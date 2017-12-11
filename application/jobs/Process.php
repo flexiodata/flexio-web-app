@@ -380,7 +380,7 @@ class Process implements \Flexio\IFace\IProcess
     private static function createStream() : \Flexio\IFace\IStream
     {
         $stream = \Flexio\Base\Stream::create();
-        $stream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TEXT); // default mime type
+        $stream->setMimeType(\Flexio\Base\ContentType::TEXT); // default mime type
         return $stream;
     }
 

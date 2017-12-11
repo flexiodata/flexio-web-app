@@ -24,7 +24,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "csv",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_CSV.'",
+                "content_type": "'.\Flexio\Base\ContentType::CSV.'",
                 "content": "'. base64_encode(trim($data)) .'"
             }
         }',true);

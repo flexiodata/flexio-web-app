@@ -269,7 +269,7 @@ class Request extends \Flexio\Jobs\Base
         $outstream_properties = array(
            // 'name' => $url,
            // 'path' => $url,
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
+            'mime_type' => \Flexio\Base\ContentType::STREAM // default
         );
         $outstream->set($outstream_properties);
 

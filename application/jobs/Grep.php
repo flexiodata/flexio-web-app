@@ -45,7 +45,7 @@ class Grep extends \Flexio\Jobs\Base
                 $outstream->copy($instream);
                 return;
 
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
         }
@@ -97,7 +97,7 @@ class Grep extends \Flexio\Jobs\Base
         }
 
         $mime_type = $instream->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // write header row
             $row = $instream->getStructure()->getNames();

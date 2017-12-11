@@ -144,7 +144,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         if (!$this->isOk())
         {

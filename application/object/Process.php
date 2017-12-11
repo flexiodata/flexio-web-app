@@ -621,7 +621,7 @@ class Process extends \Flexio\Object\Base
         while (true)
         {
             $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $row = $streamreader->readRow();
                  else
                 $row = $streamreader->read();
@@ -649,7 +649,7 @@ class Process extends \Flexio\Object\Base
         while (true)
         {
             $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $row = $streamreader->readRow();
                  else
                 $row = $streamreader->read();

@@ -42,7 +42,7 @@ class Test
                 "type": "flexio.create",
                 "params": {
                     "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                     "columns": [
                     ],
                     "content": "bad content"
@@ -64,7 +64,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "text" }
                 ]
@@ -84,7 +84,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "character", "width": null }
                 ]
@@ -100,7 +100,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "character", "width": null, "scale": null }
                 ]
@@ -116,7 +116,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "character", "width": 10, "scale": 2 }
                 ]
@@ -136,7 +136,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "numeric", "width": 14, "scale": 4 }
                 ]
@@ -156,7 +156,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "double", "width": 14, "scale": 6 }
                 ]
@@ -176,7 +176,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "integer", "width": 5, "scale": 2 }
                 ]
@@ -196,7 +196,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "date", "width": 5, "scale": 2 }
                 ]
@@ -216,7 +216,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "datetime", "width": 5, "scale": 2 }
                 ]
@@ -236,7 +236,7 @@ class Test
             "type": "flexio.create",
             "params": {
                 "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "f1", "type": "boolean", "width": 5, "scale": 2 }
                 ]
@@ -258,7 +258,7 @@ class Test
                 "type": "flexio.create",
                 "params": {
                     "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "f1", "type": "character", "width": 10, "scale": 0 },
                         { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },
@@ -280,7 +280,7 @@ class Test
                 "type": "flexio.create",
                 "params": {
                     "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                     "columns": [
                         { "name": "f1", "type": "character", "width": 10, "scale": 0 },
                         { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },

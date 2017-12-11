@@ -18,37 +18,34 @@ namespace Flexio\Base;
 
 class ContentType
 {
-    // standard content mime types
-    const MIME_TYPE_BMP        = 'image/x-ms-bmp';
-    const MIME_TYPE_CSS        = 'text/css';
-    const MIME_TYPE_CSV        = 'text/csv';
-    const MIME_TYPE_DOC        = 'application/msword';
-    const MIME_TYPE_DOCX       = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const MIME_TYPE_EMPTY      = 'application/x-empty';
-    const MIME_TYPE_GIF        = 'image/gif';
-    const MIME_TYPE_GZIP       = 'application/x-gzip';
-    const MIME_TYPE_HTML       = 'text/html';
-    const MIME_TYPE_JPEG       = 'image/jpeg';
-    const MIME_TYPE_JAVASCRIPT = 'application/javascript';
-    const MIME_TYPE_JSON       = 'application/json';
-    const MIME_TYPE_MD         = 'text/markdown';
-    const MIME_TYPE_PDF        = 'application/pdf';
-    const MIME_TYPE_PNG        = 'image/png';
-    const MIME_TYPE_RSS        = 'application/rss+xml';
-    const MIME_TYPE_STREAM     = 'application/octet-stream';
-    const MIME_TYPE_SVG        = 'image/svg+xml';
-    const MIME_TYPE_TIFF       = 'image/tiff';
-    const MIME_TYPE_TEXT       = 'text/plain';
-    const MIME_TYPE_XLS        = 'application/vnd.ms-excel';
-    const MIME_TYPE_XLSX       = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const MIME_TYPE_XML        = 'application/xml';
-    const MIME_TYPE_ZIP        = 'application/zip';
-
-    // flexio mime types
-    const MIME_TYPE_NONE         = '';
-    const MIME_TYPE_FLEXIO_TABLE = 'application/vnd.flexio.table';
-    const MIME_TYPE_FLEXIO_HTML = 'application/vnd.flexio.html';
-    const MIME_TYPE_FLEXIO_FOLDER = 'application/vnd.flexio.folder';
+    const NONE          = '';
+    const BMP           = 'image/x-ms-bmp';
+    const CSS           = 'text/css';
+    const CSV           = 'text/csv';
+    const DOC           = 'application/msword';
+    const DOCX          = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const EMPTY         = 'application/x-empty';
+    const GIF           = 'image/gif';
+    const GZIP          = 'application/x-gzip';
+    const HTML          = 'text/html';
+    const JPEG          = 'image/jpeg';
+    const JAVASCRIPT    = 'application/javascript';
+    const JSON          = 'application/json';
+    const MARKDOWN      = 'text/markdown';
+    const PDF           = 'application/pdf';
+    const PNG           = 'image/png';
+    const RSS           = 'application/rss+xml';
+    const STREAM        = 'application/octet-stream';
+    const SVG           = 'image/svg+xml';
+    const TIFF          = 'image/tiff';
+    const TEXT          = 'text/plain';
+    const XLS           = 'application/vnd.ms-excel';
+    const XLSX          = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const XML           = 'application/xml';
+    const ZIP           = 'application/zip';
+    const FLEXIO_TABLE  = 'application/vnd.flexio.table';
+    const FLEXIO_HTML   = 'application/vnd.flexio.html';
+    const FLEXIO_FOLDER = 'application/vnd.flexio.folder';
 
     public static function getMimeType($extension, $buffer, $content_length = false) : string
     {
@@ -60,8 +57,8 @@ class ContentType
         // type, then the mime is based off the filename
 
         // if we have an empty buffer and extension, return the empty mime type
-        if ($extension === ''  && $buffer === '')
-            return self::MIME_TYPE_EMPTY;
+        if ($extension ==   = ''  && $buffer ==   = '')
+            return ContentType::EMPTY;
 
         // the extension may be a path; if it is, get the actual extension
         if (strpos($extension, '.') !== false)
@@ -96,47 +93,47 @@ class ContentType
         {
             // for some general mime types, use the filename/extension
             default:
-            case self::MIME_TYPE_EMPTY:
-            case self::MIME_TYPE_STREAM:
-            case self::MIME_TYPE_TEXT:    // buffer for csv may look like text
+            case ContentType::EMPTY:
+            case ContentType::STREAM:
+            case ContentType::TEXT:    // buffer for csv may look like text
                 return $file_mime_type;
 
             // buffer for xlsx, docx looks like a zip; if we have all of the
             // buffer and we still have a zip, it's not xlsx or docx; however,
             // if we only have part of the buffer and it looks like a zip, trust
             // the filename
-            case self::MIME_TYPE_ZIP:
+            case ContentType::ZIP:
                 if ($content_length !== false && $buffer_length >= $content_length)
                     return $buffer_mime_type;
-                if ($file_mime_type === self::MIME_TYPE_DOCX || $file_mime_type === self::MIME_TYPE_XLSX)
+                if ($file_mime_type === ContentType::DOCX || $file_mime_type === ContentType::XLSX)
                     return $file_mime_type;
                      else
                     return $buffer_mime_type;
 
             // if we have specific, known mime types from the buffer, use them
-            case self::MIME_TYPE_BMP:
-            case self::MIME_TYPE_CSS:
-            case self::MIME_TYPE_CSV:
-            case self::MIME_TYPE_DOC:
-            case self::MIME_TYPE_DOCX:
-            case self::MIME_TYPE_GIF:
-            case self::MIME_TYPE_GZIP:
-            case self::MIME_TYPE_HTML:
-            case self::MIME_TYPE_JPEG:
-            case self::MIME_TYPE_JAVASCRIPT:
-            case self::MIME_TYPE_JSON:
-            case self::MIME_TYPE_PDF:
-            case self::MIME_TYPE_PNG:
-            case self::MIME_TYPE_SVG:
-            case self::MIME_TYPE_TIFF:
-            case self::MIME_TYPE_XLS:
-            case self::MIME_TYPE_XLSX:
-            case self::MIME_TYPE_XML:
+            case ContentType::BMP:
+            case ContentType::CSS:
+            case ContentType::CSV:
+            case ContentType::DOC:
+            case ContentType::DOCX:
+            case ContentType::GIF:
+            case ContentType::GZIP:
+            case ContentType::HTML:
+            case ContentType::JPEG:
+            case ContentType::JAVASCRIPT:
+            case ContentType::JSON:
+            case ContentType::PDF:
+            case ContentType::PNG:
+            case ContentType::SVG:
+            case ContentType::TIFF:
+            case ContentType::XLS:
+            case ContentType::XLSX:
+            case ContentType::XML:
                 return $buffer_mime_type;
         }
     }
 
-    public static function getMimeTypeFromExtension($ext, $def_return = self::MIME_TYPE_STREAM) : string
+    public static function getMimeTypeFromExtension($ext, $def_return = ContentType::STREAM) : string
     {
         if (strpos($ext, '.') !== false)
             $ext = \Flexio\Base\File::getFileExtension($ext);
@@ -147,31 +144,31 @@ class ContentType
         {
             default:      return $def_return;
 
-            case "bmp":   return self::MIME_TYPE_BMP;
-            case "css":   return self::MIME_TYPE_CSS;
+            case "bmp":   return ContentType::BMP;
+            case "css":   return ContentType::CSS;
             case "icsv":
-            case "csv":   return self::MIME_TYPE_CSV;
-            case "doc":   return self::MIME_TYPE_DOC;
-            case "docx":  return self::MIME_TYPE_DOCX;
-            case "gif":   return self::MIME_TYPE_GIF;
-            case "gz":    return self::MIME_TYPE_GZIP;
+            case "csv":   return ContentType::CSV;
+            case "doc":   return ContentType::DOC;
+            case "docx":  return ContentType::DOCX;
+            case "gif":   return ContentType::GIF;
+            case "gz":    return ContentType::GZIP;
             case "html":
-            case "htm":   return self::MIME_TYPE_HTML;
+            case "htm":   return ContentType::HTML;
             case "jpeg":
-            case "jpg":   return self::MIME_TYPE_JPEG;
-            case "js":    return self::MIME_TYPE_JAVASCRIPT;
-            case "json":  return self::MIME_TYPE_JSON;
-            case "md":    return self::MIME_TYPE_MD;
-            case "pdf":   return self::MIME_TYPE_PDF;
-            case "png":   return self::MIME_TYPE_PNG;
-            case "svg":   return self::MIME_TYPE_SVG;
+            case "jpg":   return ContentType::JPEG;
+            case "js":    return ContentType::JAVASCRIPT;
+            case "json":  return ContentType::JSON;
+            case "md":    return ContentType::MARKDOWN;
+            case "pdf":   return ContentType::PDF;
+            case "png":   return ContentType::PNG;
+            case "svg":   return ContentType::SVG;
             case "tiff":
-            case "tif":   return self::MIME_TYPE_TIFF;
-            case "txt":   return self::MIME_TYPE_TEXT;
-            case "xls":   return self::MIME_TYPE_XLS;
-            case "xlsx":  return self::MIME_TYPE_XLSX;
-            case "xml":   return self::MIME_TYPE_XML;
-            case "zip":   return self::MIME_TYPE_ZIP;
+            case "tif":   return ContentType::TIFF;
+            case "txt":   return ContentType::TEXT;
+            case "xls":   return ContentType::XLS;
+            case "xlsx":  return ContentType::XLSX;
+            case "xml":   return ContentType::XML;
+            case "zip":   return ContentType::ZIP;
         }
     }
 
@@ -180,8 +177,8 @@ class ContentType
         // gets the mime and content type from a string; returns true on success
         // and false otherwise
 
-        $mime_type = '';
-        $content_type = '';
+        $mime_type    = '';
+        $content_type    = '';
 
         $finfo = new \finfo(FILEINFO_MIME);
         $result = $finfo->buffer($buffer);

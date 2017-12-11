@@ -383,7 +383,7 @@ class Process
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
 
-        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type);
@@ -391,7 +391,7 @@ class Process
         else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON);
             $content = json_encode($content);
         }
 

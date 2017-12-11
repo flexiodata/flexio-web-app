@@ -121,8 +121,8 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         // TODO: for now, set default type to 'rows'; should be based on path somehow
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             return false;
 
         // make sure the index and type are valid
@@ -171,8 +171,8 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         // create an index with the specified mapping
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             return false;
 
         // make sure the index and type are valid

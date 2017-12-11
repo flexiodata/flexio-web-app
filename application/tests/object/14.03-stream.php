@@ -30,7 +30,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "id", "type" : "integer", "width" : 4, "scale" : 0},
@@ -109,7 +109,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_1a", "type" : "numeric", "width" : 10, "scale" : 0},
@@ -186,7 +186,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_2a", "type" : "double", "width" : 8, "scale" : 0},
@@ -263,7 +263,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "num_3a", "type" : "integer", "width" : 4, "scale" : 0},
@@ -340,7 +340,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "date_1a", "type" : "date", "width" : 4, "scale" : 0},
@@ -418,7 +418,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "date_2a", "type" : "datetime", "width" : 8, "scale" : 0},
@@ -496,7 +496,7 @@ class Test
         // BEGIN TEST
         $stream_info = array();
         $stream_info['path'] = \Flexio\Base\Util::generateHandle();
-        $stream_info['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
         [
             {"name" : "bool_1a", "type" : "boolean", "width" : 1, "scale" : 0},

@@ -177,7 +177,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
@@ -280,7 +280,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER);
+            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
         }
 
         $path = trim($path, '/');

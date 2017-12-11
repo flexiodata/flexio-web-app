@@ -547,7 +547,7 @@ class Execute extends \Flexio\Jobs\Base
             // create the output stream
             $outstream_properties = array(
                 'name' => $instream->getName() . '.html',
-                'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_HTML,
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML,
                 'size' => strlen($code)
             );
 
@@ -810,7 +810,7 @@ class Execute extends \Flexio\Jobs\Base
         if (!is_null($structure))
         {
             // specifying a structure automatically sets content type to table
-            $properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $properties['structure'] = $structure;
         }
 
@@ -839,7 +839,7 @@ class Execute extends \Flexio\Jobs\Base
             $set['mime_type'] = $properties['content_type'];
         if (isset($properties['structure']))
         {
-            $set['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
 

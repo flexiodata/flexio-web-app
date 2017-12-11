@@ -64,7 +64,7 @@ class List1 extends \Flexio\Jobs\Base
             $results[] = $entry;
         }
 
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter->write(json_encode($results));
     }
 }

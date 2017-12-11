@@ -50,7 +50,7 @@ class Replace extends \Flexio\Jobs\Base
                 $outstream->copy($instream);
                 return;
 
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
         }

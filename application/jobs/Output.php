@@ -324,7 +324,7 @@ class Output extends \Flexio\Jobs\Base
         $params['structure'] = $instream->getStructure()->enum();
 
         // TODO: for now, only allow output of tables
-        if ($params['content_type'] !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($params['content_type'] !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // create the index; note: subsequent tries to recreate the index will return false

@@ -26,7 +26,7 @@ class Test
         $create = json_decode('{
             "type": "flexio.create",
             "params": {
-                "content_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "field1", "type": "character", "width": 3, "scale": 0 },
                     { "name": "field2", "type": "character", "width": 3, "scale": 0 }

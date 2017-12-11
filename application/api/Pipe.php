@@ -391,7 +391,7 @@ class Pipe
         $response_code = $process->getResponseCode();
 
 
-        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type, true, $response_code);
@@ -399,7 +399,7 @@ class Pipe
         else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON, true, $response_code);
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
             $content = json_encode($content);
         }
 

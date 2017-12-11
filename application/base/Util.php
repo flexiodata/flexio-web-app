@@ -895,7 +895,7 @@ class Util
             $readsize = 1;
 
         $mime_type = $stream->getMimeType();
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             return $stream->getReader()->getRows($start,$limit);
         }

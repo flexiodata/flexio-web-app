@@ -48,18 +48,18 @@ class Create extends \Flexio\Jobs\Base
         }
 
         $outstream = $process->getStdout();
-        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         switch ($content_type)
         {
             default:
-            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-            case \Flexio\Base\ContentType::MIME_TYPE_TEXT:
-            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
+            case \Flexio\Base\ContentType::STREAM:
+            case \Flexio\Base\ContentType::TEXT:
+            case \Flexio\Base\ContentType::CSV:
+            case \Flexio\Base\ContentType::JSON:
                 $this->createFile($outstream);
                 break;
 
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->createTable($outstream);
                 break;
         }
@@ -69,7 +69,7 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
-        $content_type = ($job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $content_type = ($job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::STREAM);
 
         // get the content and decode it
         $content = '';
@@ -100,11 +100,11 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');
-        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::FLEXIO_TABLE;
         $structure = $job_definition['params']['columns'] ?? '[]';
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
             'structure' => $structure
         );
 

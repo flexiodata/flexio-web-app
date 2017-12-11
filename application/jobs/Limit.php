@@ -48,14 +48,14 @@ class Limit extends \Flexio\Jobs\Base
                 return;
 
             // table input
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
 
             // stream/text/csv input
-            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-            case \Flexio\Base\ContentType::MIME_TYPE_TEXT:
-            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+            case \Flexio\Base\ContentType::STREAM:
+            case \Flexio\Base\ContentType::TEXT:
+            case \Flexio\Base\ContentType::CSV:
                 $this->getOutput($instream, $outstream);
                 return;
         }

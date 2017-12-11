@@ -326,7 +326,7 @@ class Email
         $a = array();
         $a['name'] = $attachment['name'] ?? '';
         $a['file'] = $attachment['file'] ?? '';
-        $a['mime_type'] = $attachment['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_NONE;
+        $a['mime_type'] = $attachment['mime_type'] ?? \Flexio\Base\ContentType::NONE;
         $a['content'] = $attachment['content'] ?? '';
 
         $this->attachments[] = $a;

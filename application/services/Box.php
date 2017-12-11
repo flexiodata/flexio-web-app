@@ -47,7 +47,7 @@ class Box implements \Flexio\IFace\IFileSystem
         if (!isset($fileinfo['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER)
+        if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::FLEXIO_FOLDER)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);  // not a folder
 
 
@@ -120,7 +120,7 @@ class Box implements \Flexio\IFace\IFileSystem
             return false;
 
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
@@ -298,7 +298,7 @@ class Box implements \Flexio\IFace\IFileSystem
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => '0', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER);
+            return array('id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
         }
 
         $path = trim($path, '/');
@@ -310,7 +310,7 @@ class Box implements \Flexio\IFace\IFileSystem
 
 
         $current_id = 0; // stores the current folder id; 0 = root
-        $current_content_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER;
+        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
 
         foreach ($parts as $p)
         {
@@ -325,7 +325,7 @@ class Box implements \Flexio\IFace\IFileSystem
                 {
                     $current_id = $item['id'];
                     if ($item['type'] == 'folder')
-                        $current_content_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER;
+                        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
                          else
                         $current_content_type = 'application/octet-stream';
                     $found = true;

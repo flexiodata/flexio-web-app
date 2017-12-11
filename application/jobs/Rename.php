@@ -57,7 +57,7 @@ class Rename extends \Flexio\Jobs\Base
         // may also have columns renamed
         if (isset($job_definition['params']['columns']))
         {
-            if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $this->renameColumns($outstream);
         }
     }
