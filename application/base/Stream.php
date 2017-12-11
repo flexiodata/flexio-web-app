@@ -314,7 +314,7 @@ class Stream implements \Flexio\IFace\IStream
     }
 
 
-    public function copy(\Flexio\IFace\IStream $source) : \Flexio\IFace\Stream
+    public function copy(\Flexio\IFace\IStream $source) : \Flexio\Base\Stream
     {
         // copies all the properties of another stream into the current stream,
         // including the buffer
