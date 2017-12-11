@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Store implements \Flexio\Services\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Store
     {
@@ -60,7 +60,7 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $reader = $stream->getReader();
         while (($buf = $reader->read(16384)) !== false)
@@ -86,8 +86,8 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         }
 
         if (!$parent_stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);            
-        
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
         // if the stream already exists, overwrite it
         $arr = $parent_stream->getChildStreams($name);
         $stream = $arr[0] ?? null;
@@ -105,12 +105,12 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         }
 
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $streamwriter = $stream->getWriter();
-        
+
         while (($buf = $callback(16384)) !== false)
-            $streamwriter->write($buf);      
+            $streamwriter->write($buf);
     }
 
     ////////////////////////////////////////////////////////////
@@ -134,18 +134,18 @@ class Store implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyste
         $user = \Flexio\Object\User::load($current_user_eid);
         if ($user === false)
             return $user;
-        
+
         $stream = $user->getStoreRoot();
         if (!$stream)
             return null;
 
         if ($path == '/')
             return $stream; // return the root
-        
+
         $path = trim($path, "/ \t\n\r\0\x0B");
         if (strlen($path) == 0)
             return null;
-        
+
         $parts = explode('/', $path);
         foreach ($parts as $part)
         {

@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Firebase implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Firebase implements \Flexio\Services\IFileSystem
 {
     private $is_ok = false;
 

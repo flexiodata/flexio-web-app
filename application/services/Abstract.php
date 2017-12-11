@@ -16,10 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-interface IConnection
-{
-}
-
 interface IFileSystem
 {
     public function list(string $path = '') : array;

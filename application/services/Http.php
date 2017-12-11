@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Http implements \Flexio\Services\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Http
     {

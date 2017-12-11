@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Ftp implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Ftp implements \Flexio\Services\IFileSystem
 {
     private $host;
     private $username;

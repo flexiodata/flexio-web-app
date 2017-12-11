@@ -31,7 +31,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
 
 
-class Rss implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Rss implements \Flexio\Services\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Rss
     {

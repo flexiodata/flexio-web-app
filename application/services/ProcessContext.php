@@ -18,7 +18,7 @@ namespace Flexio\Services;
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class ProcessContext implements \Flexio\Services\IFileSystem
 {
     private $process = null;
 
@@ -118,7 +118,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
             $params = $this->process->getParams();
             if (!isset($params[$file]))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            
+
             if ($params[$file] instanceof \Flexio\Base\Stream)
             {
                 $reader = $params[$file]->getReader();
@@ -132,7 +132,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
     }
 
@@ -162,7 +162,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
     }
 
