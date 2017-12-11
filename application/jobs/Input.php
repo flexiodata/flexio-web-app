@@ -339,7 +339,7 @@ class Input extends \Flexio\Jobs\Base
         // through; for now, if we have 'plain/text', see if the first part of the string
         // look like json (e.g is either '[' or '{')
 
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_TXT)
+        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_TEXT)
         {
             $mime_data_sample_clean = trim($mime_data_sample);
             $first_char = substr($mime_data_sample_clean,0,1);

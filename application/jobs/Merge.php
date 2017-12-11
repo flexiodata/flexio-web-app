@@ -85,7 +85,7 @@ class Merge extends \Flexio\Jobs\Base
         // based on content
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_TXT
+            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_TEXT
         );
         $outstream = \Flexio\Base\Stream::create($outstream_properties);
 

@@ -54,7 +54,7 @@ class Limit extends \Flexio\Jobs\Base
 
             // stream/text/csv input
             case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_TEXT:
             case \Flexio\Base\ContentType::MIME_TYPE_CSV:
                 $this->getOutput($instream, $outstream);
                 return;

@@ -40,7 +40,7 @@ class ContentType
     const MIME_TYPE_STREAM  = 'application/octet-stream';
     const MIME_TYPE_SVG     = 'image/svg+xml';
     const MIME_TYPE_TIFF    = 'image/tiff';
-    const MIME_TYPE_TXT     = 'text/plain';
+    const MIME_TYPE_TEXT    = 'text/plain';
     const MIME_TYPE_XLS     = 'application/vnd.ms-excel';
     const MIME_TYPE_XLSX    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     const MIME_TYPE_XML     = 'application/xml';
@@ -100,7 +100,7 @@ class ContentType
             default:
             case self::MIME_TYPE_EMPTY:
             case self::MIME_TYPE_STREAM:
-            case self::MIME_TYPE_TXT:    // buffer for csv may look like text
+            case self::MIME_TYPE_TEXT:    // buffer for csv may look like text
                 return $file_mime_type;
 
             // buffer for xlsx, docx looks like a zip; if we have all of the
@@ -169,7 +169,7 @@ class ContentType
             case "svg":   return self::MIME_TYPE_SVG;
             case "tiff":
             case "tif":   return self::MIME_TYPE_TIFF;
-            case "txt":   return self::MIME_TYPE_TXT;
+            case "txt":   return self::MIME_TYPE_TEXT;
             case "xls":   return self::MIME_TYPE_XLS;
             case "xlsx":  return self::MIME_TYPE_XLSX;
             case "xml":   return self::MIME_TYPE_XML;

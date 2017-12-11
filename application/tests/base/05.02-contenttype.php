@@ -168,7 +168,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\ContentType::getMimeTypeFromExtension('test.txt');
-        $expected = \Flexio\Base\ContentType::MIME_TYPE_TXT;
+        $expected = \Flexio\Base\ContentType::MIME_TYPE_TEXT;
         TestCheck::assertString('B.17', '\Flexio\Base\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST

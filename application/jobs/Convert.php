@@ -118,7 +118,7 @@ class Convert extends \Flexio\Jobs\Base
                 return;
 
             // text input
-            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
+            case \Flexio\Base\ContentType::MIME_TYPE_TEXT:
                 $this->createOutputFromFixedLengthInput($instream, $outstream, $output_content_type_from_definition);
                 return;
 
@@ -303,7 +303,7 @@ class Convert extends \Flexio\Jobs\Base
         // input/output
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT);
+        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TEXT);
 
         $streamwriter = $outstream->getWriter();
 
@@ -1131,7 +1131,7 @@ class Convert extends \Flexio\Jobs\Base
         if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'delimited_text' /* compatibility */)
             return \Flexio\Base\ContentType::MIME_TYPE_CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH || $format == 'fixed_length_text' /* compatibility */)
-            return \Flexio\Base\ContentType::MIME_TYPE_TXT;
+            return \Flexio\Base\ContentType::MIME_TYPE_TEXT;
         else if ($format == self::FORMAT_JSON)
             return \Flexio\Base\ContentType::MIME_TYPE_JSON;
         else if ($format == self::FORMAT_RSS)
@@ -1153,7 +1153,7 @@ class Convert extends \Flexio\Jobs\Base
         if ($format == self::FORMAT_DELIMITED_TEXT)
             return \Flexio\Base\ContentType::MIME_TYPE_CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH)
-            return \Flexio\Base\ContentType::MIME_TYPE_TXT;
+            return \Flexio\Base\ContentType::MIME_TYPE_TEXT;
         else if ($format == self::FORMAT_JSON)
             return \Flexio\Base\ContentType::MIME_TYPE_JSON;
         else if ($format == self::FORMAT_PDF)

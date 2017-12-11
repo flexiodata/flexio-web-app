@@ -108,7 +108,7 @@ class Test
         TestCheck::assertString('A.17', '\ContentType mime type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::MIME_TYPE_TXT;
+        $actual = \Flexio\Base\ContentType::MIME_TYPE_TEXT;
         $expected = 'text/plain';
         TestCheck::assertString('A.18', '\ContentType mime type constant',  $actual, $expected, $results);
 
