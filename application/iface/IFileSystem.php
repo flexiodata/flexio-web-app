@@ -21,6 +21,7 @@ interface IFileSystem
     public function list(string $path = '') : array;
     public function exists(string $path) : bool;
 
+    public function createFile(string $path, array $properties = []) : bool;
     public function read(array $params, callable $callback);
     public function write(array $params, callable $callback);
 }

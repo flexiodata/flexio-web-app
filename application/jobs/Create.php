@@ -38,31 +38,43 @@ class Create extends \Flexio\Jobs\Base
         $params = $job_definition['params'] ?? [];
 
 
+        // TODO: factor
+
         if (isset($params['path']))
         {
+            $columns = $params['columns'] ?? [];
+
             $vfs = new \Flexio\Services\Vfs();
             $vfs->setProcess($process);
-            $files = $vfs->read($path, function($data) use (&$streamwriter) {
-                $streamwriter->write($data);
-            });
-        }
 
-        $outstream = $process->getStdout();
-        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        switch ($content_type)
+            $create_params = [];
+            if (is_array($columns) && count($columns) > 0)
+            {
+                $create_params['structure'] = $columns;
+            }
+
+            $vfs->createFile($params['path'], $create_params);
+        }
+         else
         {
-            default:
-            case \Flexio\Base\ContentType::STREAM:
-            case \Flexio\Base\ContentType::TEXT:
-            case \Flexio\Base\ContentType::CSV:
-            case \Flexio\Base\ContentType::JSON:
-                $this->createFile($outstream);
-                break;
-
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->createTable($outstream);
-                break;
+            $outstream = $process->getStdout();
+            $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+            switch ($content_type)
+            {
+                default:
+                case \Flexio\Base\ContentType::STREAM:
+                case \Flexio\Base\ContentType::TEXT:
+                case \Flexio\Base\ContentType::CSV:
+                case \Flexio\Base\ContentType::JSON:
+                    $this->createFile($outstream);
+                    break;
+    
+                case \Flexio\Base\ContentType::FLEXIO_TABLE:
+                    $this->createTable($outstream);
+                    break;
+            }
         }
+
     }
 
     private function createFile(\Flexio\IFace\IStream &$outstream)

@@ -160,6 +160,12 @@ class Socrata implements \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';

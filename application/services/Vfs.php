@@ -122,9 +122,21 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->createFile([ 'path' => $rpath ], $callback);
     }
 
     public function read($path, callable $callback)
