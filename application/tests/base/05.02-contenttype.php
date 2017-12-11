@@ -123,12 +123,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\ContentType::getMimeTypeFromExtension('test.jpeg');
-        $expected = \Flexio\Base\ContentType::MIME_TYPE_JPG;
+        $expected = \Flexio\Base\ContentType::MIME_TYPE_JPEG;
         TestCheck::assertString('B.8', '\Flexio\Base\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\ContentType::getMimeTypeFromExtension('test.jpg');
-        $expected = \Flexio\Base\ContentType::MIME_TYPE_JPG;
+        $expected = \Flexio\Base\ContentType::MIME_TYPE_JPEG;
         TestCheck::assertString('B.9', '\Flexio\Base\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST
