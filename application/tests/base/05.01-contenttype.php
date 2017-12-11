@@ -137,7 +137,7 @@ class Test
         // TEST: flexio mime type constant tests
 
         // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::NONE;
+        $actual = \Flexio\Base\ContentType::UNDEFINED;
         $expected = '';
         TestCheck::assertString('B.1', '\ContentType mime type constant',  $actual, $expected, $results);
 

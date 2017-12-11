@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class ContentType
 {
-    const NONE          = '';
+    const UNDEFINED     = '';
     const BMP           = 'image/x-ms-bmp';
     const CSS           = 'text/css';
     const CSV           = 'text/csv';
