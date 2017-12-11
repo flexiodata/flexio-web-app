@@ -21,7 +21,7 @@ namespace Flexio\Jobs;
         "type": "flexio.create",
         "params": {
             "name": "test",
-            "mime_type": "text/csv",
+            "content_type": "text/csv",
             "content": ""
         }
     }
@@ -37,8 +37,8 @@ class Create extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
 
         $outstream = $process->getStdout();
-        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        switch ($mime_type)
+        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        switch ($content_type)
         {
             default:
             case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
@@ -58,7 +58,7 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
-        $mime_type = ($job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $content_type = ($job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM);
 
         // get the content and decode it
         $content = '';
@@ -74,7 +74,7 @@ class Create extends \Flexio\Jobs\Base
         // create the output stream
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => $mime_type
+            'content_type' => $content_type
         );
         $outstream->set($outstream_properties);
         $streamwriter = $outstream->getWriter();
@@ -89,7 +89,7 @@ class Create extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');
-        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
         $structure = $job_definition['params']['columns'] ?? '[]';
         $outstream_properties = array(
             'name' => $name,
