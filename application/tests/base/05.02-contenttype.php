@@ -133,7 +133,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\ContentType::getMimeTypeFromExtension('test.js');
-        $expected = \Flexio\Base\ContentType::MIME_TYPE_JS;
+        $expected = \Flexio\Base\ContentType::MIME_TYPE_JAVASCRIPT;
         TestCheck::assertString('B.10', '\Flexio\Base\ContentType::getMimeTypeFromExtension() different mime types',  $actual, $expected, $results);
 
         // BEGIN TEST

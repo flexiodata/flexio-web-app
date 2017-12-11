@@ -19,30 +19,30 @@ namespace Flexio\Base;
 class ContentType
 {
     // standard content mime types
-    const MIME_TYPE_BMP     = 'image/x-ms-bmp';
-    const MIME_TYPE_CSS     = 'text/css';
-    const MIME_TYPE_CSV     = 'text/csv';
-    const MIME_TYPE_DOC     = 'application/msword';
-    const MIME_TYPE_DOCX    = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const MIME_TYPE_EMPTY   = 'application/x-empty';
-    const MIME_TYPE_GIF     = 'image/gif';
-    const MIME_TYPE_GZIP    = 'application/x-gzip';
-    const MIME_TYPE_HTML    = 'text/html';
-    const MIME_TYPE_JPEG    = 'image/jpeg';
-    const MIME_TYPE_JS      = 'application/javascript';
-    const MIME_TYPE_JSON    = 'application/json';
-    const MIME_TYPE_MD      = 'text/markdown';
-    const MIME_TYPE_PDF     = 'application/pdf';
-    const MIME_TYPE_PNG     = 'image/png';
-    const MIME_TYPE_RSS     = 'application/rss+xml';
-    const MIME_TYPE_STREAM  = 'application/octet-stream';
-    const MIME_TYPE_SVG     = 'image/svg+xml';
-    const MIME_TYPE_TIFF    = 'image/tiff';
-    const MIME_TYPE_TEXT    = 'text/plain';
-    const MIME_TYPE_XLS     = 'application/vnd.ms-excel';
-    const MIME_TYPE_XLSX    = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const MIME_TYPE_XML     = 'application/xml';
-    const MIME_TYPE_ZIP     = 'application/zip';
+    const MIME_TYPE_BMP        = 'image/x-ms-bmp';
+    const MIME_TYPE_CSS        = 'text/css';
+    const MIME_TYPE_CSV        = 'text/csv';
+    const MIME_TYPE_DOC        = 'application/msword';
+    const MIME_TYPE_DOCX       = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    const MIME_TYPE_EMPTY      = 'application/x-empty';
+    const MIME_TYPE_GIF        = 'image/gif';
+    const MIME_TYPE_GZIP       = 'application/x-gzip';
+    const MIME_TYPE_HTML       = 'text/html';
+    const MIME_TYPE_JPEG       = 'image/jpeg';
+    const MIME_TYPE_JAVASCRIPT = 'application/javascript';
+    const MIME_TYPE_JSON       = 'application/json';
+    const MIME_TYPE_MD         = 'text/markdown';
+    const MIME_TYPE_PDF        = 'application/pdf';
+    const MIME_TYPE_PNG        = 'image/png';
+    const MIME_TYPE_RSS        = 'application/rss+xml';
+    const MIME_TYPE_STREAM     = 'application/octet-stream';
+    const MIME_TYPE_SVG        = 'image/svg+xml';
+    const MIME_TYPE_TIFF       = 'image/tiff';
+    const MIME_TYPE_TEXT       = 'text/plain';
+    const MIME_TYPE_XLS        = 'application/vnd.ms-excel';
+    const MIME_TYPE_XLSX       = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    const MIME_TYPE_XML        = 'application/xml';
+    const MIME_TYPE_ZIP        = 'application/zip';
 
     // flexio mime types
     const MIME_TYPE_NONE         = '';
@@ -123,7 +123,7 @@ class ContentType
             case self::MIME_TYPE_GZIP:
             case self::MIME_TYPE_HTML:
             case self::MIME_TYPE_JPEG:
-            case self::MIME_TYPE_JS:
+            case self::MIME_TYPE_JAVASCRIPT:
             case self::MIME_TYPE_JSON:
             case self::MIME_TYPE_PDF:
             case self::MIME_TYPE_PNG:
@@ -159,7 +159,7 @@ class ContentType
             case "htm":   return self::MIME_TYPE_HTML;
             case "jpeg":
             case "jpg":   return self::MIME_TYPE_JPEG;
-            case "js":    return self::MIME_TYPE_JS;
+            case "js":    return self::MIME_TYPE_JAVASCRIPT;
             case "json":  return self::MIME_TYPE_JSON;
             case "md":    return self::MIME_TYPE_MD;
             case "pdf":   return self::MIME_TYPE_PDF;

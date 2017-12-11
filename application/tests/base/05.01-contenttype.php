@@ -73,7 +73,7 @@ class Test
         TestCheck::assertString('A.10', '\ContentType mime type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::MIME_TYPE_JS;
+        $actual = \Flexio\Base\ContentType::MIME_TYPE_JAVASCRIPT;
         $expected = 'application/javascript';
         TestCheck::assertString('A.11', '\ContentType mime type constant',  $actual, $expected, $results);
 
