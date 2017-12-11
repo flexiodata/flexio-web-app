@@ -28,7 +28,7 @@ class ContentType
     const MIME_TYPE_DOCX    = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     const MIME_TYPE_EMPTY   = 'application/x-empty';
     const MIME_TYPE_GIF     = 'image/gif';
-    const MIME_TYPE_GZ      = 'application/x-gzip';
+    const MIME_TYPE_GZIP    = 'application/x-gzip';
     const MIME_TYPE_HTML    = 'text/html';
     const MIME_TYPE_JPG     = 'image/jpeg';
     const MIME_TYPE_JS      = 'application/javascript';
@@ -122,7 +122,7 @@ class ContentType
             case self::MIME_TYPE_DOC:
             case self::MIME_TYPE_DOCX:
             case self::MIME_TYPE_GIF:
-            case self::MIME_TYPE_GZ:
+            case self::MIME_TYPE_GZIP:
             case self::MIME_TYPE_HTML:
             case self::MIME_TYPE_JPG:
             case self::MIME_TYPE_JS:
@@ -156,7 +156,7 @@ class ContentType
             case "doc":   return self::MIME_TYPE_DOC;
             case "docx":  return self::MIME_TYPE_DOCX;
             case "gif":   return self::MIME_TYPE_GIF;
-            case "gz":    return self::MIME_TYPE_GZ;
+            case "gz":    return self::MIME_TYPE_GZIP;
             case "html":
             case "htm":   return self::MIME_TYPE_HTML;
             case "jpeg":

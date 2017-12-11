@@ -58,7 +58,7 @@ class Test
         TestCheck::assertString('A.7', '\ContentType mime type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\ContentType::MIME_TYPE_GZ;
+        $actual = \Flexio\Base\ContentType::MIME_TYPE_GZIP;
         $expected = 'application/x-gzip';
         TestCheck::assertString('A.8', '\ContentType mime type constant',  $actual, $expected, $results);
 
