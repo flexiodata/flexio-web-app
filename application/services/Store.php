@@ -88,9 +88,10 @@ class Store implements \Flexio\IFace\IFileSystem
                 'path' => \Flexio\Base\Util::generateRandomString(20)
             ];
 
-            if (isset($properties['structure']))
+            if (isset($properties['structure']) && count($properties['structure']) > 0)
             {
                 $stream_properties['structure'] = $properties['structure'];
+                $stream_properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             }
 
             $stream = \Flexio\Object\Stream::create($stream_properties);
@@ -106,9 +107,10 @@ class Store implements \Flexio\IFace\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             // stream doesn't exist yet; create one
-            if (isset($properties['structure']))
+            if (isset($properties['structure']) && count($properties['structure']) > 0)
             {
-                $stream_properties = [ 'structure' => $properties['structure'] ];
+                $stream_properties = [ 'structure' => $properties['structure'],
+                                       'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE ];
                 $stream->set($stream_properties);
             }
         }
@@ -116,6 +118,12 @@ class Store implements \Flexio\IFace\IFileSystem
         $streamwriter = $stream->getWriter();
 
         return true;
+    }
+
+    public function open($path) :  \Flexio\Iface\IStream
+    {
+        $path = $path['path'] ?? (is_string($path) ? $path : '');
+        return $this->getStreamFromPath($path);
     }
 
     public function read(array $params, callable $callback)
