@@ -422,12 +422,17 @@ class StorageFsFile
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        return $this->openStream();
+        return $this->openStream(false);
     }
 
     public function getWriter() : \Flexio\IFace\IStreamWriter
     {
         return $this->openStream(true);
+    }
+
+    public function getInserter() : \Flexio\IFace\IStreamWriter
+    {
+        return $this->openStream(false);
     }
 
     public function setStructure(array $structure)

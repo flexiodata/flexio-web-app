@@ -1386,7 +1386,7 @@
 
       if (params.hasOwnProperty('values'))
       {
-        json.params.values = this.parseList(params['values'].value);
+        json.params.values = this.parseListObject(params['values'].value);
       }
       else
       {

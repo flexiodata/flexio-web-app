@@ -128,8 +128,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
@@ -146,8 +144,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             $path = $path['path'] ?? '';
         }
-
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
 
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
@@ -166,8 +162,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
@@ -176,6 +170,28 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         return $service->write([ 'path' => $rpath ], $callback);
     }
+
+    public function insert(string $path, array $rows)
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->insert([ 'path' => $rpath ], $rows);
+    }
+
+
+
+
+
 
     public function splitPath(string $path) : array
     {
@@ -218,6 +234,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 $this->store_service = \Flexio\Services\Store::create();
             return $this->store_service;
         }
+
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        
 
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);

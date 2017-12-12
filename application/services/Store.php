@@ -176,6 +176,35 @@ class Store implements \Flexio\IFace\IFileSystem
             $streamwriter->write($buf);
     }
 
+    
+
+
+    public function insert(array $params, array $rows)  // $rows is an array of rows
+    {
+        $path = $params['path'] ?? (is_string($params) ? $params : '');
+        $path = trim($path, "/ \t\n\r\0\x0B");
+
+        $stream = $this->getStreamFromPath($path);
+
+        if (!$stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+        $inserter = $stream->getInserter();
+
+        foreach ($rows as $row)
+        {
+            $inserter->write($row);
+        }
+
+        return true;
+    }
+
+
+
+
+
+
+
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////

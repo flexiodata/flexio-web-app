@@ -77,6 +77,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
         return $object;
     }
 
+
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copy(\Flexio\IFace\IStream $source)
     {
@@ -248,6 +249,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
         {
             $object = new static();
             $object->properties = $a;
+            $structure = @json_decode($a['structure'],true);
+            if (is_null($structure))
+                $structure = [];
+            $object->properties['structure'] = $structure;
             $object->setEid($a['eid']);
             $results[] = $object;
         }
@@ -282,11 +287,57 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 
         // pass along structure
         $props = [];
-        if (count($this->properties['structure']) > 0)
-            $props['structure'] = $this->properties['structure'];
+        $structure = $this->getStructure()->enum();
+        if (count($structure) > 0)
+        {
+            $props['structure'] = $structure;
+        }
+
+        try
+        {
+            $file = $storagefs->open($this->getPath(), $props);
+            return $file->getWriter();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            if ($e->getCode() == \Flexio\Base\Error::NOT_FOUND)
+            {
+                // underlying data file is missing -- recreate
+                if (strlen($this->properties['path']) > 0)
+                {
+                    $create_params = [];
+                    if (isset($this->properties['structure']) && count($this->properties['structure']) > 0)
+                    {
+                        $create_params['structure'] = $this->properties['structure'];
+                    }
+
+                    $file = $storagefs->createFile($this->getPath(), $create_params);
+                    return $file->getWriter();
+                }
+            }
+
+            throw $e;
+        }
+    }
+
+    public function getInserter() : \Flexio\IFace\IStreamWriter
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+        
+        //return \Flexio\Object\StreamWriter::create($this, true);
+        $storagefs = $this->getStorageFs();
+
+        // pass along structure
+        $props = [];
+        $structure = $this->getStructure()->enum();
+        if (count($structure) > 0)
+        {
+            $props['structure'] = $structure;
+        }
 
         $file = $storagefs->open($this->getPath(), $props);
-        return $file->getWriter();
+        return $file->getInserter();
     }
 
     private function isCached() : bool

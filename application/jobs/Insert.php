@@ -36,27 +36,18 @@ class Insert extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $params = $job_definition['params'] ?? [];
 
+        $path = $params['path'] ?? '';
+        $values = $params['values'] ?? [];
 
-        // TODO: factor
+        if (strlen($path) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        if (isset($params['path']))
-        {
-            $columns = $params['columns'] ?? [];
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
 
-            $vfs = new \Flexio\Services\Vfs();
-            $vfs->setProcess($process);
 
-            $create_params = [];
-            if (is_array($columns) && count($columns) > 0)
-            {
-                $create_params['structure'] = $columns;
-            }
-
-            if (!$vfs->createFile($params['path'], $create_params))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-            // TODO: return created stream in stdout
-        }
+        if (!$vfs->insert($path, $values))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
     }
 }
