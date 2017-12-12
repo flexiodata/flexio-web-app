@@ -384,47 +384,99 @@
 
 
 
-    // general purpose task mapper; internal use only
 
-    this.args.task= ['value'];
-    this.hints.task = {
+
+    this.args.calc = [ 'name', 'formula', 'type', 'decimal' ];
+    this.hints.calc = {
+      "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
     };
-    this.keywords.task = function(str)
+    this.keywords.calc = function(str)
     {
       var json =
         {
-          "type": "flexio.task",
-          "params": { }
-        };
+            "type": "flexio.calc",
+            "params": { }
+        }
 
-      var params = this.split(str, this.args.task);
+      var params = this.split(str, this.args.calc);
 
-      if (params.hasOwnProperty('value'))
+      if (params.hasOwnProperty('name'))
       {
-        json.params = JSON.parse(params['value'].value);
+        json.params.name = params['name'].value;
       }
+       else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'name:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      if (params.hasOwnProperty('type'))
+      {
+        json.params.type = params['type'].value;
+
+        if (!this.contains(this.hints.calc['type'], json.params.type))
+        {
+          this.errors.push({ "code":     "invalid_value",
+                             "message":  "Invalid value: '" + json.params.type +"'",
+                             "offset":   params['type'].offset,
+                             "length":   params['type'].length })
+        }
+      }
+
+
+      if (params.hasOwnProperty('decimal'))
+      {
+        json.params.decimals = parseInt(params['decimal'].value);
+      }
+
+      if (params.hasOwnProperty('formula'))
+      {
+        json.params.expression = params['formula'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'formula:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
 
       return json;
     };
 
 
-    this.templates["flexio.task"] = function(json)
+    this.templates["flexio.calc"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
 
-      var res = "task";
+      var res = 'calc';
 
-      if (json.params)
+      if (json.params.hasOwnProperty('expression'))
       {
-        res = this.append(res, "value: " + JSON.stringify(json.params));
+        res = this.append(res, "formula: " + json.params.expression);
+      }
+
+      if (json.params.hasOwnProperty('name'))
+      {
+        res = this.append(res, "name: " + json.params.name);
+      }
+
+      if (json.params.hasOwnProperty('type'))
+      {
+        res = this.append(res, "type: " + json.params.type);
+      }
+
+      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
+      {
+        res = this.append(res, "decimal: " + parseInt(json.params.decimals));
       }
 
       return res;
-    };
-
-
-
+    }
 
 
 
@@ -483,6 +535,33 @@
         res = this.append(res, "columns: " + JSON.stringify(json.params['columns']));
       }
 
+      return res;
+    };
+
+
+
+
+
+    this.args.comment = [];
+    this.hints.comment = {};
+    this.keywords.comment = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.comment",
+          "params": { }
+        };
+
+      return json;
+    };
+
+
+    this.templates["flexio.comment"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "comment";
       return res;
     };
 
@@ -790,103 +869,6 @@
 
 
 
-    this.args.calc = [ 'name', 'formula', 'type', 'decimal' ];
-    this.hints.calc = {
-      "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
-    };
-    this.keywords.calc = function(str)
-    {
-      var json =
-        {
-            "type": "flexio.calc",
-            "params": { }
-        }
-
-      var params = this.split(str, this.args.calc);
-
-      if (params.hasOwnProperty('name'))
-      {
-        json.params.name = params['name'].value;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'name:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-      if (params.hasOwnProperty('type'))
-      {
-        json.params.type = params['type'].value;
-
-        if (!this.contains(this.hints.calc['type'], json.params.type))
-        {
-          this.errors.push({ "code":     "invalid_value",
-                             "message":  "Invalid value: '" + json.params.type +"'",
-                             "offset":   params['type'].offset,
-                             "length":   params['type'].length })
-        }
-      }
-
-
-      if (params.hasOwnProperty('decimal'))
-      {
-        json.params.decimals = parseInt(params['decimal'].value);
-      }
-
-      if (params.hasOwnProperty('formula'))
-      {
-        json.params.expression = params['formula'].value;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'formula:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-
-      return json;
-    };
-
-
-    this.templates["flexio.calc"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = 'calc';
-
-      if (json.params.hasOwnProperty('expression'))
-      {
-        res = this.append(res, "formula: " + json.params.expression);
-      }
-
-      if (json.params.hasOwnProperty('name'))
-      {
-        res = this.append(res, "name: " + json.params.name);
-      }
-
-      if (json.params.hasOwnProperty('type'))
-      {
-        res = this.append(res, "type: " + json.params.type);
-      }
-
-      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
-      {
-        res = this.append(res, "decimal: " + parseInt(json.params.decimals));
-      }
-
-      return res;
-    }
-
-
-
-
-
-
 
     this.args.echo = ['msg'];
     this.hints.echo = {
@@ -926,44 +908,6 @@
     };
 
 
-
-
-    this.args.exit = ['code'];
-    this.hints.exit = {
-    };
-    this.keywords.exit = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.exit",
-          "params": { }
-        };
-
-      var params = this.split(str, this.args.exit);
-
-      if (params.hasOwnProperty('code'))
-      {
-        json.params.code = params['code'].value;
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.exit"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "exit";
-
-      if (json.params.hasOwnProperty('code'))
-      {
-        res = this.append(res, "code: " + json.params['code']);
-      }
-
-      return res;
-    };
 
 
 
@@ -1154,6 +1098,147 @@
 
 
 
+    this.args.exit = ['code'];
+    this.hints.exit = {
+    };
+    this.keywords.exit = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.exit",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.exit);
+
+      if (params.hasOwnProperty('code'))
+      {
+        json.params.code = params['code'].value;
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.exit"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "exit";
+
+      if (json.params.hasOwnProperty('code'))
+      {
+        res = this.append(res, "code: " + json.params['code']);
+      }
+
+      return res;
+    };
+
+
+
+    this.args.fail = ['code','message'];
+    this.hints.fail = {
+      "code":       [ 'general', 'unimplemented', 'unauthorized' ]
+    };
+    this.keywords.fail = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.fail",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.fail);
+
+      if (params.hasOwnProperty('code'))
+      {
+        json.params.code = params['code'].value;
+      }
+
+      if (params.hasOwnProperty('message'))
+      {
+        json.params.message = params['message'].value;
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.fail"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "fail";
+
+      if (json.params.hasOwnProperty('code'))
+      {
+        res = this.append(res, "code: " + json.params['code']);
+      }
+
+      if (json.params.hasOwnProperty('message'))
+      {
+        res = this.append(res, "message: " + json.params['message']);
+      }
+
+      return res;
+    };
+
+
+
+
+
+
+    this.args.filter = ['where'/*,'exclude'*/];
+    this.keywords.filter = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.filter",
+          "params": {
+          }
+        };
+
+      var params = this.split(str, this.args.filter);
+
+      if (params.hasOwnProperty('where'))
+      {
+        json.params.where = params['where'].value;
+      }
+
+      if (params.hasOwnProperty('exclude'))
+      {
+        json.params.exclude = this.toBoolean(params['exclude'].value);
+      }
+
+      return json;
+    };
+
+    this.templates["flexio.filter"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "filter";
+
+      if (json.params.hasOwnProperty('where'))
+      {
+        res = this.append(res, "where: " + json.params.where);
+      }
+
+      if (json.params.hasOwnProperty('exclude'))
+      {
+        res = this.append(res, "exclude: " + (json.params.exclude ? 'true' : 'false'));
+      }
+
+      return res;
+    }
+
+
+
+
+
 
     this.args.input = ['from','location','file'];
     this.keywords.input = function(str)
@@ -1279,224 +1364,6 @@
     };
 
 
-    this.args.list = ['path'];
-    this.hints.list = {
-    };
-    this.keywords.list = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.list",
-          "params": { }
-        };
-
-      var params = this.split(str, this.args.list);
-
-      if (params.hasOwnProperty('path'))
-      {
-        json.params.path = params['path'].value;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'path:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.list"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "list";
-
-      if (json.params.hasOwnProperty('path'))
-      {
-        res = this.append(res, "path: " + json.params['path']);
-      }
-
-      return res;
-    };
-
-
-
-    
-    this.args.read = ['path'];
-    this.hints.read = {
-    };
-    this.keywords.read = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.read",
-          "params": { }
-        };
-
-      var params = this.split(str, this.args.read);
-
-      if (params.hasOwnProperty('path'))
-      {
-        json.params.path = params['path'].value;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'path:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.read"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "read";
-
-      if (json.params.hasOwnProperty('path'))
-      {
-        res = this.append(res, "path: " + json.params['path']);
-      }
-
-      return res;
-    };
-
-
-
-
-    this.args.write = ['path'];
-    this.hints.write = {
-    };
-    this.keywords.write = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.write",
-          "params": { }
-        };
-
-      var params = this.split(str, this.args.write);
-
-      if (params.hasOwnProperty('path'))
-      {
-        json.params.path = params['path'].value;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'path:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.write"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "write";
-
-      if (json.params.hasOwnProperty('path'))
-      {
-        res = this.append(res, "path: " + json.params['path']);
-      }
-
-      return res;
-    };
-
-
-
-
-    this.args.fail = ['code','message'];
-    this.hints.fail = {
-      "code":       [ 'general', 'unimplemented', 'unauthorized' ]
-    };
-    this.keywords.fail = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.fail",
-          "params": { }
-        };
-
-      var params = this.split(str, this.args.fail);
-
-      if (params.hasOwnProperty('code'))
-      {
-        json.params.code = params['code'].value;
-      }
-
-      if (params.hasOwnProperty('message'))
-      {
-        json.params.message = params['message'].value;
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.fail"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "fail";
-
-      if (json.params.hasOwnProperty('code'))
-      {
-        res = this.append(res, "code: " + json.params['code']);
-      }
-
-      if (json.params.hasOwnProperty('message'))
-      {
-        res = this.append(res, "message: " + json.params['message']);
-      }
-
-      return res;
-    };
-
-
-
-
-
-    this.args.comment = [];
-    this.hints.comment = {};
-    this.keywords.comment = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.comment",
-          "params": { }
-        };
-
-      return json;
-    };
-
-
-    this.templates["flexio.comment"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "comment";
-      return res;
-    };
-
-
-
 
 
     this.args.limit = ['sample','value'];
@@ -1556,6 +1423,59 @@
 
 
 
+
+
+
+    this.args.list = ['path'];
+    this.hints.list = {
+    };
+    this.keywords.list = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.list",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.list);
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+       else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.list"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "list";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      return res;
+    };
+
+
+
+    
+
+
+
     this.args.merge = [];
     this.hints.merge = {
     };
@@ -1582,40 +1502,7 @@
 
 
 
-    this.args.sleep= ['value'];
-    this.keywords.sleep = function(str)
-    {
-      var json =
-        {
-          "type": "flexio.sleep",
-          "params": { }
-        };
 
-      var params = this.split(str, this.args.sleep);
-
-      if (params.hasOwnProperty('value'))
-      {
-        json.params.value = parseInt(params['value'].value);
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.sleep"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = "sleep";
-
-      if (json.params.hasOwnProperty('value'))
-      {
-        res = this.append(res, "value: " + json.params['value']);
-      }
-
-      return res;
-    };
 
 
 
@@ -1750,86 +1637,55 @@
 
 
 
-
-
-    this.args.select = ['col'/*,'file'*/];
-    this.keywords.select = function(str)
+    
+    this.args.read = ['path'];
+    this.hints.read = {
+    };
+    this.keywords.read = function(str)
     {
       var json =
         {
-          "type": "flexio.select",
-          "params": {
-          }
+          "type": "flexio.read",
+          "params": { }
         };
 
-      var params = this.split(str, this.args.select);
+      var params = this.split(str, this.args.read);
 
-      if (params.hasOwnProperty('file'))
+      if (params.hasOwnProperty('path'))
       {
-        json.params.files = [];
-
-        var i, files = this.parseList(params['file'].value);
-        for (i = 0; i < files.length; ++i)
-        {
-          json.params.files.push(files[i]);
-        }
+        json.params.path = params['path'].value;
       }
-
-      if (params.hasOwnProperty('col'))
+       else
       {
-        json.params.columns = [];
-        var i, columns = this.parseColumns(params['col'].value)
-        for (i = 0; i < columns.length; ++i)
-        {
-          json.params.columns.push(columns[i]);
-        }
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       return json;
     };
 
 
-    this.templates["flexio.select"] = function(json)
+    this.templates["flexio.read"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
 
-      var res = "select";
+      var res = "read";
 
-      if (json.params.hasOwnProperty('files'))
+      if (json.params.hasOwnProperty('path'))
       {
-        var str = '';
-        for (var i = 0; i < json.params.files.length; ++i)
-        {
-          if (i > 0)
-          {
-            str += ', ';
-          }
-          str += this.quoteColumnIfNecessary(json.params.files[i]);
-
-        }
-
-        res = this.append(res, "file: " + str);
-      }
-
-      if (json.params.hasOwnProperty('columns'))
-      {
-        var str = '';
-        for (var i = 0; i < json.params.columns.length; ++i)
-        {
-          if (i > 0)
-          {
-            str += ', ';
-          }
-          str += this.quoteColumnIfNecessary(json.params.columns[i]);
-
-        }
-
-        res = this.append(res, "col: " + str);
+        res = this.append(res, "path: " + json.params['path']);
       }
 
       return res;
-    }
+    };
+
+
+
+
+
 
 
 
@@ -1954,97 +1810,6 @@
 
 
 
-////////////////////////////////////////
-
-
-    this.args.settype = [ 'col', 'type', 'decimal' ];
-    this.hints.settype = {
-      "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
-    };
-    this.keywords.settype = function(str)
-    {
-      var json =
-        {
-            "type": "flexio.settype",
-            "params": { }
-        }
-
-      var params = this.split(str, this.args.settype);
-
-      if (params.hasOwnProperty('col'))
-      {
-        var columns = this.parseColumns(params['col'].value)
-        json.params.columns = columns;
-      }
-       else
-      {
-          this.errors.push({ "code":     "missing-parameter",
-                             "message":  "Missing parameter 'col:'",
-                             "offset":   str.length-1,
-                             "length":   1 })
-      }
-
-      if (params.hasOwnProperty('type'))
-      {
-        json.params.type = params['type'].value;
-
-        if (!this.contains(this.hints.settype['type'], json.params.type))
-        {
-          this.errors.push({ "code":     "invalid_value",
-                             "message":  "Invalid value: '" + json.params.type +"'",
-                             "offset":   params['type'].offset,
-                             "length":   params['type'].length })
-        }
-      }
-
-      if (params.hasOwnProperty('decimal'))
-      {
-        json.params.decimals = parseInt(params['decimal'].value);
-      }
-
-      return json;
-    };
-
-
-    this.templates["flexio.settype"] = function(json)
-    {
-      if (!json || !json.hasOwnProperty('params'))
-        return '';
-
-      var res = 'settype';
-
-      if (json.params.hasOwnProperty('columns'))
-      {
-        var str = '';
-        for (var i = 0; i < json.params.columns.length; ++i)
-        {
-          if (i > 0)
-          {
-            str += ', ';
-          }
-          str += this.quoteColumnIfNecessary(json.params.columns[i]);
-        }
-
-        res = this.append(res, "col: " + str);
-      }
-
-      if (json.params.hasOwnProperty('type'))
-      {
-        res = this.append(res, "type: " + json.params.type);
-      }
-
-      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
-      {
-        res = this.append(res, "decimal: " + parseInt(json.params.decimals));
-      }
-
-      return res;
-    }
-
-
-////////////////
-
-
 
 
     this.args.render = ['url','format','width','height','scrollbars','full','paper','landscape'];
@@ -2066,39 +1831,6 @@
       if (params.hasOwnProperty('url'))
       {
         json.params.url = params['url'].value;
-
-        /*
-        var arr = this.parseList(params['url'].value);
-
-        json.params.items = [];
-
-        for (var i = 0; i < arr.length; ++i)
-        {
-          if (arr[i] instanceof Object)
-          {
-            if (arr[i].hasOwnProperty('key') && arr[i].hasOwnProperty('value'))
-            {
-              // arrow syntax
-              json.params.items.push({"name": arr[i].value, "path": arr[i].key});
-            }
-            else if (arr[i].hasOwnProperty('path'))
-            {
-              var name, path = arr[i].path;
-              if (arr[i].hasOwnProperty('name'))
-                name = arr[i].name;
-                 else
-                name = path;
-              json.params.items.push({"name": name, "path": path});
-            }
-
-          }
-           else
-          {
-            // simple string
-            json.params.items.push({"path": arr[i]});
-          }
-        }
-*/
       }
 
 
@@ -2172,34 +1904,6 @@
       {
         // backward compatibility
         res = this.append(res, "url: " + json.params.items[0].path);
-
-        /*
-
-        var str = '';
-        var i, items = [];
-
-        for (i = 0; i < json.params.items.length; ++i)
-        {
-          if (str.length > 0)
-          {
-            str += ', ';
-          }
-
-          if (json.params.items[i].hasOwnProperty('path'))
-          {
-            str += json.params.items[i].path;
-
-            if (json.params.items[i].hasOwnProperty('name') && json.params.items[i].name != json.params.items[i].path)
-            {
-              str += " => " + json.params.items[i].name;
-            }
-          }
-        }
-
-        res = this.append(res, "file: " + str);
-        */
-
-
       }
 
 
@@ -2243,8 +1947,12 @@
 
 
 
+
+
+
+
 /*
-    {
+{
   type: 'flexio.request',
   params: {
     method: 'GET',
@@ -2438,6 +2146,215 @@
 
 
 
+    this.args.select = ['col'/*,'file'*/];
+    this.keywords.select = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.select",
+          "params": {
+          }
+        };
+
+      var params = this.split(str, this.args.select);
+
+      if (params.hasOwnProperty('file'))
+      {
+        json.params.files = [];
+
+        var i, files = this.parseList(params['file'].value);
+        for (i = 0; i < files.length; ++i)
+        {
+          json.params.files.push(files[i]);
+        }
+      }
+
+      if (params.hasOwnProperty('col'))
+      {
+        json.params.columns = [];
+        var i, columns = this.parseColumns(params['col'].value)
+        for (i = 0; i < columns.length; ++i)
+        {
+          json.params.columns.push(columns[i]);
+        }
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.select"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "select";
+
+      if (json.params.hasOwnProperty('files'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.files.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.files[i]);
+
+        }
+
+        res = this.append(res, "file: " + str);
+      }
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.columns.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.columns[i]);
+
+        }
+
+        res = this.append(res, "col: " + str);
+      }
+
+      return res;
+    }
+
+
+
+
+
+    this.args.settype = [ 'col', 'type', 'decimal' ];
+    this.hints.settype = {
+      "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
+    };
+    this.keywords.settype = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.settype",
+            "params": { }
+        }
+
+      var params = this.split(str, this.args.settype);
+
+      if (params.hasOwnProperty('col'))
+      {
+        var columns = this.parseColumns(params['col'].value)
+        json.params.columns = columns;
+      }
+      else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                            "message":  "Missing parameter 'col:'",
+                            "offset":   str.length-1,
+                            "length":   1 })
+      }
+
+      if (params.hasOwnProperty('type'))
+      {
+        json.params.type = params['type'].value;
+
+        if (!this.contains(this.hints.settype['type'], json.params.type))
+        {
+          this.errors.push({ "code":     "invalid_value",
+                            "message":  "Invalid value: '" + json.params.type +"'",
+                            "offset":   params['type'].offset,
+                            "length":   params['type'].length })
+        }
+      }
+
+      if (params.hasOwnProperty('decimal'))
+      {
+        json.params.decimals = parseInt(params['decimal'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.settype"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = 'settype';
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.columns.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.columns[i]);
+        }
+
+        res = this.append(res, "col: " + str);
+      }
+
+      if (json.params.hasOwnProperty('type'))
+      {
+        res = this.append(res, "type: " + json.params.type);
+      }
+
+      if (json.params.hasOwnProperty('decimals') && parseInt(json.params.decimals) >= 0)
+      {
+        res = this.append(res, "decimal: " + parseInt(json.params.decimals));
+      }
+
+      return res;
+    }
+
+
+
+
+
+
+
+    this.args.sleep = ['value'];
+    this.keywords.sleep = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.sleep",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.sleep);
+
+      if (params.hasOwnProperty('value'))
+      {
+        json.params.value = parseInt(params['value'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.sleep"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "sleep";
+
+      if (json.params.hasOwnProperty('value'))
+      {
+        res = this.append(res, "value: " + json.params['value']);
+      }
+
+      return res;
+    };
+
+
 
 
 
@@ -2513,9 +2430,51 @@
 
 
 
+    // general purpose task mapper; internal use only
+
+    this.args.task = ['value'];
+    this.hints.task = {
+    };
+    this.keywords.task = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.task",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.task);
+
+      if (params.hasOwnProperty('value'))
+      {
+        json.params = JSON.parse(params['value'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.task"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "task";
+
+      if (json.params)
+      {
+        res = this.append(res, "value: " + JSON.stringify(json.params));
+      }
+
+      return res;
+    };
+
+
+
+
 
     this.args.transform = ['col','case','clean','trim']
-    this.hints.transform= {
+    this.hints.transform = {
       "case":      [ "none", "lower", "upper", "proper", "first-letter" ],
       "trim":      [ "leading", "trailing", "leading-trailing" ],
       "clean":     [ "all", "leading", "trailing", "leading-trailing" ],
@@ -2629,58 +2588,49 @@
 
 
 
-
-
-
-
-
-
-
-    this.args.filter = ['where'/*,'exclude'*/];
-    this.keywords.filter = function(str)
+    this.args.write = ['path'];
+    this.hints.write = {
+    };
+    this.keywords.write = function(str)
     {
       var json =
         {
-          "type": "flexio.filter",
-          "params": {
-          }
+          "type": "flexio.write",
+          "params": { }
         };
 
-      var params = this.split(str, this.args.filter);
+      var params = this.split(str, this.args.write);
 
-      if (params.hasOwnProperty('where'))
+      if (params.hasOwnProperty('path'))
       {
-        json.params.where = params['where'].value;
+        json.params.path = params['path'].value;
       }
-
-      if (params.hasOwnProperty('exclude'))
+       else
       {
-        json.params.exclude = this.toBoolean(params['exclude'].value);
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'path:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
       }
 
       return json;
     };
 
-    this.templates["flexio.filter"] = function(json)
+
+    this.templates["flexio.write"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
 
-      var res = "filter";
+      var res = "write";
 
-      if (json.params.hasOwnProperty('where'))
+      if (json.params.hasOwnProperty('path'))
       {
-        res = this.append(res, "where: " + json.params.where);
-      }
-
-      if (json.params.hasOwnProperty('exclude'))
-      {
-        res = this.append(res, "exclude: " + (json.params.exclude ? 'true' : 'false'));
+        res = this.append(res, "path: " + json.params['path']);
       }
 
       return res;
-    }
-
+    };
 
 
 
