@@ -59,6 +59,10 @@ class Create extends \Flexio\Jobs\Base
         {
             $outstream = $process->getStdout();
             $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+
+            if (isset($params['columns']) && is_array($params['columns']) && count($params['columns']))
+                $content_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
+            
             switch ($content_type)
             {
                 default:
