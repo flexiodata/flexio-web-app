@@ -369,6 +369,12 @@ class Output extends \Flexio\Jobs\Base
         $streamreader = $instream->getReader();
         $filename = $output_info['name'];
 
+
+        // TODO: the createFile() function used to return the created spreadsheet,
+        // but the newly added function for the file system returns a boolean
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
+
         $spreadsheet = $service->createFile($filename);
         if (!$spreadsheet)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);

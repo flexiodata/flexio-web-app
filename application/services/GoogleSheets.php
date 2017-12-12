@@ -111,8 +111,54 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $postdata = json_encode(array(
+            "name" => $path,
+            "mimeType" => "application/vnd.google-apps.spreadsheet"
+            //  "parents" => [ $folderid ]
+        ));
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_response_code >= 400)
+        {
+            if ($http_response_code == 401)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Unable to create sheet");
+        }
+
+        $result = @json_decode($result, true);
+
+        $spreadsheet_id = $result['id'] ?? '';
+        if (strlen($spreadsheet_id) == 0)
+            return false;
+
+        $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
+        $spreadsheet->access_token = $this->access_token;
+        $spreadsheet->title = $name;
+        $spreadsheet->spreadsheet_id = $spreadsheet_id;
+        $spreadsheet->getWorksheets();
+
+        // if spreadsheets array is already populated, add it
+        if (count($this->spreadsheets) > 0)
+        {
+            $this->spreadsheets[] = $spreadsheet;
+        }
+
+        //$spreadsheet->worksheets[0]->setInfo(null, 10, 10);
+
+        return true;
     }
 
     public function read(array $params, callable $callback)
@@ -319,7 +365,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
 
     // creates a new spreadsheet via the google docs v3 api; returns file id
     // or false if something goes wrong
-
+/*
     public function createFile(string $name) // TODO: set return types
     {
         $postdata = json_encode(array(
@@ -371,7 +417,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
 
         return $spreadsheet;
     }
-
+*/
     public function getTokens() : array
     {
         return [ 'access_token' => $this->access_token,
