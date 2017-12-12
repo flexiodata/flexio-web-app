@@ -164,7 +164,7 @@ spl_autoload_register(function ($class) {
     {
         $parts = explode('\\',$class);
         for ($i = 0; $i < count($parts)-1; ++$i)
-            $parts[$i] = lcfirst($parts[$i]);
+            $parts[$i] = strtolower($parts[$i]);
         unset($parts[0]);
         $class = __DIR__ . '/' . implode('/',$parts) . '.php';
         if (file_exists($class))
