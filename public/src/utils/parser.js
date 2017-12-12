@@ -428,6 +428,66 @@
 
 
 
+    this.args.create = ['path', 'content-type', 'columns'];
+    this.hints.create = {
+    };
+    this.keywords.create = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.create",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.create);
+
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+
+      if (params.hasOwnProperty('content-type'))
+      {
+        json.params.content_type = params['content-type'].value;
+      }
+
+      if (params.hasOwnProperty('columns'))
+      {
+        json.params.columns = this.parseListObject(params['columns'].value);
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.create"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "create";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      if (json.params.hasOwnProperty('content_type'))
+      {
+        res = this.append(res, "content-type: " + json.params['content_type']);
+      }
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        res = this.append(res, "columns: " + JSON.stringify(json.params['columns']));
+      }
+
+      return res;
+    };
+
+
+
 
 
 
@@ -2633,6 +2693,7 @@
         //'output',
         //'calc',
         //'comment',
+        'create',
         'convert',
         'echo',
         'email',
