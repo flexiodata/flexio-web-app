@@ -178,6 +178,8 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
+            "stream_type" : null,
+            "parent_eid" : null,
             "name" : null,
             "path" : null,
             "size" : null,
@@ -188,6 +190,7 @@ class Test
             "file_created" : null,
             "file_modified" : null,
             "connection_eid" :  null,
+            "expires" : null,
             "created" : null,
             "updated" : null
         }
