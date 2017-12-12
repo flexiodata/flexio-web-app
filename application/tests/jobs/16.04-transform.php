@@ -99,10 +99,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["AA BB CC"]
+        		{"f": "A"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "AA BB CC"}
         	]
         }
         ';
@@ -148,10 +148,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a"],
-        		[null],
-        		["a"],
-        		["aa bb cc"]
+        		{"f": "a"},
+        		{"f": null},
+        		{"f": "a"},
+        		{"f": "aa bb cc"}
         	]
         }
         ';
@@ -197,10 +197,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["Aa Bb Cc"]
+        		{"f": "A"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "Aa Bb Cc"}
         	]
         }
         ';
@@ -246,10 +246,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["A"],
-        		[null],
-        		["A"],
-        		["Aa bb cc"]
+        		{"f": "A"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "Aa bb cc"}
         	]
         }
         ';
@@ -336,10 +336,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["000000a"],
-        		[null],
-        		["0000Abc"],
-        		["aa Bb C"]
+        		{"f": "000000a"},
+        		{"f": null},
+        		{"f": "0000Abc"},
+        		{"f": "aa Bb C"}
         	]
         }
         ';
@@ -385,10 +385,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a"],
-        		[null],
-        		["A"],
-        		["a"]
+        		{"f": "a"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "a"}
         	]
         }
         ';
@@ -434,10 +434,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["0000000000"],
-        		[null],
-        		["000000000A"],
-        		["0000aa Bb "]
+        		{"f": "0000000000"},
+        		{"f": null},
+        		{"f": "000000000A"},
+        		{"f": "0000aa Bb "}
         	]
         }
         ';
@@ -483,10 +483,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["******a"],
-        		[null],
-        		["****Abc"],
-        		["aa Bb C"]
+        		{"f": "******a"},
+        		{"f": null},
+        		{"f": "****Abc"},
+        		{"f": "aa Bb C"}
         	]
         }
         ';
@@ -534,11 +534,11 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["00001"],
-                [null],
-        		["00000"],
-        		["000-1"],
-        		["00987"]
+        		{"f": "00001"},
+                {"f": null},
+        		{"f": "00000"},
+        		{"f": "000-1"},
+        		{"f": "00987"}
         	]
         }
         ';
@@ -587,11 +587,11 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["00001.23"],
-                [null],
-        		["00000.00"],
-        		["000-1.00"],
-        		["00987.60"]
+        		{"f": "00001.23"},
+                {"f": null},
+        		{"f": "00000.00"},
+        		{"f": "000-1.00"},
+        		{"f": "00987.60"}
         	]
         }
         ';
@@ -637,10 +637,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a000000"],
-        		[null],
-        		["Abc0000"],
-        		["aa Bb C"]
+        		{"f": "a000000"},
+        		{"f": null},
+        		{"f": "Abc0000"},
+        		{"f": "aa Bb C"}
         	]
         }
         ';
@@ -686,10 +686,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a"],
-        		[null],
-        		["A"],
-        		["a"]
+        		{"f": "a"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "a"}
         	]
         }
         ';
@@ -735,10 +735,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a000000000"],
-        		[null],
-        		["Abc0000000"],
-        		["aa Bb CC00"]
+        		{"f": "a000000000"},
+        		{"f": null},
+        		{"f": "Abc0000000"},
+        		{"f": "aa Bb CC00"}
         	]
         }
         ';
@@ -784,10 +784,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a******"],
-        		[null],
-        		["Abc****"],
-        		["aa Bb C"]
+        		{"f": "a******"},
+        		{"f": null},
+        		{"f": "Abc****"},
+        		{"f": "aa Bb C"}
         	]
         }
         ';
@@ -835,11 +835,11 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["10000"],
-                [null],
-        		["00000"],
-        		["-1000"],
-        		["98700"]
+        		{"f": "10000"},
+                {"f": null},
+        		{"f": "00000"},
+        		{"f": "-1000"},
+        		{"f": "98700"}
         	]
         }
         ';
@@ -887,11 +887,11 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["1.230000"],
-                [null],
-        		["0.000000"],
-        		["-1.00000"],
-        		["987.6000"]
+        		{"f": "1.230000"},
+                {"f": null},
+        		{"f": "0.000000"},
+        		{"f": "-1.00000"},
+        		{"f": "987.6000"}
         	]
         }
         ';
@@ -978,10 +978,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a"],
-        		[null],
-        		["A "],
-        		["aa Bb CC  "]
+        		{"f": "a"},
+        		{"f": null},
+        		{"f": "A "},
+        		{"f": "aa Bb CC  "}
         	]
         }
         ';
@@ -1027,10 +1027,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		[" a"],
-        		[null],
-        		["A"],
-        		["  aa Bb CC"]
+        		{"f": " a"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "  aa Bb CC"}
         	]
         }
         ';
@@ -1076,10 +1076,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["a"],
-        		[null],
-        		["A"],
-        		["aa Bb CC"]
+        		{"f": "a"},
+        		{"f": null},
+        		{"f": "A"},
+        		{"f": "aa Bb CC"}
         	]
         }
         ';
@@ -1126,10 +1126,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		["1"],
-        		[null],
-        		["2"],
-        		["123"]
+        		{"f": "1"},
+        		{"f": null},
+        		{"f": "2"},
+        		{"f": "123"}
         	]
         }
         ';
