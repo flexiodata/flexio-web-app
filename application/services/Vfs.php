@@ -136,7 +136,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $service = $this->getService($connection_identifier);
 
-        return $service->createFile([ 'path' => $rpath ], $callback);
+        return $service->createFile($rpath, $properties);
     }
 
     public function read($path, callable $callback)

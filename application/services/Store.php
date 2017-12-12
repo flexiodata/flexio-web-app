@@ -55,7 +55,7 @@ class Store implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        $path = $params['path'] ?? (is_string($params) ? $params : '');
+        $path = $path['path'] ?? (is_string($path) ? $path : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
 
         $last_slash = strrpos('/', $path);
@@ -114,6 +114,8 @@ class Store implements \Flexio\IFace\IFileSystem
         }
 
         $streamwriter = $stream->getWriter();
+
+        return true;
     }
 
     public function read(array $params, callable $callback)
