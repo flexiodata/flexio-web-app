@@ -22,6 +22,7 @@ interface IFileSystem
     public function exists(string $path) : bool;
 
     public function createFile(string $path, array $properties = []) : bool;
+    public function open($path) :  \Flexio\Iface\IStream;
     public function read(array $params, callable $callback);
     public function write(array $params, callable $callback);
 }
