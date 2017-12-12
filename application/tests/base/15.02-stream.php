@@ -233,8 +233,8 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "a"}',true);
-        TestCheck::assertArray('B.8', 'StreamReader/StreamWriter; keyless row array mismatch',  $actual, $expected, $results);
+        $expected = false;
+        TestCheck::assertBoolean('B.8', 'StreamReader/StreamWriter; keyless row array mismatch',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream_info = array();
@@ -508,8 +508,8 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "a", "f2": "b"}',true);
-        TestCheck::assertArray('C.11', 'StreamReader/StreamWriter; keyless row mismatch',  $actual, $expected, $results);
+        $expected = false;
+        TestCheck::assertBoolean('C.11', 'StreamReader/StreamWriter; keyless row mismatch; counts need to match',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream_info = array();
@@ -529,8 +529,8 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "a", "f2": null}',true);
-        TestCheck::assertArray('C.12', 'StreamReader/StreamWriter; keyless row mismatch',  $actual, $expected, $results);
+        $expected = false;
+        TestCheck::assertBoolean('C.12', 'StreamReader/StreamWriter; keyless row mismatch; counts need to match',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream_info = array();
@@ -551,7 +551,7 @@ class Test
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : "a", "f2": null}',true);
-        TestCheck::assertArray('C.13', 'StreamReader/StreamWriter; keyless row mismatch',  $actual, $expected, $results);
+        TestCheck::assertArray('C.13', 'StreamReader/StreamWriter; inserting with a key that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream_info = array();
@@ -572,7 +572,7 @@ class Test
         $actual = $reader->readRow();
         $reader->close();
         $expected = json_decode('{ "f1" : null, "f2": "a"}',true);
-        TestCheck::assertArray('C.14', 'StreamReader/StreamWriter; keyless row mismatch',  $actual, $expected, $results);
+        TestCheck::assertArray('C.14', 'StreamReader/StreamWriter; keyless row mismatch; inserting with a key that doesn\'t exist',  $actual, $expected, $results);
 
 
 
