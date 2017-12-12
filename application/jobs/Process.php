@@ -66,6 +66,7 @@ class Process implements \Flexio\IFace\IProcess
         'flexio.grep'      => '\Flexio\Jobs\Grep',
         'flexio.group'     => '\Flexio\Jobs\Group',
         'flexio.input'     => '\Flexio\Jobs\Input',
+        'flexio.insert'    => '\Flexio\Jobs\Insert',
         'flexio.limit'     => '\Flexio\Jobs\Limit',
         'flexio.merge'     => '\Flexio\Jobs\Merge',
         'flexio.nop'       => '\Flexio\Jobs\Nop',

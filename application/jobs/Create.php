@@ -53,7 +53,10 @@ class Create extends \Flexio\Jobs\Base
                 $create_params['structure'] = $columns;
             }
 
-            $vfs->createFile($params['path'], $create_params);
+            if (!$vfs->createFile($params['path'], $create_params))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            // TODO: return created stream in stdout
         }
          else
         {

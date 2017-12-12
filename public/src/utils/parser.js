@@ -1359,9 +1359,76 @@
         res = this.append(res, "file: " + str);
       }
 
+      return res;
+    };
+
+
+
+
+
+
+    this.args.insert = ['path','values'];
+    this.hints.insert = {}
+    this.keywords.insert = function(str)
+    {
+      var json =
+        {
+          "type": "flexio.insert",
+          "params": { }
+        };
+
+      var params = this.split(str, this.args.insert);
+
+      if (params.hasOwnProperty('path'))
+      {
+        json.params.path = params['path'].value;
+      }
+
+      if (params.hasOwnProperty('values'))
+      {
+        json.params.values = this.parseList(params['values'].value);
+      }
+      else
+      {
+          this.errors.push({ "code":     "missing-parameter",
+                             "message":  "Missing parameter 'values:'",
+                             "offset":   str.length-1,
+                             "length":   1 })
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.insert"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = "insert";
+
+      if (json.params.hasOwnProperty('path'))
+      {
+        res = this.append(res, "path: " + json.params['path']);
+      }
+
+      if (json.params.hasOwnProperty('values'))
+      {
+        res = this.append(res, "values: " + JSON.stringify(json.params['values']));
+      }
 
       return res;
     };
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1472,7 +1539,7 @@
 
 
 
-    
+
 
 
 
