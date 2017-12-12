@@ -134,7 +134,9 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
     {
         if ($this->isOk() === false)
             return false;
-
+        if ($this->file === NULL)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $this->sqlite ? "Cannot read a table as a file stream" : null);
+        
         $res = fread($this->file, $length);
         if ($res === false)
             return false;
