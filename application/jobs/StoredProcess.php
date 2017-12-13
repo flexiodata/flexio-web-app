@@ -188,7 +188,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->rights = null;
         $this->assoc_pipe = null;
 
-        $this->engine->setTasks($this->procobj->getTask());
+        $this->engine->setTasks($this->procobj->getTasks());
     }
 
 
