@@ -25,9 +25,9 @@ interface IProcess
     public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);
-    public function setStdin();
+    public function setStdin(\Flexio\IFace\IStream $stream);
     public function getStdin();
-    public function setStdout();
+    public function setStdout(\Flexio\IFace\IStream $stream);
     public function getStdout();
     public function setResponseCode(int $code);
     public function getResponseCode();
