@@ -123,7 +123,10 @@ class Store implements \Flexio\IFace\IFileSystem
     public function open($path) :  \Flexio\Iface\IStream
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
-        return $this->getStreamFromPath($path);
+        $stream = $this->getStreamFromPath($path);
+        if (!$stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        return $stream;
     }
 
     public function read(array $params, callable $callback)
@@ -131,7 +134,7 @@ class Store implements \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $reader = $stream->getReader();
         while (($buf = $reader->read(16384)) !== false)
