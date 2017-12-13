@@ -33,17 +33,34 @@ class Store implements \Flexio\IFace\IFileSystem
         if (!$this->isOk())
             return array();
 
-        $folder = trim($path,'/');
-        $folder = explode('/', $folder);
-        $folder = $folder[0] ?? '';
-        if ($folder == '')
-            return array();
+        $path = $path['path'] ?? (is_string($path) ? $path : '');
+        if ($path == '')
+            $path = '/';
+        
+        $folder_stream = $this->getStreamFromPath($path);
+        if (!$folder_stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $result = array();
-        if (!$this->isOk())
-            return $result;
+        $files = [];
+        $streams = $folder_stream->getChildStreams();
+        foreach ($streams as $stream)
+        {
+            $entry = $stream->get();
 
-        return $result;
+            $fullpath = $path;
+            if (substr($fullpath, -1) != '/')
+                $fullpath .= '/';
+            $fullpath .= $entry['name'];
+
+            $files[] = array('id'=> $entry['eid'] ?? null,
+                             'name' => $entry['name'],
+                             'path' => $fullpath,
+                             'size' => $entry['size'] ?? '',
+                             'modified' => $entry['updated'] ?? '',
+                             'is_dir' => ($entry['stream_type'] == 'SD' ? true : false));
+        }
+
+        return $files;
     }
 
     public function exists(string $path) : bool
