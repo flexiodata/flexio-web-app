@@ -884,7 +884,6 @@ class Util
         return $code;
     }
 
-
     public static function getStreamContents($stream, int $start = 0, int $limit = PHP_INT_MAX, int $readsize = 1024 /* testing */) // returns array for table or string for data buffer
     {
         if ($start < 0 )
