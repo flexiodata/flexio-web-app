@@ -53,15 +53,15 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             // get the connections
             $connections = $user->getConnectionList();
 
-            // add an entry for local storage
+            // add an entry for home folder (local) storage
             $results[] = array(
-                'name' => 'local',
-                'path' => '/local',
+                'name' => 'home',
+                'path' => '/home',
                 'size' => null,
                 'modified' => null,
                 'type' => 'DIR',
                 'is_dir' => true,
-                '.connection_type' => 'local'
+                'connection' => [ 'connection_type' => 'home' ]
             );
 
             foreach ($connections as $c)
@@ -83,8 +83,14 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     'is_dir' => true
                 );
 
-                $entry['.connection_eid'] = $info['eid'];
-                $entry['.connection_type'] = $info['connection_type'];
+                //$entry['.connection_eid'] = $info['eid'];
+                //$entry['.connection_type'] = $info['connection_type'];
+
+                unset($info['connection_info']);
+                unset($info['owned_by']);
+                unset($info['expires']);
+                $entry['connection'] = $info;
+
                 $results[] = $entry;
             }
 
@@ -245,7 +251,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $this->process_context_service;
         }
 
-        if ($connection_identifier == 'local')
+        if ($connection_identifier == 'home')
         {
             if ($this->store_service === null)
                 $this->store_service = \Flexio\Services\Store::create();
