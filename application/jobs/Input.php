@@ -37,12 +37,12 @@ class Input extends \Flexio\Jobs\Base
         return $this->process;
     }
 
-    private function setProcess(\Flexio\Jobs\IProcess $process)
+    private function setProcess(\Flexio\IFace\IProcess $process)
     {
         $this->process = $process;
     }
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -192,7 +192,7 @@ class Input extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = $this->getProcess()->getStdout();
         $streamwriter = $outstream->getWriter();
@@ -239,7 +239,7 @@ class Input extends \Flexio\Jobs\Base
 
         // create the output
         $stream_properties = $file_info;
-        $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $stream_properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $stream_properties['structure'] =  $structure;
         $outstream = $this->getProcess()->getStdout();
         $streamwriter = $outstream->getWriter();
@@ -294,7 +294,7 @@ class Input extends \Flexio\Jobs\Base
                         // TODO: make sure the row we're inserting matches with any fieldname adjustments?
                     }
 
-                    $stream_properties['mime_type'] = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+                    $stream_properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
                     $outstream = $this->getProcess()->getStdout();
                     $outstream->setStructure($structure);
                     $streamwriter = $outstream->getWriter();
@@ -328,7 +328,7 @@ class Input extends \Flexio\Jobs\Base
 
         // set the mime type
         if ($is_table)
-            $mime_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+            $mime_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
              else
             $mime_type = \Flexio\Base\ContentType::getMimeType($path, $mime_data_sample);
 
@@ -339,12 +339,12 @@ class Input extends \Flexio\Jobs\Base
         // through; for now, if we have 'plain/text', see if the first part of the string
         // look like json (e.g is either '[' or '{')
 
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_TXT)
+        if ($mime_type === \Flexio\Base\ContentType::TEXT)
         {
             $mime_data_sample_clean = trim($mime_data_sample);
             $first_char = substr($mime_data_sample_clean,0,1);
             if ($first_char === '[' || $first_char === '{')
-                $mime_type = \Flexio\Base\ContentType::MIME_TYPE_JSON;
+                $mime_type = \Flexio\Base\ContentType::JSON;
         }
 
         if ($is_table)

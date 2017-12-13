@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Postgres implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $db = null;
@@ -91,6 +89,62 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return false;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        $mime_type = $properties['mime_type'] ?? 'text/plain';
+        $encoding = $properties['encoding'] ?? 'default';
+
+        $this->deleteFile($path);
+
+        $qtbl = self::quoteIdentifierIfNecessary($path);
+        $qmimetype = $this->db->quote($mime_type);
+        $qencoding = $this->db->quote($encoding);
+
+        $this->db->beginTransaction();
+
+        $sql  = "CREATE TABLE $qtbl (xdpgsql_stream VARCHAR(80), mime_type VARCHAR(80), encoding VARCHAR(80), blob_id OID)";
+        $res = $this->db->exec($sql);
+        if ($res === false)
+        {
+            $this->db->rollBack();
+            return false;
+        }
+
+        $res = $this->db->query('SELECT lo_create(0) as blob_id');
+        if (!$res || !($row = $res->fetch()))
+        {
+            $this->db->rollBack();
+            return false;
+        }
+        $oid = $row['blob_id'];
+
+        $sql = "INSERT INTO $qtbl (xdpgsql_stream, mime_type, encoding, blob_id) VALUES ('', $qmimetype, $qencoding, $oid)";
+        $res = $this->db->exec($sql);
+        if ($res != 1)
+        {
+            $this->db->rollBack();
+            return false;
+        }
+
+        // TODO: check for injection
+        $sql = "COMMENT ON TABLE $qtbl IS 'stream; $mime_type; $encoding'";
+        $res = $this->db->exec($sql);
+        if ($res === false)
+        {
+            $this->db->rollBack();
+            return false;
+        }
+
+        $this->db->commit();
+        return true;
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
@@ -135,7 +189,7 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
@@ -372,53 +426,6 @@ class Postgres implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
             return false;
         }
 
-        return true;
-    }
-
-    public function createFile(string $path, string $mime_type = "text/plain", string $encoding = "default") : bool
-    {
-        $this->deleteFile($path);
-
-        $qtbl = self::quoteIdentifierIfNecessary($path);
-        $qmimetype = $this->db->quote($mime_type);
-        $qencoding = $this->db->quote($encoding);
-
-        $this->db->beginTransaction();
-
-        $sql  = "CREATE TABLE $qtbl (xdpgsql_stream VARCHAR(80), mime_type VARCHAR(80), encoding VARCHAR(80), blob_id OID)";
-        $res = $this->db->exec($sql);
-        if ($res === false)
-        {
-            $this->db->rollBack();
-            return false;
-        }
-
-        $res = $this->db->query('SELECT lo_create(0) as blob_id');
-        if (!$res || !($row = $res->fetch()))
-        {
-            $this->db->rollBack();
-            return false;
-        }
-        $oid = $row['blob_id'];
-
-        $sql = "INSERT INTO $qtbl (xdpgsql_stream, mime_type, encoding, blob_id) VALUES ('', $qmimetype, $qencoding, $oid)";
-        $res = $this->db->exec($sql);
-        if ($res != 1)
-        {
-            $this->db->rollBack();
-            return false;
-        }
-
-        // TODO: check for injection
-        $sql = "COMMENT ON TABLE $qtbl IS 'stream; $mime_type; $encoding'";
-        $res = $this->db->exec($sql);
-        if ($res === false)
-        {
-            $this->db->rollBack();
-            return false;
-        }
-
-        $this->db->commit();
         return true;
     }
 

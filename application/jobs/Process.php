@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class Process implements \Flexio\Jobs\IProcess
+class Process implements \Flexio\IFace\IProcess
 {
     // note: the following constants may be stored in the database;
     // if they are changed, the database values need to be migrated
@@ -68,6 +66,7 @@ class Process implements \Flexio\Jobs\IProcess
         'flexio.grep'      => '\Flexio\Jobs\Grep',
         'flexio.group'     => '\Flexio\Jobs\Group',
         'flexio.input'     => '\Flexio\Jobs\Input',
+        'flexio.insert'    => '\Flexio\Jobs\Insert',
         'flexio.limit'     => '\Flexio\Jobs\Limit',
         'flexio.merge'     => '\Flexio\Jobs\Merge',
         'flexio.nop'       => '\Flexio\Jobs\Nop',
@@ -170,27 +169,27 @@ class Process implements \Flexio\Jobs\IProcess
         return $this->params;
     }
 
-    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream)
     {
         $this->files[$name] = $stream;
     }
 
-    public function setStdin(\Flexio\Base\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream)
     {
         return $this->stdin = $stream;
     }
 
-    public function getStdin() : \Flexio\Base\IStream
+    public function getStdin() : \Flexio\IFace\IStream
     {
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\Base\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream)
     {
         return $this->stdout = $stream;
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\IFace\IStream
     {
         return $this->stdout;
     }
@@ -338,7 +337,7 @@ class Process implements \Flexio\Jobs\IProcess
         }
     }
 
-    private static function createTask(array $task) : \Flexio\Jobs\IJob
+    private static function createTask(array $task) : \Flexio\IFace\IJob
     {
         if (!isset($task['type']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
@@ -379,10 +378,10 @@ class Process implements \Flexio\Jobs\IProcess
         }
     }
 
-    private static function createStream() : \Flexio\Base\IStream
+    private static function createStream() : \Flexio\IFace\IStream
     {
         $stream = \Flexio\Base\Stream::create();
-        $stream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_TXT); // default mime type
+        $stream->setMimeType(\Flexio\Base\ContentType::TEXT); // default mime type
         return $stream;
     }
 

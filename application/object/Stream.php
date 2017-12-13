@@ -16,10 +16,12 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-require_once dirname(__DIR__) . '/base/Abstract.php';
-
-class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 {
+    // TODO: add tests for these constants
+    const TYPE_DIRECTORY = 'SD';
+    const TYPE_FILE = 'SF';
+
     public function __construct()
     {
         $this->setType(\Model::TYPE_STREAM);
@@ -66,14 +68,18 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             $create_params['structure'] = $structure;
         }
 
-        $storagefs = $object->getStorageFs();
-        $storagefs->createFile($properties['path'], $create_params);
+        if (strlen($properties['path']) > 0)
+        {
+            $storagefs = $object->getStorageFs();
+            $storagefs->createFile($properties['path'], $create_params);
+        }
 
         return $object;
     }
 
+
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copy(\Flexio\Base\IStream $source)
+    public function copy(\Flexio\IFace\IStream $source)
     {
         $sourceimpl = $source->getImpl();
 
@@ -226,22 +232,112 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
         return $info;
     }
 
-    public function getReader() : \Flexio\Base\IStreamReader
+    public function getChildStreams($name = null) : array
     {
+        // return an array of \Flexio\Object\Stream objects that have a
+        // parent_eid = this object's eid;
+        // if name is specified, the result set will be additionally filtered with name
+
+        $where = [ 'parent_eid' => $this->getEid() ];
+        if (!is_null($name))
+            $where['name'] = $name;
+
+        $arr = $this->getModel()->stream->queryStreams($where);
+
+        $results = [];
+        foreach ($arr as $a)
+        {
+            $object = new static();
+            $object->properties = $a;
+            $structure = @json_decode($a['structure'],true);
+            if (is_null($structure))
+                $structure = [];
+            $object->properties['structure'] = $structure;
+            $object->setEid($a['eid']);
+            $results[] = $object;
+        }
+
+        return $results;
+    }
+
+    public function getReader() : \Flexio\IFace\IStreamReader
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
         //return \Flexio\Object\StreamReader::create($this);
         $storagefs = $this->getStorageFs();
 
-        $file = $storagefs->open($this->getPath());
+        // pass along structure
+        $props = [];
+        if (count($this->properties['structure']) > 0)
+            $props['structure'] = $this->properties['structure'];
+
+        $file = $storagefs->open($this->getPath(), $props);
         return $file->getReader();
     }
 
-    public function getWriter() : \Flexio\Base\IStreamWriter
+    public function getWriter() : \Flexio\IFace\IStreamWriter
     {
+        if ($this->isCached() === false)
+            $this->populateCache();
+        
         //return \Flexio\Object\StreamWriter::create($this, true);
         $storagefs = $this->getStorageFs();
 
-        $file = $storagefs->open($this->getPath());
-        return $file->getWriter();
+        // pass along structure
+        $props = [];
+        $structure = $this->getStructure()->enum();
+        if (count($structure) > 0)
+        {
+            $props['structure'] = $structure;
+        }
+
+        try
+        {
+            $file = $storagefs->open($this->getPath(), $props);
+            return $file->getWriter();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            if ($e->getCode() == \Flexio\Base\Error::NOT_FOUND)
+            {
+                // underlying data file is missing -- recreate
+                if (strlen($this->properties['path']) > 0)
+                {
+                    $create_params = [];
+                    if (isset($this->properties['structure']) && count($this->properties['structure']) > 0)
+                    {
+                        $create_params['structure'] = $this->properties['structure'];
+                    }
+
+                    $file = $storagefs->createFile($this->getPath(), $create_params);
+                    return $file->getWriter();
+                }
+            }
+
+            throw $e;
+        }
+    }
+
+    public function getInserter() : \Flexio\IFace\IStreamWriter
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+        
+        //return \Flexio\Object\StreamWriter::create($this, true);
+        $storagefs = $this->getStorageFs();
+
+        // pass along structure
+        $props = [];
+        $structure = $this->getStructure()->enum();
+        if (count($structure) > 0)
+        {
+            $props['structure'] = $structure;
+        }
+
+        $file = $storagefs->open($this->getPath(), $props);
+        return $file->getInserter();
     }
 
     private function isCached() : bool
@@ -299,6 +395,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
             "eid" : null,
             "eid_type" : "'.\Model::TYPE_STREAM.'",
             "eid_status" : null,
+            "stream_type" : null,
+            "parent_eid" : null,
             "name" : null,
             "path" : null,
             "size" : null,
@@ -316,7 +414,9 @@ class Stream extends \Flexio\Object\Base implements \Flexio\Base\IStream
 
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
-        if ($properties === false)
+
+        // sanity check: if the data record is missing, then eid will be null
+        if (!$properties || ($properties['eid'] ?? null) === null)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the structure json

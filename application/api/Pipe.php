@@ -255,10 +255,9 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
-        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $pipes = $user->getObjects($filter);
-
         $result = array();
+
+        $pipes = $user->getPipeList();
         foreach ($pipes as $p)
         {
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -301,7 +300,7 @@ class Pipe
 
         // get the processes that are accessible
         $processes_accessible = array();
-        $processes = $pipe->getProcesses();
+        $processes = $pipe->getProcessList();
         foreach ($processes as $p)
         {
             // a pipe can be run by different users; make sure the given user can only see
@@ -392,7 +391,7 @@ class Pipe
         $response_code = $process->getResponseCode();
 
 
-        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $mime_type, true, $response_code);
@@ -400,7 +399,7 @@ class Pipe
         else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON, true, $response_code);
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
             $content = json_encode($content);
         }
 

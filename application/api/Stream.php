@@ -136,7 +136,7 @@ class Stream
         if ($content_type !== false)
             $response_content_type = $content_type;
 
-        if ($response_content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($response_content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // return content as-is
             header('Content-Type: ' . $response_content_type);
@@ -154,7 +154,7 @@ class Stream
          else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::MIME_TYPE_JSON);
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON);
 
             $result = array();
             $result['success'] = true;
@@ -248,7 +248,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $mime_type = $stream_info['mime_type'];
-        $http_header_mime_type = ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE ? \Flexio\Base\ContentType::MIME_TYPE_CSV : $mime_type);
+        $http_header_mime_type = ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE ? \Flexio\Base\ContentType::CSV : $mime_type);
 
         // set the headers
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -258,7 +258,7 @@ class Stream
             $output_filename = $stream_info['name'];
         if (isset($validated_params['name']))
             $output_filename = $validated_params['name'];
-        if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // Flexio tables are exported as csv, so add an appropriate extension
             $filename_parts = pathinfo($output_filename);
@@ -281,7 +281,7 @@ class Stream
                 else
             header('Content-Disposition: attachment; filename="' . $output_filename . '"');
 
-        if ($mime_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // get the content in one chunk and return it as-is
             $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
@@ -337,7 +337,7 @@ class Stream
         exit(0);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\Base\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
+    public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
     {
         $filename = '';
         $mime_type = '';
@@ -399,7 +399,7 @@ class Stream
             $filename = $name . (strlen($ext) > 0 ? ".$ext" : '');
 
             // sense the mime type, but go with what is declared if it's available
-            $mime_type = \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+            $mime_type = \Flexio\Base\ContentType::STREAM;
             $declared_mime_type = $part_mimetype;
 
             if ($part_data_snippet === false)

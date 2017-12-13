@@ -21,7 +21,7 @@ namespace Flexio\Jobs;
         "type": "flexio.create",
         "params": {
             "name": "test",
-            "mime_type": "text/csv",
+            "content_type": "text/csv",
             "content": ""
         }
     }
@@ -29,36 +29,66 @@ namespace Flexio\Jobs;
 
 class Create extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
         // create job adds new streams; don't clear existing streams
         $job_definition = $this->getProperties();
+        $params = $job_definition['params'] ?? [];
 
-        $outstream = $process->getStdout();
-        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        switch ($mime_type)
+
+        // TODO: factor
+
+        if (isset($params['path']))
         {
-            default:
-            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
-            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
-            case \Flexio\Base\ContentType::MIME_TYPE_JSON:
-                $this->createFile($outstream);
-                break;
+            $columns = $params['columns'] ?? [];
 
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
-                $this->createTable($outstream);
-                break;
+            $vfs = new \Flexio\Services\Vfs();
+            $vfs->setProcess($process);
+
+            $create_params = [];
+            if (is_array($columns) && count($columns) > 0)
+            {
+                $create_params['structure'] = $columns;
+            }
+
+            if (!$vfs->createFile($params['path'], $create_params))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            // TODO: return created stream in stdout
         }
+         else
+        {
+            $outstream = $process->getStdout();
+            $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+
+            if (isset($params['columns']) && is_array($params['columns']) && count($params['columns']))
+                $content_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
+            
+            switch ($content_type)
+            {
+                default:
+                case \Flexio\Base\ContentType::STREAM:
+                case \Flexio\Base\ContentType::TEXT:
+                case \Flexio\Base\ContentType::CSV:
+                case \Flexio\Base\ContentType::JSON:
+                    $this->createFile($outstream);
+                    break;
+    
+                case \Flexio\Base\ContentType::FLEXIO_TABLE:
+                    $this->createTable($outstream);
+                    break;
+            }
+        }
+
     }
 
-    private function createFile(\Flexio\Base\IStream &$outstream)
+    private function createFile(\Flexio\IFace\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New File');
-        $mime_type = ($job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM);
+        $content_type = ($job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::STREAM);
 
         // get the content and decode it
         $content = '';
@@ -74,7 +104,7 @@ class Create extends \Flexio\Jobs\Base
         // create the output stream
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => $mime_type
+            'content_type' => $content_type
         );
         $outstream->set($outstream_properties);
         $streamwriter = $outstream->getWriter();
@@ -85,15 +115,15 @@ class Create extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createTable(\Flexio\Base\IStream &$outstream)
+    private function createTable(\Flexio\IFace\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
         $name = $job_definition['params']['name'] ?? _('New Table');
-        $mime_type = $job_definition['params']['mime_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE;
+        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::FLEXIO_TABLE;
         $structure = $job_definition['params']['columns'] ?? '[]';
         $outstream_properties = array(
             'name' => $name,
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
             'structure' => $structure
         );
 

@@ -12,17 +12,16 @@
  */
 
 
-
 declare(strict_types=1);
 namespace Flexio\Services;
 
-// TODO: require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Vfs // TODO: implements \Flexio\Services\IFileSystem
+class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 {
     private $process_context_service = null;
+    private $store_service = null;
 
-    public function setProcess(\Flexio\Jobs\IProcess $process)
+    public function setProcess(\Flexio\IFace\IProcess $process)
     {
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
@@ -52,8 +51,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // get the connections
-            $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-            $connections = $user->getObjects($filter);
+            $connections = $user->getConnectionList();
 
             // add an entry for local storage
             $results[] = array(
@@ -98,12 +96,6 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-        if ($connection_identifier == 'local')
-        {
-            return $this->listLocal();
-        }
-
-
         $service = $this->getService($connection_identifier);
 
         $results = $service->list($rpath);
@@ -119,6 +111,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         return $results;
     }
 
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -126,29 +119,39 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         return false;
     }
 
-    public function listLocal() : array
+
+    public function createFile(string $path, array $properties = []) : bool
     {
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
-        // load the object
-        $user = \Flexio\Object\User::load($current_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // get the pipes
-        $filter = array('eid_type' => array(\Model::TYPE_STREAM), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $streams = $user->getObjects($filter);
-
-        $result = array();
-        foreach ($streams as $s)
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
         {
-            if ($s->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-                continue;
-
-            $result[] = $s->get();
+            $path = $path['path'] ?? '';
         }
 
-        return $result;
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->createFile($rpath, $properties);
+    }
+
+    public function open($path) :  \Flexio\Iface\IStream
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->open([ 'path' => $rpath ]);
     }
 
     public function read($path, callable $callback)
@@ -158,8 +161,6 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
         {
             $path = $path['path'] ?? '';
         }
-
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
 
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
@@ -178,8 +179,6 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
@@ -188,6 +187,28 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
 
         return $service->write([ 'path' => $rpath ], $callback);
     }
+
+    public function insert(string $path, array $rows)
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->insert([ 'path' => $rpath ], $rows);
+    }
+
+
+
+
+
 
     public function splitPath(string $path) : array
     {
@@ -200,6 +221,7 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
             // split off the schema portion context://; the path portion will retain the preceding slash
             return [ substr($path, 0, 10), substr($path, 9) ];
         }
+
 
         $off = ($path[0] == '/' ? 1:0);
 
@@ -222,6 +244,17 @@ class Vfs // TODO: implements \Flexio\Services\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
             return $this->process_context_service;
         }
+
+        if ($connection_identifier == 'local')
+        {
+            if ($this->store_service === null)
+                $this->store_service = \Flexio\Services\Store::create();
+            return $this->store_service;
+        }
+
+
+        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        
 
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);

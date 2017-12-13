@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class AmazonS3 implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $bucket = '';
@@ -90,7 +88,24 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
             if (!is_null($marker))
                 $params['Marker'] = $marker;
 
-            $result = $s3->listObjects($params);
+            try
+            {
+                $result = $s3->listObjects($params);
+            }
+            catch (\Aws\Exception\AwsException $e)
+            {
+                $message = $e->getAwsErrorMessage();
+                if (strlen($message) == 0)
+                    $message = "An error occurred while attempting to access the requested resource";
+                     else
+                    $message = "AWS Error Message: $message";
+    
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+            }
+            catch (\Exception $e)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "An error occurred while attempting to access the requested resource");
+            }
 
 
             $common_prefixes = $result->get('CommonPrefixes');
@@ -177,6 +192,18 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
         return true;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         // TODO: let exceptions through on failure?
@@ -225,7 +252,7 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
     public function write(array $params, callable $callback) : bool
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         if (!$this->isOk())
             return false;
@@ -303,7 +330,6 @@ class AmazonS3 implements \Flexio\Services\IConnection, \Flexio\Services\IFileSy
 
     private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
-        $this->close();
         $this->region = $region;
         $this->bucket = $bucket;
         $this->accesskey = $accesskey;

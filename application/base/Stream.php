@@ -16,13 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Base;
 
 
-require_once dirname(__DIR__) . '/base/Abstract.php';
-
-
-
-
-
-class StreamReader implements \Flexio\Base\IStreamReader
+class StreamReader implements \Flexio\IFace\IStreamReader
 {
     private $stream;
     private $offset;
@@ -80,7 +74,7 @@ class StreamReader implements \Flexio\Base\IStreamReader
 
 
 
-class StreamWriter implements \Flexio\Base\IStreamWriter
+class StreamWriter implements \Flexio\IFace\IStreamWriter
 {
     private $stream;
     private $bytes_written;
@@ -145,16 +139,16 @@ class StreamWriter implements \Flexio\Base\IStreamWriter
     {
         if ($this->storagefs_writer)
             return $this->storagefs_writer->close();
-        
+
         if ($this->memory_table_writer)
             return $this->memory_table_writer->close();
-        
+
         return true;
     }
 }
 
 
-class Stream implements \Flexio\Base\IStream
+class Stream implements \Flexio\IFace\IStream
 {
     public $buffer = '';             // data buffer; use reader/writer to access
     private $storagefs = null;
@@ -251,7 +245,7 @@ class Stream implements \Flexio\Base\IStream
         }
     }
 
-    public function switchToDiskStorage(\Flexio\Base\StreamWriter $writer) : \Flexio\Base\IStreamWriter
+    public function switchToDiskStorage(\Flexio\Base\StreamWriter $writer) : \Flexio\IFace\IStreamWriter
     {
         $storagefs = $this->getStorageFs();
 
@@ -320,7 +314,7 @@ class Stream implements \Flexio\Base\IStream
     }
 
 
-    public function copy(\Flexio\Base\IStream $source) : \Flexio\Base\Stream
+    public function copy(\Flexio\IFace\IStream $source) : \Flexio\Base\Stream
     {
         // copies all the properties of another stream into the current stream,
         // including the buffer
@@ -333,7 +327,7 @@ class Stream implements \Flexio\Base\IStream
         $this->storagefs = $sourceimpl->storagefs;
         $this->storagefs_path = $sourceimpl->storagefs_path;
         $this->memory_db = $sourceimpl->memory_db;
-        
+
         $properties = $source->get();
         unset($properties['eid']);
         unset($properties['created']);
@@ -466,7 +460,7 @@ class Stream implements \Flexio\Base\IStream
         return $info;
     }
 
-    public function getReader() : \Flexio\Base\IStreamReader
+    public function getReader() : \Flexio\IFace\IStreamReader
     {
         if ($this->memory_db)
         {
@@ -483,7 +477,7 @@ class Stream implements \Flexio\Base\IStream
         }
     }
 
-    public function getWriter() : \Flexio\Base\IStreamWriter
+    public function getWriter() : \Flexio\IFace\IStreamWriter
     {
         $this->buffer = '';
 
@@ -500,7 +494,7 @@ class Stream implements \Flexio\Base\IStream
             $file = $this->getStorageFs()->open($this->storagefs_path);
             return $file->getWriter();
         }
-         else 
+         else
         {
             return \Flexio\Base\StreamWriter::create($this);
         }

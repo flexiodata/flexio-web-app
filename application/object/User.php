@@ -28,21 +28,6 @@ class User extends \Flexio\Object\Base
         $this->setType(\Model::TYPE_USER);
     }
 
-    public static function isValidType(string $member) : bool
-    {
-        switch ($member)
-        {
-            default:
-            case self::MEMBER_UNDEFINED:
-                return false;
-
-            case self::MEMBER_OWNER:
-            case self::MEMBER_GROUP:
-            case self::MEMBER_PUBLIC:
-                return true;
-        }
-    }
-
     public static function create(array $properties = null) : \Flexio\Object\User
     {
         // config is stored as a json string, so it needs to be encoded
@@ -135,55 +120,42 @@ class User extends \Flexio\Object\Base
         return $this->properties;
     }
 
-    public function getProjects() : array
+    public function getStoreRoot() : \Flexio\Object\Stream
     {
-        $eid = $this->getEid();
+        // get the store root for the current user; if we can't find one, create one
+        $user_eid = $this->getEid();
 
-        // get the projects for the user based on projects the user owns or is following
-        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_FOLLOWING.")->(".\Model::TYPE_PROJECT.")";
-        $projects = \Flexio\Object\Search::exec($search_path);
-
-        $res = array();
-        foreach ($projects as $p)
+        // see if we already have a store root; if we do, return it
+        $items = $this->getModel()->assoc_range($user_eid, \Model::EDGE_HAS_STORE);
+        if (count($items) > 0)
         {
-            // load the object
-            $project = \Flexio\Object\Project::load($p);
-            if ($project === false)
-                continue;
+            $store_root_eid = $items[0]['eid'];
+            $stream = \Flexio\Object\Stream::load($store_root_eid);
 
-            // only show projects that are available
-            if ($project->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
+            if ($stream === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-            $res[] = $project;
+            // the following line makes sure that tbl_stream record actually exists
+            // and will throw an exception if it doesn't
+            $stream->get();
+
+            return $stream;
         }
 
-        return $res;
+        // we don't have a root; so create one
+        $properties = array();
+        $properties['name'] = '';
+        $properties['path'] = '';
+        $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
+        $stream = \Flexio\Object\Stream::create($properties);
+
+        $this->getModel()->assoc_add($user_eid, \Model::EDGE_HAS_STORE, $stream->getEid());
+        $this->getModel()->assoc_add($stream->getEid(), \Model::EDGE_STORE_FOR, $user_eid);
+
+        return $stream;
     }
 
-    public function getProcesses() : array
-    {
-        $eid = $this->getEid();
-
-        // get the processes for the user that are either owned (process may have been created by somebody else) or created by the user
-        $search_path = "$eid->(".\Model::EDGE_OWNS.",".\Model::EDGE_CREATED.")->(".\Model::TYPE_PROCESS.")";
-        $processes = \Flexio\Object\Search::exec($search_path);
-
-        $res = array();
-        foreach ($processes as $p)
-        {
-            // load the object
-            $process = \Flexio\Object\Process::load($p);
-            if ($process === false)
-                continue;
-
-            $res[] = $process;
-        }
-
-        return $res;
-    }
-
-    public function getObjects(array $filter = null) : array
+    public function getObjectList(array $filter = null) : array
     {
         // filter can be contain combinations of the following:
         //$filter = array(
@@ -214,29 +186,38 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getObjectCount(array $filter = null) : int
+    public function getProjectList() : array
     {
-        // filter can be contain combinations of the following:
-        //$filter = array(
-        //    'target_eids' => array(/* index array of eids */),
-        //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' => array(/* index array of eid statuses */)
-        //);
-
-        // get the counts of the objects owned/followed by the user
-        $user_eid = $this->getEid();
-
-        $objects_owned = $this->getModel()->assoc_count($user_eid, \Model::EDGE_OWNS, $filter);
-        $objects_followed = $this->getModel()->assoc_count($user_eid, \Model::EDGE_FOLLOWING, $filter);
-        $total_objects = $objects_owned + $objects_followed;
-
-        return $total_objects;
+        $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
     }
 
-    public function getObjectRights(array $filter = null) : array
+    public function getPipeList() : array
+    {
+        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
+    }
+
+    public function getConnectionList() : array
+    {
+        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
+    }
+
+    public function getProcessList() : array
+    {
+        $filter = array('eid_type' => array(\Model::TYPE_PROCESS), 'eid_status' => array(\Model::STATUS_AVAILABLE));
+        $objects = $this->getObjectList($filter);
+        return $objects;
+    }
+
+    public function getRightsList(array $filter = null) : array
     {
         // get the objects for the user
-        $objects = $this->getObjects($filter);
+        $objects = $this->getObjectList($filter);
 
         // return the rights for the objects
         $res = array();
@@ -252,7 +233,7 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getTokens() : array
+    public function getTokenList() : array
     {
         $res = array();
         $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
@@ -505,7 +486,9 @@ class User extends \Flexio\Object\Base
 
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
-        if (!$properties)
+
+        // sanity check: if the data record is missing, then eid will be null
+        if (!$properties || ($properties['eid'] ?? null) === null)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the config

@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class StoredProcess implements \Flexio\Jobs\IProcess
+class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
@@ -89,27 +87,27 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         return $this->engine->getParams();
     }
 
-    public function addFile(string $name, \Flexio\Base\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream)
     {
         return $this->engine->addFile($name, $stream);
     }
 
-    public function setStdin(\Flexio\Base\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream)
     {
         return $this->engine->setStdin($stream);
     }
 
-    public function getStdin() : \Flexio\Base\IStream
+    public function getStdin() : \Flexio\IFace\IStream
     {
         return $this->engine->getStdin();
     }
 
-    public function setStdout(\Flexio\Base\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream)
     {
         return $this->engine->setStdout($stream);
     }
 
-    public function getStdout() : \Flexio\Base\IStream
+    public function getStdout() : \Flexio\IFace\IStream
     {
         return $this->engine->getStdout();
     }
@@ -245,7 +243,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
 
             $this->procobj->set(['input' => json_encode($input), 'output' => json_encode($output)]);
             $process_eid = $this->procobj->getEid();
-            
+
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
             //\Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
@@ -270,7 +268,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
         $this->engine->setParams(array_merge($user_variables, $environment_variables));
-        
+
         // STEP 3: get events for logging, if necessary
         $this->engine->addEventHandler([$this->procobj, 'handleEvent']);
 
@@ -285,12 +283,12 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         $this->procobj->set($process_params);
 
         //var_dump($this->procobj->get());
-        
+
         return $this;
     }
 
 
-    private static function createStorableStream(\Flexio\Base\IStream $stream) : \Flexio\Object\Stream
+    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
         $properties = array_merge($stream->get(), $properties);
@@ -303,7 +301,7 @@ class StoredProcess implements \Flexio\Jobs\IProcess
         while (true)
         {
             $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $row = $streamreader->readRow();
                  else
                 $row = $streamreader->read();

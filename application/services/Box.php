@@ -17,9 +17,8 @@ namespace Flexio\Services;
 
 
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Box implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $access_token = '';
@@ -48,7 +47,7 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         if (!isset($fileinfo['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER)
+        if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::FLEXIO_FOLDER)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);  // not a folder
 
 
@@ -77,6 +76,18 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
+    }
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function read(array $params, callable $callback)
@@ -121,7 +132,7 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
             return false;
 
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
@@ -299,7 +310,7 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => '0', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER);
+            return array('id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
         }
 
         $path = trim($path, '/');
@@ -311,7 +322,7 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
 
 
         $current_id = 0; // stores the current folder id; 0 = root
-        $current_content_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER;
+        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
 
         foreach ($parts as $p)
         {
@@ -326,7 +337,7 @@ class Box implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
                 {
                     $current_id = $item['id'];
                     if ($item['type'] == 'folder')
-                        $current_content_type = \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER;
+                        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
                          else
                         $current_content_type = 'application/octet-stream';
                     $found = true;

@@ -28,7 +28,7 @@ namespace Flexio\Jobs;
 
 class Distinct extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -38,19 +38,19 @@ class Distinct extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             default:
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
         }
     }
 
-    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }

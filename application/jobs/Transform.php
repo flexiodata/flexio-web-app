@@ -113,7 +113,7 @@ class Transform extends \Flexio\Jobs\Base
     const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -123,7 +123,7 @@ class Transform extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -134,20 +134,20 @@ class Transform extends \Flexio\Jobs\Base
                 return;
 
             // table input
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getTableOutput($instream, $outstream);
                 return;
 
             // stream/text/csv input
-            case \Flexio\Base\ContentType::MIME_TYPE_STREAM:
-            case \Flexio\Base\ContentType::MIME_TYPE_TXT:
-            case \Flexio\Base\ContentType::MIME_TYPE_CSV:
+            case \Flexio\Base\ContentType::STREAM:
+            case \Flexio\Base\ContentType::TEXT:
+            case \Flexio\Base\ContentType::CSV:
                 $this->getFileOutput($instream, $outstream);
                 return;
         }
     }
 
-    private function getTableOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getTableOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -211,7 +211,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getFileOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getFileOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -255,7 +255,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getTableExpressionMap(\Flexio\Base\IStream &$instream)
+    private function getTableExpressionMap(\Flexio\IFace\IStream &$instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -338,7 +338,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private function getStreamExpressionMap(\Flexio\Base\IStream &$instream)
+    private function getStreamExpressionMap(\Flexio\IFace\IStream &$instream)
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation

@@ -16,13 +16,11 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class ProcessContext implements \Flexio\IFace\IFileSystem
 {
     private $process = null;
 
-    public function __construct(\Flexio\Jobs\IProcess $process)
+    public function __construct(\Flexio\IFace\IProcess $process)
     {
         $this->process = $process;
     }
@@ -102,6 +100,18 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
         return false;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
@@ -118,7 +128,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
             $params = $this->process->getParams();
             if (!isset($params[$file]))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            
+
             if ($params[$file] instanceof \Flexio\Base\Stream)
             {
                 $reader = $params[$file]->getReader();
@@ -132,7 +142,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
     }
 
@@ -162,7 +172,7 @@ class ProcessContext implements \Flexio\Services\IConnection, \Flexio\Services\I
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);            
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
     }
 

@@ -166,7 +166,7 @@ class Project
 
         // get the projects
         $result = array();
-        $projects = $user->getProjects();
+        $projects = $user->getProjectList();
         foreach ($projects as $p)
         {
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)

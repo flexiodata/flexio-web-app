@@ -31,7 +31,7 @@ return;
         $create = json_decode('{
             "type": "flexio.create",
             "params": {
-                "mime_type": "'.\Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE.'",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
                     { "name": "field1", "type": "character", "width": 6, "scale": 0 },
                     { "name": "field2", "type": "character", "width": 6, "scale": 2 }

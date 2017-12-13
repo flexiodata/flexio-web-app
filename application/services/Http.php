@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class Http implements \Flexio\IFace\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Http
     {
@@ -42,6 +40,18 @@ class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
+    }
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function read(array $params, callable $callback)
@@ -88,7 +98,7 @@ class Http implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);

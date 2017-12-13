@@ -4,22 +4,22 @@
  * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
- * Author:   Benjamin I. Williams
- * Created:  2017-11-17
+ * Author:   Aaron L. Williams
+ * Created:  2017-12-11
  *
  * @package flexio
- * @subpackage Base
+ * @subpackage IFace
  */
 
 
 declare(strict_types=1);
-namespace Flexio\Base;
+namespace Flexio\IFace;
 
 
 interface IStream
 {
     public function getImpl();   // returns the object implementing interface; (internal helper)
-    public function copy(\Flexio\Base\IStream $source);
+    public function copy(\Flexio\IFace\IStream $source);
     public function set(array $properties);
     public function get();
     public function setName(string $name);
@@ -34,22 +34,6 @@ interface IStream
     public function setStructure($structure);
     public function getStructure();
     public function getFileInfo();
-    public function getReader() : \Flexio\Base\IStreamReader;
-    public function getWriter() : \Flexio\Base\IStreamWriter;
+    public function getReader() : \Flexio\IFace\IStreamReader;
+    public function getWriter() : \Flexio\IFace\IStreamWriter;
 }
-
-interface IStreamReader
-{
-    public function read($length = 1024);
-    public function readRow();
-    public function getRows(int $offset, int $limit);
-    public function close();
-}
-
-interface IStreamWriter
-{
-    public function write($data);
-    public function getBytesWritten();
-    public function close();
-}
-

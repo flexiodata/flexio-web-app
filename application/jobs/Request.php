@@ -29,7 +29,7 @@ namespace Flexio\Jobs;
 
 class Request extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -269,7 +269,7 @@ class Request extends \Flexio\Jobs\Base
         $outstream_properties = array(
            // 'name' => $url,
            // 'path' => $url,
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_STREAM // default
+            'mime_type' => \Flexio\Base\ContentType::STREAM // default
         );
         $outstream->set($outstream_properties);
 

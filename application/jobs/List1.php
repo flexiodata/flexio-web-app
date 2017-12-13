@@ -27,7 +27,7 @@ namespace Flexio\Jobs;
 
 class List1 extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -64,7 +64,7 @@ class List1 extends \Flexio\Jobs\Base
             $results[] = $entry;
         }
 
-        $outstream->setMimeType(\Flexio\Base\ContentType::MIME_TYPE_JSON);
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter->write(json_encode($results));
     }
 }

@@ -16,33 +16,48 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Base\IStreamWriter
+
+
+class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IFace\IStreamWriter
 {
     private $fspath = null;
     private $file = null;
 
     private $sqlite = null;
     private $result = null; // sqlite result object
+
     private $structure = null;
     private $keyed_structure = null;  // structure with field names as key
-    
+    private $storefield_map = null;
+
     function __destruct()
     {
         $this->close();
     }
 
-    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null) : bool
+    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null, $truncate = false) : bool
     {
         if ($structure !== null && count($structure) > 0)
         {
             $this->structure = $structure;
             $this->keyed_structure = [];
+            $this->storefield_map = [];
             foreach ($this->structure as $col)
             {
-                // only store columns in $this->keyed_structure that we need for type casting
-                if (isset($col['name']) && isset($col['type']) && $col['type'] == 'boolean')
+                // only store columns in $this->keyed_structure that we need for type casting;
+                // or if the store name is different than the field name
+                if (isset($col['name']))
                 {
-                    $this->keyed_structure[$col['name']] = $col;
+                    if (isset($col['store_name']) && $col['name'] != $col['store_name'])
+                    {
+                        $this->keyed_structure[$col['name']] = $col;
+                        $this->storefield_map[$col['store_name']] = $col['name'];
+                    }
+                     else if (isset($col['type']) && $col['type'] == 'boolean')
+                    {
+                        $this->keyed_structure[$col['name']] = $col;
+                    }
+
                 }
             }
 
@@ -61,10 +76,40 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             return true;
         }
 
-
         $exists = file_exists($fspath);
-        $mode =  $exists ? 'r+b' : 'w+b';
-        
+
+
+        if ($truncate && $structure !== null)
+        {
+            // caller wants to start a new table
+            try
+            {
+                if ($exists)
+                    @unlink($fspath);
+                $this->sqlite = new \SQLite3($fspath);
+                $fields = StorageFs::getStructureSql($structure);
+                $sql = 'create table fxtbl (' . $fields . ')';
+                $this->sqlite->exec($sql);
+            }
+            catch (\Exception $e)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
+        if ($truncate)
+        {
+            $mode = 'w+b';
+        }
+         else
+        {
+
+            $mode =  $exists ? 'r+b' : 'w+b';
+        }
+
+
         $this->fspath = $fspath;
 
         if (IS_DEBUG())
@@ -102,7 +147,9 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     {
         if ($this->isOk() === false)
             return false;
-
+        if ($this->file === NULL)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $this->sqlite ? "Cannot read a table as a file stream" : null);
+        
         $res = fread($this->file, $length);
         if ($res === false)
             return false;
@@ -113,6 +160,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
 
     public function readRow()
     {
+
         if ($this->isOk() === false)
             return false;
 
@@ -146,37 +194,49 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             $sql .= ' offset ' . (int)$offset;
 
         $result = $this->sqlite->query($sql);
-        
+
         if (!$result)
             return [];
 
         $res = [];
         while (($row = $result->fetchArray(SQLITE3_ASSOC)) !== false)
             $res[] = $this->applyStructureToRow($row);
-        
+
         return $res;
     }
 
     private function applyStructureToRow(array $row) : array
     {
-        if ($this->keyed_structure === null)
-            return $row;
-
-        foreach ($row as $col => &$value)
+        if (count($this->storefield_map) > 0)
         {
-            if (isset($this->keyed_structure[$col]))
+            // rename any store column names back to column names user expects
+            $newrow = [];
+            foreach ($row as $k => $v)
             {
-                if ($this->keyed_structure[$col]['type'] == 'boolean')
-                {
-                    if ($value === 0 || $value === '0' || $value === false)
-                        $value = false;
-                         else
-                        $value = true;
-                }
+                if (array_key_exists($k, $this->storefield_map))
+                    $newrow[$this->storefield_map[$k]] = $v;
+                     else
+                    $newrow[$k] = $v;
             }
-
+            $row = $newrow;
         }
 
+        if (count($this->keyed_structure) > 0)
+        {
+            foreach ($row as $col => &$value)
+            {
+                if (isset($this->keyed_structure[$col]['type']))
+                {
+                    if ($this->keyed_structure[$col]['type'] == 'boolean')
+                    {
+                        if ($value === 0 || $value === '0' || $value === false)
+                            $value = false;
+                            else
+                            $value = true;
+                    }
+                }
+            }
+        }
 
         return $row;
     }
@@ -222,7 +282,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
     }
 
 
-    // \Flexio\Base\IStreamWriter
+    // \Flexio\IFace\IStreamWriter
 
     private $first_write = true;
     private $bytes_written = 0;
@@ -236,7 +296,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
         {
             if (!is_array($data))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "data must be presented in array format");
-            
+
             // check if the column schema being inserted is the same as the last;
             // if it's different, flush rows in buffer
 
@@ -286,7 +346,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             return;
 
         $sql = 'insert into fxtbl ';
-        
+
         if (count($this->insert_rows[0]) == 0)
         {
             $sql .= 'default values';
@@ -307,7 +367,10 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
             {
                 if ($i > 0)
                     $sql .= ',';
-                $sql .= StorageFs::quoteIdentifierIfNecessary($keys[$i]);
+                $name = $keys[$i];
+                if (isset($this->keyed_structure[$name]['store_name']))
+                    $name = $this->keyed_structure[$name]['store_name'];
+                $sql .= StorageFs::quoteIdentifierIfNecessary($name);
             }
 
             $sql .= ') ';
@@ -339,7 +402,7 @@ class StorageFileReaderWriter implements \Flexio\Base\IStreamReader, \Flexio\Bas
                     $val = "'$val'";
                 }
             }
-            
+
             if ($first)
             {
                 $first = false;
@@ -388,14 +451,19 @@ class StorageFsFile
     public $file = null;
     public $structure = null;
 
-    public function getReader() : \Flexio\Base\IStreamReader
+    public function getReader() : \Flexio\IFace\IStreamReader
     {
-        return $this->openStream();
+        return $this->openStream(false);
     }
 
-    public function getWriter() : \Flexio\Base\IStreamWriter
+    public function getWriter() : \Flexio\IFace\IStreamWriter
     {
-        return $this->openStream();
+        return $this->openStream(true);
+    }
+
+    public function getInserter() : \Flexio\IFace\IStreamWriter
+    {
+        return $this->openStream(false);
     }
 
     public function setStructure(array $structure)
@@ -404,22 +472,22 @@ class StorageFsFile
         $this->structure = $structure;
     }
 
-    private function openStream() : \Flexio\Services\StorageFileReaderWriter
+    private function openStream($truncate = false) : \Flexio\Services\StorageFileReaderWriter
     {
         $stream = new StorageFileReaderWriter();
 
         if ($this->sqlite)
         {
-            $stream->init($this->sqlite, $this->structure);
+            $stream->init($this->sqlite, $this->structure, $truncate);
         }
         else if ($this->file)
         {
-            $stream->init($this->file, $this->structure);
+            $stream->init($this->file, $this->structure, false);
             $this->file = null;
         }
         else
         {
-            $stream->init($this->fspath, $this->structure);
+            $stream->init($this->fspath, $this->structure, $truncate);
         }
 
         return $stream;
@@ -466,11 +534,21 @@ class StorageFs
 
             $is_memory_database = $params['memory'] ?? false;
             if ($is_memory_database)
+            {
                 $sqlite = new \SQLite3(':memory:');
-                 else
+            }
+             else
+            {
+                if (@file_exists($fspath))
+                {
+                    if (@unlink($fspath) === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+                }
+                
                 $sqlite = new \SQLite3($fspath);
+            }
 
-            $fields = $this->getStructureSql($params['structure']);
+            $fields = self::getStructureSql($params['structure']);
             $sql = 'create table fxtbl (' . $fields . ')';
 
             $sqlite->exec($sql);
@@ -486,7 +564,7 @@ class StorageFs
                 $f = fopen($fspath, 'w+');
                 else
                 $f = @fopen($fspath, 'w+');
-            
+
             if (!$f)
             {
                 return false;
@@ -499,17 +577,23 @@ class StorageFs
         }
     }
 
-    public function open(string $path) : \Flexio\Services\StorageFsFile
+    public function open(string $path, array $params = []) : \Flexio\Services\StorageFsFile
     {
         $fspath = self::getFsPath($path);
 
         if (!@file_exists($fspath))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "File '$path' does not exist");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, IS_DEBUG() ? "File '$path' does not exist" : null);
         }
-        
+
         $file = new StorageFsFile();
         $file->fspath = $fspath;
+
+        if (isset($params['structure']))
+        {
+            $file->setStructure($params['structure']);
+        }
+
         return $file;
     }
 
@@ -628,7 +712,7 @@ class StorageFs
 
         if (DIRECTORY_SEPARATOR != '/')
             $str = str_replace('/', DIRECTORY_SEPARATOR, $str);
- 
+
         return $str;
     }
 
@@ -639,7 +723,7 @@ class StorageFs
 
     // helper functions for table functionality
 
-    private static function getStructureSql(array $structure) : string
+    public static function getStructureSql(array $structure) : string
     {
         // map each field into an sql definition
         $fieldsql = '';
@@ -664,7 +748,9 @@ class StorageFs
         $width = isset($field['width']) ? $field['width'] : null;
         $scale = isset($field['scale']) ? $field['scale'] : null;
 
-        $qname = self::quoteIdentifierIfNecessary($name);
+        //$qname = self::quoteIdentifierIfNecessary($name);
+        // for sqlite, we'll always quote field names
+        $qname = self::quoteIdentifier($name);
 
         switch ($type)
         {
@@ -701,12 +787,15 @@ class StorageFs
 
     public static function quoteIdentifierIfNecessary(string $str) : string
     {
-        $str = str_replace('?', '', $str);
-
-        if (false === strpbrk($str, "\"'-/\\!@#$%^&*() \t"))
+        if (false === strpbrk($str, "\"'-/\\!@#$%^&*?() \t"))
             return $str;
              else
-            return ('"' . $str . '"');
+            return self::quoteIdentifier($str);
     }
 
+    public static function quoteIdentifier(string $str) : string
+    {
+        return '"' . str_replace('"', '""', $str) . '"';
+    }
+    
 }

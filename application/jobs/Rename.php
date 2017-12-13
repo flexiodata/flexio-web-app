@@ -28,7 +28,7 @@ namespace Flexio\Jobs;
 
 class Rename extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -38,7 +38,7 @@ class Rename extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream, $process->getParams());
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream, array $env)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, array $env)
     {
         // any renames will be handled by the file/column rename handler; if there
         // aren't any operations, the stream will simply be copied to the output
@@ -57,12 +57,12 @@ class Rename extends \Flexio\Jobs\Base
         // may also have columns renamed
         if (isset($job_definition['params']['columns']))
         {
-            if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $this->renameColumns($outstream);
         }
     }
 
-    private function renameStream(\Flexio\Base\IStream $outstream, array $env)
+    private function renameStream(\Flexio\IFace\IStream $outstream, array $env)
     {
         // get the files to rename
         $job_definition = $this->getProperties();
@@ -103,7 +103,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function renameColumns(\Flexio\Base\IStream $outstream)
+    private function renameColumns(\Flexio\IFace\IStream $outstream)
     {
         // get the columns to rename
         $job_definition = $this->getProperties();

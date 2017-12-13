@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class MailJet implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $username = '';
@@ -80,6 +78,18 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
         return false;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
@@ -113,7 +123,7 @@ class MailJet implements \Flexio\Services\IConnection, \Flexio\Services\IFileSys
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         // TODO: implement
     }

@@ -30,7 +30,7 @@ namespace Flexio\Jobs;
 
 class CalcField extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -40,7 +40,7 @@ class CalcField extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -49,13 +49,13 @@ class CalcField extends \Flexio\Jobs\Base
                 $outstream->copy($instream);
                 return;
 
-            case \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE:
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->getOutput($instream, $outstream);
                 return;
         }
     }
 
-    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // get the job properties
         $job_definition = $this->getProperties();

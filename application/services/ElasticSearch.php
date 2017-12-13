@@ -16,9 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
-
-class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class ElasticSearch implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $host = '';
@@ -110,6 +108,18 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
         return false;
     }
 
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         // TODO: implement
@@ -123,8 +133,8 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
         // TODO: for now, set default type to 'rows'; should be based on path somehow
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             return false;
 
         // make sure the index and type are valid
@@ -173,8 +183,8 @@ class ElasticSearch implements \Flexio\Services\IConnection, \Flexio\Services\IF
         // create an index with the specified mapping
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             return false;
 
         // make sure the index and type are valid

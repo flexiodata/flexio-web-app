@@ -275,7 +275,7 @@ class Right
         if ($user === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $rights = $user->getObjectRights($filter);
+        $rights = $user->getRightsList($filter);
         return $rights;
     }
 

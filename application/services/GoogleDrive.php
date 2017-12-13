@@ -17,9 +17,8 @@ namespace Flexio\Services;
 
 
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class GoogleDrive implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $access_token = '';
@@ -105,6 +104,18 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
         return false;
     }
 
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
@@ -178,7 +189,7 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::MIME_TYPE_STREAM;
+        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
@@ -281,7 +292,7 @@ class GoogleDrive implements \Flexio\Services\IConnection, \Flexio\Services\IFil
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_FOLDER);
+            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
         }
 
         $path = trim($path, '/');

@@ -27,7 +27,7 @@ namespace Flexio\Jobs;
 
 class Task extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -37,7 +37,7 @@ class Task extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -48,7 +48,7 @@ class Task extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // STEP 1: create a subprocess and add the task to run
         $job_definition = $this->getProperties();
@@ -69,7 +69,7 @@ class Task extends \Flexio\Jobs\Base
         self::copyStream($subprocess_stdout, $outstream);
     }
 
-    private static function copyStream(\Flexio\Base\IStream &$instream, \Flexio\Base\IStream &$outstream)
+    private static function copyStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $streamreader = $instream->getReader();
         $streamwriter = $outstream->getWriter();

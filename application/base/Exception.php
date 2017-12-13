@@ -18,7 +18,6 @@ namespace Flexio\Base;
 
 class Exception extends \Exception
 {
-
     public function __construct($code, $message = null)
     {
         if (isset($GLOBALS['g_config']->debug_error_log))
@@ -42,5 +41,7 @@ class Exception extends \Exception
         $local_message = json_encode($local_error);
 
         parent::__construct($local_message);
+
+        $this->code = $code;
     }
 }

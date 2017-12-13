@@ -350,7 +350,9 @@ class Connection extends \Flexio\Object\Base
         // execute the query
         $query = json_decode($query);
         $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
-        if (!$properties)
+
+        // sanity check: if the data record is missing, then eid will be null
+        if (!$properties || ($properties['eid'] ?? null) === null)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the connection info json

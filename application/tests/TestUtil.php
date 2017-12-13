@@ -27,6 +27,7 @@ class TestError
 class TestUtil
 {
     const EPSILON = 0.000000000001;
+    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
 
     public static function getModel()
     {
@@ -197,7 +198,7 @@ class TestUtil
         return $handle1 . '@' . $handle2 . '.com';
     }
 
-    public static function getTable(\Flexio\Base\IStream $stream) : array
+    public static function getTable(\Flexio\IFace\IStream $stream) : array
     {
         $content = \Flexio\Base\Util::getStreamContents($stream);
         $result = array();
@@ -206,7 +207,7 @@ class TestUtil
         return $result;
     }
 
-    public static function getContent(\Flexio\Base\IStream $stream) : array
+    public static function getContent(\Flexio\IFace\IStream $stream) : array
     {
         $content = \Flexio\Base\Util::getStreamContents($stream);
         $result = array();

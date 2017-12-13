@@ -42,14 +42,14 @@ class Email extends \Flexio\Jobs\Base
     const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
     const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
         $this->sendEmail($process);
     }
 
-    private function sendEmail(\Flexio\Jobs\IProcess $process)
+    private function sendEmail(\Flexio\IFace\IProcess $process)
     {
         // get the parameters
         $job_definition = $this->getProperties();
@@ -137,13 +137,13 @@ class Email extends \Flexio\Jobs\Base
             $mime_type = $instream->getMimeType();
             $name = $instream->getName();
 
-            if ($mime_type === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
             {
                 $extension_to_add = 'csv';
                 $filename = \Flexio\Base\File::getFilename($name);
                 $name = "$filename.$extension_to_add";
 
-                $mime_type = \Flexio\Base\ContentType::MIME_TYPE_CSV;
+                $mime_type = \Flexio\Base\ContentType::CSV;
                 $attachment_file = \Flexio\Base\File::getTempFilename($extension_to_add);
                 if (!$this->saveDataToCsv($instream, $attachment_file, -1, 20000000))
                     continue; // TODO: fail?
@@ -169,7 +169,7 @@ class Email extends \Flexio\Jobs\Base
         return $attachments;
     }
 
-    private function saveDataToFile(\Flexio\Base\IStream $stream, string $filename)
+    private function saveDataToFile(\Flexio\IFace\IStream $stream, string $filename)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)
@@ -189,7 +189,7 @@ class Email extends \Flexio\Jobs\Base
         return true;
     }
 
-    private function saveDataToCsv(\Flexio\Base\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
+    private function saveDataToCsv(\Flexio\IFace\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
     {
         $handle = fopen($filename, "wt");
         if (!$handle)

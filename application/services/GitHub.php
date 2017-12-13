@@ -17,9 +17,8 @@ namespace Flexio\Services;
 
 
 require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'Abstract.php';
 
-class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSystem
+class GitHub implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
     private $access_token = '';
@@ -66,6 +65,18 @@ class GitHub implements \Flexio\Services\IConnection, \Flexio\Services\IFileSyst
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         //return false;
+    }
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function open($path) : \Flexio\IFace\IStream
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function read(array $params, callable $callback)

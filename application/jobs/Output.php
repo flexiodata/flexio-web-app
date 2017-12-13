@@ -32,7 +32,7 @@ class Output extends \Flexio\Jobs\Base
     private $cached_connection_properties = null;
     private $streams = [];
 
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
@@ -271,7 +271,7 @@ class Output extends \Flexio\Jobs\Base
         }
     }
 
-    private function runDatabaseExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runDatabaseExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -310,7 +310,7 @@ class Output extends \Flexio\Jobs\Base
         $inserter->finishInsert();
     }
 
-    private function runElasticSearchExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runElasticSearchExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -324,7 +324,7 @@ class Output extends \Flexio\Jobs\Base
         $params['structure'] = $instream->getStructure()->enum();
 
         // TODO: for now, only allow output of tables
-        if ($params['content_type'] !== \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+        if ($params['content_type'] !== \Flexio\Base\ContentType::FLEXIO_TABLE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         // create the index; note: subsequent tries to recreate the index will return false
@@ -337,7 +337,7 @@ class Output extends \Flexio\Jobs\Base
         });
     }
 
-    private function runRemoteFileExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runRemoteFileExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();
@@ -352,7 +352,7 @@ class Output extends \Flexio\Jobs\Base
         });
     }
 
-    private function runGoogleSheetsExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runGoogleSheetsExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // prefix the name
         $output_info['name'] = str_replace('/','_', $output_info['name']);
@@ -368,6 +368,12 @@ class Output extends \Flexio\Jobs\Base
         // get ready to read the input
         $streamreader = $instream->getReader();
         $filename = $output_info['name'];
+
+
+        // TODO: the createFile() function used to return the created spreadsheet,
+        // but the newly added function for the file system returns a boolean
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+
 
         $spreadsheet = $service->createFile($filename);
         if (!$spreadsheet)
@@ -401,7 +407,7 @@ class Output extends \Flexio\Jobs\Base
         $inserter->finishInsert();
     }
 
-    private function runMailJetExport(\Flexio\Base\IStream &$instream, $service, array $output_info) // TODO: add parameter type
+    private function runMailJetExport(\Flexio\IFace\IStream &$instream, $service, array $output_info) // TODO: add parameter type
     {
         // get ready to read the input
         $streamreader = $instream->getReader();

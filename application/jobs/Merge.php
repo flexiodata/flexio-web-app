@@ -28,7 +28,7 @@ EXAMPLE:
 
 class Merge extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\Jobs\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process)
     {
         // TODO: logic for this job is perfectly good, but we're removing the
         // notion right now of separate input streams in the process, so these
@@ -58,7 +58,7 @@ class Merge extends \Flexio\Jobs\Base
         $merge_mode = 'table';
         foreach ($input as $instream)
         {
-            if ($instream->getMimeType() === \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE)
+            if ($instream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 continue;
 
             $merge_mode = 'stream';
@@ -76,7 +76,7 @@ class Merge extends \Flexio\Jobs\Base
         }
     }
 
-    private function mergeStreams(\Flexio\Jobs\IProcess $process)
+    private function mergeStreams(\Flexio\IFace\IProcess $process)
     {
         $input = $process->getStreams();
         $process->clearStreams();
@@ -85,7 +85,7 @@ class Merge extends \Flexio\Jobs\Base
         // based on content
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_TXT
+            'mime_type' => \Flexio\Base\ContentType::TEXT
         );
         $outstream = \Flexio\Base\Stream::create($outstream_properties);
 
@@ -109,7 +109,7 @@ class Merge extends \Flexio\Jobs\Base
         $process->addStream($outstream);
     }
 
-    private function mergeTables(\Flexio\Jobs\IProcess $process)
+    private function mergeTables(\Flexio\IFace\IProcess $process)
     {
         $input = $process->getStreams();
         $process->clearStreams();
@@ -120,7 +120,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream_structure = $this->determineStructure($input);
         $outstream_properties = array(
             'name' => 'merged',
-            'mime_type' => \Flexio\Base\ContentType::MIME_TYPE_FLEXIO_TABLE,
+            'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
             'structure' => $outstream_structure
         );
         $outstream = \Flexio\Base\Stream::create($outstream_properties);
