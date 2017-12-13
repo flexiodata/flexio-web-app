@@ -88,7 +88,24 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             if (!is_null($marker))
                 $params['Marker'] = $marker;
 
-            $result = $s3->listObjects($params);
+            try
+            {
+                $result = $s3->listObjects($params);
+            }
+            catch (\Aws\Exception\AwsException $e)
+            {
+                $message = $e->getAwsErrorMessage();
+                if (strlen($message) == 0)
+                    $message = "An error occurred while attempting to access the requested resource";
+                     else
+                    $message = "AWS Error Message: $message";
+    
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
+            }
+            catch (\Exception $e)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "An error occurred while attempting to access the requested resource");
+            }
 
 
             $common_prefixes = $result->get('CommonPrefixes');
@@ -313,7 +330,6 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
-        $this->close();
         $this->region = $region;
         $this->bucket = $bucket;
         $this->accesskey = $accesskey;
