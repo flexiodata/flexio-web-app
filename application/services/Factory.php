@@ -173,10 +173,10 @@ class Factory
 
             case self::TYPE_AMAZONS3:
                     $auth_params = array(
-                        'region' => $connection_info['host'] ?? '',
-                        'bucket' => $connection_info['database'] ?? '',
-                        'accesskey' => $connection_info['username'] ?? '',
-                        'secretkey' => $connection_info['password'] ?? ''
+                        'region' => $connection_info['region'] ?? '',
+                        'bucket' => $connection_info['bucket'] ?? '',
+                        'accesskey' => $connection_info['aws_key'] ?? '',
+                        'secretkey' => $connection_info['aws_secret'] ?? ''
                     );
                     $service = \Flexio\Services\AmazonS3::create($auth_params);
                 break;
