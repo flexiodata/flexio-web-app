@@ -38,7 +38,7 @@ class Test
         // TEST: Exit Job
 
         // BEGIN TEST
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = $process->getResponseCode();
         $expected = 404;
         TestCheck::assertNumber('A.1', 'Exit; check basic functionality',  $actual, $expected, $results);

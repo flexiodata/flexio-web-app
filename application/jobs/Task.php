@@ -55,7 +55,7 @@ class Task extends \Flexio\Jobs\Base
         $job_tasks = array($job_definition['params']);
 
         $subprocess = \Flexio\Jobs\Process::create();
-        $subprocess->addTasks($job_tasks);
+        $subprocess->setTasks($job_tasks);
 
         // STEP 2: pass on the stdin from the main process to the subprocess
         $subprocess_stdin = $subprocess->getStdin();

@@ -261,25 +261,25 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->get();
-        $object = \Flexio\Object\Pipe::create()->setTask($task);
-        $actual = count($object->getTask());
+        $object = \Flexio\Object\Pipe::create()->setTasks($task);
+        $actual = count($object->getTasks());
         $expected = 0;
-        TestCheck::assertNumber('G.1', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
+        TestCheck::assertNumber('G.1', 'Pipe::setTasks(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->push(['type'=>'flexio.create', 'params' => []]);
-        $object = \Flexio\Object\Pipe::create()->setTask($task->get());
-        $actual = count($object->getTask());
+        $object = \Flexio\Object\Pipe::create()->setTasks($task->get());
+        $actual = count($object->getTasks());
         $expected = 1;
-        TestCheck::assertNumber('G.2', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
+        TestCheck::assertNumber('G.2', 'Pipe::setTasks(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task_step1 = \Flexio\Jobs\Create::create()->getProperties();
         $task_step2 = \Flexio\Jobs\Convert::create()->getProperties();
         $task = \Flexio\Object\Task::create()->push($task_step1)->push($task_step2);
-        $object = \Flexio\Object\Pipe::create()->setTask($task->get());
-        $actual = count($object->getTask());
+        $object = \Flexio\Object\Pipe::create()->setTasks($task->get());
+        $actual = count($object->getTasks());
         $expected = 2;
-        TestCheck::assertNumber('G.3', 'Pipe::setTask(); make sure task step count is valid',  $actual, $expected, $results);
+        TestCheck::assertNumber('G.3', 'Pipe::setTasks(); make sure task step count is valid',  $actual, $expected, $results);
     }
 }

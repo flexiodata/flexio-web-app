@@ -79,7 +79,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTask(array $task) : \Flexio\Object\Pipe
+    public function setTasks(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
@@ -87,7 +87,7 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTask() : array
+    public function getTasks() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();
@@ -97,37 +97,37 @@ class Pipe extends \Flexio\Object\Base
     public function addTaskStep(array $task_step, int $index = null) : string
     {
         // get the current task array
-        $task_array = $this->getTask();
+        $task_array = $this->getTasks();
         $task = \Flexio\Object\Task::create($task_array);
 
         // add a new task
         $task_eid = $task->addTaskStep($task_step, $index);
-        $this->setTask($task->get());
+        $this->setTasks($task->get());
         return $task_eid;
     }
 
     public function deleteTaskStep(string $task_eid) : \Flexio\Object\Pipe
     {
-        $task_array = $this->getTask();
+        $task_array = $this->getTasks();
         $task = \Flexio\Object\Task::create($task_array);
         $task->deleteTaskStep($task_eid);
-        $this->setTask($task->get());
+        $this->setTasks($task->get());
         return $this;
     }
 
     public function setTaskStep(string $task_eid, array $task_step) : \Flexio\Object\Pipe
     {
         // get the current task array
-        $task_array = $this->getTask();
+        $task_array = $this->getTasks();
         $task = \Flexio\Object\Task::create($task_array);
         $task->setTaskStep($task_eid, $task_step);
-        $this->setTask($task->get());
+        $this->setTasks($task->get());
         return $this;
     }
 
     public function getTaskStep(string $task_eid) // TODO: add function return type
     {
-        $task_array = $this->getTask();
+        $task_array = $this->getTasks();
         $task = \Flexio\Object\Task::create($task_array);
         return $task->getTaskStep($task_eid);
     }

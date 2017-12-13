@@ -70,7 +70,7 @@ class Each extends \Flexio\Jobs\Base
             // to the content for the row; TODO: need to pass on the params from
             // the process
             $subprocess = \Flexio\Jobs\Process::create();
-            $subprocess->addTasks($job_tasks);
+            $subprocess->setTasks($job_tasks);
             $subprocess->getStdin()->write($row);
             $subprocess->execute();
             $subprocess_stdout = $subprcess->getStdout();

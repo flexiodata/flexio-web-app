@@ -52,7 +52,7 @@ class Test
                 "expression": "upper(field1)"
             }
         }',true));
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b","A"],["b","B","B"],["c","b","C"]];
         TestCheck::assertString('A.1', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
@@ -66,7 +66,7 @@ class Test
                 "expression": "concat(field1,\'.\',field2)"
             }
         }',true));
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b","a.b"],["b","B","b.B"],["c","b","c.b"]];
         TestCheck::assertString('A.2', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
@@ -80,7 +80,7 @@ class Test
                 "expression": "substr(concat(field1,\'.\',field2),2,2)"
             }
         }',true));
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b",".b"],["b","B",".B"],["c","b",".b"]];
         TestCheck::assertString('A.3', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
@@ -94,7 +94,7 @@ class Test
                 "expression": "lpad(field2,3,\'0\')"
             }
         }',true));
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b","00b"],["b","B","00B"],["c","b","00b"]];
         TestCheck::assertString('A.4', 'CalcField Job; check basic functionality',  $actual, $expected, $results);

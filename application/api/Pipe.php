@@ -361,7 +361,7 @@ class Pipe
         $process->setAssocPipe($pipe);
 
         $pipe_properties = $pipe->get();
-        $process->addTasks($pipe_properties['task']);
+        $process->setTasks($pipe_properties['task']);
 
         // STEP 2: parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');

@@ -85,5 +85,55 @@ class Test
         $actual = $object->pause()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
         TestCheck::assertString('B.4', 'Process::pause(); only jobs that are running can be paused',  $actual, $expected, $results);
+
+
+
+        // TEST: check status on process success or failure
+
+        // BEGIN TEST
+        $task =
+        [
+            [
+                "type" => "application/bad-job-definition",
+                "params" => (object)[]
+            ]
+        ];
+        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $actual = $process->getProcessStatus();
+        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
+        TestCheck::assertString('C.1', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task =
+        [
+            [
+                "type" => "flexio.create",
+                "params" => [
+                    "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                    "columns" => [
+                        [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
+                    ],
+                    "content" => "bad content"
+                ]
+            ]
+        ];
+        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $actual = $process->getProcessStatus();
+        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
+        TestCheck::assertString('C.2', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task =
+        [
+            [
+                "type" => "flexio.nop",
+                "params" => (object)[
+                ]
+            ]
+        ];
+        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $actual = $process->getProcessStatus();
+        $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
+        TestCheck::assertString('C.3', 'Basic Process; make sure the task status is properly set when a process succeeds',  $actual, $expected, $results);
     }
 }
