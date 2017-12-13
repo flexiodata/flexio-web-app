@@ -47,7 +47,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = \Flexio\Base\Util::getStreamContents($process->getStdout());
+        $actual = $process->getStdout()->getReader()->read();
         $expected = 'SOME CONTENT';
         TestCheck::assertString('A.1', 'Transform Job; basic transformation on stream content',  $actual, $expected, $results);
     }
