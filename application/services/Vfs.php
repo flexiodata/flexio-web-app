@@ -296,6 +296,9 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $connection_info = $connection->get();
 
+        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
         $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
