@@ -35,7 +35,12 @@ var fallbackCss = (el_id, href) => {
   document.body.removeChild(tmp_el)
 }
 
+var sanitizeMasked = (obj) => {
+  return _.omitBy(obj, (val, key) => { return val === '*****' })
+}
+
 export default {
   pluralize: pluralize,
-  fallbackCss: fallbackCss
+  fallbackCss: fallbackCss,
+  sanitizeMasked: sanitizeMasked
 }
