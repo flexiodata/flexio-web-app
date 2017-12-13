@@ -54,7 +54,7 @@ class Test
         // TEST: Limit Job
 
         // BEGIN TEST
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["a","b"]];
         TestCheck::assertString('A.1', 'Limit Job; check basic functionality',  $actual, $expected, $results);
