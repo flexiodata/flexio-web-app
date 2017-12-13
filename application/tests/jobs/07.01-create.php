@@ -269,9 +269,15 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->hasError();
-        $expected = true;
-        TestCheck::assertBoolean('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
+        $actual = $process->getStdout()->getStructure()->get();
+        $expected = '
+        [
+            { "name": "f1", "type": "character", "width": 10,   "scale": null },
+            { "name": "f2", "type": "numeric",   "width": 10,   "scale": 2    },
+            { "name": "f3", "type": "date",      "width": 8,    "scale": null }
+        ]
+        ';
+        TestCheck::assertInArray('I.2', 'Create Job; make sure structure is properly created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
