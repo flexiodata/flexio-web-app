@@ -51,7 +51,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $object;
     }
 
-
     public function addEventHandler($handler)
     {
         return $this->engine->addEventHandler($handler);
