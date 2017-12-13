@@ -101,7 +101,11 @@ class Base implements \Flexio\IFace\IJob
                             while (($chunk = $streamreader->read()) !== false)
                                 $replacement .= $chunk;
                         }
-                         else if (isset($variables[$varname]))
+                        else if ($varname == 'uniqid')
+                        {
+                            $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
+                        }
+                        else if (isset($variables[$varname]))
                         {
                             if ($variables[$varname] instanceof \Flexio\Base\Stream)
                             {
