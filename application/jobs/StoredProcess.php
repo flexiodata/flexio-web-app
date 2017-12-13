@@ -51,14 +51,16 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $object;
     }
 
-    public function addEventHandler($handler)
+    public function addEventHandler($handler) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->addEventHandler($handler);
+        $this->engine->addEventHandler($handler);
+        return $this;
     }
 
     public function setMetadata(array $metadata)
     {
-        return $this->engine->setMetadata($handler);
+        $this->engine->setMetadata($handler);
+        return $this;
     }
 
     public function getMetadata() : array
@@ -66,9 +68,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getMetadata();
     }
 
-    public function setTasks(array $tasks)
+    public function setTasks(array $tasks) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->setTasks($tasks);
+        $this->engine->setTasks($tasks);
+        return $this;
     }
 
     public function getTasks() : array
@@ -76,9 +79,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getTasks();
     }
 
-    public function setParams(array $arr)
+    public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->setParams($arr);
+        $this->engine->setParams($arr);
+        return $this;
     }
 
     public function getParams() : array
@@ -86,14 +90,16 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getParams();
     }
 
-    public function addFile(string $name, \Flexio\IFace\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->addFile($name, $stream);
+        $this->engine->addFile($name, $stream);
+        return $this;
     }
 
-    public function setStdin(\Flexio\IFace\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->setStdin($stream);
+        $this->engine->setStdin($stream);
+        return $this;
     }
 
     public function getStdin() : \Flexio\IFace\IStream
@@ -101,9 +107,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getStdin();
     }
 
-    public function setStdout(\Flexio\IFace\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->setStdout($stream);
+        $this->engine->setStdout($stream);
+        return $this;
     }
 
     public function getStdout() : \Flexio\IFace\IStream
@@ -111,9 +118,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getStdout();
     }
 
-    public function setResponseCode(int $code)
+    public function setResponseCode(int $code) : \Flexio\Jobs\StoredProcess
     {
-        return $this->engine->setResponseCode($code);
+        $this->engine->setResponseCode($code);
+        return $this;
     }
 
     public function getResponseCode() : int
@@ -121,9 +129,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getResponseCode();
     }
 
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null) : \Flexio\IFace\IProcess
     {
-        return $this->engine->setError($code, $message, $file, $line, $type, $trace);
+        $this->engine->setError($code, $message, $file, $line, $type, $trace);
+        return $this;
     }
 
     public function getError() : array
@@ -141,11 +150,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getStatusInfo();
     }
 
-    public function execute()
+    public function execute() : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a
         // database process record, so no statistics will be serialized
-        return $this->engine->execute();
+        $this->engine->execute();
+        return $this;
     }
 
 

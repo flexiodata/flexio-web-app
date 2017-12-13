@@ -20,19 +20,21 @@ interface IProcess
 {
     public function setMetadata(array $metadata); // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     public function getMetadata();
-    public function setTasks(array $tasks);       // array of tasks to process
+    public function setTasks(array $tasks);
     public function getTasks();
-    public function setParams(array $arr);        // variables that are used in the processing
+    public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);
+    public function setStdin();
     public function getStdin();
+    public function setStdout();
     public function getStdout();
     public function setResponseCode(int $code);
     public function getResponseCode();
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
-    public function getStatusInfo();              // returns info about the process, such as the current task being processed
-    public function execute();                    // $func is a callback that is either or a callable or array type (in the instance of a call to a class method)
+    public function getStatusInfo();
+    public function execute();
 }
 

@@ -119,14 +119,16 @@ class Process implements \Flexio\IFace\IProcess
         return $object;
     }
 
-    public function addEventHandler($handler)
+    public function addEventHandler($handler) : \Flexio\Jobs\Process
     {
         $this->handlers[] = $handler;
+        return $this;
     }
 
-    public function setMetadata(array $metadata)
+    public function setMetadata(array $metadata) : \Flexio\Jobs\Process
     {
         $this->metadata = $metadata;
+        return $this;
     }
 
     public function getMetadata() : array
@@ -134,9 +136,10 @@ class Process implements \Flexio\IFace\IProcess
         return $this->metadata;
     }
 
-    public function setTasks(array $tasks)
+    public function setTasks(array $tasks) : \Flexio\Jobs\Process
     {
         $this->tasks = $tasks;
+        return $this;
     }
 
     public function getTasks() : array
@@ -144,7 +147,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this->tasks;
     }
 
-    public function setParams(array $arr)
+    public function setParams(array $arr) : \Flexio\Jobs\Process
     {
         foreach ($arr as $k => &$v)
         {
@@ -157,6 +160,7 @@ class Process implements \Flexio\IFace\IProcess
         }
 
         $this->params = $arr;
+        return $this;
     }
 
     public function getParams() : array
@@ -164,14 +168,16 @@ class Process implements \Flexio\IFace\IProcess
         return $this->params;
     }
 
-    public function addFile(string $name, \Flexio\IFace\IStream $stream)
+    public function addFile(string $name, \Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
         $this->files[$name] = $stream;
+        return $this;
     }
 
-    public function setStdin(\Flexio\IFace\IStream $stream)
+    public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
-        return $this->stdin = $stream;
+        $this->stdin = $stream;
+        return $this;
     }
 
     public function getStdin() : \Flexio\IFace\IStream
@@ -179,9 +185,10 @@ class Process implements \Flexio\IFace\IProcess
         return $this->stdin;
     }
 
-    public function setStdout(\Flexio\IFace\IStream $stream)
+    public function setStdout(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
-        return $this->stdout = $stream;
+        $this->stdout = $stream;
+        return $this;
     }
 
     public function getStdout() : \Flexio\IFace\IStream
@@ -189,9 +196,10 @@ class Process implements \Flexio\IFace\IProcess
         return $this->stdout;
     }
 
-    public function setResponseCode(int $code)
+    public function setResponseCode(int $code) : \Flexio\Jobs\Process
     {
         $this->response_code = $code;
+        return $this;
     }
 
     public function getResponseCode() : int
@@ -199,12 +207,13 @@ class Process implements \Flexio\IFace\IProcess
         return $this->response_code;
     }
 
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)  : \Flexio\Jobs\Process
     {
         if (!isset($message))
         $message = \Flexio\Base\Error::getDefaultMessage($code);
 
         $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
+        return $this;
     }
 
     public function getError() : array
@@ -225,7 +234,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this->status_info;
     }
 
-    public function execute()
+    public function execute() : \Flexio\IFace\IProcess
     {
         // fire the starting event
         $this->invokeEventHandlers(self::EVENT_STARTING);
@@ -239,6 +248,7 @@ class Process implements \Flexio\IFace\IProcess
 
         // fire the finish event
         $this->invokeEventHandlers(self::EVENT_FINISHED);
+        return $this;
     }
 
     private function executeAllTasks()
