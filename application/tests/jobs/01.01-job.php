@@ -20,52 +20,5 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: check status on process success or failure
-
-        // BEGIN TEST
-        $task =
-        [
-            [
-                "type" => "application/bad-job-definition",
-                "params" => (object)[]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('A.1', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task =
-        [
-            [
-                "type" => "flexio.create",
-                "params" => [
-                    "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                    "columns" => [
-                        [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
-                    ],
-                    "content" => "bad content"
-                ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('A.2', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task =
-        [
-            [
-                "type" => "flexio.nop",
-                "params" => (object)[
-                ]
-            ]
-        ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
-        TestCheck::assertString('A.3', 'Basic Process; make sure the task status is properly set when a process succeeds',  $actual, $expected, $results);
     }
 }
