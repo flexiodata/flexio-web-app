@@ -719,7 +719,9 @@ class StorageFs
         $width = isset($field['width']) ? $field['width'] : null;
         $scale = isset($field['scale']) ? $field['scale'] : null;
 
-        $qname = self::quoteIdentifierIfNecessary($name);
+        //$qname = self::quoteIdentifierIfNecessary($name);
+        // for sqlite, we'll always quote field names
+        $qname = self::quoteIdentifier($name);
 
         switch ($type)
         {
@@ -756,12 +758,15 @@ class StorageFs
 
     public static function quoteIdentifierIfNecessary(string $str) : string
     {
-        $str = str_replace('?', '', $str);
-
-        if (false === strpbrk($str, "\"'-/\\!@#$%^&*() \t"))
+        if (false === strpbrk($str, "\"'-/\\!@#$%^&*?() \t"))
             return $str;
              else
-            return ('"' . $str . '"');
+            return self::quoteIdentifier($str);
     }
 
+    public static function quoteIdentifier(string $str) : string
+    {
+        $qname = '"' . str_replace('"', '""', $name) . '"';
+    }
+    
 }
