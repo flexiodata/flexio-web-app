@@ -31,6 +31,25 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    private function isStorageConnectionType(string $type) : bool
+    {
+        switch ($type)
+        {
+            default:
+                return false;
+            case 'ftp':
+            case 'sftp':
+            case 'mysql':
+            case 'postgres':
+            case 'dropbox':
+            case 'box':
+            case 'googledrive':
+            case 'googlesheets':
+            case 'amazons3':
+                return true;
+        }
+    }
+
     public function list(string $path = '') : array
     {
         $results = [];
@@ -70,6 +89,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     continue;
 
                 $info = $c->get();
+
+                if (!self::isStorageConnectionType($info['connection_type'] ?? ''))
+                    continue;
+
                 $name = $info['ename'];
                 if (strlen($name) == 0)
                     $name = $info['eid'];
