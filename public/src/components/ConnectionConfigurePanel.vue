@@ -23,9 +23,41 @@
         <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
       </div>
       <div class="lh-copy" v-else>To use this connection, you must connect {{service_name}} to Flex.io.</div>
-      <div class="flex flex-column w-50-ns center mt1 mb3" :class="form_cls">
+      <div class="flex flex-column w-50-ns center mt1 mb3">
         <ui-textbox
-          class="css-condensed css-input-token"
+          class="css-condensed"
+          autocomplete="off"
+          label="AWS Access Key"
+          floating-label
+          v-model.trim="info.aws_key"
+          v-if="showInput('aws_key')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed"
+          autocomplete="off"
+          label="AWS Secret Key"
+          floating-label
+          v-model.trim="info.aws_secret"
+          v-if="showInput('aws_secret')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed"
+          autocomplete="off"
+          label="Bucket"
+          floating-label
+          v-model.trim="info.bucket"
+          v-if="showInput('bucket')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed"
+          autocomplete="off"
+          label="Region"
+          floating-label
+          v-model.trim="info.region"
+          v-if="showInput('region')"
+        ></ui-textbox>
+        <ui-textbox
+          class="css-condensed"
           autocomplete="off"
           label="Token"
           floating-label
@@ -33,7 +65,7 @@
           v-if="showInput('token')"
         ></ui-textbox>
         <ui-textbox
-          class="css-condensed css-input-host"
+          class="css-condensed"
           autocomplete="off"
           floating-label
           :label="host_label"
@@ -41,7 +73,7 @@
           v-if="showInput('host')"
         ></ui-textbox>
         <ui-textbox
-          class="css-condensed css-input-port"
+          class="css-condensed"
           autocomplete="off"
           label="Port"
           floating-label
@@ -49,7 +81,7 @@
           v-if="showInput('port')"
         ></ui-textbox>
         <ui-textbox
-          class="css-condensed css-input-username"
+          class="css-condensed"
           autocomplete="off"
           floating-label
           :label="username_label"
@@ -58,7 +90,7 @@
         ></ui-textbox>
         <ui-textbox
           type="password"
-          class="css-condensed css-input-password"
+          class="css-condensed"
           autocomplete="off"
           :label="password_label"
           floating-label
@@ -66,7 +98,7 @@
           v-if="showInput('password')"
         ></ui-textbox>
         <ui-textbox
-          class="css-condensed css-input-database"
+          class="css-condensed"
           autocomplete="off"
           :label="database_label"
           floating-label
@@ -106,13 +138,21 @@
       Btn
     },
     data() {
+      var c = this.connection
+
       var attrs = {
-        token: _.get(this.connection, 'connection_info.token', ''),
-        host: this.mode == 'edit' ? _.get(this.connection, 'connection_info.host', '') : this.getDefaultHost(),
-        port: this.mode == 'edit' ? _.get(this.connection, 'connection_info.port', '') : this.getDefaultPort(),
-        username: _.get(this.connection, 'connection_info.username', ''),
-        password: _.get(this.connection, 'connection_info.password', ''),
-        database: _.get(this.connection, 'connection_info.database', '')
+        token: _.get(c, 'connection_info.token', ''),
+        host: _.get(c, 'connection_info.host', ''),
+        port: this.mode == 'edit' ? _.get(c, 'connection_info.port', '') : this.getDefaultPort(),
+        username: _.get(c, 'connection_info.username', ''),
+        password: _.get(c, 'connection_info.password', ''),
+        database: _.get(c, 'connection_info.database', ''),
+
+        // aws
+        aws_key: _.get(c, 'connection_info.aws_key', ''),
+        aws_secret: _.get(c, 'connection_info.aws_secret', ''),
+        bucket: _.get(c, 'connection_info.bucket', ''),
+        region: this.mode == 'edit' ? _.get(c, 'connection_info.region', '') : this.getDefaultRegion()
       }
 
       switch (this.getConnectionType())
@@ -121,7 +161,7 @@
           attrs = _.pick(attrs, ['host', 'port', 'username', 'password', 'database'])
           break;
         case types.CONNECTION_TYPE_AMAZONS3:
-          attrs = _.pick(attrs, ['host', 'username', 'password', 'database'])
+          attrs = _.pick(attrs, ['aws_key', 'aws_secret', 'bucket', 'region'])
           break
         case types.CONNECTION_TYPE_FIREBASE:
           attrs = _.pick(attrs, ['host', 'username', 'password'])
@@ -136,12 +176,16 @@
       }
     },
     watch: {
-      'info.token'()    { this.$emit('change', { connection_info: this.info }) },
-      'info.host'()     { this.$emit('change', { connection_info: this.info }) },
-      'info.port'()     { this.$emit('change', { connection_info: this.info }) },
-      'info.username'() { this.$emit('change', { connection_info: this.info }) },
-      'info.password'() { this.$emit('change', { connection_info: this.info }) },
-      'info.database'() { this.$emit('change', { connection_info: this.info }) }
+      'info.token'()      { this.$emit('change', { connection_info: this.info }) },
+      'info.host'()       { this.$emit('change', { connection_info: this.info }) },
+      'info.port'()       { this.$emit('change', { connection_info: this.info }) },
+      'info.username'()   { this.$emit('change', { connection_info: this.info }) },
+      'info.password'()   { this.$emit('change', { connection_info: this.info }) },
+      'info.database'()   { this.$emit('change', { connection_info: this.info }) },
+
+      'info.aws_key'()    { this.$emit('change', { connection_info: this.info }) },
+      'info.aws_secret'() { this.$emit('change', { connection_info: this.info }) },
+      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) }
     },
     computed: {
       ctype() {
@@ -165,9 +209,6 @@
       cls() {
         return this.is_connected ? 'b--dark-green' : 'b--blue'
       },
-      form_cls() {
-        return { 'css-amazon-s3': this.is_s3 }
-      },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
       },
@@ -183,16 +224,16 @@
         return false
       },
       host_label()     {
-        return this.is_s3 ? 'Region'     : 'Host'
+        return 'Host'
       },
       username_label() {
-        return this.is_s3 ? 'Access Key' : 'Username'
+        return 'Username'
       },
       password_label() {
-        return this.is_s3 ? 'Secret Key' : 'Password'
+        return 'Password'
       },
       database_label() {
-        return this.is_s3 ? 'Bucket' : 'Database'
+        return 'Database'
       }
     },
     methods: {
@@ -202,13 +243,8 @@
       getConnectionType() {
         return _.get(this, 'connection.connection_type', '')
       },
-      getDefaultHost() {
-        // we use a method here since we can't use computed values in the data()
-        switch (this.getConnectionType())
-        {
-          case types.CONNECTION_TYPE_AMAZONS3: return 'us-east-1'
-        }
-        return ''
+      getDefaultRegion() {
+        return 'us-east-1'
       },
       getDefaultPort() {
         // we use a method here since we can't use computed values in the data()
@@ -236,13 +272,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .css-amazon-s3 {
-    .css-input-username { order: 1; }
-    .css-input-password { order: 2; }
-    .css-input-database { order: 3; }
-    .css-input-host     { order: 4; }
-    .css-btn-test       { order: 5; }
-  }
-</style>
