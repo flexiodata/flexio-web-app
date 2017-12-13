@@ -51,9 +51,9 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($local_task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('A.1', 'Table Creation; fail when a job definition is invalid',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('A.1', 'Table Creation; fail when a job definition is invalid',  $actual, $expected, $results);
 
 
 
@@ -269,9 +269,9 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
-        TestCheck::assertString('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('I.1', 'Table Creation; succeed when job definition is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('

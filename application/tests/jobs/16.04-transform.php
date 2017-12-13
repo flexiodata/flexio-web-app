@@ -55,9 +55,9 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-		TestCheck::assertString('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+		TestCheck::assertBoolean('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -292,8 +292,8 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
+        $actual = $process->hasError();
+        $expected = true;
 		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
@@ -934,8 +934,8 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
+        $actual = $process->hasError();
+        $expected = true;
 		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST

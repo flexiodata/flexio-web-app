@@ -106,9 +106,9 @@ EOD;
             }
         }',true));
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -121,9 +121,9 @@ EOD;
             }
         }',true));
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -136,9 +136,9 @@ EOD;
             }
         }',true));
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('B.5', 'Execute Job; check code integrity; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('B.5', 'Execute Job; check code integrity; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
 
 
 
@@ -170,9 +170,9 @@ EOD;
             }
         }',true));
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('C.2', 'Execute Job; check code integrity; sha384 integrity failure',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('C.2', 'Execute Job; check code integrity; sha384 integrity failure',  $actual, $expected, $results);
 
 
 
@@ -204,9 +204,9 @@ EOD;
             }
         }',true));
         $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
-        $actual = $process->getProcessStatus();
-        $expected = \Flexio\Jobs\Process::STATUS_FAILED;
-        TestCheck::assertString('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
+        $actual = $process->hasError();
+        $expected = true;
+        TestCheck::assertBoolean('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
 
 
 
