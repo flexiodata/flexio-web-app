@@ -115,12 +115,12 @@ const HTTP = {
 const MAILJET = {
   service_name: 'Mailjet',
   service_description: 'Send email that converts',
+  connection_type: types.CONNECTION_TYPE_MAILJET,
+  icon: require('../assets/icon/icon-mailjet-128.png'),
   is_service: true,
   is_input: false,
   is_output: false,
-  is_storage: false,
-  connection_type: types.CONNECTION_TYPE_MAILJET,
-  icon: require('../assets/icon/icon-mailjet-128.png')
+  is_storage: false
 }
 
 const MYSQL = {

@@ -70,7 +70,7 @@
     },
     data() {
       return {
-        connection_path: '/',
+        connection_path: '/' + this.getConnectionIdentifier(),
         items: []
       }
     },
@@ -117,8 +117,12 @@
         this.reset()
       },
       openFolder(path) {
-        this.connection_path = _.defaultTo(path, '/')
+        this.connection_path = _.defaultTo(path, '/' + this.getConnectionIdentifier())
         this.items = []
+      },
+      getConnectionIdentifier() {
+        var cid = _.get(this.connection, 'ename', '')
+        return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
       },
       updateItems(items) {
         this.items = items
