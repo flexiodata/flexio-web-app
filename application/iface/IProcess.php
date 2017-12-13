@@ -20,7 +20,7 @@ interface IProcess
 {
     public function setMetadata(array $metadata); // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     public function getMetadata();
-    public function addTasks(array $tasks);       // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
+    public function setTasks(array $tasks);       // array of tasks to process
     public function getTasks();
     public function setParams(array $arr);        // variables that are used in the processing
     public function getParams();

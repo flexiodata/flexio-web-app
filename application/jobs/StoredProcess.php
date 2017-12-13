@@ -67,9 +67,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getMetadata();
     }
 
-    public function addTasks(array $tasks)
+    public function setTasks(array $tasks)
     {
-        return $this->engine->addTasks($tasks);
+        return $this->engine->setTasks($tasks);
     }
 
     public function getTasks() : array

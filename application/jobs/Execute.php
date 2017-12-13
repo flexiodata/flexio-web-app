@@ -673,7 +673,7 @@ class Execute extends \Flexio\Jobs\Base
             $this->runjob_stdin = $this->getContext()->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
-        $process->addTasks(array($task));
+        $process->setTasks(array($task));
         $process->getStdin()->copy($this->runjob_stdin);
         $process->execute();
 

@@ -134,11 +134,6 @@ class Process implements \Flexio\IFace\IProcess
         return $this->metadata;
     }
 
-    public function addTasks(array $tasks)
-    {
-        $this->tasks = array_merge($this->tasks, $tasks);
-    }
-
     public function setTasks(array $tasks)
     {
         $this->tasks = $tasks;

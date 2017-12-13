@@ -377,7 +377,7 @@ class Process extends \Flexio\Object\Base
 
         // STEP 4: create the process engine and configure it
         $process_engine = \Flexio\Jobs\Process::create();
-        $process_engine->addTasks($process_tasks);
+        $process_engine->setTasks($process_tasks);
         $process_engine->setParams($variables);
         $process_engine->getStdin()->copy($this->getStdin());
         $process_engine->addEventHandler([$this, 'handleEvent']);
