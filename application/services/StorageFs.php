@@ -25,8 +25,10 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     private $sqlite = null;
     private $result = null; // sqlite result object
+
     private $structure = null;
     private $keyed_structure = null;  // structure with field names as key
+    private $storefield_map = null;
 
     function __destruct()
     {
@@ -39,12 +41,23 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         {
             $this->structure = $structure;
             $this->keyed_structure = [];
+            $this->storefield_map = [];
             foreach ($this->structure as $col)
             {
-                // only store columns in $this->keyed_structure that we need for type casting
-                if (isset($col['name']) && isset($col['type']) && $col['type'] == 'boolean')
+                // only store columns in $this->keyed_structure that we need for type casting;
+                // or if the store name is different than the field name
+                if (isset($col['name']))
                 {
-                    $this->keyed_structure[$col['name']] = $col;
+                    if (isset($col['store_name']) && $col['name'] != $col['store_name'])
+                    {
+                        $this->keyed_structure[$col['name']] = $col;
+                        $this->storefield_map[$col['store_name']] = $col['name'];
+                    }
+                     else if (isset($col['type']) && $col['type'] == 'boolean')
+                    {
+                        $this->keyed_structure[$col['name']] = $col;
+                    }
+
                 }
             }
 
@@ -147,6 +160,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     public function readRow()
     {
+
         if ($this->isOk() === false)
             return false;
 
@@ -193,24 +207,36 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     private function applyStructureToRow(array $row) : array
     {
-        if ($this->keyed_structure === null)
-            return $row;
-
-        foreach ($row as $col => &$value)
+        if (count($this->storefield_map) > 0)
         {
-            if (isset($this->keyed_structure[$col]))
+            // rename any store column names back to column names user expects
+            $newrow = [];
+            foreach ($row as $k => $v)
             {
-                if ($this->keyed_structure[$col]['type'] == 'boolean')
-                {
-                    if ($value === 0 || $value === '0' || $value === false)
-                        $value = false;
-                         else
-                        $value = true;
-                }
+                if (array_key_exists($k, $this->storefield_map))
+                    $newrow[$this->storefield_map[$k]] = $v;
+                     else
+                    $newrow[$k] = $v;
             }
-
+            $row = $newrow;
         }
 
+        if (count($this->keyed_structure) > 0)
+        {
+            foreach ($row as $col => &$value)
+            {
+                if (isset($this->keyed_structure[$col]['type']))
+                {
+                    if ($this->keyed_structure[$col]['type'] == 'boolean')
+                    {
+                        if ($value === 0 || $value === '0' || $value === false)
+                            $value = false;
+                            else
+                            $value = true;
+                    }
+                }
+            }
+        }
 
         return $row;
     }
@@ -341,7 +367,10 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             {
                 if ($i > 0)
                     $sql .= ',';
-                $sql .= StorageFs::quoteIdentifierIfNecessary($keys[$i]);
+                $name = $keys[$i];
+                if (isset($this->keyed_structure[$name]['store_name']))
+                    $name = $this->keyed_structure[$name]['store_name'];
+                $sql .= StorageFs::quoteIdentifierIfNecessary($name);
             }
 
             $sql .= ') ';
@@ -766,7 +795,7 @@ class StorageFs
 
     public static function quoteIdentifier(string $str) : string
     {
-        $qname = '"' . str_replace('"', '""', $name) . '"';
+        return '"' . str_replace('"', '""', $str) . '"';
     }
     
 }
