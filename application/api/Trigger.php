@@ -86,7 +86,10 @@ class Trigger
                 // one; use some other technique?
             }
 
-            $process->run(false); // handleEmail should be run in background from email processing script
+
+            // run the pipe
+            $engine = \Flexio\Jobs\StoredProcess::attach($process);
+            $engine->run(false); // handleEmail should be run in background from email processing script
         }
 
         // STEP 5: delete the temporary file
