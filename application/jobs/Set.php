@@ -39,7 +39,7 @@ class Set extends \Flexio\Jobs\Base
         
         $params = $process->getParams();
         $params[$var] = $value;
-        $process->setParams($value);
+        $process->setParams($params);
 
         $process->getStdout()->getWriter()->write($value);
     }
