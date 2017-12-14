@@ -116,7 +116,14 @@ class Base implements \Flexio\IFace\IJob
                             }
                              else
                             {
-                                $replacement = (string)$variables[$varname];
+                                if (is_array($variables[$varname]))
+                                {
+                                    $replacement = json_encode($variables[$varname]);
+                                }
+                                 else
+                                {
+                                    $replacement = (string)$variables[$varname];
+                                }
                             }
                         }
 
