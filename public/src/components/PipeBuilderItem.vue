@@ -214,10 +214,10 @@
 
           <!-- helper area -->
           <div v-if="show_helper">
-            <div class="tc mt3 mb2 f6 fw6 silver">...or autofill from these common steps:</div>
-            <div class="flex flex-row flex-wrap items-center justify-center-l center">
+            <div class="mt3 mb2 f6 fw6 silver">...or autofill from these common steps:</div>
+            <div class="flex flex-column flex-row-ns flex-wrap nl2-l nl-1">
               <div
-                class="f6 fw6 ttu br1 ma1 ma2-l pa2 pointer bg-near-white darken-10"
+                class="f6 fw6 ttu br1 ma2-l ma1 pa2 pointer bg-blue white darken-10"
                 @click="autofillItemClick(item)"
                 v-for="(item, index) in autofill_items"
               >{{item.label}}</div>
