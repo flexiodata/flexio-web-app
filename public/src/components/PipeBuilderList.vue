@@ -15,11 +15,7 @@
     >
       {{error_message}}
     </ui-alert>
-    <div
-      class="mv4 center"
-      style="max-width: 1440px"
-      v-if="tasks.length == 0"
-    >
+    <div class="mv4 pt3 center" style="max-width: 1440px" v-if="tasks.length == 0">
       <div class="mh4 pa4 bg-white ba b--white-box br2 tc">
         <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
         <div class="mt3">
@@ -34,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="mv4 center" style="max-width: 1440px" v-else>
+    <div class="mv4 pt3 center" style="max-width: 1440px" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :key="task.eid"
