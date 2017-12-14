@@ -5,11 +5,11 @@
         to="/pipes"
         class="flex flex-row items-center link mid-gray hover-black pv1"
       >
-        <div class="hint--bottom-right" aria-label="Back to pipe list">
+        <div class="hint--bottom-right" style="margin-top: -1px" aria-label="Back to pipe list">
           <i class="material-icons md-24">home</i>
         </div>
       </router-link>
-      <i class="material-icons md-24 black-20 rotate-270 pv1">arrow_drop_down</i>
+      <i class="material-icons md-24 black-20 rotate-270 pv1 nl1 ml0-ns" style="margin-top: -1px">arrow_drop_down</i>
       <div class="flex-fill mb1 mr2">
         <div class="flex flex-column flex-row-l items-center-l">
           <inline-edit-text
