@@ -2309,14 +2309,14 @@
 
       var params = this.split(str, this.args.set);
 
-      if (json.params.hasOwnProperty('var'))
+      if (params.hasOwnProperty('var'))
       {
-        res = this.append(res, "var: " + json.params.name)
+        json.params['var'] = params['var'].value;
       }
   
-      if (json.params.hasOwnProperty('value'))
+      if (params.hasOwnProperty('value'))
       {
-        res = this.append(res, "value: " + json.params.value)
+        json.params['value'] = params['value'].value;
       }
 
       return json;
@@ -2332,7 +2332,7 @@
 
       if (json.params.hasOwnProperty('var'))
       {
-        res = this.append(res, "var: " + json.params.name);
+        res = this.append(res, "var: " + json.params['var']);
       }
 
       if (json.params.hasOwnProperty('value'))
