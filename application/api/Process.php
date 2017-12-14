@@ -354,7 +354,6 @@ class Process
 
         $validated_params = $validator->getParams();
         $process_identifier = $validated_params['eid'];
-        $background = false;
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
@@ -365,15 +364,17 @@ class Process
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // create a job engine, attach it to the process object, and run the process and get the output
+        $engine = \Flexio\Jobs\StoredProcess::attach($process);
+
         // parse the content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
-         // run the process and get the output
-        $process->run($background);
+        $engine->run(false);
 
-        $stream = $process->getStdout();
+        $stream = $engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
