@@ -686,6 +686,9 @@ class Convert extends \Flexio\Jobs\Base
         if ($row_width == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        if (count($columns) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         // get the input
         $streamreader = $instream->getReader();
         $outstream->set($instream->get());
