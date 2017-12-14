@@ -52,6 +52,7 @@ class Read extends \Flexio\Jobs\Base
         try
         {
             $stream = $vfs->open($path);
+
             if (!$stream)
             {
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
@@ -72,11 +73,13 @@ class Read extends \Flexio\Jobs\Base
              else
             {
                 while (($data = $reader->read(16384)) !== false)
+                {
                     $writer->write($data);
+                }
             }
 
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             $files = $vfs->read($path, function($data) use (&$streamwriter) {
                 $streamwriter->write($data);
