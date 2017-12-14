@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="code light-silver f8 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
-      <div class="ml2" v-if="showDropdown">
+      <div class="ml2" v-if="showDropdown && eid.length > 0">
         <a
           ref="dropdown-trigger"
           tabindex="0"

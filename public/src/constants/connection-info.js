@@ -101,6 +101,17 @@ const GOOGLESHEETS = {
   is_storage: true
 }
 
+const HOME = {
+  service_name: 'Home',
+  service_description: '',
+  connection_type: types.CONNECTION_TYPE_HOME,
+  icon: require('../assets/icon/icon-home-128.png'),
+  is_service: false,
+  is_input: false,
+  is_output: false,
+  is_storage: true
+}
+
 const HTTP = {
   service_name: 'Web Link',
   service_description: '',
@@ -237,6 +248,7 @@ export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 //export const CONNECTION_INFO_FIREBASE      = FIREBASE
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
+export const CONNECTION_INFO_HOME          = HOME
 export const CONNECTION_INFO_HTTP          = HTTP
 //export const CONNECTION_INFO_MAILJET       = MAILJET
 export const CONNECTION_INFO_MYSQL         = MYSQL

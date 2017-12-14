@@ -29,10 +29,9 @@
 
 <script>
   import {
+    CONNECTION_TYPE_HOME,
     CONNECTION_TYPE_HTTP,
-    CONNECTION_TYPE_RSS,
-    CONNECTION_TYPE_MYSQL,
-    CONNECTION_TYPE_POSTGRES
+    CONNECTION_TYPE_RSS
   } from '../constants/connection-type'
   import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
@@ -70,7 +69,7 @@
     },
     data() {
       return {
-        connection_path: '/' + this.getConnectionIdentifier(),
+        connection_path: this.getConnectionBasePath(),
         items: []
       }
     },
@@ -117,12 +116,17 @@
         this.reset()
       },
       openFolder(path) {
-        this.connection_path = _.defaultTo(path, '/' + this.getConnectionIdentifier())
+        this.connection_path = _.defaultTo(path, this.getConnectionBasePath())
         this.items = []
       },
       getConnectionIdentifier() {
         var cid = _.get(this.connection, 'ename', '')
         return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
+      },
+      getConnectionBasePath() {
+        if (_.get(this.connection, 'connection_type', '') == CONNECTION_TYPE_HOME)
+          return '/home'
+        return '/' + this.getConnectionIdentifier()
       },
       updateItems(items) {
         this.items = items
