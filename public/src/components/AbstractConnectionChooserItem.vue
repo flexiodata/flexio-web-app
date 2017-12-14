@@ -21,8 +21,8 @@
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
       </div>
-      <div class="code light-silver f8 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
-      <div class="ml2" v-if="showDropdown && eid.length > 0">
+      <div class="code light-silver f8 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
+      <div class="ml2" v-if="showDropdown && !is_home">
         <a
           ref="dropdown-trigger"
           tabindex="0"
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_HOME } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
 
   export default {
@@ -127,6 +128,9 @@
       identifier() {
         var cid = _.get(this.item, 'ename', '')
         return cid.length > 0 ? cid : _.get(this.item, 'eid', '')
+      },
+      is_home() {
+        return this.ctype == CONNECTION_TYPE_HOME
       },
       is_selected() {
         return this.eid.length > 0

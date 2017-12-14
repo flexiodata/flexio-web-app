@@ -97,7 +97,7 @@
       }),
       connections() {
         var items = _.filter(this.getAllConnections(), this.isStorageConnection)
-        return [{ connection_type: CONNECTION_TYPE_HOME, name: 'Home' }].concat(items)
+        return [{ connection_type: CONNECTION_TYPE_HOME, eid: 'home', name: 'Home' }].concat(items)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
