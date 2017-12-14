@@ -168,7 +168,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
     public function open($path) : \Flexio\IFace\IStream
     {
-
         // path can either be an array [ 'path' => value ] or a string containing the path
         if (is_array($path))
         {

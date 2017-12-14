@@ -174,6 +174,11 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
+    public function getFiles() : array
+    {
+        return $this->files;
+    }
+
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
         $this->stdin = $stream;

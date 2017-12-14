@@ -114,6 +114,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
+
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path,'/');
         $parts = explode('/', $path);
@@ -123,9 +124,10 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         if ($file == '')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        if ($folder == 'params')
+        if ($folder == 'params' || $folder == 'files')
         {
-            $params = $this->process->getParams();
+            $params = ($folder == 'files' ? $this->process->getFiles() : $this->process->getParams());
+
             if (!isset($params[$file]))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 

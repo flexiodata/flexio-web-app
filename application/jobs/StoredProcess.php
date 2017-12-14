@@ -96,6 +96,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
+    public function getFiles() : array
+    {
+        return $this->engine->getFiles();
+    }
+
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setStdin($stream);
