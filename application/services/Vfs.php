@@ -31,6 +31,25 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    private function isStorageConnectionType(string $type) : bool
+    {
+        switch ($type)
+        {
+            default:
+                return false;
+            case 'ftp':
+            case 'sftp':
+            case 'mysql':
+            case 'postgres':
+            case 'dropbox':
+            case 'box':
+            case 'googledrive':
+            case 'googlesheets':
+            case 'amazons3':
+                return true;
+        }
+    }
+
     public function list(string $path = '') : array
     {
         $results = [];
@@ -53,15 +72,15 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             // get the connections
             $connections = $user->getConnectionList();
 
-            // add an entry for local storage
+            // add an entry for home folder (local) storage
             $results[] = array(
-                'name' => 'local',
-                'path' => '/local',
+                'name' => 'home',
+                'path' => '/home',
                 'size' => null,
                 'modified' => null,
                 'type' => 'DIR',
                 'is_dir' => true,
-                '.connection_type' => 'local'
+                'connection' => [ 'connection_type' => 'home' ]
             );
 
             foreach ($connections as $c)
@@ -70,6 +89,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     continue;
 
                 $info = $c->get();
+
+                if (!self::isStorageConnectionType($info['connection_type'] ?? ''))
+                    continue;
+
                 $name = $info['ename'];
                 if (strlen($name) == 0)
                     $name = $info['eid'];
@@ -83,8 +106,14 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     'is_dir' => true
                 );
 
-                $entry['.connection_eid'] = $info['eid'];
-                $entry['.connection_type'] = $info['connection_type'];
+                //$entry['.connection_eid'] = $info['eid'];
+                //$entry['.connection_type'] = $info['connection_type'];
+
+                unset($info['connection_info']);
+                unset($info['owned_by']);
+                unset($info['expires']);
+                $entry['connection'] = $info;
+
                 $results[] = $entry;
             }
 
@@ -245,7 +274,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $this->process_context_service;
         }
 
-        if ($connection_identifier == 'local')
+        if ($connection_identifier == 'home')
         {
             if ($this->store_service === null)
                 $this->store_service = \Flexio\Services\Store::create();
@@ -266,6 +295,9 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
+
+        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $service = \Flexio\Services\Factory::create($connection_info);
         if ($service === false)

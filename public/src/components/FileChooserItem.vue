@@ -24,7 +24,6 @@
 </template>
 
 <script>
-  import * as ctypes from '../constants/connection-type'
   import moment from 'moment'
   import filesize from 'filesize'
 
@@ -54,21 +53,8 @@
         var m = this.item.modified
         return m ? moment(m).format('l LT') : ''
       },
-      ctype() {
-        return _.get(this.connection, 'connection_type', '')
-      },
       has_filesize() {
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_AMAZONS3:
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_SFTP:
-            return true
-        }
-
-        return false
+        return this.size === null ? false : true
       },
       size() {
         // show empty string for null sizes

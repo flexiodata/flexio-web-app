@@ -18,7 +18,6 @@
           v-for="(item, index) in items"
           :item="item"
           :index="index"
-          :connection="connection"
           @click="itemClick"
           @ctrl-click="itemCtrlClick"
           @shift-click="itemShiftClick"
@@ -36,10 +35,6 @@
 
   export default {
     props: {
-      'connection': {
-        type: Object,
-        required: true
-      },
       'path': {
         type: String,
         default: '/'
@@ -75,17 +70,11 @@
       }
     },
     watch: {
-      connection(val, old_val) {
-        this.refreshList()
-      },
       path(val, old_val) {
         this.refreshList()
       }
     },
     computed: {
-      connection_eid() {
-        return _.get(this.connection, 'eid', '')
-      },
       selected_items() {
         var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
@@ -94,9 +83,6 @@
         return this.allowFolders ? items : _.reject(items, { is_dir: true })
       },
       empty_message() {
-        if (this.connection_eid.length == 0)
-          return "This connection cannot be found or no longer exists"
-
         if (this.emptyMessage.length > 0)
           return this.emptyMessage
 
@@ -173,13 +159,9 @@
       },
       refreshList() {
         var path = _.defaultTo(this.path, '/')
-        var eid = this.connection_eid
-
-        if (eid.length == 0)
-          return
 
         this.is_fetching = true
-        api.describeConnection({ eid, path }).then(response => {
+        api.vfsListFiles({ path }).then(response => {
           var items = _
             .chain(_.defaultTo(response.body, []))
             .map((f) => { return _.assign({}, { is_selected: false }, f) })

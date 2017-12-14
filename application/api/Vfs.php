@@ -41,7 +41,7 @@ class Vfs
         return $result;
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api\Request $request)
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -57,6 +57,8 @@ class Vfs
         $vfs->read($path, function($data) {
             echo $data;
         });
+
+        exit(0);        
     }
 
     public static function put(\Flexio\Api\Request $request) : array
@@ -87,6 +89,5 @@ class Vfs
         fclose($php_stream_handle);
 
         return array('success' => true);
-
     }
 }

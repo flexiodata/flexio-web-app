@@ -62,6 +62,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_HOME } from '../constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -95,7 +96,8 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return _.filter(this.getAllConnections(), this.isStorageConnection)
+        var items = _.filter(this.getAllConnections(), this.isStorageConnection)
+        return [{ connection_type: CONNECTION_TYPE_HOME, eid: 'home', name: 'Home' }].concat(items)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')

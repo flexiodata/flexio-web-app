@@ -41,7 +41,7 @@ class Test
         // TEST: Email Job
 
         // BEGIN TEST
-        $process = \Flexio\Object\Process::create()->setTask($task)->run(false);
+        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
         $actual = $process->getStdout()->getReader()->read();
         $expected = '';
         TestCheck::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);

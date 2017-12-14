@@ -25,86 +25,77 @@
       <div class="lh-copy" v-else>To use this connection, you must connect {{service_name}} to Flex.io.</div>
       <div class="flex flex-column w-50-ns center mt1 mb3">
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           label="AWS Access Key"
           floating-label
           v-model.trim="info.aws_key"
           v-if="showInput('aws_key')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           label="AWS Secret Key"
           floating-label
           v-model.trim="info.aws_secret"
           v-if="showInput('aws_secret')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           label="Bucket"
           floating-label
           v-model.trim="info.bucket"
           v-if="showInput('bucket')"
-        ></ui-textbox>
-        <ui-textbox
-          class="css-condensed"
+        />
+        <value-select
           autocomplete="off"
           label="Region"
           floating-label
+          :options="region_options"
           v-model.trim="info.region"
           v-if="showInput('region')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           label="Token"
           floating-label
           v-model.trim="info.token"
           v-if="showInput('token')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           floating-label
           :label="host_label"
           v-model.trim="info.host"
           v-if="showInput('host')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           label="Port"
           floating-label
           v-model.trim.number="info.port"
           v-if="showInput('port')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           floating-label
           :label="username_label"
           v-model.trim="info.username"
           v-if="showInput('username')"
-        ></ui-textbox>
+        />
         <ui-textbox
           type="password"
-          class="css-condensed"
           autocomplete="off"
           :label="password_label"
           floating-label
           v-model.trim="info.password"
           v-if="showInput('password')"
-        ></ui-textbox>
+        />
         <ui-textbox
-          class="css-condensed"
           autocomplete="off"
           :label="database_label"
           floating-label
           v-model.trim="info.database"
           v-if="showInput('database') && !is_sftp && !is_elasticsearch"
-        ></ui-textbox>
+        />
         <div class="mt3 css-btn-test">
           <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
         </div>
@@ -121,7 +112,26 @@
   } from '../constants/connection-status'
   import * as types from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
+  import ValueSelect from './ValueSelect.vue'
   import Btn from './Btn.vue'
+
+  const region_options = [
+    { val: 'us-east-2',      label: 'US East (Ohio)'            },
+    { val: 'us-east-1',      label: 'US East (N. Virginia)'     },
+    { val: 'us-west-1',      label: 'US West (N. California)'   },
+    { val: 'us-west-2',      label: 'US West (Oregon)'          },
+    { val: 'ca-central-1',   label: 'Canada (Central)'          },
+    { val: 'ap-south-1',     label: 'Asia Pacific (Mumbai)'     },
+    { val: 'ap-northeast-2', label: 'Asia Pacific (Seoul)'      },
+    { val: 'ap-southeast-1', label: 'Asia Pacific (Singapore)'  },
+    { val: 'ap-southeast-2', label: 'Asia Pacific (Sydney)'     },
+    { val: 'ap-northeast-1', label: 'Asia Pacific (Tokyo)'      },
+    { val: 'cn-northwest-1', label: 'China (Ningxia)'           },
+    { val: 'eu-central-1',   label: 'EU (Frankfurt)'            },
+    { val: 'eu-west-1',      label: 'EU (Ireland)'              },
+    { val: 'eu-west-2',      label: 'EU (London)'               },
+    { val: 'sa-east-1',      label: 'South America (São Paulo)' }
+  ]
 
   export default {
     props: {
@@ -135,6 +145,7 @@
       }
     },
     components: {
+      ValueSelect,
       Btn
     },
     data() {
@@ -172,7 +183,8 @@
       }
 
       return {
-        info: attrs
+        info: attrs,
+        region_options
       }
     },
     watch: {
@@ -185,7 +197,8 @@
 
       'info.aws_key'()    { this.$emit('change', { connection_info: this.info }) },
       'info.aws_secret'() { this.$emit('change', { connection_info: this.info }) },
-      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) }
+      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) },
+      'info.region'()     { this.$emit('change', { connection_info: this.info }) }
     },
     computed: {
       ctype() {

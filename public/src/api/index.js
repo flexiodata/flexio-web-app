@@ -15,7 +15,8 @@ import {
   StreamResource,
   TestResource,
   TrashResource,
-  ValidateResource
+  ValidateResource,
+  VfsResource
 } from './resources'
 
 /*
@@ -38,6 +39,7 @@ import {
 
 var GET = 'get'
 var POS = 'save'
+var PUT = 'update'
 var DEL = 'delete'
 
 export default {
@@ -145,5 +147,19 @@ export default {
 
   // test
   fetchTests:                     function()                            { return TestResource[GET] ({ p1: 'configure' })                                                  },
-  runTest:                        function({ id })                      { return TestResource[GET] ({ p1: 'run', id })                                                    }
+  runTest:                        function({ id })                      { return TestResource[GET] ({ p1: 'run', id })                                                    },
+
+  // vfs
+  vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                                              },
+  vfsGetFile:                     function({ path })                     { return VfsResource[GET] ({ p1: path })                                                         },
+  vfsPutFile:                     function({ path })                     { return VfsResource[PUT] ({ p1: path })                                                         },
+  vfsCreateDirectory:             function({ path })                     { return VfsResource[PUT] ({ p1: path })                                                         }
 }
+
+/*
+1) List Directory      GET https://localhost/api/v1/vfs/list?q=/
+2) Get File            GET https://localhost/api/v1/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+3) Put File            PUT https://localhost/api/v1/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+4) Create Directory    PUT https://localhost/api/v1/vfs/my-alias/my-folder/my-subfolder   ?????
+5) Delete Files        DEL https://localhost/api/v1/vfs/my-alias/my-folder/my-subfolder/aphist.csv
+*/
