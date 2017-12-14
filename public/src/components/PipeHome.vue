@@ -23,7 +23,7 @@
     </pipe-home-header>
 
     <pipe-builder-list
-      class="flex-fill pv4 pl4-l"
+      class="flex-fill"
       style="padding-bottom: 16rem"
       :id="eid"
       :pipe-eid="eid"

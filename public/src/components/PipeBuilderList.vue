@@ -1,18 +1,14 @@
 <template>
   <div class="overflow-y-auto" @scroll="onScroll">
     <ui-alert
-      class="pl3 pr3 pr4-l relative"
-      style="top: -1rem"
       type="success"
       :dismissible="false"
       @dismiss="show_success = false"
-       v-show="show_success"
-      >
-      The pipe was run successfully!
+      v-show="show_success"
+    >
+      {{success_message}}
     </ui-alert>
     <ui-alert
-      class="pl3 pr3 pr4-l relative"
-      style="top: -1rem"
       type="error"
       @dismiss="show_error = false"
       v-show="show_error"
@@ -20,11 +16,11 @@
       {{error_message}}
     </ui-alert>
     <div
-      class="relative center"
-      style="max-width: 1574px"
+      class="mv4 center"
+      style="max-width: 1440px"
       v-if="tasks.length == 0"
     >
-      <div class="pa4 ml4 ml0-l mr4 bg-white ba b--white-box br2 tc">
+      <div class="mh4 pa4 bg-white ba b--white-box br2 tc">
         <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
         <div class="mt3">
           <btn
@@ -38,7 +34,7 @@
         </div>
       </div>
     </div>
-    <div class="ml2-m ml3-l" v-else>
+    <div class="mv4 center" style="max-width: 1440px" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :key="task.eid"
@@ -116,14 +112,12 @@
           this.show_error = false
           this.show_success = false
 
-          var options = {
+          // scroll back to the top of the pipe list when the process starts
+          this.$scrollTo('#'+this.pipeEid, {
             container: '#'+this.pipeEid,
             duration: 400,
             easing: 'ease-out'
-          }
-
-          // scroll back to the top of the pipe list when the process starts
-          this.$scrollTo('#'+this.pipeEid, options)
+          })
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
@@ -174,6 +168,7 @@
         show_all_previews: true,
         show_success: false,
         show_error: false,
+        success_message: 'The pipe was run successfully!',
         error_message: ''
       }
     },

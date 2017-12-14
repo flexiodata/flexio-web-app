@@ -1,12 +1,17 @@
 <template>
   <div
-    class="relative center"
-    style="max-width: 1574px"
     :style="style"
     :id="eid"
   >
-    <div class="flex flex-row relative ml3 ml0-l mr4 mr5-l hide-child">
+    <div class="flex flex-row relative hide-child">
 
+      <!-- compensate for the remove step button on right -->
+      <div
+        class="w2 pv1 tc"
+        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+      >&nbsp;</div>
+
+      <!-- task icon and step number -->
       <div
         class="flex-none"
         :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
@@ -26,47 +31,36 @@
             </div>
           </div>
 
-          <!-- feedback icon when prompting -->
-          <div class="mr1" v-if="false">
-            <i
-              :class="{
-                'dark-green': true
-              }"
-            >check_circle</i>
-          </div>
-
           <!-- task number -->
           <div class="f5 lh-title mr2 mr3-ns">{{index+1}}.</div>
         </div>
       </div>
 
-      <!-- vertical line -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 45px; bottom: 35px; left: 19px"
-        :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
-        v-show="!show_progress && !isPrompting"
-      ></div>
+      <!-- lines and insert buttons -->
+      <div class="absolute h-100 ml4" v-if="!show_progress && !isPrompting">
+        <!-- vertical line -->
+        <div
+          class="bl bw1 b--black-10 pl3 absolute"
+          style="top: 45px; bottom: 35px; left: 19px"
+          :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
+        ></div>
 
-      <!-- insert before button -->
-      <div
-        class="absolute"
-        style="top: -12px; left: 8px"
-        v-show="!show_progress"
-        v-if="index==0 && !show_progress && !isPrompting && showInsertBeforeFirstTask"
-      >
-        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
-          <i class="db material-icons f3">add_circle</i>
+        <!-- insert before button -->
+        <div
+          class="absolute"
+          style="top: -12px; left: 8px"
+          v-if="index==0 && showInsertBeforeFirstTask"
+        >
+          <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_before_tooltip" @click="insertNewTask(0)">
+            <i class="db material-icons f3">add_circle</i>
+          </div>
         </div>
-      </div>
 
-      <!-- insert after button -->
-      <div
-        class="absolute"
-        style="bottom: 5px; left: 8px"
-        v-show="!show_progress && !isPrompting">
-        <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
-          <i class="db material-icons f3">add_circle</i>
+        <!-- insert after button -->
+        <div class="absolute" style="bottom: 5px; left: 8px">
+          <div class="pointer moon-gray hover-blue link hint--right" :aria-label="insert_after_tooltip" @click="insertNewTask()">
+            <i class="db material-icons f3">add_circle</i>
+          </div>
         </div>
       </div>
 
@@ -270,6 +264,7 @@
         </div>
       </div>
 
+      <!-- remove step button -->
       <div
         class="w2 pv1 tc"
         :class="{ 'mt3a': index == 0 || (index != 0 && isPrompting) }"
