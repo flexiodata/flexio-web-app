@@ -1,5 +1,6 @@
 <template>
   <div class="overflow-y-auto" @scroll="onScroll">
+
     <ui-alert
       type="success"
       :dismissible="false"
@@ -8,6 +9,7 @@
     >
       {{success_message}}
     </ui-alert>
+
     <ui-alert
       type="error"
       @dismiss="show_error = false"
@@ -15,6 +17,7 @@
     >
       {{error_message}}
     </ui-alert>
+
     <div class="mv4 pt3 center" style="max-width: 1440px" v-if="tasks.length == 0">
       <div class="mh4 pa4 bg-white ba b--white-box br2 tc">
         <div class="lh-copy mid-gray mb3 i">There are no steps in this pipe.</div>
@@ -30,6 +33,7 @@
         </div>
       </div>
     </div>
+
     <div class="mv4 pt3 center" style="max-width: 1440px" v-else>
       <pipe-builder-item
         v-for="(task, index) in tasks"

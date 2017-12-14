@@ -19,8 +19,20 @@
       :is-process-running="is_process_running"
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
-      @cancel-process="cancelProcess">
-    </pipe-home-header>
+      @cancel-process="cancelProcess"
+    />
+
+    <pipe-builder-toolbar
+      class="flex-none mv3 center" style="max-width: 1440px"
+      :pipe-eid="eid"
+      :pipe-view="pipe_view"
+      :is-prompting="is_prompting"
+      :is-process-running="is_process_running"
+      @set-pipe-view="setPipeView"
+      @run-pipe="runPipe"
+      @cancel-process="cancelProcess"
+      v-if="false"
+    />
 
     <pipe-builder-list
       class="flex-fill"
@@ -37,12 +49,12 @@
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
-    ></pipe-builder-list>
+    />
 
     <ui-snackbar-container
       ref="snackbar-container"
       position="center"
-    ></ui-snackbar-container>
+    />
 
 <pre ref="last-prompt" v-show="false">
 <div class="flex flex-row items-center justify-center">
@@ -71,6 +83,7 @@
   import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
+  import PipeBuilderToolbar from './PipeBuilderToolbar.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
@@ -78,6 +91,7 @@
       Btn,
       Spinner,
       PipeHomeHeader,
+      PipeBuilderToolbar,
       PipeBuilderList
     },
     provide() {

@@ -288,17 +288,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  @import "../stylesheets/variables.less";
-
-  .css-back-button {
-    margin-left: -12px;
-  }
-
-  @media @breakpoint-large {
-    .css-back-button {
-      margin-left: -24px;
-    }
-  }
-</style>
