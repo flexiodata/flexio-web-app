@@ -1018,7 +1018,7 @@ class Util
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
 
                 $stream_info = array();
-                $stream_info['name'] = $name;
+                $stream_info['name'] = $filename;
                 $stream_info['mime_type'] = $content_type;
 
                 $stream->set($stream_info);
