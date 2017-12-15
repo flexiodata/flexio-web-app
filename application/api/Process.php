@@ -374,6 +374,14 @@ class Process
 
         $engine->run(false);
 
+        if ($engine->hasError())
+        {
+            header('Content-Type: application/json', true, 500);
+            $content = json_encode($engine->getError());
+            echo $content;
+            exit(0);
+        }
+
         $stream = $engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
