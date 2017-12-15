@@ -104,7 +104,7 @@ class Create extends \Flexio\Jobs\Base
         // create the output stream
         $outstream_properties = array(
             'name' => $name,
-            'content_type' => $content_type
+            'mime_type' => $content_type
         );
         $outstream->set($outstream_properties);
         $streamwriter = $outstream->getWriter();
