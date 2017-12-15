@@ -366,6 +366,11 @@ class Stream implements \Flexio\IFace\IStream
         if (isset($properties['file_modified']))
             $this->properties['file_modified'] = $properties['file_modified'];
 
+        if ($this->isTable() && !$this->memory_db)
+        {
+            $this->prepareStorage();
+        }
+
         return $this;
     }
 
