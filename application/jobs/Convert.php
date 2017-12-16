@@ -348,11 +348,6 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromJsonInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
     {
-        // input/output
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\Base\ContentType::FLEXIO_TABLE);
-
         // read the json into a buffer
         $buffer = '';
         $streamreader = $instream->getReader();
@@ -373,7 +368,12 @@ class Convert extends \Flexio\Jobs\Base
         if ($structure === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        $outstream->setStructure($structure);
+        // input/output
+        $outstream->set([
+            'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+            'structure' => $structure
+        ]);
+
         $streamwriter = $outstream->getWriter();
 
         foreach($items as $i)
@@ -382,7 +382,6 @@ class Convert extends \Flexio\Jobs\Base
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 
     private function createOutputFromCsvInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)

@@ -48,14 +48,17 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 // or if the store name is different than the field name
                 if (isset($col['name']))
                 {
-                    if (isset($col['store_name']) && $col['name'] != $col['store_name'])
+                    $lc_colname = strtolower($col['name']);
+                    $lc_storename = strtolower($col['store_name'] ?? $col['name']);
+
+                    if ($lc_colname != $lc_storename)
                     {
-                        $this->keyed_structure[$col['name']] = $col;
-                        $this->storefield_map[$col['store_name']] = $col['name'];
+                        $this->keyed_structure[$lc_colname] = $col;
+                        $this->storefield_map[$lc_storename] = $col['name'];
                     }
                      else if (isset($col['type']) && $col['type'] == 'boolean')
                     {
-                        $this->keyed_structure[$col['name']] = $col;
+                        $this->keyed_structure[$lc_colname] = $col;
                     }
 
                 }
@@ -211,12 +214,13 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         {
             // rename any store column names back to column names user expects
             $newrow = [];
-            foreach ($row as $k => $v)
+            foreach ($row as $col => $v)
             {
-                if (array_key_exists($k, $this->storefield_map))
-                    $newrow[$this->storefield_map[$k]] = $v;
+                $lc_col = strtolower($col);
+                if (array_key_exists($lc_col, $this->storefield_map))
+                    $newrow[$this->storefield_map[$lc_col]] = $v;
                      else
-                    $newrow[$k] = $v;
+                    $newrow[$lc_col] = $v;
             }
             $row = $newrow;
         }
@@ -225,9 +229,11 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         {
             foreach ($row as $col => &$value)
             {
-                if (isset($this->keyed_structure[$col]['type']))
+                $lc_col = strtolower($col);
+
+                if (isset($this->keyed_structure[$lc_col]['type']))
                 {
-                    if ($this->keyed_structure[$col]['type'] == 'boolean')
+                    if ($this->keyed_structure[$lc_col]['type'] == 'boolean')
                     {
                         if ($value === 0 || $value === '0' || $value === false)
                             $value = false;
@@ -368,8 +374,9 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 if ($i > 0)
                     $sql .= ',';
                 $name = $keys[$i];
-                if (isset($this->keyed_structure[$name]['store_name']))
-                    $name = $this->keyed_structure[$name]['store_name'];
+                $lc_name = strtolower($name);
+                if (isset($this->keyed_structure[$lc_name]['store_name']))
+                    $name = $this->keyed_structure[$lc_name]['store_name'];
                 $sql .= StorageFs::quoteIdentifierIfNecessary($name);
             }
 
