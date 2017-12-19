@@ -557,7 +557,7 @@ class Process extends \Flexio\Object\Base
 
         // create a log record
         $params = array();
-        $params['task_type'] = $task['type'] ?? '';
+        $params['task_type'] = $task['op'] ?? '';
         $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
         $params['input'] = json_encode($storable_stream_info);
@@ -584,7 +584,7 @@ class Process extends \Flexio\Object\Base
 
         // update the log record
         $params = array();
-        $params['task_type'] = $task['type'] ?? '';
+        $params['task_type'] = $task['op'] ?? '';
         $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);

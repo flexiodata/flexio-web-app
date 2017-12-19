@@ -344,15 +344,15 @@ class Process implements \Flexio\IFace\IProcess
 
     private static function createTask(array $task) : \Flexio\IFace\IJob
     {
-        if (!isset($task['type']))
+        if (!isset($task['op']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        $job_type = $task['type'];
+        $operation = $task['op'];
 
         // make sure the job is registered; note: this isn't strictly necessary,
         // but gives us a convenient way of limiting what jobs are available for
         // processing
-        $job_class_name = self::$manifest[$job_type] ?? false;
+        $job_class_name = self::$manifest[$operation] ?? false;
         if ($job_class_name === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
@@ -409,17 +409,17 @@ class Process implements \Flexio\IFace\IProcess
             return '';
 
         // make sure have a valid task
-        $task_type = $task['type'] ?? false;
+        $task_operation = $task['op'] ?? false;
         $task_parameters = $task['params'] ?? false;
 
         // make sure we have the params we need
-        if (is_string($task_type) === false || is_array($task_parameters) === false)
+        if (is_string($task_operation) === false || is_array($task_parameters) === false)
             return '';
 
         $encoded_task_parameters = json_encode($task_parameters);
         $hash = md5(
             $implementation_version .
-            $task_type .
+            $task_operation .
             $encoded_task_parameters
         );
 
