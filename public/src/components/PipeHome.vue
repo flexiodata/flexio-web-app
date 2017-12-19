@@ -155,9 +155,7 @@
         return _.get(this.pipe, 'task', [])
       },
       empty_tasks() {
-        // even if we have tasks with `is_prompt` set to true, only show
-        // the prompting mode if we actually have variables to fill in
-        return _.filter(this.tasks, (t) => { return _.isNil(_.get(t, 'type')) })
+        return _.filter(this.tasks, (t) => { return _.isNil(_.get(t, 'op')) })
       },
       has_empty_tasks() {
         return this.empty_tasks.length > 0
@@ -297,7 +295,7 @@
               error_msg: ''
             }, task)
           }
-           else if (_.get(task, 'type') == TASK_OP_COMMENT)
+           else if (_.get(task, 'op') == TASK_OP_COMMENT)
           {
             return _.assign({ is_prompt: true }, task)
           }
