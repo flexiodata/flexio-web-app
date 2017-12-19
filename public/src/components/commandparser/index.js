@@ -1,4 +1,4 @@
-import * as task_types from '../../constants/task-type'
+import * as task_types from '../../constants/task-op'
 import * as command_names  from '../../constants/command-name'
 import convert from './convert'
 import execute from './execute'

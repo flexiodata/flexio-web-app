@@ -1,4 +1,4 @@
-import { TASK_OP_FIND_REPLACE } from '../../constants/task-type'
+import { TASK_OP_FIND_REPLACE } from '../../constants/task-op'
 import { COMMAND_NAME_FIND_REPLACE }  from '../../constants/command-name'
 
 import {

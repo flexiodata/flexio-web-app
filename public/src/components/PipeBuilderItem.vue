@@ -299,7 +299,7 @@
     TASK_OP_EXECUTE,
     TASK_OP_COMMENT,
     TASK_OP_EMAIL_SEND
-  } from '../constants/task-type'
+  } from '../constants/task-op'
   import {
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS,

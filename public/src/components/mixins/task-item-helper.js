@@ -1,7 +1,7 @@
 // common helpers for task items (requires that the calling object has
 // an `item` computed property or provides their own `task` computed property)
 
-import * as types from '../../constants/task-type'
+import * as types from '../../constants/task-op'
 import * as tasks from '../../constants/task-info'
 import { VARIABLE_REGEX } from '../../constants/common'
 

@@ -36,7 +36,7 @@
 
 <script>
   import * as ctypes from '../constants/connection-type'
-  import * as ttypes from '../constants/task-type'
+  import * as ttypes from '../constants/task-op'
   import { mapState, mapGetters } from 'vuex'
   import OnboardingTileItem from './OnboardingTileItem.vue'
   import Btn from './Btn.vue'

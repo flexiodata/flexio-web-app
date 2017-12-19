@@ -1,4 +1,4 @@
-import { TASK_OP_SORT } from '../../constants/task-type'
+import { TASK_OP_SORT } from '../../constants/task-op'
 import { COMMAND_NAME_SORT }  from '../../constants/command-name'
 import { SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING } from '../../constants/tasks/sort'
 

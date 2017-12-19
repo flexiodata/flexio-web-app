@@ -1,4 +1,4 @@
-import { TASK_OP_LIMIT } from '../../constants/task-type'
+import { TASK_OP_LIMIT } from '../../constants/task-op'
 import { COMMAND_NAME_LIMIT }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {

@@ -10,7 +10,7 @@
 
 <script>
   import { HOSTNAME } from '../constants/common'
-  import { TASK_OP_EXECUTE } from '../constants/task-type'
+  import { TASK_OP_EXECUTE } from '../constants/task-op'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
   import CodeMirror from 'codemirror'

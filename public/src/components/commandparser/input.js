@@ -1,4 +1,4 @@
-import { TASK_OP_INPUT } from '../../constants/task-type'
+import { TASK_OP_INPUT } from '../../constants/task-op'
 import { COMMAND_NAME_INPUT }  from '../../constants/command-name'
 import * as connections from '../../constants/connection-info'
 

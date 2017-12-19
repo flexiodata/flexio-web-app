@@ -4,7 +4,7 @@ import {
   TASK_OP_EMAIL_SEND,
   TASK_OP_EXECUTE,
   TASK_OP_RENDER
-} from '../constants/task-type'
+} from '../constants/task-op'
 
 import {
   CONNECTION_TYPE_HTTP,

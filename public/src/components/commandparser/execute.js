@@ -1,4 +1,4 @@
-import { TASK_OP_EXECUTE } from '../../constants/task-type'
+import { TASK_OP_EXECUTE } from '../../constants/task-op'
 import { COMMAND_NAME_EXECUTE }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {

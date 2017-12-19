@@ -71,7 +71,7 @@
   import { ROUTE_PIPES } from '../constants/route'
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { SCHEDULE_STATUS_ACTIVE, SCHEDULE_STATUS_INACTIVE, SCHEDULE_FREQUENCY_DAILY } from '../constants/schedule'
-  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import util from '../utils'
   import ServiceIcon from './ServiceIcon.vue'

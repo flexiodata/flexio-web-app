@@ -1,4 +1,4 @@
-import { TASK_OP_CONVERT } from '../../constants/task-type'
+import { TASK_OP_CONVERT } from '../../constants/task-op'
 import { COMMAND_NAME_CONVERT }  from '../../constants/command-name'
 import * as connections from '../../constants/connection-info'
 import * as convert from '../../constants/tasks/convert'

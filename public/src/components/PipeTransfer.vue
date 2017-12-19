@@ -123,7 +123,7 @@
     TASK_OP_INPUT,
     TASK_OP_OUTPUT,
     TASK_OP_EMAIL_SEND
-  } from '../constants/task-type'
+  } from '../constants/task-op'
   import {
     CONNECTION_TYPE_STDIN,
     CONNECTION_TYPE_STDOUT,

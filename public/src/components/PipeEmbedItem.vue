@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import ServiceIcon from './ServiceIcon.vue'
 
   export default {

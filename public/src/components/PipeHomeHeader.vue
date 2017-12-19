@@ -114,7 +114,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
-  import { TASK_OP_INPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT } from '../constants/task-op'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
   import UserDropdown from './UserDropdown.vue'

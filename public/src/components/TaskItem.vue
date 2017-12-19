@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import * as types from '../constants/task-type'
+  import * as types from '../constants/task-op'
   import * as tasks from '../constants/task-info'
 
   export default {

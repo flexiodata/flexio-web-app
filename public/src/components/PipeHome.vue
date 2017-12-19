@@ -73,7 +73,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_SIGNIN, ROUTE_PIPES } from '../constants/route'
   import { VARIABLE_REGEX } from '../constants/common'
-  import { TASK_OP_COMMENT } from '../constants/task-type'
+  import { TASK_OP_COMMENT } from '../constants/task-op'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {

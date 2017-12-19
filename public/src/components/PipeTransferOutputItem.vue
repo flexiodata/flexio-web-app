@@ -109,7 +109,7 @@
     CONNECTION_TYPE_SFTP
   } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import { TASK_OP_EMAIL_SEND } from '../constants/task-type'
+  import { TASK_OP_EMAIL_SEND } from '../constants/task-op'
   import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ServiceIcon from './ServiceIcon.vue'
