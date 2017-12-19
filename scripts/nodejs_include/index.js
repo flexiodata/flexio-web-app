@@ -426,7 +426,7 @@ class Output {
 
     set name(value) {
         this._name = value
-        proxy.invoke('setOutputStreamInfo', [this._handle, {'name':value}])
+        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'name':value}])
     }
 
     get contentType() {
@@ -435,7 +435,7 @@ class Output {
 
     set contentType(value) {
         this._contentType = value
-        proxy.invoke('setOutputStreamInfo', [this._handle, {'content_type':value}])
+        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'content_type':value}])
     }
 
     get env() {
