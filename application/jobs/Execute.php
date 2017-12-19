@@ -332,15 +332,13 @@ class ExecuteProxy
         //  Send reply back to client
         $this->sendMessage(self::encodepart($retval));
     }
-
 }
 
 
-class Execute extends \Flexio\Jobs\Base
+class ScriptHost
 {
-    private $code_base64 = '';
-    private $code = '';
-    private $context = null;
+    protected $process = null;
+
     private $input_map = [];
     private $input_streams = [];
     private $input_readers = [];
@@ -348,254 +346,12 @@ class Execute extends \Flexio\Jobs\Base
     private $output_streams = [];
     private $output_writers = [];
 
-    private function getContext()
+    public function setProcess($process)
     {
-        return $this->context;
-    }
-
-    private function setContext(\Flexio\IFace\IProcess $process)
-    {
-        $this->context = $process;
-    }
-
-    private static function getFileContents(string $url) : string
-    {
-        // load the service
-        $connection_info = array(
-            'connection_type' => \Flexio\Services\Factory::TYPE_HTTP
-        );
-
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        // get the contents
-        $contents = '';
-        $service->read(array('path'=>$url), function($data) use (&$contents) {
-            $contents .= $data;
-        });
-
-        return $contents;
-    }
-
-    public function run(\Flexio\IFace\IProcess $process)
-    {
-        parent::run($process);
-
-        $this->setContext($process);
-
-        // properties
-        $job_definition = $this->getProperties();
-
-        // get the language
-        $this->lang = $job_definition['params']['lang'];
-
-        // if code is specified, get the contents from the supplied code
-        $code = $job_definition['params']['code'] ?? false;
-        if ($code !== false)
-        {
-            $this->code_base64 = $job_definition['params']['code'];
-            $this->code = base64_decode($this->code_base64);
-        }
-         else
-        {
-            // if the code isn't specified in a file location, see if it's specified
-            // in a remote location
-            $file = $job_definition['params']['path'] ?? false;
-            if ($file === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
-            $this->code = self::getFileContents($file);
-            $this->code_base64 = base64_encode($this->code);
-        }
-
-        $integrity = $job_definition['params']['integrity'] ?? false;
-        if ($integrity !== false)
-        {
-            // an integrity parameter is specified; use a subresource integrity check
-            // (https://www.w3.org/TR/SRI/) to verify the code (e.g. "sha384:<base64-encoded-hash-value>");
-            // if a hash of the code using the provided algorithm doesn't match the value in
-            // the integrity check, throw an exception
-            if (!is_string($integrity))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // use ":" as format/code separator
-            $parts = explode(':', $integrity);
-            if (count($parts) !== 2)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $integrity_hashformat = strtolower($parts[0]);
-            $integrity_hashvalue = strtolower($parts[1]);
-
-            $code_hashvalue = false;
-            switch ($integrity_hashformat)
-            {
-                // make sure the integrity is a supported format; currently, the required formats
-                // in the standard are sha256, sha384, and sha512, and weak formats, such as md5
-                // and sha1 should be refused
-                default:
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                case 'sha256':
-                    $code_hashvalue = hash('sha256', $this->code, false); // false = use lowercase base64 encoded output
-                    break;
-                case 'sha384':
-                    $code_hashvalue = hash('sha384', $this->code, false); // false = use lowercase base64 encoded output
-                    break;
-                case 'sha512':
-                    $code_hashvalue = hash('sha512', $this->code, false); // false = use lowercase base64 encoded output
-                    break;
-            }
-
-            if ($code_hashvalue !== $integrity_hashvalue)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
-        }
-
-        if ($this->lang == 'python')
-        {
-            // if a flexio_hander is specified, call it, otherwise let the script handle everything
-            if (strpos($this->code, "flexio_handler") !== false)
-            {
-                // add code that invokes the main handler -- this is the preferred
-                // way of coding python scripts
-                if (false !== strpos($this->code, "\r\n"))
-                    $endl = "\r\n";
-                    else
-                    $endl = "\n";
-
-                $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run(flexio_handler)";
-                $this->code .= $endl;
-
-                $this->code_base64 = base64_encode($this->code);
-            }
-
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /tmp/script.py && timeout 30s python3 /tmp/script.py)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                if (strlen($err) == 0)
-                    $err = null;
-            }
-
-            if (isset($err))
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-        else if ($this->lang == 'javascript')
-        {
-            // if a flexio_hander is specified, call it, otherwise let the script handle everything
-            if (strpos($this->code, "flexio_handler") !== false)
-            {
-                $this->code_base64 = base64_encode($this->code);
-            }
-
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /srv/fx/script.js && timeout 30s nodejs /srv/fx/run.js unmanaged /srv/fx/script.js)'";
-
-            $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
-            $ep->run();
-
-            $err = $ep->getStdError();
-
-            if (isset($err))
-            {
-                //die("<pre>".$err);
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
-            }
-
-            return true;
-        }
-        else if ($this->lang == 'html')
-        {
-            $outstream = $this->getContext()->getStdout();
-            if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
-            {
-                $streamreader = $instream->getReader();
-                $rows = [];
-                while (true)
-                {
-                    $row = $streamreader->readRow();
-                    if ($row === false)
-                        break;
-                    $rows[] = $row;
-                }
-
-                $json = json_encode($rows);
-
-                $code = str_replace('flexio.input.json_assoc()', $json, $code);
-            }
-
-            // create the output stream
-            $outstream_properties = array(
-                'name' => $instream->getName() . '.html',
-                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML,
-                'size' => strlen($code)
-            );
-
-            $outstream->set($outstream_properties);
-            $streamwriter = $outstream->getWriter();
-            $streamwriter->write($code);
-
-            return true;
-        }
-
+        $this->process = $process;
     }
 
 
-    // checks a script for compile errors;  If script compiles cleanly, returns true,
-    // otherwise returns the error as a textual string
-
-    public static function checkScript(string $lang, string $code)
-    {
-        // only python supported for now
-        if ($lang == 'python')
-        {
-            $code = base64_encode($code);
-
-            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-            if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $cmd = "$dockerbin run --net none --rm -i fxpython python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
-
-            $f = popen($cmd . ' 2>&1' /*grab stderr*/, 'r');
-            $str = fread($f, 8192);
-            pclose($f);
-
-            if ($str === false || strlen(trim($str)) == 0)
-                return true;
-
-            return $str;
-        }
-         else if ($lang == 'javascript')
-        {
-            return true;
-        }
-         else
-        {
-            // unknown language
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-    }
 
 
     private function getInputReader($idx)
@@ -645,14 +401,14 @@ class Execute extends \Flexio\Jobs\Base
 
     public function func_exit($response_code)
     {
-        $this->getContext()->setExitCode((int)$response_code);
+        $this->process->setExitCode((int)$response_code);
     }
 
     public function func_setenv($key,$value)
     {
-        $env = $this->getContext()->getParams();
+        $env = $this->process->getParams();
         $env[$key] = $value;
-        $this->getContext()->setParams($env);
+        $this->process->setParams($env);
     }
 
 
@@ -670,7 +426,7 @@ class Execute extends \Flexio\Jobs\Base
             return;
 
         if ($this->runjob_stdin === null)
-            $this->runjob_stdin = $this->getContext()->getStdin();
+            $this->runjob_stdin = $this->process->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
         $process->setTasks(array($task));
@@ -679,27 +435,27 @@ class Execute extends \Flexio\Jobs\Base
 
         // stdin of the next invocation of runjob is the stdout of the job that just ran
         $this->runjob_stdin = $process->getStdout();
-        $this->getContext()->getStdout()->copy($this->runjob_stdin);
+        $this->process->getStdout()->copy($this->runjob_stdin);
     }
 
     public function func_getInputEnv()
     {
         // TODO: need to save input environment variables for this work;
         // however, can't these just be saved in the script before changing them?
-        //return $this->getContext()->getParams();
+        //return $this->process->getParams();
     }
 
     public function func_getOutputEnv()
     {
         // TODO: // rename this function? to func_getEnv() ?
-        return $this->getContext()->getParams();
+        return $this->process->getParams();
     }
 
     public function func_setOutputEnvValue($key, $value)
     {
-        $env = $this->getContext()->getParams();
+        $env = $this->process->getParams();
         $env[(string)$key] = (string)$value;
-        $this->getContext()->setParams($env);
+        $this->process->setParams($env);
         return true;
     }
 
@@ -711,7 +467,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         if ($name === '_fxstdin_')
         {
-            $stdin = $this->context->getStdin();
+            $stdin = $this->process->getStdin();
             $this->input_streams[] = $stdin;
             return array('handle' => count($this->input_streams)-1,
                          'name' => '',
@@ -743,7 +499,7 @@ class Execute extends \Flexio\Jobs\Base
     {
         if ($name === '_fxstdout_')
         {
-            $stdout = $this->context->getStdout();
+            $stdout = $this->process->getStdout();
             $this->output_streams[] = $stdout;
             return array('handle' => count($this->output_streams)-1,
                          'name' => '',
@@ -815,7 +571,7 @@ class Execute extends \Flexio\Jobs\Base
         }
 
         $stream = \Flexio\Base\Stream::create($properties);
-        $this->getContext()->addStream($stream);
+        $this->process->addStream($stream);
         $this->output_streams[] = $stream;
 
         return array('idx' => count($this->output_streams)-1,
@@ -924,5 +680,256 @@ class Execute extends \Flexio\Jobs\Base
         if ($res === false)
             return false;
         return $associative ? $res : array_values($res);
+    }
+}
+
+
+
+class Execute extends \Flexio\Jobs\Base
+{
+    private $code_base64 = '';
+    private $code = '';
+    private $process = null;
+
+    private static function getFileContents(string $url) : string
+    {
+        // load the service
+        $connection_info = array(
+            'connection_type' => \Flexio\Services\Factory::TYPE_HTTP
+        );
+
+        $service = \Flexio\Services\Factory::create($connection_info);
+        if ($service === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        // get the contents
+        $contents = '';
+        $service->read(array('path'=>$url), function($data) use (&$contents) {
+            $contents .= $data;
+        });
+
+        return $contents;
+    }
+
+    public function run(\Flexio\IFace\IProcess $process)
+    {
+        parent::run($process);
+
+        $this->process = $process;
+
+        // properties
+        $job_definition = $this->getProperties();
+
+        // get the language
+        $this->lang = $job_definition['params']['lang'];
+
+        // if code is specified, get the contents from the supplied code
+        $code = $job_definition['params']['code'] ?? false;
+        if ($code !== false)
+        {
+            $this->code_base64 = $job_definition['params']['code'];
+            $this->code = base64_decode($this->code_base64);
+        }
+         else
+        {
+            // if the code isn't specified in a file location, see if it's specified
+            // in a remote location
+            $file = $job_definition['params']['path'] ?? false;
+            if ($file === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+
+            $this->code = self::getFileContents($file);
+            $this->code_base64 = base64_encode($this->code);
+        }
+
+        $integrity = $job_definition['params']['integrity'] ?? false;
+        if ($integrity !== false)
+        {
+            // an integrity parameter is specified; use a subresource integrity check
+            // (https://www.w3.org/TR/SRI/) to verify the code (e.g. "sha384:<base64-encoded-hash-value>");
+            // if a hash of the code using the provided algorithm doesn't match the value in
+            // the integrity check, throw an exception
+            if (!is_string($integrity))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            // use ":" as format/code separator
+            $parts = explode(':', $integrity);
+            if (count($parts) !== 2)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $integrity_hashformat = strtolower($parts[0]);
+            $integrity_hashvalue = strtolower($parts[1]);
+
+            $code_hashvalue = false;
+            switch ($integrity_hashformat)
+            {
+                // make sure the integrity is a supported format; currently, the required formats
+                // in the standard are sha256, sha384, and sha512, and weak formats, such as md5
+                // and sha1 should be refused
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+                case 'sha256':
+                    $code_hashvalue = hash('sha256', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+                case 'sha384':
+                    $code_hashvalue = hash('sha384', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+                case 'sha512':
+                    $code_hashvalue = hash('sha512', $this->code, false); // false = use lowercase base64 encoded output
+                    break;
+            }
+
+            if ($code_hashvalue !== $integrity_hashvalue)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
+        }
+
+        if ($this->lang == 'python')
+        {
+            // if a flexio_hander is specified, call it, otherwise let the script handle everything
+            if (strpos($this->code, "flexio_handler") !== false)
+            {
+                // add code that invokes the main handler -- this is the preferred
+                // way of coding python scripts
+                if (false !== strpos($this->code, "\r\n"))
+                    $endl = "\r\n";
+                    else
+                    $endl = "\n";
+
+                $this->code .= $endl . "import flexio as flexioext";
+                $this->code .= $endl . "flexioext.run(flexio_handler)";
+                $this->code .= $endl;
+
+                $this->code_base64 = base64_encode($this->code);
+            }
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 30s python3 /fxpython/script.py)'";
+
+            $script_host = new ScriptHost();
+            $script_host->setProcess($process);
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $script_host);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
+                if (strlen($err) == 0)
+                    $err = null;
+            }
+
+            if (isset($err))
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
+        }
+        else if ($this->lang == 'javascript')
+        {
+            // if a flexio_hander is specified, call it, otherwise let the script handle everything
+            if (strpos($this->code, "flexio_handler") !== false)
+            {
+                $this->code_base64 = base64_encode($this->code);
+            }
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
+
+            $ep = new ExecuteProxy;
+            $ep->initialize($cmd, $this);
+            $ep->run();
+
+            $err = $ep->getStdError();
+
+            if (isset($err))
+            {
+                //die("<pre>".$err);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+            }
+
+            return true;
+        }
+        else if ($this->lang == 'html')
+        {
+            $outstream = $process->getStdout();
+            if (strpos($this->code, 'flexio.input.json_assoc()') !== false)
+            {
+                $streamreader = $instream->getReader();
+                $rows = [];
+                while (true)
+                {
+                    $row = $streamreader->readRow();
+                    if ($row === false)
+                        break;
+                    $rows[] = $row;
+                }
+
+                $json = json_encode($rows);
+
+                $code = str_replace('flexio.input.json_assoc()', $json, $code);
+            }
+
+            // create the output stream
+            $outstream_properties = array(
+                'name' => $instream->getName() . '.html',
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_HTML,
+                'size' => strlen($code)
+            );
+
+            $outstream->set($outstream_properties);
+            $streamwriter = $outstream->getWriter();
+            $streamwriter->write($code);
+
+            return true;
+        }
+
+    }
+
+
+    // checks a script for compile errors;  If script compiles cleanly, returns true,
+    // otherwise returns the error as a textual string
+
+    public static function checkScript(string $lang, string $code)
+    {
+        // only python supported for now
+        if ($lang == 'python')
+        {
+            $code = base64_encode($code);
+
+            $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+            if (is_null($dockerbin))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $cmd = "$dockerbin run --net none --rm -i fxruntime python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
+
+            $f = popen($cmd . ' 2>&1' /*grab stderr*/, 'r');
+            $str = fread($f, 8192);
+            pclose($f);
+
+            if ($str === false || strlen(trim($str)) == 0)
+                return true;
+
+            return $str;
+        }
+         else if ($lang == 'javascript')
+        {
+            return true;
+        }
+         else
+        {
+            // unknown language
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
     }
 }

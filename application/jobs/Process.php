@@ -83,7 +83,9 @@ class Process implements \Flexio\IFace\IProcess
         'task'      => '\Flexio\Jobs\Task',       // general task whose parameters are another task; for internal use only
         'transform' => '\Flexio\Jobs\Transform',
         'list'      => '\Flexio\Jobs\List1',
-        'write'     => '\Flexio\Jobs\Write'
+        'write'     => '\Flexio\Jobs\Write',
+        'report'    => '\Flexio\Jobs\Report',
+        'set'       => '\Flexio\Jobs\Set'
     );
 
     private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
@@ -172,6 +174,11 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->files[$name] = $stream;
         return $this;
+    }
+
+    public function getFiles() : array
+    {
+        return $this->files;
     }
 
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process

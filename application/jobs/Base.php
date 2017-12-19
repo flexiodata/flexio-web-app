@@ -49,27 +49,35 @@ class Base implements \Flexio\IFace\IJob
 
     public function replaceParameterTokens($process) : \Flexio\Jobs\Base
     {
-        $this->replaceParameterTokensRecurse($process, $this->properties);
-        return $this;
-    }
+        $info = [];
 
-    private function replaceParameterTokensRecurse($process, &$value)
-    {
         // normally, $process is an object that exposes the \Flexio\IFace\IProcess interface; however, for the
-        // convenience of the test suite, a key/value array may be passed instead
-
+        // convenience of the test suite, a key/value array may be passed instead.
         // $value is the array or value that we will replace tokens on
 
         if (is_array($process))
-            $variables = $process;
-             else
-            $variables = $process->getParams();
+        {
+            $info['variables'] = $process;
+            $info['files'] = [];
+        }
+        else
+        {
+            $info['variables'] = $process->getParams();
+            $info['files'] = $process->getFiles();
+        }
 
+
+        $this->replaceParameterTokensRecurse($info, $process, $this->properties);
+        return $this;
+    }
+
+    private function replaceParameterTokensRecurse(&$info, $process, &$value)
+    {
         if (is_array($value))
         {
             foreach ($value as $k => &$v)
             {
-                $this->replaceParameterTokensRecurse($process, $v);
+                $this->replaceParameterTokensRecurse($info, $process, $v);
             }
         }
          else
@@ -95,7 +103,6 @@ class Base implements \Flexio\IFace\IJob
 
                         if ($varname == 'stdin')
                         {
-                            $replacement = '';
                             $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
@@ -105,24 +112,41 @@ class Base implements \Flexio\IFace\IJob
                         {
                             $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
                         }
-                        else if (isset($variables[$varname]))
-                        {
-                            if ($variables[$varname] instanceof \Flexio\Base\Stream)
+                        else if (substr($varname, 0, 6) == 'files.')
+                        {                            
+                            $parts = explode('.', $varname);
+
+                            if (count($parts) >= 2 && isset($info['files'][$parts[1]]))
                             {
-                                $replacement = '';
-                                $streamreader = $variables[$varname]->getReader();
-                                while (($chunk = $streamreader->read()) !== false)
-                                    $replacement .= $chunk;
-                            }
-                             else
-                            {
-                                if (is_array($variables[$varname]))
+                                $file = $info['files'][$parts[1]];
+                                if (($parts[2] ?? '') == 'name')
                                 {
-                                    $replacement = json_encode($variables[$varname]);
+                                    if ($file instanceof \Flexio\Base\Stream)
+                                        $replacement = $file->getName();
                                 }
-                                 else
+                            }
+                        }
+                        else
+                        {
+                            $var = $info['variables'][$varname] ?? null;
+                            if ($var !== null)
+                            {
+                                if ($var instanceof \Flexio\Base\Stream)
                                 {
-                                    $replacement = (string)$variables[$varname];
+                                    $streamreader = $var->getReader();
+                                    while (($chunk = $streamreader->read()) !== false)
+                                        $replacement .= $chunk;
+                                }
+                                else
+                                {
+                                    if (is_array($var))
+                                    {
+                                        $replacement = json_encode($var);
+                                    }
+                                    else
+                                    {
+                                        $replacement = (string)$var;
+                                    }
                                 }
                             }
                         }

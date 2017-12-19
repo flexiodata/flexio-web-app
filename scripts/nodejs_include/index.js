@@ -70,7 +70,25 @@ class StdinoutProxy {
                 }
                 var msglen = parseInt(lenstr)
                 data = new Buffer(msglen)
-                fs.readSync(this.stdin, data, 0, msglen, null)
+
+                // OLD CODE: 
+                // fs.readSync(this.stdin, data, 0, msglen, null)
+
+                var bytes_read = 0
+                var offset = 0
+                var left_to_read = msglen
+                while (left_to_read > 0)
+                {
+                    bytes_read = fs.readSync(this.stdin, data, offset, left_to_read, null)
+                    offset += bytes_read
+                    left_to_read -= bytes_read
+                }
+
+                //if (bytes_read != msglen)
+                //{
+                //    throw "Bytes read mismatch. Wanted " + msglen + " Got " + bytes_read;
+                //}
+
                 //return this.u8arrToString(data)
                 return data.toString('binary')
             }
@@ -426,7 +444,7 @@ class Output {
 
     set name(value) {
         this._name = value
-        proxy.invoke('setOutputStreamInfo', [this._handle, {'name':value}])
+        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'name':value}])
     }
 
     get contentType() {
@@ -435,7 +453,7 @@ class Output {
 
     set contentType(value) {
         this._contentType = value
-        proxy.invoke('setOutputStreamInfo', [this._handle, {'content_type':value}])
+        proxy.invokeSync('setOutputStreamInfo', [this._handle, {'content_type':value}])
     }
 
     get env() {
@@ -570,7 +588,7 @@ var inited = false
 var input = null
 var output = null
 var context = new Context()
-
+context.proxy = proxy
 
 function checkModuleInit(callback) {
     if (inited) {

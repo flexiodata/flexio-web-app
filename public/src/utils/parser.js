@@ -2016,6 +2016,33 @@
 
 
 
+    this.args.report = [ 'var', 'value' ];
+    this.hints.report = {}
+    this.keywords.report = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.report",
+            "params": { }
+        }
+
+      var params = this.split(str, this.args.report);
+
+      return json;
+    };
+
+
+    this.templates["flexio.report"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = 'report';
+
+      return res;
+    }
+
+
 
 
 /*
@@ -2296,6 +2323,66 @@
 
 
 
+
+    this.args.set = [ 'var', 'value' ];
+    this.hints.set = {}
+    this.keywords.set = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.set",
+            "params": { }
+        }
+
+      var params = this.split(str, this.args.set);
+
+      if (params.hasOwnProperty('var'))
+      {
+        json.params['var'] = params['var'].value;
+      }
+  
+      if (params.hasOwnProperty('value'))
+      {
+        json.params['value'] = params['value'].value;
+      }
+
+      return json;
+    };
+
+
+    this.templates["flexio.set"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = 'set';
+
+      if (json.params.hasOwnProperty('var'))
+      {
+        res = this.append(res, "var: " + json.params['var']);
+      }
+
+      if (json.params.hasOwnProperty('value'))
+      {
+        res = this.append(res, "value: " + json.params.value);
+      }
+
+      return res;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     this.args.settype = [ 'col', 'type', 'decimal' ];
     this.hints.settype = {
       "type":        [ 'text', 'numeric', 'integer', 'date', 'datetime', 'boolean' ]
@@ -2379,6 +2466,10 @@
 
       return res;
     }
+
+
+
+
 
 
 
@@ -2723,8 +2814,10 @@
         'read',
         //'rename',
         'render',
+        'report',
         'request',
         'select',
+        'set',
         //'settype',
         //'sort',
         //'transform',

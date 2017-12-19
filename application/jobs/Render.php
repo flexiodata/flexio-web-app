@@ -31,22 +31,24 @@ class Render extends \Flexio\Jobs\Base
         parent::run($process);
 
         $job_definition = $this->getProperties();
-        $items = $job_definition['params']['items'] ?? null;
-        $url = $job_definition['params']['url'] ?? null;
-        $format = $job_definition['params']['format'] ?? 'png';
-        $paper = $job_definition['params']['paper'] ?? 'letter';
-        $width = $job_definition['params']['width'] ?? null;
-        $height = $job_definition['params']['height'] ?? null;
+        $params =  $job_definition['params'] ?? [];
 
-        $full = $job_definition['params']['full'] ?? false;
+        $items = $params['items'] ?? null;
+        $url = $params['url'] ?? null;
+        $format = $params['format'] ?? 'png';
+        $paper = $params['paper'] ?? 'letter';
+        $width = $params['width'] ?? null;
+        $height = $params['height'] ?? null;
+
+        $full = $params['full'] ?? false;
         $full = toBoolean($full);
 
         $paper = ucfirst(strtolower($paper));
 
-        $landscape = $job_definition['params']['landscape'] ?? false;
+        $landscape = $params['landscape'] ?? false;
         $landscape = toBoolean($landscape);
 
-        $scrollbars = $job_definition['params']['scrollbars'] ?? true;
+        $scrollbars = $params['scrollbars'] ?? true;
         $scrollbars = toBoolean($scrollbars);
 
         if ($format == 'pdf')
@@ -85,7 +87,7 @@ class Render extends \Flexio\Jobs\Base
         if (!$scrollbars)
             $hide_scrollbars = '--hide-scrollbars';
 
-        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s nodejs /render/run.js ".
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c 'timeout 30s nodejs /fxnodejs/render.js ".
                "--url $url ".
                "--format $format ".
                "--paper $paper ".
@@ -107,54 +109,5 @@ class Render extends \Flexio\Jobs\Base
         }
 
         fclose($fp);
-/*
-        // we've removed the "looped stream" handling in the logic, so
-        // we no longer support arbitrary creation and subsequent processing
-        // an array of streams; we'll probably want to bring back this notion,
-        // but using parameters and explicit operations on those parameters
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
-
-        $counter = 0;
-        foreach ($input as $item)
-        {
-            $counter++;
-            $output_name = $item['name'] ?? "output-$counter.$format";
-            $url = $item['path'] ?? 'about:blank';
-
-            // create the output stream
-            $outstream_properties = array(
-                'name' => $output_name,
-                'mime_type' => $content_type
-            );
-            $outstream = \Flexio\Base\Stream::create($outstream_properties);
-            $streamwriter = $outstream->getWriter();
-
-            $windowsize = '';
-            if (isset($width) && isset($height))
-                $windowsize = '--window-size="'.$width.'x'.$height.'"';
-
-            $hide_scrollbars = '';
-            if (!$scrollbars)
-                $hide_scrollbars = '--hide-scrollbars';
-
-            if ($format == 'pdf')
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s google-chrome --headless --disable-gpu --print-to-pdf --no-sandbox $windowsize $hide_scrollbars $url && cat output.pdf'";
-            else if ($format == 'png')
-                $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxrender sh -c 'timeout 30s google-chrome --headless --disable-gpu --screenshot --no-sandbox $windowsize $hide_scrollbars $url && cat screenshot.png'";
-            else
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            $fp = popen($cmd, "r");
-
-            while (!feof($fp))
-            {
-                $buf = fread($fp, 1024);
-                $streamwriter->write($buf);
-            }
-            fclose($fp);
-
-            $process->addStream($outstream);
-        }
-*/
     }
 }

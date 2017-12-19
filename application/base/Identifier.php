@@ -91,9 +91,9 @@ class Identifier
             // case 'flexio': // allow flexio, since we want to use it as our public account
             case 'flexible':
             case 'flexiodata':
-            case 'goldprairie':
-            case 'kirix':
-            case 'kirixresearch':
+            //case 'goldprairie':
+            //case 'kirix':
+            //case 'kirixresearch':
                 return true;
 
             // public file and folder names

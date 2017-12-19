@@ -1008,7 +1008,6 @@ class Util
             return;
         }
 
-
         $parser = \Flexio\Base\MultipartParser::create();
         $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$post_streams) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
@@ -1019,7 +1018,7 @@ class Util
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
 
                 $stream_info = array();
-                $stream_info['name'] = $name;
+                $stream_info['name'] = $filename;
                 $stream_info['mime_type'] = $content_type;
 
                 $stream->set($stream_info);
@@ -1037,6 +1036,7 @@ class Util
             {
                 $streamwriter = false;
                 $process->addFile($name, $stream);
+
                 $stream = false;
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
