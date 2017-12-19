@@ -2,17 +2,13 @@ the #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-pushd $DIR/fxpython
+pushd $DIR/fxruntime
 cp $DIR/../python_include/flexio.py ./
 cp $DIR/../nodejs_include/index.js ./
 cp $DIR/../nodejs_include/run.js ./
 cp $DIR/../nodejs_include/package.json ./
-docker build -t fxpython . --no-cache
+docker build -t fxruntime . --no-cache
 popd
-
-#pushd $DIR/fxrender
-#docker build -t fxrender . --no-cache
-#popd
 
 
 
