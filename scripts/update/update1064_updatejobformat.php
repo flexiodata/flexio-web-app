@@ -208,10 +208,12 @@ function writeProcess($db, $process_eid, $task)
 
 function writeProcessLog($db, $processlog_eid, $task_type, $task)
 {
+    $task_type = $db->quote($task_type);
     $task = $db->quote($task);
+
     $sql = "update tbl_processlog ".
            "    set ".
-           "        task_type = $task_type ".
+           "        task_type = $task_type, ".
            "        task = $task ".
            "    where eid = '$processlog_eid';";
 
