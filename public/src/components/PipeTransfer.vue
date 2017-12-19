@@ -120,10 +120,10 @@
 
 <script>
   import {
-    TASK_TYPE_INPUT,
-    TASK_TYPE_OUTPUT,
-    TASK_TYPE_EMAIL_SEND
-  } from '../constants/task-type'
+    TASK_OP_INPUT,
+    TASK_OP_OUTPUT,
+    TASK_OP_EMAIL_SEND
+  } from '../constants/task-op'
   import {
     CONNECTION_TYPE_STDIN,
     CONNECTION_TYPE_STDOUT,
@@ -168,20 +168,20 @@
     },
     computed: {
       input_tasks() {
-        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+        return _.filter(this.tasks, { op: TASK_OP_INPUT })
       },
       output_tasks() {
         // this is somewhat of a kludge, but it works -- ideally, we'd have a full-fledged
         // email output connection and/or figure out a way to make outputs and inputs
         // a little less strict
         return _.filter(this.tasks, (task) => {
-          return task.type == TASK_TYPE_OUTPUT || task.type == TASK_TYPE_EMAIL_SEND
+          return task.op == TASK_OP_OUTPUT || task.op == TASK_OP_EMAIL_SEND
         })
       },
       transform_tasks() {
         return _.reject(this.tasks, (t) => {
-          var task_type = _.get(t, 'type')
-          return task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT
+          var task_op = _.get(t, 'op')
+          return task_op == TASK_OP_INPUT || task_op == TASK_OP_OUTPUT
         })
       },
       has_input() {
@@ -210,7 +210,7 @@
         var ctype = _.get(connection, 'connection_type', '')
 
         // insert input after any existing inputs
-        var input_idx = _.findLastIndex(this.tasks, (t) => { return _.get(t, 'type') == TASK_TYPE_INPUT })
+        var input_idx = _.findLastIndex(this.tasks, (t) => { return _.get(t, 'op') == TASK_OP_INPUT })
 
         // if there are no inputs, insert at the beginning of the pipe
         if (input_idx == -1)
@@ -226,7 +226,7 @@
           metadata: {
             connection_type: ctype
           },
-          type: TASK_TYPE_INPUT,
+          op: TASK_OP_INPUT,
           params: {}
         }
 
@@ -259,7 +259,7 @@
         if (ctype == CONNECTION_TYPE_EMAIL)
         {
           var attrs = {
-            type: TASK_TYPE_EMAIL_SEND,
+            op: TASK_OP_EMAIL_SEND,
             params: {
               to: ['${email_address}'],
               subject: 'Flex.io Pipe Email Output',
@@ -291,7 +291,7 @@
           metadata: {
             connection_type: ctype
           },
-          type: TASK_TYPE_OUTPUT,
+          op: TASK_OP_OUTPUT,
           params: {}
         }
 

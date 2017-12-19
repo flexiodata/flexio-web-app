@@ -4,7 +4,7 @@
   "description": "Historical weather from 538 repository on GitHub",
   "task": [
     {
-      "type": "flexio.input",
+      "op": "input",
       "metadata": {
         "connection_type": "http"
       },
@@ -24,7 +24,7 @@
       }
     },
     {
-      "type": "flexio.convert",
+      "op": "convert",
       "params": {
         "input": {
           "format": "delimited_text",
@@ -35,7 +35,7 @@
       }
     },
     {
-      "type": "flexio.merge",
+      "op": "merge",
       "params": {
       }
     }

@@ -36,7 +36,7 @@
 
 <script>
   import * as ctypes from '../constants/connection-type'
-  import * as ttypes from '../constants/task-type'
+  import * as ttypes from '../constants/task-op'
   import { mapState, mapGetters } from 'vuex'
   import OnboardingTileItem from './OnboardingTileItem.vue'
   import Btn from './Btn.vue'
@@ -45,17 +45,17 @@
     'transform-an-image-with-python': {
       title: 'Transform an Image with Python',
       short_description: 'This template grabs a web-based image and shrinks it using Python. Then, it emails the new thumbnail as an attachment.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_TYPE_EXECUTE, ctypes.CONNECTION_TYPE_EMAIL]
+      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_OP_EXECUTE, ctypes.CONNECTION_TYPE_EMAIL]
     },
     'convert-a-dirty-csv-to-clean-json': {
       title: 'Convert a Dirty CSV to Clean JSON',
       short_description: 'This template takes a CSV file and concatenates various columns. Then, it removes and renames various columns and, finally, converts the file into a tidy JSON output.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_TYPE_CONVERT, ctypes.CONNECTION_TYPE_EMAIL]
+      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_OP_CONVERT, ctypes.CONNECTION_TYPE_EMAIL]
     },
     'add-search-to-a-static-website': {
       title: 'Add Search to a Static Website',
       short_description: 'This pipe powers a search application on a static site using the Flex.io API. The website user inputs a search term, which is passed to the pipe as a variable. The pipe then returns the filtered data set to the website, which displays the result.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_TYPE_FILTER, ctypes.CONNECTION_TYPE_STDOUT]
+      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ttypes.TASK_OP_FILTER, ctypes.CONNECTION_TYPE_STDOUT]
     }
   }
 

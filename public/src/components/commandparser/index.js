@@ -1,4 +1,4 @@
-import * as task_types from '../../constants/task-type'
+import * as task_types from '../../constants/task-op'
 import * as command_names  from '../../constants/command-name'
 import convert from './convert'
 import execute from './execute'
@@ -38,13 +38,13 @@ export default {
 
     switch (_.get(json, 'type'))
     {
-      case task_types.TASK_TYPE_CONVERT:       return convert.getCmd(json)
-      case task_types.TASK_TYPE_EXECUTE:       return execute.getCmd(json)
-      case task_types.TASK_TYPE_FIND_REPLACE:  return findreplace.getCmd(json)
-      case task_types.TASK_TYPE_INPUT:         return input.getCmd(json)
-      case task_types.TASK_TYPE_LIMIT:         return limit.getCmd(json)
-      case task_types.TASK_TYPE_SELECT:        return selectcolumn.getCmd(json)
-      case task_types.TASK_TYPE_SORT:          return sort.getCmd(json)
+      case task_types.TASK_OP_CONVERT:       return convert.getCmd(json)
+      case task_types.TASK_OP_EXECUTE:       return execute.getCmd(json)
+      case task_types.TASK_OP_FIND_REPLACE:  return findreplace.getCmd(json)
+      case task_types.TASK_OP_INPUT:         return input.getCmd(json)
+      case task_types.TASK_OP_LIMIT:         return limit.getCmd(json)
+      case task_types.TASK_OP_SELECT:        return selectcolumn.getCmd(json)
+      case task_types.TASK_OP_SORT:          return sort.getCmd(json)
     }
 
     return ''

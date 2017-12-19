@@ -1,9 +1,9 @@
-import { TASK_TYPE_SELECT }  from '../../constants/task-type'
+import { TASK_OP_SELECT }  from '../../constants/task-op'
 import { COMMAND_NAME_SELECT_COLUMN }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {
   'name': 'Select Columns',
-  'type': TASK_TYPE_SELECT,
+  'type': TASK_OP_SELECT,
   'params': {
     'columns': []
   },

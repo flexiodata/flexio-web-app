@@ -1,10 +1,10 @@
 import {
-  TASK_TYPE_REQUEST,
-  TASK_TYPE_CONVERT,
-  TASK_TYPE_EMAIL_SEND,
-  TASK_TYPE_EXECUTE,
-  TASK_TYPE_RENDER
-} from '../constants/task-type'
+  TASK_OP_REQUEST,
+  TASK_OP_CONVERT,
+  TASK_OP_EMAIL_SEND,
+  TASK_OP_EXECUTE,
+  TASK_OP_RENDER
+} from '../constants/task-op'
 
 import {
   CONNECTION_TYPE_HTTP,
@@ -15,7 +15,7 @@ export default [
   {
     label: 'Request from Web',
     task_json: {
-      'type': TASK_TYPE_REQUEST,
+      'type': TASK_OP_REQUEST,
       'params': {
         'method': 'GET',
         'url': 'https://raw.githubusercontent.com/flexiodata/data/master/mockaroo/names-and-ip-addresses.csv'
@@ -24,7 +24,7 @@ export default [
   },{
     label: 'Render a webpage',
     task_json: {
-      'type': TASK_TYPE_RENDER,
+      'type': TASK_OP_RENDER,
       'params': {
         'url': 'https://www.flex.io',
         'format': 'png',
@@ -36,7 +36,7 @@ export default [
   },{
     label: 'Execute Python Code',
     task_json: {
-      'type': TASK_TYPE_EXECUTE,
+      'type': TASK_OP_EXECUTE,
       'params': {
         'lang': 'python',
         // "Hello, World!" example code
@@ -46,7 +46,7 @@ export default [
   },{
     label: 'Execute Javascript Code',
     task_json: {
-      'type': TASK_TYPE_EXECUTE,
+      'type': TASK_OP_EXECUTE,
       'params': {
         'lang': 'javascript',
         // "Hello, World!" example code
@@ -56,7 +56,7 @@ export default [
   },{
     label: 'Send Email',
     task_json: {
-      'type': TASK_TYPE_EMAIL_SEND,
+      'type': TASK_OP_EMAIL_SEND,
       'params': {
         'to': ['john.smith@example.com'],
         'subject': 'My Subject',
@@ -66,7 +66,7 @@ export default [
   },{
     label: 'Convert From CSV to JSON',
     task_json: {
-      'type': TASK_TYPE_CONVERT,
+      'type': TASK_OP_CONVERT,
       'params': {
         'input': {
           'format': 'delimited',

@@ -109,7 +109,7 @@
     CONNECTION_TYPE_SFTP
   } from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import { TASK_TYPE_EMAIL_SEND } from '../constants/task-type'
+  import { TASK_OP_EMAIL_SEND } from '../constants/task-op'
   import { mapGetters } from 'vuex'
   import Btn from './Btn.vue'
   import ServiceIcon from './ServiceIcon.vue'
@@ -148,7 +148,7 @@
         return this.item
       },
       ctype() {
-        if (_.get(this.task, 'type') == TASK_TYPE_EMAIL_SEND)
+        if (_.get(this.task, 'type') == TASK_OP_EMAIL_SEND)
           return CONNECTION_TYPE_EMAIL
 
         return _.get(this.task, 'metadata.connection_type', '')

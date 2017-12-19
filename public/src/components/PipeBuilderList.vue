@@ -121,6 +121,24 @@
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
+          if (val == PROCESS_STATUS_COMPLETED)
+          {
+            setTimeout(() => { this.show_success = false }, 6000)
+
+            setTimeout(() => {
+              this.show_success = true
+              this.show_error = false
+            }, 1000)
+          }
+
+          if (val == PROCESS_STATUS_FAILED)
+          {
+            setTimeout(() => {
+              this.show_success = false
+              this.show_error = true
+          }, 1000)
+
+          /*
           var eid = this.pipeEid
           var process_eid = _.get(this.activeProcess, 'eid', '')
           var subprocesses = _.get(this.activeProcess, 'subprocesses', [])
@@ -159,6 +177,7 @@
               analytics.track('Ran Pipe: Error', { eid, process_eid, task_types, task_count, duration, message, error_code })
             }, 1000)
           }
+          */
         }
       }
     },

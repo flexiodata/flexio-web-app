@@ -73,7 +73,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_SIGNIN, ROUTE_PIPES } from '../constants/route'
   import { VARIABLE_REGEX } from '../constants/common'
-  import { TASK_TYPE_COMMENT } from '../constants/task-type'
+  import { TASK_OP_COMMENT } from '../constants/task-op'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {
@@ -297,7 +297,7 @@
               error_msg: ''
             }, task)
           }
-           else if (_.get(task, 'type') == TASK_TYPE_COMMENT)
+           else if (_.get(task, 'type') == TASK_OP_COMMENT)
           {
             return _.assign({ is_prompt: true }, task)
           }
@@ -361,6 +361,7 @@
           this.$store.dispatch('createProcess', { attrs }).then(response => {
             if (response.ok)
             {
+              /*
               var eid = this.eid
               var task_types_arr = _.map(this.tasks, (t) => { return _.get(t, 'type', '') })
               var task_types = task_types_arr.join(', ')
@@ -368,6 +369,7 @@
               var process_eid = _.get(response.body, 'eid', '')
 
               analytics.track('Ran Pipe: Start', { eid, process_eid, task_types, task_count })
+              */
 
               this.$nextTick(() => { this.is_prompting = false })
             }
