@@ -31,7 +31,31 @@ class ReportScriptHost extends ScriptHost
 {
     public function func_getReportPayload()
     {
-        return "<html><body><h1>Hello world!</h1></body></html";
+        $input = $this->process->getStdin();
+        $content_type = $input->getMimeType();
+
+        //return "<html><body><h1>Hello world!</h1></body></html>";
+        if ($content_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            $html = "<html><body><table>";
+            $rows = $input->getReader()->getRows(0,10000);
+            foreach ($rows as $row)
+            {
+                $rowstr = "<tr>";
+                foreach ($row as $col)
+                    $rowstr .= "<td>$col</td>";
+                $rowstr .= "</tr>";
+                $html .= $rowstr;
+            }
+            $html .= "</table></body></html>";
+
+            return $html;
+        }
+        else
+        {
+            $content = $input->getReader()->read(100000);
+            return "<html><body>$content</body></html>";
+        }
     }
 }
 
@@ -59,13 +83,15 @@ EOT;*/
         exports.flexio_handler = function(context) {
             
             var html = context.proxy.invokeSync('getReportPayload', [])
+            //context.output.write(html)
+           // return
 
             var f = (async () => {
                 const browser = await puppeteer.launch({args:['--no-sandbox']});
                 const page = await browser.newPage();
                 //await page.goto('https://www.flex.io', {waitUntil: 'networkidle2'});
                 await page.setContent(html)
-                await page.pdf({path: '/tmp/document.pdf', format: 'A4'});
+                await page.pdf({path: '/tmp/document.pdf', format: 'A4', landscape: true});
                 
                 await browser.close();
 

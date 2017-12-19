@@ -337,7 +337,7 @@ class ExecuteProxy
 
 class ScriptHost
 {
-    private $process = null;
+    protected $process = null;
 
     private $input_map = [];
     private $input_streams = [];
