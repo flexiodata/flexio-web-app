@@ -70,7 +70,25 @@ class StdinoutProxy {
                 }
                 var msglen = parseInt(lenstr)
                 data = new Buffer(msglen)
-                fs.readSync(this.stdin, data, 0, msglen, null)
+
+                // OLD CODE: 
+                // fs.readSync(this.stdin, data, 0, msglen, null)
+
+                var bytes_read = 0
+                var offset = 0
+                var left_to_read = msglen
+                while (left_to_read > 0)
+                {
+                    bytes_read = fs.readSync(this.stdin, data, offset, left_to_read, null)
+                    offset += bytes_read
+                    left_to_read -= bytes_read
+                }
+
+                //if (bytes_read != msglen)
+                //{
+                //    throw "Bytes read mismatch. Wanted " + msglen + " Got " + bytes_read;
+                //}
+
                 //return this.u8arrToString(data)
                 return data.toString('binary')
             }
