@@ -205,7 +205,7 @@ class Process extends ModelBase
                 $process_arr = array(
                     'eid'          => $eid,
                     'process_eid'  => $process_eid,
-                    'task_type'    => $params['task_type'] ?? '',
+                    'task_type'    => $params['task_op'] ?? '',
                     'task_version' => $params['task_version'] ?? 0,
                     'task'         => $params['task'] ?? '{}',
                     'input'        => $params['input'] ?? '{}',
@@ -236,7 +236,7 @@ class Process extends ModelBase
             $validator = \Flexio\Base\Validator::create();
             if (($validator->check($params, array(
                     'process_eid'  => array('type' => 'string',  'required' => false),
-                    'task_type'    => array('type' => 'string',  'required' => false),
+                    'task_op'      => array('type' => 'string',  'required' => false),
                     'task_version' => array('type' => 'integer', 'required' => false),
                     'task'         => array('type' => 'string',  'required' => false),
                     'input'        => array('type' => 'string',  'required' => false),
@@ -247,6 +247,13 @@ class Process extends ModelBase
                     'message'      => array('type' => 'string',  'required' => false)
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            if (isset($params['task_op']))
+            {
+                // 'task_op' is currently stored as task_type
+                $params['task_type'] = $params['task_op'];
+                unset($params['task_op']);
+            }
 
             $db = $this->getDatabase();
             $db->beginTransaction();
@@ -277,7 +284,7 @@ class Process extends ModelBase
         {
             $rows = $db->fetchAll("select tpl.eid as eid,
                                           tpl.process_eid as process_eid,
-                                          tpl.task_type as task_type,
+                                          tpl.task_type as task_op,
                                           tpl.task_version as task_version,
                                           tpl.task as task,
                                           tpl.input as input,
@@ -306,7 +313,7 @@ class Process extends ModelBase
         {
             $output[] = array('eid'              => $row['eid'],
                               'process_eid'      => $row['process_eid'],
-                              'task_type'        => $row['task_type'],
+                              'task_op'          => $row['task_op'],
                               'task_version'     => $row['task_version'],
                               'task'             => $row['task'],
                               'input'            => $row['input'],
@@ -437,7 +444,7 @@ class Process extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('task_type'    => $row['task_type'],
+            $output[] = array('task_op'      => $row['task_type'],
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],
                               'average_time' => $row['average_time']);
