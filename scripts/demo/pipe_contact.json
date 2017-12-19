@@ -4,7 +4,7 @@
     "description": "Standardize contact information",
     "task": [
         {
-            "type": "flexio.input",
+            "op": "input",
             "description": "Read CSV file from GitHub url",
             "metadata": {
                 "connection_type": "http"
@@ -18,7 +18,7 @@
             }
         },
         {
-            "type": "flexio.convert",
+            "op": "convert",
             "description": "Convert from CSV to table",
             "params": {
                 "input": {
@@ -32,7 +32,7 @@
             }
         },
         {
-            "type": "flexio.select",
+            "op": "select",
             "description": "Select only the relevant columns",
             "params": {
                 "columns": [
@@ -46,7 +46,7 @@
             }
         },
         {
-            "type": "flexio.transform",
+            "op": "transform",
             "description": "Make all text uppercase for consistency",
             "params": {
                 "columns": [

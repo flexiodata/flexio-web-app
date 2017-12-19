@@ -45,7 +45,7 @@ class StdinoutProxy(object):
                 msglen = int(lenstr.decode())
                 return sys.stdin.buffer.read(msglen)
         return None
-    
+
     def encodepart(self, var):
         if var is None:
             return b'N0,'
@@ -54,7 +54,7 @@ class StdinoutProxy(object):
             type = b'B'
         if isinstance(var, bool):
             type = b'b'
-            var = b'1' if var else b'0' 
+            var = b'1' if var else b'0'
         elif isinstance(var, int):
             type = b'i'
             var = str(var).encode('utf-8')
@@ -152,7 +152,7 @@ class InputEnv(object):
         if not self.inited:
             self.initialize()
         return self.env.keys()
-    
+
     def values(self):
         if not self.inited:
             self.initialize()
@@ -178,7 +178,7 @@ class OutputEnv(object):
             self.initialize()
         if proxy.invoke('setOutputEnvValue', [key,value]) is True:
             self.env[key] = value
-    
+
     def __iter__(self):
         if not self.inited:
             self.initialize()
@@ -193,7 +193,7 @@ class OutputEnv(object):
         if not self.inited:
             self.initialize()
         return self.env.keys()
-    
+
     def values(self):
         if not self.inited:
             self.initialize()
@@ -231,7 +231,7 @@ class Input(object):
             self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
-        
+
     @property
     def env(self):
         return input_env
@@ -247,7 +247,7 @@ class Input(object):
     @property
     def size(self):
         return self._size
-    
+
     @property
     def structure(self):
         if not self.is_table:
@@ -255,7 +255,7 @@ class Input(object):
         if not self._structure:
             self._structure = proxy.invoke('getInputStreamStructure', [self._handle])
         return self._structure
-    
+
     @property
     def is_table(self):
         return self._is_table
@@ -307,7 +307,7 @@ class Input(object):
             if self._casting:
                 self.type_casts(row)
             return row
-    
+
     def readall(self):
         if self.is_table:
             rows = []
@@ -374,7 +374,7 @@ class Output(object):
             self._content_type = 'application/octet-stream'
             self._size = 0
             self._handle = -1
-    
+
     @property
     def name(self):
         return self._name
@@ -413,7 +413,7 @@ class Output(object):
 
     def insert_row(self, row):
         proxy.invoke('insertRow', [self._handle, row])
-    
+
     def insert_rows(self, rows):
         proxy.invoke('insertRows', [self._handle, rows])
 
@@ -424,7 +424,7 @@ class PipeFunctions(object):
 
     def echo(self, msg):
         definition = {
-            "type": "flexio.echo",
+            "op": "echo",
             "params": {
                 "msg": msg
             }
@@ -454,7 +454,7 @@ def run(handler):
 
     input = Input(stdin_stream_info)
     output = Output(stdout_stream_info)
-    
+
     context = Context(input, output)
 
     handler(context)

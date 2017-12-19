@@ -394,7 +394,7 @@
     {
       var json =
         {
-            "type": "flexio.calc",
+            "op": "calc",
             "params": { }
         }
 
@@ -448,7 +448,7 @@
     };
 
 
-    this.templates["flexio.calc"] = function(json)
+    this.templates["calc"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -487,7 +487,7 @@
     {
       var json =
         {
-          "type": "flexio.create",
+          "op": "create",
           "params": { }
         };
 
@@ -513,7 +513,7 @@
     };
 
 
-    this.templates["flexio.create"] = function(json)
+    this.templates["create"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -548,7 +548,7 @@
     {
       var json =
         {
-          "type": "flexio.comment",
+          "op": "comment",
           "params": { }
         };
 
@@ -556,7 +556,7 @@
     };
 
 
-    this.templates["flexio.comment"] = function(json)
+    this.templates["comment"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -583,7 +583,7 @@
     {
       var json =
         {
-            "type": "flexio.convert",
+            "op": "convert",
             "params": { }
         };
 
@@ -776,7 +776,7 @@
       return json;
     };
 
-    this.templates["flexio.convert"] = function(json)
+    this.templates["convert"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -877,7 +877,7 @@
     {
       var json =
         {
-          "type": "flexio.echo",
+          "op": "echo",
           "params": { }
         };
 
@@ -892,7 +892,7 @@
     };
 
 
-    this.templates["flexio.echo"] = function(json)
+    this.templates["echo"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -920,7 +920,7 @@
     {
       var json =
         {
-          "type": "flexio.email",
+          "op": "email",
           "params": {
           }
         };
@@ -961,7 +961,7 @@
     };
 
 
-    this.templates["flexio.email"] = function(json)
+    this.templates["email"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1030,7 +1030,7 @@
     {
       var json =
         {
-          "type": "flexio.execute",
+          "op": "execute",
           "params": { }
         };
 
@@ -1070,7 +1070,7 @@
     };
 
 
-    this.templates["flexio.execute"] = function(json)
+    this.templates["execute"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1105,7 +1105,7 @@
     {
       var json =
         {
-          "type": "flexio.exit",
+          "op": "exit",
           "params": { }
         };
 
@@ -1120,7 +1120,7 @@
     };
 
 
-    this.templates["flexio.exit"] = function(json)
+    this.templates["exit"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1145,7 +1145,7 @@
     {
       var json =
         {
-          "type": "flexio.fail",
+          "op": "fail",
           "params": { }
         };
 
@@ -1165,7 +1165,7 @@
     };
 
 
-    this.templates["flexio.fail"] = function(json)
+    this.templates["fail"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1195,7 +1195,7 @@
     {
       var json =
         {
-          "type": "flexio.filter",
+          "op": "filter",
           "params": {
           }
         };
@@ -1215,7 +1215,7 @@
       return json;
     };
 
-    this.templates["flexio.filter"] = function(json)
+    this.templates["filter"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1245,7 +1245,7 @@
     {
       var json =
         {
-          "type": "flexio.input",
+          "op": "input",
           "params": { }
         };
 
@@ -1307,7 +1307,7 @@
     };
 
 
-    this.templates["flexio.input"] = function(json)
+    this.templates["input"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1373,7 +1373,7 @@
     {
       var json =
         {
-          "type": "flexio.insert",
+          "op": "insert",
           "params": { }
         };
 
@@ -1400,7 +1400,7 @@
     };
 
 
-    this.templates["flexio.insert"] = function(json)
+    this.templates["insert"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1441,7 +1441,7 @@
     {
       var json =
         {
-          "type": "flexio.limit",
+          "op": "limit",
           "params": { }
         };
 
@@ -1468,7 +1468,7 @@
     };
 
 
-    this.templates["flexio.limit"] = function(json)
+    this.templates["limit"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1500,7 +1500,7 @@
     {
       var json =
         {
-          "type": "flexio.list",
+          "op": "list",
           "params": { }
         };
 
@@ -1522,7 +1522,7 @@
     };
 
 
-    this.templates["flexio.list"] = function(json)
+    this.templates["list"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1550,7 +1550,7 @@
     {
       var json =
         {
-          "type": "flexio.merge",
+          "op": "merge",
           "params": { }
         };
 
@@ -1558,7 +1558,7 @@
     };
 
 
-    this.templates["flexio.merge"] = function(json)
+    this.templates["merge"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1579,7 +1579,7 @@
     {
       var json =
         {
-          "type": "flexio.output",
+          "op": "output",
           "params": {
           }
         };
@@ -1639,7 +1639,7 @@
     };
 
 
-    this.templates["flexio.output"] = function(json)
+    this.templates["output"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1704,7 +1704,7 @@
 
 
 
-    
+
     this.args.read = ['path'];
     this.hints.read = {
     };
@@ -1712,7 +1712,7 @@
     {
       var json =
         {
-          "type": "flexio.read",
+          "op": "read",
           "params": { }
         };
 
@@ -1734,7 +1734,7 @@
     };
 
 
-    this.templates["flexio.read"] = function(json)
+    this.templates["read"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1761,7 +1761,7 @@
     {
       var json =
         {
-          "type": "flexio.rename",
+          "op": "rename",
           "params": {
           }
         };
@@ -1820,7 +1820,7 @@
     };
 
 
-    this.templates["flexio.rename"] = function(json)
+    this.templates["rename"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -1888,7 +1888,7 @@
     {
       var json =
         {
-          "type": "flexio.render",
+          "op": "render",
           "params": {
           }
         };
@@ -1956,7 +1956,7 @@
     };
 
 
-    this.templates["flexio.render"] = function(json)
+    this.templates["render"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2020,7 +2020,7 @@
 
 /*
 {
-  type: 'flexio.request',
+  type: 'request',
   params: {
     method: 'GET',
     url: 'https://github.com/my-api-endpoint',
@@ -2037,7 +2037,7 @@
     {
       var json =
         {
-            "type": "flexio.request",
+            "op": "request",
             "params": {
             }
         };
@@ -2111,7 +2111,7 @@
       return json
     };
 
-    this.templates["flexio.request"] = function(json)
+    this.templates["request"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2218,7 +2218,7 @@
     {
       var json =
         {
-          "type": "flexio.select",
+          "op": "select",
           "params": {
           }
         };
@@ -2250,7 +2250,7 @@
     };
 
 
-    this.templates["flexio.select"] = function(json)
+    this.templates["select"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2304,7 +2304,7 @@
     {
       var json =
         {
-            "type": "flexio.settype",
+            "op": "settype",
             "params": { }
         }
 
@@ -2345,7 +2345,7 @@
     };
 
 
-    this.templates["flexio.settype"] = function(json)
+    this.templates["settype"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2391,7 +2391,7 @@
     {
       var json =
         {
-          "type": "flexio.sleep",
+          "op": "sleep",
           "params": { }
         };
 
@@ -2406,7 +2406,7 @@
     };
 
 
-    this.templates["flexio.sleep"] = function(json)
+    this.templates["sleep"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2430,7 +2430,7 @@
     {
       var json =
         {
-            "type": "flexio.sort",
+            "op": "sort",
             "params": {
                 "order": []
             }
@@ -2459,7 +2459,7 @@
       return json;
     };
 
-    this.templates["flexio.sort"] = function(json)
+    this.templates["sort"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2506,7 +2506,7 @@
     {
       var json =
         {
-          "type": "flexio.task",
+          "op": "task",
           "params": { }
         };
 
@@ -2521,7 +2521,7 @@
     };
 
 
-    this.templates["flexio.task"] = function(json)
+    this.templates["task"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2550,7 +2550,7 @@
     {
       var json =
       {
-            "type": "flexio.transform",
+            "op": "transform",
             "params": {
             }
         };
@@ -2597,7 +2597,7 @@
       return json;
     };
 
-    this.templates["flexio.transform"] = function(json)
+    this.templates["transform"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
@@ -2662,7 +2662,7 @@
     {
       var json =
         {
-          "type": "flexio.write",
+          "op": "write",
           "params": { }
         };
 
@@ -2684,7 +2684,7 @@
     };
 
 
-    this.templates["flexio.write"] = function(json)
+    this.templates["write"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';

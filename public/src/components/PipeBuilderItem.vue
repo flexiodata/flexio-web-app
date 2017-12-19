@@ -422,35 +422,35 @@
       eid() {
         return _.get(this, 'task.eid', '')
       },
-      task_type() {
-        return _.get(this, 'task.type', '')
+      task_op() {
+        return _.get(this, 'task.op', '')
       },
-      edit_type() {
-        return _.get(this.edit_json, 'type', '')
+      edit_op() {
+        return _.get(this.edit_json, 'op', '')
       },
       meta_ctype() {
         return _.get(this, 'task.metadata.connection_type', '')
       },
       is_input_task() {
-        return this.task_type == TASK_TYPE_INPUT
+        return this.task_op == TASK_TYPE_INPUT
       },
       is_output_task() {
-        return this.task_type == TASK_TYPE_OUTPUT
+        return this.task_op == TASK_TYPE_OUTPUT
       },
       is_email_task() {
-        return this.task_type == TASK_TYPE_EMAIL_SEND
+        return this.task_op == TASK_TYPE_EMAIL_SEND
       },
       is_execute_task() {
-        return this.task_type == TASK_TYPE_EXECUTE
+        return this.task_op == TASK_TYPE_EXECUTE
       },
       is_active_prompt_task() {
         return this.index == this.activePromptIdx
       },
       show_command_bar() {
-        return this.task_type != TASK_TYPE_COMMENT
+        return this.task_op != TASK_TYPE_COMMENT
       },
       show_input_chooser() {
-        if (this.edit_type == TASK_TYPE_INPUT)
+        if (this.edit_op == TASK_TYPE_INPUT)
         {
           if (this.meta_ctype == CONNECTION_TYPE_HTTP || this.meta_ctype == CONNECTION_TYPE_RSS)
             return false
@@ -462,7 +462,7 @@
         return false
       },
       show_output_chooser() {
-        if (this.edit_type == TASK_TYPE_OUTPUT)
+        if (this.edit_op == TASK_TYPE_OUTPUT)
         {
           if (_.get(this.edit_json, 'params.connection', '') == '')
             return true
@@ -477,7 +477,7 @@
         if (this.edit_cmd.length > 0)
           return false
 
-        if (this.edit_type == '')
+        if (this.edit_op == '')
           return true
 
         return false
@@ -621,7 +621,7 @@
         var cmd_text = _.defaultTo(parser.toCmdbar(json), '')
         var end_idx = cmd_text.indexOf(' code:')
 
-        return (_.get(json, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
+        return (_.get(json, 'op') == TASK_TYPE_EXECUTE && end_idx != -1)
           ? cmd_text.substring(0, end_idx)
           : cmd_text
       },
@@ -689,9 +689,9 @@
       },
       saveChanges() {
         var edit_json = _.cloneDeep(this.edit_json)
-        var edit_attrs = _.pick(edit_json, ['metadata', 'type', 'params'])
-        var task_type = _.get(edit_attrs, 'type', '')
-        var friendly_task_name = _.capitalize(task_type.replace('flexio.', ''))
+        var edit_attrs = _.pick(edit_json, ['metadata', 'op', 'params'])
+        var task_op = _.get(edit_attrs, 'op', '')
+        var friendly_task_name = _.capitalize(task_op)
 
         var command = this.edit_cmd
         var code = this.edit_code
@@ -705,7 +705,7 @@
         }
 
         // sync up the changes from the code editor if we're on an execute step
-        if (task_type == TASK_TYPE_EXECUTE)
+        if (task_op == TASK_TYPE_EXECUTE)
         {
           // this is a hack-ish workaround for the fact that the PHP backend returns
           // empty objects as empty arrays
@@ -742,10 +742,10 @@
           return
         }
 
-        // create analytics payload for all other task types
+        // create analytics payload for all other task operations
         var analytics_payload = { command, message }
 
-        if (task_type == TASK_TYPE_INPUT || task_type == TASK_TYPE_OUTPUT)
+        if (task_op == TASK_TYPE_INPUT || task_op == TASK_TYPE_OUTPUT)
         {
           var connection_identifier = _.get(edit_attrs, 'params.connection', '')
 
@@ -846,7 +846,7 @@
           metadata: {
             connection_type: ctype
           },
-          type: TASK_TYPE_INPUT,
+          op: TASK_TYPE_INPUT,
           params: {}
         }
 
@@ -882,7 +882,7 @@
         if (ctype == CONNECTION_TYPE_EMAIL)
         {
           var attrs = {
-            type: TASK_TYPE_EMAIL_SEND,
+            op: TASK_TYPE_EMAIL_SEND,
             params: {
               to: ['${email_address}'],
               subject: 'Flex.io Pipe Email Output',
@@ -896,7 +896,7 @@
             metadata: {
               connection_type: ctype
             },
-            type: TASK_TYPE_OUTPUT,
+            op: TASK_TYPE_OUTPUT,
             params: {}
           }
 

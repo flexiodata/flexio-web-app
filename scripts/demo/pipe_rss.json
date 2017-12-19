@@ -4,7 +4,7 @@
   "description": "Technology RSS feed aggregator",
   "task": [
     {
-      "type": "flexio.input",
+      "op": "input",
       "metadata":
         "connection_type": "rss"
       },
@@ -19,12 +19,12 @@
       }
     },
     {
-      "type": "flexio.merge",
+      "op": "merge",
       "params": {
       }
     },
     {
-      "type": "flexio.distinct",
+      "op": "distinct",
       "params": {
         "distinct": [ "title" ],
         "columns": [ "*" ]
