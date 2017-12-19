@@ -31,7 +31,7 @@ class ReportScriptHost extends ScriptHost
 {
     public function func_getReportPayload()
     {
-        return "This is the report payload";
+        return "<html><body><h1>Hello world!</h1></body></html";
     }
 }
 
@@ -41,7 +41,7 @@ class Report extends \Flexio\Jobs\Base
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
-
+/*
         $code = <<<EOT
 
         exports.flexio_handler = function(context) {
@@ -50,6 +50,40 @@ class Report extends \Flexio\Jobs\Base
 
             context.output.write(payload)
         }
+EOT;*/
+
+        $code = <<<EOT
+
+        const puppeteer = require('puppeteer');
+        
+        exports.flexio_handler = function(context) {
+            
+            var html = context.proxy.invokeSync('getReportPayload', [])
+
+            var f = (async () => {
+                const browser = await puppeteer.launch({args:['--no-sandbox']});
+                const page = await browser.newPage();
+                //await page.goto('https://www.flex.io', {waitUntil: 'networkidle2'});
+                await page.setContent(html)
+                await page.pdf({path: '/tmp/document.pdf', format: 'A4'});
+                
+                await browser.close();
+
+                //var rs = require('fs').createReadStream('/tmp/document.pdf');
+                //rs.pipe(context.output);
+
+                context.output.contentType = 'application/pdf'
+                var data = require('fs').readFileSync('/tmp/document.pdf')
+                context.output.write(data)
+            });
+
+            f().then(v => {
+
+            }).catch(v => {
+                context.output.write("Problem! " + v)
+            })
+        }
+
 EOT;
 
         $dockerbin = \Flexio\System\System::getBinaryPath('docker');
