@@ -1,7 +1,7 @@
 // common helpers for task items (requires that the calling object has
 // an `item` computed property or provides their own `task` computed property)
 
-import * as types from '../../constants/task-op'
+import * as ops from '../../constants/task-op'
 import * as tasks from '../../constants/task-info'
 import { VARIABLE_REGEX } from '../../constants/common'
 
@@ -20,19 +20,19 @@ export default {
       return _.get(this, 'task.metadata.connection_type', '')
     },
     is_input_task() {
-      return _.get(this, 'task.type') == types.TASK_OP_INPUT
+      return _.get(this, 'task.op') == ops.TASK_OP_INPUT
     },
     is_output_task() {
-      return _.get(this, 'task.type') == types.TASK_OP_OUTPUT
+      return _.get(this, 'task.op') == ops.TASK_OP_OUTPUT
     },
     show_connection_icon() {
       if (this.ctype.length == 0)
         return false
 
-      switch (_.get(this, 'task.type'))
+      switch (_.get(this, 'task.op'))
       {
-        case types.TASK_OP_INPUT:
-        case types.TASK_OP_OUTPUT:
+        case ops.TASK_OP_INPUT:
+        case ops.TASK_OP_OUTPUT:
           return true
       }
 
