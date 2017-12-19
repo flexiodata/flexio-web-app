@@ -570,7 +570,7 @@ var inited = false
 var input = null
 var output = null
 var context = new Context()
-
+context.proxy = proxy
 
 function checkModuleInit(callback) {
     if (inited) {
