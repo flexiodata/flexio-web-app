@@ -1,19 +1,19 @@
 <template>
   <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
-    <div class="flex flex-row bg-white pa2 pl3-ns pr2-ns items-start" style="min-height: 54px">
+    <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center" style="min-height: 54px">
       <router-link
         to="/pipes"
-        class="flex flex-row items-center link mid-gray hover-black pv1"
+        class="flex flex-row items-center link mid-gray hover-black"
       >
-        <div class="hint--bottom-right" style="margin-top: -1px" aria-label="Back to pipe list">
+        <div class="hint--bottom-right" aria-label="Back to pipe list">
           <i class="material-icons md-24">home</i>
         </div>
       </router-link>
-      <i class="material-icons md-24 black-20 rotate-270 pv1 nl1 ml0-ns" style="margin-top: -1px">arrow_drop_down</i>
-      <div class="flex-fill mb1 mr2">
+      <i class="material-icons md-24 black-20 rotate-270">arrow_drop_down</i>
+      <div class="flex-fill mr2">
         <div class="flex flex-column flex-row-l items-center-l">
           <inline-edit-text
-            class="dib f3 lh-title v-mid dark-gray mb1 mb0-l mr3-l"
+            class="dib f3 lh-title v-mid dark-gray mr3-l"
             input-key="name"
             tooltip-cls="hint--bottom"
             :val="pipe_name"
@@ -39,6 +39,7 @@
             </div>
           </div>
         </div>
+        <!--
         <inline-edit-text
           class="f6 lh-copy gray mw7 mt1 dn db-l"
           placeholder="Add a description"
@@ -49,6 +50,7 @@
           :show-edit-button="false"
           @save="editPipeDescription">
         </inline-edit-text>
+        -->
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
         <btn
@@ -78,7 +80,7 @@
             @click="runPipe"
           >Run</btn>
         </div>
-        <div class="dn db-ns flex-none mh2">
+        <div class="dn db-ns flex-none ml2">
           <div v-if="user_fetching"></div>
           <user-dropdown v-else-if="logged_in"></user-dropdown>
           <div v-else>
