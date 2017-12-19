@@ -238,7 +238,7 @@ CREATE TABLE tbl_processlog (
   id serial,
   eid varchar(12) NOT NULL default '',
   process_eid varchar(12) NOT NULL default '',
-  task_type text default '',
+  task_op text default '',
   task_version int NOT NULL default 0,
   task json,
   input json,
