@@ -474,7 +474,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 30s python3 /fxpython/script.py)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 30s python3 /fxpython/script.py)'";
 
             $ep = new ExecuteProxy;
             $ep->initialize($cmd, $this);
@@ -508,7 +508,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
             $ep = new ExecuteProxy;
             $ep->initialize($cmd, $this);
@@ -575,7 +575,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $cmd = "$dockerbin run --net none --rm -i fxpython python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
+            $cmd = "$dockerbin run --net none --rm -i fxruntime python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
 
             $f = popen($cmd . ' 2>&1' /*grab stderr*/, 'r');
             $str = fread($f, 8192);

@@ -6,6 +6,7 @@ pushd $DIR/fxruntime
 cp $DIR/../python_include/flexio.py ./
 cp $DIR/../nodejs_include/index.js ./
 cp $DIR/../nodejs_include/run.js ./
+cp $DIR/../nodejs_include/render.js ./
 cp $DIR/../nodejs_include/package.json ./
 docker build -t fxruntime . --no-cache
 popd

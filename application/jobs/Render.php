@@ -87,7 +87,7 @@ class Render extends \Flexio\Jobs\Base
         if (!$scrollbars)
             $hide_scrollbars = '--hide-scrollbars';
 
-        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxpython sh -c 'timeout 30s nodejs /fxrender/render.js ".
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c 'timeout 30s nodejs /fxnodejs/render.js ".
                "--url $url ".
                "--format $format ".
                "--paper $paper ".

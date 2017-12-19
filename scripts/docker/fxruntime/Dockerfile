@@ -44,22 +44,24 @@ RUN pip3 install boto3
 RUN curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 RUN apt-get -y install nodejs
 
-# puppeteer for rendering
+# puppeteer prequisites for rendering
 RUN apt-get -y install chromium-browser libgconf2-4
-RUN mkdir /fxrender
-RUN echo {} > /fxrender/package.json
-RUN cd /fxrender && npm install puppeteer
-RUN cd /fxrender && npm install command-line-args
-COPY render.js /fxrender/render.js
+#RUN mkdir /fxrender
+#RUN echo {} > /fxrender/package.json
+#RUN cd /fxrender && npm install puppeteer
+#RUN cd /fxrender && npm install command-line-args
+
 #COPY kits.js /fxrender/kits.js
 
 
 # flexio bindings for nodejs
 RUN mkdir /fxnodejs
-COPY index.js /fxnodejs/index.js
-COPY run.js /fxnodejs/run.js
 COPY package.json /fxnodejs/package.json
 RUN cd /fxnodejs && npm install
+COPY index.js /fxnodejs/index.js
+COPY run.js /fxnodejs/run.js
+COPY render.js /fxnodejs/render.js
+
 
 # flexio bindings for python
 RUN mkdir /fxpython
