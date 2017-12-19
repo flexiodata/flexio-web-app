@@ -50,8 +50,8 @@
       }
     },
     methods: {
-      getTaskConnectionType(task_type) {
-        var task = _.find(this.item.task, { type: task_type })
+      getTaskConnectionType(task_op) {
+        var task = _.find(this.item.task, { op: task_op })
         return _.get(task, 'metadata.connection_type')
       }
     }
