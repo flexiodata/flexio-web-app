@@ -450,19 +450,19 @@ class Pipe
 
             $task_errors = array();
 
-            $type = $t['type'] ?? '';
+            $operation = $t['op'] ?? '';
             $job_params = $t['params'] ?? array();
 
-            if (empty($type))
+            if (empty($operation))
             {
                 $task_errors[] = array(
                     'error' => 'missing-parameter',
-                    'message' => 'Job type parameter is missing'
+                    'message' => 'Job operation parameter is missing'
                 );
             }
 
 
-            if ($type == 'flexio.execute')
+            if ($operation == 'execute')
             {
                 $lang = $job_params['lang'] ?? '';
                 $code = base64_decode($job_params['code'] ?? '');

@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -60,7 +60,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -100,7 +100,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -140,7 +140,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -180,7 +180,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -220,7 +220,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -260,7 +260,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -304,7 +304,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",

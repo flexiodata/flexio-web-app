@@ -35,14 +35,14 @@ EOD;
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "content_type": "'.\Flexio\Base\ContentType::CSV.'",
                     "content": "'. base64_encode(trim($data)) .'"
                 }
             },
             {
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "input": {
                         "delimiter": "{comma}",

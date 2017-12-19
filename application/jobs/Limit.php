@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.limit",
+    "op": "limit",
     "params": {
         "rows": 10
     }

@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 EXAMPLE:
 {
-    "type": "flexio.merge",
+    "op": "merge",
     "params": {
         "matching_filenames": true,
         "matching_columnames": true

@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.task",
+    "op": "task",
     "params": {
         // another task here
     }

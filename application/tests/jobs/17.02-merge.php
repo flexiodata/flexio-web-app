@@ -30,7 +30,7 @@ return;
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "file1",
                     "content_type": "'.\Flexio\Base\ContentType::TEXT.'",
@@ -38,7 +38,7 @@ return;
                 }
             },
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "file2",
                     "content_type": "'.\Flexio\Base\ContentType::TEXT.'",
@@ -46,7 +46,7 @@ return;
                 }
             },
             {
-                "type": "flexio.merge",
+                "op": "merge",
                 "params": {
                 }
             }

@@ -94,7 +94,7 @@ class Test
         $task =
         [
             [
-                "type" => "application/bad-job-definition",
+                "op" => "application/bad-job-definition",
                 "params" => (object)[]
             ]
         ];
@@ -107,7 +107,7 @@ class Test
         $task =
         [
             [
-                "type" => "flexio.create",
+                "op" => "create",
                 "params" => [
                     "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
                     "columns" => [
@@ -126,7 +126,7 @@ class Test
         $task =
         [
             [
-                "type" => "flexio.nop",
+                "op" => "nop",
                 "params" => (object)[
                 ]
             ]

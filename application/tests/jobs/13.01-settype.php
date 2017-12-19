@@ -29,7 +29,7 @@ return;
 
         // SETUP
         $create = json_decode('{
-            "type": "flexio.create",
+            "op": "create",
             "params": {
                 "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
@@ -50,7 +50,7 @@ return;
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.settype",
+            "op": "settype",
             "params": {
                 "columns": ["field1"],
                 "type": "numeric",
@@ -65,7 +65,7 @@ return;
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.settype",
+            "op": "settype",
             "params": {
                 "columns": ["field2"],
                 "type": "numeric",
@@ -80,7 +80,7 @@ return;
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.settype",
+            "op": "settype",
             "params": {
                 "columns": ["field2", "field1"],
                 "type": "integer",
@@ -95,7 +95,7 @@ return;
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.settype",
+            "op": "settype",
             "params": {
                 "columns": ["field2"],
                 "type": "numeric",
@@ -110,7 +110,7 @@ return;
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.settype",
+            "op": "settype",
             "params": {
                 "columns": ["field[0-9]*"],
                 "type": "numeric",

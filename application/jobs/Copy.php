@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.copy",
+    "op": "copy",
     "params": {
     }
 }

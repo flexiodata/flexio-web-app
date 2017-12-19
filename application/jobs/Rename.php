@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.rename",
+    "op": "rename",
     "params": {
         "columns": [],
         "files": []

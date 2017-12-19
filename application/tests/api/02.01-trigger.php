@@ -27,7 +27,7 @@ class Test
         $properties['task'] = json_decode('
         [
             {
-                "type": "flexio.input",
+                "op": "input",
                 "params": {
                     "connection" : {
                         "connection_type": "upload"
@@ -37,7 +37,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "input": {
                         "format": "delimited_text",
@@ -48,7 +48,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.limit",
+                "op": "limit",
                 "params": {
                     "rows": 2
                 }

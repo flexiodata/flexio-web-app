@@ -57,7 +57,7 @@ class TestSample
     {
         $task = <<<EOD
         {
-            "type": "flexio.create",
+            "op": "create",
             "params": {
                 "content_type": "application/vnd.flexio.table",
                 "columns" : [

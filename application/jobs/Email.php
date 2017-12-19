@@ -23,7 +23,7 @@ EXAMPLE:
 // if 'attachment' the data file will be attached to the email
 // if 'link' the data file
 {
-    "type": "flexio.email",
+    "op": "email",
     "params": {
         "to": "",
         "subject": "",

@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.fail",
+    "op": "fail",
     "params": {
         "code": "string",
         "message": "string"

@@ -30,8 +30,7 @@ class Test
         $task = json_decode('
         [
             {
-                "eid": "ls3nzjhkkbgx",
-                "type": "flexio.input",
+                "op": "input",
                 "params": {
                     "items": [
                         {
@@ -44,8 +43,7 @@ class Test
                 }
             },
             {
-                "eid": "q3yhx2y611l4",
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "input": {
                         "format": "delimited",
@@ -58,8 +56,7 @@ class Test
                 }
             },
             {
-                "eid": "fnk06dsykhfg",
-                "type": "flexio.select",
+                "op": "select",
                 "params": {
                     "columns": [
                         "givenname",
@@ -73,15 +70,13 @@ class Test
                 }
             },
             {
-                "type": "flexio.filter",
+                "op": "filter",
                 "params": {
                     "where": "strpart(birthday, \"\/\", 1) = \"1980\""
-                },
-                "eid": "m8065fhls7lv"
+                }
             },
             {
-                "eid": "drmxq9f8zl4g",
-                "type": "flexio.execute",
+                "op": "execute",
                 "params": {
                     "lang": "python",
                     "code": "aW1wb3J0IHN5cwoKaW5wdXQgPSAnJzsKZm9yIGxpbmUgaW4gc3lzLnN0ZGluOgogICAgaW5wdXQgKz0gbGluZS51cHBlcigpOwogICAgCnN5cy5zdGRvdXQud3JpdGUoaW5wdXQpCg=="
@@ -111,7 +106,7 @@ class Test
             {
                 "eid": "p1zsvtts2gr7",
                 "name": "Input",
-                "type": "flexio.input",
+                "op": "input",
                 "params": {
                     "items": [
                         {
@@ -128,7 +123,7 @@ class Test
             {
                 "eid": "d7hzg2mnpx2x",
                 "name": "Convert File",
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "input": {
                         "format": "delimited_text",
@@ -142,7 +137,7 @@ class Test
             {
                 "eid": "gdj722l8426y",
                 "name": "Transform",
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "*"
@@ -158,7 +153,7 @@ class Test
             },
             {
                 "name": "Filter",
-                "type": "flexio.filter",
+                "op": "filter",
                 "params": {
                     "where": "gender = \"FEMALE\""
                 },
@@ -209,7 +204,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.input",
+                "op": "input",
                 "params": {
                     "items": [
                         {
@@ -223,7 +218,7 @@ class Test
                 "eid": "k01ckt2m9d9n"
             },
             {
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "input": {
                         "format": "delimited",
@@ -238,7 +233,7 @@ class Test
                 "eid": "d8wkhh3v25xy"
             },
             {
-                "type": "flexio.select",
+                "op": "select",
                 "params": {
                     "columns": [
                         "url",
@@ -257,14 +252,14 @@ class Test
                 "eid": "nhmghbyxdtvc"
             },
             {
-                "type": "flexio.filter",
+                "op": "filter",
                 "params": {
                     "where": "contains(lower(concat(title,description,notes,[saas resources])),lower(\'${filter}\'))"
                 },
                 "eid": "cyfg5rv0lftm"
             },{
                 "eid": "gvv8ypwhw9lz",
-                "type": "flexio.convert",
+                "op": "convert",
                 "params": {
                     "output": {
                         "format": "json"

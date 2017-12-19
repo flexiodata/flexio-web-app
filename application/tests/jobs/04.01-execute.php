@@ -31,7 +31,7 @@ def flexio_handler(context):
     context.output.write("Hello, World!")
 EOD;
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'"
@@ -50,7 +50,7 @@ exports.flexio_handler = function(context) {
 }
 EOD;
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'"
@@ -68,7 +68,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -83,7 +83,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -98,7 +98,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -113,7 +113,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'",
@@ -128,7 +128,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'",
@@ -147,7 +147,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -162,7 +162,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -181,7 +181,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -196,7 +196,7 @@ EOD;
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "javascript",
                 "code": "'.base64_encode($script).'",
@@ -214,7 +214,7 @@ EOD;
 
         // BEGIN TEST
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
@@ -227,7 +227,7 @@ EOD;
 
         // BEGIN TEST
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py",
@@ -250,7 +250,7 @@ def flexio_handler(context):
     context.output.write("This is local.")
 EOD;
         $task = array(json_decode('{
-            "type": "flexio.execute",
+            "op": "execute",
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'",

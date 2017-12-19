@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.calc",
+    "op": "calc",
     "params": {
         "name": "",
         "type": "",

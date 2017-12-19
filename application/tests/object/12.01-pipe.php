@@ -267,7 +267,7 @@ class Test
         TestCheck::assertNumber('G.1', 'Pipe::setTasks(); make sure task step count is valid',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = \Flexio\Object\Task::create()->push(['type'=>'flexio.create', 'params' => []]);
+        $task = \Flexio\Object\Task::create()->push(['op'=>'create', 'params' => []]);
         $object = \Flexio\Object\Pipe::create()->setTasks($task->get());
         $actual = count($object->getTasks());
         $expected = 1;

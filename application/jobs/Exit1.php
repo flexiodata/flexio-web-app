@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.exit",
+    "op": "exit",
     "params": {
         "code": ""
     }

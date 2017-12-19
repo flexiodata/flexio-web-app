@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.echo",
+                "op": "echo",
                 "params": {
                     "msg": "hi"
                 }

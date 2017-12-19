@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.distinct",
+    "op": "distinct",
     "params": {
         "distinct": [ "email_field"],
         "columns": [ "*" ]

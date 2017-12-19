@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
     {
-        "type": "flexio.create",
+        "op": "create",
         "params": {
             "name": "test",
             "content_type": "text/csv",
@@ -65,7 +65,7 @@ class Create extends \Flexio\Jobs\Base
 
             if (isset($params['columns']) && is_array($params['columns']) && count($params['columns']))
                 $content_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
-            
+
             switch ($content_type)
             {
                 default:
@@ -75,7 +75,7 @@ class Create extends \Flexio\Jobs\Base
                 case \Flexio\Base\ContentType::JSON:
                     $this->createFile($outstream);
                     break;
-    
+
                 case \Flexio\Base\ContentType::FLEXIO_TABLE:
                     $this->createTable($outstream);
                     break;

@@ -830,7 +830,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": [
                     "${}",
@@ -849,7 +849,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": [
                     "",
@@ -867,7 +867,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": {
                     "p1": "${}",
@@ -887,7 +887,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": {
                     "p1": "",
@@ -905,7 +905,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": [
                     {"p1": "${}"},
@@ -924,7 +924,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.nop",
+                "op": "nop",
                 "custom": "${v1}",
                 "params": [
                     {"p1": ""},
@@ -942,7 +942,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {
@@ -966,7 +966,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {
@@ -986,7 +986,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {
@@ -1016,7 +1016,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {
@@ -1038,7 +1038,7 @@ class Test
         $properties = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {
@@ -1068,7 +1068,7 @@ class Test
         $expected = '
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "columns": [
                         {

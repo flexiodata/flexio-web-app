@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.request",
+    "op": "request",
     "params": {
         "method": "head|get|put|post|patch|delete|options",
         "url": "https://www.flex.io",

@@ -30,14 +30,14 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "content_type": "'.\Flexio\Base\ContentType::TEXT.'",
                     "content": "'. base64_encode(trim('some content')) . '"
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "operations": [
                         { "operation": "case", "case": "upper" }

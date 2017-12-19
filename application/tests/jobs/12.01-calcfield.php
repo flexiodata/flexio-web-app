@@ -24,7 +24,7 @@ class Test
 
         // SETUP
         $create = json_decode('{
-            "type": "flexio.create",
+            "op": "create",
             "params": {
                 "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                 "columns": [
@@ -45,7 +45,7 @@ class Test
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.calc",
+            "op": "calc",
             "params": {
                 "name": "field3",
                 "type": "character",
@@ -59,7 +59,7 @@ class Test
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.calc",
+            "op": "calc",
             "params": {
                 "name": "field3",
                 "type": "character",
@@ -73,7 +73,7 @@ class Test
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.calc",
+            "op": "calc",
             "params": {
                 "name": "field3",
                 "type": "character",
@@ -87,7 +87,7 @@ class Test
 
         // BEGIN TEST
         $task = array($create, json_decode('{
-            "type": "flexio.calc",
+            "op": "calc",
             "params": {
                 "name": "field3",
                 "type": "character",

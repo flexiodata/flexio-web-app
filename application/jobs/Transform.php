@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.transform",
+    "op": "transform",
     "params": {
         "columns": [],
         "operations": [

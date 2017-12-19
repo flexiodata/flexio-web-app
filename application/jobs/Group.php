@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.group",
+    "op": "group",
     "params": {
         "group": [
             "vend_no"

@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.email",
+                "op": "email",
                 "params": {
                     "to": "",
                     "subject": "Test",

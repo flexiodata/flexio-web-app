@@ -30,7 +30,7 @@ return;
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table1",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -46,7 +46,7 @@ return;
                 }
             },
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table2",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -60,7 +60,7 @@ return;
                 }
             },
             {
-                "type": "flexio.merge",
+                "op": "merge",
                 "params": {
                 }
             }

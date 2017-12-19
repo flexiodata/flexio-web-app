@@ -26,7 +26,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -42,7 +42,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -63,7 +63,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -79,7 +79,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -112,7 +112,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -128,7 +128,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -161,7 +161,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -177,7 +177,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -210,7 +210,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -226,7 +226,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -263,7 +263,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -279,7 +279,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -300,7 +300,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -316,7 +316,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -349,7 +349,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -365,7 +365,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -398,7 +398,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -414,7 +414,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -447,7 +447,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -463,7 +463,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -496,7 +496,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -513,7 +513,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -548,7 +548,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -565,7 +565,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "type": "character",
                     "columns": [
@@ -601,7 +601,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -617,7 +617,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -650,7 +650,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -666,7 +666,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -699,7 +699,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -715,7 +715,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -748,7 +748,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -764,7 +764,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -797,7 +797,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -814,7 +814,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -849,7 +849,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -866,7 +866,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -905,7 +905,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -921,7 +921,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -942,7 +942,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -958,7 +958,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -991,7 +991,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -1007,7 +1007,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -1040,7 +1040,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -1056,7 +1056,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"
@@ -1089,7 +1089,7 @@ class Test
 		$task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "name": "table",
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
@@ -1105,7 +1105,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.transform",
+                "op": "transform",
                 "params": {
                     "columns": [
                         "f"

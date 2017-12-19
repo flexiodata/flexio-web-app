@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.exit",
+                "op": "exit",
                 "params": {
                     "code": 404
                 }

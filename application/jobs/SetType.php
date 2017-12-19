@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.settype",
+    "op": "settype",
     "params": {
         "name": "",
         "type": "",

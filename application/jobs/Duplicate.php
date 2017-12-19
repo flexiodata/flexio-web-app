@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
     {
-        "type": "flexio.duplicate",
+        "op": "duplicate",
         "params": {
             "columns": [ "*" ]
         }

@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.request",
+                "op": "request",
                 "params": {
                     "method": "get",
                     "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"

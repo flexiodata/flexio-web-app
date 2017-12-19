@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.execute",
+    "op": "execute",
     "params": {
         "lang": "python",
         "code": "<base64 encoded>",

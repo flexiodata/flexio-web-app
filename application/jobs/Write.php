@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.write",
+    "op": "write",
     "params": {
         "path": ""
     }

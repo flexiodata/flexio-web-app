@@ -21,7 +21,7 @@ class Test
     private static function buildCreateTask(string $data) : array
     {
         $task = json_decode('{
-            "type": "flexio.create",
+            "op": "create",
             "params": {
                 "name": "csv",
                 "content_type": "'.\Flexio\Base\ContentType::CSV.'",
@@ -34,7 +34,7 @@ class Test
     private static function buildConvertTask() : array
     {
         $task = json_decode('{
-            "type": "flexio.convert",
+            "op": "convert",
             "params": {
                 "input": {
                     "format": "delimited_text",

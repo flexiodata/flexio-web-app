@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.convert",
+    "op": "convert",
     "params": {
         "input": {
             "format": "delimited_text",

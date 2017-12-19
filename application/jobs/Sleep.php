@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.sleep",
+    "op": "sleep",
     "params": {
         "value": 1
     }

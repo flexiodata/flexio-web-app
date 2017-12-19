@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.render",
+                "op": "render",
                 "params": {
                     "url": "https://www.flex.io",
                     "width": 300,

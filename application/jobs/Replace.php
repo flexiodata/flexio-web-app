@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.replace",
+    "op": "replace",
     "params": {
         "columns": [],
         "find": "",

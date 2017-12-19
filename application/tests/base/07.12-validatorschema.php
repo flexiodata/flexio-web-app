@@ -25,7 +25,7 @@ class Test
         // BEGIN TEST
         $object = <<<EOD
 {
-    "type": "flexio.create",
+    "op": "create",
     "params": {
         "columns": [
         ]
@@ -49,7 +49,7 @@ EOD;
         // BEGIN TEST
         $object = <<<EOD
 {
-    "type": "flexio.create",
+    "op": "create",
     "params": {
         "columns": [
         ]
@@ -59,7 +59,7 @@ EOD;
         $template = <<<EOD
 {
     "type": "object",
-    "required": ["type","params"],
+    "required": ["op","params"],
     "properties": {
         "type": {
             "type": "string"
@@ -82,7 +82,7 @@ EOD;
         // BEGIN TEST
         $object = <<<EOD
 {
-    "type": "flexio.create",
+    "op": "create",
     "params": {
         "columns": [
             {"name": "", "type":"character", "width": 1},
@@ -94,11 +94,11 @@ EOD;
         $template = <<<EOD
 {
     "type": "object",
-    "required": ["type","params"],
+    "required": ["op","params"],
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["flexio.create"]
+            "enum": ["create"]
         },
         "params": {
             "type": "object",
@@ -146,7 +146,7 @@ EOD;
 
         // BEGIN TEST
         $object = array(
-            'type'=>'flexio.create',
+            'type'=>'create',
             'params'=>array(
                 'columns'=>array(
                     array('name'=>'','type'=>'character','width'=>1),
@@ -157,11 +157,11 @@ EOD;
         $template = <<<EOD
 {
     "type": "object",
-    "required": ["type","params"],
+    "required": ["op","params"],
     "properties": {
         "type": {
             "type": "string",
-            "enum": ["flexio.create"]
+            "enum": ["create"]
         },
         "params": {
             "type": "object",

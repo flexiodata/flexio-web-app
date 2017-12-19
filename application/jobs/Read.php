@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.read",
+    "op": "read",
     "params": {
         "path": ""
     }

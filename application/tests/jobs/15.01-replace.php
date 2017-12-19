@@ -26,7 +26,7 @@ class Test
         $task = json_decode('
         [
             {
-                "type": "flexio.create",
+                "op": "create",
                 "params": {
                     "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
                     "columns": [
@@ -41,7 +41,7 @@ class Test
                 }
             },
             {
-                "type": "flexio.replace",
+                "op": "replace",
                 "params": {
                     "columns": [ "field1", "field2" ],
                     "find": "b",

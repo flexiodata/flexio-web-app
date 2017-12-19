@@ -29,7 +29,7 @@ class Test
         $params['run'] = false;
         $params['task'] = json_decode('[
             {
-                "type": "flexio.sleep",
+                "op": "sleep",
                 "params": {
                     "value": 4000
                 }
@@ -40,7 +40,7 @@ class Test
         $request->setRequestingUser(TestUtil::getDefaultTestUser());
         $process_info = \Flexio\Api\Process::create($request);
         $actual = $process_info['task'][0]['type'];
-        $expected = 'flexio.sleep';
+        $expected = 'sleep';
         TestCheck::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
 
 
@@ -52,7 +52,7 @@ class Test
         $params['background'] = true;
         $params['task'] = json_decode('[
             {
-                "type": "flexio.sleep",
+                "op": "sleep",
                 "params": {
                     "value": 4000
                 }

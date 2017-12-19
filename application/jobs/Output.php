@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.output",
+    "op": "output",
     "params": {
         "connection": "",
         "items": []

@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
     {
-        "type": "flexio.insert",
+        "op": "insert",
         "params": {
             "path": "test",
             "values": [ { "field": "value"}, ... ]

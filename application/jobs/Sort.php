@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 // direction is 'asc' or 'desc'
 {
-    "type": "flexio.sort",
+    "op": "sort",
     "params": {
         "order": [{
             "expression": "",
