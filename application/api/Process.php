@@ -355,24 +355,25 @@ class Process
         $validated_params = $validator->getParams();
         $process_identifier = $validated_params['eid'];
 
-        // load the object
+        // load the process object
         $process = \Flexio\Object\Process::load($process_identifier);
         if ($process === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // check the rights on the object
+        // check the rights on the process object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // create a job engine, attach it to the process object, and run the process and get the output
+        // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::attach($process);
 
-        // parse the content and set the stream info
+        // parse the request content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
         \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
-        $engine->run(false);
+        // run the process
+        $engine->run(false /*background*/);
 
         if ($engine->hasError())
         {
@@ -391,16 +392,17 @@ class Process
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $response_code = $engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
             // return content as-is
-            header('Content-Type: ' . $mime_type);
+            header('Content-Type: ' . $mime_type, true, $response_code);
         }
         else
         {
             // flexio table; return application/json in place of internal mime
-            header('Content-Type: ' . \Flexio\Base\ContentType::JSON);
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
             $content = json_encode($content);
         }
 

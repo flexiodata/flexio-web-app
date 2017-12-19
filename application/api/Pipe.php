@@ -339,47 +339,52 @@ class Pipe
         $validated_params = $validator->getParams();
         $pipe_identifier = $validated_params['eid'];
 
-        // load the object
+        // load the pipe object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
         if ($pipe === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // check the rights on the object
+        // check the rights on the pipe object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // STEP 1: create a new process
-        $process = \Flexio\Jobs\StoredProcess::create();
+        // create a new process
+        $process_properties = array();
+        $process = \Flexio\Object\Process::create($process_properties);
         $process->setOwner($pipe->getOwner());
 
         if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
             $process->setCreatedBy($pipe->getOwner());
-             else
+            else
             $process->setCreatedBy($requesting_user_eid);
 
         $process->setRights($pipe->getRights());
-        $process->setAssocPipe($pipe);
+        $pipe->addProcess($process);
 
         $pipe_properties = $pipe->get();
-        $process->setTasks($pipe_properties['task']);
+        $process_properties['task'] = $pipe_properties['task'];
+        $process->set($process_properties);
 
-        // STEP 2: parse the content and set the stream info
+        // create a job engine, attach it to the process object
+        $engine = \Flexio\Jobs\StoredProcess::attach($process);
+
+        // parse the request content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');
         $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
-         \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $process);
+         \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
-         // STEP 3: run the process
-        $process->run(false /*background*/);
+        // run the process
+        $engine->run(false /*background*/);
 
-        if ($process->hasError())
+        if ($engine->hasError())
         {
             header('Content-Type: application/json', true, 500);
-            $content = json_encode($process->getError());
+            $content = json_encode($engine->getError());
             echo $content;
             exit(0);
         }
 
-        $stream = $process->getStdout();
+        $stream = $engine->getStdout();
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -388,8 +393,7 @@ class Pipe
         $start = 0;
         $limit = PHP_INT_MAX;
         $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
-        $response_code = $process->getResponseCode();
-
+        $response_code = $engine->getResponseCode();
 
         if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
