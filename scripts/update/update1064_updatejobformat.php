@@ -48,14 +48,17 @@ if (is_null($db))
 
 try
 {
+    // DEBUG: set to true to remove old 'type'
+    $remove_old_type_param = false;
+
     // STEP 1: update the pipe table
-    updatePipeTable($db);
+    updatePipeTable($db, $remove_old_type_param);
 
     // STEP 2: update the process table
-    updateProcessTable($db);
+    updateProcessTable($db, $remove_old_type_param);
 
     // STEP 3: update the process log table
-    updateProcessLogTable($db);
+    updateProcessLogTable($db, $remove_old_type_param);
 }
 catch(\Exception $e)
 {
@@ -72,7 +75,7 @@ echo '{ "success": true, "msg": "Operation completed successfully." }';
 
 
 
-function updatePipeTable($db)
+function updatePipeTable($db, $remove_old_type_param)
 {
     // STEP 1: get a list of pipes
     $query_sql = 'select eid, task from tbl_pipe';
@@ -94,9 +97,14 @@ function updatePipeTable($db)
         // "type" key
         foreach ($pipe_task as &$task_item)
         {
-            $task_type = $task_item['type'];
+            $task_type = $task_item['type'] ?? false;
+            if ($task_type === false)
+                continue;
+
             $task_item['op'] = convertType($task_type);
-            unset($task_item['type']);
+
+            if ($remove_old_type_param === true)
+                unset($task_item['type']);
         }
 
         $updated_pipe_task = json_encode($pipe_task);
@@ -104,7 +112,7 @@ function updatePipeTable($db)
     }
 }
 
-function updateProcessTable($db)
+function updateProcessTable($db, $remove_old_type_param)
 {
     // STEP 1: get a list of processes
     $query_sql = 'select eid, task from tbl_process';
@@ -126,9 +134,14 @@ function updateProcessTable($db)
         // "type" key
         foreach ($process_task as &$task_item)
         {
-            $task_type = $task_item['type'];
+            $task_type = $task_item['type'] ?? false;
+            if ($task_type === false)
+                continue;
+
             $task_item['op'] = convertType($task_type);
-            unset($task_item['type']);
+
+            if ($remove_old_type_param === true)
+                unset($task_item['type']);
         }
 
         $updated_process_task = json_encode($process_task);
@@ -136,7 +149,7 @@ function updateProcessTable($db)
     }
 }
 
-function updateProcessLogTable($db)
+function updateProcessLogTable($db, $remove_old_type_param)
 {
     // STEP 1: get a list of process log entries
     $query_sql = 'select eid, task_type, task from tbl_processlog';
@@ -160,7 +173,9 @@ function updateProcessLogTable($db)
         if ($task_type !== false)
         {
             $process_task['op'] = convertType($task_type);
-            unset($process_task['type']);
+
+            if ($remove_old_type_param === true)
+                unset($process_task['type']);
         }
 
         $updated_process_task_type = convertType($process_task_type);
@@ -208,7 +223,12 @@ function convertType($type)
     // if the job type starts with a "flexio.", then strip it off;
     // otherwise just return the type
 
-    // TODO: implement
+    // make sure the type is clean
+    $type = trim(strtolower($type));
+
+    // strip off any leading "flexio."
+    if (substr($type,0,7) === "flexio.")
+        $type = substr($type,7);
 
     return $type;
 }
