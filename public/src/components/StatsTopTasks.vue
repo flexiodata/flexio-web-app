@@ -25,7 +25,7 @@
             item="item"
             index="index"
           >
-            <td class="bt b--light-gray pa2 tl">{{item.task_type}}</td>
+            <td class="bt b--light-gray pa2 tl">{{item.task_op}}</td>
             <td class="bt b--light-gray pa2 tr">{{ getAvgTime(item.average_time) }}</td>
             <td class="bt b--light-gray pa2 tr w-10 dark-red">{{item.failed}}</td>
             <td class="bt b--light-gray pa2 tr w-10 dark-green">{{item.completed}}</td>

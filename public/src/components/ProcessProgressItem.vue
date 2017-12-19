@@ -18,7 +18,7 @@
     props: ['item'],
     computed: {
       task_action_str() {
-        switch (_.get(this.item, 'task_type', ''))
+        switch (_.get(this.item, 'task_op', ''))
         {
           default                            : return 'Initializing'
           case types.TASK_OP_CALC          : return 'Adding calculated columns'
