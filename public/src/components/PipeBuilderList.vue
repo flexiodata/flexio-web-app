@@ -136,7 +136,8 @@
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
-          }, 1000)
+            }, 1000)
+          }
 
           /*
           var eid = this.pipeEid
