@@ -205,7 +205,7 @@ class Process extends ModelBase
                 $process_arr = array(
                     'eid'          => $eid,
                     'process_eid'  => $process_eid,
-                    'task_type'    => $params['task_op'] ?? '',
+                    'task_op'      => $params['task_op'] ?? '',
                     'task_version' => $params['task_version'] ?? 0,
                     'task'         => $params['task'] ?? '{}',
                     'input'        => $params['input'] ?? '{}',
@@ -248,13 +248,6 @@ class Process extends ModelBase
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            if (isset($params['task_op']))
-            {
-                // 'task_op' is currently stored as task_type
-                $params['task_type'] = $params['task_op'];
-                unset($params['task_op']);
-            }
-
             $db = $this->getDatabase();
             $db->beginTransaction();
             try
@@ -284,7 +277,7 @@ class Process extends ModelBase
         {
             $rows = $db->fetchAll("select tpl.eid as eid,
                                           tpl.process_eid as process_eid,
-                                          tpl.task_type as task_op,
+                                          tpl.task_op as task_op,
                                           tpl.task_version as task_version,
                                           tpl.task as task,
                                           tpl.input as input,
@@ -427,13 +420,13 @@ class Process extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $rows = $db->fetchAll("select tpl.task_type as task_type,
+            $rows = $db->fetchAll("select tpl.task_op as task_op,
                                          count(*) as total_count,
                                          avg(extract(epoch from (tpl.finished - tpl.started))) as average_time,
                                          sum(extract(epoch from (tpl.finished - tpl.started))) as total_time
                                    from tbl_processlog tpl
-                                   group by tpl.task_type
-                                   order by total_count desc, task_type
+                                   group by tpl.task_op
+                                   order by total_count desc, task_op
                                  ");
          }
          catch (\Exception $e)
@@ -444,7 +437,7 @@ class Process extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('task_op'      => $row['task_type'],
+            $output[] = array('task_op'      => $row['task_op'],
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],
                               'average_time' => $row['average_time']);

@@ -205,7 +205,7 @@ class Process extends ModelBase
                 $process_arr = array(
                     'eid'          => $eid,
                     'process_eid'  => $process_eid,
-                    'task_type'    => $params['task_op'] ?? '',
+                    'task_op'      => $params['task_op'] ?? '',
                     'task_version' => $params['task_version'] ?? 0,
                     'task'         => $params['task'] ?? '{}',
                     'input'        => $params['input'] ?? '{}',
@@ -248,13 +248,6 @@ class Process extends ModelBase
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            if (isset($params['task_op']))
-            {
-                // 'task_op' is currently stored as task_type
-                $params['task_type'] = $params['task_op'];
-                unset($params['task_op']);
-            }
-
             $db = $this->getDatabase();
             $db->beginTransaction();
             try
@@ -284,7 +277,7 @@ class Process extends ModelBase
         {
             $rows = $db->fetchAll("select tpl.eid as eid,
                                           tpl.process_eid as process_eid,
-                                          tpl.task_type as task_op,
+                                          tpl.task_op as task_op,
                                           tpl.task_version as task_version,
                                           tpl.task as task,
                                           tpl.input as input,

@@ -255,7 +255,7 @@ CREATE TABLE tbl_processlog (
   id int UNSIGNED NOT NULL auto_increment,
   eid varchar(12) NOT NULL default '',
   process_eid varchar(12) NOT NULL default '',
-  task_type text default '',
+  task_op text default '',
   task_version int NOT NULL default 0,
   task text default NULL,
   input text default NULL,
