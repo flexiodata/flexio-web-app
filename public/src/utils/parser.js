@@ -66,14 +66,14 @@
     {
       if (!json)
         return '';
-      if (!json.hasOwnProperty('type'))
-        return ''; // missing template type
-      var type = ''+json['type'];
+      if (!json.hasOwnProperty('op'))
+        return ''; // missing template operation
+      var op = ''+json['op'];
 
-      if (!this.templates.hasOwnProperty(type))
-        return ''; // unknown template type
+      if (!this.templates.hasOwnProperty(op))
+        return ''; // unknown template op
 
-      return this.templates[type].call(this, json);
+      return this.templates[op].call(this, json);
     }
 
 
