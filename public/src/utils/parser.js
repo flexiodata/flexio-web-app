@@ -2016,6 +2016,33 @@
 
 
 
+    this.args.report = [ 'var', 'value' ];
+    this.hints.report = {}
+    this.keywords.report = function(str)
+    {
+      var json =
+        {
+            "type": "flexio.report",
+            "params": { }
+        }
+
+      var params = this.split(str, this.args.report);
+
+      return json;
+    };
+
+
+    this.templates["flexio.report"] = function(json)
+    {
+      if (!json || !json.hasOwnProperty('params'))
+        return '';
+
+      var res = 'report';
+
+      return res;
+    }
+
+
 
 
 /*
@@ -2787,6 +2814,7 @@
         'read',
         //'rename',
         'render',
+        'report',
         'request',
         'select',
         'set',
