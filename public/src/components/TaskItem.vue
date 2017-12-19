@@ -86,36 +86,36 @@
 
         switch (_.get(this.item, 'type')) {
           // blue tiles
-          case types.TASK_TYPE_INPUT:
-          case types.TASK_TYPE_CONVERT:
-          case types.TASK_TYPE_EMAIL_SEND:
-          case types.TASK_TYPE_OUTPUT:
-          case types.TASK_TYPE_PROMPT:
+          case types.TASK_OP_INPUT:
+          case types.TASK_OP_CONVERT:
+          case types.TASK_OP_EMAIL_SEND:
+          case types.TASK_OP_OUTPUT:
+          case types.TASK_OP_PROMPT:
             return 'bg-task-blue'
 
-          case types.TASK_TYPE_EXECUTE:
+          case types.TASK_OP_EXECUTE:
             return 'bg-task-purple'
 
           // green tiles
-          case types.TASK_TYPE_CALC:
-          case types.TASK_TYPE_DISTINCT:
-          case types.TASK_TYPE_DUPLICATE:
-          case types.TASK_TYPE_FILTER:
-          case types.TASK_TYPE_GROUP:
-          case types.TASK_TYPE_LIMIT:
-          case types.TASK_TYPE_MERGE:
-          case types.TASK_TYPE_SEARCH:
-          case types.TASK_TYPE_SORT:
+          case types.TASK_OP_CALC:
+          case types.TASK_OP_DISTINCT:
+          case types.TASK_OP_DUPLICATE:
+          case types.TASK_OP_FILTER:
+          case types.TASK_OP_GROUP:
+          case types.TASK_OP_LIMIT:
+          case types.TASK_OP_MERGE:
+          case types.TASK_OP_SEARCH:
+          case types.TASK_OP_SORT:
             return 'bg-task-green'
 
           // orange tiles
-          case types.TASK_TYPE_COPY:
-          case types.TASK_TYPE_CUSTOM:
-          case types.TASK_TYPE_FIND_REPLACE:
-          case types.TASK_TYPE_NOP:
-          case types.TASK_TYPE_RENAME:
-          case types.TASK_TYPE_SELECT:
-          case types.TASK_TYPE_TRANSFORM:
+          case types.TASK_OP_COPY:
+          case types.TASK_OP_CUSTOM:
+          case types.TASK_OP_FIND_REPLACE:
+          case types.TASK_OP_NOP:
+          case types.TASK_OP_RENAME:
+          case types.TASK_OP_SELECT:
+          case types.TASK_OP_TRANSFORM:
             return 'bg-task-orange'
         }
 

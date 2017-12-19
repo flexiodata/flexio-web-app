@@ -10,7 +10,7 @@
 
 <script>
   import { HOSTNAME } from '../constants/common'
-  import { TASK_TYPE_EXECUTE } from '../constants/task-type'
+  import { TASK_OP_EXECUTE } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
   import CodeMirror from 'codemirror'
@@ -81,7 +81,7 @@
         var cmd_text = _.defaultTo(parser.toCmdbar(val), '')
         var end_idx = cmd_text.indexOf(' code:')
 
-        if (_.get(val, 'type') == TASK_TYPE_EXECUTE && end_idx != -1)
+        if (_.get(val, 'type') == TASK_OP_EXECUTE && end_idx != -1)
           cmd_text = cmd_text.substring(0, end_idx)
 
         this.setValue(cmd_text)

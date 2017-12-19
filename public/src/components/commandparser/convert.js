@@ -1,4 +1,4 @@
-import { TASK_TYPE_CONVERT } from '../../constants/task-type'
+import { TASK_OP_CONVERT } from '../../constants/task-type'
 import { COMMAND_NAME_CONVERT }  from '../../constants/command-name'
 import * as connections from '../../constants/connection-info'
 import * as convert from '../../constants/tasks/convert'
@@ -8,7 +8,7 @@ const CONVERT_SHORTHAND_TSV = 'tsv'
 
 const DEFAULT_JSON = {
   'name': 'Convert File',
-  'type': TASK_TYPE_CONVERT,
+  'type': TASK_OP_CONVERT,
   'params': {
     'input': {
       'format': convert.CONVERT_FORMAT_DELIMITED_TEXT,

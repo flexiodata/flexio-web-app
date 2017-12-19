@@ -114,7 +114,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
-  import { TASK_TYPE_INPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT } from '../constants/task-type'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
   import UserDropdown from './UserDropdown.vue'
@@ -179,7 +179,7 @@
         return _.includes(user_email, '@flex.io') && _.get(this.$route, 'query.su', false) !== false
       },
       input_tasks() {
-        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+        return _.filter(this.tasks, { type: TASK_OP_INPUT })
       },
       is_run_allowed() {
         return this.tasks.length > 0

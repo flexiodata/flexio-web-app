@@ -69,7 +69,7 @@
     CONNECTION_TYPE_MYSQL,
     CONNECTION_TYPE_POSTGRES
   } from '../constants/connection-type'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
   import * as connections from '../constants/connection-info'
   import { mapGetters } from 'vuex'
   import api from '../api'

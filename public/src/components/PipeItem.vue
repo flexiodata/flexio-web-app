@@ -71,7 +71,7 @@
   import { ROUTE_PIPES } from '../constants/route'
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { SCHEDULE_STATUS_ACTIVE, SCHEDULE_STATUS_INACTIVE, SCHEDULE_FREQUENCY_DAILY } from '../constants/schedule'
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import util from '../utils'
   import ServiceIcon from './ServiceIcon.vue'
@@ -108,10 +108,10 @@
     },
     computed: {
       input_type() {
-        return this.getTaskConnectionType(TASK_TYPE_INPUT)
+        return this.getTaskConnectionType(TASK_OP_INPUT)
       },
       output_type() {
-        return this.getTaskConnectionType(TASK_TYPE_OUTPUT)
+        return this.getTaskConnectionType(TASK_OP_OUTPUT)
       },
       has_description() {
         return _.get(this.item, 'description', '').length > 0
@@ -181,8 +181,8 @@
       }
     },
     methods: {
-      getTaskConnectionType(task_type) {
-        var task = _.find(this.item.task, { type: task_type })
+      getTaskConnectionType(task_op) {
+        var task = _.find(this.item.task, { op: task_op })
         return _.get(task, 'metadata.connection_type')
       },
       openPipe() {

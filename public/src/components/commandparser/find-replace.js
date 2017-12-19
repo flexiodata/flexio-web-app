@@ -1,4 +1,4 @@
-import { TASK_TYPE_FIND_REPLACE } from '../../constants/task-type'
+import { TASK_OP_FIND_REPLACE } from '../../constants/task-type'
 import { COMMAND_NAME_FIND_REPLACE }  from '../../constants/command-name'
 
 import {
@@ -14,7 +14,7 @@ const ALL_COLUMNS = '*'
 
 const DEFAULT_JSON = {
   'name': 'Find and Replace',
-  'type': TASK_TYPE_FIND_REPLACE,
+  'type': TASK_OP_FIND_REPLACE,
   'params': {
     'find': '',
     'columns': [ALL_COLUMNS],

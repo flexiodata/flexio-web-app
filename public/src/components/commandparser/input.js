@@ -1,4 +1,4 @@
-import { TASK_TYPE_INPUT } from '../../constants/task-type'
+import { TASK_OP_INPUT } from '../../constants/task-type'
 import { COMMAND_NAME_INPUT }  from '../../constants/command-name'
 import * as connections from '../../constants/connection-info'
 
@@ -11,7 +11,7 @@ import {
 
 const DEFAULT_JSON = {
   'name': 'Input',
-  'type': TASK_TYPE_INPUT,
+  'type': TASK_OP_INPUT,
   'params': {
     'items': [],
     'connection': {

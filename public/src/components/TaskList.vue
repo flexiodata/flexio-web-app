@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
   import TaskItem from './TaskItem.vue'
 
   export default {
@@ -86,29 +86,29 @@
     },
     computed: {
       hasInput() {
-        return _.find(this.tasks, { type: TASK_TYPE_INPUT })
+        return _.find(this.tasks, { type: TASK_OP_INPUT })
       },
       hasOutput() {
-        return _.find(this.tasks, { type: TASK_TYPE_OUTPUT })
+        return _.find(this.tasks, { type: TASK_OP_OUTPUT })
       },
       middle_tasks() {
         return _
           .chain(this.tasks)
-          .reject({ type: TASK_TYPE_INPUT })
-          .reject({ type: TASK_TYPE_OUTPUT })
+          .reject({ type: TASK_OP_INPUT })
+          .reject({ type: TASK_OP_OUTPUT })
           .value()
       },
       input_tasks() {
-        return _.filter(this.tasks, { type: TASK_TYPE_INPUT })
+        return _.filter(this.tasks, { type: TASK_OP_INPUT })
       },
       output_tasks() {
-        return _.filter(this.tasks, { type: TASK_TYPE_OUTPUT })
+        return _.filter(this.tasks, { type: TASK_OP_OUTPUT })
       },
       last_task_item() {
         return _
           .chain(this.middle_tasks)
-          .without({ type: TASK_TYPE_INPUT })
-          .without({ type: TASK_TYPE_OUTPUT })
+          .without({ type: TASK_OP_INPUT })
+          .without({ type: TASK_OP_OUTPUT })
           .last()
           .value()
       }

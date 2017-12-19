@@ -33,7 +33,7 @@
 </template>
 
 <script>
-  import { TASK_TYPE_INPUT, TASK_TYPE_OUTPUT } from '../constants/task-type'
+  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-type'
   import ServiceIcon from './ServiceIcon.vue'
 
   export default {
@@ -42,8 +42,8 @@
       ServiceIcon
     },
     computed: {
-      input_type() { return this.getTaskConnectionType(TASK_TYPE_INPUT) },
-      output_type() { return this.getTaskConnectionType(TASK_TYPE_OUTPUT) },
+      input_type() { return this.getTaskConnectionType(TASK_OP_INPUT) },
+      output_type() { return this.getTaskConnectionType(TASK_OP_OUTPUT) },
       pipe_src() {
         var loc = window.location
         return loc.protocol+'//'+loc.host+'/app/pipes/'+this.item.eid
