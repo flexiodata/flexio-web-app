@@ -10,9 +10,9 @@ cp $DIR/../nodejs_include/package.json ./
 docker build -t fxpython . --no-cache
 popd
 
-pushd $DIR/fxrender
-docker build -t fxrender . --no-cache
-popd
+#pushd $DIR/fxrender
+#docker build -t fxrender . --no-cache
+#popd
 
 
 
