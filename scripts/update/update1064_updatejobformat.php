@@ -48,8 +48,8 @@ if (is_null($db))
 
 try
 {
-    // DEBUG: set to true to remove old 'type'
-    $remove_old_type_param = false;
+    // DEBUG: set to false to keep old 'type'
+    $remove_old_type_param = true;
 
     // STEP 1: update the pipe table
     updatePipeTable($db, $remove_old_type_param);
