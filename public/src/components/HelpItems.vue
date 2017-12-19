@@ -12,26 +12,29 @@
 </template>
 
 <script>
+  const isLocalhost = () => { return location.hostname === 'localhost' || location.hostname === '127.0.0.1' }
+  const host = isLocalhost() ? 'https://www.flex.io' : ''
+
   const help_items = [{
     id: 'quick-start',
     icon: 'launch',
     label: 'Quick Start',
-    href: '/docs/quick-start'
+    href: host + '/docs/quick-start'
   },{
     id: 'api-docs',
     icon: 'help',
     label: 'API Docs',
-    href: '/docs/api'
+    href: host + '/docs/api'
   },{
     id: 'command-bar-docs',
     icon: 'help',
     label: 'Docs',
-    href: '/docs/api/#tasks'
+    href: host + '/docs/api/#tasks'
   },{
     id: 'templates',
     icon: 'now_widgets',
     label: 'Templates',
-    href: '/templates'
+    href: host + '/templates'
   },{
     id: 'help',
     icon: 'chat',
