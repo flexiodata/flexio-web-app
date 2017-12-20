@@ -366,7 +366,7 @@ class Pipe
         $process->set($process_properties);
 
         // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::attach($process);
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
 
         // parse the request content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');

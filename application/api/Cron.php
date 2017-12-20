@@ -293,7 +293,7 @@ class Cron
         $process->setRights($pipe->getRights());
 
         // STEP 3: run the process
-        $engine = \Flexio\Jobs\StoredProcess::attach($process);
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
         $engine->run();
     }
 }

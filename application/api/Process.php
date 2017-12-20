@@ -136,7 +136,7 @@ class Process
         // STEP 3: run the process and return the process info
         if ($autorun === true)
         {
-            $engine = \Flexio\Jobs\StoredProcess::attach($process);
+            $engine = \Flexio\Jobs\StoredProcess::create($process);
             $engine->run($background);
         }
 
@@ -365,7 +365,7 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create a job engine, attach it to the process object
-        $engine = \Flexio\Jobs\StoredProcess::attach($process);
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
 
         // parse the request content and set the stream info
         $php_stream_handle = fopen('php://input', 'rb');

@@ -32,23 +32,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->procobj = null;
     }
 
-    public static function create() : \Flexio\Jobs\StoredProcess
+    public static function create(\Flexio\Object\Process $procobj) : \Flexio\Jobs\StoredProcess
     {
         $object = new static();
+        $object->loadFromProcess($procobj);
         return $object;
     }
 
     public static function load(string $process_eid) : \Flexio\Jobs\StoredProcess
     {
         $procobj = \Flexio\Object\Process::load($process_eid);
-        return self::attach($procobj);
-    }
-
-    public static function attach(\Flexio\Object\Process $procobj) : \Flexio\Jobs\StoredProcess
-    {
-        $object = new static();
-        $object->loadFromProcess($procobj);
-        return $object;
+        return self::create($procobj);
     }
 
     public function addEventHandler($handler) : \Flexio\Jobs\StoredProcess
@@ -204,22 +198,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
-        if ($this->procobj)
-        {
-            $this->procobj->set([
-                'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
-                'started' => self::getProcessTimestamp()
-            ]);
-        }
-         else
-        {
-            // create a new process object
-            $this->procobj = \Flexio\Object\Process::create([
-                'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
-                'task' => $this->engine->getTasks(),
-                'started' => self::getProcessTimestamp()
-            ]);
-        }
+        $this->procobj->set([
+            'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
+            'started' => self::getProcessTimestamp()
+        ]);
 
         if (!is_null($this->owner))         $this->procobj->setOwner($this->owner);
         if (!is_null($this->created_by))    $this->procobj->setCreatedBy($this->created_by);

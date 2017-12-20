@@ -88,7 +88,7 @@ class Trigger
 
 
             // run the pipe
-            $engine = \Flexio\Jobs\StoredProcess::attach($process);
+            $engine = \Flexio\Jobs\StoredProcess::create($process);
             $engine->run(false); // handleEmail should be run in background from email processing script
         }
 
