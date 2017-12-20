@@ -20,6 +20,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
+    private $procmode;
 
     public function __construct()
     {
@@ -30,7 +31,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object = new static();
         $object->procobj = $procobj;
         $object->engine = \Flexio\Jobs\Process::create();
-        $object->engine->setTasks($this->procobj->getTasks());
+        $object->engine->setTasks($procobj->getTasks());
+        $object->procmode = $procobj->getMode();
         return $object;
     }
 
@@ -186,12 +188,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
             $process_eid = $this->procobj->getEid();
 
             \Flexio\System\Program::runInBackground("\Flexio\Jobs\StoredProcess::background_entry('$process_eid')");
-            //\Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
          else
         {
             return $this->run_internal();
-            //return \Flexio\Jobs\StoredProcess::background_entry($this->procobj->getEid());
         }
 
         return $this;
@@ -203,27 +203,50 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $proc->run_internal();
     }
 
+    public function handleEvent(string $event, \Flexio\IFace\IProcess $process_engine)
+    {
+        // if we're not in build mode, don't do anything with events;
+        // TODO: store as a property so we don't have to ping the database
+        if ($this->procmode !== \Flexio\Jobs\Process::MODE_BUILD)
+            return;
+
+        switch ($event)
+        {
+            // don't do anything if it's an event we don't care about
+            default:
+            case \Flexio\Jobs\Process::EVENT_STARTING:
+            case \Flexio\Jobs\Process::EVENT_FINISHED:
+                return;
+
+            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
+                $this->startLog($process_engine);
+                break;
+
+            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
+                $this->finishLog($process_engine);
+                break;
+        }
+    }
+
     private function run_internal() : \Flexio\Jobs\StoredProcess
     {
-        // STEP 2: add the environment variables in
+        // STEP 1: add the environment variables in
         $environment_variables = $this->getEnvironmentParams();
         $user_variables = $this->getParams();
-        $this->engine->setParams(array_merge($user_variables, $environment_variables));
+        $this->setParams(array_merge($user_variables, $environment_variables));
 
-        // STEP 3: get events for logging, if necessary
-        $this->engine->addEventHandler([$this->procobj, 'handleEvent']);
+        // STEP 2: get events for logging, if necessary
+        $this->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 4: execute the job
-        $this->engine->execute();
+        // STEP 3: execute the job
+        $this->execute();
 
-        // STEP 6: save final job output and status
+        // STEP 4: save final job output and status
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
         $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $process_params['cache_used'] = 'N';
         $this->procobj->set($process_params);
-
-        //var_dump($this->procobj->get());
 
         return $this;
     }
@@ -282,33 +305,70 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $environment_params;
     }
 
-
-/*
-
-    public function handleEvent(string $event, \Flexio\IFace\IProcess $process_engine)
+    private function startLog(\Flexio\IFace\IProcess $process_engine)
     {
-        // if we're not in build mode, don't do anything with events
-        if ($this->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
-            return;
+        $process_engine = $this->engine;
 
-        switch ($event)
-        {
-            // don't do anything if it's an event we don't care about
-            default:
-            case \Flexio\Jobs\Process::EVENT_STARTING:
-            case \Flexio\Jobs\Process::EVENT_FINISHED:
-                return;
+        $storable_stream_info = self::getStreamLogInfo($process_engine);
+        $process_info = $process_engine->getStatusInfo();
+        $task = $process_info['current_task'] ?? array();
 
-            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog($process_engine);
-                break;
+        // create a log record
+        $params = array();
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
+        $params['started'] = self::getProcessTimestamp();
+        $params['input'] = json_encode($storable_stream_info);
+        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
+        $params['message'] = '';
 
-            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog($process_engine);
-                break;
-        }
+        $log_eid = $this->procobj->addToLog($log_eid, $params);
+
+        // pass on the log entry for the log finish function
+        $process_engine->setMetadata(array('log_eid' => $log_eid));
     }
 
+    private function finishLog()
+    {
+        $process_engine = $this->engine;
+
+        // make sure we have a log eid record to complete
+        $process_engine_metadata = $process_engine->getMetadata();
+        if (!isset($process_engine_metadata['log_eid']))
+            return;
+
+        $log_eid = $process_engine_metadata['log_eid'];
+        $storable_stream_info = self::getStreamLogInfo($process_engine);
+        $process_info = $process_engine->getStatusInfo();
+        $task = $process_info['current_task'] ?? array();
+
+        // update the log record
+        $params = array();
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
+        $params['finished'] = self::getProcessTimestamp();
+        $params['output'] = json_encode($storable_stream_info);
+        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
+        $params['message'] = '';
+
+        $this->procobj->addToLog($log_eid, $params);
+    }
+
+    private static function getStreamLogInfo(\Flexio\IFace\IProcess $process_engine) : array
+    {
+        $stdin = $process_engine->getStdin();
+        $stdout = $process_engine->getStdout();
+
+        $storable_stdin = self::createStorableStream($stdin);
+        $storable_stdout = self::createStorableStream($stdout);
+
+        $info = array();
+        $info['stdin'] = array('eid' => $storable_stdin->getEid());
+        $info['stdout'] = array('eid' => $storable_stdout->getEid());
+        return $info;
+    }
+
+/*
     private function execute()
     {
         // TODO: need to handle process cancellation
@@ -369,65 +429,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // clear the process object cache
         $this->clearCache();
-    }
-
-    private function startLog(\Flexio\IFace\IProcess $process_engine)
-    {
-        $storable_stream_info = self::getStreamLogInfo($process_engine);
-        $process_info = $process_engine->getStatusInfo();
-        $task = $process_info['current_task'] ?? array();
-
-        // create a log record
-        $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
-        $params['started'] = self::getProcessTimestamp();
-        $params['input'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $params['message'] = '';
-
-        $log_eid = $this->getModel()->process->log(null, $this->getEid(), $params);
-
-        // pass on the log entry for the log finish function
-        $process_engine->setMetadata(array('log_eid' => $log_eid));
-    }
-
-    private function finishLog(\Flexio\IFace\IProcess $process_engine)
-    {
-        // make sure we have a log eid record to complete
-        $process_engine_metadata = $process_engine->getMetadata();
-        if (!isset($process_engine_metadata['log_eid']))
-            return;
-
-        $log_eid = $process_engine_metadata['log_eid'];
-        $storable_stream_info = self::getStreamLogInfo($process_engine);
-        $process_info = $process_engine->getStatusInfo();
-        $task = $process_info['current_task'] ?? array();
-
-        // update the log record
-        $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
-        $params['finished'] = self::getProcessTimestamp();
-        $params['output'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $params['message'] = '';
-
-        $this->getModel()->process->log($log_eid, $this->getEid(), $params);
-    }
-
-    private static function getStreamLogInfo(\Flexio\IFace\IProcess $process_engine) : array
-    {
-        $stdin = $process_engine->getStdin();
-        $stdout = $process_engine->getStdout();
-
-        $storable_stdin = self::createStorableStream($stdin);
-        $storable_stdout = self::createStorableStream($stdout);
-
-        $info = array();
-        $info['stdin'] = array('eid' => $storable_stdin->getEid());
-        $info['stdout'] = array('eid' => $storable_stdout->getEid());
-        return $info;
     }
 */
 }

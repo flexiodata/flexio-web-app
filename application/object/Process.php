@@ -140,6 +140,12 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_mode'];
     }
 
+    public function addToLog($log_eid = null, array $params) : string
+    {
+        $eid = $this->getModel()->process->log($log_eid, $this->getEid(), $params);
+        return $eid;
+    }
+
     public function getLog() : array
     {
         $process_model = $this->getModel()->process;
