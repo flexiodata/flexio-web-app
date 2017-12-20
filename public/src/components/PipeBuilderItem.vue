@@ -370,7 +370,7 @@
       },
       'show-insert-before-first-task': {
         type: Boolean,
-        false
+        default: false
       }
     },
     mixins: [TaskItemHelper],

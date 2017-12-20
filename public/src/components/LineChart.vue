@@ -49,7 +49,8 @@
     }
   }
 
-  export default Line.extend({
+  export default {
+    extends: Line,
     props: {
       'labels': {
         type: Array,
@@ -103,5 +104,5 @@
         )
       }
     }
-  })
+  }
 </script>

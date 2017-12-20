@@ -33,16 +33,16 @@ config.module.rules = (config.module.rules || []).concat([
   {
     test: /\.css$/,
     loader: ExtractTextPlugin.extract({
-      fallbackLoader: 'style-loader',
-      loader: 'css-loader!autoprefixer-loader'
+      fallback: 'style-loader',
+      use: 'css-loader!autoprefixer-loader'
     })
   },
   // extract less files
   {
     test: /\.less$/,
     loader: ExtractTextPlugin.extract({
-      fallbackLoader: 'style-loader',
-      loader: 'css-loader!autoprefixer-loader!less-loader'
+      fallback: 'style-loader',
+      use: 'css-loader!autoprefixer-loader!less-loader'
     })
   }
 ])
