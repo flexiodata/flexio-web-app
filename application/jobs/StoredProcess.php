@@ -219,11 +219,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
                 return;
 
             case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog($process_engine);
+                $this->startLog();
                 break;
 
             case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog($process_engine);
+                $this->finishLog();
                 break;
         }
     }
@@ -251,61 +251,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
-    {
-        $properties['path'] = \Flexio\Base\Util::generateHandle();
-        $properties = array_merge($stream->get(), $properties);
-        $storable_stream = \Flexio\Object\Stream::create($properties);
-
-        // copy from the input stream to the storable stream
-        $streamreader = $stream->getReader();
-        $streamwriter = $storable_stream->getWriter();
-
-        while (true)
-        {
-            $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
-        }
-
-        return $storable_stream;
-    }
-
-    private static function getProcessTimestamp() : string
-    {
-        // return the timestamp as accurately as we can determine
-        $time_exact = microtime(true);
-        $time_rounded = floor($time_exact);
-        $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
-        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
-        return ($date->format("Y-m-d H:i:s.u"));
-    }
-
-    private static function getEnvironmentParams() : array
-    {
-        // return a list of environment parameters;
-        // TODO: determine list; for now, include current user information and time
-        // TODO: do we want to "namespace" the variables? right now, variables are
-        // limited to alphanumeric, but maybe we want to do something like:
-        // "flexio.user_firstname", "flexio.user_lastname", etc
-        $environment_params = array();
-
-        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
-        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
-        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
-        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
-
-        return $environment_params;
-    }
-
-    private function startLog(\Flexio\IFace\IProcess $process_engine)
+    private function startLog()
     {
         $process_engine = $this->engine;
 
@@ -366,6 +312,61 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $info['stdin'] = array('eid' => $storable_stdin->getEid());
         $info['stdout'] = array('eid' => $storable_stdout->getEid());
         return $info;
+    }
+
+
+    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
+    {
+        $properties['path'] = \Flexio\Base\Util::generateHandle();
+        $properties = array_merge($stream->get(), $properties);
+        $storable_stream = \Flexio\Object\Stream::create($properties);
+
+        // copy from the input stream to the storable stream
+        $streamreader = $stream->getReader();
+        $streamwriter = $storable_stream->getWriter();
+
+        while (true)
+        {
+            $row = false;
+            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
+                $row = $streamreader->readRow();
+                 else
+                $row = $streamreader->read();
+
+            if ($row === false)
+                break;
+
+            $streamwriter->write($row);
+        }
+
+        return $storable_stream;
+    }
+
+    private static function getProcessTimestamp() : string
+    {
+        // return the timestamp as accurately as we can determine
+        $time_exact = microtime(true);
+        $time_rounded = floor($time_exact);
+        $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
+        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
+        return ($date->format("Y-m-d H:i:s.u"));
+    }
+
+    private static function getEnvironmentParams() : array
+    {
+        // return a list of environment parameters;
+        // TODO: determine list; for now, include current user information and time
+        // TODO: do we want to "namespace" the variables? right now, variables are
+        // limited to alphanumeric, but maybe we want to do something like:
+        // "flexio.user_firstname", "flexio.user_lastname", etc
+        $environment_params = array();
+
+        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
+        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
+        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
+        $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
+
+        return $environment_params;
     }
 
 /*
