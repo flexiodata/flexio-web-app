@@ -261,7 +261,7 @@ class Process implements \Flexio\IFace\IProcess
     private function executeAllTasks()
     {
         $first = true;
-        while (true)
+        foreach ($this->tasks as $current_task)
         {
             // reset the status info
             $this->status_info = array();
@@ -273,11 +273,6 @@ class Process implements \Flexio\IFace\IProcess
             // if the process was exited intentionally, stop the process
             $response_code = $this->getResponseCode();
             if ($response_code !== self::RESPONSE_NONE)
-                break;
-
-            // get the next task to process
-            $current_task = array_shift($this->tasks);
-            if (!isset($current_task))
                 break;
 
             // set the current status info

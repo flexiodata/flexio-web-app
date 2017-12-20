@@ -314,7 +314,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $info;
     }
 
-
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
