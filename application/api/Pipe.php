@@ -374,7 +374,7 @@ class Pipe
          \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
 
         // run the process
-        $engine->run(false /*background*/);
+        $engine->run(false /*true: run in background*/);
 
         if ($engine->hasError())
         {
