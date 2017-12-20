@@ -97,7 +97,7 @@ class Process implements \Flexio\IFace\IProcess
     private $error;
     private $status_info;
     private $handlers;     // array of callbacks invoked for each event
-    //private $files;        // array of streams of files (similar to php's $_FILES)
+    private $files;        // array of streams of files (similar to php's $_FILES)
 
     public function __construct()
     {
