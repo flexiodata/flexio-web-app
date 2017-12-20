@@ -18,15 +18,9 @@ namespace Flexio\Object;
 
 class Process extends \Flexio\Object\Base
 {
-    // variables and errors
-    private $response_code;
-    private $error;
-
     public function __construct()
     {
         $this->setType(\Model::TYPE_PROCESS);
-        $this->response_code = \Flexio\Jobs\Process::RESPONSE_NORMAL;
-        $this->error = array();
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Process
@@ -144,36 +138,6 @@ class Process extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties['process_mode'];
-    }
-
-    public function getError() : array
-    {
-        return $this->error;
-    }
-
-    public function hasError() : bool
-    {
-        if (empty($this->error))
-            return false;
-
-        return true;
-    }
-
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null)
-    {
-        // only save the first error we come to
-        if ($this->hasError())
-            return;
-
-        if (!isset($message))
-            $message = \Flexio\Base\Error::getDefaultMessage($code);
-
-        $this->error = array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'type' => $type, 'trace' => $trace);
-    }
-
-    public function getResponseCode() : int
-    {
-        return $this->response_code;
     }
 
     public function getLog() : array
