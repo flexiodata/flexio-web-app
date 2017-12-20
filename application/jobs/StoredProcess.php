@@ -23,7 +23,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     private $owner = null;      // user eid owner (will be passed to \Flexio\Object\Process::setOwner())
     private $created_by = null; // created by eid ( "   "   "      "  "  )
     private $rights = null;     // rights         ( "   "   "      "  "  )
-    private $assoc_pipe = null; // associated pipe object; if set, $assoc_pipe->addProcess() will be called with the process object
     private $stdout = null;
 
     public function __construct()
@@ -176,12 +175,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function setAssocPipe(\Flexio\Object\Pipe $pipe) : \Flexio\Jobs\StoredProcess
-    {
-        $this->assoc_pipe = $pipe;
-        return $this;
-    }
-
     public function loadFromProcess(\Flexio\Object\Process $procobj)
     {
         // this function loads a \Flexio\Object\Process object into $this->procobj, and
@@ -191,7 +184,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->owner = null;
         $this->created_by = null;
         $this->rights = null;
-        $this->assoc_pipe = null;
 
         $this->engine->setTasks($this->procobj->getTasks());
     }
@@ -206,7 +198,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         if (!is_null($this->owner))         $this->procobj->setOwner($this->owner);
         if (!is_null($this->created_by))    $this->procobj->setCreatedBy($this->created_by);
         if (!is_null($this->rights))        $this->procobj->setRights($this->rights);
-        if (!is_null($this->assoc_pipe))    $this->assoc_pipe->addProcess($this->procobj);
 
         // STEP 3: run the job
         if ($background === true)
