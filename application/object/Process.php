@@ -80,7 +80,7 @@ class Process extends \Flexio\Object\Base
 
         return $this->properties;
     }
-
+/*
     public function run(bool $background = true) : \Flexio\Object\Process
     {
         // STEP 1: check the status; don't run the job in certain circumstances
@@ -138,7 +138,7 @@ class Process extends \Flexio\Object\Base
         $object->execute();
         return true;
     }
-
+*/
     public function pause() : \Flexio\Object\Process
     {
         $this->clearCache();

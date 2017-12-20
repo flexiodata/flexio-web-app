@@ -163,9 +163,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-
     // these functions proxy information to the internal \Flexio\Object\Process $procobj, once it has been created
-
     public function setOwner(string $user_eid) : \Flexio\Jobs\StoredProcess
     {
         $this->owner = $user_eid;
@@ -190,7 +188,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-
     public function loadFromProcess(\Flexio\Object\Process $procobj)
     {
         // this function loads a \Flexio\Object\Process object into $this->procobj, and
@@ -204,9 +201,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         $this->engine->setTasks($this->procobj->getTasks());
     }
-
-
-
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
@@ -301,7 +295,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
@@ -329,7 +322,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $storable_stream;
     }
 
-
     private static function getProcessTimestamp() : string
     {
         // return the timestamp as accurately as we can determine
@@ -356,5 +348,5 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         return $environment_params;
     }
-
 }
+
