@@ -80,65 +80,7 @@ class Process extends \Flexio\Object\Base
 
         return $this->properties;
     }
-/*
-    public function run(bool $background = true) : \Flexio\Object\Process
-    {
-        // STEP 1: check the status; don't run the job in certain circumstances
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_status = $process_model->getProcessStatus($this->getEid());
 
-        switch ($process_status)
-        {
-            // run job; fall through
-            default:
-            case \Flexio\Jobs\Process::STATUS_UNDEFINED:
-            case \Flexio\Jobs\Process::STATUS_PENDING:
-                break;
-
-            // job is already running or has been run, so don't do anything
-            case \Flexio\Jobs\Process::STATUS_WAITING:
-            case \Flexio\Jobs\Process::STATUS_RUNNING:
-            case \Flexio\Jobs\Process::STATUS_CANCELLED:
-            case \Flexio\Jobs\Process::STATUS_FAILED:
-            case \Flexio\Jobs\Process::STATUS_COMPLETED:
-                return $this;
-
-            // job is paused, so resume it
-            case \Flexio\Jobs\Process::STATUS_PAUSED:
-                $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
-                return $this;
-        }
-
-        // STEP 2: set the status
-        $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
-
-        // STEP 3: run the job
-        if ($background !== true)
-        {
-            $this->execute();
-            return $this;
-        }
-
-        $process_eid = $this->getEid();
-        \Flexio\System\Program::runInBackground("\Flexio\Object\Process::run_internal('$process_eid')");
-        return $this;
-    }
-
-    public static function run_internal(string $eid) : bool
-    {
-        // this is a non-blocking internal static run function called that's
-        // run in the background by \Flexio\Objects\Process::run($background) when $background
-        // is set to true
-
-        // load the process and run in non-blocking mode
-        $object = self::load($eid);
-
-        // run the job
-        $object->execute();
-        return true;
-    }
-*/
     public function pause() : \Flexio\Object\Process
     {
         $this->clearCache();
