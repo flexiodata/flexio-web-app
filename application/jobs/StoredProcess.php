@@ -23,14 +23,14 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     public function __construct()
     {
-        $this->engine = \Flexio\Jobs\Process::create();
-        $this->procobj = null;
     }
 
     public static function create(\Flexio\Object\Process $procobj) : \Flexio\Jobs\StoredProcess
     {
         $object = new static();
-        $object->loadFromProcess($procobj);
+        $object->procobj = $procobj;
+        $object->engine = \Flexio\Jobs\Process::create();
+        $object->engine->setTasks($this->procobj->getTasks());
         return $object;
     }
 
@@ -150,15 +150,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // database process record, so no statistics will be serialized
         $this->engine->execute();
         return $this;
-    }
-
-    public function loadFromProcess(\Flexio\Object\Process $procobj)
-    {
-        // this function loads a \Flexio\Object\Process object into $this->procobj, and
-        // then deserializes it into \Flexio\Jobs\Process $this->engine
-
-        $this->procobj = $procobj;
-        $this->engine->setTasks($this->procobj->getTasks());
     }
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
