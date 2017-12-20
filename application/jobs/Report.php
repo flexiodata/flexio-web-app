@@ -29,11 +29,16 @@ require_once __DIR__ . '/Execute.php';
 
 class ReportScriptHost extends ScriptHost
 {
+    public $params = [];
+
     public function func_getReportPayload()
     {
         $input = $this->process->getStdin();
         $content_type = $input->getMimeType();
 
+        $params = $this->params;
+        $cols = $params['columns'] ?? null;
+        
         //return "<html><body><h1>Hello world!</h1></body></html>";
         if ($content_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
@@ -41,6 +46,9 @@ class ReportScriptHost extends ScriptHost
             $rows = $input->getReader()->getRows(0,10000);
             foreach ($rows as $row)
             {
+                if ($cols !== null)
+                    $row = \Flexio\Base\Util::filterArray($row, $cols);
+                
                 $rowstr = "<tr>";
                 foreach ($row as $col)
                     $rowstr .= "<td>$col</td>";
@@ -65,6 +73,9 @@ class Report extends \Flexio\Jobs\Base
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
+
+        $job_definition = $this->getProperties();
+        $params =  $job_definition['params'] ?? [];
 /*
         $code = <<<EOT
 
@@ -119,6 +130,7 @@ EOT;
         $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".base64_encode($code)." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
         $script_host = new ReportScriptHost();
+        $script_host->params = $params;
         $script_host->setProcess($process);
 
         $ep = new ExecuteProxy;

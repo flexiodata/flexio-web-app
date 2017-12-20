@@ -2016,28 +2016,53 @@
 
 
 
-    this.args.report = [ 'var', 'value' ];
+    this.args.report = [ 'col' ];
     this.hints.report = {}
     this.keywords.report = function(str)
     {
       var json =
         {
-            "type": "flexio.report",
+            "op": "report",
             "params": { }
         }
 
       var params = this.split(str, this.args.report);
 
+      if (params.hasOwnProperty('col'))
+      {
+        json.params.columns = [];
+        var i, columns = this.parseColumns(params['col'].value)
+        for (i = 0; i < columns.length; ++i)
+        {
+          json.params.columns.push(columns[i]);
+        }
+      }
+
       return json;
     };
 
 
-    this.templates["flexio.report"] = function(json)
+    this.templates["report"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
 
       var res = 'report';
+
+      if (json.params.hasOwnProperty('columns'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.columns.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.columns[i]);
+        }
+
+        res = this.append(res, "col: " + str);
+      }
 
       return res;
     }
