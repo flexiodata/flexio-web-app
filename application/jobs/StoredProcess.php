@@ -20,10 +20,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 {
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
-    private $owner = null;      // user eid owner (will be passed to \Flexio\Object\Process::setOwner())
-    private $created_by = null; // created by eid ( "   "   "      "  "  )
-    private $rights = null;     // rights         ( "   "   "      "  "  )
-    private $stdout = null;
 
     public function __construct()
     {
@@ -156,35 +152,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    // these functions proxy information to the internal \Flexio\Object\Process $procobj, once it has been created
-    public function setOwner(string $user_eid) : \Flexio\Jobs\StoredProcess
-    {
-        $this->owner = $user_eid;
-        return $this;
-    }
-
-    public function setCreatedBy(string $user_eid) : \Flexio\Jobs\StoredProcess
-    {
-        $this->created_by = $user_eid;
-        return $this;
-    }
-
-    public function setRights(array $rights) : \Flexio\Jobs\StoredProcess
-    {
-        $this->rights = $rights;
-        return $this;
-    }
-
     public function loadFromProcess(\Flexio\Object\Process $procobj)
     {
         // this function loads a \Flexio\Object\Process object into $this->procobj, and
         // then deserializes it into \Flexio\Jobs\Process $this->engine
 
         $this->procobj = $procobj;
-        $this->owner = null;
-        $this->created_by = null;
-        $this->rights = null;
-
         $this->engine->setTasks($this->procobj->getTasks());
     }
 
@@ -194,10 +167,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
             'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
             'started' => self::getProcessTimestamp()
         ]);
-
-        if (!is_null($this->owner))         $this->procobj->setOwner($this->owner);
-        if (!is_null($this->created_by))    $this->procobj->setCreatedBy($this->created_by);
-        if (!is_null($this->rights))        $this->procobj->setRights($this->rights);
 
         // STEP 3: run the job
         if ($background === true)
