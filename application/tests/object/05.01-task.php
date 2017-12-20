@@ -75,7 +75,7 @@ class Test
                 ["op" => "create", "params" => (object)[]],
                 ["op" => "convert", "params" => (object)[]]
             ]);
-        $actual = $task->get()[0]['op'] === "create" && $task->get()[1]['type'] === "convert";
+        $actual = $task->get()[0]['op'] === "create" && $task->get()[1]['op'] === "convert";
         $expected = true;
         TestCheck::assertBoolean('A.6', 'Task::create(); add valid steps; make sure parameters are set', $actual, $expected, $results);
 
@@ -119,13 +119,13 @@ class Test
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->push([1]);
-        $actual = $task->get()[0]['type'] ?? false;
+        $actual = $task->get()[0]['op'] ?? false;
         $expected = false;
         TestCheck::assertBoolean('B.4', 'Task::push(); add valid steps', $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Object\Task::create()->push(["op" => "create", "params" => (object)[]]);
-        $actual = $task->get()[0]['type'];
+        $actual = $task->get()[0]['op'];
         $expected = "create";
         TestCheck::assertString('B.5', 'Task::push(); add valid steps', $actual, $expected, $results);
 

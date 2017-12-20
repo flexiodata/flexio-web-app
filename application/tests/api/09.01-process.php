@@ -39,7 +39,7 @@ class Test
         $request->setPostParams($params);
         $request->setRequestingUser(TestUtil::getDefaultTestUser());
         $process_info = \Flexio\Api\Process::create($request);
-        $actual = $process_info['task'][0]['type'];
+        $actual = $process_info['task'][0]['op'];
         $expected = 'sleep';
         TestCheck::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
 
