@@ -2355,7 +2355,7 @@
     {
       var json =
         {
-            "type": "flexio.set",
+            "op": "set",
             "params": { }
         }
 
@@ -2375,7 +2375,7 @@
     };
 
 
-    this.templates["flexio.set"] = function(json)
+    this.templates["set"] = function(json)
     {
       if (!json || !json.hasOwnProperty('params'))
         return '';
