@@ -196,90 +196,6 @@ class Process extends \Flexio\Object\Base
         return $properties['task'];
     }
 
-    public function setParams(array $params) : \Flexio\Object\Process
-    {
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = json_decode($process_properties['input'], true);
-        $input['params'] = $params;
-        $input = json_encode($input);
-        $this->getModel()->process->set($this->getEid(), array('input' => $input));
-        return $this;
-    }
-
-    public function getParams() : array
-    {
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = json_decode($process_properties['input'], true);
-        return $input['params'] ?? array();
-    }
-
-    public function addFile(string $name, \Flexio\IFace\IStream $stream)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function setStdin(\Flexio\IFace\IStream $stream)
-    {
-        $storable_stream = self::createStorableStream($stream);
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = json_decode($process_properties['input'], true);
-        $input['stream'] = $storable_stream->getEid();
-        $input = json_encode($input);
-        $this->getModel()->process->set($this->getEid(), array('input' => $input));
-        return $this;
-    }
-
-    public function getStdin() : \Flexio\IFace\IStream
-    {
-        $memory_stream = \Flexio\Base\Stream::create();
-
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $input = json_decode($process_properties['input'], true);
-
-        if ($input === false)
-            return $memory_stream;
-        if (!isset($input['stream']))
-            return $memory_stream;
-
-        $storable_stream = \Flexio\Object\Stream::load($input['stream']);
-        if ($storable_stream === false)
-            return $memory_stream;
-
-        $memory_stream = self::createMemoryStream($storable_stream);
-        return $memory_stream;
-    }
-
-    public function setStdout(\Flexio\IFace\IStream $stream)
-    {
-        $storable_stream = self::createStorableStream($stream);
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $output = json_decode($process_properties['output'], true);
-        $output['stream'] = $storable_stream->getEid();
-        $output = json_encode($output);
-        $this->getModel()->process->set($this->getEid(), array('output' => $output));
-        return $this;
-    }
-
-    public function getStdout() : \Flexio\IFace\IStream
-    {
-        $memory_stream = \Flexio\Base\Stream::create();
-
-        $process_properties = $this->getModel()->process->get($this->getEid());
-        $output = json_decode($process_properties['output'], true);
-
-        if ($output === false)
-            return $memory_stream;
-        if (!isset($output['stream']))
-            return $memory_stream;
-
-        $storable_stream = \Flexio\Object\Stream::load($output['stream']);
-        if ($storable_stream === false)
-            return $memory_stream;
-
-        $memory_stream = self::createMemoryStream($storable_stream);
-        return $memory_stream;
-    }
-
     public function getMode() : string
     {
         if ($this->isCached() === false)
@@ -398,7 +314,7 @@ class Process extends \Flexio\Object\Base
         $this->getModel()->process->set($this->getEid(), $process_params);
 
         // STEP 8: save the process output; TODO: saving stdout also writes to the database; could we consolidate with other writes for efficiency?
-        $this->setStdout($process_engine->getStdout());
+        //$this->setStdout($process_engine->getStdout());
 
         // clear the process object cache
         $this->clearCache();
