@@ -176,30 +176,6 @@ class Process extends \Flexio\Object\Base
         return $this->response_code;
     }
 
-    public function handleEvent(string $event, \Flexio\IFace\IProcess $process_engine)
-    {
-        // if we're not in build mode, don't do anything with events
-        if ($this->getMode() !== \Flexio\Jobs\Process::MODE_BUILD)
-            return;
-
-        switch ($event)
-        {
-            // don't do anything if it's an event we don't care about
-            default:
-            case \Flexio\Jobs\Process::EVENT_STARTING:
-            case \Flexio\Jobs\Process::EVENT_FINISHED:
-                return;
-
-            case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog($process_engine);
-                break;
-
-            case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog($process_engine);
-                break;
-        }
-    }
-
     public function getLog() : array
     {
         $process_model = $this->getModel()->process;
@@ -323,3 +299,4 @@ class Process extends \Flexio\Object\Base
         return $properties;
     }
 }
+
