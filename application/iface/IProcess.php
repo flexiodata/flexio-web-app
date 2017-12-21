@@ -34,7 +34,6 @@ interface IProcess
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
-    public function getStatusInfo();
     public function execute();
 }
 

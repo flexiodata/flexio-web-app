@@ -141,11 +141,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->hasError();
     }
 
-    public function getStatusInfo() : array
-    {
-        return $this->engine->getStatusInfo();
-    }
-
     public function execute() : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a
@@ -203,7 +198,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $proc->run_internal();
     }
 
-    public function handleEvent(string $event, \Flexio\IFace\IProcess $process_engine)
+    public function handleEvent(string $event, array $process_info)
     {
         // if we're not in build mode, don't do anything with events;
         // TODO: store as a property so we don't have to ping the database
@@ -219,11 +214,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
                 return;
 
             case \Flexio\Jobs\Process::EVENT_STARTING_TASK:
-                $this->startLog();
+                $this->startLog($process_info);
                 break;
 
             case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
-                $this->finishLog();
+                $this->finishLog($process_info);
                 break;
         }
     }
@@ -251,18 +246,20 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    private function startLog()
+    private function startLog(array $process_info)
     {
-        $process_engine = $this->engine;
+        $current_task = $process_info['current_task'] ?? array();
+        $storable_stdin = self::createStorableStream($process_info['stdin']);
+        $storable_stdout = self::createStorableStream($process_info['stdout']);
 
-        $storable_stream_info = self::getStreamLogInfo($process_engine);
-        $process_info = $process_engine->getStatusInfo();
-        $task = $process_info['current_task'] ?? array();
+        $storable_stream_info = array();
+        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
+        $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
         // create a log record
         $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
+        $params['task_op'] = $current_task['op'] ?? '';
+        $params['task'] = json_encode($current_task);
         $params['started'] = self::getProcessTimestamp();
         $params['input'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
@@ -274,9 +271,15 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $process_engine->setMetadata(array('log_eid' => $log_eid));
     }
 
-    private function finishLog()
+    private function finishLog(array $process_info)
     {
-        $process_engine = $this->engine;
+        $current_task = $process_info['current_task'] ?? array();
+        $storable_stdin = self::createStorableStream($process_info['stdin']);
+        $storable_stdout = self::createStorableStream($process_info['stdout']);
+
+        $storable_stream_info = array();
+        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
+        $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
         // make sure we have a log eid record to complete
         $process_engine_metadata = $process_engine->getMetadata();
@@ -284,34 +287,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
             return;
 
         $log_eid = $process_engine_metadata['log_eid'];
-        $storable_stream_info = self::getStreamLogInfo($process_engine);
-        $process_info = $process_engine->getStatusInfo();
-        $task = $process_info['current_task'] ?? array();
 
         // update the log record
         $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
+        $params['task_op'] = $current_task['op'] ?? '';
+        $params['task'] = json_encode($current_task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
         $this->procobj->addToLog($log_eid, $params);
-    }
-
-    private static function getStreamLogInfo(\Flexio\IFace\IProcess $process_engine) : array
-    {
-        $stdin = $process_engine->getStdin();
-        $stdout = $process_engine->getStdout();
-
-        $storable_stdin = self::createStorableStream($stdin);
-        $storable_stdout = self::createStorableStream($stdout);
-
-        $info = array();
-        $info['stdin'] = array('eid' => $storable_stdin->getEid());
-        $info['stdout'] = array('eid' => $storable_stdout->getEid());
-        return $info;
     }
 
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream

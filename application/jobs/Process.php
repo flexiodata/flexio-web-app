@@ -110,7 +110,6 @@ class Process implements \Flexio\IFace\IProcess
 
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
-        $this->status_info = array();
         $this->handlers = array();
         $this->files = array();
     }
@@ -220,20 +219,20 @@ class Process implements \Flexio\IFace\IProcess
         $message = \Flexio\Base\Error::getDefaultMessage($code);
 
         $this->error = array('code' => $code, 'message' => $message);
-        
+
         if ($module !== null)
         {
             $this->error['module'] = $module;
             if ($line !== null)
                 $this->error['line'] = $line;
         }
-        
+
         if ($type !== null)
             $this->error['type'] = $type;
-            
+
         if ($trace !== null)
             $this->error['trace'] = $trace;
-        
+
         return $this;
     }
 
@@ -250,15 +249,10 @@ class Process implements \Flexio\IFace\IProcess
         return true;
     }
 
-    public function getStatusInfo() : array
-    {
-        return $this->status_info;
-    }
-
     public function execute() : \Flexio\IFace\IProcess
     {
         // fire the starting event
-        $this->invokeEventHandlers(self::EVENT_STARTING);
+        $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState($current_task));
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
@@ -268,7 +262,7 @@ class Process implements \Flexio\IFace\IProcess
             $this->executeAllTasks();
 
         // fire the finish event
-        $this->invokeEventHandlers(self::EVENT_FINISHED);
+        $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState($current_task));
         return $this;
     }
 
@@ -277,9 +271,6 @@ class Process implements \Flexio\IFace\IProcess
         $first = true;
         foreach ($this->tasks as $current_task)
         {
-            // reset the status info
-            $this->status_info = array();
-
             // if there's an error, stop the process
             if ($this->hasError())
                 break;
@@ -289,11 +280,8 @@ class Process implements \Flexio\IFace\IProcess
             if ($response_code !== self::RESPONSE_NONE)
                 break;
 
-            // set the current status info
-            $this->status_info['current_task'] = $current_task;
-
             // signal the start of the task
-            $this->invokeEventHandlers(self::EVENT_STARTING_TASK);
+            $this->invokeEventHandlers(self::EVENT_STARTING_TASK, $this->getProcessState($current_task));
 
             if ($first === false)
             {
@@ -307,8 +295,17 @@ class Process implements \Flexio\IFace\IProcess
             $first = false;
 
             // signal the end of the task
-            $this->invokeEventHandlers(self::EVENT_FINISHED_TASK);
+            $this->invokeEventHandlers(self::EVENT_FINISHED_TASK, $this->getProcessState($current_task));
         }
+    }
+
+    private function getProcessState(array $current_task) : array
+    {
+        $state = array();
+        $state['stdin'] = $this->getStdin();
+        $state['stdout'] = $this->getStdout();
+        $state['current_task'] = $current_task;
+        return $state;
     }
 
     private function executeTask(array $task)
@@ -394,11 +391,11 @@ class Process implements \Flexio\IFace\IProcess
         return $job;
     }
 
-    private function invokeEventHandlers(string $event)
+    private function invokeEventHandlers(string $event, array $process_info)
     {
         foreach ($this->handlers as $handler)
         {
-            call_user_func($handler, $event, $this);
+            call_user_func($handler, $event, $process_info);
         }
     }
 
