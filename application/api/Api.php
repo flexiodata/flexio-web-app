@@ -74,7 +74,7 @@ class Api
             if (IS_DEBUG())
             {
                 $error['type'] = 'flexio exception';
-                $error['file'] = $e->getFile();
+                $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
@@ -90,8 +90,8 @@ class Api
 
             if (IS_DEBUG())
             {
-                $error['type'] = 'php exception';
-                $error['file'] = $e->getFile();
+                $error['type'] = 'system exception';
+                $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
@@ -107,8 +107,8 @@ class Api
 
             if (IS_DEBUG())
             {
-                $error['type'] = 'php error';
-                $error['file'] = $e->getFile();
+                $error['type'] = 'system error';
+                $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
