@@ -98,7 +98,8 @@ class Test
                 "params" => (object)[]
             ]
         ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $process = \Flexio\Object\Process::create(["task" => $task]);
+        $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
         TestCheck::assertString('C.1', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
@@ -117,7 +118,8 @@ class Test
                 ]
             ]
         ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $process = \Flexio\Object\Process::create(["task" => $task]);
+        $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
         TestCheck::assertString('C.2', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
@@ -131,7 +133,8 @@ class Test
                 ]
             ]
         ];
-        $process = \Flexio\Object\Process::create(["task" => $task])->run(false);
+        $process = \Flexio\Object\Process::create(["task" => $task]);
+        $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
         $actual = $process->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
         TestCheck::assertString('C.3', 'Basic Process; make sure the task status is properly set when a process succeeds',  $actual, $expected, $results);
