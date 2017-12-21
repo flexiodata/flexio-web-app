@@ -68,13 +68,13 @@ class Trigger
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address
+            $process_email_params = array();
             $from_addresses = $parser->getFrom();
             if (count($from_addresses) > 0)
             {
                 $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
-                $params = array('email-from' => $from_addresses[0]['email'],
-                                'email-from-display' => $from_addresses[0]['display']);
-                $process->setParams($params);
+                $process_email_params = array('email-from' => $from_addresses[0]['email'],
+                                              'email-from-display' => $from_addresses[0]['display']);
             }
 
             // save the email attachments as streams, and if there
@@ -88,7 +88,8 @@ class Trigger
 
 
             // run the pipe
-            $engine = \Flexio\Jobs\StoredProcess::attach($process);
+            $engine = \Flexio\Jobs\StoredProcess::create($process);
+            $engine->setParams($process_email_params);
             $engine->run(false); // handleEmail should be run in background from email processing script
         }
 

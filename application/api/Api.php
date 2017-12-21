@@ -50,7 +50,7 @@ class Api
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
-            // of completely; this switch is implemented here and in \Flexio\Object\Process
+            // of completely; this switch is implemented here and in \Flexio\Jobs\Process
             $content = self::processRequest($api_request);
             \Flexio\Api\Response::sendContent($content);
             return;
@@ -71,7 +71,7 @@ class Api
             $error['code'] = $info['code'];
             $error['message'] = $info['message'];
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'flexio exception';
                 $error['file'] = $e->getFile();
@@ -88,7 +88,7 @@ class Api
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'php exception';
                 $error['file'] = $e->getFile();
@@ -105,7 +105,7 @@ class Api
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'php error';
                 $error['file'] = $e->getFile();
