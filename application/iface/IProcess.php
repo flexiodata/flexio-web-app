@@ -18,8 +18,6 @@ namespace Flexio\IFace;
 
 interface IProcess
 {
-    public function setMetadata(array $metadata); // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
-    public function getMetadata();
     public function setTasks(array $tasks);
     public function getTasks();
     public function setParams(array $arr);

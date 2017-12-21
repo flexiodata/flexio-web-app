@@ -21,6 +21,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
     private $engine;            // instance of \Flexio\Jobs\Process
     private $procobj;           // instance of \Flexio\Object\Process -- used only during execution phase
     private $procmode;
+    private $current_log_eid;
 
     public function __construct()
     {
@@ -33,6 +34,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object->engine = \Flexio\Jobs\Process::create();
         $object->engine->setTasks($procobj->getTasks());
         $object->procmode = $procobj->getMode();
+        $object->current_log_eid = null;
         return $object;
     }
 
@@ -46,17 +48,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         $this->engine->addEventHandler($handler);
         return $this;
-    }
-
-    public function setMetadata(array $metadata)
-    {
-        $this->engine->setMetadata($handler);
-        return $this;
-    }
-
-    public function getMetadata() : array
-    {
-        return $this->engine->getMetadata();
     }
 
     public function setTasks(array $tasks) : \Flexio\Jobs\StoredProcess
@@ -265,10 +256,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
-        $log_eid = $this->procobj->addToLog($log_eid, $params);
-
-        // pass on the log entry for the log finish function
-        $process_engine->setMetadata(array('log_eid' => $log_eid));
+        $this->current_log_eid = $this->procobj->addToLog(null, $params);
     }
 
     private function finishLog(array $process_info)
@@ -281,13 +269,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
-        // make sure we have a log eid record to complete
-        $process_engine_metadata = $process_engine->getMetadata();
-        if (!isset($process_engine_metadata['log_eid']))
-            return;
-
-        $log_eid = $process_engine_metadata['log_eid'];
-
         // update the log record
         $params = array();
         $params['task_op'] = $current_task['op'] ?? '';
@@ -297,7 +278,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
 
-        $this->procobj->addToLog($log_eid, $params);
+        $this->procobj->addToLog($this->current_log_eid, $params);
     }
 
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream

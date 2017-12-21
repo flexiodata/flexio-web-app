@@ -88,7 +88,6 @@ class Process implements \Flexio\IFace\IProcess
         'set'       => '\Flexio\Jobs\Set'
     );
 
-    private $metadata;      // array of optional metadata info that can be used for passing info (such as info from the calling context) across callbacks
     private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
@@ -101,7 +100,6 @@ class Process implements \Flexio\IFace\IProcess
 
     public function __construct()
     {
-        $this->metadata = array();
         $this->tasks = array();
         $this->params = array();
 
@@ -124,17 +122,6 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->handlers[] = $handler;
         return $this;
-    }
-
-    public function setMetadata(array $metadata) : \Flexio\Jobs\Process
-    {
-        $this->metadata = $metadata;
-        return $this;
-    }
-
-    public function getMetadata() : array
-    {
-        return $this->metadata;
     }
 
     public function setTasks(array $tasks) : \Flexio\Jobs\Process
@@ -252,7 +239,7 @@ class Process implements \Flexio\IFace\IProcess
     public function execute() : \Flexio\IFace\IProcess
     {
         // fire the starting event
-        $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState($current_task));
+        $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState());
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
@@ -262,7 +249,7 @@ class Process implements \Flexio\IFace\IProcess
             $this->executeAllTasks();
 
         // fire the finish event
-        $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState($current_task));
+        $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState());
         return $this;
     }
 
@@ -299,12 +286,12 @@ class Process implements \Flexio\IFace\IProcess
         }
     }
 
-    private function getProcessState(array $current_task) : array
+    private function getProcessState(array $current_task = null) : array
     {
         $state = array();
         $state['stdin'] = $this->getStdin();
         $state['stdout'] = $this->getStdout();
-        $state['current_task'] = $current_task;
+        $state['current_task'] = $current_task ?? array();
         return $state;
     }
 
