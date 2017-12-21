@@ -86,29 +86,29 @@
     },
     computed: {
       hasInput() {
-        return _.find(this.tasks, { type: TASK_OP_INPUT })
+        return _.find(this.tasks, { op: TASK_OP_INPUT })
       },
       hasOutput() {
-        return _.find(this.tasks, { type: TASK_OP_OUTPUT })
+        return _.find(this.tasks, { op: TASK_OP_OUTPUT })
       },
       middle_tasks() {
         return _
           .chain(this.tasks)
-          .reject({ type: TASK_OP_INPUT })
-          .reject({ type: TASK_OP_OUTPUT })
+          .reject({ op: TASK_OP_INPUT })
+          .reject({ op: TASK_OP_OUTPUT })
           .value()
       },
       input_tasks() {
-        return _.filter(this.tasks, { type: TASK_OP_INPUT })
+        return _.filter(this.tasks, { op: TASK_OP_INPUT })
       },
       output_tasks() {
-        return _.filter(this.tasks, { type: TASK_OP_OUTPUT })
+        return _.filter(this.tasks, { op: TASK_OP_OUTPUT })
       },
       last_task_item() {
         return _
           .chain(this.middle_tasks)
-          .without({ type: TASK_OP_INPUT })
-          .without({ type: TASK_OP_OUTPUT })
+          .without({ op: TASK_OP_INPUT })
+          .without({ op: TASK_OP_OUTPUT })
           .last()
           .value()
       }

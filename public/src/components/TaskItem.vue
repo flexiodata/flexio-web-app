@@ -35,7 +35,7 @@
 </template>
 
 <script>
-  import * as types from '../constants/task-op'
+  import * as ops from '../constants/task-op'
   import * as tasks from '../constants/task-info'
 
   export default {
@@ -86,36 +86,36 @@
 
         switch (_.get(this.item, 'op')) {
           // blue tiles
-          case types.TASK_OP_INPUT:
-          case types.TASK_OP_CONVERT:
-          case types.TASK_OP_EMAIL_SEND:
-          case types.TASK_OP_OUTPUT:
-          case types.TASK_OP_PROMPT:
+          case ops.TASK_OP_INPUT:
+          case ops.TASK_OP_CONVERT:
+          case ops.TASK_OP_EMAIL_SEND:
+          case ops.TASK_OP_OUTPUT:
+          case ops.TASK_OP_PROMPT:
             return 'bg-task-blue'
 
-          case types.TASK_OP_EXECUTE:
+          case ops.TASK_OP_EXECUTE:
             return 'bg-task-purple'
 
           // green tiles
-          case types.TASK_OP_CALC:
-          case types.TASK_OP_DISTINCT:
-          case types.TASK_OP_DUPLICATE:
-          case types.TASK_OP_FILTER:
-          case types.TASK_OP_GROUP:
-          case types.TASK_OP_LIMIT:
-          case types.TASK_OP_MERGE:
-          case types.TASK_OP_SEARCH:
-          case types.TASK_OP_SORT:
+          case ops.TASK_OP_CALC:
+          case ops.TASK_OP_DISTINCT:
+          case ops.TASK_OP_DUPLICATE:
+          case ops.TASK_OP_FILTER:
+          case ops.TASK_OP_GROUP:
+          case ops.TASK_OP_LIMIT:
+          case ops.TASK_OP_MERGE:
+          case ops.TASK_OP_SEARCH:
+          case ops.TASK_OP_SORT:
             return 'bg-task-green'
 
           // orange tiles
-          case types.TASK_OP_COPY:
-          case types.TASK_OP_CUSTOM:
-          case types.TASK_OP_FIND_REPLACE:
-          case types.TASK_OP_NOP:
-          case types.TASK_OP_RENAME:
-          case types.TASK_OP_SELECT:
-          case types.TASK_OP_TRANSFORM:
+          case ops.TASK_OP_COPY:
+          case ops.TASK_OP_CUSTOM:
+          case ops.TASK_OP_FIND_REPLACE:
+          case ops.TASK_OP_NOP:
+          case ops.TASK_OP_RENAME:
+          case ops.TASK_OP_SELECT:
+          case ops.TASK_OP_TRANSFORM:
             return 'bg-task-orange'
         }
 
