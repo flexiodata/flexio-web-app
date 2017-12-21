@@ -47,7 +47,7 @@ class Replace extends \Flexio\Jobs\Base
         switch ($mime_type)
         {
             default:
-                $outstream->copy($instream);
+                $outstream->copyFrom($instream);
                 return;
 
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
@@ -66,7 +66,7 @@ class Replace extends \Flexio\Jobs\Base
         // pointing to the origina content
         if (count($column_expression_map) === 0)
         {
-            $outstream->copy($instream);
+            $outstream->copyFrom($instream);
             return;
         }
 

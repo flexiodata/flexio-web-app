@@ -44,7 +44,7 @@ class Limit extends \Flexio\Jobs\Base
         {
             // unhandled input
             default:
-                $outstream->copy($instream);
+                $outstream->copyFrom($instream);
                 return;
 
             // table input

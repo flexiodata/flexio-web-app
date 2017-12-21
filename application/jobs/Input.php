@@ -356,7 +356,7 @@ class Input extends \Flexio\Jobs\Base
             $outstream->set(array('size' => $streamwriter->getBytesWritten(),
                                   'mime_type' => $mime_type));
         }
-        $this->getProcess()->getStdout()->copy($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
+        $this->getProcess()->getStdout()->copyFrom($outstream); // TODO: only set stdout? merge all content from all input items or only output last?
     }
 
     private function getConnectionInfoFromItem(array $params, array $item)

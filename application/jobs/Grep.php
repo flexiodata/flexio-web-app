@@ -42,7 +42,7 @@ class Grep extends \Flexio\Jobs\Base
         switch ($mime_type)
         {
             default:
-                $outstream->copy($instream);
+                $outstream->copyFrom($instream);
                 return;
 
             case \Flexio\Base\ContentType::FLEXIO_TABLE:

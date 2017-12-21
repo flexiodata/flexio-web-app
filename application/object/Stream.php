@@ -79,7 +79,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 
 
     // copies a streams properties to $dest, overwriting $dest's properties
-    public function copy(\Flexio\IFace\IStream $source)
+    public function copyFrom(\Flexio\IFace\IStream $source)
     {
         $sourceimpl = $source->getImpl();
 

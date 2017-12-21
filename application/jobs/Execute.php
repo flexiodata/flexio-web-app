@@ -430,12 +430,12 @@ class ScriptHost
 
         $process = \Flexio\Jobs\Process::create();
         $process->setTasks(array($task));
-        $process->getStdin()->copy($this->runjob_stdin);
+        $process->getStdin()->copyFrom($this->runjob_stdin);
         $process->execute();
 
         // stdin of the next invocation of runjob is the stdout of the job that just ran
         $this->runjob_stdin = $process->getStdout();
-        $this->process->getStdout()->copy($this->runjob_stdin);
+        $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
     public function func_getInputEnv()

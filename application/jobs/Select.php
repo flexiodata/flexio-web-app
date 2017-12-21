@@ -44,7 +44,7 @@ class Select extends \Flexio\Jobs\Base
             // if we don't have a table, we only care about selecting the file,
             // so we're done
             default:
-                $outstream->copy($instream);
+                $outstream->copyFrom($instream);
                 return;
 
             // if we have a table input, perform additional column selection

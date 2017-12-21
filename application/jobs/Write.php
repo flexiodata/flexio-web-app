@@ -34,7 +34,7 @@ class Write extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $outstream->copy($instream);
+        $outstream->copyFrom($instream);
 
         $job_definition = $this->getProperties();
         $path = $job_definition['params']['path'] ?? null;
