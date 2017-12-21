@@ -3,7 +3,7 @@ import { COMMAND_NAME_LIMIT }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {
   'name': 'Limit',
-  'type': TASK_OP_LIMIT,
+  'op': TASK_OP_LIMIT,
   'params': {
     'rows': 100
   },

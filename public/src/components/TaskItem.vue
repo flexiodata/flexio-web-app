@@ -84,7 +84,7 @@
         if (this.isTaskAdd)
           return 'bg-black-20'
 
-        switch (_.get(this.item, 'type')) {
+        switch (_.get(this.item, 'op')) {
           // blue tiles
           case types.TASK_OP_INPUT:
           case types.TASK_OP_CONVERT:
@@ -125,7 +125,7 @@
     },
     methods: {
       tinfo() {
-        return _.find(tasks, { type: _.get(this.item, 'type') })
+        return _.find(tasks, { op: _.get(this.item, 'op') })
       },
 
       onClick() {

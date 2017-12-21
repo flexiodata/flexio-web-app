@@ -3,9 +3,9 @@ import { COMMAND_NAME_EXECUTE }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {
   'name': 'Execute',
-  'type': TASK_OP_EXECUTE,
+  'op': TASK_OP_EXECUTE,
   'params': {
-    'type': '',
+    'lang': '',
     'code': ''
   },
   'version': 1,
@@ -14,21 +14,21 @@ const DEFAULT_JSON = {
 
 export default {
   getCmd(json) {
-    var type = _.get(json, 'params.type', '')
+    var lang = _.get(json, 'params.lang', '')
     var code = _.get(json, 'params.code', '')
 
-    if (type.length > 0)
-      type = ' ' + type
+    if (lang.length > 0)
+      lang = ' ' + lang
 
     // decode base64
     if (code.length > 0)
       code = ' "' + atob(code) + '"'
 
-    return COMMAND_NAME_EXECUTE + type + code
+    return COMMAND_NAME_EXECUTE + lang + code
   },
 
   getJson(args) {
-    var type = _.defaultTo(_.nth(args, 0), '')
+    var lang = _.defaultTo(_.nth(args, 0), '')
     var code = _.defaultTo(_.nth(args, 1), '')
 
     // encode as base64
@@ -36,7 +36,7 @@ export default {
       code = btoa(code)
 
     var json = _.assign({}, DEFAULT_JSON)
-    _.set(json, 'params.type', type)
+    _.set(json, 'params.lang', lang)
     _.set(json, 'params.code', code)
 
     return JSON.stringify(json, null, 2)

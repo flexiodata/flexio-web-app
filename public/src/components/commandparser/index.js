@@ -36,7 +36,7 @@ export default {
     if (!_.isObject(json))
       return ''
 
-    switch (_.get(json, 'type'))
+    switch (_.get(json, 'op'))
     {
       case task_ops.TASK_OP_CONVERT:       return convert.getCmd(json)
       case task_ops.TASK_OP_EXECUTE:       return execute.getCmd(json)

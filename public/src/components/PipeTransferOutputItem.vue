@@ -148,7 +148,7 @@
         return this.item
       },
       ctype() {
-        if (_.get(this.task, 'type') == TASK_OP_EMAIL_SEND)
+        if (_.get(this.task, 'op') == TASK_OP_EMAIL_SEND)
           return CONNECTION_TYPE_EMAIL
 
         return _.get(this.task, 'metadata.connection_type', '')

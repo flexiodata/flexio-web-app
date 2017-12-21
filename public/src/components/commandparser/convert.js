@@ -8,7 +8,7 @@ const CONVERT_SHORTHAND_TSV = 'tsv'
 
 const DEFAULT_JSON = {
   'name': 'Convert File',
-  'type': TASK_OP_CONVERT,
+  'op': TASK_OP_CONVERT,
   'params': {
     'input': {
       'format': convert.CONVERT_FORMAT_DELIMITED_TEXT,

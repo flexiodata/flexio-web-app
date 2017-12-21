@@ -3,7 +3,7 @@ import { COMMAND_NAME_SELECT_COLUMN }  from '../../constants/command-name'
 
 const DEFAULT_JSON = {
   'name': 'Select Columns',
-  'type': TASK_OP_SELECT,
+  'op': TASK_OP_SELECT,
   'params': {
     'columns': []
   },

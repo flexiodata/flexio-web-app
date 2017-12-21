@@ -11,7 +11,7 @@ import {
 
 const DEFAULT_JSON = {
   'name': 'Input',
-  'type': TASK_OP_INPUT,
+  'op': TASK_OP_INPUT,
   'params': {
     'items': [],
     'connection': {

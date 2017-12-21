@@ -14,7 +14,7 @@ const ALL_COLUMNS = '*'
 
 const DEFAULT_JSON = {
   'name': 'Find and Replace',
-  'type': TASK_OP_FIND_REPLACE,
+  'op': TASK_OP_FIND_REPLACE,
   'params': {
     'find': '',
     'columns': [ALL_COLUMNS],

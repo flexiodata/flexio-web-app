@@ -361,7 +361,7 @@
             {
               /*
               var eid = this.eid
-              var task_types_arr = _.map(this.tasks, (t) => { return _.get(t, 'type', '') })
+              var task_types_arr = _.map(this.tasks, (t) => { return _.get(t, 'op', '') })
               var task_types = task_types_arr.join(', ')
               var task_count = _.size(task_types_arr)
               var process_eid = _.get(response.body, 'eid', '')

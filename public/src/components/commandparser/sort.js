@@ -4,7 +4,7 @@ import { SORT_DIRECTION_ASCENDING, SORT_DIRECTION_DESCENDING } from '../../const
 
 const DEFAULT_JSON = {
   'name': 'Sort',
-  'type': TASK_OP_SORT,
+  'op': TASK_OP_SORT,
   'params': {
     'order': []
   },

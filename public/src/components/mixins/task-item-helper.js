@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     tinfo() {
-      return _.find(tasks, { type: _.get(this.task, 'type') })
+      return _.find(tasks, { op: _.get(this.task, 'op') })
     }
   }
 }
