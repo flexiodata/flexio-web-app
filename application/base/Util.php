@@ -814,7 +814,7 @@ class Util
         // mask language
         $filename = str_replace('.php', '', $filename);
         $filename = str_replace("\\", '/', $filename);
-        $parts = explode('/', $filename);
+        $parts = explode('/', strtolower($filename));
         $parts = array_slice($parts, -2);
         return implode('/', $parts);
     }
