@@ -92,9 +92,9 @@ class Process implements \Flexio\IFace\IProcess
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
+    private $status;
     private $response_code;
     private $error;
-    private $status_info;
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
 
@@ -106,6 +106,7 @@ class Process implements \Flexio\IFace\IProcess
         $this->stdin = self::createStream();
         $this->stdout =  self::createStream();
 
+        $this->status = self::STATUS_PENDING;
         $this->response_code = self::RESPONSE_NONE;
         $this->error = array();
         $this->handlers = array();
@@ -189,6 +190,17 @@ class Process implements \Flexio\IFace\IProcess
         return $this->stdout;
     }
 
+    public function setStatus(string $status) : \Flexio\Jobs\Process
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatus() : string
+    {
+        return $this->status;
+    }
+
     public function setResponseCode(int $code) : \Flexio\Jobs\Process
     {
         $this->response_code = $code;
@@ -238,6 +250,8 @@ class Process implements \Flexio\IFace\IProcess
 
     public function execute() : \Flexio\IFace\IProcess
     {
+        $this->setStatus(self::STATUS_RUNNING);
+
         // fire the starting event
         $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState());
 
@@ -250,6 +264,15 @@ class Process implements \Flexio\IFace\IProcess
 
         // fire the finish event
         $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState());
+
+        if ($this->getStatus() !== self::STATUS_CANCELLED)
+        {
+            if ($this->hasError() === true)
+                $this->setStatus(self::STATUS_FAILED);
+                 else
+                $this->setStatus(self::STATUS_COMPLETED);
+        }
+
         return $this;
     }
 

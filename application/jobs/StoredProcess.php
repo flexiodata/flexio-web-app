@@ -105,6 +105,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getStdout();
     }
 
+    public function setStatus(string $status) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->setStatus($status);
+        return $this;
+    }
+
+    public function getStatus() : string
+    {
+        return $this->engine->getStatus();
+    }
+
     public function setResponseCode(int $code) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setResponseCode($code);
@@ -143,7 +154,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
         $this->procobj->set([
-            'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
+            'process_status' => $this->getStatus(),
             'started' => self::getProcessTimestamp()
         ]);
 
@@ -210,6 +221,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
             case \Flexio\Jobs\Process::EVENT_FINISHED_TASK:
                 $this->finishLog($process_info);
+                $this->updateProcessInfo($process_info);
                 break;
         }
     }
@@ -230,7 +242,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 4: save final job output and status
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
+        $process_params['process_status'] = $this->getStatus();
         $process_params['cache_used'] = 'N';
         $this->procobj->set($process_params);
 
@@ -279,6 +291,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params['message'] = '';
 
         $this->procobj->addToLog($this->current_log_eid, $params);
+    }
+
+    private function updateProcessInfo(array $process_info)
+    {
+        // TODO: look at the process record and update the process with
+        // new info
     }
 
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
