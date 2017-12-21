@@ -846,12 +846,14 @@ class Execute extends \Flexio\Jobs\Base
 
             $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
+            $script_host = new ScriptHost();
+            $script_host->setProcess($process);
+
             $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $this);
+            $ep->initialize($cmd, $script_host);
             $ep->run();
 
             $err = $ep->getStdError();
-
             if (isset($err))
             {
                 //die("<pre>".$err);
