@@ -316,11 +316,12 @@ class Process implements \Flexio\IFace\IProcess
         }
         catch (\Flexio\Base\Exception $e)
         {
+            $debug = IS_DEBUG();
             $info = $e->getMessage(); // exception info is packaged up in message
             $info = json_decode($info,true);
-            $file = $e->getFile();
+            $file = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $e->getTrace();
+            $trace = $debug ? $e->getTrace() : null;
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
@@ -328,18 +329,20 @@ class Process implements \Flexio\IFace\IProcess
         }
         catch (\Exception $e)
         {
-            $file = $e->getFile();
+            $debug = IS_DEBUG();
+            $file = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $e->getTrace();
-            $type = 'php exception';
+            $trace = $debug ? $e->getTrace() : null;
+            $type = 'system exception';
             $this->setError(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
         }
         catch (\Error $e)
         {
-            $file = $e->getFile();
+            $debug = IS_DEBUG();
+            $file = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $e->getTrace();
-            $type = 'php error';
+            $trace = $debug ? $e->getTrace() : null;
+            $type = 'system error';
             $this->setError(\Flexio\Base\Error::GENERAL, '', $file, $line, $type, $trace);
         }
     }

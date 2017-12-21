@@ -809,6 +809,16 @@ class Util
         return $res;
     }
 
+    public static function safePrintCodeFilename(string $filename) : string
+    {
+        // mask language
+        $filename = str_replace('.php', '', $filename);
+        $filename = str_replace("\\", '/', $filename);
+        $parts = explode('/', $filename);
+        $parts = array_slice($parts, -2);
+        return implode('/', $parts);
+    }
+
     // mode should be either 'inline' or 'download'
     public static function headersPdf(string $output_filename, string $file_location, string $mode = 'inline') : bool
     {

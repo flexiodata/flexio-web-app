@@ -71,7 +71,7 @@ class Api
             $error['code'] = $info['code'];
             $error['message'] = $info['message'];
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'flexio exception';
                 $error['file'] = $e->getFile();
@@ -88,7 +88,7 @@ class Api
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'php exception';
                 $error['file'] = $e->getFile();
@@ -105,7 +105,7 @@ class Api
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
-            if (IS_DEBUG() !== false)
+            if (IS_DEBUG())
             {
                 $error['type'] = 'php error';
                 $error['file'] = $e->getFile();
