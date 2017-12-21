@@ -27,13 +27,13 @@ interface IProcess
     public function getStdin();
     public function setStdout(\Flexio\IFace\IStream $stream);
     public function getStdout();
-    public function setStatus(string $status);
-    public function getStatus();
     public function setResponseCode(int $code);
     public function getResponseCode();
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
     public function execute();
+    public function cancel();
+    public function isCancelled();
 }
 

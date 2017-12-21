@@ -105,17 +105,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getStdout();
     }
 
-    public function setStatus(string $status) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setStatus($status);
-        return $this;
-    }
-
-    public function getStatus() : string
-    {
-        return $this->engine->getStatus();
-    }
-
     public function setResponseCode(int $code) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setResponseCode($code);
@@ -151,10 +140,21 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
+    public function cancel() : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->cancel();
+        return $this;
+    }
+
+    public function isCancelled() : bool
+    {
+        return $this->engine->isCancelled();
+    }
+
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
         $this->procobj->set([
-            'process_status' => $this->getStatus(),
+            'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
             'started' => self::getProcessTimestamp()
         ]);
 
@@ -239,11 +239,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 3: execute the job
         $this->execute();
 
-        // STEP 4: save final job output and status
+        // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
-        $process_params['process_status'] = $this->getStatus();
         $process_params['cache_used'] = 'N';
+        if ($this->isCancelled() === false)
+            $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $this->procobj->set($process_params);
 
         return $this;
@@ -295,8 +296,13 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function updateProcessInfo(array $process_info)
     {
-        // TODO: look at the process record and update the process with
-        // new info
+        // read the process object record and proxy information to the
+        // process engine
+
+        if ($this->procobj->getStatus() === \Flexio\Jobs\Process::STATUS_CANCELLED)
+            $this->cancel();
+
+        // TODO: proxy other information
     }
 
     private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
