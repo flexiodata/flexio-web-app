@@ -110,7 +110,7 @@
     CONNECTION_STATUS_UNAVAILABLE,
     CONNECTION_STATUS_ERROR
   } from '../constants/connection-status'
-  import * as types from '../constants/connection-type'
+  import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ValueSelect from './ValueSelect.vue'
   import Btn from './Btn.vue'
@@ -171,13 +171,13 @@
         default:
           attrs = _.pick(attrs, ['host', 'port', 'username', 'password', 'database'])
           break;
-        case types.CONNECTION_TYPE_AMAZONS3:
+        case ctypes.CONNECTION_TYPE_AMAZONS3:
           attrs = _.pick(attrs, ['aws_key', 'aws_secret', 'bucket', 'region'])
           break
-        case types.CONNECTION_TYPE_FIREBASE:
+        case ctypes.CONNECTION_TYPE_FIREBASE:
           attrs = _.pick(attrs, ['host', 'username', 'password'])
           break
-        case types.CONNECTION_TYPE_PIPELINEDEALS:
+        case ctypes.CONNECTION_TYPE_PIPELINEDEALS:
           attrs = _.pick(attrs, ['token'])
           break
       }
@@ -211,13 +211,13 @@
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       is_s3() {
-        return this.ctype == types.CONNECTION_TYPE_AMAZONS3
+        return this.ctype == ctypes.CONNECTION_TYPE_AMAZONS3
       },
       is_sftp() {
-        return this.ctype == types.CONNECTION_TYPE_SFTP
+        return this.ctype == ctypes.CONNECTION_TYPE_SFTP
       },
       is_elasticsearch() {
-        return this.ctype == types.CONNECTION_TYPE_ELASTICSEARCH
+        return this.ctype == ctypes.CONNECTION_TYPE_ELASTICSEARCH
       },
       cls() {
         return this.is_connected ? 'b--dark-green' : 'b--blue'
@@ -228,10 +228,10 @@
       is_oath() {
         switch (this.ctype)
         {
-          case types.CONNECTION_TYPE_BOX:
-          case types.CONNECTION_TYPE_DROPBOX:
-          case types.CONNECTION_TYPE_GOOGLEDRIVE:
-          case types.CONNECTION_TYPE_GOOGLESHEETS:
+          case ctypes.CONNECTION_TYPE_BOX:
+          case ctypes.CONNECTION_TYPE_DROPBOX:
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
+          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
             return true
         }
         return false
@@ -263,10 +263,10 @@
         // we use a method here since we can't use computed values in the data()
         switch (this.getConnectionType())
         {
-          case types.CONNECTION_TYPE_ELASTICSEARCH: return '9200'
-          case types.CONNECTION_TYPE_MYSQL:         return '3306'
-          case types.CONNECTION_TYPE_POSTGRES:      return '5432'
-          case types.CONNECTION_TYPE_SFTP:          return '22'
+          case ctypes.CONNECTION_TYPE_ELASTICSEARCH: return '9200'
+          case ctypes.CONNECTION_TYPE_MYSQL:         return '3306'
+          case ctypes.CONNECTION_TYPE_POSTGRES:      return '5432'
+          case ctypes.CONNECTION_TYPE_SFTP:          return '22'
         }
         return ''
       },

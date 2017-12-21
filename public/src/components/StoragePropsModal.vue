@@ -114,9 +114,9 @@
   import { mapGetters } from 'vuex'
   import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import * as mt from '../constants/member-type'
-  import * as at from '../constants/action-type'
-  import * as types from '../constants/connection-type'
+  import * as mtypes from '../constants/member-type'
+  import * as atypes from '../constants/action-type'
+  import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import api from '../api'
   import Btn from './Btn.vue'
@@ -129,23 +129,23 @@
 
   const defaultRights = () => {
     return {
-      [mt.MEMBER_TYPE_OWNER]: {
-        [at.ACTION_TYPE_READ]: true,
-        [at.ACTION_TYPE_WRITE]: true,
-        [at.ACTION_TYPE_EXECUTE]: true,
-        [at.ACTION_TYPE_DELETE]: true
+      [mtypes.MEMBER_TYPE_OWNER]: {
+        [atypes.ACTION_TYPE_READ]: true,
+        [atypes.ACTION_TYPE_WRITE]: true,
+        [atypes.ACTION_TYPE_EXECUTE]: true,
+        [atypes.ACTION_TYPE_DELETE]: true
       },
-      [mt.MEMBER_TYPE_MEMBER]: {
-        [at.ACTION_TYPE_READ]: true,
-        [at.ACTION_TYPE_WRITE]: true,
-        [at.ACTION_TYPE_EXECUTE]: true,
-        [at.ACTION_TYPE_DELETE]: false
+      [mtypes.MEMBER_TYPE_MEMBER]: {
+        [atypes.ACTION_TYPE_READ]: true,
+        [atypes.ACTION_TYPE_WRITE]: true,
+        [atypes.ACTION_TYPE_EXECUTE]: true,
+        [atypes.ACTION_TYPE_DELETE]: false
       },
-      [mt.MEMBER_TYPE_PUBLIC]: {
-        [at.ACTION_TYPE_READ]: false,
-        [at.ACTION_TYPE_WRITE]: false,
-        [at.ACTION_TYPE_EXECUTE]: false,
-        [at.ACTION_TYPE_DELETE]: false
+      [mtypes.MEMBER_TYPE_PUBLIC]: {
+        [atypes.ACTION_TYPE_READ]: false,
+        [atypes.ACTION_TYPE_WRITE]: false,
+        [atypes.ACTION_TYPE_EXECUTE]: false,
+        [atypes.ACTION_TYPE_DELETE]: false
       }
     }
   }
@@ -219,10 +219,10 @@
 
         switch (this.ctype)
         {
-          case types.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
-          case types.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
-          case types.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
-          case types.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
+          case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
+          case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
+          case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
         }
 
         return ''

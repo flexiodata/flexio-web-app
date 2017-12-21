@@ -46,8 +46,8 @@
       getConnectionInfo(type) {
         return _.find(connections, { connection_type: type })
       },
-      getTaskInfo(type) {
-        return _.find(tasks, { type })
+      getTaskInfo(op) {
+        return _.find(tasks, { op })
       },
       isConnection(type) {
         var cinfo = this.getConnectionInfo(type)
@@ -60,12 +60,12 @@
         if (!_.isNil(cinfo))
           return _.get(cinfo, 'icon', '')
       },
-      getTaskIcon(type) {
-        var tinfo = this.getTaskInfo(type)
+      getTaskIcon(op) {
+        var tinfo = this.getTaskInfo(op)
         return _.get(tinfo, 'icon', '')
       },
-      getTaskBgColor(type) {
-        var tinfo = this.getTaskInfo(type)
+      getTaskBgColor(op) {
+        var tinfo = this.getTaskInfo(op)
         return _.get(tinfo, 'bg_color', '')
       }
     }

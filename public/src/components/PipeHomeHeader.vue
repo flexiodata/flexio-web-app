@@ -181,7 +181,7 @@
         return _.includes(user_email, '@flex.io') && _.get(this.$route, 'query.su', false) !== false
       },
       input_tasks() {
-        return _.filter(this.tasks, { type: TASK_OP_INPUT })
+        return _.filter(this.tasks, { op: TASK_OP_INPUT })
       },
       is_run_allowed() {
         return this.tasks.length > 0
