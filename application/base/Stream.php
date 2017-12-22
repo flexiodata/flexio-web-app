@@ -498,6 +498,7 @@ class Stream implements \Flexio\IFace\IStream
          else if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
+            $file->setStructure($this->properties['structure']);
             return $file->getWriter();
         }
          else
