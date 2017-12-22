@@ -38,7 +38,7 @@ class Test
         // TEST: Echo Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read();
         $expected = 'hi';
         TestCheck::assertString('A.1', 'Echo; check basic functionality',  $actual, $expected, $results);

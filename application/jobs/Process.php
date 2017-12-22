@@ -88,7 +88,6 @@ class Process implements \Flexio\IFace\IProcess
         'set'       => '\Flexio\Jobs\Set'
     );
 
-    private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
@@ -100,9 +99,7 @@ class Process implements \Flexio\IFace\IProcess
 
     public function __construct()
     {
-        $this->tasks = array();
         $this->params = array();
-
         $this->stdin = self::createStream();
         $this->stdout =  self::createStream();
 
@@ -123,17 +120,6 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->handlers[] = $handler;
         return $this;
-    }
-
-    public function setTasks(array $tasks) : \Flexio\Jobs\Process
-    {
-        $this->tasks = $tasks;
-        return $this;
-    }
-
-    public function getTasks() : array
-    {
-        return $this->tasks;
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\Process
@@ -237,17 +223,17 @@ class Process implements \Flexio\IFace\IProcess
         return true;
     }
 
-    public function execute() : \Flexio\Jobs\Process
+    public function execute(array $tasks) : \Flexio\Jobs\Process
     {
         // fire the starting event
         $this->signal(self::EVENT_STARTING, $this->getProcessState());
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
-        if (count($this->tasks) === 0)
+        if (count($tasks) === 0)
             $this->stdout = $this->stdin;
              else
-            $this->executeAllTasks();
+            $this->executeAllTasks($tasks);
 
         // fire the finish event
         $this->signal(self::EVENT_FINISHED, $this->getProcessState());
@@ -276,10 +262,10 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    private function executeAllTasks()
+    private function executeAllTasks(array $tasks)
     {
         $first = true;
-        foreach ($this->tasks as $current_task)
+        foreach ($tasks as $current_task)
         {
             // if there's an error, stop the process
             if ($this->hasError())

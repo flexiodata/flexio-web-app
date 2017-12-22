@@ -53,16 +53,14 @@ class Task extends \Flexio\Jobs\Base
         // STEP 1: create a subprocess and add the task to run
         $job_definition = $this->getProperties();
         $job_tasks = array($job_definition['params']);
-
         $subprocess = \Flexio\Jobs\Process::create();
-        $subprocess->setTasks($job_tasks);
 
         // STEP 2: pass on the stdin from the main process to the subprocess
         $subprocess_stdin = $subprocess->getStdin();
         self::copyStream($instream, $subprocess_stdin);
 
         // STEP 3: execute the subprocess
-        $subprocess->execute();
+        $subprocess->execute($job_tasks);
 
         // STEP 4: copy the output from the subprocess to the stdout of the main process
         $subprocess_stdout = $subprocess->getStdout();

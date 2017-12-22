@@ -18,8 +18,6 @@ namespace Flexio\IFace;
 
 interface IProcess
 {
-    public function setTasks(array $tasks);
-    public function getTasks();
     public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);
@@ -32,9 +30,9 @@ interface IProcess
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
-    public function execute();
+    public function execute(array $tasks);
     public function stop();
     public function isStopped();
-    public function signal(string $event, $properties);
+    public function signal(string $event, array $properties);
 }
 

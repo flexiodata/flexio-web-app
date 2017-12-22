@@ -54,7 +54,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		TestCheck::assertBoolean('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
@@ -91,7 +91,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -140,7 +140,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -189,7 +189,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -238,7 +238,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -291,7 +291,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
@@ -328,7 +328,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -377,7 +377,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -426,7 +426,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -475,7 +475,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -526,7 +526,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -579,7 +579,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -629,7 +629,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -678,7 +678,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -727,7 +727,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -776,7 +776,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -827,7 +827,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -879,7 +879,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -933,7 +933,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
@@ -970,7 +970,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -1019,7 +1019,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -1068,7 +1068,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -1118,7 +1118,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {

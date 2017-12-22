@@ -53,7 +53,7 @@ EOD;
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
 
         // note: this line uses excel's rules

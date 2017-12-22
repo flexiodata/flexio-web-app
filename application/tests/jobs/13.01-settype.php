@@ -58,7 +58,7 @@ return;
                 "decimals": 2
             }
         }',true));
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["1.00","1.2"],["2.00","2.3"],["3.00","3.6"]];
         TestCheck::assertString('A.1', 'SetType Job; check basic functionality',  $actual, $expected, $results);
@@ -73,7 +73,7 @@ return;
                 "decimals": 0
             }
         }',true));
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["1","1"],["2","2"],["3","4"]];
         TestCheck::assertString('A.2', 'SetType Job; check basic functionality',  $actual, $expected, $results);
@@ -88,7 +88,7 @@ return;
                 "decimals": 0
             }
         }',true));
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [[1,1],[2,2],[3,4]];
         TestCheck::assertString('A.3', 'SetType Job; check basic functionality',  $actual, $expected, $results);
@@ -103,7 +103,7 @@ return;
                 "decimals": 0
             }
         }',true));
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["1","1"],["2","2"],["3","4"]];
         TestCheck::assertString('A.4', 'SetType Job; check basic functionality',  $actual, $expected, $results);
@@ -118,7 +118,7 @@ return;
                 "decimals": 3
             }
         }',true));
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["1.000","1.200"],["2.000","2.300"],["3.000","3.600"]];
         TestCheck::assertString('A.5', 'SetType Job; check basic functionality',  $actual, $expected, $results);

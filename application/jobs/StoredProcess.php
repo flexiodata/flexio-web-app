@@ -32,7 +32,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object = new static();
         $object->procobj = $procobj;
         $object->engine = \Flexio\Jobs\Process::create();
-        $object->engine->setTasks($procobj->getTasks());
         $object->procmode = $procobj->getMode();
         $object->current_log_eid = null;
         return $object;
@@ -48,17 +47,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         $this->engine->addEventHandler($handler);
         return $this;
-    }
-
-    public function setTasks(array $tasks) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setTasks($tasks);
-        return $this;
-    }
-
-    public function getTasks() : array
-    {
-        return $this->engine->getTasks();
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
@@ -132,11 +120,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->hasError();
     }
 
-    public function execute() : \Flexio\Jobs\StoredProcess
+    public function execute(array $tasks) : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a
         // database process record, so no statistics will be serialized
-        $this->engine->execute();
+        $this->engine->execute($tasks);
         return $this;
     }
 
@@ -243,7 +231,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->addEventHandler([$this, 'handleEvent']);
 
         // STEP 3: execute the job
-        $this->execute();
+        $tasks = $this->procobj->getTasks();
+        $this->execute($tasks);
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();

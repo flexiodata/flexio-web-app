@@ -40,7 +40,7 @@ class Test
         // TEST: Render Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getMimeType();
         $expected = 'image/png';
         TestCheck::assertString('A.1', 'Render; check basic functionality',  $actual, $expected, $results);

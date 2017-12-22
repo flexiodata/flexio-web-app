@@ -57,7 +57,7 @@ class Test
         // TEST: Rename Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '
         [
