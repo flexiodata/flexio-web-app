@@ -133,7 +133,6 @@ class Convert extends \Flexio\Jobs\Base
     {
         $job_definition = $this->getProperties();
 
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $outstream->setMimeType($output_mime_type);
 
         $streamreader = $instream->getReader();
