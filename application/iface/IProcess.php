@@ -35,5 +35,6 @@ interface IProcess
     public function execute();
     public function stop();
     public function isStopped();
+    public function signal(string $event, $properties);
 }
 

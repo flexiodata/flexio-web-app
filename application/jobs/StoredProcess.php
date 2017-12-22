@@ -151,6 +151,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->isStopped();
     }
 
+    public function signal(string $event, array $properties) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->signal($event, $properties);
+        return $this;
+    }
+
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
     {
         $this->procobj->set([

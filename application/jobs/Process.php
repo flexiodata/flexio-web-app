@@ -240,7 +240,7 @@ class Process implements \Flexio\IFace\IProcess
     public function execute() : \Flexio\Jobs\Process
     {
         // fire the starting event
-        $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState());
+        $this->signal(self::EVENT_STARTING, $this->getProcessState());
 
         // if we don't have any tasks, simply move the stdin to the stdout;
         // otherwise, process the tasks
@@ -250,7 +250,7 @@ class Process implements \Flexio\IFace\IProcess
             $this->executeAllTasks();
 
         // fire the finish event
-        $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState());
+        $this->signal(self::EVENT_FINISHED, $this->getProcessState());
 
         return $this;
     }
@@ -264,6 +264,16 @@ class Process implements \Flexio\IFace\IProcess
     public function isStopped() : bool
     {
         return $this->stop;
+    }
+
+    public function signal(string $event, array $properties) : \Flexio\Jobs\Process
+    {
+        foreach ($this->handlers as $handler)
+        {
+            call_user_func($handler, $event, $properties);
+        }
+
+        return $this;
     }
 
     private function executeAllTasks()
@@ -285,7 +295,7 @@ class Process implements \Flexio\IFace\IProcess
                 break;
 
             // signal the start of the task
-            $this->invokeEventHandlers(self::EVENT_STARTING_TASK, $this->getProcessState($current_task));
+            $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($current_task));
 
             if ($first === false)
             {
@@ -299,7 +309,7 @@ class Process implements \Flexio\IFace\IProcess
             $first = false;
 
             // signal the end of the task
-            $this->invokeEventHandlers(self::EVENT_FINISHED_TASK, $this->getProcessState($current_task));
+            $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($current_task));
         }
     }
 
@@ -393,14 +403,6 @@ class Process implements \Flexio\IFace\IProcess
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
         return $job;
-    }
-
-    private function invokeEventHandlers(string $event, array $process_info)
-    {
-        foreach ($this->handlers as $handler)
-        {
-            call_user_func($handler, $event, $process_info);
-        }
     }
 
     private static function createStream() : \Flexio\IFace\IStream
