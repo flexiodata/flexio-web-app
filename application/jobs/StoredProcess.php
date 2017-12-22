@@ -140,15 +140,15 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function cancel() : \Flexio\Jobs\StoredProcess
+    public function stop() : \Flexio\Jobs\StoredProcess
     {
         $this->engine->cancel();
         return $this;
     }
 
-    public function isCancelled() : bool
+    public function isStopped() : bool
     {
-        return $this->engine->isCancelled();
+        return $this->engine->isStopped();
     }
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
@@ -243,7 +243,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
         $process_params['cache_used'] = 'N';
-        if ($this->isCancelled() === false)
+        if ($this->isStopped() === false)
             $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $this->procobj->set($process_params);
 

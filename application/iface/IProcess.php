@@ -33,7 +33,7 @@ interface IProcess
     public function getError();
     public function hasError();
     public function execute();
-    public function cancel();
-    public function isCancelled();
+    public function stop();
+    public function isStopped();
 }
 

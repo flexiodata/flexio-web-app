@@ -96,7 +96,7 @@ class Process implements \Flexio\IFace\IProcess
     private $error;
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
-    private $iscancelled;
+    private $stop;
 
     public function __construct()
     {
@@ -110,7 +110,7 @@ class Process implements \Flexio\IFace\IProcess
         $this->error = array();
         $this->handlers = array();
         $this->files = array();
-        $this->iscancelled = false;
+        $this->stop = false;
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -255,15 +255,15 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    public function cancel() : \Flexio\Jobs\Process
+    public function stop() : \Flexio\Jobs\Process
     {
-        $this->iscancelled = true;
+        $this->stop = true;
         return $this;
     }
 
-    public function isCancelled() : bool
+    public function isStopped() : bool
     {
-        return $this->iscancelled;
+        return $this->stop;
     }
 
     private function executeAllTasks()
@@ -281,7 +281,7 @@ class Process implements \Flexio\IFace\IProcess
                 break;
 
             // if the process was cancelled, stop the process
-            if ($this->isCancelled() === true)
+            if ($this->isStopped() === true)
                 break;
 
             // signal the start of the task
