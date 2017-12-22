@@ -23,6 +23,7 @@ module.exports = {
       'clipboard',
       'marked',
       'moment',
+      'flexio-sdk-js',
       'codemirror',
       'codemirror/mode/css/css',
       'codemirror/mode/javascript/javascript',
