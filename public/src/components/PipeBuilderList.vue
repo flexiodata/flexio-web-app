@@ -2,19 +2,21 @@
   <div class="overflow-y-auto" @scroll="onScroll">
 
     <ui-alert
+      class="ma3"
+      style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
       type="success"
       :dismissible="false"
       @dismiss="show_success = false"
-      v-show="show_success"
-    >
+      v-show="show_success">
       {{success_message}}
     </ui-alert>
 
     <ui-alert
+      class="ma3"
+      style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
       type="error"
       @dismiss="show_error = false"
-      v-show="show_error"
-    >
+      v-show="show_error">
       {{error_message}}
     </ui-alert>
 
