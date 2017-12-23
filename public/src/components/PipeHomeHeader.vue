@@ -39,18 +39,6 @@
             </div>
           </div>
         </div>
-        <!--
-        <inline-edit-text
-          class="f6 lh-copy gray mw7 mt1 dn db-l"
-          placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
-          input-key="description"
-          tooltip-cls="hint--bottom"
-          :val="pipe_description"
-          :show-edit-button="false"
-          @save="editPipeDescription">
-        </inline-edit-text>
-        -->
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
         <btn
@@ -168,9 +156,6 @@
       pipe_ename() {
         return _.get(this.pipe, 'ename', '')
       },
-      pipe_description() {
-        return _.get(this.pipe, 'description', '')
-      },
       tasks() {
         return _.get(this.pipe, 'task', [])
       },
@@ -255,23 +240,6 @@
                 analytics.track('Updated Pipe: Alias (Error)', { eid, ename })
               }
             })
-          }
-        })
-      },
-      editPipeDescription(attrs, input) {
-        var eid = this.pipeEid
-        var description = _.get(attrs, 'description', '')
-
-        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            input.endEdit()
-            analytics.track('Updated Pipe: Description', { eid, description })
-          }
-           else
-          {
-            input.endEdit(false)
-            analytics.track('Updated Pipe: Description (Error)', { eid, description })
           }
         })
       },
