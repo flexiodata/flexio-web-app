@@ -3,7 +3,7 @@
     <spinner size="large" message="Loading pipe..."></spinner>
   </div>
 
-  <div class="flex flex-column justify-center items-center" v-else-if="!has_error">
+  <div class="flex flex-column justify-center items-center" v-else-if="has_error">
     <div class="f3 mid-gray">{{error_msg}}</div>
     <div class="mt3" v-if="!is_signed_in">
       <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div v-else class="flex flex-column items-stretch bg-nearer-white">
+  <div class="flex flex-column items-stretch bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
       :pipe-view="pipe_view"
@@ -28,10 +28,10 @@
       style="padding-bottom: 16rem"
       :id="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
-      :active-prompt-idx="active_prompt_idx"
+      :connections="connections"
       :is-prompting="is_prompting"
       :active-process="active_process"
-      :connections="connections"
+      :active-prompt-idx="active_prompt_idx"
       @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
@@ -111,20 +111,20 @@
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.eid, {})
       },
-      has_error() {
-        return _.get(this.pipe, 'error.code', '').length == 0
-      },
-      error_msg() {
-        return _.get(this.pipe, 'error.message', '')
-      },
       is_fetched() {
-        return _.get(this.pipe, 'is_fetched', false) && !this.has_error
+        return _.get(this.pipe, 'is_fetched', false)
       },
       is_fetching() {
         return _.get(this.pipe, 'is_fetching', false)
       },
       is_signed_in() {
         return this.active_user_eid.length > 0
+      },
+      has_error() {
+        return _.get(this.pipe, 'error.code', '').length > 0
+      },
+      error_msg() {
+        return _.get(this.pipe, 'error.message', '')
       },
       signin_route() {
         return {
