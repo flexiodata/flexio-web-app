@@ -126,15 +126,13 @@
 
   export default {
     props: {
-      'pipe-view': {
-        type: String
-      },
       'is-prompting': {
         type: Boolean,
         default: false
       },
       'is-process-running': {
-        type: Boolean
+        type: Boolean,
+        default: false
       }
     },
     mixins: [Validation],

@@ -15,9 +15,7 @@
   <div class="flex flex-column items-stretch bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
-      :pipe-view="pipe_view"
-      :is-prompting="is_prompting"
-      :is-process-running="is_process_running"
+      v-bind="pipe_options"
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
       @cancel-process="cancelProcess"
@@ -109,6 +107,12 @@
       ]),
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.eid, {})
+      },
+      pipe_options() {
+        return {
+          isPrompting: this.is_prompting,
+          isProcessRunning: this.is_process_running
+        }
       },
       is_fetched() {
         return _.get(this.pipe, 'is_fetched', false)
