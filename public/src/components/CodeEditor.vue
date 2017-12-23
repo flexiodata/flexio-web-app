@@ -75,6 +75,10 @@
         this.code_text = cm.getValue()
         this.$emit('change', this.code_text, this.base64_code)
       })
+
+      // set minimum height
+      if (_.isNumber(opts.minHeight))
+        this.editor.getScrollerElement().style.minHeight = opts.minHeight + 'px'
     },
     methods: {
       getLang() {

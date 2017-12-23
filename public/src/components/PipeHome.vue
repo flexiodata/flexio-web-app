@@ -32,6 +32,13 @@
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
+      v-if="is_builder_view"
+    />
+
+    <pipe-code-editor
+      :pipe-options="pipe_options"
+      v-bind="pipe_options"
+      v-else
     />
 
     <ui-snackbar-container
@@ -60,17 +67,20 @@
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {
+    PIPEHOME_VIEW_JS_SDK,
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
+  import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
     components: {
       Spinner,
       PipeHomeHeader,
+      PipeCodeEditor,
       PipeBuilderList
     },
     provide() {
@@ -91,7 +101,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_BUILDER,
+        pipe_view: PIPEHOME_VIEW_JS_SDK,
         prompt_tasks: [],
         active_prompt_idx: 0,
         is_prompting: false
@@ -171,7 +181,7 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-      this.setPipeView(PIPEHOME_VIEW_BUILDER)
+      this.setPipeView(PIPEHOME_VIEW_JS_SDK)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;
@@ -190,7 +200,7 @@
       ]),
 
       setPipeView(view) {
-        if (_.includes([PIPEHOME_VIEW_BUILDER], view))
+        if (_.includes([PIPEHOME_VIEW_JS_SDK, PIPEHOME_VIEW_BUILDER], view))
         {
           // don't strip off query string
           var query = _.get(this.$route, 'query', undefined)
