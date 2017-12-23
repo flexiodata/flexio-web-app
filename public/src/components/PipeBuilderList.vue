@@ -40,7 +40,6 @@
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :key="task.eid"
-        :pipe-eid="pipeEid"
         :item="task"
         :index="index"
         :tasks="tasks"
