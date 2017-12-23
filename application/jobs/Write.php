@@ -34,20 +34,62 @@ class Write extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $outstream->copyFrom($instream);
-
         $job_definition = $this->getProperties();
         $path = $job_definition['params']['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
+
+        // the write job's output is always just a copy of its input; do this first
+        $outstream->copyFrom($instream);
+        
+
+
         $streamreader = $instream->getReader();
 
         $vfs = new \Flexio\Services\Vfs();
         $vfs->setProcess($process);
-        $files = $vfs->write($path, function($length) use (&$streamreader) {
-            return $streamreader->read($length);
-        });
+
+
+        // not all services support open(). Try that first, and if it fails,
+        // fall back to the read() method
+
+        try
+        {
+            $stream = $vfs->open($path);
+
+            if (!$stream)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            }
+
+            $stream_properties = $stream->get();
+            $outstream->set(['structure' => $stream_properties['structure'],
+                             'mime_type' => $stream_properties['mime_type']]);
+
+            $writer = $outstream->getWriter();
+            $reader = $stream->getReader();
+
+            if (count($stream_properties['structure']) > 0)
+            {
+                while (($row = $reader->readRow()) !== false)
+                    $writer->write($row);
+            }
+             else
+            {
+                while (($data = $reader->read(16384)) !== false)
+                {
+                    $writer->write($data);
+                }
+            }
+
+        }
+        catch (\Exception $e)
+        {
+            $files = $vfs->write($path, function($length) use (&$streamreader) {
+                return $streamreader->read($length);
+            });
+        }
     }
 }

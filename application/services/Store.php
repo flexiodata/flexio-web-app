@@ -28,6 +28,16 @@ class Store implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
+    public function getFlags() : int
+    {
+        return \Flexio\IFace\IFileSystem::FLAG_RANDOM_ACCESS;
+    }
+
     public function list(string $path = '') : array
     {
         if (!$this->isOk())

@@ -18,6 +18,10 @@ namespace Flexio\IFace;
 
 interface IFileSystem
 {
+    const FLAG_RANDOM_ACCESS = 0x01; 
+    
+    public function getFlags() : int;
+
     public function list(string $path = '') : array;
     public function exists(string $path) : bool;
 

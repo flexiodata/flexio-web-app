@@ -31,6 +31,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
     private function isStorageConnectionType(string $type) : bool
     {
         switch ($type)
