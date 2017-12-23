@@ -2,6 +2,7 @@
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
     <spinner size="large" message="Loading pipe..."></spinner>
   </div>
+
   <div class="flex flex-column justify-center items-center" v-else-if="!has_error">
     <div class="f3 mid-gray">{{error_msg}}</div>
     <div class="mt3" v-if="!is_signed_in">
@@ -10,6 +11,7 @@
       </router-link>
     </div>
   </div>
+
   <div v-else class="flex flex-column items-stretch bg-nearer-white">
     <pipe-home-header
       class="flex-none"
@@ -20,18 +22,6 @@
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
       @cancel-process="cancelProcess"
-    />
-
-    <pipe-builder-toolbar
-      class="flex-none mv3 center" style="max-width: 1440px"
-      :pipe-eid="eid"
-      :pipe-view="pipe_view"
-      :is-prompting="is_prompting"
-      :is-process-running="is_process_running"
-      @set-pipe-view="setPipeView"
-      @run-pipe="runPipe"
-      @cancel-process="cancelProcess"
-      v-if="false"
     />
 
     <pipe-builder-list
@@ -80,18 +70,14 @@
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
-  import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
-  import PipeBuilderToolbar from './PipeBuilderToolbar.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
     components: {
-      Btn,
       Spinner,
       PipeHomeHeader,
-      PipeBuilderToolbar,
       PipeBuilderList
     },
     provide() {
