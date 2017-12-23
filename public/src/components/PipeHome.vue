@@ -15,7 +15,6 @@
   <div v-else class="flex flex-column items-stretch bg-nearer-white">
     <pipe-home-header
       class="flex-none"
-      :pipe-eid="eid"
       :pipe-view="pipe_view"
       :is-prompting="is_prompting"
       :is-process-running="is_process_running"
@@ -28,7 +27,6 @@
       class="flex-fill"
       style="padding-bottom: 16rem"
       :id="eid"
-      :pipe-eid="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
       :active-prompt-idx="active_prompt_idx"
       :is-prompting="is_prompting"

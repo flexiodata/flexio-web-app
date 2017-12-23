@@ -78,10 +78,6 @@
 
   export default {
     props: {
-      'pipe-eid': {
-        type: String,
-        required: true
-      },
       'tasks': {
         type: Array,
         required: true
@@ -107,6 +103,7 @@
       PipeBuilderItem,
       HelpItems
     },
+    inject: ['pipeEid'],
     watch: {
       active_process_status: function(val, old_val) {
         if (val == PROCESS_STATUS_RUNNING)

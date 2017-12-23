@@ -126,10 +126,6 @@
 
   export default {
     props: {
-      'pipe-eid': {
-        type: String,
-        required: true
-      },
       'pipe-view': {
         type: String
       },
@@ -149,6 +145,7 @@
       CopyPipeModal,
       AlertModal
     },
+    inject: ['pipeEid'],
     data() {
       return {
         show_copy_pipe_modal: false,
