@@ -26,7 +26,6 @@
     <pipe-builder-list
       class="flex-fill"
       style="padding-bottom: 16rem"
-      :id="eid"
       :tasks="is_prompting ? prompt_tasks : tasks"
       :connections="connections"
       :is-prompting="is_prompting"
