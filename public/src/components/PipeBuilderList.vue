@@ -78,24 +78,28 @@
 
   export default {
     props: {
+      'pipe-options': {
+        type: Object,
+        default: () => { return {} }
+      },
       'tasks': {
         type: Array,
         required: true
       },
-      'active-prompt-idx': {
-        type: Number,
-        default: 0
+      'connections': {
+        type: Array,
+        default: () => { return [] }
       },
       'is-prompting': {
         type: Boolean,
         default: false
       },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
       'active-process': {
         type: Object
-      },
-      'connections': {
-        type: Array,
-        default: () => { return [] }
       }
     },
     components: {

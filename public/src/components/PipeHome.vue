@@ -15,6 +15,7 @@
   <div class="flex flex-column items-stretch bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
+      :pipe-options="pipe_options"
       v-bind="pipe_options"
       @set-pipe-view="setPipeView"
       @run-pipe="runPipe"
@@ -24,11 +25,8 @@
     <pipe-builder-list
       class="flex-fill"
       style="padding-bottom: 16rem"
-      :tasks="is_prompting ? prompt_tasks : tasks"
-      :connections="connections"
-      :is-prompting="is_prompting"
-      :active-process="active_process"
-      :active-prompt-idx="active_prompt_idx"
+      :pipe-options="pipe_options"
+      v-bind="pipe_options"
       @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
@@ -110,8 +108,12 @@
       },
       pipe_options() {
         return {
+          tasks: this.is_prompting ? this.prompt_tasks : this.tasks,
+          connections: this.connections,
           isPrompting: this.is_prompting,
-          isProcessRunning: this.is_process_running
+          isProcessRunning: this.is_process_running,
+          activePromptIdx: this.active_prompt_idx,
+          activeProcess: this.active_process
         }
       },
       is_fetched() {

@@ -126,6 +126,10 @@
 
   export default {
     props: {
+      'pipe-options': {
+        type: Object,
+        default: () => { return {} }
+      },
       'is-prompting': {
         type: Boolean,
         default: false
