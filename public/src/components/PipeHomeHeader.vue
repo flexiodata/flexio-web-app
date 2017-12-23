@@ -44,13 +44,6 @@
         <btn
           btn-md
           btn-primary
-          class="ttu b mr2"
-          @click="openCopyPipeModal"
-          v-if="is_superuser"
-        >Get Template JSON</btn>
-        <btn
-          btn-md
-          btn-primary
           class="ttu b"
           @click="cancelProcess"
           v-if="isPrompting || isProcessRunning"
@@ -64,7 +57,7 @@
             btn-md
             btn-primary
             class="ttu b"
-            :disabled="!is_run_allowed"
+            :disabled="tasks.length == 0"
             @click="runPipe"
           >Run</btn>
         </div>
@@ -80,13 +73,6 @@
           </div>
         </div>
       </div>
-
-      <!-- copy pipe modal -->
-      <copy-pipe-modal
-        ref="modal-copy-pipe"
-        @hide="show_copy_pipe_modal = false"
-        v-if="show_copy_pipe_modal"
-      ></copy-pipe-modal>
 
       <!-- alert modal -->
       <alert-modal
@@ -108,7 +94,6 @@
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
   import UserDropdown from './UserDropdown.vue'
-  import CopyPipeModal from './CopyPipeModal.vue'
   import AlertModal from './AlertModal.vue'
   import Validation from './mixins/validation'
 
@@ -117,6 +102,14 @@
       'pipe-options': {
         type: Object,
         default: () => { return {} }
+      },
+      'pipe-view': {
+        type: String,
+        required: true
+      },
+      'tasks': {
+        type: Array,
+        required: true
       },
       'is-prompting': {
         type: Boolean,
@@ -132,7 +125,6 @@
       Btn,
       InlineEditText,
       UserDropdown,
-      CopyPipeModal,
       AlertModal
     },
     inject: ['pipeEid'],
@@ -155,20 +147,6 @@
       },
       pipe_ename() {
         return _.get(this.pipe, 'ename', '')
-      },
-      tasks() {
-        return _.get(this.pipe, 'task', [])
-      },
-      is_superuser() {
-        // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
-        return _.includes(user_email, '@flex.io') && _.get(this.$route, 'query.su', false) !== false
-      },
-      input_tasks() {
-        return _.filter(this.tasks, { op: TASK_OP_INPUT })
-      },
-      is_run_allowed() {
-        return this.tasks.length > 0
       },
       run_button_tooltip() {
         return ''
@@ -244,15 +222,11 @@
         })
       },
       runPipe() {
-        this.setPipeView(PIPEHOME_VIEW_BUILDER)
+        //this.setPipeView(PIPEHOME_VIEW_BUILDER)
         this.$emit('run-pipe')
       },
       cancelProcess() {
         this.$emit('cancel-process')
-      },
-      openCopyPipeModal() {
-        this.show_copy_pipe_modal = true
-        this.$nextTick(() => { this.$refs['modal-copy-pipe'].open(this.pipe) })
       }
     }
   }

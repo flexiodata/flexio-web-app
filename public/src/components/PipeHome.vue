@@ -118,6 +118,7 @@
       },
       pipe_options() {
         return {
+          pipeView: this.pipe_view,
           tasks: this.is_prompting ? this.prompt_tasks : this.tasks,
           connections: this.connections,
           isPrompting: this.is_prompting,
