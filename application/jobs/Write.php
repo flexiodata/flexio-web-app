@@ -40,41 +40,46 @@ class Write extends \Flexio\Jobs\Base
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
-
         // the write job's output is always just a copy of its input; do this first
         $outstream->copyFrom($instream);
-        
-
-
-        $streamreader = $instream->getReader();
+        $outstream = null;        
 
         $vfs = new \Flexio\Services\Vfs();
         $vfs->setProcess($process);
 
-
-        // not all services support open(). Try that first, and if it fails,
-        // fall back to the read() method
+        // not all services support open/readers/writers; try that first
 
         try
         {
-            $stream = $vfs->open($path);
+            $service = $vfs->getServiceFromPath($path); // this will return or service, or throw
 
-            if (!$stream)
-            {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-            }
+            // check if the service only supports write(), and if so, go to the catch
+            if (($service->getFlags() & \Flexio\IFace\IFileSystem::FLAG_RANDOM_ACCESS) == 0)
+                throw new \Exception(""); // go to the catch and use $vfs->write()
 
-            $stream_properties = $stream->get();
-            $outstream->set(['structure' => $stream_properties['structure'],
-                             'mime_type' => $stream_properties['mime_type']]);
+            $stream_properties = $instream->get();
+            
+            $create_params = [];
+            if (count($stream_properties['structure']) > 0)
+                $create_params['structure'] = $stream_properties['structure'];
+            $create_params['mime_type'] = $stream_properties['mime_type'];
 
+            if (!$vfs->createFile($path, $create_params))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            
+            $outstream = $vfs->open($path);
+            if (!$outstream)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        
+            $reader = $instream->getReader();
             $writer = $outstream->getWriter();
-            $reader = $stream->getReader();
 
             if (count($stream_properties['structure']) > 0)
             {
                 while (($row = $reader->readRow()) !== false)
+                {
                     $writer->write($row);
+                }
             }
              else
             {

@@ -27,11 +27,6 @@ class Store implements \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
-
-    public function getFlags() : int
-    {
-        return 0;
-    }
     
     public function getFlags() : int
     {
@@ -115,6 +110,11 @@ class Store implements \Flexio\IFace\IFileSystem
                 'path' => \Flexio\Base\Util::generateRandomString(20)
             ];
 
+            if (isset($properties['mime_type']))
+            {
+                $stream_properties['mime_type'] = $properties['mime_type'];
+            }
+            
             if (isset($properties['structure']) && count($properties['structure']) > 0)
             {
                 $stream_properties['structure'] = $properties['structure'];
