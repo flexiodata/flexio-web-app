@@ -315,19 +315,18 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $streamreader = $stream->getReader();
         $streamwriter = $storable_stream->getWriter();
 
-        while (true)
+        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
         }
+         else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+
+
 
         return $storable_stream;
     }
