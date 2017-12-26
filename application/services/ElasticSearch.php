@@ -56,6 +56,11 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
     public function list(string $path = '') : array
     {
         // note: right now, the list is flat; path isn't used

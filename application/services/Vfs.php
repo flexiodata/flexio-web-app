@@ -31,6 +31,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
     private function isStorageConnectionType(string $type) : bool
     {
         switch ($type)
@@ -265,12 +270,27 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
     }
 
+    public function getServiceFromPath(string $path)
+    {
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        return $this->getService($connection_identifier);
+    }
+
+    private $service_map = [];
     private function getService(string $connection_identifier)
     {
+        $conn = $this->service_map[$connection_identifier] ?? null;
+        if (isset($conn))
+            return $conn;
+
         if ($connection_identifier == 'context://')
         {
             if ($this->process_context_service === null)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+            $this->service_map[$connection_identifier] = $this->process_context_service;
             return $this->process_context_service;
         }
 
@@ -278,12 +298,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             if ($this->store_service === null)
                 $this->store_service = \Flexio\Services\Store::create();
+            $this->service_map[$connection_identifier] = $this->store_service;
             return $this->store_service;
         }
 
-
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-        
 
         // load the connection
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -303,6 +322,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if ($service === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
+        $this->service_map[$connection_identifier] = $service;
         return $service;
     }
 }
