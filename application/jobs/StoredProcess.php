@@ -252,6 +252,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
+        // don't need to log anything on process task start for now
+
+        /*
         $current_task = $process_info['current_task'] ?? array();
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
@@ -270,16 +273,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params['message'] = '';
 
         $this->current_log_eid = $this->procobj->addToLog(null, $params);
+        */
     }
 
     private function finishLog(array $process_info)
     {
         $current_task = $process_info['current_task'] ?? array();
-        $storable_stdin = self::createStorableStream($process_info['stdin']);
+        //$storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
 
         $storable_stream_info = array();
-        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
+        //$storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
         // update the log record
