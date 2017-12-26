@@ -120,11 +120,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->hasError();
     }
 
-    public function execute(array $tasks) : \Flexio\Jobs\StoredProcess
+    public function execute(array $task) : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a
         // database process record, so no statistics will be serialized
-        $this->engine->execute($tasks);
+        $this->engine->execute($task);
         return $this;
     }
 
@@ -232,7 +232,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // STEP 3: execute the job
         $tasks = $this->procobj->getTasks();
-        $this->execute($tasks);
+
+        foreach ($tasks as $t)
+        {
+            $this->execute($t);
+        }
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
@@ -247,7 +251,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
-        $current_task = $process_info['current_task'] ?? array();
+        $task = $process_info['task'] ?? array();
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
 
@@ -257,8 +261,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // create a log record
         $params = array();
-        $params['task_op'] = $current_task['op'] ?? '';
-        $params['task'] = json_encode($current_task);
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
         $params['input'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
@@ -269,7 +273,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function finishLog(array $process_info)
     {
-        $current_task = $process_info['current_task'] ?? array();
+        $task = $process_info['task'] ?? array();
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
 
@@ -279,8 +283,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // update the log record
         $params = array();
-        $params['task_op'] = $current_task['op'] ?? '';
-        $params['task'] = json_encode($current_task);
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;

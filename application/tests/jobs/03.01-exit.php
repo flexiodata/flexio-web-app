@@ -24,14 +24,12 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "exit",
-                "params": {
-                    "code": 404
-                }
+        {
+            "op": "exit",
+            "params": {
+                "code": 404
             }
-        ]
+        }
         ',true);
 
 

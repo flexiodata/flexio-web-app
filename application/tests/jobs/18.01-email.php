@@ -24,16 +24,14 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "email",
-                "params": {
-                    "to": "",
-                    "subject": "Test",
-                    "body_text": "This is a test"
-                }
+        {
+            "op": "email",
+            "params": {
+                "to": "",
+                "subject": "Test",
+                "body_text": "This is a test"
             }
-        ]
+        }
         ',true);
 
 

@@ -24,15 +24,13 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "request",
-                "params": {
-                    "method": "get",
-                    "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
-                }
+        {
+            "op": "request",
+            "params": {
+                "method": "get",
+                "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
             }
-        ]
+        }
         ',true);
 
 

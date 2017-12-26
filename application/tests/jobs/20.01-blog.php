@@ -85,7 +85,11 @@ class Test
         ]
         ',true);
 
-        $process = \Flexio\Jobs\Process::create()->execute($task);
+        $process = \Flexio\Jobs\Process::create();
+        foreach ($task as $t)
+        {
+            $process->execute($t);
+        }
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
         TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
@@ -162,7 +166,11 @@ class Test
         ]
         ',true);
 
-        $process = \Flexio\Jobs\Process::create()->execute($task);
+        $process = \Flexio\Jobs\Process::create();
+        foreach ($task as $t)
+        {
+            $process->execute($t);
+        }
         $actual = $process->getStdout()->getReader()->getRows(1535,1);
         $expected = json_decode('
         {
@@ -272,7 +280,11 @@ class Test
         $params = [
             "filter" => "bootstrap"
         ];
-        $process = \Flexio\Jobs\Process::create()->setParams($params)->execute($task);
+        $process = \Flexio\Jobs\Process::create()->setParams($params);
+        foreach ($task as $t)
+        {
+            $process->execute($t);
+        }
         $actual = $process->getStdout()->getReader()->getRows(10,122);
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
         TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);

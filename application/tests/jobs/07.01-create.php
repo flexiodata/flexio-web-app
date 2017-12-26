@@ -37,18 +37,16 @@ class Test
 
         // BEGIN TEST
         $local_task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                    "columns": [
-                    ],
-                    "content": "bad content"
-                }
+        {
+            "op": "create",
+            "params": {
+                "name": "table",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
+                "columns": [
+                ],
+                "content": "bad content"
             }
-        ]
+        }
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($local_task);
         $actual = $process->hasError();
@@ -60,7 +58,7 @@ class Test
         // TEST: Create; text column creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -69,7 +67,7 @@ class Test
                     { "name": "f1", "type": "text" }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "text" }]';
@@ -80,7 +78,7 @@ class Test
         // TEST: Create; character column creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -89,14 +87,14 @@ class Test
                     { "name": "f1", "type": "character", "width": null }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": null }]';
         TestCheck::assertInArray('C.1', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -105,14 +103,14 @@ class Test
                     { "name": "f1", "type": "character", "width": null, "scale": null }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": null, "scale": null }]';
         TestCheck::assertInArray('C.2', 'Create Job; character column creation, no scale',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -121,7 +119,7 @@ class Test
                     { "name": "f1", "type": "character", "width": 10, "scale": 2 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "character", "width": 10 }]';
@@ -132,7 +130,7 @@ class Test
         // TEST: Create; numeric column creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -141,7 +139,7 @@ class Test
                     { "name": "f1", "type": "numeric", "width": 14, "scale": 4 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "numeric", "width": 14, "scale": 4 }]';
@@ -152,7 +150,7 @@ class Test
         // TEST: Create; double column creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -161,7 +159,7 @@ class Test
                     { "name": "f1", "type": "double", "width": 14, "scale": 6 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "double" }]';
@@ -172,7 +170,7 @@ class Test
         // TEST: Create; integer field creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -181,7 +179,7 @@ class Test
                     { "name": "f1", "type": "integer", "width": 5, "scale": 2 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "integer" }]';
@@ -192,7 +190,7 @@ class Test
         // TEST: Create; date field creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -201,7 +199,7 @@ class Test
                     { "name": "f1", "type": "date", "width": 5, "scale": 2 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "date" }]';
@@ -212,7 +210,7 @@ class Test
         // TEST: Create; datetime field creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -221,7 +219,7 @@ class Test
                     { "name": "f1", "type": "datetime", "width": 5, "scale": 2 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "datetime" }]';
@@ -232,7 +230,7 @@ class Test
         // TEST: Create; boolean field creation
 
         // BEGIN TEST
-        $task = array(json_decode('{
+        $task = json_decode('{
             "op": "create",
             "params": {
                 "name": "table",
@@ -241,7 +239,7 @@ class Test
                     { "name": "f1", "type": "boolean", "width": 5, "scale": 2 }
                 ]
             }
-        }',true));
+        }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '[{ "name": "f1", "type": "boolean" }]';
@@ -253,20 +251,18 @@ class Test
 
         // BEGIN TEST
         $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "f1", "type": "character", "width": 10, "scale": 0 },
-                        { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },
-                        { "name": "f3", "type": "date",      "width": 4,  "scale": 0 }
-                    ]
-                }
+        {
+            "op": "create",
+            "params": {
+                "name": "table",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "character", "width": 10, "scale": 0 },
+                    { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },
+                    { "name": "f3", "type": "date",      "width": 4,  "scale": 0 }
+                ]
             }
-        ]
+        }
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
@@ -281,20 +277,18 @@ class Test
 
         // BEGIN TEST
         $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "f1", "type": "character", "width": 10, "scale": 0 },
-                        { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },
-                        { "name": "f3", "type": "date",      "width": 4,  "scale": 0 }
-                    ]
-                }
+        {
+            "op": "create",
+            "params": {
+                "name": "table",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "f1", "type": "character", "width": 10, "scale": 0 },
+                    { "name": "f2", "type": "numeric",   "width": 10, "scale": 2 },
+                    { "name": "f3", "type": "date",      "width": 4,  "scale": 0 }
+                ]
             }
-        ]
+        }
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();

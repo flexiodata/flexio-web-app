@@ -24,14 +24,12 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "echo",
-                "params": {
-                    "msg": "hi"
-                }
+        {
+            "op": "echo",
+            "params": {
+                "msg": "hi"
             }
-        ]
+        }
         ',true);
 
 

@@ -58,7 +58,7 @@ return;
         // TEST: Merge Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->execute($task);
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1])->execute($task[2]);
         $actual = $process->getStdout()->getReader()->readRow();
         $expected = "a\nbc\nde";
         TestCheck::assertString('A.1', 'Merge Job; check basic functionality',  $actual, $expected, $results);

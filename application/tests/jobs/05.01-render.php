@@ -24,16 +24,14 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "render",
-                "params": {
-                    "url": "https://www.flex.io",
-                    "width": 300,
-                    "height": 200
-                }
+        {
+            "op": "render",
+            "params": {
+                "url": "https://www.flex.io",
+                "width": 300,
+                "height": 200
             }
-        ]
+        }
         ',true);
 
 

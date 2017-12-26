@@ -430,7 +430,7 @@ class ScriptHost
 
         $process = \Flexio\Jobs\Process::create();
         $process->getStdin()->copyFrom($this->runjob_stdin);
-        $process->execute(array($task));
+        $process->execute($task);
 
         // stdin of the next invocation of runjob is the stdout of the job that just ran
         $this->runjob_stdin = $process->getStdout();

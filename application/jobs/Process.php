@@ -96,6 +96,7 @@ class Process implements \Flexio\IFace\IProcess
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
     private $stop;
+    private $first_execute;
 
     public function __construct()
     {
@@ -108,6 +109,7 @@ class Process implements \Flexio\IFace\IProcess
         $this->handlers = array();
         $this->files = array();
         $this->stop = false;
+        $this->first_execute = true;
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -223,20 +225,40 @@ class Process implements \Flexio\IFace\IProcess
         return true;
     }
 
-    public function execute(array $tasks) : \Flexio\Jobs\Process
+    public function execute(array $task) : \Flexio\Jobs\Process
     {
-        // fire the starting event
-        $this->signal(self::EVENT_STARTING, $this->getProcessState());
+        // if the process was cancelled, stop the process
+        if ($this->isStopped() === true)
+            return $this;
 
-        // if we don't have any tasks, simply move the stdin to the stdout;
-        // otherwise, process the tasks
-        if (count($tasks) === 0)
-            $this->stdout = $this->stdin;
-             else
-            $this->executeAllTasks($tasks);
+        // if the process was exited intentionally, stop the process
+        $response_code = $this->getResponseCode();
+        if ($response_code !== self::RESPONSE_NONE)
+            return $this;
 
-        // fire the finish event
-        $this->signal(self::EVENT_FINISHED, $this->getProcessState());
+        // if there's an error, stop the process
+        if ($this->hasError())
+            return $this;
+
+        // signal the start of the task
+        $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($task));
+
+        // if a task on the process has already been executed, move the previous stdout
+        // to the current stdin; this allows chaining of execute() on the process with
+        // a separate task in each execute:  $process->execute($task1)->execute($task2);
+        if ($this->first_execute === false)
+        {
+            // copy the stdout of the last task to the stdin; make a new stdout
+            $this->stdin = $this->stdout;
+            $this->stdout = self::createStream();
+        }
+
+        // execute the task
+        $this->executeTask($task);
+        $this->first_execute = false;
+
+        // signal the end of the task
+        $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($task));
 
         return $this;
     }
@@ -262,49 +284,12 @@ class Process implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    private function executeAllTasks(array $tasks)
-    {
-        $first = true;
-        foreach ($tasks as $current_task)
-        {
-            // if there's an error, stop the process
-            if ($this->hasError())
-                break;
-
-            // if the process was exited intentionally, stop the process
-            $response_code = $this->getResponseCode();
-            if ($response_code !== self::RESPONSE_NONE)
-                break;
-
-            // if the process was cancelled, stop the process
-            if ($this->isStopped() === true)
-                break;
-
-            // signal the start of the task
-            $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($current_task));
-
-            if ($first === false)
-            {
-                // copy the stdout of the last task to the stdin; make a new stdout
-                $this->stdin = $this->stdout;
-                $this->stdout = self::createStream();
-            }
-
-            // execute the task
-            $this->executeTask($current_task);
-            $first = false;
-
-            // signal the end of the task
-            $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($current_task));
-        }
-    }
-
-    private function getProcessState(array $current_task = null) : array
+    private function getProcessState(array $task = null) : array
     {
         $state = array();
         $state['stdin'] = $this->getStdin();
         $state['stdout'] = $this->getStdout();
-        $state['current_task'] = $current_task ?? array();
+        $state['task'] = $task ?? array();
         return $state;
     }
 
