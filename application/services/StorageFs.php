@@ -326,6 +326,8 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 $this->flushRows();
                 $this->cur_schema = $new_schema;
             }
+
+            return;
         }
 
         if ($this->bytes_written == 0)
