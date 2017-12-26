@@ -354,8 +354,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return;
         if (count($this->insert_rows) == 0)
             return;
-        echo "FLUSH!!";
-
+        
         $sql = 'insert into fxtbl ';
 
         if (count($this->insert_rows[0]) == 0)
