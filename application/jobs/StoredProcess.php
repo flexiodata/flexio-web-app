@@ -251,6 +251,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
+        // don't need to log anything on process task start for now
+
+        /*
         $task = $process_info['task'] ?? array();
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
@@ -269,16 +272,18 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params['message'] = '';
 
         $this->current_log_eid = $this->procobj->addToLog(null, $params);
+        */
     }
 
     private function finishLog(array $process_info)
     {
+
         $task = $process_info['task'] ?? array();
-        $storable_stdin = self::createStorableStream($process_info['stdin']);
+        //$storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
 
         $storable_stream_info = array();
-        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
+        //$storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
         // update the log record
@@ -314,19 +319,18 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $streamreader = $stream->getReader();
         $streamwriter = $storable_stream->getWriter();
 
-        while (true)
+        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
         }
+         else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+
+
 
         return $storable_stream;
     }
