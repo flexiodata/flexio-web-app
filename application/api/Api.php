@@ -288,16 +288,6 @@ class Api
             case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
             case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
-            // storage
-            case 'POS /storage'                        : return '\Flexio\Api\Connection::create';
-            case 'GET /storage'                        : return '\Flexio\Api\Connection::listall';
-            case 'POS /storage/:eid'                   : return '\Flexio\Api\Connection::set';
-            case 'GET /storage/:eid'                   : return '\Flexio\Api\Connection::get';
-            case 'DEL /storage/:eid'                   : return '\Flexio\Api\Connection::delete';
-            case 'GET /storage/:eid/describe'          : return '\Flexio\Api\Connection::describe';
-            case 'POS /storage/:eid/connect'           : return '\Flexio\Api\Connection::connect';
-            case 'POS /storage/:eid/disconnect'        : return '\Flexio\Api\Connection::disconnect';
-
             // streams
             case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
             case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
