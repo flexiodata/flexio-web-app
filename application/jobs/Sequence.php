@@ -31,26 +31,16 @@ class Sequence extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        // stdin/stdout
-        $instream = $process->getStdin();
-        $outstream = $process->getStdout();
-        $this->processStream($instream, $outstream);
-    }
-
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
-    {
-        $mime_type = $instream->getMimeType();
-        switch ($mime_type)
-        {
-            default:
-                $this->getOutput($instream, $outstream);
-                return;
-        }
-    }
-
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
-    {
         $job_definition = $this->getProperties();
         $job_task = $job_definition['params'];
+        $job_sequence_tasks = $job_task['items'] ?? false;
+
+        if ($job_sequence_tasks === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+
+        foreach ($job_sequence_tasks as $task)
+        {
+            $process->execute($task);
+        }
     }
 }
