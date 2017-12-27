@@ -251,25 +251,24 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
-        // only need to save started time for now
+        // save the task and the started time
 
 /*
         $task = $process_info['task'] ?? array();
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
-*/
         $storable_stream_info = array();
         $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
-
+*/
         // create a log record
         $params = array();
-//        $params['task_op'] = $task['op'] ?? '';
-//        $params['task'] = json_encode($task);
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
 //        $params['input'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $params['message'] = '';
+//        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
+//        $params['message'] = '';
 
         $this->current_log_eid = $this->procobj->addToLog(null, $params);
     }
@@ -287,8 +286,8 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // update the log record
         $params = array();
-        $params['task_op'] = $task['op'] ?? '';
-        $params['task'] = json_encode($task);
+        //$params['task_op'] = $task['op'] ?? '';
+        //$params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
