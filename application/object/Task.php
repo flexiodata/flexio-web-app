@@ -29,7 +29,7 @@ class Task
         {
             foreach ($properties as $p)
             {
-                $object->push($p);
+                $this->addTaskStep($task_step);
             }
         }
 
@@ -40,20 +40,6 @@ class Task
     {
         // returns the list of commands
         return $this->task;
-    }
-
-    public function push(array $task_step) : \Flexio\Object\Task // TODO: add input parameter types
-    {
-        // note: adds a raw command to the end of the task array
-        $this->addTaskStep($task_step, null);
-        return $this;
-    }
-
-    public function pop() : \Flexio\Object\Task
-    {
-        // removes a command from the end of the task array
-        array_pop($this->task);
-        return $this;
     }
 
     public function addTaskStep(array $task_step, int $index = null) : string
