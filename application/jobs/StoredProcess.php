@@ -230,13 +230,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 2: get events for logging, if necessary
         $this->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 3: execute the job
+        // STEP 3: execute the job; process the top-level array with a sequence task
         $tasks = $this->procobj->getTasks();
-
-        foreach ($tasks as $t)
-        {
-            $this->execute($t);
-        }
+        $sequence = array('op' => 'sequence', 'params' => array('items' => $tasks));
+        $this->execute($sequence);
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
@@ -251,10 +248,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
-        // save the task and the started time
-
-/*
         $task = $process_info['task'] ?? array();
+/*
+        // no need to save the stdin/stdout for the input
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
         $storable_stream_info = array();
@@ -275,7 +271,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function finishLog(array $process_info)
     {
-
         $task = $process_info['task'] ?? array();
         //$storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
