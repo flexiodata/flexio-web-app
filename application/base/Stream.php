@@ -102,8 +102,10 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         {
             if ($this->bytes_written > 1000000)
             {
+                $this->memory_table_writer->close();
+                $this->memory_table_writer = null;
+
                 $this->storagefs_writer = $this->stream->switchToDiskStorage($this);
-                $memory_table_writer = null;
                 return $this->storagefs_writer->write($data);
             }
 

@@ -163,7 +163,6 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     public function readRow()
     {
-
         if ($this->isOk() === false)
             return false;
 
@@ -310,7 +309,11 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             $new_schema = array_keys($data);
             if ($new_schema !== $this->cur_schema)
             {
-                $this->flushRows();
+
+                if (count($this->insert_rows) > 0)
+                {
+                    $this->flushRows();
+                }
                 $this->cur_schema = $new_schema;
             }
 
@@ -364,6 +367,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             $sql .= 'default values';
             $res = @$this->sqlite->exec($sql);
             $this->insert_rows = [];
+            $this->insert_length = 0;
             return;
         }
 
