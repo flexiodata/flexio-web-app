@@ -231,9 +231,14 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->addEventHandler([$this, 'handleEvent']);
 
         // STEP 3: execute the job; process the top-level array with a sequence task
-        $tasks = $this->procobj->getTasks();
-        $sequence = array('op' => 'sequence', 'params' => array('items' => $tasks));
-        $this->execute($sequence);
+
+
+        // STEP 3: if we have an associative array, we have a top-level task, so simply
+        // execute it; otherwise we have an array of tasks, so package them in a sequence job
+        $task = $this->procobj->getTasks();
+        if (\Flexio\Base\Util::isAssociativeArray($task) === false)
+            $task = array('op' => 'sequence', 'params' => array('items' => $task));
+        $this->execute($task);
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
