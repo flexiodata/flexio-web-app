@@ -1051,7 +1051,7 @@ class Util
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)
             {
-                $form_params[$name] = $data;
+                $form_params['form.' . $name] = $data;
             }
         });
         fclose($php_stream_handle);
