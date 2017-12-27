@@ -335,13 +335,6 @@ class Api
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
             case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
-
-            // DEPRECATED (internal):
-            case 'POS /projects'                       : return '\Flexio\Api\Project::create';
-            case 'GET /projects'                       : return '\Flexio\Api\Project::listall';
-            case 'POS /projects/:eid'                  : return '\Flexio\Api\Project::set';
-            case 'GET /projects/:eid'                  : return '\Flexio\Api\Project::get';
-            case 'DEL /projects/:eid'                  : return '\Flexio\Api\Project::delete';
         }
     }
 }
