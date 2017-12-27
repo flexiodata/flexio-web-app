@@ -17,7 +17,7 @@
       class="flex-none"
       :pipe-options="pipe_options"
       v-bind="pipe_options"
-      @set-pipe-view="setPipeView"
+      @pipe-view-change="setPipeView"
       @run-pipe="runPipe"
       @cancel-process="cancelProcess"
     />
@@ -67,7 +67,7 @@
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {
-    PIPEHOME_VIEW_JS_SDK,
+    PIPEHOME_VIEW_SDK_JS,
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
@@ -101,7 +101,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_JS_SDK,
+        pipe_view: PIPEHOME_VIEW_SDK_JS,
         prompt_tasks: [],
         active_prompt_idx: 0,
         is_prompting: false
@@ -182,7 +182,7 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-      this.setPipeView(PIPEHOME_VIEW_JS_SDK)
+      this.setPipeView(PIPEHOME_VIEW_SDK_JS)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;
@@ -201,7 +201,7 @@
       ]),
 
       setPipeView(view) {
-        if (_.includes([PIPEHOME_VIEW_JS_SDK, PIPEHOME_VIEW_BUILDER], view))
+        if (_.includes([PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER], view))
         {
           // don't strip off query string
           var query = _.get(this.$route, 'query', undefined)

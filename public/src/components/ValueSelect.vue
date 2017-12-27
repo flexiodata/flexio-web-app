@@ -23,11 +23,13 @@
       'multiple': {},
       'allow-numbers': {},
       'value-key': {
+        type: String,
         default: 'val'
       },
       'keys': {
+        type: Object,
         default: () => {
-          return { label: 'label', value: 'val' }
+          return { label: 'label', val: 'val' }
         }
       },
       'options': {}

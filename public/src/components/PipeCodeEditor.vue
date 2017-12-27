@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto">
-    <div class="mv4 pv3 center" style="max-width: 1440px">
+    <div class="mv4 pv3 ph4 center" style="max-width: 1440px">
       <div class="relative bg-white b--white-box ba">
         <code-editor
           ref="code"

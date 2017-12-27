@@ -41,6 +41,12 @@
         </div>
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
+        <value-select
+            class="nt1 nb3 mr3"
+            :options="pipe_view_options"
+            @change="onViewChange"
+            v-model.trim="pipe_view"
+          />
         <btn
           btn-md
           btn-primary
@@ -89,13 +95,19 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
+  import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
+  import ValueSelect from './ValueSelect.vue'
   import UserDropdown from './UserDropdown.vue'
   import AlertModal from './AlertModal.vue'
   import Validation from './mixins/validation'
+
+  const pipe_view_options = [
+    { val: PIPEHOME_VIEW_SDK_JS,  label: 'Javascript SDK' },
+    { val: PIPEHOME_VIEW_BUILDER, label: 'Builder'        }
+  ]
 
   export default {
     props: {
@@ -124,14 +136,22 @@
     components: {
       Btn,
       InlineEditText,
+      ValueSelect,
       UserDropdown,
       AlertModal
     },
     inject: ['pipeEid'],
+    watch: {
+      pipeView(val) {
+        this.pipe_view = val
+      }
+    },
     data() {
       return {
         show_copy_pipe_modal: false,
         show_alert_modal: false,
+        pipe_view_options,
+        pipe_view: this.pipeView,
         ss_errors: {}
       }
     },
@@ -227,6 +247,9 @@
       },
       cancelProcess() {
         this.$emit('cancel-process')
+      },
+      onViewChange(val) {
+        this.$emit('pipe-view-change', val)
       }
     }
   }
