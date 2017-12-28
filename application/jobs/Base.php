@@ -26,20 +26,22 @@ class Base implements \Flexio\IFace\IJob
         $this->properties = array();
     }
 
-    public static function create(array $properties = null) : \Flexio\Jobs\Base
+    public static function create(array $task) : \Flexio\Jobs\Base
     {
         $object = new static();
-
-        // if properties are specified, set them
-        if (isset($properties))
-            $object->properties = $properties;
-
+        $object->properties = $task;
         return $object;
     }
 
     public function getProperties() : array
     {
         return $this->properties;
+    }
+
+    public function validate() : array
+    {
+        $errors = array();
+        return $errors;
     }
 
     public function run(\Flexio\IFace\IProcess $process)
@@ -113,7 +115,7 @@ class Base implements \Flexio\IFace\IJob
                             $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
                         }
                         else if (substr($varname, 0, 6) == 'files.')
-                        {                            
+                        {
                             $parts = explode('.', $varname);
 
                             if (count($parts) >= 2 && isset($info['files'][$parts[1]]))

@@ -710,6 +710,48 @@ class Execute extends \Flexio\Jobs\Base
         return $contents;
     }
 
+    public function validate() : array
+    {
+        $errors = array();
+        $properties = $this->getProperties();
+
+        if (!isset($properties['op']))
+            $errors[] = array('code' => \Flexio\Base\Error::INVALID_PARAMETER, 'message' => '');
+
+        if (!isset($properties['params']))
+            $errors[] = array('code' => \Flexio\Base\Error::INVALID_PARAMETER, 'message' => '');
+
+        if (count($errors) > 0)
+            return $errors;
+
+        try
+        {
+            $job_params = $properties['params'];
+
+            $lang = $job_params['lang'] ?? '';
+            $code = base64_decode($job_params['code'] ?? '');
+            $code = is_null($code) ? '' : $code;
+
+            $err = self::checkScript($lang, $code);
+            if ($err !== true)
+            {
+                $errors[] = array(
+                    'code' => 'compile_error',
+                    'message' => $err
+                );
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $errors[] = array(
+                'code' => 'unknown_language',
+                'message' => 'The scripting language specified is unknown'
+            );
+        }
+
+        return $errors;
+    }
+
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
@@ -897,11 +939,10 @@ class Execute extends \Flexio\Jobs\Base
 
     }
 
-
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
 
-    public static function checkScript(string $lang, string $code)
+    private static function checkScript(string $lang, string $code)
     {
         // only python supported for now
         if ($lang == 'python')

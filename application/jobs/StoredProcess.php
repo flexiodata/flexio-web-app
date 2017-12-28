@@ -120,6 +120,11 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->hasError();
     }
 
+    public function validate(array $task) : array
+    {
+        return $this->engine->validate($task);
+    }
+
     public function execute(array $task) : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a

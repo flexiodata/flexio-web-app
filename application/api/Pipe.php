@@ -451,47 +451,7 @@ class Pipe
                     continue;
             }
 
-
-            $task_errors = array();
-
-            $operation = $t['op'] ?? '';
-            $job_params = $t['params'] ?? array();
-
-            if (empty($operation))
-            {
-                $task_errors[] = array(
-                    'error' => 'missing-parameter',
-                    'message' => 'Job operation parameter is missing'
-                );
-            }
-
-
-            if ($operation == 'execute')
-            {
-                $lang = $job_params['lang'] ?? '';
-                $code = base64_decode($job_params['code'] ?? '');
-                $code = is_null($code) ? '' : $code;
-
-                try
-                {
-                    $err = \Flexio\Jobs\Execute::checkScript($lang, $code);
-                    if ($err !== true)
-                    {
-                        $task_errors[] = array(
-                            'error' => 'compile_error',
-                            'message' => $err
-                        );
-                    }
-                }
-                catch (\Flexio\Base\Exception $e)
-                {
-                    $task_errors[] = array(
-                        'error' => 'unknown_language',
-                        'message' => 'The scripting language specified is unknown'
-                    );
-                }
-            }
-
+            $task_errors = \Flexio\Jobs\Process::create()->validate($t);
 
             // push back any steps with an error
             if (count($task_errors) > 0)

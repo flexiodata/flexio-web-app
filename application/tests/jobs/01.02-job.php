@@ -28,6 +28,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": ""
         }
         ',true);
@@ -45,6 +46,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1}"
         }
         ',true);
@@ -61,6 +63,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1}"
         }
         ',true);
@@ -78,6 +81,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1}"
         }
         ',true);
@@ -95,6 +99,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1}"
         }
         ',true);
@@ -112,6 +117,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${V1}"
         }
         ',true);
@@ -129,6 +135,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "$ {v1}"
         }
         ',true);
@@ -146,6 +153,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${ v1}"
         }
         ',true);
@@ -163,6 +171,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1 }"
         }
         ',true);
@@ -180,6 +189,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "  ${v1}  "
         }
         ',true);
@@ -197,6 +207,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "{v1}"
         }
         ',true);
@@ -214,6 +225,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "$v1}"
         }
         ',true);
@@ -231,6 +243,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${v1"
         }
         ',true);
@@ -248,6 +261,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${1}"
         }
         ',true);
@@ -265,6 +279,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${_1}"
         }
         ',true);
@@ -282,6 +297,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${email-address-1}"
         }
         ',true);
@@ -299,6 +315,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${email_address_1}"
         }
         ',true);
@@ -316,6 +333,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${variable}"
         }
         ',true);
@@ -333,6 +351,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${variable}"
         }
         ',true);
@@ -350,6 +369,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${variable}"
         }
         ',true);
@@ -371,6 +391,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -388,6 +409,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -405,6 +427,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -422,6 +445,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -439,6 +463,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -456,6 +481,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -473,6 +499,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -490,6 +517,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -507,6 +535,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -524,6 +553,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -541,6 +571,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -558,6 +589,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}"
         }
         ',true);
@@ -575,6 +607,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The value is: ${value} units."
         }
         ',true);
@@ -592,6 +625,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The value is: ${value} units."
         }
         ',true);
@@ -609,6 +643,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The statement is ${value}."
         }
         ',true);
@@ -626,6 +661,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The statement is ${value}."
         }
         ',true);
@@ -643,6 +679,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The value is ${value}."
         }
         ',true);
@@ -660,6 +697,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${value}/${value} is 1"
         }
         ',true);
@@ -681,6 +719,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": [ "${v1}", "${v2}" ]
         }
         ',true);
@@ -699,6 +738,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": [ "${v2}", "${v1}" ]
         }
         ',true);
@@ -717,6 +757,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": [ "${v2}", "${v1}", "${v2}", "${v1}" ]
         }
         ',true);
@@ -735,6 +776,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": [ "${v2}", "${v1}", "${v2}", "${v1}" ]
         }
         ',true);
@@ -753,6 +795,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": {"${key}": "${value}"}
         }
         ',true);
@@ -771,6 +814,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "The ${_1} is ${_2}."
         }
         ',true);
@@ -789,6 +833,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": "${_2} is ${_1}."
         }
         ',true);
@@ -807,6 +852,7 @@ class Test
         // BEGIN TEST
         $properties = json_decode('
         {
+            "op": "",
             "params": {"a": "${var_01}", "b": "${var_02}"}
         }
         ',true);

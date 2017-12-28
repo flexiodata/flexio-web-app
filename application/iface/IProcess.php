@@ -30,7 +30,8 @@ interface IProcess
     public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
     public function getError();
     public function hasError();
-    public function execute(array $tasks);
+    public function validate(array $task);
+    public function execute(array $task);
     public function stop();
     public function isStopped();
     public function signal(string $event, array $properties);
