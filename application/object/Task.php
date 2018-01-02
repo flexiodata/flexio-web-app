@@ -29,7 +29,7 @@ class Task
         {
             foreach ($properties as $p)
             {
-                $this->addTaskStep($task_step);
+                $object->addTaskStep($p);
             }
         }
 

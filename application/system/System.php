@@ -288,52 +288,59 @@ class System
         $g_store->user_eid = $arr['user_eid'];
     }
 
-    public static function verifyTemporaryLoginCredentials(string $login, string $password, int $maxage = 60 /* max age in seconds allowed */) : bool
+
+    public static function generateTemporaryAuthToken(string $user_eid)
     {
-        global $g_config;
+        $pk = $GLOBALS['g_config']->private_key;
+        $time = ''.time();
+        $token = "autht1:sha256:$user_eid:$time";
+        
+        $hash_input = "$user_eid:$time:$pk";
+        $hash = hash('sha256', $hash_input);
+        
+        return "$token:$hash";
+    }
 
-        // verify signature of temporary logins is present
-        if (substr($login, 0, 7) != '@autht:')
+    public static function getUserEidFromAuthToken(string $token) // : ?string
+    {
+        $parts = explode(':', $token);
+        if (count($parts) != 5)
+            return null;
+        if ($parts[0] != 'autht1')
+            return null;
+        return $parts[2];
+    }
+    
+    public static function verifyTemporaryAuthToken(string $token, int $timestamp_tolerance = 60) : bool
+    {
+        $pk = $GLOBALS['g_config']->private_key;
+        $parts = explode(':', $token);
+        if (count($parts) != 5)
+            return false;
+        if ($parts[0] != 'autht1')
+            return false;
+        if ($parts[1] != 'sha256')
             return false;
 
-        $enc_login = substr($login, 7);
-        $enc_login = base64_decode($enc_login);
+        // verify hash is ok
+        $hash_input = $parts[2] . ':' . $parts[3] . ':' . $pk;
+        $hash = hash('sha256', $hash_input);
+        
+        if ($parts[4] != $hash)
+            return false; // hash mismatch
 
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_CBC);
-        $iv = substr($enc_login, 0, $iv_size);
-        $enc_login = substr($enc_login, $iv_size);
-
-        $plain_login = mcrypt_decrypt(MCRYPT_BLOWFISH, substr($g_config->private_key, 0, 32), $enc_login, MCRYPT_MODE_CBC, $iv);
-        $plain_login = trim($plain_login, "\0");
-
-        // parse colon-delimited string
-        $arr = explode(':', $plain_login);
-        if (count($arr) != 3)
-        {
-            // invalid number of string parts
-            return false;
-        }
-
-        // first, verify that the timestamp is less than 1 minute old
-        $timestamp = (int)$arr[2];
+        // check to make sure the timestamp is within the correct timespan
+        $timestamp = (int)$parts[3];
         $cur_time = time();
-        if ($timestamp < ($cur_time - $maxage) || $timestamp > $cur_time)
+        if ($timestamp < ($cur_time - $timestamp_tolerance) || $timestamp > ($cur_time + $timestamp_tolerance))
         {
             // timestamp is invalid
             return false;
         }
 
-        // next calculate the password hash -- the caller's supplied hash must match this
-        $hash_input = $plain_login . ':' . $g_config->private_key;
-        $hash = sha1($hash_input);
-        if ($password != $hash)
-        {
-            // supplied password/hash is invalid
-            return false;
-        }
-
         return true;
     }
+
 
     public static function resetModel()
     {
