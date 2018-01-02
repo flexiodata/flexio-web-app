@@ -119,14 +119,14 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_status'];
     }
 
-    public function setTasks(array $task) : \Flexio\Object\Process
+    public function setTask(array $task) : \Flexio\Object\Process
     {
         $properties = array();
         $properties['task'] = $task;
         return $this->set($properties);
     }
 
-    public function getTasks() : array
+    public function getTask() : array
     {
         $properties = $this->get();
         return $properties['task'];

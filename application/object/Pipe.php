@@ -83,7 +83,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTasks(array $task) : \Flexio\Object\Pipe
+    public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
@@ -91,7 +91,7 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTasks() : array
+    public function getTask() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();

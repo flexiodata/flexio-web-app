@@ -240,7 +240,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // STEP 3: if we have an associative array, we have a top-level task, so simply
         // execute it; otherwise we have an array of tasks, so package them in a sequence job
-        $task = $this->procobj->getTasks();
+        $task = $this->procobj->getTask();
         if (\Flexio\Base\Util::isAssociativeArray($task) === false)
             $task = array('op' => 'sequence', 'params' => array('items' => $task));
         $this->execute($task);
