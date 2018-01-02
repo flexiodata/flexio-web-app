@@ -268,10 +268,6 @@ class Api
             case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
             case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
             case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
-            case 'POS /pipes/:eid/tasks'               : return '\Flexio\Api\Pipe::addTaskStep';
-            case 'DEL /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::deleteTaskStep';
-            case 'POS /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::setTaskStep';
-            case 'GET /pipes/:eid/tasks/:eid'          : return '\Flexio\Api\Pipe::getTaskStep';
             case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
             case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
