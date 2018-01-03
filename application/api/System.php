@@ -260,6 +260,25 @@ class System
                     }
                 }
                 break;
+
+            // python/javascript requires an active user to validate
+            case 'javascript':
+            case 'python':
+                {
+                    $code = base64_decode($value);
+                    $err = \Flexio\Jobs\Execute::checkScript($type, $code);
+                    if ($err === true)
+                    {
+                        $valid = true;
+                        $message = '';
+                    }
+                     else
+                    {
+                        $valid = false;
+                        $message = $err;
+                    }
+                }
+                break;
         }
 
         // echo back the key and whether or not it's valid (note: don't echo

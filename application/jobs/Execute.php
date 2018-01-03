@@ -942,7 +942,7 @@ class Execute extends \Flexio\Jobs\Base
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
 
-    private static function checkScript(string $lang, string $code)
+    public static function checkScript(string $lang, string $code)
     {
         // only python supported for now
         if ($lang == 'python')
