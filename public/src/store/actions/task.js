@@ -30,9 +30,12 @@ export const createPipeTask = ({ commit, state }, { eid, attrs }) => {
 export const updatePipeTask = ({ commit, state }, { eid, task_eid, attrs }) => {
   var pipe = _.find(state.objects, { eid }, {})
   var task = _.get(pipe, 'task', [])
-  var task_obj = _.find(task, { eid: task_eid }, {})
+  var replace_idx = _.findIndex(task, { eid: task_eid })
 
-  _.assign(task_obj, attrs)
+  if (replace_idx == -1)
+    return
+
+  task.splice(replace_idx, 1, attrs)
 
   var attrs = { task }
 
