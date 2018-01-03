@@ -205,7 +205,7 @@ class Base implements \Flexio\IFace\IJob
         // array in the ApiController; should look for a more comprehensive solution
         // since this can affect other parameters in other API payloads
 
-        if (isset($task['params']) && is_array($task['params']) && count($task['params'] == 0))
+        if (isset($task['params']) && is_array($task['params']) && count($task['params']) == 0)
             $task['params'] = (object)array();
 
         foreach ($task as $key => &$value)
