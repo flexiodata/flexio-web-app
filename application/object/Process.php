@@ -32,6 +32,7 @@ class Process extends \Flexio\Object\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
@@ -60,6 +61,7 @@ class Process extends \Flexio\Object\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
@@ -161,7 +163,10 @@ class Process extends \Flexio\Object\Base
             // unpack the task
             $task = @json_decode($entry['task'],true);
             if ($task !== false)
+            {
                 $entry['task'] = $task;
+                $entry['task'] = \Flexio\Jobs\Base::fixEmptyParams($entry['task']);
+            }
 
             // unpack the input
             $input = @json_decode($entry['input'],true);
@@ -257,7 +262,10 @@ class Process extends \Flexio\Object\Base
         {
             $task = @json_decode($properties['task'],true);
             if ($task !== false)
+            {
                 $properties['task'] = $task;
+                $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+            }
         }
 
         // unpack the primary process process info json

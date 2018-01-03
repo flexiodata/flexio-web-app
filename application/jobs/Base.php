@@ -197,4 +197,25 @@ class Base implements \Flexio\IFace\IJob
 
         return $task;
     }
+
+    public static function fixEmptyParams(array $task) : array
+    {
+        // TODO: temporary fix for making sure empty params are stored as
+        // objects; this happens because we're decoding JSON into an associative
+        // array in the ApiController; should look for a more comprehensive solution
+        // since this can affect other parameters in other API payloads
+
+        if (isset($task['params']) && is_array($task['params']) && count($task['params'] == 0))
+            $task['params'] = (object)array();
+
+        foreach ($task as $key => &$value)
+        {
+            if (!is_array($value))
+                continue;
+
+            $value = self::fixEmptyParams($value);
+        }
+
+        return $task;
+    }
 }

@@ -32,6 +32,7 @@ class Pipe extends \Flexio\Object\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
             $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
@@ -66,6 +67,7 @@ class Pipe extends \Flexio\Object\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
@@ -225,10 +227,15 @@ class Pipe extends \Flexio\Object\Base
 
         // unpack the task json
         $task = @json_decode($properties['task'],true);
-        if ($task !== false)
-            $properties['task'] = $task;
-             else
+        if ($task === false)
+        {
             $properties['task'] = array();
+        }
+         else
+        {
+            $properties['task'] = $task;
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+        }
 
         // unpack the schedule json
         $schedule = @json_decode($properties['schedule'],true);
