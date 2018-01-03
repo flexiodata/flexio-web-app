@@ -31,6 +31,7 @@ class Process extends \Flexio\Object\Base
             if (!is_array($properties['task']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
@@ -58,6 +59,7 @@ class Process extends \Flexio\Object\Base
             if (!is_array($properties['task']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
             $properties['task'] = json_encode($properties['task']);
         }
 
