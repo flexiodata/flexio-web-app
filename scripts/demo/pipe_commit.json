@@ -1,41 +1,26 @@
 {
     "name": "GitHub Commits",
     "ename": "github-commits",
-    "description": "Review commits across multiple repositories",
+    "description": "Review commits for a repository",
     "task": [
         {
-            "op": "input",
-            "description": "Read 3 repository commit histories from GitHub API",
-            "metadata": {
-                "connection_type": "http"
-            },
+            "op": "request",
+            "description": "Read repository commit histories from GitHub API",
             "params": {
-                "items": [
-                    {
-                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-web-app\/commits"
-                    },
-                    {
-                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-getting-started\/commits"
-                    },
-                    {
-                        "path": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
-                    }
-                ]
+                "url": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
             }
         },
         {
             "op": "convert",
             "description": "Convert from json to table",
             "params": {
+                "input": {
+                    "format": "json"
+                },
                 "output": {
                     "format": "table"
                 }
             }
-        },
-        {
-            "op": "merge",
-            "description": "Merge three tables together",
-            "params": []
         },
         {
             "op": "calc",
@@ -57,50 +42,6 @@
                     "commit.committer.name",
                     "commit.committer.email",
                     "commit.message"
-                ]
-            }
-        },
-        {
-            "op": "rename",
-            "description": "Rename columns to something more readable",
-            "params": {
-                "columns": [
-                    {
-                        "name": "commit.author.date",
-                        "new_name": "author_date"
-                    },
-                    {
-                        "name": "commit.author.name",
-                        "new_name": "author_name"
-                    },
-                    {
-                        "name": "commit.author.email",
-                        "new_name": "author_email"
-                    },
-                    {
-                        "name": "commit.committer.name",
-                        "new_name": "committer_name"
-                    },
-                    {
-                        "name": "commit.committer.email",
-                        "new_name": "committer_email"
-                    },
-                    {
-                        "name": "commit.message",
-                        "new_name": "commit_message"
-                    }
-                ]
-            }
-        },
-        {
-            "op": "sort",
-            "description": "Sort descending by 'author_date'",
-            "params": {
-                "order": [
-                    {
-                        "expression": "author_date",
-                        "direction": "desc"
-                    }
                 ]
             }
         }

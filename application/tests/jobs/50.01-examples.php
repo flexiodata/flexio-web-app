@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: example pipe installed for new users
+        // TEST: example pipes installed for new users
 
         // BEGIN TEST
         $task = json_decode('
@@ -73,7 +73,63 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "{\"STREETADDRESS\": \"1690 MILL STREET\"}\n{\"STREETADDRESS\": \"783 ELK AVENUE\"}\n{\"STREETADDRESS\": \"1748 HE";
-        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
+        TestCheck::assertString('A.1', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = json_decode('
+        [
+            {
+                "op": "request",
+                "description": "Read repository commit histories from GitHub API",
+                "params": {
+                    "url": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
+                }
+            },
+            {
+                "op": "convert",
+                "description": "Convert from json to table",
+                "params": {
+                    "input": {
+                        "format": "json"
+                    },
+                    "output": {
+                        "format": "table"
+                    }
+                }
+            },
+            {
+                "op": "calc",
+                "description": "Create new field \'repository\' which concatenates two different parts of the \'commit.tree.url\' field to isolate \'user/repo\'",
+                "params": {
+                    "name": "repository",
+                    "expression": "concat(strpart([commit.tree.url],\'\/\',5),\'\/\',strpart([commit.tree.url],\'\/\',6))"
+                }
+            },
+            {
+                "op": "select",
+                "description": "Select only the relevant columns",
+                "params": {
+                    "columns": [
+                        "repository",
+                        "commit.author.date",
+                        "commit.author.name",
+                        "commit.author.email",
+                        "commit.committer.name",
+                        "commit.committer.email",
+                        "commit.message"
+                    ]
+                }
+            }
+        ]
+        ',true);
+        $process = \Flexio\Jobs\Process::create();
+        foreach ($task as $t)
+        {
+            $process->execute($t);
+        }
+        $actual = $process->getStdout()->getReader()->getRows(0,1);
+        $expected = json_decode('[{"repository":"flexiodata\/docs-api","commit.author.date":"2017-11-18T12:16:39Z","commit.author.name":"Ben Williams","commit.author.email":"ben@flex.io","commit.committer.name":"Ben Williams","commit.committer.email":"ben@flex.io","commit.message":"missing comma"}]',true);
+        TestCheck::assertArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
 
 
 
@@ -131,7 +187,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->readRow(0);
         $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980\/12\/29"}',true);
-        TestCheck::assertArray('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
+        TestCheck::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
 
 
 
@@ -216,7 +272,7 @@ class Test
             "ups": "1Z 3W5 6V5 59 2261 267 6"
         }
         ',true);
-        TestCheck::assertArray('A.2', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
+        TestCheck::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
 
 
 /*
@@ -297,7 +353,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->getRows(10,122);
         $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
-        TestCheck::assertString('A.3', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
+        TestCheck::assertString('B.2', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
 */
     }
 }
