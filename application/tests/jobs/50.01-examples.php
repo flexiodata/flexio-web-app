@@ -20,10 +20,64 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: add tests for sample project pipes
+        // TEST: example pipe installed for new users
+
+        // BEGIN TEST
+        $task = json_decode('
+        [
+            {
+                "op": "request",
+                "description": "Read CSV file from GitHub url",
+                "params": {
+                    "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
+                }
+            },
+            {
+                "op": "convert",
+                "description": "Convert from CSV to table",
+                "params": {
+                    "input": {
+                        "format": "delimited",
+                        "delimiter": "{comma}",
+                        "header": true
+                    },
+                    "output": {
+                        "format": "table"
+                    }
+                }
+            },
+            {
+                "op": "select",
+                "description": "Select only the relevant columns",
+                "params": {
+                    "columns": [
+                        "streetaddress"
+                    ]
+                }
+            },
+            {
+                "op": "execute",
+                "description": "Make all text uppercase for consistency",
+                "params": {
+                    "lang": "python",
+                    "code": "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
+                }
+            }
+        ]
+        ',true);
+
+        $process = \Flexio\Jobs\Process::create();
+        foreach ($task as $t)
+        {
+            $process->execute($t);
+        }
+        $actual = $process->getStdout()->getReader()->read(100);
+        $expected = "{\"STREETADDRESS\": \"1690 MILL STREET\"}\n{\"STREETADDRESS\": \"783 ELK AVENUE\"}\n{\"STREETADDRESS\": \"1748 HE";
+        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
 
 
-        // TEST: demo video pipe; note: demo video pipe uses deprecated "Input" job
+
+        // TEST: logic similar to demo video pipe
 
         // BEGIN TEST
         $task = json_decode('
@@ -66,13 +120,6 @@ class Test
                 "params": {
                     "where": "strpart(birthday, \"\/\", 1) = \"1980\""
                 }
-            },
-            {
-                "op": "execute",
-                "params": {
-                    "lang": "python",
-                    "code": "aW1wb3J0IHN5cwoKaW5wdXQgPSAnJzsKZm9yIGxpbmUgaW4gc3lzLnN0ZGluOgogICAgaW5wdXQgKz0gbGluZS51cHBlcigpOwogICAgCnN5cy5zdGRvdXQud3JpdGUoaW5wdXQpCg=="
-                }
             }
         ]
         ',true);
@@ -82,9 +129,10 @@ class Test
         {
             $process->execute($t);
         }
-        $actual = $process->getStdout()->getReader()->read(50);
-        $expected = 'GIVENNAME,SURNAME,STREETADDRESS,CITY,STATE,ZIPCODE';
-        TestCheck::assertString('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        $actual = $process->getStdout()->getReader()->readRow(0);
+        $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980\/12\/29"}',true);
+        TestCheck::assertArray('A.1', 'Demo Video; pipe for a demo video',  $actual, $expected, $results);
+
 
 
         // TEST: public blog entry pipe
