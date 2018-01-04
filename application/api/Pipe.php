@@ -411,59 +411,6 @@ class Pipe
         exit(0);
     }
 
-    public static function validate(\Flexio\Api\Request $request) : array
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid'      => array('type' => 'identifier', 'required' => true),
-                'task_eid' => array('type' => 'identifier', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
-
-        // load the object
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the tasks
-        $pipe_info = $pipe->get();
-        $task = $pipe_info['task'];
-
-        // iterate through the task steps an validate each one
-        $result = array();
-        foreach ($task as $t)
-        {
-            $task_eid = $t['eid'] ?? '';
-            if (strlen($task_eid) > 0 && isset($validated_params['task_eid']))
-            {
-                // user wants to validate only one step of a pipe (e.g. an execute job/script)
-                if ($validated_params['task_eid'] != $task_eid)
-                    continue;
-            }
-
-            $task_errors = \Flexio\Jobs\Process::create()->validate($t);
-
-            // push back any steps with an error
-            if (count($task_errors) > 0)
-            {
-                $result[] = array('task_eid' => $task_eid,
-                                  'errors' => $task_errors);
-            }
-        }
-
-        return $result;
-    }
-
     private static function filter(array $items, int $start = null, int $tail = null, int $limit = null) : array
     {
         // if limit isn't defined, set it to the largest integer size

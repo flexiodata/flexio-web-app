@@ -262,18 +262,6 @@ class Api
             case 'DEL /trash'                          : return '\Flexio\Api\Trash::empty';
             case 'POS /restore'                        : return '\Flexio\Api\Trash::restore';
 
-            // pipes
-            case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
-            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::listall';
-            case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
-            case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
-            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
-            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
-            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
-            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
-            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
-            case 'GET /pipes/:eid/validate'            : return '\Flexio\Api\Pipe::validate';
-
             // connections
             case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
             case 'GET /connections'                    : return '\Flexio\Api\Connection::listall';
@@ -284,14 +272,16 @@ class Api
             case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
             case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
-            // streams
-            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
-            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
-            case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
-            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
-            case 'GET /streams/:eid/download'          : return '\Flexio\Api\Stream::download';
-            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
-            case 'POS /streams/:eid/content'           : return '\Flexio\Api\Stream::upload';
+            // pipes
+            case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
+            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::listall';
+            case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
+            case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
+            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
+            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
+            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
+            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
+            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';
@@ -301,6 +291,10 @@ class Api
             case 'GET /processes/:eid/log'             : return '\Flexio\Api\Process::log';
             case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
             case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
+
+            // streams
+            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
+            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
 
             // statistics
             case 'GET /statistics/processes'           : return '\Flexio\Api\Statistics::getUserProcessStats';
