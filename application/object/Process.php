@@ -25,12 +25,16 @@ class Process extends \Flexio\Object\Base
 
     public static function create(array $properties = null) : \Flexio\Object\Process
     {
+        // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
-            $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
+        {
+            if (!is_array($properties['task']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // task is stored as a json string, so it needs to be encoded
-        if (isset($properties) && isset($properties['task']))
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
+        }
 
         // if not process mode is specified, run everything
         if (!isset($properties['process_mode']))
@@ -50,16 +54,16 @@ class Process extends \Flexio\Object\Base
     {
         // TODO: add properties check
 
-        // TODO: some properties shouldn't be able to be changed once
-        // a process is running; e.g. the task
-
-        // if a task parameter is set, we need to assign a client id to each element
+        // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
-            $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
+        {
+            if (!is_array($properties['task']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // task and schedule are stored as a json string, so these need to be encoded
-        if (isset($properties) && isset($properties['task']))
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
+        }
 
         $this->clearCache();
         $process_model = $this->getModel()->process;
@@ -119,14 +123,14 @@ class Process extends \Flexio\Object\Base
         return $this->properties['process_status'];
     }
 
-    public function setTasks(array $task) : \Flexio\Object\Process
+    public function setTask(array $task) : \Flexio\Object\Process
     {
         $properties = array();
         $properties['task'] = $task;
         return $this->set($properties);
     }
 
-    public function getTasks() : array
+    public function getTask() : array
     {
         $properties = $this->get();
         return $properties['task'];
@@ -159,7 +163,10 @@ class Process extends \Flexio\Object\Base
             // unpack the task
             $task = @json_decode($entry['task'],true);
             if ($task !== false)
+            {
                 $entry['task'] = $task;
+                $entry['task'] = \Flexio\Jobs\Base::fixEmptyParams($entry['task']);
+            }
 
             // unpack the input
             $input = @json_decode($entry['input'],true);
@@ -255,7 +262,10 @@ class Process extends \Flexio\Object\Base
         {
             $task = @json_decode($properties['task'],true);
             if ($task !== false)
+            {
                 $properties['task'] = $task;
+                $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+            }
         }
 
         // unpack the primary process process info json

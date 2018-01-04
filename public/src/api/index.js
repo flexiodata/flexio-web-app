@@ -121,11 +121,6 @@ export default {
   fetchTrash:                     function()                            { return TrashResource[GET] ()                                                                    },
   emptyTrash:                     function({ attrs })                   { return TrashResource[DEL] ({}, attrs)                                                           },
 
-  // task
-  createPipeTask:                 function({ eid, attrs })              { return PipeResource[POS] ({ eid, p1: 'tasks' }, attrs)                                          },
-  updatePipeTask:                 function({ eid, task_eid, attrs })    { return PipeResource[POS] ({ eid, p1: 'tasks', p2: task_eid }, attrs)                            },
-  deletePipeTask:                 function({ eid, task_eid })           { return PipeResource[DEL] ({ eid, p1: 'tasks', p2: task_eid })                                   },
-
   // process
   fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                                                           },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                                                         },

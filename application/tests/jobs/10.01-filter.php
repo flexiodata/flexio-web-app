@@ -54,7 +54,7 @@ class Test
         // TEST: Filter Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getContent($process->getStdout());
         $expected = [["b","b"]];
         TestCheck::assertString('A.1', 'Filter Job; check basic functionality',  $actual, $expected, $results);

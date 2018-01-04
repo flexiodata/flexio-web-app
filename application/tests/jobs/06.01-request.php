@@ -24,22 +24,20 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "request",
-                "params": {
-                    "method": "get",
-                    "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
-                }
+        {
+            "op": "request",
+            "params": {
+                "method": "get",
+                "url": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
             }
-        ]
+        }
         ',true);
 
 
         // TEST: Request Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(27);
         $expected = 'def flexio_handler(context)';
         TestCheck::assertString('A.1', 'Request; check basic functionality',  $actual, $expected, $results);

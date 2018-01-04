@@ -77,6 +77,7 @@ class Process implements \Flexio\IFace\IProcess
         'render'    => '\Flexio\Jobs\Render',
         'search'    => '\Flexio\Jobs\Search',
         'select'    => '\Flexio\Jobs\Select',
+        'sequence'  => '\Flexio\Jobs\Sequence',
         'settype'   => '\Flexio\Jobs\SetType',
         'sleep'     => '\Flexio\Jobs\Sleep',
         'sort'      => '\Flexio\Jobs\Sort',
@@ -88,7 +89,6 @@ class Process implements \Flexio\IFace\IProcess
         'set'       => '\Flexio\Jobs\Set'
     );
 
-    private $tasks;         // array of tasks to process; tasks are popped off the list; when there are no tasks left, the process is done
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
@@ -96,13 +96,12 @@ class Process implements \Flexio\IFace\IProcess
     private $error;
     private $handlers;     // array of callbacks invoked for each event
     private $files;        // array of streams of files (similar to php's $_FILES)
-    private $iscancelled;
+    private $stop;
+    private $first_execute;
 
     public function __construct()
     {
-        $this->tasks = array();
         $this->params = array();
-
         $this->stdin = self::createStream();
         $this->stdout =  self::createStream();
 
@@ -110,7 +109,8 @@ class Process implements \Flexio\IFace\IProcess
         $this->error = array();
         $this->handlers = array();
         $this->files = array();
-        $this->iscancelled = false;
+        $this->stop = false;
+        $this->first_execute = true;
     }
 
     public static function create() : \Flexio\Jobs\Process
@@ -119,21 +119,43 @@ class Process implements \Flexio\IFace\IProcess
         return $object;
     }
 
+    public static function createTask(array $task) : \Flexio\IFace\IJob
+    {
+        if (!isset($task['op']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        $operation = $task['op'];
+
+        // make sure the job is registered; note: this isn't strictly necessary,
+        // but gives us a convenient way of limiting what jobs are available for
+        // processing
+        $job_class_name = self::$manifest[$operation] ?? false;
+        if ($job_class_name === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        // try to find the job file
+        $class_name_parts = explode("\\", $job_class_name);
+        if (!isset($class_name_parts[3]))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        $job_class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
+        if (!@file_exists($job_class_file))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        // load the job's php file and instantiate the job object
+        include_once $job_class_file;
+        $job = $job_class_name::create($task);
+
+        if ($job === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        return $job;
+    }
+
     public function addEventHandler($handler) : \Flexio\Jobs\Process
     {
         $this->handlers[] = $handler;
         return $this;
-    }
-
-    public function setTasks(array $tasks) : \Flexio\Jobs\Process
-    {
-        $this->tasks = $tasks;
-        return $this;
-    }
-
-    public function getTasks() : array
-    {
-        return $this->tasks;
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\Process
@@ -237,78 +259,86 @@ class Process implements \Flexio\IFace\IProcess
         return true;
     }
 
-    public function execute() : \Flexio\Jobs\Process
+    public function validate(array $task) : array
     {
-        // fire the starting event
-        $this->invokeEventHandlers(self::EVENT_STARTING, $this->getProcessState());
-
-        // if we don't have any tasks, simply move the stdin to the stdout;
-        // otherwise, process the tasks
-        if (count($this->tasks) === 0)
-            $this->stdout = $this->stdin;
-             else
-            $this->executeAllTasks();
-
-        // fire the finish event
-        $this->invokeEventHandlers(self::EVENT_FINISHED, $this->getProcessState());
-
-        return $this;
-    }
-
-    public function cancel() : \Flexio\Jobs\Process
-    {
-        $this->iscancelled = true;
-        return $this;
-    }
-
-    public function isCancelled() : bool
-    {
-        return $this->iscancelled;
-    }
-
-    private function executeAllTasks()
-    {
-        $first = true;
-        foreach ($this->tasks as $current_task)
+        try
         {
-            // if there's an error, stop the process
-            if ($this->hasError())
-                break;
-
-            // if the process was exited intentionally, stop the process
-            $response_code = $this->getResponseCode();
-            if ($response_code !== self::RESPONSE_NONE)
-                break;
-
-            // if the process was cancelled, stop the process
-            if ($this->isCancelled() === true)
-                break;
-
-            // signal the start of the task
-            $this->invokeEventHandlers(self::EVENT_STARTING_TASK, $this->getProcessState($current_task));
-
-            if ($first === false)
-            {
-                // copy the stdout of the last task to the stdin; make a new stdout
-                $this->stdin = $this->stdout;
-                $this->stdout = self::createStream();
-            }
-
-            // execute the task
-            $this->executeTask($current_task);
-            $first = false;
-
-            // signal the end of the task
-            $this->invokeEventHandlers(self::EVENT_FINISHED_TASK, $this->getProcessState($current_task));
+            $job = self::createTask($task);
+            return $job->validate();
+        }
+        catch (\Error $e)
+        {
+            $errors = array();
+            $errors[] = array('code' => \Flexio\Base\Errors::INVALID_PARAMETER, 'message' => 'Missing or invalid task operation or parameter.');
+            return $errors;
         }
     }
 
-    private function getProcessState(array $current_task = null) : array
+    public function execute(array $task) : \Flexio\Jobs\Process
+    {
+        // if the process was cancelled, stop the process
+        if ($this->isStopped() === true)
+            return $this;
+
+        // if the process was exited intentionally, stop the process
+        $response_code = $this->getResponseCode();
+        if ($response_code !== self::RESPONSE_NONE)
+            return $this;
+
+        // if there's an error, stop the process
+        if ($this->hasError())
+            return $this;
+
+        // signal the start of the task
+        $this->signal(self::EVENT_STARTING_TASK, $this->getProcessState($task));
+
+        // if a task on the process has already been executed, move the previous stdout
+        // to the current stdin; this allows chaining of execute() on the process with
+        // a separate task in each execute:  $process->execute($task1)->execute($task2);
+        if ($this->first_execute === false)
+        {
+            // copy the stdout of the last task to the stdin; make a new stdout
+            $this->stdin = $this->stdout;
+            $this->stdout = self::createStream();
+        }
+
+        // execute the task
+        $this->executeTask($task);
+        $this->first_execute = false;
+
+        // signal the end of the task
+        $this->signal(self::EVENT_FINISHED_TASK, $this->getProcessState($task));
+
+        return $this;
+    }
+
+    public function stop() : \Flexio\Jobs\Process
+    {
+        $this->stop = true;
+        return $this;
+    }
+
+    public function isStopped() : bool
+    {
+        return $this->stop;
+    }
+
+    public function signal(string $event, array $properties) : \Flexio\Jobs\Process
+    {
+        foreach ($this->handlers as $handler)
+        {
+            call_user_func($handler, $event, $properties);
+        }
+
+        return $this;
+    }
+
+    private function getProcessState(array $task = null) : array
     {
         $state = array();
         $state['stdin'] = $this->getStdin();
         $state['stdout'] = $this->getStdout();
-        $state['current_task'] = $current_task ?? array();
+        $state['task'] = $task ?? array();
         return $state;
     }
 
@@ -359,47 +389,6 @@ class Process implements \Flexio\IFace\IProcess
             $trace = $debug ? $e->getTrace() : null;
             $type = 'system error';
             $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
-        }
-    }
-
-    private static function createTask(array $task) : \Flexio\IFace\IJob
-    {
-        if (!isset($task['op']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $operation = $task['op'];
-
-        // make sure the job is registered; note: this isn't strictly necessary,
-        // but gives us a convenient way of limiting what jobs are available for
-        // processing
-        $job_class_name = self::$manifest[$operation] ?? false;
-        if ($job_class_name === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // try to find the job file
-        $class_name_parts = explode("\\", $job_class_name);
-        if (!isset($class_name_parts[3]))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $job_class_file = \Flexio\System\System::getApplicationDirectory() . DIRECTORY_SEPARATOR . 'jobs' . DIRECTORY_SEPARATOR . $class_name_parts[3] . '.php';
-        if (!@file_exists($job_class_file))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        // load the job's php file and instantiate the job object
-        include_once $job_class_file;
-        $job = $job_class_name::create($task);
-
-        if ($job === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $job;
-    }
-
-    private function invokeEventHandlers(string $event, array $process_info)
-    {
-        foreach ($this->handlers as $handler)
-        {
-            call_user_func($handler, $event, $process_info);
         }
     }
 

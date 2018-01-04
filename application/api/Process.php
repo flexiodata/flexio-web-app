@@ -124,7 +124,7 @@ class Process
             if (!isset($validated_params['task']))
             {
                 $parent_properties = array();
-                $parent_properties['task'] = $pipe->getTasks();
+                $parent_properties['task'] = $pipe->getTask();
                 $process->set($parent_properties);
             }
 

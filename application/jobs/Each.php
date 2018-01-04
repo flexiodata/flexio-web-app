@@ -54,7 +54,7 @@ class Each extends \Flexio\Jobs\Base
     private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $job_definition = $this->getProperties();
-        $job_tasks = $job_definition['params'];
+        $job_task = $job_definition['params'];
 
         // execute each of the job tasks for the input row
         $streamreader = $instream->getReader();
@@ -70,9 +70,8 @@ class Each extends \Flexio\Jobs\Base
             // to the content for the row; TODO: need to pass on the params from
             // the process
             $subprocess = \Flexio\Jobs\Process::create();
-            $subprocess->setTasks($job_tasks);
             $subprocess->getStdin()->write($row);
-            $subprocess->execute();
+            $subprocess->execute($job_task);
             $subprocess_stdout = $subprcess->getStdout();
 
             while (true)

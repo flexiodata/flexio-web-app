@@ -26,20 +26,22 @@ class Base implements \Flexio\IFace\IJob
         $this->properties = array();
     }
 
-    public static function create(array $properties = null) : \Flexio\Jobs\Base
+    public static function create(array $task) : \Flexio\Jobs\Base
     {
         $object = new static();
-
-        // if properties are specified, set them
-        if (isset($properties))
-            $object->properties = $properties;
-
+        $object->properties = $task;
         return $object;
     }
 
     public function getProperties() : array
     {
         return $this->properties;
+    }
+
+    public function validate() : array
+    {
+        $errors = array();
+        return $errors;
     }
 
     public function run(\Flexio\IFace\IProcess $process)
@@ -113,7 +115,7 @@ class Base implements \Flexio\IFace\IJob
                             $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
                         }
                         else if (substr($varname, 0, 6) == 'files.')
-                        {                            
+                        {
                             $parts = explode('.', $varname);
 
                             if (count($parts) >= 2 && isset($info['files'][$parts[1]]))
@@ -167,5 +169,53 @@ class Base implements \Flexio\IFace\IJob
                 }
             }
         }
+    }
+
+    public static function addEids(array $task) : array
+    {
+        // if a task eid isn't set, then add one
+
+        // TODO: eventually, we may want to check if eid is unique and store it in the
+        // database; however, for now, task eids are only used internally for identifying
+        // tasks within a job for purposes of correlating preview info with the task, so
+        // there's no need to do any checks and eids are sufficiently unique to not worry
+        // about duplicate eids within a single task
+
+        if (isset($task['op']))
+        {
+            if (!isset($task['eid']))
+                $task['eid'] = \Flexio\Base\Eid::generate();
+        }
+
+        foreach ($task as $key => &$value)
+        {
+            if (!is_array($value))
+                continue;
+
+            $value = self::addEids($value);
+        }
+
+        return $task;
+    }
+
+    public static function fixEmptyParams(array $task) : array
+    {
+        // TODO: temporary fix for making sure empty params are stored as
+        // objects; this happens because we're decoding JSON into an associative
+        // array in the ApiController; should look for a more comprehensive solution
+        // since this can affect other parameters in other API payloads
+
+        if (isset($task['params']) && is_array($task['params']) && count($task['params']) == 0)
+            $task['params'] = (object)array();
+
+        foreach ($task as $key => &$value)
+        {
+            if (!is_array($value))
+                continue;
+
+            $value = self::fixEmptyParams($value);
+        }
+
+        return $task;
     }
 }

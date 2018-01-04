@@ -163,7 +163,6 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     public function readRow()
     {
-
         if ($this->isOk() === false)
             return false;
 
@@ -293,8 +292,9 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
     private $first_write = true;
     private $bytes_written = 0;
 
-    private $last_schema = null;
+    private $cur_schema = null;
     private $insert_rows = [];
+    private $insert_length = 0;
 
     public function write($data)
     {
@@ -306,20 +306,29 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             // check if the column schema being inserted is the same as the last;
             // if it's different, flush rows in buffer
 
-            $cur_schema = array_keys($data);
-            if ($cur_schema !== $this->last_schema)
+            $new_schema = array_keys($data);
+            if ($new_schema !== $this->cur_schema)
             {
-                $this->flushRows();
-                $this->last_schema = $cur_schema;
-            }
 
-            if (count($this->insert_rows) >= 100)
-            {
-                $this->flushRows();
-                $this->last_schema = $cur_schema;
+                if (count($this->insert_rows) > 0)
+                {
+                    $this->flushRows();
+                }
+                $this->cur_schema = $new_schema;
             }
 
             $this->insert_rows[] = $data;
+
+            foreach ($data as $d)
+            {
+                $this->insert_length += (strlen((string)$d)+3);
+            }
+
+            if ($this->insert_length >= 5000000)
+            {
+                $this->flushRows();
+                $this->cur_schema = $new_schema;
+            }
 
             return;
         }
@@ -350,7 +359,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return;
         if (count($this->insert_rows) == 0)
             return;
-
+        
         $sql = 'insert into fxtbl ';
 
         if (count($this->insert_rows[0]) == 0)
@@ -358,6 +367,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             $sql .= 'default values';
             $res = @$this->sqlite->exec($sql);
             $this->insert_rows = [];
+            $this->insert_length = 0;
             return;
         }
 
@@ -442,10 +452,12 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
             // var_dump($this->sqlite->lastErrorCode());
             $this->insert_rows = [];
+            $this->insert_length = 0;
             return false;
         }
 
         $this->insert_rows = [];
+        $this->insert_length = 0;
         return true;
     }
 }

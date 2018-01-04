@@ -24,21 +24,19 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "exit",
-                "params": {
-                    "code": 404
-                }
+        {
+            "op": "exit",
+            "params": {
+                "code": 404
             }
-        ]
+        }
         ',true);
 
 
         // TEST: Exit Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getResponseCode();
         $expected = 404;
         TestCheck::assertNumber('A.1', 'Exit; check basic functionality',  $actual, $expected, $results);

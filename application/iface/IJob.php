@@ -18,8 +18,9 @@ namespace Flexio\IFace;
 
 interface IJob
 {
-    public static function create(array $properties = null);
+    public static function create(array $task);
     public function getProperties() : array;
+    public function validate() : array;
     public function run(\Flexio\IFace\IProcess $process);
 }
 

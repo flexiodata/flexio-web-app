@@ -46,7 +46,12 @@ class Socrata implements \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
-
+    
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
     public function list(string $path = '') : array
     {
         // TODO: filter based on a specified path

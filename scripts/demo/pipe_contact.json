@@ -4,17 +4,10 @@
     "description": "Standardize contact information",
     "task": [
         {
-            "op": "input",
+            "op": "request",
             "description": "Read CSV file from GitHub url",
-            "metadata": {
-                "connection_type": "http"
-            },
             "params": {
-                "items": [
-                    {
-                        "path": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
-                    }
-                ]
+                "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
             }
         },
         {
@@ -36,31 +29,16 @@
             "description": "Select only the relevant columns",
             "params": {
                 "columns": [
-                    "givenname",
-                    "surname",
-                    "streetaddress",
-                    "city",
-                    "state",
-                    "zipcode"
+                    "streetaddress"
                 ]
             }
         },
         {
-            "op": "transform",
+            "op": "execute",
             "description": "Make all text uppercase for consistency",
             "params": {
-                "columns": [
-                    "givenname",
-                    "surname",
-                    "streetaddress",
-                    "city"
-                ],
-                "operations": [
-                    {
-                        "operation": "case",
-                        "case": "upper"
-                    }
-                ]
+                "lang": "python",
+                "code": "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
             }
         }
     ]

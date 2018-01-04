@@ -24,16 +24,14 @@ class Test
 
         // SETUP
         $task = json_decode('
-        [
-            {
-                "op": "email",
-                "params": {
-                    "to": "",
-                    "subject": "Test",
-                    "body_text": "This is a test"
-                }
+        {
+            "op": "email",
+            "params": {
+                "to": "",
+                "subject": "Test",
+                "body_text": "This is a test"
             }
-        ]
+        }
         ',true);
 
 
@@ -41,7 +39,7 @@ class Test
         // TEST: Email Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read();
         $expected = '';
         TestCheck::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);

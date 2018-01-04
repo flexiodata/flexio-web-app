@@ -37,6 +37,11 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
 
+    public function getFlags() : int
+    {
+        return 0;
+    }
+    
     public function list(string $path = '') : array
     {
         if (!$this->authenticated())

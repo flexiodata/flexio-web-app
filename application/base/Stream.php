@@ -102,8 +102,10 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         {
             if ($this->bytes_written > 1000000)
             {
+                $this->memory_table_writer->close();
+                $this->memory_table_writer = null;
+
                 $this->storagefs_writer = $this->stream->switchToDiskStorage($this);
-                $memory_table_writer = null;
                 return $this->storagefs_writer->write($data);
             }
 
@@ -323,16 +325,16 @@ class Stream implements \Flexio\IFace\IStream
         if (!($sourceimpl instanceof \Flexio\Base\Stream))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED, "copy may only be used on stream objects of the same type");
 
-        $this->buffer = $sourceimpl->buffer;
-        $this->storagefs = $sourceimpl->storagefs;
-        $this->storagefs_path = $sourceimpl->storagefs_path;
-        $this->memory_db = $sourceimpl->memory_db;
-
         $properties = $source->get();
         unset($properties['eid']);
         unset($properties['created']);
         unset($properties['updated']);
         $this->set($properties);
+
+        $this->buffer = $sourceimpl->buffer;
+        $this->storagefs = $sourceimpl->storagefs;
+        $this->storagefs_path = $sourceimpl->storagefs_path;
+        $this->memory_db = $sourceimpl->memory_db;
 
         return $this;
     }
@@ -474,6 +476,7 @@ class Stream implements \Flexio\IFace\IStream
          else if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
+            $file->setStructure($this->properties['structure']);
             return $file->getReader();
         }
          else
@@ -497,6 +500,7 @@ class Stream implements \Flexio\IFace\IStream
          else if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
+            $file->setStructure($this->properties['structure']);
             return $file->getWriter();
         }
          else

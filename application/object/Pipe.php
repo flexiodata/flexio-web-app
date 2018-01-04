@@ -25,14 +25,18 @@ class Pipe extends \Flexio\Object\Base
 
     public static function create(array $properties = null) : \Flexio\Object\Pipe
     {
-        // if a task parameter is set, we need to assign a client id to each element
+        // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
-            $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
+        {
+            if (!is_array($properties['task']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        // task and schedule are stored as a json string, so these need to be encoded
-        if (isset($properties) && isset($properties['task']))
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
+        }
 
+        // if the schedule is set, make sure it's valid and then encode it as JSON for storage
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
@@ -56,14 +60,18 @@ class Pipe extends \Flexio\Object\Base
     {
         // TODO: add properties check
 
-        // if a task parameter is set, we need to assign a client id to each element
+        // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
-            $properties['task'] = \Flexio\Object\Task::create($properties['task'])->get();
+        {
+            if (!is_array($properties['task']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // task and schedule are stored as a json string, so these need to be encoded
-        if (isset($properties) && isset($properties['task']))
+            $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
+        }
 
+        // if the schedule is set, make sure it's valid and then encode it as JSON for storage
         if (isset($properties) && isset($properties['schedule']))
         {
             $schedule = $properties['schedule'];
@@ -79,7 +87,7 @@ class Pipe extends \Flexio\Object\Base
         return $this;
     }
 
-    public function setTasks(array $task) : \Flexio\Object\Pipe
+    public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
@@ -87,49 +95,11 @@ class Pipe extends \Flexio\Object\Base
         return $this->set($properties);
     }
 
-    public function getTasks() : array
+    public function getTask() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();
         return $local_properties['task'];
-    }
-
-    public function addTaskStep(array $task_step, int $index = null) : string
-    {
-        // get the current task array
-        $task_array = $this->getTasks();
-        $task = \Flexio\Object\Task::create($task_array);
-
-        // add a new task
-        $task_eid = $task->addTaskStep($task_step, $index);
-        $this->setTasks($task->get());
-        return $task_eid;
-    }
-
-    public function deleteTaskStep(string $task_eid) : \Flexio\Object\Pipe
-    {
-        $task_array = $this->getTasks();
-        $task = \Flexio\Object\Task::create($task_array);
-        $task->deleteTaskStep($task_eid);
-        $this->setTasks($task->get());
-        return $this;
-    }
-
-    public function setTaskStep(string $task_eid, array $task_step) : \Flexio\Object\Pipe
-    {
-        // get the current task array
-        $task_array = $this->getTasks();
-        $task = \Flexio\Object\Task::create($task_array);
-        $task->setTaskStep($task_eid, $task_step);
-        $this->setTasks($task->get());
-        return $this;
-    }
-
-    public function getTaskStep(string $task_eid) // TODO: add function return type
-    {
-        $task_array = $this->getTasks();
-        $task = \Flexio\Object\Task::create($task_array);
-        return $task->getTaskStep($task_eid);
     }
 
     public function setSchedule(array $schedule) : \Flexio\Object\Pipe
@@ -257,10 +227,15 @@ class Pipe extends \Flexio\Object\Base
 
         // unpack the task json
         $task = @json_decode($properties['task'],true);
-        if ($task !== false)
-            $properties['task'] = $task;
-             else
+        if ($task === false)
+        {
             $properties['task'] = array();
+        }
+         else
+        {
+            $properties['task'] = $task;
+            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+        }
 
         // unpack the schedule json
         $schedule = @json_decode($properties['schedule'],true);

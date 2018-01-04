@@ -93,7 +93,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -148,7 +148,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -199,7 +199,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -249,7 +249,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -305,7 +305,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -357,7 +357,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -413,7 +413,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -468,7 +468,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -521,7 +521,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -573,7 +573,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -634,7 +634,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -698,7 +698,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -749,7 +749,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -804,7 +804,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -859,7 +859,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -912,7 +912,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -963,7 +963,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {
@@ -1014,7 +1014,7 @@ class Test
             }
         ]
         ',true);
-        $process = \Flexio\Jobs\Process::create()->setTasks($task)->execute();
+        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = TestUtil::getTable($process->getStdout());
 		$expected = '
         {

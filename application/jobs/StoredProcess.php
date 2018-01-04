@@ -32,7 +32,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object = new static();
         $object->procobj = $procobj;
         $object->engine = \Flexio\Jobs\Process::create();
-        $object->engine->setTasks($procobj->getTasks());
         $object->procmode = $procobj->getMode();
         $object->current_log_eid = null;
         return $object;
@@ -48,17 +47,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         $this->engine->addEventHandler($handler);
         return $this;
-    }
-
-    public function setTasks(array $tasks) : \Flexio\Jobs\StoredProcess
-    {
-        $this->engine->setTasks($tasks);
-        return $this;
-    }
-
-    public function getTasks() : array
-    {
-        return $this->engine->getTasks();
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
@@ -132,23 +120,34 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->hasError();
     }
 
-    public function execute() : \Flexio\Jobs\StoredProcess
+    public function validate(array $task) : array
+    {
+        return $this->engine->validate($task);
+    }
+
+    public function execute(array $task) : \Flexio\Jobs\StoredProcess
     {
         // calling this function will execute the job locally without creating a
         // database process record, so no statistics will be serialized
-        $this->engine->execute();
+        $this->engine->execute($task);
         return $this;
     }
 
-    public function cancel() : \Flexio\Jobs\StoredProcess
+    public function stop() : \Flexio\Jobs\StoredProcess
     {
         $this->engine->cancel();
         return $this;
     }
 
-    public function isCancelled() : bool
+    public function isStopped() : bool
     {
-        return $this->engine->isCancelled();
+        return $this->engine->isStopped();
+    }
+
+    public function signal(string $event, array $properties) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->signal($event, $properties);
+        return $this;
     }
 
     public function run(bool $background = true) : \Flexio\Jobs\StoredProcess
@@ -236,14 +235,21 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 2: get events for logging, if necessary
         $this->addEventHandler([$this, 'handleEvent']);
 
-        // STEP 3: execute the job
-        $this->execute();
+        // STEP 3: execute the job; process the top-level array with a sequence task
+
+
+        // STEP 3: if we have an associative array, we have a top-level task, so simply
+        // execute it; otherwise we have an array of tasks, so package them in a sequence job
+        $task = $this->procobj->getTask();
+        if (\Flexio\Base\Util::isAssociativeArray($task) === false)
+            $task = array('op' => 'sequence', 'params' => array('items' => $task));
+        $this->execute($task);
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = self::getProcessTimestamp();
         $process_params['cache_used'] = 'N';
-        if ($this->isCancelled() === false)
+        if ($this->isStopped() === false)
             $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
         $this->procobj->set($process_params);
 
@@ -252,40 +258,41 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
     private function startLog(array $process_info)
     {
-        $current_task = $process_info['current_task'] ?? array();
+        $task = $process_info['task'] ?? array();
+/*
+        // no need to save the stdin/stdout for the input
         $storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
-
         $storable_stream_info = array();
         $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
-
+*/
         // create a log record
         $params = array();
-        $params['task_op'] = $current_task['op'] ?? '';
-        $params['task'] = json_encode($current_task);
+        $params['task_op'] = $task['op'] ?? '';
+        $params['task'] = json_encode($task);
         $params['started'] = self::getProcessTimestamp();
-        $params['input'] = json_encode($storable_stream_info);
-        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
-        $params['message'] = '';
+//        $params['input'] = json_encode($storable_stream_info);
+//        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
+//        $params['message'] = '';
 
         $this->current_log_eid = $this->procobj->addToLog(null, $params);
     }
 
     private function finishLog(array $process_info)
     {
-        $current_task = $process_info['current_task'] ?? array();
-        $storable_stdin = self::createStorableStream($process_info['stdin']);
+        $task = $process_info['task'] ?? array();
+        //$storable_stdin = self::createStorableStream($process_info['stdin']);
         $storable_stdout = self::createStorableStream($process_info['stdout']);
 
         $storable_stream_info = array();
-        $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
+        //$storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
 
         // update the log record
         $params = array();
-        $params['task_op'] = $current_task['op'] ?? '';
-        $params['task'] = json_encode($current_task);
+        //$params['task_op'] = $task['op'] ?? '';
+        //$params['task'] = json_encode($task);
         $params['finished'] = self::getProcessTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
@@ -315,19 +322,18 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $streamreader = $stream->getReader();
         $streamwriter = $storable_stream->getWriter();
 
-        while (true)
+        if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            $row = false;
-            if ($stream->getMimeType() === \Flexio\Base\ContentType::FLEXIO_TABLE)
-                $row = $streamreader->readRow();
-                 else
-                $row = $streamreader->read();
-
-            if ($row === false)
-                break;
-
-            $streamwriter->write($row);
+            while (($row = $streamreader->readRow()) !== false)
+                $streamwriter->write($row);
         }
+         else
+        {
+            while (($data = $streamreader->read(32768)) !== false)
+                $streamwriter->write($data);
+        }
+
+
 
         return $storable_stream;
     }
