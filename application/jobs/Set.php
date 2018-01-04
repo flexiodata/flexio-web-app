@@ -30,17 +30,32 @@ class Set extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {
-        parent::run($process);
+      //  parent::run($process);
 
         // get the duration
         $job_definition = $this->getProperties();
         $var = $job_definition['params']['var'];
         $value = $job_definition['params']['value'];
         
-        $params = $process->getParams();
-        $params[$var] = $value;
-        $process->setParams($params);
+        if (isset($value['op']) && isset($value['params']))
+        {
+            $pipecode = $value;
+            $valstream = \Flexio\Base\Stream::create();
 
-        $process->getStdout()->getWriter()->write($value);
+            $subprocess = \Flexio\Jobs\Process::create();
+            $subprocess->setStdout($valstream);
+            $subprocess->execute($pipecode);
+
+            $params = $process->getParams();
+            $params[$var] = $valstream;
+            $process->setParams($params);
+        }
+         else
+        {
+            $params = $process->getParams();
+            $params[$var] = $value;
+            $process->setParams($params);
+            $process->getStdout()->getWriter()->write($value);
+        }
     }
 }

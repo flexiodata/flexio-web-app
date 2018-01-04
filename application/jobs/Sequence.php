@@ -29,7 +29,9 @@ class Sequence extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {
-        parent::run($process);
+        // Don't uncomment this, as this will do token replacement on
+        // the entire sequence before any variables are set/evaluated
+        //parent::run($process);
 
         $job_definition = $this->getProperties();
         $job_task = $job_definition['params'];
