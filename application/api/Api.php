@@ -289,8 +289,6 @@ class Api
             case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
             case 'POS /streams/:eid'                   : return '\Flexio\Api\Stream::set';
             case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
-            case 'POS /streams/:eid/upload'            : return '\Flexio\Api\Stream::upload';
-            case 'POS /streams/:eid/content'           : return '\Flexio\Api\Stream::upload';
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';
