@@ -18,28 +18,6 @@ namespace Flexio\Api;
 
 class Stream
 {
-    public static function create(\Flexio\Api\Request $request) : array
-    {
-        $params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid_status'    => array('type' => 'string', 'required' => false),
-                'name'          => array('type' => 'string',  'required' => false),
-                'size'          => array('type' => 'integer', 'required' => false),
-                'mime_type'     => array('type' => 'string',  'required' => false),
-                'file_created'  => array('type' => 'string',  'required' => false), // TODO: date type?
-                'file_modified' => array('type' => 'string',  'required' => false), // TODO: date type?
-                'expires'       => array('type' => 'string',  'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $stream = \Flexio\Object\Stream::create($validated_params); // the \Flexio\Object\Stream::create() creates a default connection and path
-        return $stream->get();
-    }
-
     public static function get(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();

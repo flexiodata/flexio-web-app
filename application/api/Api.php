@@ -285,7 +285,6 @@ class Api
             case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
 
             // streams
-            case 'POS /streams'                        : return '\Flexio\Api\Stream::create';
             case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
             case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
 
