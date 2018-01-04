@@ -282,7 +282,6 @@ class Api
             case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
             case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
             case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
-            case 'GET /pipes/:eid/validate'            : return '\Flexio\Api\Pipe::validate';
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';

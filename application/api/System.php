@@ -261,7 +261,7 @@ class System
                 }
                 break;
 
-            // python/javascript requires an active user to validate
+            // python/javascript
             case 'javascript':
             case 'python':
                 {
@@ -279,6 +279,31 @@ class System
                     }
                 }
                 break;
+
+            // task
+            case 'task':
+            {
+                $task = $value;
+                $error_list = array();
+                $err = self::validateTask($task, $error_list);
+
+                if ($err === true)
+                {
+                    $valid = true;
+                    $message = '';
+                }
+                 else
+                {
+                    // if we have an error, return the message for the first error
+                    $message = '';
+                    if (count($error_list) > 0)
+                        $message = $error_list[0]['message'];
+
+                    $valid = false;
+                    $message = $message;
+                }
+            }
+            break;
         }
 
         // echo back the key and whether or not it's valid (note: don't echo
@@ -289,5 +314,17 @@ class System
         $result['message'] = $message;
 
         return $result;
+    }
+
+    private static function validateTask(array $task, array &$errors) : bool
+    {
+        // returns true if the task is valid; false otherwise; sets the errors
+        // parameter to an array of errors
+
+        $errors = \Flexio\Jobs\Process::create()->validate($t);
+        if (count($errors) > 0)
+            return false;
+
+        return true;
     }
 }
