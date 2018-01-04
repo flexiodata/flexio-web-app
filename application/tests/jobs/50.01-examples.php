@@ -275,8 +275,6 @@ class Test
         TestCheck::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
 
 
-/*
-// TODO: fix following test
 
         // TEST: public blog entry pipe
         // Pipe Name: Saastr Podcast Search
@@ -351,10 +349,9 @@ class Test
         {
             $process->execute($t);
         }
-        $actual = $process->getStdout()->getReader()->getRows(10,122);
-        $expected = 'http:\\/\\/saastr.libsyn.com\\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-laura-roeder-founder-ceo-edgar';
-        TestCheck::assertString('B.2', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
-*/
+        $actual = $process->getStdout()->getReader()->read(100);
+        $expected = "[\n{\"url\":\"http:\/\/saastr.libsyn.com\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-wit";
+        TestCheck::assertString('D.1', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
 }
 
