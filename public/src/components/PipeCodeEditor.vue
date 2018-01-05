@@ -3,7 +3,7 @@
     <div class="mv4 pv3 ph4 center" style="max-width: 1440px">
 
       <!-- code editor -->
-      <div class="relative bg-white b--white-box ba lh-title">
+      <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
         <code-editor
           ref="code"
           lang="javascript"
