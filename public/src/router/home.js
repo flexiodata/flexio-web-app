@@ -56,11 +56,6 @@ export default {
       component: Storage
     },
     {
-      path: '/storage-old',
-      name: ROUTE_HOME_STORAGE_OLD,
-      component: StorageManager
-    },
-    {
       path: '/trash',
       name: ROUTE_HOME_TRASH,
       component: TrashManager

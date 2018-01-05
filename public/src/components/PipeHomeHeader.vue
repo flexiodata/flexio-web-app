@@ -39,27 +39,14 @@
             </div>
           </div>
         </div>
-        <!--
-        <inline-edit-text
-          class="f6 lh-copy gray mw7 mt1 dn db-l"
-          placeholder="Add a description"
-          placeholder-cls="fw6 black-20 hover-black-40"
-          input-key="description"
-          tooltip-cls="hint--bottom"
-          :val="pipe_description"
-          :show-edit-button="false"
-          @save="editPipeDescription">
-        </inline-edit-text>
-        -->
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
-        <btn
-          btn-md
-          btn-primary
-          class="ttu b mr2"
-          @click="openCopyPipeModal"
-          v-if="is_superuser"
-        >Get Template JSON</btn>
+        <value-select
+            class="nt1 nb3 mr3"
+            :options="pipe_view_options"
+            @change="onViewChange"
+            v-model.trim="pipe_view"
+          />
         <btn
           btn-md
           btn-primary
@@ -76,7 +63,7 @@
             btn-md
             btn-primary
             class="ttu b"
-            :disabled="!is_run_allowed"
+            :disabled="tasks.length == 0"
             @click="runPipe"
           >Run</btn>
         </div>
@@ -93,13 +80,6 @@
         </div>
       </div>
 
-      <!-- copy pipe modal -->
-      <copy-pipe-modal
-        ref="modal-copy-pipe"
-        @hide="show_copy_pipe_modal = false"
-        v-if="show_copy_pipe_modal"
-      ></copy-pipe-modal>
-
       <!-- alert modal -->
       <alert-modal
         ref="modal-alert"
@@ -115,44 +95,63 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
+  import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
   import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
+  import ValueSelect from './ValueSelect.vue'
   import UserDropdown from './UserDropdown.vue'
-  import CopyPipeModal from './CopyPipeModal.vue'
   import AlertModal from './AlertModal.vue'
   import Validation from './mixins/validation'
 
+  const pipe_view_options = [
+    { val: PIPEHOME_VIEW_SDK_JS,  label: 'Javascript SDK' },
+    { val: PIPEHOME_VIEW_BUILDER, label: 'Builder'        }
+  ]
+
   export default {
     props: {
-      'pipe-eid': {
+      'pipe-options': {
+        type: Object,
+        default: () => { return {} }
+      },
+      'pipe-view': {
         type: String,
         required: true
       },
-      'pipe-view': {
-        type: String
+      'tasks': {
+        type: Array,
+        required: true
       },
       'is-prompting': {
         type: Boolean,
         default: false
       },
       'is-process-running': {
-        type: Boolean
+        type: Boolean,
+        default: false
       }
     },
     mixins: [Validation],
     components: {
       Btn,
       InlineEditText,
+      ValueSelect,
       UserDropdown,
-      CopyPipeModal,
       AlertModal
+    },
+    inject: ['pipeEid'],
+    watch: {
+      pipeView(val) {
+        this.pipe_view = val
+      }
     },
     data() {
       return {
         show_copy_pipe_modal: false,
         show_alert_modal: false,
+        pipe_view_options,
+        pipe_view: this.pipeView,
         ss_errors: {}
       }
     },
@@ -168,23 +167,6 @@
       },
       pipe_ename() {
         return _.get(this.pipe, 'ename', '')
-      },
-      pipe_description() {
-        return _.get(this.pipe, 'description', '')
-      },
-      tasks() {
-        return _.get(this.pipe, 'task', [])
-      },
-      is_superuser() {
-        // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
-        return _.includes(user_email, '@flex.io') && _.get(this.$route, 'query.su', false) !== false
-      },
-      input_tasks() {
-        return _.filter(this.tasks, { op: TASK_OP_INPUT })
-      },
-      is_run_allowed() {
-        return this.tasks.length > 0
       },
       run_button_tooltip() {
         return ''
@@ -259,33 +241,15 @@
           }
         })
       },
-      editPipeDescription(attrs, input) {
-        var eid = this.pipeEid
-        var description = _.get(attrs, 'description', '')
-
-        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            input.endEdit()
-            analytics.track('Updated Pipe: Description', { eid, description })
-          }
-           else
-          {
-            input.endEdit(false)
-            analytics.track('Updated Pipe: Description (Error)', { eid, description })
-          }
-        })
-      },
       runPipe() {
-        this.setPipeView(PIPEHOME_VIEW_BUILDER)
+        //this.setPipeView(PIPEHOME_VIEW_BUILDER)
         this.$emit('run-pipe')
       },
       cancelProcess() {
         this.$emit('cancel-process')
       },
-      openCopyPipeModal() {
-        this.show_copy_pipe_modal = true
-        this.$nextTick(() => { this.$refs['modal-copy-pipe'].open(this.pipe) })
+      onViewChange(val) {
+        this.$emit('pipe-view-change', val)
       }
     }
   }

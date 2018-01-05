@@ -2,19 +2,21 @@
   <div class="overflow-y-auto" @scroll="onScroll">
 
     <ui-alert
+      class="ma3"
+      style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
       type="success"
       :dismissible="false"
       @dismiss="show_success = false"
-      v-show="show_success"
-    >
+      v-show="show_success">
       {{success_message}}
     </ui-alert>
 
     <ui-alert
+      class="ma3"
+      style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
       type="error"
       @dismiss="show_error = false"
-      v-show="show_error"
-    >
+      v-show="show_error">
       {{error_message}}
     </ui-alert>
 
@@ -38,7 +40,6 @@
       <pipe-builder-item
         v-for="(task, index) in tasks"
         :key="task.eid"
-        :pipe-eid="pipeEid"
         :item="task"
         :index="index"
         :tasks="tasks"
@@ -76,28 +77,28 @@
 
   export default {
     props: {
-      'pipe-eid': {
-        type: String,
-        required: true
+      'pipe-options': {
+        type: Object,
+        default: () => { return {} }
       },
       'tasks': {
         type: Array,
         required: true
       },
-      'active-prompt-idx': {
-        type: Number,
-        default: 0
+      'connections': {
+        type: Array,
+        default: () => { return [] }
       },
       'is-prompting': {
         type: Boolean,
         default: false
       },
+      'active-prompt-idx': {
+        type: Number,
+        default: 0
+      },
       'active-process': {
         type: Object
-      },
-      'connections': {
-        type: Array,
-        default: () => { return [] }
       }
     },
     components: {
@@ -105,6 +106,7 @@
       PipeBuilderItem,
       HelpItems
     },
+    inject: ['pipeEid'],
     watch: {
       active_process_status: function(val, old_val) {
         if (val == PROCESS_STATUS_RUNNING)

@@ -2,7 +2,8 @@
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
     <spinner size="large" message="Loading pipe..."></spinner>
   </div>
-  <div class="flex flex-column justify-center items-center" v-else-if="!has_error">
+
+  <div class="flex flex-column justify-center items-center" v-else-if="has_error">
     <div class="f3 mid-gray">{{error_msg}}</div>
     <div class="mt3" v-if="!is_signed_in">
       <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
@@ -10,45 +11,34 @@
       </router-link>
     </div>
   </div>
-  <div v-else class="flex flex-column items-stretch bg-nearer-white">
+
+  <div class="flex flex-column items-stretch bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
-      :pipe-eid="eid"
-      :pipe-view="pipe_view"
-      :is-prompting="is_prompting"
-      :is-process-running="is_process_running"
-      @set-pipe-view="setPipeView"
+      :pipe-options="pipe_options"
+      v-bind="pipe_options"
+      @pipe-view-change="setPipeView"
       @run-pipe="runPipe"
       @cancel-process="cancelProcess"
-    />
-
-    <pipe-builder-toolbar
-      class="flex-none mv3 center" style="max-width: 1440px"
-      :pipe-eid="eid"
-      :pipe-view="pipe_view"
-      :is-prompting="is_prompting"
-      :is-process-running="is_process_running"
-      @set-pipe-view="setPipeView"
-      @run-pipe="runPipe"
-      @cancel-process="cancelProcess"
-      v-if="false"
     />
 
     <pipe-builder-list
       class="flex-fill"
       style="padding-bottom: 16rem"
-      :id="eid"
-      :pipe-eid="eid"
-      :tasks="is_prompting ? prompt_tasks : tasks"
-      :active-prompt-idx="active_prompt_idx"
-      :is-prompting="is_prompting"
-      :active-process="active_process"
-      :connections="connections"
+      :pipe-options="pipe_options"
+      v-bind="pipe_options"
       @prompt-value-change="onPromptValueChange"
       @go-prev-prompt="goPrevPrompt"
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
+      v-if="is_builder_view"
+    />
+
+    <pipe-code-editor
+      :pipe-options="pipe_options"
+      v-bind="pipe_options"
+      v-else
     />
 
     <ui-snackbar-container
@@ -77,21 +67,20 @@
   import { TASK_INFO_COMMENT } from '../constants/task-info'
   import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
   import {
+    PIPEHOME_VIEW_SDK_JS,
     PIPEHOME_VIEW_BUILDER,
     PIPEHOME_STATUS_CONFIGURE
   } from '../constants/pipehome'
-  import Btn from './Btn.vue'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
-  import PipeBuilderToolbar from './PipeBuilderToolbar.vue'
+  import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
 
   export default {
     components: {
-      Btn,
       Spinner,
       PipeHomeHeader,
-      PipeBuilderToolbar,
+      PipeCodeEditor,
       PipeBuilderList
     },
     provide() {
@@ -112,7 +101,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_BUILDER,
+        pipe_view: PIPEHOME_VIEW_SDK_JS,
         prompt_tasks: [],
         active_prompt_idx: 0,
         is_prompting: false
@@ -127,20 +116,31 @@
       pipe() {
         return _.get(this.$store, 'state.objects.'+this.eid, {})
       },
-      has_error() {
-        return _.get(this.pipe, 'error.code', '').length == 0
-      },
-      error_msg() {
-        return _.get(this.pipe, 'error.message', '')
+      pipe_options() {
+        return {
+          pipeView: this.pipe_view,
+          tasks: this.is_prompting ? this.prompt_tasks : this.tasks,
+          connections: this.connections,
+          isPrompting: this.is_prompting,
+          isProcessRunning: this.is_process_running,
+          activePromptIdx: this.active_prompt_idx,
+          activeProcess: this.active_process
+        }
       },
       is_fetched() {
-        return _.get(this.pipe, 'is_fetched', false) && !this.has_error
+        return _.get(this.pipe, 'is_fetched', false)
       },
       is_fetching() {
         return _.get(this.pipe, 'is_fetching', false)
       },
       is_signed_in() {
         return this.active_user_eid.length > 0
+      },
+      has_error() {
+        return _.get(this.pipe, 'error.code', '').length > 0
+      },
+      error_msg() {
+        return _.get(this.pipe, 'error.message', '')
       },
       signin_route() {
         return {
@@ -182,7 +182,7 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-      this.setPipeView(PIPEHOME_VIEW_BUILDER)
+      this.setPipeView(PIPEHOME_VIEW_SDK_JS)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;
@@ -201,7 +201,7 @@
       ]),
 
       setPipeView(view) {
-        if (_.includes([PIPEHOME_VIEW_BUILDER], view))
+        if (_.includes([PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER], view))
         {
           // don't strip off query string
           var query = _.get(this.$route, 'query', undefined)
