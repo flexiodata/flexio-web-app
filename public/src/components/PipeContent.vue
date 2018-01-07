@@ -3,15 +3,15 @@
     <spinner message="Loading preview..."></spinner>
   </div>
   <div v-else-if="is_image">
-    <img :stream-eid="streamEid" :src="stream_content_url" class="dib" style="max-height: 360px">
+    <img :stream-eid="streamEid" :src="stream_content_url" :style="inner_style" class="dib">
   </div>
-  <div v-else-if="is_flexio_html" class="bg-white ba b--black-10" style="height: 360px">
+  <div v-else-if="is_flexio_html" :style="inner_style" class="bg-white ba b--black-10">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div v-else-if="is_pdf" class="bg-white relative overflow-hidden" style="height: 360px">
+  <div v-else-if="is_pdf" :style="inner_style" class="bg-white relative overflow-hidden">
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
-  <div v-else-if="is_json || is_html || is_text" class="bg-white ba b--black-10" style="height: 360px">
+  <div v-else-if="is_json || is_html || is_text" :style="inner_style" class="bg-white ba b--black-10">
     <stream-text
       :stream-eid="streamEid"
       :content-url="stream_content_url"
@@ -20,7 +20,7 @@
       :is-html="is_html"
     ></stream-text>
   </div>
-  <div v-else-if="is_table" class="bg-white ba b--black-10" style="height: 360px">
+  <div v-else-if="is_table" :style="inner_style" class="bg-white ba b--black-10">
     <grid
       :data-url="stream_content_url"
       :live-scroll="false"
@@ -44,7 +44,16 @@
   }
 
   export default {
-    props: ['stream-eid'],
+    props: {
+      'stream-eid': {
+        type: String,
+        default: ''
+      },
+      'height': {
+        type: Number,
+        default: 360
+      }
+    },
     components: {
       Grid,
       Spinner,
@@ -118,6 +127,13 @@
 
       is_table() {
         return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_VND_FLEXIO_TABLE) != -1
+      },
+
+      inner_style() {
+        if (this.height <= 0)
+          return ''
+
+        return this.is_image ? 'max-height: ' + this.height + 'px' : 'height: ' + this.height + 'px'
       }
     },
     mounted() {

@@ -31,6 +31,7 @@
         <pipe-content
           class="mt2 relative"
           :stream-eid="last_stream_eid"
+          :height="600"
           v-if="last_stream_eid.length > 0"
         ></pipe-content>
       </transition>
