@@ -44,7 +44,7 @@
   }
 
   export default {
-    props: ['stream-eid', 'task-json'],
+    props: ['stream-eid'],
     components: {
       Grid,
       Spinner,
