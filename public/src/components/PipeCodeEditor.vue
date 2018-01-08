@@ -26,14 +26,25 @@
         </div>
       </transition>
 
+      <!-- preview -->
+      <transition name="slide-fade">
+        <pipe-content
+          class="mt2 relative"
+          :stream-eid="last_stream_eid"
+          :height="600"
+          v-if="last_stream_eid.length > 0"
+        ></pipe-content>
+      </transition>
+
     </div>
   </div>
 </template>
 
 <script>
+  import Flexio from 'flexio-sdk-js'
   import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
-  import Flexio from 'flexio-sdk-js'
+  import PipeContent from './PipeContent.vue'
 
   export default {
     props: {
@@ -45,13 +56,17 @@
         type: Array,
         required: true
       },
+      'active-process': {
+        type: Object
+      },
       'is-process-running': {
         type: Boolean
       }
     },
     components: {
       Btn,
-      CodeEditor
+      CodeEditor,
+      PipeContent
     },
     inject: ['pipeEid'],
     data() {
@@ -66,6 +81,17 @@
       },
       is_changed() {
         return this.orig_code != this.edit_code
+      },
+      // find the active subprocess by finding this task eid in the subprocess array
+      last_subprocess() {
+        return _
+          .chain(this.activeProcess)
+          .get('log')
+          .last()
+          .value()
+      },
+      last_stream_eid() {
+        return _.get(this.last_subprocess, 'output.stdout.eid', '')
       }
     },
     methods: {

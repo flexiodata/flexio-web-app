@@ -257,7 +257,6 @@
             <pipe-content
               class="mt2 relative"
               :stream-eid="active_stream_eid"
-              :task-json="task"
               v-if="show_preview && active_stream_eid.length > 0"
             ></pipe-content>
           </transition>
