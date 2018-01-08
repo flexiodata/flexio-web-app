@@ -219,21 +219,17 @@ class Merge extends \Flexio\Jobs\Base
         }
     }
     
-    private function mergeTables(\Flexio\IFace\IProcess $process)
+    private function mergeTables(array $streams, \Flexio\Iface\IStream $outstream)
     {
-        $input = $process->getStreams();
-        $process->clearStreams();
-
         // create a merged structure and a row template for insertion
         // (the bulk insert, which the row inserter uses, requires the fields
         // to match the structure based on offset)
-        $outstream_structure = $this->determineStructure($input);
-        $outstream_properties = array(
-            'name' => 'merged',
+        $outstream_structure = $this->determineStructure($streams);
+        $props = [
             'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
             'structure' => $outstream_structure
-        );
-        $outstream = \Flexio\Base\Stream::create($outstream_properties);
+        ];
+        $outstream->set($props);
 
         // write to the output
         $streamwriter = $outstream->getWriter();
@@ -243,22 +239,15 @@ class Merge extends \Flexio\Jobs\Base
             $row_template[$s['name']] = null;
 
         // insert the rows from each of the streams
-        foreach ($input as $stream)
+        foreach ($streams as $stream)
         {
             $streamreader = $stream->getReader();
-            while (true)
+            while (($row = $streamreader->readRow()) !== false)
             {
-                $row = $streamreader->readRow();
-                if ($row === false)
-                    break;
                 $row = \Flexio\Base\Util::mapArray($row_template, $row);
                 $streamwriter->write($row);
             }
         }
-
-        $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
-        $process->addStream($outstream);
     }
 
     private function determineStructure(array $streams) : array
