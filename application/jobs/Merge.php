@@ -30,28 +30,9 @@ class Merge extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {
-        // TODO: logic for this job is perfectly good, but we're removing the
-        // notion right now of separate input streams in the process, so these
-        // functions will likely be removed from the process interface; however,
-        // we're looking to bring process for multiple streams back another way,
-        // probably using named parameters
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::DEPRECATED);
+        //parent::run($process);
 
-
-        parent::run($process);
-
-        // note: no need to process the stdin buffer, since it's a single stream and the merged
-        // result is the same as the original
-
-        // process stream array
-
-        // TODO: merge content by compatible mime_type; pass on files
-        // that aren't handled
-
-        // iterate over the input streams and find out if all of the streams
-        // are tables; if they are, merge them as tables; otherwise, merge
-        // them as text
-
+/*
         $table_merge_mode = true;
         $input = $process->getStreams();
 
@@ -64,34 +45,74 @@ class Merge extends \Flexio\Jobs\Base
             $merge_mode = 'stream';
             break;
         }
+*/
+        $job_definition = $this->getProperties();
+        $paths = $job_definition['params']['files'] ?? [];
 
+        if (count($paths) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Missing/empty 'files' array");
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
+
+        $streams = [];
+        foreach($paths as $path)
+        {
+            try
+            {
+                $stream = $vfs->open($path);
+                if (!$stream)
+                {
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                }
+
+                $streams[] = $stream;
+            }
+            catch (\Exception $e)
+            {
+                $stream = \Flexio\Base\Stream::create();
+                $streamwriter = $stream->getWriter();
+                $vfs->read($path, function($data) use (&$streamwriter) {
+                    $streamwriter->write($data);
+                });
+
+                $streams[] = $stream;
+            }
+        }
+
+        $output = $process->getStdout();
+
+
+
+        $merge_mode = 'stream';
+        
         switch ($merge_mode)
         {
             default:
             case 'stream':
-                return $this->mergeStreams($process);
+                return $this->mergeStreams($streams, $output);
+
+            case 'json':
+                return $this->mergeJson($streams, $output);
 
             case 'table':
-                return $this->mergeTables($process);
+                return $this->mergeTables($streams, $output);
         }
     }
 
-    private function mergeStreams(\Flexio\IFace\IProcess $process)
+    private function mergeStreams(array $streams, \Flexio\Iface\IStream $outstream)
     {
-        $input = $process->getStreams();
-        $process->clearStreams();
-
         // set the default output mime type; for now, use text, but should be
         // based on content
-        $outstream_properties = array(
-            'name' => 'merged',
+        $outstream_properties = [
             'mime_type' => \Flexio\Base\ContentType::TEXT
-        );
-        $outstream = \Flexio\Base\Stream::create($outstream_properties);
+        ];
+        
+        $outstream->set($outstream_properties);
 
         // write to the output
         $streamwriter = $outstream->getWriter();
-        foreach ($input as $instream)
+        foreach ($streams as $instream)
         {
             $streamreader = $instream->getReader();
             while (true)
@@ -104,11 +125,13 @@ class Merge extends \Flexio\Jobs\Base
             }
         }
 
-        $streamwriter->close();
         $outstream->setSize($streamwriter->getBytesWritten());
-        $process->addStream($outstream);
     }
 
+    private function mergeJson(\Flexio\IFace\IProcess $process)
+    {
+    }
+    
     private function mergeTables(\Flexio\IFace\IProcess $process)
     {
         $input = $process->getStreams();

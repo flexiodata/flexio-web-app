@@ -1543,7 +1543,7 @@
 
 
 
-    this.args.merge = [];
+    this.args.merge = [ 'files' ];
     this.hints.merge = {
     };
     this.keywords.merge = function(str)
@@ -1553,6 +1553,19 @@
           "op": "merge",
           "params": { }
         };
+
+      var params = this.split(str, this.args.merge);
+
+      if (params.hasOwnProperty('files'))
+      {
+        json.params.files = [];
+
+        var i, files = this.parseList(params['files'].value);
+        for (i = 0; i < files.length; ++i)
+        {
+          json.params.files.push(files[i]);
+        }
+      }
 
       return json;
     };
@@ -1564,6 +1577,23 @@
         return '';
 
       var res = "merge";
+
+      if (json.params.hasOwnProperty('files'))
+      {
+        var str = '';
+        for (var i = 0; i < json.params.files.length; ++i)
+        {
+          if (i > 0)
+          {
+            str += ', ';
+          }
+          str += this.quoteColumnIfNecessary(json.params.files[i]);
+
+        }
+
+        res = this.append(res, "files: " + str);
+      }
+
       return res;
     };
 
@@ -2835,7 +2865,7 @@
         'filter',
         //'limit',
         'list',
-        //'merge',
+        'merge',
         'read',
         //'rename',
         'render',
