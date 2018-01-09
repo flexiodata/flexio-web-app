@@ -130,9 +130,16 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        try
+        {
+            $stream = $this->open($path);
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public function createFile(string $path, array $properties = []) : bool
