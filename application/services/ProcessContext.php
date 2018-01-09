@@ -141,15 +141,10 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function open($path) : \Flexio\IFace\IStream
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
-    public function read(array $params, callable $callback)
+    public function open($params) : \Flexio\IFace\IStream
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
+
         $path = trim($path,'/');
         $parts = explode('/', $path);
         $folder = $parts[0] ?? '';
@@ -197,17 +192,27 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
 
-
         if ($val instanceof \Flexio\Base\Stream)
         {
-            $reader = $val->getReader();
-            while (($buf = $reader->read(16384)) !== false)
-                $callback($buf);
+            return $val;
         }
-         else
+        else
         {
-            $callback($val);
+            $stream = \Flexio\Base\Stream::create();
+            $stream->buffer = (string)$v;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+            return $stream;
         }
+    }
+
+    public function read(array $params, callable $callback)
+    {
+        $path = $params['path'] ?? (is_string($params) ? $params : '');
+
+        $stream = $this->open($path);
+
+        $reader = $stream->getReader();
+        while (($buf = $reader->read(16384)) !== false)
+            $callback($buf);
     }
 
     public function write(array $params, callable $callback)
