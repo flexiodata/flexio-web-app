@@ -55,7 +55,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
     }
 
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         $results = [];
 

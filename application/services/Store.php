@@ -33,7 +33,7 @@ class Store implements \Flexio\IFace\IFileSystem
         return \Flexio\IFace\IFileSystem::FLAG_RANDOM_ACCESS;
     }
 
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         if (!$this->isOk())
             return array();

@@ -33,7 +33,7 @@ class Http implements \Flexio\IFace\IFileSystem
         return 0;
     }
     
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);

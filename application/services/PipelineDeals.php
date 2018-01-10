@@ -50,7 +50,7 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
         return 0;
     }
     
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         if (!$this->isOk())
             return array();

@@ -61,7 +61,7 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         return 0;
     }
     
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         // note: right now, the list is flat; path isn't used
 

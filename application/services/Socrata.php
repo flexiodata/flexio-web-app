@@ -52,7 +52,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
         return 0;
     }
     
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         // TODO: filter based on a specified path
 

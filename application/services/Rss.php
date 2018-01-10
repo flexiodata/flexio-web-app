@@ -35,7 +35,7 @@ class Rss implements \Flexio\IFace\IFileSystem
         return 0;
     }
     
-    public function list(string $path = '') : array
+    public function list(string $path = '', array $options = []) : array
     {
         // TODO: show the RSS links for a given URL?
         return array();

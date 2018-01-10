@@ -657,7 +657,7 @@ class StorageFs
         return true;
     }
 
-    public function list(string $path)
+    public function list(string $path = '', array $options = [])
     {
         $fspath = self::getFsPath($path);
 
