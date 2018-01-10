@@ -51,43 +51,65 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         if (substr($path, -1) == '/')
             $path = substr($path, 0, strlen($path)-1);
 
-        $postdata = json_encode(array(
-            "path" => $path
-        ));
+        $postdata = json_encode([
+            "path" => $path,
+            "recursive" => false
+        ]);
 
         $ch = curl_init();
+
         curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/list_folder");
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer '.$this->access_token));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        //execute post
         $result = curl_exec($ch);
-        curl_close($ch);
         $result = json_decode($result, true);
 
         $files = [];
 
-
-        if (isset($result['entries']))
+        while (true)
         {
-
-            foreach ($result['entries'] as $entry)
+            if (isset($result['entries']))
             {
-                $fullpath = $path;
-                if (substr($fullpath, -1) != '/')
-                    $fullpath .= '/';
-                $fullpath .= $entry['name'];
+                foreach ($result['entries'] as $entry)
+                {
+                    $fullpath = $path;
+                    if (substr($fullpath, -1) != '/')
+                        $fullpath .= '/';
+                    $fullpath .= $entry['name'];
 
-                $files[] = array('id'=> $entry['id'] ?? null,
-                                 'name' => $entry['name'],
-                                 'path' => $fullpath,
-                                 'size' => $entry['size'] ?? '',
-                                 'modified' => $entry['client_modified'] ?? '',
-                                 'is_dir' => ($entry['.tag'] == 'folder' ? true : false));
+                    $files[] = array('id'=> $entry['id'] ?? null,
+                                    'name' => $entry['name'],
+                                    'path' => $fullpath,
+                                    'size' => $entry['size'] ?? '',
+                                    'modified' => $entry['client_modified'] ?? '',
+                                    'is_dir' => ($entry['.tag'] == 'folder' ? true : false));
+                }
+            }
+
+
+            if (isset($result['has_more']) && isset($result['cursor']) && $result['has_more'])
+            {
+                $postdata = json_encode([
+                    "cursor" => $result['cursor']
+                ]);
+
+                curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/list_folder/continue");
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer '.$this->access_token));
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($ch);
+                $result = json_decode($result, true);
+            }
+             else
+            {
+                break;
             }
         }
+
+        curl_close($ch);
 
         return $files;
     }
