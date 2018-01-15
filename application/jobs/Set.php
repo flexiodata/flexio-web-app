@@ -30,7 +30,7 @@ class Set extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {
-      //  parent::run($process);
+        parent::run($process);
 
         // get the duration
         $job_definition = $this->getProperties();
