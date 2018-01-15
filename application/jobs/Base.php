@@ -77,6 +77,10 @@ class Base implements \Flexio\IFace\IJob
     {
         if (is_array($value))
         {
+            // don't replace subsequences
+            if (isset($value['op']) && $value['op'] == 'sequence')
+                return;
+
             foreach ($value as $k => &$v)
             {
                 $this->replaceParameterTokensRecurse($info, $process, $v);
