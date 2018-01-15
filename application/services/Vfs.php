@@ -145,6 +145,16 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $results;
     }
 
+    public function getFileInfo(string $path) : array
+    {
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->getFileInfo($rpath);
+    }
 
     public function exists(string $path) : bool
     {

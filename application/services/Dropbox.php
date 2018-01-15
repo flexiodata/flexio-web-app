@@ -114,6 +114,11 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         return $files;
     }
 
+    public function getFileInfo(string $path) : array
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function exists(string $path) : bool
     {
         // TODO: implement

@@ -70,6 +70,11 @@ class Firebase implements \Flexio\IFace\IFileSystem
         return false;
     }
 
+    public function getFileInfo(string $path) : array
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function createFile(string $path, array $properties = []) : bool
     {
         // TODO: implement

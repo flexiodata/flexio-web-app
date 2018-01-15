@@ -23,6 +23,7 @@ interface IFileSystem
     public function getFlags() : int;
 
     public function list(string $path = '', array $options = []) : array;
+    public function getFileInfo(string $path) : array;
     public function exists(string $path) : bool;
 
     public function createFile(string $path, array $properties = []) : bool;

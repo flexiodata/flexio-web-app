@@ -117,6 +117,11 @@ class Sftp implements \Flexio\IFace\IFileSystem
         return $result;
     }
 
+    public function getFileInfo(string $path) : array
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function exists(string $path) : bool
     {
         // TODO: implement
