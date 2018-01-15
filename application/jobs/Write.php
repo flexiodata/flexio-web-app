@@ -92,8 +92,9 @@ class Write extends \Flexio\Jobs\Base
         }
         catch (\Exception $e)
         {
-            $files = $vfs->write($path, function($length) use (&$streamreader) {
-                return $streamreader->read($length);
+            $reader = $instream->getReader();
+            $files = $vfs->write($path, function($length) use (&$reader) {
+                return $reader->read($length);
             });
         }
     }
