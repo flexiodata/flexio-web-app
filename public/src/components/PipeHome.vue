@@ -182,7 +182,7 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-      this.setPipeView(PIPEHOME_VIEW_SDK_JS)
+      this.setPipeView(PIPEHOME_VIEW_BUILDER)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;
