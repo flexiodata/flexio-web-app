@@ -101,7 +101,7 @@
     data() {
       return {
         eid: this.$route.params.eid,
-        pipe_view: PIPEHOME_VIEW_SDK_JS,
+        pipe_view: PIPEHOME_VIEW_BUILDER,
         prompt_tasks: [],
         active_prompt_idx: 0,
         is_prompting: false
