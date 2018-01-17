@@ -28,27 +28,41 @@ namespace Flexio\Jobs;
 
 class Diff extends \Flexio\Jobs\Base
 {
+
+
+private $code = <<<EOT
+
+import difflib
+diff = difflib.unified_diff("a", "b")
+
+EOT;
+
+
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
-        // process buffer
-        $outstream = $process->getStdout();
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".base64_encode($code)." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
-        $streamwriter = $outstream->getWriter();
+        $script_host = new ReportScriptHost();
+        $script_host->params = $params;
+        $script_host->setProcess($process);
 
-        $vfs = new \Flexio\Services\Vfs();
-        $vfs->setProcess($process);
-        $files = $vfs->list($path);
+        $ep = new ExecuteProxy;
+        $ep->initialize($cmd, $script_host);
+        $ep->run();
 
+        $err = $ep->getStdError();
 
-
-        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-        $streamwriter->write(json_encode($results));
+        if (isset($err))
+        {
+            //die("<pre>".$err);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
+        }
     }
+    
 }
