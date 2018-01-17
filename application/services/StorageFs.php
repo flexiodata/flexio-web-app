@@ -678,8 +678,7 @@ class StorageFs
                     'path' => $combined,
                     'type' => ($isdir ? 'DIR' : 'FILE'),
                     'size' => null,
-                    'modified' => null,
-                    'is_dir' => $isdir
+                    'modified' => null
                 );
 
                 $arr[] = $file;

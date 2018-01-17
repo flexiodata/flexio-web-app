@@ -96,8 +96,7 @@ class Ftp implements \Flexio\IFace\IFileSystem
                 'path' => $full_path,
                 'size' => $info['size'] ?? '',
                 'modified' => '',
-                'is_dir' => '',
-                'root' => '/ftp'
+                'type' => 'FILE'
             );
 
             $result[] = $entry;

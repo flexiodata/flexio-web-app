@@ -80,11 +80,11 @@ class Dropbox implements \Flexio\IFace\IFileSystem
                     $fullpath .= $entry['name'];
 
                     $files[] = array('id'=> $entry['id'] ?? null,
-                                    'name' => $entry['name'],
-                                    'path' => $fullpath,
-                                    'size' => $entry['size'] ?? '',
-                                    'modified' => $entry['client_modified'] ?? '',
-                                    'is_dir' => ($entry['.tag'] == 'folder' ? true : false));
+                                     'name' => $entry['name'],
+                                     'path' => $fullpath,
+                                     'size' => $entry['size'] ?? null,
+                                     'modified' => $entry['client_modified'] ?? '',
+                                     'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
                 }
             }
 

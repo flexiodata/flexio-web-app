@@ -89,8 +89,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 'path' => $full_path,
                 'size' => null,
                 'modified' => null,
-                'is_dir' => ($row['mimeType'] == 'application/vnd.google-apps.folder' ? true : false),
-                'root' => 'googledrive'
+                'type' => ($row['mimeType'] == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE')
             );
 
             if (isset($row['size']))

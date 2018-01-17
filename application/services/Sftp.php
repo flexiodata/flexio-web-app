@@ -105,10 +105,9 @@ class Sftp implements \Flexio\IFace\IFileSystem
             $entry = array(
                 'name' => $file,
                 'path' => $full_path,
-                'size' => $info['size'] ?? '',
+                'size' => $info['size'] ?? null,
                 'modified' => '',
-                'is_dir' => ($info['type'] === NET_SFTP_TYPE_DIRECTORY),
-                'root' => '/sftp'
+                'type' => ($info['type'] === NET_SFTP_TYPE_DIRECTORY) ? 'DIR' : 'FILE'
             );
 
             $result[] = $entry;

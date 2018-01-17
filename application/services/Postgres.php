@@ -80,7 +80,7 @@ class Postgres implements \Flexio\IFace\IFileSystem
                 'path' => $r['tablename'],
                 'size' => null,
                 'modified' => null,
-                'is_dir' => false
+                'type' => 'FILE'
             );
         }
 

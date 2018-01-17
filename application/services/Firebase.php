@@ -55,8 +55,7 @@ class Firebase implements \Flexio\IFace\IFileSystem
                 'path' => $row['table_name'],
                 'size' => null,
                 'modified' => null,
-                'is_dir' => false,
-                'root' => 'Firebase'
+                'type' => 'FILE'
             );
         }
 

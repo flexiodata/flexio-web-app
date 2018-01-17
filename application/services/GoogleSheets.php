@@ -64,9 +64,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                     'path' => '/' . $spreadsheet->title,
                     'size' => null, // size unknown
                     'modified' => $spreadsheet->updated,
-                    //'is_dir' => (count($worksheets) > 1 ? true:false),
-                    'is_dir' => true,
-                    'root' => 'googlesheets'
+                    'type' => 'DIR'  // (count($worksheets) > 1 ? 'DIR':'FILE')
                 );
 
                // if (count($worksheets) == 1)
@@ -96,8 +94,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                     'path' => '/' . $spreadsheet->title . '/' . $worksheet->title,
                     'size' => null,
                     'modified' => null,
-                    'is_dir' => false,
-                    'root' => 'googlesheets'
+                    'type' => 'FILE'
                 );
 
                 $files[] = $fileinfo;

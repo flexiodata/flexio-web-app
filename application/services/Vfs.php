@@ -84,7 +84,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 'size' => null,
                 'modified' => null,
                 'type' => 'DIR',
-                'is_dir' => true,
                 'connection' => [ 'connection_type' => 'home' ]
             );
 
@@ -107,8 +106,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     'path' => '/'.$name,
                     'size' => null,
                     'modified' => null,
-                    'type' => 'DIR',
-                    'is_dir' => true
+                    'type' => 'DIR'
                 );
 
                 //$entry['.connection_eid'] = $info['eid'];
@@ -137,7 +135,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             foreach ($results as &$v)
             {
-                $v['type'] = ($v['is_dir'] ? 'DIR' : 'FILE');
                 $v['path'] = '/' . $connection_identifier . $v['path'];
             }
             unset($v);

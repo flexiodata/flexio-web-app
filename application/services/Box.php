@@ -70,7 +70,7 @@ class Box implements \Flexio\IFace\IFileSystem
                                 'path' => $fullpath,
                                 'size' => $entry['size'] ?? '',
                                 'modified' => $entry['modified_at'] ?? '',
-                                'is_dir' => ($entry['type'] == 'folder' ? true : false));
+                                'type' => ($entry['type'] == 'folder' ? 'DIR' : 'FILE'));
         }
 
         return $files;

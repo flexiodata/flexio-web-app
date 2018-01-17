@@ -225,9 +225,9 @@ class GitHub implements \Flexio\IFace\IFileSystem
                 $repository_items[] = array('id'=> null, // TODO: available?
                                             'name' => $entry['name'],
                                             'path' => $entry['full_name'],
-                                            'size' => '',
+                                            'size' => null,
                                             'modified' => '',  // TODO: available?
-                                            'is_dir' => true);
+                                            'type' => 'DIR');
             }
 
             // find out if there's another page of results, and if so, get the url
@@ -338,7 +338,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
                                         'path' => $entry['path'],
                                         'size' => $entry['size'] ?? '',
                                         'modified' => '',  // TODO: available?
-                                        'is_dir' => ($entry['type'] == 'dir' ? true : false));
+                                        'type' => ($entry['type'] == 'dir' ? 'DIR' : 'FILE'));
             }
 
             // find out if there's another page of results, and if so, get the url

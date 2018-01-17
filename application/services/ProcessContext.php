@@ -65,8 +65,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
-                    'is_dir' => false,
-                    'root' => 'ProcessContext'
+                    'type' => 'FILE'
                 );
             }
         }
@@ -84,8 +83,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
-                    'is_dir' => false,
-                    'root' => 'ProcessContext'
+                    'type' => 'FILE'
                 );
             }
         }
@@ -103,8 +101,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
-                    'is_dir' => false,
-                    'root' => 'ProcessContext'
+                    'type' => 'FILE'
                 );
             }
         }
@@ -118,8 +115,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
                     'path' => $k,
                     'size' => null,
                     'modified' => null,
-                    'is_dir' => false,
-                    'root' => 'ProcessContext'
+                    'type' => 'FILE'
                 );
             }
         }

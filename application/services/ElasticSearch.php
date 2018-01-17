@@ -98,8 +98,7 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
                                    'path' => $index_name,
                                    'size' => null,
                                    'modified' => null,
-                                   'is_dir' => false,
-                                   'root' => 'elasticsearch');
+                                   'type' => 'FILE');
             }
         }
 

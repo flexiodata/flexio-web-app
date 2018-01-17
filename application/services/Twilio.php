@@ -68,8 +68,7 @@ class Twilio implements \Flexio\IFace\IFileSystem
                 'path' => $d['path'],
                 'size' => null,
                 'modified' => null,
-                'is_dir' => false,
-                'root' => 'twilio'
+                'type' => 'FILE'
             );
         }
 

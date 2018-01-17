@@ -62,7 +62,7 @@ class Store implements \Flexio\IFace\IFileSystem
                              'path' => $fullpath,
                              'size' => $entry['size'] ?? '',
                              'modified' => $entry['updated'] ?? '',
-                             'is_dir' => ($entry['stream_type'] == 'SD' ? true : false));
+                             'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE'));
         }
 
         return $files;

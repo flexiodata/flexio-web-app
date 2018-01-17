@@ -101,7 +101,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
                     'size' => null,
                     'id' => $id,
                     'url' => $this->base_url,
-                    'is_dir' => false
+                    'type' => 'DIR'
                 )
             );
         }
@@ -150,7 +150,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
                     'modified' => null,
                     'id' => $id,
                     'url' => $n['url'],
-                    'is_dir' => false
+                    'type' => 'FILE'
                 );
             }
         }

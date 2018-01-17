@@ -171,8 +171,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
                 'path' => $a['path'],
                 'size' => $a['size'],
                 'modified' => $a['modified'],
-                'is_dir' => ($a['type'] == 'DIR') ? true:false,
-                'root' => 'amazons3'
+                'type' => ($a['type'] == 'DIR') ? 'DIR':'FILE'
             );
         }
 
