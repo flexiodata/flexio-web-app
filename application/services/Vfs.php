@@ -82,7 +82,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 'name' => 'home',
                 'path' => '/home',
                 'size' => null,
-                'modified' => null,
+                'modified' => "2017-01-20T10:00:01+0000",
                 'type' => 'DIR',
                 'connection' => [ 'connection_type' => 'home' ]
             );
@@ -96,6 +96,8 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
                 if (!self::isStorageConnectionType($info['connection_type'] ?? ''))
                     continue;
+                if ($info['connection_status'] != 'A') // only return active connections
+                    continue;
 
                 $name = $info['ename'];
                 if (strlen($name) == 0)
@@ -105,17 +107,14 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                     'name' => $name,
                     'path' => '/'.$name,
                     'size' => null,
-                    'modified' => null,
+                    'modified' => $info['updated'],
                     'type' => 'DIR'
                 );
 
                 //$entry['.connection_eid'] = $info['eid'];
                 //$entry['.connection_type'] = $info['connection_type'];
 
-                unset($info['connection_info']);
-                unset($info['owned_by']);
-                unset($info['expires']);
-                $entry['connection'] = $info;
+                $entry['connection'] = \Flexio\Base\Util::filterArray($info, ['eid','ename','name','connection_type']);
 
                 $results[] = $entry;
             }
