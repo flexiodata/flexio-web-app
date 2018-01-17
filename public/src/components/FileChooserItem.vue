@@ -9,14 +9,14 @@
   >
     <td class="css-item">
       <div class="flex flex-row items-center">
-        <img v-if="item.is_dir" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
+        <img v-if="is_dir" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
         <img v-else src="../assets/file-icon/file-16.png" class="dib" alt="File">
         <span class="dib ml1 f7">{{item.name}}</span>
       </div>
     </td>
     <td class="css-item f7 tr">{{modified}}</td>
     <td class="css-item f7 tr">
-      <span v-if="item.is_dir">&nbsp;</span>
+      <span v-if="is_dir">&nbsp;</span>
       <span v-else-if="!has_filesize">&nbsp;</span>
       <span v-else>{{size}}</span>
     </td>
@@ -26,6 +26,8 @@
 <script>
   import moment from 'moment'
   import filesize from 'filesize'
+
+  const VFS_TYPE_DIR = 'DIR'
 
   export default {
     props: {
@@ -55,6 +57,9 @@
       },
       has_filesize() {
         return this.size === null ? false : true
+      },
+      is_dir() {
+        return _.get(this.item, 'type') == VFS_TYPE_DIR ? true : false
       },
       size() {
         // show empty string for null sizes

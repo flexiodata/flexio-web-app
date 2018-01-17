@@ -114,6 +114,8 @@
   import FileChooserModal from './FileChooserModal.vue'
   import TaskItemHelper from './mixins/task-item-helper'
 
+  const VFS_TYPE_DIR = 'DIR'
+
   export default {
     props: {
       'item': {
@@ -255,7 +257,7 @@
       addFiles(items, modal) {
         // add wildcards for folders
         var new_items = _.map(items, (f) => {
-          return _.get(f, 'is_dir', false)
+          return _.get(f, 'type') == VFS_TYPE_DIR
             ? { path: _.get(f, 'path') + '/*' }
             : _.pick(f, ['path'])
         })

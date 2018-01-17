@@ -33,6 +33,9 @@
   import Spinner from 'vue-simple-spinner'
   import FileChooserItem from './FileChooserItem.vue'
 
+  const VFS_TYPE_DIR  = 'DIR'
+  const VFS_TYPE_FILE = 'FILE'
+
   export default {
     props: {
       'path': {
@@ -80,7 +83,7 @@
           ? _.filter(this.items, { is_selected: true })
           : this.last_selected_item
 
-        return this.allowFolders ? items : _.reject(items, { is_dir: true })
+        return this.allowFolders ? items : _.reject(items, { type: VFS_TYPE_DIR })
       },
       empty_message() {
         if (this.emptyMessage.length > 0)
@@ -151,7 +154,7 @@
         this.fireSelectionChangeEvent()
       },
       itemDblClick(item) {
-        if (_.get(item, 'is_dir') === true)
+        if (_.get(item, 'type') == VFS_TYPE_DIR)
         {
           this.$emit('open-folder', _.defaultTo(item.path, '/'))
           this.last_selected_item = null
@@ -165,12 +168,12 @@
           var items = _
             .chain(_.defaultTo(response.body, []))
             .map((f) => { return _.assign({}, { is_selected: false }, f) })
-            .sortBy([{ is_dir: false }, function(f) { return _.toLower(f.name) } ])
+            .sortBy([{ type: VFS_TYPE_FILE }, function(f) { return _.toLower(f.name) } ])
             .value()
 
           // only show folders
           if (this.foldersOnly)
-            items = _.filter(items, (item) => { return _.get(item, 'is_dir') === true })
+            items = _.filter(items, (item) => { return _.get(item, 'type') == VFS_TYPE_DIR })
 
           this.is_fetching = false
           this.items = [].concat(items)
