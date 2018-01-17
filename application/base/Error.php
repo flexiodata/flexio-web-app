@@ -25,6 +25,7 @@ class Error
     const INVALID_VERSION        =  'invalid-version';
     const INVALID_REQUEST        =  'invalid-request';
     const INVALID_SYNTAX         =  'invalid-syntax';
+    const INVALID_FORMAT         =  'invalid-format';
     const MISSING_PARAMETER      =  'missing-parameter';
     const INVALID_PARAMETER      =  'invalid-parameter';
     const UNAUTHORIZED           =  'unauthorized';
@@ -64,6 +65,7 @@ class Error
             case self::INVALID_SYNTAX:         return 'Invalid syntax';
             case self::MISSING_PARAMETER:      return 'Missing parameter';
             case self::INVALID_PARAMETER:      return 'Invalid parameter';
+            case self::INVALID_FORMAT:         return 'Invalid format';
             case self::CREATE_FAILED:          return 'Could not create object';
             case self::DELETE_FAILED:          return 'Could not delete object';
             case self::WRITE_FAILED:           return 'Could not write to object';
@@ -74,6 +76,7 @@ class Error
             case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
             case self::INVALID_VERSION:        return 'Invalid version';
             case self::INVALID_REQUEST:        return 'Invalid request';
+            case self::NOT_FOUND:              return 'Not found';
         }
     }
 }
