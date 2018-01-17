@@ -17,6 +17,7 @@
       if (this.keywords.hasOwnProperty(keyword))
       {
         this.json = this.keywords[keyword].call(this, str)
+
         this.command = keyword
       }
        else
@@ -28,6 +29,7 @@
     this.toJSON = function(cmdbar)
     {
       this.parse(cmdbar)
+
       if (this.errors.length > 0)
         return null;
           else
@@ -912,10 +914,8 @@
 
 
 
-    this.args.email = ['to'/*,'from'*/,'subject','body','html'/*,'reply-to'*/,'data'];
-    this.hints.email = {
-      "data":       [ 'none','body','attachment' ]
-    };
+    this.args.email = ['to'/*,'from'*/,'subject','body','html'/*,'reply-to'*/,'attachments']
+    this.hints.email = {}
     this.keywords.email = function(str)
     {
       var json =
@@ -929,35 +929,50 @@
 
       if (params.hasOwnProperty('to'))
       {
-        json.params.to = this.parseCommaList(params['to'].value);
+        json.params.to = this.parseCommaList(params['to'].value)
       }
 
       if (params.hasOwnProperty('from'))
       {
-        json.params.from = params['from'].value;
+        json.params.from = params['from'].value
       }
 
       if (params.hasOwnProperty('subject'))
       {
-        json.params.subject = params['subject'].value;
+        json.params.subject = params['subject'].value
       }
 
       if (params.hasOwnProperty('body'))
       {
-        json.params.body_text = params['body'].value;
+        json.params.body_text = params['body'].value
       }
 
       if (params.hasOwnProperty('html'))
       {
-        json.params.body_html = params['html'].value;
+        json.params.body_html = params['html'].value
       }
 
-      if (params.hasOwnProperty('data'))
+      if (params.hasOwnProperty('attachments'))
       {
-        json.params.data = params['data'].value;
+        json.params.attachments = []
+
+        var i, arr = this.parseList(params['attachments'].value)
+
+        for (i = 0; i < arr.length; ++i)
+        {
+          var name, path
+          if (arr[i] instanceof Object && arr[i].hasOwnProperty('key'))
+          {
+            json.params.attachments.push({ name: arr[i].key, file: arr[i].value })
+          }
+           else
+          {
+            json.params.attachments.push(arr[i])
+          }
+        }
       }
 
-      return json;
+      return json
     };
 
 
@@ -1010,9 +1025,37 @@
         res = this.append(res, "html: " + json.params.body_html);
       }
 
-      if (json.params.hasOwnProperty('data'))
+      if (json.params.hasOwnProperty('attachments'))
       {
-        res = this.append(res, "data: " + json.params.data);
+        var str = ''
+        
+
+        for (var i = 0; i < json.params.attachments.length; ++i)
+        { 
+          
+
+          if (str.length > 0)
+            str += ", ";
+          if (json.params.attachments instanceof Object && json.params.attachments[i].hasOwnProperty('file'))
+          {
+            if (json.params.attachments[i].hasOwnProperty('name'))
+            {
+              str += json.params.attachments[i].name + " => " + json.params.attachments[i].file
+            }
+            else
+            {
+              str += json.params.attachments[i].file
+            }
+          }
+           else
+          {
+            str += json.params.attachments[i]
+          }
+        }
+
+        if (str.length > 0) { 
+          res = this.append(res, "attachments: " + str);
+        }
       }
 
       return res;

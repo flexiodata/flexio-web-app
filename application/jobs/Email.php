@@ -84,7 +84,55 @@ class Email extends \Flexio\Jobs\Base
 
         $data_mode = isset($job_definition['params']['data']) ? $job_definition['params']['data'] : self::DATA_MODE_ATTACHMENT;
 
-        $email_params['attachments'] = array();
+        $attachments = array();
+
+        if (isset($job_definition['params']['attachments']))
+        {
+            foreach ($job_definition['params']['attachments'] as $attachment)
+            {
+                if (is_string($attachment))
+                {
+                    $file = $attachment;
+                    $name = null;
+                    $mime_type = null;
+                }
+                else if (isset($attachment['file']))
+                {
+                    $file = $attachment['file'];
+                    $name = $attachment['name'] ?? null;
+                    $mime_type = $attachment['mime_type'] ?? null;
+                }
+
+                if ($name === null)
+                {
+                    $name = substr($file, strrpos($file, '/') + 1);
+                }
+
+                if ($mime_type === null)
+                {
+                    $mime_type = \Flexio\Base\ContentType::getMimeTypeFromExtension($name);
+                }
+
+                $attachments[] = [
+                    'name' => $name,
+                    'file' => $file,
+                    'mime_type' => $mime_type
+                ];
+            }
+        }
+
+
+        if (count($attachments) > 0)
+        {
+            foreach ($attachments as &$attachment)
+            {
+                self::convertToDiskFile($process, $attachment);
+            }
+
+            $email_params['attachments'] = $attachments;
+        }
+
+        /*
         foreach ($attachments as $a)
         {
             if ($data_mode === self::DATA_MODE_ATTACHMENT)
@@ -114,6 +162,7 @@ class Email extends \Flexio\Jobs\Base
 
             // everything else; equivalent for now to nothing
         }
+        */
 
         $email = \Flexio\Services\Email::create($email_params);
         $res = $email->send();
@@ -127,6 +176,48 @@ class Email extends \Flexio\Jobs\Base
                 @unlink($file);
         }
     }
+
+    private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment)
+    {
+        $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+        $fname = $storage_tmpbase . "emailattach-" . \Flexio\Base\Util::generateRandomString(20);
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
+
+
+        try
+        {
+            $stream = $vfs->open($attachment['file']);
+            if (!$stream)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            }
+
+
+            $reader = $stream->getReader();
+            $f = fopen($fname, "wb");
+            while (($data = $reader->read(32768)) != false)
+            {
+                fwrite($f, $data);
+            }
+            fclose($f);
+
+            $attachment['file'] = $fname;
+        }
+        catch (\Exception $e)
+        {
+            $f = fopen($fname, "wb");
+            $vfs->read($attachment['file'], function($data) use (&$f) {
+                fwrite($f, $data);
+            });
+            fclose($f);
+
+            $attachment['file'] = $fname;
+        }
+
+    }
+
 
     private function getAttachmentsFromInput(array $instream_list)
     {
