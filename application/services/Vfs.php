@@ -256,10 +256,19 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if (strlen($path) == 0)
             return [];
 
-        if (substr($path, 0, 10) == 'context://')
+        $urlsep_pos = strpos($path, '://');
+        if ($urlsep_pos != -1)
         {
-            // split off the schema portion context://; the path portion will retain the preceding slash
-            return [ substr($path, 0, 10), substr($path, 9) ];
+            $protocol = substr($path, 0, $urlsep_pos);
+            if ($protocol == 'context')
+            {
+                // split off the schema portion context://; the path portion will retain the preceding slash
+                return [ substr($path, 0, $urlsep_pos+3), substr($path, 9) ];
+            }
+            else if ($protocol == 'https' || $protocol == 'http')
+            {
+                return [ substr($path, 0, $urlsep_pos+3), $path ];
+            }
         }
 
 
@@ -298,6 +307,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
             $this->service_map[$connection_identifier] = $this->process_context_service;
             return $this->process_context_service;
+        }
+
+        if ($connection_identifier == 'http://' || $connection_identifier == 'https://')
+        {
+            $http_service = \Flexio\Services\Http::create();
+            $this->service_map[$connection_identifier] = $http_service;
+            return $http_service;
         }
 
         if ($connection_identifier == 'home')
