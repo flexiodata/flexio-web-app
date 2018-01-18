@@ -2445,9 +2445,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flexio-sdk-js@^1.14.1:
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/flexio-sdk-js/-/flexio-sdk-js-1.14.1.tgz#46bb26f6b46457c4b4296ab2167a172bddc9a9fd"
+flexio-sdk-js@^1.15.1:
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/flexio-sdk-js/-/flexio-sdk-js-1.15.1.tgz#48775ea5fcc9a3e4362db50fd89b4efaf0cd2387"
   dependencies:
     axios "^0.16.2"
     lodash "^4.17.4"
