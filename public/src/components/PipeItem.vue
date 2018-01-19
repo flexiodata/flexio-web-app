@@ -165,11 +165,11 @@
           id: 'share',
           label: 'Share',
           icon: 'person_add'
-        },{
+        }/*,{
           id: 'embed',
           label: 'Embed',
           icon: 'share'
-        },{
+        }*/,{
           id: 'schedule',
           label: 'Schedule',
           icon: 'date_range'
