@@ -257,7 +257,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return [];
 
         $urlsep_pos = strpos($path, '://');
-        if ($urlsep_pos != -1)
+        if ($urlsep_pos !== false)
         {
             $protocol = substr($path, 0, $urlsep_pos);
             if ($protocol == 'context')
