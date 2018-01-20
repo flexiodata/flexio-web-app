@@ -214,6 +214,13 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
         return $structure;
     }
 
+    public function isTable() : bool
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+        return count($this->properties['structure']) > 0 ? true : false;
+    }
+
     public function getFileInfo() : array
     {
         if ($this->isCached() === false)

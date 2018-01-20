@@ -664,10 +664,18 @@ class ScriptHost
             return null;
 
         if ($data instanceof BinaryData)
+        {
             $writer->write($data->getData());
+        }
         else if (is_object($data))
-            $writer->write(json_encode($data));
-        else {
+        {
+            if (isset($this->output_streams[$handle]) && $this->output_streams[$handle]->isTable())
+                $writer->write((array)$data);
+                 else
+                $writer->write(json_encode($data));
+        }
+        else
+        {
             $writer->write((string)$data);
         }
     }
