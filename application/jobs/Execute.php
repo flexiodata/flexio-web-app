@@ -584,6 +584,9 @@ class ScriptHost
         if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
             return false;
 
+        if (is_object($properties))
+            $properties = (array)$properties;
+        
         $stream = $this->output_streams[$stream_idx];
 
         $set = array();
@@ -594,6 +597,12 @@ class ScriptHost
             $set['mime_type'] = $properties['content_type'];
         if (isset($properties['structure']))
         {
+            for ($i = 0; $i < count($properties['structure']); ++$i)
+            {
+                if (is_object($properties['structure'][$i]))
+                    $properties['structure'][$i] = (array)$properties['structure'][$i];
+            }
+            
             $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
@@ -623,9 +632,15 @@ class ScriptHost
             return null;
 
         if ($row instanceof BinaryData)
+        {
             $writer->write($row->getData());
-             else
+        }
+         else
+        {
+            if (is_object($row))
+                $row = (array)$row;
             $writer->write($row);
+        }
     }
 
     public function func_insertRows($stream_idx, $row)
@@ -636,6 +651,8 @@ class ScriptHost
 
         foreach ($rows as $row)
         {
+            if (is_object($row))
+                $row = (array)$row;
             $writer->write($row);
         }
     }
