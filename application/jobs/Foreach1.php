@@ -18,13 +18,13 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "op": "each",
+    "op": "foreach",
     "params": [
     ]
 }
 */
 
-class Each extends \Flexio\Jobs\Base
+class ForEach1 extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {
