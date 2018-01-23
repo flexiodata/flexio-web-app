@@ -162,7 +162,8 @@ class Filter extends \Flexio\Jobs\Base
         if ($filter_expression === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing where parameter");
 
-        $outstream->setStructure($input_structure);
+        $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                         'structure' => $input_structure ]);
 
         // write to the output
         $streamreader = $instream->getReader();
