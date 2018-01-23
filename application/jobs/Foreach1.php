@@ -24,21 +24,64 @@ namespace Flexio\Jobs;
 }
 */
 
-class ForEach1 extends \Flexio\Jobs\Base
+class Foreach1 extends \Flexio\Jobs\Base
 {
+    private $env = null;
+    private $task = null;
+
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
+
+        $this->env = $process->getParams();
+
+        $job_definition = $this->getProperties();
+        $this->task = $job_definition['params']['run'] ?? [];
+
 
         // stdin/stdout
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
         $this->processStream($instream, $outstream);
+
+        $process->setParams($this->env);
     }
 
     private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
+        $streamreader = $instream->getReader();
+
+        if ($mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            while (($row = $streamreader->readRow()) !== false)
+            {
+                $this->doIteration($row);
+            }
+        }
+        else if ($mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $buf = '';
+            while (($chunk = $streamreader->read(32768)) !== false)
+                $buf .= $chunk;
+            $json = json_decode($buf);
+            if (is_array($json))
+            {
+                foreach ($json as $item)
+                {
+                    $this->doIteration($item);
+                }
+            }
+            else
+            {
+                $this->doIteration($json);
+            }
+        }
+        else
+        {
+
+        }
+
         switch ($mime_type)
         {
             default:
@@ -51,40 +94,26 @@ class ForEach1 extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function doIteration($row)
     {
-        $job_definition = $this->getProperties();
-        $job_task = $job_definition['params'];
+        $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
 
-        // execute each of the job tasks for the input row
-        $streamreader = $instream->getReader();
-        $streamwriter = $outstream->getWriter();
-
-        while (true)
+        if (is_array($row) || is_object($row))
         {
-            $row = $streamreader->readRow();
-            if ($row === false)
-                break;
-
-            // create a new process; pass on the params, but set the stdin
-            // to the content for the row; TODO: need to pass on the params from
-            // the process
-            $subprocess = \Flexio\Jobs\Process::create();
-            $subprocess->getStdin()->write($row);
-            $subprocess->execute($job_task);
-            $subprocess_stdout = $subprcess->getStdout();
-
-            while (true)
-            {
-                $outrow = $subprocess_stdout->read();
-                if ($outrow === false)
-                    break;
-
-                $streamwriter->write($outrow);
-            }
+            $stream->setMimeType(\Flexio\Base\ContentType::JSON);
+            $writer->write(json_encode($row));
+        }
+        else
+        {
+            $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
+            $writer->write((string)$row);
         }
 
-        $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
+        $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setParams($this->env);
+        $subprocess->setStdin($stream);
+        $subprocess->execute($this->task);
+        $this->env = $subprocess->getParams();
     }
 }
