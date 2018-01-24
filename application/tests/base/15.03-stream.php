@@ -167,14 +167,14 @@ class Test
         $actual = $last_row;
         $expected = json_decode('
         {
-            "num_1a": "1",
-            "num_1b": "0",
-            "num_1c": "1",
-            "num_1d": "5",
-            "num_1e": "5000000000000",
-            "num_1f": "0.000000000005",
-            "num_1g": "5000000000000",
-            "num_1h": "0.000000000005"
+            "num_1a": 1,
+            "num_1b": 0,
+            "num_1c": 1,
+            "num_1d": 5,
+            "num_1e": 5000000000000,
+            "num_1f": 0.000000000005,
+            "num_1g": 5000000000000,
+            "num_1h": 0.000000000005
         }
         ',true);
         TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; test numeric type with multiple rows and combinations of values',  $actual, $expected, $results);
@@ -242,18 +242,16 @@ class Test
         }
         $reader->close();
         $actual = $last_row;
-        $expected = json_decode('
-        {
-            "num_2a": "1",
-            "num_2b": "0",
-            "num_2c": "1",
-            "num_2d": "5",
-            "num_2e": "5000000000000",
-            "num_2f": "5e-12",
-            "num_2g": "5000000000000",
-            "num_2h": "5e-12"
-        }
-        ',true);
+        $expected = array(
+            "num_2a" => (float)1,
+            "num_2b" => (float)0,
+            "num_2c" => (float)1,
+            "num_2d" => (float)5,
+            "num_2e" => (float)5000000000000,
+            "num_2f" => (float)0.000000000005,
+            "num_2g" => (float)5000000000000,
+            "num_2h" => (float)0.000000000005
+        );
         TestCheck::assertArray('C.1', 'StreamReader/StreamWriter; test double type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 

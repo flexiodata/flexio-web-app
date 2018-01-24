@@ -1009,7 +1009,7 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "0"}',true);
+        $expected = json_decode('{ "f1" : 0}',true);
         TestCheck::assertArray('F.2', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1028,7 +1028,7 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "1"}',true);
+        $expected = json_decode('{ "f1" : 1}',true);
         TestCheck::assertArray('F.3', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1047,7 +1047,7 @@ class Test
         $reader = $stream->getReader();
         $actual = $reader->readRow();
         $reader->close();
-        $expected = json_decode('{ "f1" : "-1"}',true);
+        $expected = json_decode('{ "f1" : -1}',true);
         TestCheck::assertArray('F.4', 'StreamReader/StreamWriter; make sure values that could potentially cause problems are handled correctly',  $actual, $expected, $results);
 
 
