@@ -20,21 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+/*
         // TEST: SDK template tests
 
         // BEGIN TEST
         $script = TestUtil::getTestSDKSetup() . <<<EOD
-Flexio.pipe()
-.javascript(function(context) {
-    context.output.write('Hello ' + context.query.name + '!')
-})
-.run({ query: { name: 'World' } }, function(err, response) {
-    console.log(response.text)
-})
 EOD;
-        $actual = TestUtil::execSDKJS($script);
-        $expected = "Hello World!\n";
-        TestCheck::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
+        $actual = json_deocdTestUtil::execSDKJS($script);
+        $expected = "";
+        TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+*/
     }
 }
 

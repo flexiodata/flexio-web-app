@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: basic SDK tests
+        // TEST: SDK template tests
 
         // BEGIN TEST
         $script = TestUtil::getTestSDKSetup() . <<<EOD

@@ -24,19 +24,18 @@ class Test
 
         // BEGIN TEST
         $script = TestUtil::getTestSDKSetup() . <<<EOD
-var python_code = `
-def flexio_handler(context):
-    context.output.write('Hello ' + context.query['name'] + '!')
-`
 Flexio.pipe()
-    .python(python_code)
-    .run({ query: { name: 'World' } }, function(err, response) {
+    .python(
+    'https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py', // code path
+    'sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36' // optional integrity check
+    )
+    .run(function(err, response) {
     console.log(response.text)
     })
 EOD;
         $actual = TestUtil::execSDKJS($script);
-        $expected = "Hello World!\n";
-        TestCheck::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
+        $expected = "Hello, World!\n";
+        TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
     }
 }
 
