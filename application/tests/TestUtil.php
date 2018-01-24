@@ -34,6 +34,11 @@ class TestUtil
         return new \Model;
     }
 
+    public static function execSDKJS(string $script)
+    {
+        // TODO: add hook for running the SDK
+    }
+
     // $method = GET, POST, PUT, DELETE
     // $path = /api/v1/... + GET parameters
     // $token = authentication token
