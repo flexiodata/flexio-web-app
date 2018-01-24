@@ -105,9 +105,17 @@ class Base implements \Flexio\IFace\IJob
                         $offset = $match[1];
 
                         $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
+                        $suffix = '';
                         $replacement = '';
 
-                        if ($varname == 'stdin')
+                        $period = strpos($varname, '.');
+                        if ($period !== false)
+                        {
+                            $suffix = substr($varname, $period+1);
+                            $varname = substr($varname, 0, $period);
+                        }
+
+                        if ($varname == 'stdin' || $varname = 'input')
                         {
                             $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
@@ -118,14 +126,14 @@ class Base implements \Flexio\IFace\IJob
                         {
                             $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
                         }
-                        else if (substr($varname, 0, 6) == 'files.')
+                        else if ($varname == 'files')
                         {
-                            $parts = explode('.', $varname);
+                            $parts = explode('.', $suffix);
 
-                            if (count($parts) >= 2 && isset($info['files'][$parts[1]]))
+                            if (count($parts) >= 1 && isset($info['files'][$part[0]]))
                             {
-                                $file = $info['files'][$parts[1]];
-                                if (($parts[2] ?? '') == 'name')
+                                $file = $info['files'][$part[0]];
+                                if (($parts[1] ?? '') == 'name')
                                 {
                                     if ($file instanceof \Flexio\Base\Stream)
                                         $replacement = $file->getName();
@@ -154,6 +162,16 @@ class Base implements \Flexio\IFace\IJob
                                         $replacement = (string)$var;
                                     }
                                 }
+                            }
+                        }
+
+                        if (strlen($suffix) > 0)
+                        {
+                            $data = json_decode($replacement, true);
+                            $replacement = '';
+                            if (isset($data[$suffix]))
+                            {
+                                $replacement = (string)$data[$suffix];
                             }
                         }
 
