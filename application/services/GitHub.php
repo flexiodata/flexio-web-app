@@ -39,8 +39,8 @@ class GitHub implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
-    public function list(string $path = '') : array
+
+    public function list(string $path = '', array $options = []) : array
     {
         // returns the directory tree for all repositories the user
         // has access to, starting with the repository as the root
@@ -69,7 +69,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement

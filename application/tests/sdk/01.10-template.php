@@ -45,7 +45,7 @@ Flexio.pipe()
 EOD;
         $actual = json_decode(TestUtil::execSDKJS($script),true);
         $expected = array("males" => 50, "females" => 50);
-        TestCheck::assertArray('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+        TestCheck::assertInArray('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
     }
 }
 

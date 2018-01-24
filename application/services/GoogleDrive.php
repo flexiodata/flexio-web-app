@@ -41,7 +41,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         if (!$this->authenticated())
@@ -104,9 +104,47 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $default_result = array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
+
+        if (is_null($path) || $path == '' || $path == '/')
+            return $default_result;
+
+        $path = trim($path, '/');
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $parts = explode('/', $path);
+        $file_limit = 1000;
+
+        $ch = curl_init();
+
+        $current_id = 'root'; // stores the current folder id
+        $current_content_type = 'application/octet-stream';
+
+        foreach ($parts as $p)
+        {
+            $p = str_replace("'", "\\'", $p);
+            $p = urlencode($p); // necessary for files/folders with spaces
+            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+
+            $result = @json_decode($result,true);
+            if (!isset($result['files'][0]['id']))
+                return $default_result;
+            $current_id = $result['files'][0]['id'];
+            $current_content_type = $result['files'][0]['mimeType'];
+        }
+
+        curl_close($ch);
+
+        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
-    
+
     public function exists(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
@@ -295,49 +333,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         if (!$info)
             return $info;
         return $info['id'];
-    }
-
-    public function getFileInfo(string $path)  // TODO: set function return type   (: ?string)
-    {
-        if (is_null($path) || $path == '' || $path == '/')
-        {
-            return array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
-        }
-
-        $path = trim($path, '/');
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $parts = explode('/', $path);
-        $file_limit = 1000;
-
-        $ch = curl_init();
-
-        $current_id = 'root'; // stores the current folder id
-        $current_content_type = 'application/octet-stream';
-
-        foreach ($parts as $p)
-        {
-            $p = str_replace("'", "\\'", $p);
-            $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-
-            $result = @json_decode($result,true);
-            if (!isset($result['files'][0]['id']))
-                return null;
-            $current_id = $result['files'][0]['id'];
-            $current_content_type = $result['files'][0]['mimeType'];
-        }
-
-        curl_close($ch);
-
-        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
 
     private function connect() : bool

@@ -60,7 +60,7 @@ class Postgres implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         $db = $this->newConnection();
@@ -89,9 +89,44 @@ class Postgres implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $qtbl = $this->db->quote($path);
+        $sql = "select t.tablename as name, coalesce(d.description,'') as type from pg_tables t " .
+               'inner join pg_class as c on c.relname=t.tablename ' .
+               'left outer join pg_description as d on c.oid=d.objoid ' .
+               'where t.schemaname = current_schema() and c.relname=' . $qtbl;
+
+        $stmt = $this->db->query($sql);
+        $res = null;
+        if ($stmt) $res = $stmt->fetchAll();
+
+        if (count($res) != 1)
+            return array();
+
+        $type = $res[0]['type'];
+        $type_parts = explode(';',$type);
+        $type_parts = array_map('trim', $type_parts);
+
+        $result = [];
+        if (count($type_parts) == 3 && $type_parts[0] == 'stream')
+        {
+            $result['name'] = $path;
+            $result['type'] = 'stream';
+            $result['format'] = 'default';
+            $result['mime_type'] = $type_parts[1];
+            $result['encoding'] = $type_parts[2];
+        }
+         else
+        {
+            $result['name'] = $path;
+            $result['type'] = 'table';
+            $result['format'] = 'default';
+            $result['mime_type'] = 'text/plain';
+            $result['encoding'] = 'default';
+        }
+
+        return $result;
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -591,46 +626,6 @@ class Postgres implements \Flexio\IFace\IFileSystem
             return null;
 
         return $structure;
-    }
-
-    public function getFileInfo(string $path)
-    {
-        $qtbl = $this->db->quote($path);
-        $sql = "select t.tablename as name, coalesce(d.description,'') as type from pg_tables t " .
-               'inner join pg_class as c on c.relname=t.tablename ' .
-               'left outer join pg_description as d on c.oid=d.objoid ' .
-               'where t.schemaname = current_schema() and c.relname=' . $qtbl;
-
-        $stmt = $this->db->query($sql);
-        $res = null;
-        if ($stmt) $res = $stmt->fetchAll();
-
-        if (count($res) != 1)
-            return;
-
-        $type = $res[0]['type'];
-        $type_parts = explode(';',$type);
-        $type_parts = array_map('trim', $type_parts);
-
-        $result = [];
-        if (count($type_parts) == 3 && $type_parts[0] == 'stream')
-        {
-            $result['name'] = $path;
-            $result['type'] = 'stream';
-            $result['format'] = 'default';
-            $result['mime_type'] = $type_parts[1];
-            $result['encoding'] = $type_parts[2];
-        }
-         else
-        {
-            $result['name'] = $path;
-            $result['type'] = 'table';
-            $result['format'] = 'default';
-            $result['mime_type'] = 'text/plain';
-            $result['encoding'] = 'default';
-        }
-
-        return $result;
     }
 
     public function getTableRowCount(string $table) : int
