@@ -82,16 +82,6 @@ class Foreach1 extends \Flexio\Jobs\Base
 
         }
 
-        switch ($mime_type)
-        {
-            default:
-                $outstream->copyFrom($instream);
-                return;
-
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->getOutput($instream, $outstream);
-                return;
-        }
     }
 
     private function doIteration($row)

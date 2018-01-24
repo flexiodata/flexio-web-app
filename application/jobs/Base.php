@@ -115,12 +115,13 @@ class Base implements \Flexio\IFace\IJob
                             $varname = substr($varname, 0, $period);
                         }
 
-                        if ($varname == 'stdin' || $varname = 'input')
+                        if ($varname == 'stdin' || $varname == 'input')
                         {
                             $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                                 $replacement .= $chunk;
+
                         }
                         else if ($varname == 'uniqid')
                         {
