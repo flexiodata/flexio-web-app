@@ -20,11 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        $server_ipaddr = $_SERVER['SERVER_ADDR'];
-
-        $script = <<<EOD
-const Flexio = require('flexio-sdk-js')
-Flexio.setup('xtdkxpcjwzkpgkhkcmhx', { baseUrl: 'https://$server_ipaddr/api/v1', insecure: true })
+        $script = TestUtil::getTestSDKSetup() . <<<EOD
 Flexio.pipe()
 .echo("Hello, World.")
 .run(function(err, response) {
@@ -32,7 +28,8 @@ Flexio.pipe()
 })
 EOD;
         $actual = TestUtil::execSDKJS($script);
-        $expected = 'Hello, World.';
+        $expected = "Hello, World.\n";
         TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
     }
 }
+

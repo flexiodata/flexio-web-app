@@ -119,6 +119,25 @@ class TestUtil
         return $retval;
     }
 
+    public static function getTestSDKSetup()
+    {
+        $default_user_token = TestUtil::getDefaultTestUserToken();
+        $test_api_endpoint = TestUtil::getTestApiEndpoint();
+
+        $script = <<<EOD
+
+const Flexio = require('flexio-sdk-js');
+Flexio.setup('$default_user_token', { baseUrl: '$test_api_endpoint', insecure: true });
+
+EOD;
+        return $script;
+    }
+
+    public static function getTestApiEndpoint()
+    {
+        return 'https://' . $_SERVER['SERVER_ADDR'] . '/api/v1';
+    }
+
     public static function getDefaultTestUser()
     {
         // returns the eid of a default test user; creates the user if the
@@ -134,6 +153,21 @@ class TestUtil
 
         $user_eid = TestUtil::createUser($user_name, $email, $password);
         return $user_eid;
+    }
+
+    public static function getDefaultTestUserToken()
+    {
+        // returns an api token for the default test user
+        $user_eid = self::getDefaultTestUser();
+        $user = \Flexio\Object\User::load($user_eid);
+        $tokens = $user->getTokenList();
+
+        if (count($tokens) === 0)
+            $tokens[] = \Flexio\Object\Token::create(array('user_eid' => $user_eid));
+
+        // return the first token
+        $token_info = $tokens[0]->get();
+        return $token_info['access_code'];
     }
 
     public static function getDefaultTestProject()
