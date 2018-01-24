@@ -54,7 +54,7 @@ class TestBase
         TestBase::addTests('object', $tests);
         TestBase::addTests('jobs', $tests);
         TestBase::addTests('api', $tests);
-        TestBase::addTests('sdkjs', $tests);
+        TestBase::addTests('sdk', $tests);
 
         return $tests;
     }
