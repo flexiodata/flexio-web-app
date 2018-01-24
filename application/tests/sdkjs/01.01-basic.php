@@ -20,8 +20,11 @@ class Test
 {
     public function run(&$results)
     {
+        $server_ipaddr = $_SERVER['SERVER_ADDR'];
+
         $script = <<<EOD
-Flexio.setup('YOUR_API_KEY')
+const Flexio = require('flexio-sdk-js')
+Flexio.setup('xtdkxpcjwzkpgkhkcmhx', { baseUrl: 'https://$server_ipaddr/api/v1', insecure: true })
 Flexio.pipe()
 .echo("Hello, World.")
 .run(function(err, response) {

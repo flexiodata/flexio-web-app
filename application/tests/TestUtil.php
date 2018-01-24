@@ -24,6 +24,7 @@ class TestError
     const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
 }
 
+
 class TestUtil
 {
     const EPSILON = 0.000000000001;
@@ -34,9 +35,19 @@ class TestUtil
         return new \Model;
     }
 
-    public static function execSDKJS(string $script)
+    public static function execSDKJS(string $code)
     {
-        // TODO: add hook for running the SDK
+        $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".base64_encode($code)." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/script.js)' 2>&1";
+
+        $f = popen($cmd, 'r');
+        $result = stream_get_contents($f);
+        pclose($f);
+
+        return $result;
     }
 
     // $method = GET, POST, PUT, DELETE
