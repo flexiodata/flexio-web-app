@@ -78,9 +78,49 @@ class Box implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $default_result = array('id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
+
+        if (is_null($path) || $path == '' || $path == '/')
+            return $default_result;
+
+        $path = trim($path, '/');
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $parts = explode('/', $path);
+        $file_limit = 1000;
+
+        $current_id = 0; // stores the current folder id; 0 = root
+        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
+
+        foreach ($parts as $p)
+        {
+            //$p = str_replace("'", "\\'", $p);
+            $p = urlencode($p); // necessary for files/folders with spaces
+            $items = $this->getFolderItems($current_id);
+
+            $found = false;
+            foreach ($items as $item)
+            {
+                if ($item['name'] == $p)
+                {
+                    $current_id = $item['id'];
+                    if ($item['type'] == 'folder')
+                        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
+                         else
+                        $current_content_type = 'application/octet-stream';
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found)
+                return $default_result;
+        }
+
+
+        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -314,53 +354,6 @@ class Box implements \Flexio\IFace\IFileSystem
         if (!$info)
             return $info;
         return $info['id'];
-    }
-
-    private function getFileInfo(string $path)  // TODO: set function return type   (: ?string)
-    {
-        if (is_null($path) || $path == '' || $path == '/')
-        {
-            return array('id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
-        }
-
-        $path = trim($path, '/');
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $parts = explode('/', $path);
-        $file_limit = 1000;
-
-
-
-        $current_id = 0; // stores the current folder id; 0 = root
-        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
-
-        foreach ($parts as $p)
-        {
-            //$p = str_replace("'", "\\'", $p);
-            $p = urlencode($p); // necessary for files/folders with spaces
-            $items = $this->getFolderItems($current_id);
-
-            $found = false;
-            foreach ($items as $item)
-            {
-                if ($item['name'] == $p)
-                {
-                    $current_id = $item['id'];
-                    if ($item['type'] == 'folder')
-                        $current_content_type = \Flexio\Base\ContentType::FLEXIO_FOLDER;
-                         else
-                        $current_content_type = 'application/octet-stream';
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found)
-                return false;
-        }
-
-
-        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
 
     private function connect() : bool
