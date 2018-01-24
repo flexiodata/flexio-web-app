@@ -11,10 +11,10 @@
       <div v-if="email_provided" class="mv3">
         <input
           type="email"
-          class="bg-black-10"
           placeholder="Email"
           autocomplete=off
           spellcheck="false"
+          class="bg-black-10"
           disabled
           :class="input_cls"
           v-model="email"
@@ -23,13 +23,13 @@
       <div class="mv3 flex flex-row">
         <div class="flex-fill mr3">
           <input
+            ref="input-firstname"
             type="text"
             placeholder="First name"
             autocomplete=off
             spellcheck="false"
             :class="input_cls"
             v-model="first_name"
-            v-focus
           >
         </div>
         <div class="flex-fill">
@@ -162,6 +162,9 @@
       has_errors() {
         return this.has_client_errors || this.has_server_errors
       }
+    },
+    mounted() {
+      this.$refs['input-firstname'].focus()
     },
     methods: {
       getAttrs() {

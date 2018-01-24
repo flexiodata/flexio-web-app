@@ -23,6 +23,7 @@
       </div>
       <div class="mv3">
         <input
+          ref="input-password"
           type="password"
           name="password"
           placeholder="Password"
@@ -30,7 +31,6 @@
           spellcheck="false"
           :class="input_cls"
           v-model="password"
-          v-focus
           v-validate
           data-vv-as="password"
           data-vv-name="password"
@@ -110,6 +110,9 @@
       confirm_password_error() { return _.defaultTo(this.errors.first('password2'), '') },
       has_password_error() { return this.password_error.length > 0 },
       has_confirm_password_error() { return this.confirm_password_error.length > 0 }
+    },
+    mounted() {
+      this.$refs['input-password'].focus()
     },
     methods: {
       getAttrs() {

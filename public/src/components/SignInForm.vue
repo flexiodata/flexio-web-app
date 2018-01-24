@@ -10,25 +10,18 @@
       </div>
       <div class="mv3">
         <input
+          ref="input-username"
           type="text"
           placeholder="Email or username"
-          disabled
-          class="bg-black-10"
+          autocomplete=off
+          spellcheck="false"
           :class="input_cls"
           v-model="username"
-          v-if="username_provided"
-        >
-        <input
-          type="text"
-          placeholder="Email or username"
-          :class="input_cls"
-          v-model="username"
-          v-focus
-          v-else
         >
       </div>
       <div class="mv3">
         <input
+          ref="input-password"
           type="password"
           placeholder="Password"
           autocomplete=off
@@ -36,18 +29,6 @@
           :class="input_cls"
           @keyup.enter="trySignIn"
           v-model="password"
-          v-focus
-          v-if="username_provided"
-        >
-        <input
-          type="password"
-          placeholder="Password"
-          autocomplete=off
-          spellcheck="false"
-          :class="input_cls"
-          @keyup.enter="trySignIn"
-          v-model="password"
-          v-else
         >
         <button type="button" class="f8 fw6 black-60 link underline-hover dib" @click="$emit('forgot-password-click')">Forgot your password?</button>
       </div>
@@ -78,12 +59,14 @@
       return {
         username: '',
         password: '',
-        username_provided: false,
         is_submitting: false,
         error_msg: '',
         verify_code: '',
         input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
+    },
+    mounted() {
+      this.$refs['input-username'].focus()
     },
     methods: {
       getAttrs() {

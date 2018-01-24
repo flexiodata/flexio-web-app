@@ -20,7 +20,16 @@
         {{error_msg}}
       </div>
       <div class="mv3">
-        <input v-model="email" v-focus @keyup.enter="sendReset" :class="input_cls" placeholder="Email address" type="email" autocomplete=off spellcheck="false">
+        <input
+          ref="input-email"
+          type="email"
+          placeholder="Email address"
+          autocomplete=off
+          spellcheck="false"
+          :class="input_cls"
+          @keyup.enter="sendReset"
+          v-model="email"
+        >
       </div>
       <div class="mt3">
         <btn btn-lg btn-primary :disabled="is_submitting" @click="sendReset" class="b ttu w-100">
@@ -53,6 +62,9 @@
         error_msg: '',
         input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
+    },
+    mounted() {
+      this.$refs['input-email'].focus()
     },
     methods: {
       getAttrs() {
