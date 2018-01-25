@@ -22,6 +22,11 @@
     label: 'Quick Start',
     href: host + '/docs/quick-start'
   },{
+    id: 'sdk-and-cli',
+    icon: 'settings_applications',
+    label: 'SDKs & CLI',
+    href: host + '/docs/javascript-sdk'
+  },{
     id: 'api-docs',
     icon: 'help',
     label: 'API Docs',

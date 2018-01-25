@@ -17,7 +17,7 @@
           <div class="dib">
             <help-items
               help-message="I need help getting started with Flex.io..."
-              :items="['quick-start', 'api-docs', 'templates', 'help']"
+              :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
               :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer moon-gray hover-blue bg-white hover-bg-near-white'"
             ></help-items>
           </div>
