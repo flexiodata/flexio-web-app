@@ -84,20 +84,20 @@ class Foreach1 extends \Flexio\Jobs\Base
 
     }
 
-    private function doIteration($row)
+    private function doIteration($input)
     {
         $stream = \Flexio\Base\Stream::create();
         $writer = $stream->getWriter();
 
-        if (is_array($row) || is_object($row))
+        if (is_array($input) || is_object($input))
         {
             $stream->setMimeType(\Flexio\Base\ContentType::JSON);
-            $writer->write(json_encode($row));
+            $writer->write(json_encode($input));
         }
         else
         {
             $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
-            $writer->write((string)$row);
+            $writer->write((string)$input);
         }
 
         $subprocess = \Flexio\Jobs\Process::create();
