@@ -60,13 +60,18 @@ export const updatePipeTask = ({ commit, state }, { eid, task_eid, attrs }) => {
 
 export const deletePipeTask = ({ commit, state }, { eid, task_eid }) => {
   var pipe = _.find(state.objects, { eid }, {})
-  var task = _.get(pipe, 'task', [])
-  var delete_idx = _.findIndex(task, { eid: task_eid })
+  var task = _.get(pipe, 'task', { op: 'sequence', params: {} })
+  var items = _.get(pipe, 'task.params.items', [])
+  var delete_idx = _.findIndex(items, { eid: task_eid })
 
   if (delete_idx == -1)
     return
 
-  task.splice(delete_idx, 1)
+  items = [].concat(items)
+  items.splice(delete_idx, 1)
+
+  task = _.cloneDeep(task)
+  _.set(task, 'params.items', items)
 
   var attrs = { task }
 
