@@ -5,11 +5,16 @@ import * as types from '../mutation-types'
 
 export const createPipeTask = ({ commit, state }, { eid, attrs }) => {
   var pipe = _.find(state.objects, { eid }, {})
-  var task = _.get(pipe, 'task', [])
+  var task = _.get(pipe, 'task', { op: 'sequence', params: {} })
+  var items = _.get(pipe, 'task.params.items', [])
   var insert_idx = _.get(attrs, 'index', task.length)
   var task_attrs = _.omit(attrs, ['index'])
 
-  task.splice(insert_idx, 0, task_attrs)
+  items = [].concat(items)
+  items.splice(insert_idx, 0, task_attrs)
+
+  task = _.cloneDeep(task)
+  _.set(task, 'params.items', items)
 
   var attrs = { task }
 

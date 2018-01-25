@@ -152,7 +152,7 @@
         return _.get(this.pipe, 'processes_fetched', false)
       },
       tasks() {
-        return _.get(this.pipe, 'task', [])
+        return _.get(this.pipe, 'task.params.items', [])
       },
       empty_tasks() {
         return _.filter(this.tasks, (t) => { return _.isNil(_.get(t, 'op')) })
