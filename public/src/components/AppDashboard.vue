@@ -1,31 +1,66 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns mb2">Hey, {{active_user_firstname}}!</div>
-      <div class="f4 f3-ns">Welcome to the Flex.io Dashboard.</div>
-      <div class="mt3">
-        <div class="dib nl2 nb2 nr2">
-          <help-items
-            help-message="I need help getting started with Flex.io..."
-            :items="['quick-start', 'api-docs', 'templates', 'help']"
-          ></help-items>
+      <div class="f3 f2-ns">Dashboard</div>
+    </div>
+
+    <div class="ma4">
+      <div class="flex flex-row items-center pv2">
+        <div class="flex-fill fw6 gray">Getting Started</div>
+        <!-- placeholder for consistent spacing -->
+        <div class="invisible">
+          <i class="material-icons">chevron_right</i>
+        </div>
+      </div>
+      <div class="bg-white css-dashboard-box">
+        <div class="pa3">
+          <div class="dib">
+            <help-items
+              help-message="I need help getting started with Flex.io..."
+              :items="['quick-start', 'api-docs', 'templates', 'help']"
+            ></help-items>
+          </div>
         </div>
       </div>
     </div>
-    <div class="ma4 mt0 bg-white css-dashboard-box">
-      <div class="pa3">
-        <div class="flex flex-row items-start mb3">
-          <div class="flex-fill f3">API Keys</div>
-          <btn btn-md btn-primary class="ttu b" @click="$refs['account-api-form'].createApiKey()">Create API Key</btn>
+
+    <div class="ma4">
+      <div class="flex flex-row items-center pv2">
+        <div class="flex-fill fw6 gray">API Keys</div>
+        <router-link
+          to="/dashboard"
+          class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns f6 fw6 link blue dim"
+        >
+          Manage API Keys <i class="material-icons">chevron_right</i>
+        </router-link>
+      </div>
+      <div class="bg-white css-dashboard-box">
+        <div class="pa3">
+          <div class="dib">
+            <account-api-form
+              ref="account-api-form"
+              :show-create-button="false"
+            ></account-api-form>
+          </div>
         </div>
-        <account-api-form
-          ref="account-api-form"
-          :show-create-button="false"
-        ></account-api-form>
       </div>
     </div>
-    <div class="ma4 mt0 bg-white css-dashboard-box">
-      <stats-pipes-run title="Pipes Run (Last 30 days)"></stats-pipes-run>
+
+    <div class="ma4">
+      <div class="flex flex-row items-center pv2">
+        <div class="flex-fill fw6 gray">Activity</div>
+        <router-link
+          to="/dashboard"
+          class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns f6 fw6 link blue dim"
+        >
+          View Activity <i class="material-icons">chevron_right</i>
+        </router-link>
+      </div>
+      <div class="bg-white css-dashboard-box">
+        <div class="pa3">
+          <stats-pipes-run></stats-pipes-run>
+        </div>
+      </div>
     </div>
   </div>
 </template>
