@@ -1,7 +1,8 @@
 <template>
   <div class="flex flex-row flex-wrap items-center justify-center center">
     <div
-      class="flex flex-column justify-center items-center f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue css-help-item"
+      class="flex flex-column justify-center items-center"
+      :class="itemCls"
       @click="helpItemClick(item)"
       v-for="(item, index) in filtered_items"
     >
@@ -47,6 +48,10 @@
       'items': {
         type: Array,
         default: () => { return ['command-bar-docs', 'templates', 'help'] }
+      },
+      'item-cls': {
+        type: String,
+        default: 'f6 fw6 ttu br2 ma2 pa2 h4 w4 pointer moon-gray bg-white hover-blue css-help-item'
       },
       'help-message': {
         type: String,
