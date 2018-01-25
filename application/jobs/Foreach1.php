@@ -79,30 +79,41 @@ class Foreach1 extends \Flexio\Jobs\Base
         }
         else
         {
-
+            // nothing to iterate over -- use the input stream
+            $this->doIteration($instream);
         }
 
     }
 
     private function doIteration($input)
     {
-        $stream = \Flexio\Base\Stream::create();
-        $writer = $stream->getWriter();
+        $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setParams($this->env);
 
-        if (is_array($input) || is_object($input))
+        if ($input instanceof \Flexio\Iface\IStream)
         {
-            $stream->setMimeType(\Flexio\Base\ContentType::JSON);
-            $writer->write(json_encode($input));
+            // input is a stream
+            $subprocess->setStdin($input);
         }
         else
         {
-            $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
-            $writer->write((string)$input);
+            $stream = \Flexio\Base\Stream::create();
+            $writer = $stream->getWriter();
+
+            if (is_array($input) || is_object($input))
+            {
+                $stream->setMimeType(\Flexio\Base\ContentType::JSON);
+                $writer->write(json_encode($input));
+            }
+            else
+            {
+                $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
+                $writer->write((string)$input);
+            }
+
+            $subprocess->setStdin($stream);
         }
 
-        $subprocess = \Flexio\Jobs\Process::create();
-        $subprocess->setParams($this->env);
-        $subprocess->setStdin($stream);
         $subprocess->execute($this->task);
         $this->env = $subprocess->getParams();
     }
