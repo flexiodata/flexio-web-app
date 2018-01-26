@@ -81,7 +81,7 @@ class Pipe
             $project->addPipe($pipe);
 
         // get the pipe properties
-        return $pipe->get();
+        return self::get_internal($pipe);
     }
 
     public static function copy(\Flexio\Api\Request $request) : array
@@ -146,7 +146,7 @@ class Pipe
         if ($project !== false)
             $project->addPipe($new_pipe);
 
-        return $new_pipe->get();
+        return self::get_internal($new_pipe);
     }
 
     public static function delete(\Flexio\Api\Request $request) : array
@@ -214,7 +214,7 @@ class Pipe
         // set the properties
         $pipe->set($validated_params);
 
-        return $pipe->get();
+        return self::get_internal($pipe);
     }
 
     public static function get(\Flexio\Api\Request $request) : array
@@ -241,7 +241,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
-        return $pipe->get();
+        return self::get_internal($pipe);
     }
 
     public static function listall(\Flexio\Api\Request $request) : array
@@ -263,7 +263,7 @@ class Pipe
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $result[] = $p->get();
+            $result[] = self::get_internal($p);
         }
 
         return $result;
@@ -319,7 +319,7 @@ class Pipe
         $result = array();
         foreach ( $processes_accessible as $p)
         {
-            $result[] = $p->get();
+            $result[] = self::get_internal($p);
         }
 
         return $result;
@@ -438,5 +438,20 @@ class Pipe
 
         // no start or tail; start at zero and return the limit
         return array_slice($items, 0, $limit);
+    }
+
+    private static function get_internal($object)
+    {
+        // TODO: tasks are objects right now; and an empty task is returning as [];
+        // internally, we still look for tasks as arrays, so we can't do a full
+        // fix until we start handling objects as objects and not as arrays; this
+        // fix let's us return empty tasks as {} until we get a more general fix;
+        // similar to fixEmptyParams() for task params
+
+        $properties = $object->get();
+        if (isset($properties['task']) && count($properties['task']) === 0)
+            $properties['task'] = (object)$properties['task'];
+
+        return $properties;
     }
 }
