@@ -41,6 +41,7 @@ class Request extends \Flexio\Jobs\Base
         // note: don't clear out the streams; this job simply adds a new stream
 
         // get the parameters
+        $connection = false;
         $connection_identifier = $params['connection'] ?? false;
         $method = $params['method'] ?? null;
         $url = $params['url'] ?? '';
@@ -57,7 +58,18 @@ class Request extends \Flexio\Jobs\Base
             $connection = \Flexio\Object\Connection::load($connection_identifier);
             if ($connection === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
+        }
+         else
+        {
+            // the url can also be a connection identifier
+            
+            $connection = \Flexio\Object\Connection::load($url);
+            if ($connection !== false)
+                $url = ''; // connection found
+        }
+        
+        if ($connection)
+        {
             // TODO: rights
             //if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
@@ -198,6 +210,7 @@ class Request extends \Flexio\Jobs\Base
             $method = 'get';
              else
             $method = strtolower($method);
+
         switch ($method)
         {
             default: // default to get
