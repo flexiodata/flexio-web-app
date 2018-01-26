@@ -42,11 +42,14 @@ class Set extends \Flexio\Jobs\Base
             $pipecode = $value;
             $valstream = \Flexio\Base\Stream::create();
 
+            $params = $process->getParams();
+
             $subprocess = \Flexio\Jobs\Process::create();
+            $subprocess->setParams($params);
+            $subprocess->setStdin($process->getStdin());
             $subprocess->setStdout($valstream);
             $subprocess->execute($pipecode);
 
-            $params = $process->getParams();
             $params[$var] = $valstream;
             $process->setParams($params);
         }

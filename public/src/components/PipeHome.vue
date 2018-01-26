@@ -158,6 +158,12 @@
         if (tasks.length == 0)
           tasks = _.get(this.pipe, 'task', [])
 
+        // for new pipes that are created after the migration
+        // to sequences, the task node is an empty object;
+        // in this scenario, use an empty array (for now)
+        if (_.isPlainObject(tasks))
+          tasks = []
+
         return tasks
       },
       empty_tasks() {
