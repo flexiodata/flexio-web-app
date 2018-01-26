@@ -46,6 +46,7 @@ class Set extends \Flexio\Jobs\Base
 
             $subprocess = \Flexio\Jobs\Process::create();
             $subprocess->setParams($params);
+            $subprocess->setStdin($process->getStdin());
             $subprocess->setStdout($valstream);
             $subprocess->execute($pipecode);
 
