@@ -20,46 +20,80 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: set storage path
+        $storage_paths = self::getStoragePaths();
+        $data_strings = self::getDataStrings();
 
-        // SETUP
-        $storage_path= "/vfs-alias/path/file.txt";
-
-        $read = json_decode('
+        $idx = 0;
+        foreach ($storage_paths as $path_info)
         {
-            "op": "read",
-            "params": {
-                "path": "'. $storage_path . '"
+            foreach ($data_strings as $data_info)
+            {
+                $idx++;
+
+                $read = json_decode('
+                {
+                    "op": "read",
+                    "params": {
+                        "path": "'. $path_info['path'] . '"
+                    }
+                }
+                ',true);
+
+                $write = json_decode('
+                {
+                    "op": "write",
+                    "params": {
+                        "path": "'. $path_info['path'] . '"
+                    }
+                }
+                ',true);
+
+                $stream = \Flexio\Base\Stream::create();
+                $stream->getWriter()->write($data_info['data']);
+                $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
+                $process_read = \Flexio\Jobs\Process::create()->execute($read);
+                $actual = $process_read->getStdout()->getReader()->read();
+                $expected = $data_info['data'];
+                TestCheck::assertString($path_info['id'] . '.' . $data_info['id'], 'Read/Write; check basic functionality ('. $path_info['path'] .')',  $actual, $expected, $results);
             }
         }
-        ',true);
+    }
 
-        $write = json_decode('
-        {
-            "op": "write",
-            "params": {
-                "path": "'. $storage_path . '"
-            }
-        }
-        ',true);
+    public function getStoragePaths()
+    {
+        $paths = array();
+        $paths[] = array("id" => "A", "path" => "/storagepath1/file1.txt");
+        $paths[] = array("id" => "B", "path" => "/storagepath2/file2.txt");
+        return $paths;
+    }
+
+    public function getDataStrings()
+    {
+        $data = array();
 
 
+// TEST
+$d = <<<EOD
+EOD;
+$data[] = array("id" => 1,"data" => $d);
 
-        // TEST: Read/Write
 
-        // BEGIN TEST
-        $data = <<<EOD
+// TEST
+$d = <<<EOD
+
+EOD;
+$data[] = array("id" => 2,"data" => $d);
+
+
+// TEST
+$d = <<<EOD
 
         Test
 
 EOD;
+$data[] = array("id" => 2,"data" => $d);
 
-        $stream = \Flexio\Base\Stream::create();
-        $stream->getWriter()->write($data);
-        $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
-        $process_read = \Flexio\Jobs\Process::create()->execute($read);
-        $actual = $process_read->getStdout()->getReader()->read();
-        $expected = $data;
-        TestCheck::assertString('A.1', 'Read/Write; check basic functionality',  $actual, $expected, $results);
+
+        return $data;
     }
 }
