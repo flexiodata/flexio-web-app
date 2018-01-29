@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         $files = TestUtil::getTestDataFiles();
-        $store_alias = "storage-alias";
+        $store_alias = "testsuite-dropbox";
 
         $idx = 0;
         foreach ($files as $full_filename)
