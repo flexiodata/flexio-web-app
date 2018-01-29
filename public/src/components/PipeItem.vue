@@ -19,8 +19,7 @@
           <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
         </div>
       </div>
-      <div class="dn db-l flex-none mh3 f7 fw6 mid-gray" style="min-width: 160px">
-
+      <div class="dn db-l flex-none mh3 f7 fw6 mid-gray" style="min-width: 160px" v-if="false">
         <span
           class="hint--bottom hint--multiline"
           :aria-label="follower_tooltip"
@@ -161,11 +160,11 @@
           id: 'duplicate',
           label: 'Duplicate',
           icon: 'content_copy'
-        },{
+        }/*,{
           id: 'share',
           label: 'Share',
           icon: 'person_add'
-        }/*,{
+        },{
           id: 'embed',
           label: 'Embed',
           icon: 'share'
@@ -175,7 +174,8 @@
           icon: 'date_range'
         },{
           id: 'delete',
-          label: 'Move to Trash',
+          //label: 'Move to Trash',
+          label: 'Delete',
           icon: 'delete'
         }]
       }

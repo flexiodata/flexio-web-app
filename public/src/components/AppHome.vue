@@ -36,12 +36,12 @@
       route: 'storage-old',
       name: 'Storage Old',
       icon: 'layers'
-    },*/
+    },
     {
       route: 'trash',
       name: 'Trash',
       icon: 'delete'
-    }
+    }*/
   ]
 
   export default {
