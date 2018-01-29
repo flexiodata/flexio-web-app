@@ -210,9 +210,14 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $this->connection = false;
         $this->is_ok = false;
 
+        if (strlen(trim($host)) == 0) {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Missing host name");
+        }
+
         $sftp = new \phpseclib\Net\SFTP($host);
-        if (!$sftp->login($username, $password))
-            return false;
+        if (!@$sftp->login($username, $password)) {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not connect to remote host " . $host);
+        }
 
         $this->connection = $sftp;
         $this->is_ok = true;
