@@ -102,7 +102,7 @@ const GOOGLESHEETS = {
 }
 
 const HOME = {
-  service_name: 'Home',
+  service_name: 'Local Storage',
   service_description: '',
   connection_type: types.CONNECTION_TYPE_HOME,
   icon: require('../assets/icon/icon-home-128.png'),

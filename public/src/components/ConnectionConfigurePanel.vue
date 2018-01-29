@@ -18,11 +18,13 @@
       </div>
     </div>
     <div v-else>
-      <div class="lh-copy" v-if="is_connected">
-        <i class="material-icons v-mid dark-green">check_circle</i>
-        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-      </div>
-      <div class="lh-copy" v-else>To use this connection, you must connect {{service_name}} to Flex.io.</div>
+      <ui-alert type="success" :dismissible="false" v-show="is_connected && error_msg.length == 0">
+        You've successfully connected to {{service_name}}!
+      </ui-alert>
+      <ui-alert type="error" :dismissible="true" @dismiss="error_msg = ''" v-show="error_msg.length > 0">
+        {{error_msg}}
+      </ui-alert>
+      <div class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
       <div class="flex flex-column w-50-ns center mt1 mb3">
         <ui-textbox
           autocomplete="off"
@@ -105,6 +107,7 @@
 </template>
 
 <script>
+  import { HOSTNAME } from '../constants/common'
   import {
     CONNECTION_STATUS_AVAILABLE,
     CONNECTION_STATUS_UNAVAILABLE,
@@ -114,6 +117,7 @@
   import * as connections from '../constants/connection-info'
   import ValueSelect from './ValueSelect.vue'
   import Btn from './Btn.vue'
+  import OauthPopup from './mixins/oauth-popup'
 
   const region_options = [
     { val: 'us-east-2',      label: 'US East (Ohio)'            },
@@ -144,6 +148,7 @@
         default: 'add'
       }
     },
+    mixins: [OauthPopup],
     components: {
       ValueSelect,
       Btn
@@ -183,6 +188,7 @@
       }
 
       return {
+        error_msg: '',
         info: attrs,
         region_options
       }
@@ -201,6 +207,9 @@
       'info.region'()     { this.$emit('change', { connection_info: this.info }) }
     },
     computed: {
+      eid() {
+        return _.get(this, 'connection.eid', '')
+      },
       ctype() {
         return this.getConnectionType()
       },
@@ -236,7 +245,21 @@
         }
         return false
       },
-      host_label()     {
+      oauth_url() {
+        var eid =  _.get(this, 'connection.eid', '')
+        var base_url = 'https://'+HOSTNAME+'/a/connectionauth'
+
+        switch (this.ctype)
+        {
+          case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
+          case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
+          case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
+        }
+
+        return ''
+      },
+      host_label() {
         return 'Host'
       },
       username_label() {
@@ -274,13 +297,75 @@
         return _.has(this.info, key)
       },
       onDisconnectClick() {
-        this.$emit('disconnect', _.assign({}, this.connection, this.info))
+        this.tryDisconnect(_.assign({}, this.connection, this.info))
       },
       onConnectClick() {
-        this.$emit('connect', this.info)
+        this.tryOauthConnect(this.info)
       },
       onTestClick() {
-        this.$emit('test', _.assign({}, this.connection, this.info))
+        this.tryTest(_.assign({}, this.connection, this.info))
+      },
+      tryDisconnect(attrs) {
+        var eid = attrs.eid
+
+        // disconnect from this connection (oauth only)
+        this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            this.error_msg = ''
+            this.$emit('change', response.body)
+          }
+           else
+          {
+            this.error_msg = _.get(response, 'body.error.message', '')
+          }
+        })
+      },
+      tryOauthConnect() {
+        var eid = this.eid
+
+        this.oauthPopup(this.oauth_url, (params) => {
+          // TODO: handle 'code' and 'state' and 'error' here...
+
+          // for now, re-fetch the connection to update its state
+          this.$store.dispatch('fetchConnection', { eid }).then(response => {
+            if (response.ok)
+            {
+              this.$emit('change', _.omit(response.body, ['name', 'ename', 'description']))
+            }
+             else
+            {
+              this.error_msg = _.get(response, 'body.error.message', '')
+            }
+          })
+        })
+      },
+      tryTest(attrs) {
+        var eid = attrs.eid
+        //attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
+
+        // update the connection
+        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            // test the connection
+            this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
+              if (response.ok)
+              {
+                this.$emit('change', _.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
+              }
+               else
+              {
+                this.error_msg = _.get(response, 'body.error.message', '')
+              }
+            })
+          }
+           else
+          {
+            this.error_msg = _.get(response, 'body.error.message', '')
+          }
+        })
       }
     }
   }

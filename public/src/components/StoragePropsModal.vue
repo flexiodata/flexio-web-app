@@ -94,9 +94,6 @@
           <connection-configure-panel
             :connection="connection"
             :mode="mode"
-            @disconnect="tryDisconnect"
-            @test="tryTest"
-            @connect="tryOauthConnect"
             @change="updateConnection"
           ></connection-configure-panel>
         </ui-collapsible>
@@ -112,7 +109,6 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { HOSTNAME } from '../constants/common'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import * as mtypes from '../constants/member-type'
   import * as atypes from '../constants/action-type'
@@ -125,7 +121,6 @@
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
-  import OauthPopup from './mixins/oauth-popup'
 
   const defaultRights = () => {
     return {
@@ -169,7 +164,7 @@
         type: Boolean
       }
     },
-    mixins: [Validation, OauthPopup],
+    mixins: [Validation],
     components: {
       Btn,
       ServiceList,
@@ -212,20 +207,6 @@
       },
       has_connection() {
         return this.ctype.length > 0
-      },
-      oauth_url() {
-        var eid =  _.get(this, 'connection.eid', '')
-        var base_url = 'https://'+HOSTNAME+'/a/connectionauth'
-
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
-          case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
-        }
-
-        return ''
       },
       title() {
         return this.mode == 'edit'
@@ -317,66 +298,6 @@
 
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.connection = _.assign({}, this.connection, update_attrs)
-      },
-      tryDisconnect(attrs) {
-        var eid = attrs.eid
-
-        // disconnect from this connection (oauth only)
-        this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.updateConnection(response.body)
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      tryTest(attrs) {
-        var eid = attrs.eid
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
-
-        // update the connection
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            // test the connection
-            this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
-              if (response.ok)
-              {
-                this.updateConnection(_.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
-              }
-               else
-              {
-                // TODO: add error handling
-              }
-            })
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      tryOauthConnect() {
-        var eid = this.eid
-
-        this.oauthPopup(this.oauth_url, (params) => {
-          // TODO: handle 'code' and 'state' and 'error' here...
-
-          // for now, re-fetch the connection to update its state
-          this.$store.dispatch('fetchConnection', { eid }).then(response => {
-            if (response.ok)
-            {
-              this.updateConnection(_.omit(response.body, ['name', 'ename', 'description']))
-            }
-             else
-            {
-              // TODO: add error handling
-            }
-          })
-        })
       }
     }
   }
