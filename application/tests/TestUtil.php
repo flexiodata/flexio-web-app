@@ -241,11 +241,48 @@ EOD;
         return $pipe->getEid();
     }
 
+    public static function createStreamFromFile($path) : \Flexio\Base\Stream
+    {
+        $f = @fopen($path, 'rb');
+        if (!$f)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $stream = \Flexio\Base\Stream::create();
+        while (!feof($f))
+        {
+            $buffer = fread($f, 2048);
+            $stream->getWriter()->write($buffer);
+        }
+
+        fclose($f);
+
+        return $stream;
+    }
+
     public static function createEmailAddress()
     {
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Base\Util::generateHandle();
         return $handle1 . '@' . $handle2 . '.com';
+    }
+
+    public static function getTestDataFiles() : array
+    {
+        $testdata_dir = __DIR__ . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR;
+        $files = scandir($testdata_dir);
+        if (!$files)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $result = array();
+        foreach ($files as $f)
+        {
+            if ($f == '.' || $f == '..')
+                continue;
+
+            $result[] = $testdata_dir . $f;
+        }
+
+        return $result;
     }
 
     public static function getTable(\Flexio\IFace\IStream $stream) : array
