@@ -24,7 +24,7 @@
   },{
     id: 'sdk-and-cli',
     icon: 'settings_applications',
-    label: 'SDKs & CLI',
+    label: 'SDK & CLI',
     href: host + '/docs/javascript-sdk'
   },{
     id: 'api-docs',
