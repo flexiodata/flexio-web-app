@@ -3,40 +3,39 @@
     <div class="pb2 bb b--black-10" v-if="showCreateButton">
         <btn btn-md btn-primary class="ttu b" @click="createApiKey">Create API Key</btn>
     </div>
-    <div>
-      <empty-item class="mv3" v-if="tokens.length == 0">
-        <span slot="text">No API keys to show</span>
-      </empty-item>
-      <table class="w-100" v-else>
-        <tbody class="lh-copy">
-          <tr
-            class="darken-05 hide-child"
-            v-for="(token, index) in tokens"
-          >
-            <td class="pv2 ph3 w-100"><pre class="f6 ma0"><code>{{token.access_code}}</code></pre></td>
-            <td class="pv2 tr">
-              <btn
-                btn-md
-                btn-primary
-                class="hint--top"
-                aria-label="Copy to Clipboard"
-                :data-clipboard-text="token.access_code"
-              >
-                <span class="ttu b">Copy</span>
-              </btn>
-            </td>
-            <td class="pv2 ph3 tr">
-              <span
-                class="pointer f3 lh-solid b child hint--top"
-                aria-label="Delete API Key"
-                @click="deleteKey(token)"
-              >
-                &times;
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <empty-item class="mv3" v-if="tokens.length == 0">
+      <span slot="text">No API keys to show</span>
+    </empty-item>
+    <div
+      class="flex flex-row items-center hide-child"
+      :class="showOnlyOne ? '' : 'darken-05'"
+      v-for="(token, index) in tokens"
+      v-else
+    >
+      <div
+        class="flex-fill pv2 ph3"
+        :class="showOnlyOne ? 'f5 min-w5 mr3 bg-black-05' : ''"
+      ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
+      <div class="pv2 tr">
+        <btn
+          btn-md
+          btn-primary
+          class="hint--top"
+          aria-label="Copy to Clipboard"
+          :data-clipboard-text="token.access_code"
+        >
+          <span class="ttu b">Copy</span>
+        </btn>
+      </div>
+      <div class="pv2 ph3 tr" v-if="!showOnlyOne">
+        <span
+          class="pointer f3 lh-solid b child hint--top"
+          aria-label="Delete API Key"
+          @click="deleteKey(token)"
+        >
+          &times;
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -51,6 +50,10 @@
       'show-create-button': {
         type: Boolean,
         default: true
+      },
+      'show-only-one': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -68,7 +71,8 @@
         return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetching', true)
       },
       tokens() {
-        return this.getAllTokens()
+        var tokens = this.getAllTokens()
+        return this.showOnlyOne ? [].concat(_.first(tokens)) : tokens
       }
     },
     mounted() {

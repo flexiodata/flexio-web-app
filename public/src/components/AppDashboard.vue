@@ -27,7 +27,7 @@
       <div class="flex flex-row items-center pv2">
         <div class="flex-fill fw6 gray">API Keys</div>
         <router-link
-          to="/dashboard"
+          to="/account#api"
           class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns f6 fw6 link blue dim"
         >
           Manage API Keys <i class="material-icons">chevron_right</i>
@@ -39,6 +39,7 @@
             <account-api-form
               ref="account-api-form"
               :show-create-button="false"
+              :show-only-one="true"
             ></account-api-form>
           </div>
         </div>
