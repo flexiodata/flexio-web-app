@@ -175,7 +175,7 @@ class TestBase
             $basename = basename($f);
 
             $matches = array();
-            if (preg_match("/^([0-9.]*?-?[a-z_]*?)\\.php/", $basename, $matches))
+            if (preg_match("/^([0-9.]*?-?[a-z_-]*?)\\.php/", $basename, $matches))
             {
                 $tests[] = $subfolder . '/' . $matches[1];
             }
