@@ -6,7 +6,7 @@
         <span class="dn dib-ns v-mid">{{item.name}}</span>
       </router-link>
     </div>
-    <router-view class="flex-fill relative overflow-auto"></router-view>
+    <router-view class="flex-fill relative"></router-view>
   </div>
 </template>
 

@@ -4,7 +4,7 @@
       <spinner size="large" message="Loading storage items..."></spinner>
     </div>
   </div>
-  <div v-else>
+  <div class="flex flex-column" v-else>
     <!-- control bar -->
     <div class="pa3 ph4-l relative bg-white bb b--black-05">
       <div class="flex flex-row">

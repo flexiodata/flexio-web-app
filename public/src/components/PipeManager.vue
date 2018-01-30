@@ -4,7 +4,7 @@
       <spinner size="large" message="Loading pipes..."></spinner>
     </div>
   </div>
-  <div v-else>
+  <div class="flex flex-column overflow-y-auto" v-else>
     <!-- control bar -->
     <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
       <div class="flex flex-row">
@@ -26,7 +26,7 @@
 
     <!-- list -->
     <pipe-list
-      class="pl4-l pr4-l pb4-l h-100"
+      class="pl4-l pr4-l pb4-l"
       style="max-width: 1152px"
       :filter="filter"
       :show-header="true"
