@@ -85,7 +85,7 @@ class Store implements \Flexio\IFace\IFileSystem
         $path = $path['path'] ?? (is_string($path) ? $path : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
 
-        $last_slash = strrpos('/', $path);
+        $last_slash = strrpos($path, '/');
         if ($last_slash === false)
         {
             $parent_stream = $this->getStreamFromPath('/');
@@ -178,17 +178,17 @@ class Store implements \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
 
-        $last_slash = strrpos('/', $path);
+        $last_slash = strrpos($path, '/');
         if ($last_slash === false)
         {
-            $parent_stream = $this->getStreamFromPath('/');
             $name = $path;
+            $parent_stream = $this->getStreamFromPath('/');
         }
          else
         {
             $name = substr($path, $last_slash+1);
             $path = substr($path, 0, $last_slash);
-            $parent_stream = $this->getStreamFromPath($path);
+            $parent_stream = $this->getStreamFromPath($path, true /* create directory structure if it doesn't already exist */);
         }
 
         if (!$parent_stream)
@@ -263,7 +263,7 @@ class Store implements \Flexio\IFace\IFileSystem
     }
 
 
-    private function getStreamFromPath(string $path) // : ?\Flexio\Object\Stream
+    private function getStreamFromPath(string $path, bool $create_dir_structure = false) // : ?\Flexio\Object\Stream
     {
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
         $user = \Flexio\Object\User::load($current_user_eid);
@@ -285,9 +285,27 @@ class Store implements \Flexio\IFace\IFileSystem
         foreach ($parts as $part)
         {
             $arr = $stream->getChildStreams($part);
-            $stream = $arr[0] ?? null;
-            if (is_null($stream))
-                return null;
+            $child = $arr[0] ?? null;
+            if (is_null($child))
+            {
+                if ($create_dir_structure)
+                {
+                    $child = \Flexio\Object\Stream::create([
+                        'parent_eid' => $stream->getEid(),
+                        'name' => $part,
+                        'stream_type' => 'SD',
+                        'path' => \Flexio\Base\Util::generateRandomString(20)
+                    ]);
+                    if (!$child)
+                        return null;
+                }
+                 else
+                {
+                    return null;
+                }
+            }
+
+            $stream = $child;
         }
 
         return $stream;

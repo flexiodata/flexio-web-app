@@ -64,9 +64,10 @@ class Write extends \Flexio\Jobs\Base
                 $create_params['structure'] = $stream_properties['structure'];
             $create_params['mime_type'] = $stream_properties['mime_type'];
 
+
             if (!$vfs->createFile($path, $create_params))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-            
+    
             $outstream = $vfs->open($path);
             if (!$outstream)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);

@@ -109,7 +109,7 @@ const HOME = {
   is_service: false,
   is_input: false,
   is_output: false,
-  is_storage: true
+  is_storage: false
 }
 
 const HTTP = {
