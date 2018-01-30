@@ -61,7 +61,7 @@
       </div>
       <div class="bg-white css-dashboard-box">
         <div class="pa3">
-          <stats-pipes-run></stats-pipes-run>
+          <stats-pipes-run :chart-height="280"></stats-pipes-run>
         </div>
       </div>
     </div>
@@ -69,35 +69,15 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
   import StatsPipesRun from './StatsPipesRun.vue'
   import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
-  import Btn from './Btn.vue'
 
   export default {
     components: {
       StatsPipesRun,
       AccountApiForm,
-      HelpItems,
-      Btn
-    },
-    computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
-      active_user() {
-        var user = this.getActiveUser()
-        return user ? user : {}
-      },
-      active_user_firstname() {
-        return _.get(this.active_user, 'first_name', '')
-      }
-    },
-    methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ])
+      HelpItems
     }
   }
 </script>
