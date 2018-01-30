@@ -15,6 +15,12 @@
         legend: {
           display: false
         },
+        layout: {
+          padding: {
+            // any unspecified dimensions are assumed to be 0
+            left: 16
+          }
+        },
         scales: {
           yAxes: [{
             ticks: {
@@ -139,7 +145,7 @@
         })
 
         return [{
-          label: 'All Pipes',
+          label: 'Pipes',
           data: this.getDatasetData(count_vals, this.baseline_vals)
         }]
       }
