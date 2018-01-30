@@ -20,34 +20,39 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
         $files = TestUtil::getTestDataFiles();
         $store_alias = "home";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
+        $output_filepath = self::getOutputPath($output_folder, $filename);
 
+        $read = json_decode('
+        {
+            "op": "read",
+            "params": {
+                "path": "'. $output_filepath . '"
+            }
+        }
+        ',true);
+
+        $write = json_decode('
+        {
+            "op": "write",
+            "params": {
+                "path": "'. $output_filepath . '"
+            }
+        }
+        ',true);
+
+
+
+        // TEST: Write/Read Job
+
+        // BEGIN TEST
         $idx = 0;
         foreach ($files as $filename)
         {
             $idx++;
-            $output_filepath = self::getOutputPath($output_folder, $filename);
-
-            $read = json_decode('
-            {
-                "op": "read",
-                "params": {
-                    "path": "'. $output_filepath . '"
-                }
-            }
-            ',true);
-
-            $write = json_decode('
-            {
-                "op": "write",
-                "params": {
-                    "path": "'. $output_filepath . '"
-                }
-            }
-            ',true);
-
             $stream = TestUtil::createStreamFromFile($filename);
             $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
