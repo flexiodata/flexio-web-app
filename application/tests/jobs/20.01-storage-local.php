@@ -24,25 +24,6 @@ class Test
         $files = TestUtil::getTestDataFiles();
         $store_alias = "home";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
-        $output_filepath = self::getOutputPath($output_folder, $filename);
-
-        $read = json_decode('
-        {
-            "op": "read",
-            "params": {
-                "path": "'. $output_filepath . '"
-            }
-        }
-        ',true);
-
-        $write = json_decode('
-        {
-            "op": "write",
-            "params": {
-                "path": "'. $output_filepath . '"
-            }
-        }
-        ',true);
 
 
 
@@ -52,6 +33,26 @@ class Test
         $idx = 0;
         foreach ($files as $filename)
         {
+            $output_filepath = self::getOutputPath($output_folder, $filename);
+
+            $read = json_decode('
+            {
+                "op": "read",
+                "params": {
+                    "path": "'. $output_filepath . '"
+                }
+            }
+            ',true);
+
+            $write = json_decode('
+            {
+                "op": "write",
+                "params": {
+                    "path": "'. $output_filepath . '"
+                }
+            }
+            ',true);
+
             $idx++;
             $stream = TestUtil::createStreamFromFile($filename);
             $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
