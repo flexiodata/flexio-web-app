@@ -309,6 +309,11 @@ EOD;
         return $result;
     }
 
+    public static function getTimestampName() : string
+    {
+        return date("YmdHis", time());
+    }
+
     public static function convertToNumber($size_str)
     {
         switch (strtoupper(substr($size_str, -1)))
