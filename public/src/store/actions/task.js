@@ -5,7 +5,7 @@ import * as types from '../mutation-types'
 
 export const createPipeTask = ({ commit, state }, { eid, attrs }) => {
   var pipe = _.find(state.objects, { eid }, {})
-  var task = _.get(pipe, 'task', { op: 'sequence', params: {} })
+  var task = { op: 'sequence', params: {} }
   var items = _.get(pipe, 'task.params.items', [])
   var insert_idx = _.get(attrs, 'index', items.length)
   var task_attrs = _.omit(attrs, ['index'])
@@ -13,7 +13,6 @@ export const createPipeTask = ({ commit, state }, { eid, attrs }) => {
   items = [].concat(items)
   items.splice(insert_idx, 0, task_attrs)
 
-  task = _.cloneDeep(task)
   _.set(task, 'params.items', items)
 
   var attrs = { task }
@@ -34,7 +33,7 @@ export const createPipeTask = ({ commit, state }, { eid, attrs }) => {
 
 export const updatePipeTask = ({ commit, state }, { eid, task_eid, attrs }) => {
   var pipe = _.find(state.objects, { eid }, {})
-  var task = _.get(pipe, 'task', { op: 'sequence', params: {} })
+  var task = { op: 'sequence', params: {} }
   var items = _.get(pipe, 'task.params.items', [])
   var replace_idx = _.findIndex(items, { eid: task_eid })
 
@@ -44,7 +43,6 @@ export const updatePipeTask = ({ commit, state }, { eid, task_eid, attrs }) => {
   items = [].concat(items)
   items.splice(replace_idx, 1, attrs)
 
-  task = _.cloneDeep(task)
   _.set(task, 'params.items', items)
 
   var attrs = { task }
@@ -65,7 +63,7 @@ export const updatePipeTask = ({ commit, state }, { eid, task_eid, attrs }) => {
 
 export const deletePipeTask = ({ commit, state }, { eid, task_eid }) => {
   var pipe = _.find(state.objects, { eid }, {})
-  var task = _.get(pipe, 'task', { op: 'sequence', params: {} })
+  var task = { op: 'sequence', params: {} }
   var items = _.get(pipe, 'task.params.items', [])
   var delete_idx = _.findIndex(items, { eid: task_eid })
 
@@ -75,7 +73,6 @@ export const deletePipeTask = ({ commit, state }, { eid, task_eid }) => {
   items = [].concat(items)
   items.splice(delete_idx, 1)
 
-  task = _.cloneDeep(task)
   _.set(task, 'params.items', items)
 
   var attrs = { task }

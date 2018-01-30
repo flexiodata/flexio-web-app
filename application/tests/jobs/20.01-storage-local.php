@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-06-07
+ * Created:  2018-01-29
  *
  * @package flexio
  * @subpackage Tests
@@ -20,6 +20,8 @@ class Test
 {
     public function run(&$results)
     {
+        // TODO: writing with bad info (e.g. malformed paths, no file extension, bad file characters)
+
         // SETUP
         $files = TestUtil::getTestDataFiles();
         $store_alias = "home";
@@ -27,7 +29,22 @@ class Test
 
 
 
-        // TEST: Write/Read Job
+        // TEST: List Job; Basic List
+
+        // BEGIN TEST
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($write);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $filename, "type" => "FILE"));
+        TestCheck::assertInArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+
+
+
+        // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
         $idx = 0;
@@ -46,7 +63,31 @@ class Test
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("A.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("B.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+        }
+
+
+
+        // TEST: Write/Read Job; Overwrite
+
+        // BEGIN TEST
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
+        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+        $contents = ["", "abc", "cba", "", "abcd"];
+
+        $idx = 0;
+        foreach ($contents as $c)
+        {
+            $idx++;
+            $stream = \Flexio\Base\Stream::create();
+            $stream->getWriter()->write($c);
+            $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write); // first write
+            $process_read = \Flexio\Jobs\Process::create()->execute($read);
+            $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
+            $expected = $c;
+            TestCheck::assertString("C.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
     }
 

@@ -281,12 +281,18 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             // 3. Upload the file in parts.
             $parts = array();
             $part_number = 1;
-            while (true)
+            $done = false;
+            while (!$done)
             {
                 $chunk = $callback(5 * 1024 * 1024);
 
                 if ($chunk === false)
-                    break;
+                {
+                    $done = true;
+                    $chunk = '';
+                    if ($part_number > 1)
+                        break; // there must be at least one part
+                }
 
                 $result = $this->s3->uploadPart(array(
                     'Bucket'     => $this->bucket,
