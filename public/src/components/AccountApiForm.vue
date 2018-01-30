@@ -72,7 +72,11 @@
       },
       tokens() {
         var tokens = this.getAllTokens()
-        return this.showOnlyOne ? [].concat(_.first(tokens)) : tokens
+
+        if (tokens.length == 0)
+          return []
+
+         return this.showOnlyOne ? [].concat([ _.first(tokens) ]) : tokens
       }
     },
     mounted() {
