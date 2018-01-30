@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2018-01-29
+ * Created:  2018-01-30
  *
  * @package flexio
  * @subpackage Tests
@@ -22,7 +22,7 @@ class Test
     {
         // SETUP
         $files = TestUtil::getTestDataFiles();
-        $store_alias = "testsuite-googledrive";
+        $store_alias = "testsuite-sftp";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
 
 
