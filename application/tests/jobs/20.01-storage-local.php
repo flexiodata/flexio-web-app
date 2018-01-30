@@ -20,10 +20,27 @@ class Test
 {
     public function run(&$results)
     {
+        // TODO: writing with bad info (e.g. malformed paths, no file extension, bad file characters)
+
         // SETUP
         $files = TestUtil::getTestDataFiles();
         $store_alias = "home";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
+
+
+
+        // TEST: List Job; Basic List
+
+        // BEGIN TEST
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($write);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $filename, "type" => "FILE"));
+        TestCheck::assertInArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
 
 
 
@@ -46,7 +63,7 @@ class Test
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("A.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("B.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -70,7 +87,7 @@ class Test
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("B.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("C.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
     }
 
