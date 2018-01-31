@@ -14,7 +14,7 @@
         <div class="flex-fill mr4-l">
           <div class="bg-white css-dashboard-box cf">
             <div
-              class="pa4 ma3 f6 lh-copy bg-nearer-white overflow-hidden css-onboarding-box"
+              class="pa4 ma3 f6 lh-copy bg-nearer-white overflow-hidden marked css-onboarding-box"
               style="box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
               v-html="getStepCopy(step)"
               v-for="(step, index) in item1.steps"
@@ -38,7 +38,7 @@
   import marked from 'marked'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
-  const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-and-process-files-from-cloud-storage.yml')
+  const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
 
   export default {
     components: {
