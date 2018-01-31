@@ -46,5 +46,8 @@ steps:
 
 code: >
   Flexio.pipe()
-    .echo('Hello, World.')
+    .list('flexio-public-s3/')
+    .foreach(
+      Flexio.pipe().read('flexio-public-s3/${input.name}')
+    )
     .run(callback)

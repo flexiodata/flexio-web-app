@@ -12,10 +12,10 @@
       </div>
       <div class="flex flex-column flex-row-l">
         <div class="flex-fill mr4-l">
-          <div class="bg-white css-dashboard-box cf">
+          <div class="bg-black-05 css-dashboard-box cf">
             <div
-              class="pa4 ma3 f6 lh-copy bg-nearer-white overflow-hidden marked css-onboarding-box"
-              style="box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
+              class="pa4 ma3 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
+              :class="isStepActive(index) ? '' : 'o-40 no-pointer-events css-onboarding-box-inactive'"
               v-html="getStepCopy(step)"
               v-for="(step, index) in item1.steps"
             ></div>
@@ -46,12 +46,16 @@
     },
     data() {
       return {
-        item1
+        item1,
+        active_idx: 0
       }
     },
     methods: {
       getStepCopy(step) {
         return marked(step.blurb.trim())
+      },
+      isStepActive(idx) {
+        return idx <= this.active_idx
       }
     }
   }
@@ -64,5 +68,17 @@
 
   .css-onboarding-box p:last-child {
     margin-bottom: 0;
+  }
+
+  .css-onboarding-box-inactive p:nth-child(n+3) {
+    display:none;
+  }
+
+  .css-onboarding-box-inactive pre:nth-child(n+3) {
+    display:none;
+  }
+
+  .css-onboarding-box-inactive button:nth-child(n+3) {
+    display:none;
   }
 </style>
