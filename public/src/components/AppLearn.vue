@@ -72,11 +72,22 @@
       isStepActive(idx) {
         return idx <= this.active_idx
       },
+      goStep(idx) {
+        this.active_idx = idx
+        /*
+        // scroll back to the top of the pipe list when the process starts
+        this.$scrollTo('#'+this.pipeEid, {
+          container: '#'+this.pipeEid,
+          duration: 400,
+          easing: 'ease-out'
+        })
+        */
+      },
       doStepAction(step, idx) {
         switch (step.button.action)
         {
           case 'next':
-            this.active_idx = idx + 1
+            this.goStep(idx + 1)
             return
           case 'storage':
             this.show_storage_props_modal = true
@@ -86,7 +97,7 @@
       },
       tryUpdateConnection(a, b) {
         this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
-        this.active_idx += 1
+        this.goStep(this.active_idx + 1)
       }
     }
   }
