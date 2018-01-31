@@ -127,6 +127,8 @@ class Filter extends \Flexio\Jobs\Base
         }
 
         $payload = json_encode($results);
+
+        $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter = $outstream->getWriter();
         $streamwriter->write($payload);
         $outstream->setSize($streamwriter->getBytesWritten());
