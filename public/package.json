@@ -49,6 +49,7 @@
     "file-loader": "^1.1.6",
     "html-webpack-plugin": "^2.30.1",
     "image-webpack-loader": "^3.4.2",
+    "js-yaml": "^3.10.0",
     "less": "^2.7.3",
     "less-loader": "^4.0.5",
     "mjml": "^3.3.5",
