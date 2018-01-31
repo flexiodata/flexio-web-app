@@ -16,9 +16,13 @@
             <div
               class="pa4 ma3 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
               :class="isStepActive(index) ? '' : 'o-40 no-pointer-events css-onboarding-box-inactive'"
-              v-html="getStepCopy(step)"
               v-for="(step, index) in item1.steps"
-            ></div>
+            >
+              <div v-html="getStepCopy(step)"></div>
+              <button type="button" class="link dib blue underline-hover db ttu fw6 pa0 mt4" @click="doStepAction(step, index)">
+                <span class="v-mid">{{step.button.label}}</span>
+              </button>
+            </div>
           </div>
         </div>
         <div class="flex-fill">
@@ -31,23 +35,34 @@
       </div>
     </div>
 
+    <!-- storage props modal -->
+    <storage-props-modal
+      ref="modal-storage-props"
+      @submit="tryUpdateConnection"
+      @hide="show_storage_props_modal = false"
+      v-if="show_storage_props_modal"
+    ></storage-props-modal>
+
   </div>
 </template>
 
 <script>
   import marked from 'marked'
+  import StoragePropsModal from './StoragePropsModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
 
   export default {
     components: {
+      StoragePropsModal,
       OnboardingCodeEditor
     },
     data() {
       return {
         item1,
-        active_idx: 0
+        active_idx: 0,
+        show_storage_props_modal: false
       }
     },
     methods: {
@@ -56,6 +71,22 @@
       },
       isStepActive(idx) {
         return idx <= this.active_idx
+      },
+      doStepAction(step, idx) {
+        switch (step.button.action)
+        {
+          case 'next':
+            this.active_idx = idx + 1
+            return
+          case 'storage':
+            this.show_storage_props_modal = true
+            this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
+            return
+        }
+      },
+      tryUpdateConnection(a, b) {
+        this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
+        this.active_idx += 1
       }
     }
   }
@@ -78,7 +109,7 @@
     display:none;
   }
 
-  .css-onboarding-box-inactive button:nth-child(n+3) {
+  .css-onboarding-box-inactive button {
     display:none;
   }
 </style>
