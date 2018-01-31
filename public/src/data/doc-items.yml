@@ -1,0 +1,29 @@
+- title: Quick Start
+  description: 'Quickly get started with Flex.io. Start building pipes, working with the API and using pipes from your command line in a few minutes.'
+  link:
+    href: /docs/quick-start
+    label: Get Started
+
+- title: Tutorials
+  description: Step-by-step guides for getting started with Flex.io.
+  link:
+    href: /docs/tutorials
+    label: Get Started
+
+- title: Javascript SDK
+  description: Start using Flex.io in your Node.js apps. Click here to view runnable documentation for the Javascript SDK.
+  link:
+    href: /docs/javascript-sdk
+    label: Get Started
+
+- title: API Reference
+  description: 'Get in the weeds with Flex.io’s REST API and SDKs, including authentication, parameters, response formats and errors.'
+  link:
+    href: /docs/api
+    label: Get Started
+
+- title: Support
+  description: Need any help or clarification? Just shoot us an email at support@flex.io and our devs we’ll lend you a hand.
+  link:
+    href: /about#contact-us
+    label: Contact Us
