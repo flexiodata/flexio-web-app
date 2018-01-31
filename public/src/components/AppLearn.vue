@@ -1,10 +1,10 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns">Learn to create pipes in a few simple steps</div>
+      <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
       <div class="mv4 f4">
         <span class="ma1">I want to</span>
-        <select name="" class="pa1 b--black-10">
+        <select name="" class="pa1 ba b--black-10">
           <option value="a">convert a CSV to JSON</option>
           <option value="b">filter a JSON file from the web</option>
           <option value="c" selected>copy and process files from cloud storage</option>
