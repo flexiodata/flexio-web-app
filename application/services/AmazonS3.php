@@ -355,10 +355,19 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             $this->region = 'us-east-1';
 
         require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
-
         //setAutoloaderIgnoreErrors(true);
-        $credentials = new \Aws\Credentials\Credentials($this->accesskey, $this->secretkey);
 
+
+        if ($accesskey == '' && $secretkey == '')
+        {
+            // no key specified, don't use any credentials
+            $credentials = false;
+        }
+         else
+        {
+            $credentials = new \Aws\Credentials\Credentials($this->accesskey, $this->secretkey);
+        }
+        
         $this->s3 = new \Aws\S3\S3Client([
             'version'     => 'latest',
             'region'      => $this->region,
