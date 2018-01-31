@@ -38,9 +38,8 @@
         v-if="is_inited"
       />
     </div>
-    <div class="mt3" v-if="is_loading">
-      <div class="bb b--black-10"></div>
-      <div class="v-mid fw6 dark-gray mt3 mb"><span class="fa fa-spin fa-spinner"></span> Running...</div>
+    <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
+      <div class="v-mid fw6 dark-gray"><span class="fa fa-spin fa-spinner"></span> Running...</div>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-else-if="has_text_result || has_img_src || has_pdf_src">
       <div class="flex flex-row">

@@ -13,7 +13,7 @@
       <div class="flex flex-column flex-row-l">
         <div class="flex-fill mr4-l">
           <div
-            class="pa3 mb3 f6 lh-copy bg-white ba b--black-10 css-onboarding-box"
+            class="pa3 mb3 f6 lh-copy bg-white ba b--black-10 overflow-hidden css-onboarding-box"
             v-html="getStepCopy(step)"
             v-for="(step, index) in item1.steps"
           ></div>
