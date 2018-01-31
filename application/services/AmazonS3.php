@@ -51,6 +51,30 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    private function getS3(string $path)
+    {
+        if (strpos($path, "s3://") !== 0)
+        {
+            return $this->s3;
+        }
+         else
+        {
+            $urlparts = parse_url($path);
+
+            require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
+            $s3 = new \Aws\S3\S3Client([
+                'version'     => 'latest',
+               // 'region'      => $this->region,
+                'endpoint' => $urlparts['host'],
+                'credentials' => false
+            ]);
+
+            var_dump($s3);
+            die();
+            return $s3;
+        }
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -62,6 +86,8 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function list(string $path = '', array $options = []) : array
     {
+        $s3 = $this->getS3($path);
+
         if (!$this->isOk())
             return array();
 
@@ -77,7 +103,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
 
-        $s3 = $this->s3;
+
 
         $arr = array();
         $maxkey = '';
