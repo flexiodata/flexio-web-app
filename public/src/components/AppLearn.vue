@@ -2,7 +2,7 @@
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
       <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
-      <div class="mv4 f4">
+      <div class="mt4 mb3 f5">
         <span class="ma1">I want to</span>
         <select name="" class="pa1 ba b--black-10">
           <option value="a">convert a CSV to JSON</option>
@@ -12,11 +12,14 @@
       </div>
       <div class="flex flex-column flex-row-l">
         <div class="flex-fill mr4-l">
-          <div
-            class="pa3 mb3 f6 lh-copy bg-white ba b--black-10 overflow-hidden css-onboarding-box"
-            v-html="getStepCopy(step)"
-            v-for="(step, index) in item1.steps"
-          ></div>
+          <div class="bg-white css-dashboard-box cf">
+            <div
+              class="pa4 ma3 f6 lh-copy bg-nearer-white overflow-hidden css-onboarding-box"
+              style="box-shadow: 0 1px 4px -2px rgba(0,0,0,0.4)"
+              v-html="getStepCopy(step)"
+              v-for="(step, index) in item1.steps"
+            ></div>
+          </div>
         </div>
         <div class="flex-fill">
           <onboarding-code-editor
