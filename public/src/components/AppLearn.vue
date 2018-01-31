@@ -5,9 +5,9 @@
       <div class="mt4 mb3 f5">
         <span class="ma1">I want to</span>
         <select name="" class="pa1 ba b--black-10">
-          <option value="a">convert a CSV to JSON</option>
-          <option value="b">filter a JSON file from the web</option>
-          <option value="c" selected>copy and process files from cloud storage</option>
+          <option value="a" selected>copy a file directory to cloud storage</option>
+          <option value="b">collect data from an API</option>
+          <option value="c">process and move tabular data</option>
         </select>
       </div>
       <div class="flex flex-column flex-row-l">
