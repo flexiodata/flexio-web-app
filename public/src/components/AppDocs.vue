@@ -20,7 +20,7 @@
 </template>
 
 <script>
-  var doc_items = require('json-loader!yaml-loader!../data/doc-items.yml')
+  const doc_items = require('json-loader!yaml-loader!../data/doc-items.yml')
 
   export default {
     data() {
