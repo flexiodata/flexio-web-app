@@ -28,6 +28,8 @@
         <div class="flex-fill">
           <onboarding-code-editor
             cls="relative"
+            :api-key="api_key"
+            :sdk-options="sdk_options"
             :buttons="['run']"
             :code="item1.code"
           />
@@ -48,6 +50,7 @@
 
 <script>
   import marked from 'marked'
+  import { mapState, mapGetters } from 'vuex'
   import StoragePropsModal from './StoragePropsModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
@@ -65,7 +68,29 @@
         show_storage_props_modal: false
       }
     },
+    computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
+      api_key() {
+        var tokens = this.getAllTokens()
+
+        if (tokens.length == 0)
+          return ''
+
+        return _.get(tokens, '[0].access_code', '')
+      },
+      sdk_options() {
+        return { baseUrl: 'https://' + window.location.hostname + '/api/v1' }
+      }
+    },
+    mounted() {
+      this.tryFetchTokens()
+    },
     methods: {
+      ...mapGetters([,
+        'getAllTokens'
+      ]),
       getStepCopy(step) {
         return marked(step.blurb.trim())
       },
@@ -98,6 +123,9 @@
       tryUpdateConnection(a, b) {
         this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
         this.goStep(this.active_idx + 1)
+      },
+      tryFetchTokens() {
+        this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       }
     }
   }
