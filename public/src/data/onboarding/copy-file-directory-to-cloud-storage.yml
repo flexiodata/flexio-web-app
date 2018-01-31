@@ -8,6 +8,7 @@ steps:
   - button:
       label: Next step
       action: next
+
     blurb: |
       ### Step 1. Access a file directory
 
@@ -27,10 +28,7 @@ steps:
       ```
       Flexio.pipe()
         .list('/flexio-public-s3')
-        .filter('size >= 1000000')
-        .foreach(Flexio.pipe()
-          .read('/flexio-public-s3/${input.name}')
-        )
+        .filter('size >= 50000')
       ```
 
       Re-run the pipe and we'll see that only a handful of files match this criteria.  Now let's transfer these files to a cloud storage account.
@@ -38,6 +36,10 @@ steps:
   - button:
       label: Connect to storage
       action: storage
+
+    button2:
+      label: Skip
+      action: next
 
     blurb: |
       ### Step 3. Create a connection to a cloud storage account
@@ -56,14 +58,15 @@ steps:
       ```
       Flexio.pipe()
         .list('/flexio-public-s3')
-        .filter('size >= 1000000')
+        .filter('size >= 50000')
         .foreach(
           Flexio.pipe()
-            .read('/flexio-public-s3/${input.name}')
-            .write('/home/${input.name}')
+            .read('/flexio-public-s3/${item.name}')
+            .write('/home/${item.name}')
         )
+        .echo('Finished!')
       ```
 
-      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${input.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
+      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${item.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
 
       That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!

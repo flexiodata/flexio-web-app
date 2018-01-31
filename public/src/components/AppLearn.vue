@@ -12,16 +12,27 @@
       </div>
       <div class="flex flex-column flex-row-l">
         <div class="flex-fill mr4-l">
-          <div class="bg-black-05 css-dashboard-box cf">
+          <div class="bg-white css-dashboard-box cf">
             <div
               class="pa4 ma3 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
               :class="isStepActive(index) ? '' : 'o-40 no-pointer-events css-onboarding-box-inactive'"
               v-for="(step, index) in item1.steps"
             >
               <div v-html="getStepCopy(step)"></div>
-              <button type="button" class="link dib blue underline-hover db ttu fw6 pa0 mt4" @click="doStepAction(step, index)">
-                <span class="v-mid">{{step.button.label}}</span>
-              </button>
+              <div class="flex flex-row">
+                <button type="button" class="link dib blue underline-hover db ttu fw6 pa0 mt4" @click="doStepAction(step.button.action, index)">
+                  <span class="v-mid">{{step.button.label}}</span>
+                </button>
+                <div class="flex-fill" v-if="step.button2"></div>
+                <button
+                  type="button"
+                  class="link dib blue underline-hover db ttu fw6 pa0 mt4 mr2"
+                  @click="doStepAction(step.button2.action, index)"
+                  v-if="step.button2"
+                >
+                  <span class="v-mid">{{step.button2.label}}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -108,8 +119,8 @@
         })
         */
       },
-      doStepAction(step, idx) {
-        switch (step.button.action)
+      doStepAction(action, idx) {
+        switch (action)
         {
           case 'next':
             this.goStep(idx + 1)
