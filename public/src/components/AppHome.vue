@@ -20,24 +20,20 @@
 <script>
   const nav_items = [
     {
-      route: '/dashboard',
+      route: '/dashboard/overview',
       name: 'Dashboard',
-      icon: 'dashboard',
-      subitems: [
-        {
-          route: '/dashboard/overview',
-          name: 'Overview'
-        },
-        {
-          route: '/dashboard/learn',
-          name: 'Build & Learn'
-        },
-        {
-          route: '/dashboard/docs',
-          name: 'Documentation'
-        }
-      ]
+      icon: 'dashboard'
     },
+    {
+      route: '/dashboard/learn',
+      name: 'Build & Learn',
+      icon: 'help'
+    }/*,
+    {
+      route: '/dashboard/docs',
+      name: 'Documentation',
+      icon: 'help'
+    }*/,
     {
       route: '/pipes',
       name: 'Pipes',
@@ -52,7 +48,7 @@
       route: '/storage',
       name: 'Storage',
       icon: 'layers'
-    },/*
+    }/*,
     {
       route: '/trash',
       name: 'Trash',
