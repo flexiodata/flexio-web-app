@@ -43,7 +43,7 @@
       <div class="v-mid fw6 dark-gray"><span class="fa fa-spin fa-spinner"></span> Running...</div>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-else-if="has_text_result || has_img_src || has_pdf_src">
-      <div class="flex flex-row">
+      <div class="flex flex-row mb2">
         <h4 class="flex-fill mv0">Output</h4>
         <div>
           <div
