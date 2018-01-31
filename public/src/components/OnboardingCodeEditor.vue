@@ -33,8 +33,9 @@
       <code-editor
         ref="code"
         lang="javascript"
-        :val="code_to_show"
+        :val="edit_code"
         :options="{ minHeight: 300 }"
+        @change="updateCode"
         v-if="is_inited"
       />
     </div>
@@ -65,7 +66,6 @@
 </template>
 
 <script>
-  //import Prism from 'prismjs'
   import Flexio from 'flexio-sdk-js'
   import CodeEditor from './CodeEditor.vue'
 
@@ -139,13 +139,10 @@
     components: {
       CodeEditor
     },
-    watch: {
-      text_result(val, old_val) {
-        //this.$nextTick(() => { Prism.highlightElement(this.$refs['output']) })
-      }
-    },
     data() {
       return {
+        edit_code: '',
+        syntax_msg: '',
         text_result: '',
         img_src: '',
         pdf_src: '',
@@ -173,6 +170,13 @@
       show_see_it_work_button() {
         return this.buttons.indexOf('see-it-work') != -1
       },
+      run_code() {
+        var code = this.edit_code
+        var idx = code.indexOf('.run')
+        if (idx >= 0)
+          code = code.substring(0, idx)
+        return code + '.run(callback)'
+      },
       run_fn() {
         if (typeof this.fn == 'function')
         {
@@ -181,7 +185,7 @@
          else
         {
           return (Flexio, callback) => {
-            eval(this.code)
+            eval(this.run_code)
           }
         }
       },
@@ -217,13 +221,22 @@
     },
     mounted() {
       this.$nextTick(() => {
-        //Prism.highlightElement(this.$refs['code'])
         this.is_inited = true
+        this.edit_code = this.code_to_show
+
+        // set the code in the code editor
+        var code_editor = this.$refs['code']
+        if (!_.isNil(code_editor))
+          code_editor.setValue(this.edit_code)
       })
     },
     methods: {
       toggleOutput() {
         this.show_output = !this.show_output
+      },
+      updateCode(code) {
+        this.edit_code = code
+        this.syntax_msg = ''
       },
       copy() {
         if (window.analytics)

@@ -1,6 +1,6 @@
 steps:
   - blurb: |
-      #### Step 1.  Access a CSV file from a directory
+      ### Step 1.  Access a CSV file from a directory
 
       The first step in this pipe is to access a CSV file.  A CSV file could be located in a URL, a cloud storage service or could be sent to your pipe via email or web upload.  In this case, we'll get this from an AWS S3 directory as seen in the **read** task in the console to the right. Click the **Run** button to show the output.
 
@@ -15,7 +15,7 @@ steps:
       Now let's add a task to manipulate the file.
 
   - blurb: |
-      #### Step 2.  Add a processing step
+      ### Step 2.  Add a processing step
 
       Let's add a simple `select` step that selects only a few of the columns in our file. Add this below the `read` or `request` task:
 
@@ -24,7 +24,7 @@ steps:
       Now re-run the pipe and you'll see only these three columns in the output.  You could also use tasks like `convert` or  `filter` or `execute` with python to do further table manipulation.  Now, let's send this file somewhere.
 
   - blurb: |
-      #### Step 3. Transfer the file to a cloud storage account
+      ### Step 3. Transfer the file to a cloud storage account
 
       Now that we've accessed our file and performed some basic processing, let's send it somewhere.  If you have a cloud storage account, like dropbox, box, s3, etc., let's set that up now:
 

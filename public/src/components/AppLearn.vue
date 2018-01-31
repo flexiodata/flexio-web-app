@@ -55,7 +55,7 @@
 </script>
 
 <style>
-  .css-onboarding-box h4 {
+  .css-onboarding-box h3 {
     margin-top: 0;
   }
 
