@@ -265,10 +265,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 // split off the schema portion context://; the path portion will retain the preceding slash
                 return [ substr($path, 0, $urlsep_pos+3), substr($path, 9) ];
             }
-            else if ($protocol == 'https' || $protocol == 'http')
+            else if ($protocol == 'https' || $protocol == 'http' || $protocol == 's3')
             {
                 return [ substr($path, 0, $urlsep_pos+3), $path ];
             }
+            
         }
 
 
@@ -314,6 +315,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $http_service = \Flexio\Services\Http::create();
             $this->service_map[$connection_identifier] = $http_service;
             return $http_service;
+        }
+
+        if ($connection_identifier == 's3://')
+        {
+            $s3_service = \Flexio\Services\AmazonS3::create();
+            $this->service_map[$connection_identifier] = $s3_service;
+            return $s3_service;
         }
 
         if ($connection_identifier == 'home')

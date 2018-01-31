@@ -104,15 +104,19 @@ class Base implements \Flexio\IFace\IJob
                         $token_len = strlen($token);
                         $offset = $match[1];
 
-                        $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
+                        $fullvarname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
                         $suffix = '';
                         $replacement = '';
 
-                        $period = strpos($varname, '.');
+                        $period = strpos($fullvarname, '.');
                         if ($period !== false)
                         {
-                            $suffix = substr($varname, $period+1);
-                            $varname = substr($varname, 0, $period);
+                            $suffix = substr($fullvarname, $period+1);
+                            $varname = substr($fullvarname, 0, $period);
+                        }
+                         else
+                        {
+                            $varname = $fullvarname;
                         }
 
                         if ($varname == 'stdin' || $varname == 'input')
@@ -143,7 +147,16 @@ class Base implements \Flexio\IFace\IJob
                         }
                         else
                         {
-                            $var = $info['variables'][$varname] ?? null;
+                            $var = $info['variables'][$fullvarname] ?? null;
+                            if ($var !== null)
+                            {
+                                $suffix = '';
+                            }
+                            else
+                            {
+                                $var = $info['variables'][$varname] ?? null;
+                            }
+
                             if ($var !== null)
                             {
                                 if ($var instanceof \Flexio\Base\Stream)

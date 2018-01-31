@@ -102,6 +102,13 @@ class Foreach1 extends \Flexio\Jobs\Base
 
             if (is_array($input) || is_object($input))
             {
+                $p = $subprocess->getParams();
+                foreach ((array)$input as $k => $v)
+                {
+                    $p['item.' . $k] = $v;
+                }
+                $subprocess->setParams($p);
+
                 $stream->setMimeType(\Flexio\Base\ContentType::JSON);
                 $writer->write(json_encode($input));
             }
