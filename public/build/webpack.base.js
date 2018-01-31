@@ -66,6 +66,11 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/
       },
+      {
+        test: /\.yml$/,
+        loader: 'yaml-loader',
+        exclude: /node_modules/
+      },
       // compress images before outputting them
       {
         test: /\.(jpe?g|png|gif|svg)$/,
