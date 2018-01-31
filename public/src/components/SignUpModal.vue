@@ -97,11 +97,12 @@
         this.user_info = _.assign({}, this.user_info, user_info)
 
         this.fireIdentify()
-        this.fireSignUp()
+        //this.fireSignUp()
       },
       onSignedUpAndIn(user_info) {
-        this.$emit('signed-up-signed-in')
-        this.view = 'sign-up-success'
+        //this.$emit('signed-up-signed-in')
+        //this.view = 'sign-up-success'
+        this.fireSignUp()
       },
       getUserInfo(include_label) {
         var info = this.user_info
@@ -142,6 +143,7 @@
         setTimeout(() => {
           if (window.analytics)
             window.analytics.track('Signed Up', this.getUserInfo(true))
+            setTimeout(function() { window.location = '/app/dashboard/learn' }, 300)
         }, 50)
       }
     }

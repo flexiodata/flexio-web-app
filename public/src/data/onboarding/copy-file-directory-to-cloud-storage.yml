@@ -1,0 +1,69 @@
+
+code: >
+  Flexio.pipe()
+    .list('/flexio-public-s3')
+    .run(callback)
+
+steps:
+  - button:
+      label: Next step
+      action: next
+    blurb: |
+      ### Step 1. Access a file directory
+
+      For this example, we're going to copy files from one cloud storage directory into another.  In addition, we'll filter out files that are greater than 50KB in size.
+
+      The first step in the pipe is to access to a sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` and `foreach` tasks to read through each of the files in the directory.  Click the Run button to see a list of the files in the directory.
+
+  - button:
+      label: Next step
+      action: next
+
+    blurb: |
+      ### Step 2. Add a filter
+
+      For our copy, let's say we only want move files that are less than 50KB in size.  To do this, add a `filter` task like this:
+
+      ```
+      Flexio.pipe()
+        .list('/flexio-public-s3')
+        .filter('size >= 1000000')
+        .foreach(Flexio.pipe()
+          .read('/flexio-public-s3/${input.name}')
+        )
+      ```
+
+      Re-run the pipe and we'll see that only a handful of files match this criteria.  Now let's transfer these files to a cloud storage account.
+
+  - button:
+      label: Connect to storage
+      action: storage
+
+    blurb: |
+      ### Step 3. Create a connection to a cloud storage account
+
+      To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
+
+  - button:
+      label: Next step
+      action: next
+
+    blurb: |
+      ### Step 4. Copy the filtered files to your cloud Storage
+
+      Now we'll copy the files from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:
+
+      ```
+      Flexio.pipe()
+        .list('/flexio-public-s3')
+        .filter('size >= 1000000')
+        .foreach(
+          Flexio.pipe()
+            .read('/flexio-public-s3/${input.name}')
+            .write('/home/${input.name}')
+        )
+      ```
+
+      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${input.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
+
+      That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!
