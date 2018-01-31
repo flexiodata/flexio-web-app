@@ -195,7 +195,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             $objects[] = array(
                 'name' => $a['name'],
                 'path' => $a['path'],
-                'size' => $a['size'],
+                'size' => (int)$a['size'],
                 'modified' => $a['modified'],
                 'type' => ($a['type'] == 'DIR') ? 'DIR':'FILE'
             );
