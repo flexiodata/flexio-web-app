@@ -1,7 +1,7 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns">Build your first pipe</div>
+      <div class="f3 f2-ns">Learn to create pipes in a few simple steps</div>
       <div class="mv4 f4">
         <span class="ma1">I want to</span>
         <select name="" class="pa1 b--black-10">
@@ -20,7 +20,8 @@
         </div>
         <div class="flex-fill">
           <onboarding-code-editor
-            cls="relative pa3 bg-black-05 br2"
+            cls="relative"
+            :buttons="['run']"
             :code="item1.code"
           />
         </div>

@@ -2,9 +2,9 @@ steps:
   - blurb: |
       #### Step 1.  Access a CSV file from a directory
 
-      The first step in this pipe is to access a csv file.  A csv file could be located in a url, a cloud storage service or could be sent to your pipe via email or web upload.  In this case, we'll get this from a AWS S3 directory as see in the the 'read' task in the console to the right. Click the 'Run' button to show the output.
+      The first step in this pipe is to access a CSV file.  A CSV file could be located in a URL, a cloud storage service or could be sent to your pipe via email or web upload.  In this case, we'll get this from an AWS S3 directory as seen in the **read** task in the console to the right. Click the **Run** button to show the output.
 
-      You could also select a different csv file and re-run the pipe, using another file from the S3 directory or choosing from a web URL, respectively:
+      You could also select a different CSV file and re-run the pipe, using another file from the S3 directory or choosing from a web URL, respectively:
 
       `.read('/flexio-public-s3/bar.csv')`
 

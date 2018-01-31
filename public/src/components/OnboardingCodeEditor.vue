@@ -1,6 +1,6 @@
 <template>
   <div :class="cls" v-show="is_inited">
-    <div class="flex flex-row absolute top-0 right-0" v-if="showButtons">
+    <div class="flex flex-row absolute top-0 right-0" style="z-index: 10" v-if="showButtons">
       <button
         type="button"
         aria-label="Copy to Clipboard"
@@ -29,16 +29,21 @@
       <pre><code class="db ph3">{{description}}</code></pre>
       <div class="mv3 bb b--black-10"></div>
     </div>
-    <div>
-      <pre class="f6 line-numbers"><code ref="code" class="db overflow-x-auto language-javascript" spellcheck="false">{{code_to_show}}</code></pre>
+    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
+      <code-editor
+        ref="code"
+        lang="javascript"
+        :val="code_to_show"
+        :options="{ minHeight: 300 }"
+        v-if="is_inited"
+      />
     </div>
     <div class="mt3" v-if="is_loading">
       <div class="bb b--black-10"></div>
       <div class="v-mid fw6 dark-gray mt3 mb"><span class="fa fa-spin fa-spinner"></span> Running...</div>
     </div>
-    <div class="mt3" v-else-if="has_text_result || has_img_src || has_pdf_src">
-      <div class="bb b--black-10"></div>
-      <div class="flex flex-row mt3 mb2">
+    <div class="mt3 pa3 bg-white ba b--black-10" v-else-if="has_text_result || has_img_src || has_pdf_src">
+      <div class="flex flex-row">
         <h4 class="flex-fill mv0">Output</h4>
         <div>
           <div
@@ -63,6 +68,7 @@
 <script>
   //import Prism from 'prismjs'
   import Flexio from 'flexio-sdk-js'
+  import CodeEditor from './CodeEditor.vue'
 
   export default {
     props: {
@@ -130,6 +136,9 @@
         type: String,
         default: ''
       }
+    },
+    components: {
+      CodeEditor
     },
     watch: {
       text_result(val, old_val) {
