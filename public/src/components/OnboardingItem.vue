@@ -4,8 +4,8 @@
       <div class="flex-fill mr4-l order-1 order-0-l">
         <div class="bg-white css-dashboard-box cf">
           <div
-            class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 pointer overflow-hidden marked css-onboarding-box"
-            :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive css-onboarding-box-hover'"
+            class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
+            :class="isStepActive(index) ? '' : 'o-40 pointer css-onboarding-box-inactive css-onboarding-box-hover'"
             @click="goStep(index)"
             v-for="(step, index) in item.steps"
           >
