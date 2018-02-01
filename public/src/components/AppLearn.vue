@@ -4,10 +4,13 @@
       <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
       <div class="mt4 mb3 f5">
         <span class="ma1">I want to</span>
-        <select name="" class="pa1 ba b--black-10">
-          <option value="a" selected>copy a file directory to cloud storage</option>
-          <option value="b">collect data from an API</option>
-          <option value="c">process and move tabular data</option>
+        <select class="pa1 ba b--black-10" v-model="active_item_id">
+          <option
+            :value="item.id"
+            v-for="(item, index) in items"
+          >
+            {{item.want}}
+          </option>
         </select>
       </div>
       <div class="flex flex-column flex-row-l">
@@ -17,7 +20,7 @@
               class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 pointer overflow-hidden marked css-onboarding-box"
               :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive css-onboarding-box-hover'"
               @click="goStep(index)"
-              v-for="(step, index) in item1.steps"
+              v-for="(step, index) in active_item.steps"
             >
               <div v-html="getStepCopy(step)"></div>
               <button
@@ -37,7 +40,7 @@
             :api-key="api_key"
             :sdk-options="sdk_options"
             :buttons="['run']"
-            :code="item1.code"
+            :code="active_item.code"
           />
         </div>
       </div>
@@ -63,6 +66,7 @@
   const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
   const item2 = require('json-loader!yaml-loader!../data/onboarding/collect-data-from-api.yml')
   const item3 = require('json-loader!yaml-loader!../data/onboarding/process-tabular-data.yml')
+  const items = [item1, item2, item3]
 
   export default {
     components: {
@@ -71,8 +75,9 @@
     },
     data() {
       return {
-        item1,
-        active_idx: 0,
+        items,
+        active_item_id: '',
+        active_step: 0,
         show_storage_props_modal: false
       }
     },
@@ -90,9 +95,14 @@
       },
       sdk_options() {
         return { baseUrl: 'https://' + window.location.hostname + '/api/v1' }
+      },
+      active_item() {
+        var step = _.find(this.items, { id: this.active_item_id })
+        return _.defaultTo(step, {})
       }
     },
     mounted() {
+      this.active_item_id = _.get(this.items, '[0].id', '')
       this.tryFetchTokens()
     },
     methods: {
@@ -103,10 +113,10 @@
         return marked(step.blurb.trim())
       },
       isStepActive(idx) {
-        return idx == this.active_idx
+        return idx == this.active_step
       },
       goStep(idx) {
-        this.active_idx = idx
+        this.active_step = idx
         /*
         // scroll back to the top of the pipe list when the process starts
         this.$scrollTo('#'+this.pipeEid, {
@@ -130,7 +140,7 @@
       },
       tryUpdateConnection(a, b) {
         this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
-        this.goStep(this.active_idx + 1)
+        this.goStep(this.active_step + 1)
       },
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })

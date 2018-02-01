@@ -1,5 +1,6 @@
 title: Copy a file directory to cloud storage
 description:
+id: copy-files-to-cloud-storage
 want: I want to copy a file directory to cloud storage
 
 code: >
