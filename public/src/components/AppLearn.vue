@@ -4,35 +4,33 @@
       <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
       <div class="mt4 mb3 f5">
         <span class="ma1">I want to</span>
-        <select name="" class="pa1 ba b--black-10">
-          <option value="a" selected>copy a file directory to cloud storage</option>
-          <option value="b">collect data from an API</option>
-          <option value="c">process and move tabular data</option>
+        <select class="pa1 ba b--black-10" v-model="active_item_id">
+          <option
+            :value="item.id"
+            v-for="(item, index) in items"
+          >
+            {{item.want}}
+          </option>
         </select>
       </div>
       <div class="flex flex-column flex-row-l">
         <div class="flex-fill mr4-l">
           <div class="bg-white css-dashboard-box cf">
             <div
-              class="pa4 ma3 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
-              :class="isStepActive(index) ? '' : 'o-40 no-pointer-events css-onboarding-box-inactive'"
-              v-for="(step, index) in item1.steps"
+              class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 pointer overflow-hidden marked css-onboarding-box"
+              :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive css-onboarding-box-hover'"
+              @click="goStep(index)"
+              v-for="(step, index) in active_item.steps"
             >
               <div v-html="getStepCopy(step)"></div>
-              <div class="flex flex-row">
-                <button type="button" class="link dib blue underline-hover db ttu fw6 pa0 mt4" @click="doStepAction(step.button.action, index)">
-                  <span class="v-mid">{{step.button.label}}</span>
-                </button>
-                <div class="flex-fill" v-if="step.button2"></div>
-                <button
-                  type="button"
-                  class="link dib blue underline-hover db ttu fw6 pa0 mt4 mr2"
-                  @click="doStepAction(step.button2.action, index)"
-                  v-if="step.button2"
-                >
-                  <span class="v-mid">{{step.button2.label}}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                class="link dib blue underline-hover db ttu fw6 pa0 mt4"
+                @click.stop="doStepAction(step.button.action, index)"
+                v-if="step.button"
+              >
+                <span class="v-mid">{{step.button.label}}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -42,7 +40,7 @@
             :api-key="api_key"
             :sdk-options="sdk_options"
             :buttons="['run']"
-            :code="item1.code"
+            :code="active_item.code"
           />
         </div>
       </div>
@@ -66,6 +64,9 @@
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
+  const item2 = require('json-loader!yaml-loader!../data/onboarding/collect-data-from-api.yml')
+  const item3 = require('json-loader!yaml-loader!../data/onboarding/process-tabular-data.yml')
+  const items = [item1, item2, item3]
 
   export default {
     components: {
@@ -74,8 +75,9 @@
     },
     data() {
       return {
-        item1,
-        active_idx: 0,
+        items,
+        active_item_id: '',
+        active_step: 0,
         show_storage_props_modal: false
       }
     },
@@ -93,9 +95,14 @@
       },
       sdk_options() {
         return { baseUrl: 'https://' + window.location.hostname + '/api/v1' }
+      },
+      active_item() {
+        var step = _.find(this.items, { id: this.active_item_id })
+        return _.defaultTo(step, {})
       }
     },
     mounted() {
+      this.active_item_id = _.get(this.items, '[0].id', '')
       this.tryFetchTokens()
     },
     methods: {
@@ -106,10 +113,10 @@
         return marked(step.blurb.trim())
       },
       isStepActive(idx) {
-        return idx <= this.active_idx
+        return idx == this.active_step
       },
       goStep(idx) {
-        this.active_idx = idx
+        this.active_step = idx
         /*
         // scroll back to the top of the pipe list when the process starts
         this.$scrollTo('#'+this.pipeEid, {
@@ -133,7 +140,7 @@
       },
       tryUpdateConnection(a, b) {
         this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
-        this.goStep(this.active_idx + 1)
+        this.goStep(this.active_step + 1)
       },
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
@@ -149,6 +156,11 @@
 
   .css-onboarding-box p:last-child {
     margin-bottom: 0;
+  }
+
+  .css-onboarding-box-hover:hover {
+    border-color: rgba(0,0,0,0.2);
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
   }
 
   .css-onboarding-box-inactive p:nth-child(n+3) {

@@ -1,0 +1,56 @@
+title: Collect data from an API
+description:
+id: collect-api-data
+want: I want to collect data from an API
+
+code: >
+  Flexio.pipe()
+    .request('http://uinames.com/api/?amount=10/')
+
+steps:
+  - button:
+      label: Next step
+      action: next
+
+    blurb: |
+      ### Step 1. Access an API endpoint
+
+      For this example, we're going to collect data from an API endpoint and store it locally in Flex.io. This pipe can then be scheduled to re-run regularly to collect new data.
+
+      The first step in the pipe is to access an API endpoint. You can save authenticated API endpoints in the Connections area. However, for this example, we'll use a `request` task to get JSON from a sample name generator API.  Click the Run button on the right to show the output.
+
+  - button:
+      label: Next step
+      action: next
+
+    blurb: |
+      ### Step 2. Add a conversion step
+
+      Now we'll add a simple `convert` task that reformats the data from JSON to a delimited format as follows:
+
+      ```
+      Flexio.pipe()
+        .request('http://uinames.com/api/?amount=10/')
+        .convert('json', 'table')
+      ```
+
+      Add this task to the code and re-run the pipe; you'll now see the output converted to a tabular format.  Now, let's store this data.
+
+  - blurb: |
+      ### Step 3. Store the data locally in Flex.io storage
+
+      Now that we have our data in tabular format, let's store it somewhere. You could store it externally if you'd like. However, for this example, we'll store it in the local storage that comes with your Flex.io account. Local storage provides a quick access point for data collection or to enrich your pipes.
+
+      The root path of your local storage is `/{addpathhere?}`.  So, to collect this data in local storage, we'll simply add a `write` task; make sure to replace the {path} below with your own:
+
+      ```
+      Flexio.pipe()
+        .request('http://uinames.com/api/?amount=10/')
+        .convert('json', 'table')
+        .write('{path}/sample-api.csv')
+      ```
+
+      Re-run your pipe.  The data from the API is now stored in Flex.io locally as a csv file called 'sample-api.csv'.
+
+
+      That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!
