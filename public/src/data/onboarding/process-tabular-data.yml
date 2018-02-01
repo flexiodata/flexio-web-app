@@ -1,0 +1,58 @@
+title: Process tabular data
+description:
+want: I want to process tabular data
+
+code: >
+  Flexio.pipe()
+    .read('/flexio-public-s3/contact-list-1.csv')
+
+steps:
+  - button:
+      label: Next step
+      action: next
+    blurb: |
+      ### Step 1.  Access a CSV file from a directory
+
+      For this example, we're going to get a CSV file from one cloud storage account, do some lightweight processing and then send the transformed file to another cloud storage account.
+
+      The first step in the pipe is to access to a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task get access to the CSV.  Click the Run button to see the raw CSV data.
+
+  - button:
+      label: Next step
+      action: next
+    blurb: |
+      ### Step 2.  Add a processing step
+
+      For this example, we'll simply add a `select` step to reduce the number of columns in the table. The CSV we are using is a fictitious contact list with 12 fields. Here we'll simply grab the First Name, Last Name and City from the list:
+
+      ```
+      Flexio.pipe()
+        .read('/flexio-public-s3/contact-list-1.csv')
+        .select('firstname', 'lastname', 'city')
+      ```
+
+      Add the step and re-run the pipe. Now we see only the columns we selected. OK, now let's send this file somewhere.
+
+  - button:
+      label: Connect to storage
+      action: storage
+    blurb: |
+      ### Step 3. Create a connection to a cloud Storage account
+
+      To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
+
+  - blurb: |
+      ### Step 4. Transfer the file to your cloud Storage
+
+      Now we'll copy the file from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:
+
+      ```
+      Flexio.pipe()
+        .read('/flexio-public-s3/contact-list-1.csv')
+        .select('firstname', 'lastname', 'city')
+        .write('{path}/${input.name}')
+      ```
+
+      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${input.name}')`.  Now re-run the pipe; then check your cloud storage to see the file that has been added.
+
+      That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!

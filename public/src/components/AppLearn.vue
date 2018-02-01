@@ -14,25 +14,20 @@
         <div class="flex-fill mr4-l">
           <div class="bg-white css-dashboard-box cf">
             <div
-              class="pa4 ma3 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
-              :class="isStepActive(index) ? '' : 'o-40 no-pointer-events css-onboarding-box-inactive'"
+              class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 pointer overflow-hidden marked css-onboarding-box"
+              :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive'"
+              @click="goStep(index)"
               v-for="(step, index) in item1.steps"
             >
               <div v-html="getStepCopy(step)"></div>
-              <div class="flex flex-row">
-                <button type="button" class="link dib blue underline-hover db ttu fw6 pa0 mt4" @click="doStepAction(step.button.action, index)">
-                  <span class="v-mid">{{step.button.label}}</span>
-                </button>
-                <div class="flex-fill" v-if="step.button2"></div>
-                <button
-                  type="button"
-                  class="link dib blue underline-hover db ttu fw6 pa0 mt4 mr2"
-                  @click="doStepAction(step.button2.action, index)"
-                  v-if="step.button2"
-                >
-                  <span class="v-mid">{{step.button2.label}}</span>
-                </button>
-              </div>
+              <button
+                type="button"
+                class="link dib blue underline-hover db ttu fw6 pa0 mt4"
+                @click.stop="doStepAction(step.button.action, index)"
+                v-if="step.button"
+              >
+                <span class="v-mid">{{step.button.label}}</span>
+              </button>
             </div>
           </div>
         </div>
@@ -66,6 +61,8 @@
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
+  const item2 = require('json-loader!yaml-loader!../data/onboarding/collect-data-from-api.yml')
+  const item3 = require('json-loader!yaml-loader!../data/onboarding/process-tabular-data.yml')
 
   export default {
     components: {
@@ -106,7 +103,7 @@
         return marked(step.blurb.trim())
       },
       isStepActive(idx) {
-        return idx <= this.active_idx
+        return idx == this.active_idx
       },
       goStep(idx) {
         this.active_idx = idx
