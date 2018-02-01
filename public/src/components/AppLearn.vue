@@ -15,7 +15,7 @@
           <div class="bg-white css-dashboard-box cf">
             <div
               class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 pointer overflow-hidden marked css-onboarding-box"
-              :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive'"
+              :class="isStepActive(index) ? '' : 'o-40 css-onboarding-box-inactive css-onboarding-box-hover'"
               @click="goStep(index)"
               v-for="(step, index) in item1.steps"
             >
@@ -146,6 +146,11 @@
 
   .css-onboarding-box p:last-child {
     margin-bottom: 0;
+  }
+
+  .css-onboarding-box-hover:hover {
+    border-color: rgba(0,0,0,0.2);
+    box-shadow: 0 0 12px rgba(0,0,0,0.3);
   }
 
   .css-onboarding-box-inactive p:nth-child(n+3) {
