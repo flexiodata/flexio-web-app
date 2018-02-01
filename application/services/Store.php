@@ -152,6 +152,12 @@ class Store implements \Flexio\IFace\IFileSystem
         return true;
     }
 
+    public function createDirectory(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function open($path) :  \Flexio\Iface\IStream
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
