@@ -20,17 +20,17 @@
 <script>
   const nav_items = [
     {
-      route: '/dashboard/overview',
+      route: '/dashboard',
       name: 'Dashboard',
       icon: 'dashboard'
     },
     {
-      route: '/dashboard/learn',
+      route: '/learn',
       name: 'Build & Learn',
       icon: 'help'
     }/*,
     {
-      route: '/dashboard/docs',
+      route: '/docs',
       name: 'Documentation',
       icon: 'help'
     }*/,

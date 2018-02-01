@@ -1,8 +1,8 @@
 import {
   ROUTE_HOME,
-  ROUTE_HOME_DASHBOARD_OVERVIEW,
-  ROUTE_HOME_DASHBOARD_LEARN,
-  ROUTE_HOME_DASHBOARD_DOCS,
+  ROUTE_HOME_DASHBOARD,
+  ROUTE_HOME_LEARN,
+  ROUTE_HOME_DOCS,
   ROUTE_HOME_PIPES,
   ROUTE_HOME_MEMBERS,
   ROUTE_HOME_CONNECTIONS,
@@ -29,31 +29,24 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /home/dashboard
+      // redirect to /dashboard
       path: '',
       name: ROUTE_HOME,
       redirect: '/dashboard'
     },
     {
-      // redirect to /home/dashboard/overview
       path: '/dashboard',
-      redirect: '/dashboard/overview'
+      name: ROUTE_HOME_DASHBOARD,
+      component: AppDashboard
     },
     {
-      path: '/dashboard/overview',
-      name: ROUTE_HOME_DASHBOARD_OVERVIEW,
-      component: AppDashboard,
-      alias: '/dashboard'
+      path: '/learn',
+      name: ROUTE_HOME_LEARN,
+      component: AppLearn
     },
     {
-      path: '/dashboard/learn',
-      name: ROUTE_HOME_DASHBOARD_LEARN,
-      component: AppLearn,
-      alias: '/learn'
-    },
-    {
-      path: '/dashboard/docs',
-      name: ROUTE_HOME_DASHBOARD_DOCS,
+      path: '/docs',
+      name: ROUTE_HOME_DOCS,
       component: AppDocs,
       alias: '/documentation'
     },

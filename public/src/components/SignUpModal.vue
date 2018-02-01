@@ -143,7 +143,7 @@
         setTimeout(() => {
           if (window.analytics)
             window.analytics.track('Signed Up', this.getUserInfo(true))
-            setTimeout(function() { window.location = '/app/dashboard/learn' }, 300)
+            setTimeout(function() { window.location = '/app/learn' }, 300)
         }, 50)
       }
     }
