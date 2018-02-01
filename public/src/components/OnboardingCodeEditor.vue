@@ -139,6 +139,12 @@
     components: {
       CodeEditor
     },
+    watch: {
+      code(val, old_val) {
+        this.updateCode(val)
+        this.updateEditor(val)
+      }
+    },
     data() {
       return {
         edit_code: '',
@@ -224,10 +230,7 @@
         this.is_inited = true
         this.edit_code = this.code_to_show
 
-        // set the code in the code editor
-        var code_editor = this.$refs['code']
-        if (!_.isNil(code_editor))
-          code_editor.setValue(this.edit_code)
+        this.updateEditor(this.edit_code)
       })
     },
     methods: {
@@ -237,6 +240,12 @@
       updateCode(code) {
         this.edit_code = code
         this.syntax_msg = ''
+      },
+      updateEditor(code) {
+        // set the code in the code editor
+        var code_editor = this.$refs['code']
+        if (!_.isNil(code_editor))
+          code_editor.setValue(code)
       },
       copy() {
         if (window.analytics)
