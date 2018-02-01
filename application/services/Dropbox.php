@@ -132,6 +132,12 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
+    public function createDirecotry(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement

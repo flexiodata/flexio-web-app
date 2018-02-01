@@ -149,6 +149,12 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
+    public function createDirectory(string $path, array $properties = []) : bool
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
     public function open($params) : \Flexio\IFace\IStream
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
