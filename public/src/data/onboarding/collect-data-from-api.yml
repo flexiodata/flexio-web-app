@@ -26,7 +26,7 @@ steps:
     blurb: |
       ### Step 2. Add a conversion step
 
-      Now we'll add a simple `convert` task that reformats the data from JSON to a delimited format as follows:
+      Now we'll add a simple `convert` task that reformats the data from JSON to a table as follows:
 
       ```
       Flexio.pipe()
@@ -36,7 +36,10 @@ steps:
 
       Add this task to the code and re-run the pipe; you'll now see the output converted to a tabular format.  Now, let's store this data.
 
-  - blurb: |
+  - button:
+      label: Next step
+      action: next
+    blurb: |
       ### Step 3. Store the data locally in Flex.io storage
 
       Now that we have our data in tabular format, let's store it somewhere. You could store it externally if you'd like. However, for this example, we'll store it in the local storage that comes with your Flex.io account. Local storage provides a quick access point for data collection or to enrich your pipes.

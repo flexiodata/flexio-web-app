@@ -45,7 +45,10 @@ steps:
 
       To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
 
-  - blurb: |
+  - button:
+      label: Next step
+      action: next
+    blurb: |
       ### Step 4. Copy the filtered files to your cloud Storage
 
       Now we'll copy the files from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:

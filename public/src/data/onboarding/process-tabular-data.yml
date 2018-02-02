@@ -21,14 +21,32 @@ steps:
   - button:
       label: Next step
       action: next
+
     blurb: |
-      ### Step 2.  Add a processing step
+      ### Step 2. Add a conversion step
+
+      Now we'll add a simple `convert` task that reformats the data from CSV to a table as follows:
+
+      ```
+      Flexio.pipe()
+        .read('/flexio-public-s3/contact-list-1.csv')
+        .convert('csv', 'table')
+      ```
+
+      Add this task to the code and re-run the pipe; you'll now see the output converted to a tabular format.  Now, let's store this data.
+
+  - button:
+      label: Next step
+      action: next
+    blurb: |
+      ### Step 3.  Add a processing step
 
       For this example, we'll simply add a `select` step to reduce the number of columns in the table. The CSV we are using is a fictitious contact list with 12 fields. Here we'll simply grab the First Name, Last Name and City from the list:
 
       ```
       Flexio.pipe()
         .read('/flexio-public-s3/contact-list-1.csv')
+        .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
       ```
 
@@ -38,18 +56,22 @@ steps:
       label: Connect to storage
       action: storage
     blurb: |
-      ### Step 3. Create a connection to a cloud Storage account
+      ### Step 4. Create a connection to a cloud Storage account
 
       To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
 
-  - blurb: |
-      ### Step 4. Transfer the file to your cloud Storage
+  - button:
+      label: Next step
+      action: next
+    blurb: |
+      ### Step 5. Transfer the file to your cloud Storage
 
       Now we'll copy the file from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:
 
       ```
       Flexio.pipe()
         .read('/flexio-public-s3/contact-list-1.csv')
+        .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
         .write('{path}/${input.name}')
       ```
