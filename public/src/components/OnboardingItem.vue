@@ -100,7 +100,9 @@
         active_step: 0,
         show_storage_props_modal: false,
         show_pipe_props_modal: false,
-        show_deploy_modal: false
+        show_deploy_modal: false,
+        connection: {},
+        pipe: {}
       }
     },
     computed: {
@@ -189,7 +191,7 @@ If you have any questions, please send us a note using the chat button at the bo
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
-            modal.close()
+            var connection = response.body
 
             // try to connect to the connection
             this.$store.dispatch('testConnection', { eid, attrs })
@@ -201,6 +203,11 @@ If you have any questions, please send us a note using the chat button at the bo
               _.set(analytics_payload, 'connection_type', ctype)
               analytics.track('Created Connection in Onboarding', analytics_payload)
             }
+
+            if (!_.isNil(modal))
+              modal.close()
+
+            this.connection = _.assign({}, connection)
           }
            else
           {
@@ -228,6 +235,7 @@ If you have any questions, please send us a note using the chat button at the bo
             if (!_.isNil(modal))
               modal.close()
 
+            this.pipe = _.assign({}, pipe)
             this.showDeployModal()
           }
            else
