@@ -18,7 +18,7 @@
             class="btn-add ttu b ba"
             :disabled="is_new"
             @click="createPendingConnection"
-          >New</btn>
+          >New Connection</btn>
         </div>
       </div>
     </div>
