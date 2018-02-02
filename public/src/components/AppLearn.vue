@@ -4,7 +4,7 @@
       <div class="f3 f2-ns">Hi {{first_name}}, let's build some data feeds!</div>
       <p class="mw7 lh-copy">Welcome to our live tutorial. Choose a topic from the drop-down menu to get started.<br>Run some code in the editor to get a deployable pipe in just a few steps.</p>
       <div class="mv3 f5 lh-copy">
-        <span class="dib ma1">I want to</span>
+        <span class="dib mr1 ml0">I want to</span>
         <select class="pa1 pr4-ns ba b--black-10" v-model="active_item_id">
           <option
             :value="item.id"
