@@ -32,6 +32,14 @@
       </div>
     </div>
 
+    <!-- pipe modal -->
+    <pipe-props-modal
+      ref="modal-pipe-props"
+      @submit="tryCreatePipe"
+      @hide="show_pipe_props_modal = false"
+      v-if="show_pipe_props_modal"
+    ></pipe-props-modal>
+
     <!-- storage props modal -->
     <storage-props-modal
       ref="modal-storage-props"
@@ -39,6 +47,18 @@
       @hide="show_storage_props_modal = false"
       v-if="show_storage_props_modal"
     ></storage-props-modal>
+
+    <ui-modal
+      ref="deploy-dialog"
+      :title="'Save & Deploy'"
+      @hide="show_deploy_modal = false"
+      v-if="show_deploy_modal"
+    >
+      <div class="relative w-100 tc">
+        <div class="f2 pt4 mbv">Welcome to Flex.io</div>
+        <div class="mv3 f5 fw6 black-60 lh-copy mw7 center">Below are three simple templates to show how pipes work. Click on one below to get started, and then you can modify them with your own inputs and commands.</div>
+      </div>
+    </ui-modal>
   </div>
 </template>
 
@@ -46,6 +66,7 @@
   import marked from 'marked'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import StoragePropsModal from './StoragePropsModal.vue'
+  import PipePropsModal from './PipePropsModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
@@ -65,6 +86,7 @@
     },
     components: {
       StoragePropsModal,
+      PipePropsModal,
       OnboardingCodeEditor
     },
     watch: {
@@ -75,7 +97,9 @@
     data() {
       return {
         active_step: 0,
-        show_storage_props_modal: false
+        show_storage_props_modal: false,
+        show_pipe_props_modal: false,
+        show_deploy_modal: false
       }
     },
     computed: {
@@ -90,10 +114,12 @@
 
 You should now have a functioning pipe. Next, click the "Save & Deploy" button. This will save the pipe to your account and will provide you with external deployment options, such as a cURL call.  Alternatively, you can go to your pipe list and schedule the pipe to run using the drop-down menu.
 
-If you have any questions, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.
+If you have any questions, please send us a note using the chat button at the bottom right of the screen; were more than happy to help! Thanks.
 `
         }
-        return [].concat(this.item.steps).concat([final_step])
+
+        var arr = [].concat(this.item.steps).concat([final_step])
+        return _.compact(arr)
       }
     },
     methods: {
@@ -125,7 +151,21 @@ If you have any questions, please send us a note using the chat button at the bo
             this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
             analytics.track('Clicked `Connect to Storage` button in Onboarding')
             return
+          case 'save':
+            var attrs = {
+              name: _.get(this.item, 'name', ''),
+              ename: _.get(this.item, 'id', '')
+            }
+
+            this.show_pipe_props_modal = true
+            this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
+            analytics.track('Clicked `Save & Deploy` button in Onboarding')
+            return
         }
+      },
+      showDeployModal() {
+        this.show_deploy_modal = true
+        this.$nextTick(() => { this.$refs['deploy-dialog'].open() })
       },
       tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
@@ -155,6 +195,34 @@ If you have any questions, please send us a note using the chat button at the bo
            else
           {
             // TODO: add error handling
+          }
+        })
+      },
+      tryCreatePipe(attrs, modal) {
+        if (!_.isObject(attrs))
+          attrs = { name: 'Untitled Pipe' }
+
+        this.$store.dispatch('createPipe', { attrs }).then(response => {
+          if (response.ok)
+          {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+
+            // add Segment-friendly keys
+            _.assign(analytics_payload, {
+              createdAt: _.get(pipe, 'created')
+            })
+
+            analytics.track('Created Pipe in Onboarding', analytics_payload)
+
+            if (!_.isNil(modal))
+              modal.close()
+
+            this.showDeployModal()
+          }
+           else
+          {
+            analytics.track('Created Pipe in Onboarding (Error)')
           }
         })
       }

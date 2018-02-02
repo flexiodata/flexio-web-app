@@ -14,8 +14,8 @@
         novalidate
         @submit.prevent="submit"
       >
-        <div class="flex flex-column flex-row-ns items-center-ns">
-          <div class="flex-fill mr4-ns">
+        <div class="flex flex-column">
+          <div class="flex-fill">
             <ui-textbox
               autocomplete="off"
               label="Name"
