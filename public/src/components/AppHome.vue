@@ -24,7 +24,7 @@
     },
     {
       route: '/docs',
-      name: 'Documentation',
+      name: 'Docs',
       icon: 'help'
     },
     {
