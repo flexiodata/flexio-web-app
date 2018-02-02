@@ -54,6 +54,3 @@ steps:
       ```
 
       Re-run your pipe.  The data from the API is now stored in Flex.io locally as a csv file called 'sample-api.csv'.
-
-
-      That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!

@@ -77,5 +77,3 @@ steps:
       ```
 
       Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${input.name}')`.  Now re-run the pipe; then check your cloud storage to see the file that has been added.
-
-      That's it! Now time to build your own pipes in the Pipes area or in your own developer environment. Shoot us a note with any questions using the chat button at the bottom right of the screen.  We're happy to help!
