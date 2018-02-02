@@ -64,6 +64,7 @@
 
 <script>
   import marked from 'marked'
+  import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import StoragePropsModal from './StoragePropsModal.vue'
   import PipePropsModal from './PipePropsModal.vue'
@@ -103,6 +104,9 @@
       }
     },
     computed: {
+      active_username() {
+        return _.get(this.getActiveUser(), 'user_name', '')
+      },
       all_steps() {
         var final_step = {
           button: {
@@ -123,6 +127,9 @@ If you have any questions, please send us a note using the chat button at the bo
       }
     },
     methods: {
+      ...mapGetters([
+        'getActiveUser'
+      ]),
       getStepCopy(step) {
         return marked(step.blurb.trim())
       },
@@ -156,6 +163,9 @@ If you have any questions, please send us a note using the chat button at the bo
               name: _.get(this.item, 'name', ''),
               ename: _.get(this.item, 'id', '')
             }
+
+            // add username as the alias prefix
+            attrs.ename = _.kebabCase(this.active_username + '-' + attrs.ename)
 
             this.show_pipe_props_modal = true
             this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })

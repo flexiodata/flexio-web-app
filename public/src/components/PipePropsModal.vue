@@ -2,7 +2,6 @@
   <ui-modal
     ref="dialog"
     dismiss-on="close-button"
-    @open="onOpen"
     @hide="onHide"
   >
     <div slot="header" class="w-100">
