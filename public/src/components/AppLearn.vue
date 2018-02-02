@@ -1,10 +1,11 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
-      <div class="mt4 mb3 f5">
+      <div class="f3 f2-ns">Hi {{first_name}}, let's build some data feeds!</div>
+      <p class="mw7 lh-copy">Welcome to our live tutorial. Choose a topic from the drop-down menu to get started.<br>Run some code in the editor to get a deployable pipe in just a few steps.</p>
+      <div class="mv3 f5 lh-copy">
         <span class="dib ma1">I want to</span>
-        <select class="pa1 pr4 ba b--black-10" v-model="active_item_id">
+        <select class="pa1 pr4-ns ba b--black-10" v-model="active_item_id">
           <option
             :value="item.id"
             v-for="(item, index) in items"
@@ -45,6 +46,13 @@
       ...mapState([
         'active_user_eid'
       ]),
+      active_user() {
+        var user = this.getActiveUser()
+        return user ? user : {}
+      },
+      first_name() {
+        return _.get(this.active_user, 'first_name', ' ')
+      },
       api_key() {
         var tokens = this.getAllTokens()
 
@@ -67,7 +75,8 @@
     },
     methods: {
       ...mapGetters([,
-        'getAllTokens'
+        'getAllTokens',
+        'getActiveUser'
       ]),
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
