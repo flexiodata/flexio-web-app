@@ -11,7 +11,6 @@ steps:
   - button:
       label: Next step
       action: next
-
     blurb: |
       ### Step 1. Access an API endpoint
 
@@ -22,7 +21,6 @@ steps:
   - button:
       label: Next step
       action: next
-
     blurb: |
       ### Step 2. Add a conversion step
 

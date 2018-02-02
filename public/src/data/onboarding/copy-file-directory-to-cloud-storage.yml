@@ -11,7 +11,6 @@ steps:
   - button:
       label: Next step
       action: next
-
     blurb: |
       ### Step 1. Access a file directory
 
@@ -23,7 +22,6 @@ steps:
   - button:
       label: Next step
       action: next
-
     blurb: |
       ### Step 2. Add a filter
 
@@ -40,7 +38,6 @@ steps:
   - button:
       label: Connect to storage
       action: storage
-
     blurb: |
       ### Step 3. Create a connection to a cloud storage account
 
