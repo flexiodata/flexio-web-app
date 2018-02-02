@@ -5,7 +5,7 @@
     @hide="onHide"
   >
     <div slot="header" class="w-100">
-      <span class="f4">{{title}}</span>
+      <span class="f4">{{our_title}}</span>
     </div>
 
     <div>
@@ -124,6 +124,12 @@
   }
 
   export default {
+    props: {
+      'title': {
+        type: String,
+        default: ''
+      }
+    },
     mixins: [Validation],
     components: {
       Btn,
@@ -160,7 +166,10 @@
       pipe_name() {
         return _.get(this.original_pipe, 'name', '')
       },
-      title() {
+      our_title() {
+        if (this.title.length > 0)
+          return this.title
+
         return this.mode == 'edit-pipe'
           ? 'Edit "' + this.pipe_name + '" Pipe'
           : 'New Pipe'

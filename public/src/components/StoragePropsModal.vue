@@ -9,7 +9,7 @@
     <div slot="header" class="w-100">
       <div class="flex flex-row items-center">
         <div class="flex-fill">
-          <span class="f4">{{title}}</span>
+          <span class="f4">{{our_title}}</span>
         </div>
         <div
           class="pointer f3 lh-solid b child black-30 hover-black-60"
@@ -159,6 +159,10 @@
 
   export default {
     props: {
+      'title': {
+        type: String,
+        default: ''
+      },
       'show-steps': {
         default: true,
         type: Boolean
@@ -208,7 +212,10 @@
       has_connection() {
         return this.ctype.length > 0
       },
-      title() {
+      our_title() {
+        if (this.title.length > 0)
+          return this.title
+
         return this.mode == 'edit'
           ? 'Edit "' + _.get(this.original_connection, 'name') + '" Storage'
           : 'New Storage'

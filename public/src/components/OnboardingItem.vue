@@ -35,6 +35,7 @@
 
     <!-- pipe modal -->
     <pipe-props-modal
+      title="Save Pipe"
       ref="modal-pipe-props"
       @submit="tryCreatePipe"
       @hide="show_pipe_props_modal = false"
@@ -43,6 +44,7 @@
 
     <!-- storage props modal -->
     <storage-props-modal
+      title="Connect to Storage"
       ref="modal-storage-props"
       @submit="tryUpdateConnection"
       @hide="show_storage_props_modal = false"
