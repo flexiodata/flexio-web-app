@@ -132,10 +132,25 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function createDirecotry(string $path, array $properties = []) : bool
+    public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = $params['path'] ?? '';
+
+        $postdata = json_encode(array('path' => $path, 'autorename' => false));
+
+        // download the file
+        $ch = curl_init();
+
+        $filename = rawurlencode($path);
+        curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/create_folder_v2");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
     }
     
     public function open($path) : \Flexio\IFace\IStream
