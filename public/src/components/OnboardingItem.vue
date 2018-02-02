@@ -26,8 +26,9 @@
           cls="relative"
           :api-key="apiKey"
           :sdk-options="sdkOptions"
-          :buttons="['run']"
+          :buttons="['save', 'run']"
           :code="item.code"
+          @save="showPipePropsModal"
         />
       </div>
     </div>

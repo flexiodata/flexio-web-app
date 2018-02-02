@@ -3,6 +3,12 @@
     <div class="flex flex-row absolute top-0 right-0" style="z-index: 10" v-if="showButtons">
       <button
         type="button"
+        class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10"
+        @click="$emit('save')"
+        v-if="show_save_button"
+      ><span class="f6 ttu b">Save &amp; Deploy</span></button>
+      <button
+        type="button"
         aria-label="Copy to Clipboard"
         class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10 hint--top"
         :class="show_run_button || show_see_it_work_button ? '' : 'br2 br--top br--right'"
@@ -166,6 +172,9 @@
       },
       has_pdf_src() {
         return this.pdf_src.length > 0
+      },
+      show_save_button() {
+        return this.buttons.indexOf('save') != -1
       },
       show_copy_button() {
         return this.buttons.indexOf('copy') != -1
