@@ -7,7 +7,7 @@
             class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
             :class="isStepActive(index) ? '' : 'o-40 pointer css-onboarding-box-inactive css-onboarding-box-hover'"
             @click="goStep(index)"
-            v-for="(step, index) in item.steps"
+            v-for="(step, index) in all_steps"
           >
             <div v-html="getStepCopy(step)"></div>
             <button
@@ -44,6 +44,7 @@
 
 <script>
   import marked from 'marked'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import StoragePropsModal from './StoragePropsModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
@@ -77,6 +78,24 @@
         show_storage_props_modal: false
       }
     },
+    computed: {
+      all_steps() {
+        var final_step = {
+          button: {
+            label: 'Save & Deploy',
+            action: 'save'
+          },
+          blurb: `
+### Step 5. Save and Deploy
+
+You should now have a functioning pipe. Next, click the "Save & Deploy" button. This will save the pipe to your account and will provide you with external deployment options, such as a cURL call.  Alternatively, you can go to your pipe list and schedule the pipe to run using the drop-down menu.
+
+If you have any questions, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.
+`
+        }
+        return [].concat(this.item.steps).concat([final_step])
+      }
+    },
     methods: {
       getStepCopy(step) {
         return marked(step.blurb.trim())
@@ -104,12 +123,40 @@
           case 'storage':
             this.show_storage_props_modal = true
             this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
+            analytics.track('Clicked `Connect to Storage` button in Onboarding')
             return
         }
       },
-      tryUpdateConnection(a, b) {
-        this.$nextTick(() => { this.$refs['modal-storage-props'].close() })
-        this.goStep(this.active_step + 1)
+      tryUpdateConnection(attrs, modal) {
+        var eid = attrs.eid
+        var ctype = _.get(attrs, 'connection_type', '')
+        var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
+
+        attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+
+        // update the connection and make it available
+        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            modal.close()
+
+            // try to connect to the connection
+            this.$store.dispatch('testConnection', { eid, attrs })
+
+            if (is_pending)
+            {
+              var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
+              _.set(analytics_payload, 'eid', eid)
+              _.set(analytics_payload, 'connection_type', ctype)
+              analytics.track('Created Connection in Onboarding', analytics_payload)
+            }
+          }
+           else
+          {
+            // TODO: add error handling
+          }
+        })
       }
     }
   }
