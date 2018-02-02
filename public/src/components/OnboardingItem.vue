@@ -50,13 +50,30 @@
 
     <ui-modal
       ref="deploy-dialog"
-      :title="'Save & Deploy'"
+      title="Deploy your pipe"
       @hide="show_deploy_modal = false"
       v-if="show_deploy_modal"
     >
-      <div class="relative w-100 tc">
-        <div class="f2 pt4 mbv">Welcome to Flex.io</div>
-        <div class="mv3 f5 fw6 black-60 lh-copy mw7 center">Below are three simple templates to show how pipes work. Click on one below to get started, and then you can modify them with your own inputs and commands.</div>
+      <div class="lh-copy">
+        <h2 class="flex flex-row items-center mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
+
+        <p>The <strong>{{pipe.name}}</strong> pipe has been added to your account.</p>
+        <p>To deploy your pipe in the wild, try one of these options:</p>
+
+        <div class="ml3">
+          <h4 class="mb2">cURL:</h4>
+          [snippet here]
+
+          <h4 class="mb2">http:</h4>
+          [snippet here]
+
+          <h4 class="mb2">CRON:</h4>
+          [snippet here]
+        </div>
+
+        <p>If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
+
+        <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
       </div>
     </ui-modal>
   </div>
@@ -156,24 +173,30 @@ If you have any questions, please send us a note using the chat button at the bo
             this.goStep(idx + 1)
             return
           case 'storage':
-            this.show_storage_props_modal = true
-            this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
-            analytics.track('Clicked `Connect to Storage` button in Onboarding')
+            this.showStoragePropsModal()
             return
           case 'save':
-            var attrs = {
-              name: _.get(this.item, 'name', ''),
-              ename: _.get(this.item, 'id', '')
-            }
-
-            // add username as the alias prefix
-            attrs.ename = _.kebabCase(this.active_username + '-' + attrs.ename)
-
-            this.show_pipe_props_modal = true
-            this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
-            analytics.track('Clicked `Save & Deploy` button in Onboarding')
+            this.showPipePropsModal()
             return
         }
+      },
+      showStoragePropsModal() {
+        this.show_storage_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
+        analytics.track('Clicked `Connect to Storage` button in Onboarding')
+      },
+      showPipePropsModal() {
+        var attrs = {
+          name: _.get(this.item, 'name', ''),
+          ename: _.get(this.item, 'id', '')
+        }
+
+        // add username as the alias prefix
+        attrs.ename = _.kebabCase(this.active_username + '-' + attrs.ename)
+
+        this.show_pipe_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
+        analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
       showDeployModal() {
         this.show_deploy_modal = true
