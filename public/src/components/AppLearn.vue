@@ -4,7 +4,7 @@
       <div class="f3 f2-ns">Learn to create data feeds in a few simple steps</div>
       <div class="mt4 mb3 f5">
         <span class="dib ma1">I want to</span>
-        <select class="pa1 ba b--black-10" v-model="active_item_id">
+        <select class="pa1 pr4 ba b--black-10" v-model="active_item_id">
           <option
             :value="item.id"
             v-for="(item, index) in items"
