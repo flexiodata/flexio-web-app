@@ -8,9 +8,12 @@ code: >
     .list('/flexio-public-s3')
 
 steps:
-  - button:
+  - #----------------------------------------#
+
+    button:
       label: Next step
       action: next
+
     blurb: |
       ### Step 1. Access a file directory
 
@@ -18,8 +21,9 @@ steps:
 
       The first step in the pipe is to access to a sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory. Click the Run button to see the files.
 
+  - #----------------------------------------#
 
-  - button:
+    button:
       label: Next step
       action: next
     blurb: |
@@ -35,7 +39,9 @@ steps:
 
       Re-run the pipe and we'll see that only a handful of files match this criteria.  Now let's transfer these files to a cloud storage account.
 
-  - button:
+  - #----------------------------------------#
+
+    button:
       label: Connect to storage
       action: storage
     blurb: |
@@ -43,7 +49,9 @@ steps:
 
       To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
 
-  - button:
+  - #----------------------------------------#
+
+    button:
       label: Next step
       action: next
     blurb: |
