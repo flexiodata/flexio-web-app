@@ -15,6 +15,8 @@
           class="flex-fill mr4-ns"
           autocomplete="off"
           placeholder="Name"
+          label="Name"
+          floating-label
           help=" "
           required
           v-model="name"
@@ -24,6 +26,8 @@
           class="flex-fill"
           autocomplete="off"
           placeholder="Alias"
+          label="Alias"
+          floating-label
           help=" "
           v-model="ename"
         />
@@ -33,6 +37,8 @@
         <value-select
           class="w-25-ns min-w4-ns"
           placeholder="Method"
+          label="Method"
+          floating-label
           :options="method_options"
           v-model="method"
         />
@@ -40,6 +46,8 @@
           class="flex-fill ml4-ns"
           autocomplete="off"
           placeholder="URL"
+          label="URL"
+          floating-label
           help=" "
           v-model="url"
         />
