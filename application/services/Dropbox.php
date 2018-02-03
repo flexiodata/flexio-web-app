@@ -134,8 +134,6 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        $path = $params['path'] ?? '';
-
         $postdata = json_encode(array('path' => $path, 'autorename' => false));
 
         // download the file
@@ -144,13 +142,15 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         $filename = rawurlencode($path);
         curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/create_folder_v2");
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Content-Type: application/json"));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
         $result = curl_exec($ch);
         curl_close($ch);
+
+        return true;
     }
     
     public function open($path) : \Flexio\IFace\IStream
