@@ -23,7 +23,7 @@ class Identifier
         // identifiers (e.g. usernames, or other 'named handles') must
         // follow the following rules:
         //     1. be a lowercase string
-        //     2. have a length between 3 and 39 chars
+        //     2. have a length between 3 and 80 chars
         //     3. start with a letter
         //     4. not be one of a list of various reserved words
 
@@ -41,18 +41,18 @@ class Identifier
 
         // make sure identifier is correct length
         $identifier_minlength = 3;
-        $identifier_maxlength = 39;
+        $identifier_maxlength = 80;
         $identifier_length = strlen($identifier);
         if ($identifier_length < $identifier_minlength || $identifier_length > $identifier_maxlength)
         {
-            $message = _('An identifier must be between 3 and 39 characters');
+            $message = _('An identifier must be between 3 and 80 characters');
             return false;
         }
 
         // make sure identifier starts with a letter; the rest of the
         // identifier must be made up of a letter, number, underscore
         // or hyphen
-        if (!preg_match('/^[a-z][a-z0-9_-]{2,38}$/', $identifier))
+        if (!preg_match('/^[a-z][a-z0-9_-]{2,79}$/', $identifier))
         {
             $message = _('An identifier may only contain letters, numbers, hyphens and underscores');
             return false;

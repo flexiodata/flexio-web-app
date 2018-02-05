@@ -11,7 +11,7 @@ CREATE TABLE tbl_object (
   eid varchar(12) NOT NULL default '',
   eid_type varchar(3) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
-  ename varchar(40) NOT NULL default '',
+  ename varchar(80) NOT NULL default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
