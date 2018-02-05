@@ -57,7 +57,7 @@ class Test
 
         // BEGIN TEST
         $foldername = 'empty_folder1';
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '/}}',true); // folder path with path terminator
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '/"}}',true); // folder path with path terminator
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
         $process_write = \Flexio\Jobs\Process::create()->execute($create);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
@@ -67,7 +67,7 @@ class Test
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '}}',true); // folder path without path terminator
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path without path terminator
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
         $process_write = \Flexio\Jobs\Process::create()->execute($create);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
