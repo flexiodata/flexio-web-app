@@ -1,4 +1,5 @@
 {
+    "eid_type": "PIP",
     "name": "Contact Refinement",
     "ename": "contact-refinement",
     "description": "Standardize contact information",

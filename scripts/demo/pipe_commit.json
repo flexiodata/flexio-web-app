@@ -1,4 +1,5 @@
 {
+    "eid_type": "PIP",
     "name": "GitHub Commits",
     "ename": "github-commits",
     "description": "Review commits for a repository",
