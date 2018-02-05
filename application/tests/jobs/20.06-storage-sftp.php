@@ -49,7 +49,7 @@ class Test
         $output_filepath = self::getOutputPath($output_folder, $filename);
         $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $filename, "type" => "FILE"));
@@ -59,7 +59,7 @@ class Test
         $foldername = 'empty_folder1';
         $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '/"}}',true); // folder path with path terminator
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $foldername, "type" => "DIR"));
@@ -69,7 +69,7 @@ class Test
         $foldername = 'empty_folder2';
         $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path without path terminator
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $foldername, "type" => "DIR"));
@@ -122,6 +122,31 @@ class Test
             $expected = $c;
             TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
+
+
+
+        // TEST: Delete Job; Basic Delete
+
+        // TODO: try to delete a file that doesn't exist
+
+        // BEGIN TEST
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
+        $delete = json_decode('{"op": "delete", "params": { "path": "'. $output_filepath . '"}}',true);
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list1 = \Flexio\Jobs\Process::create()->execute($list);
+        $process_delete = \Flexio\Jobs\Process::create()->execute($delete);
+        $process_list2 = \Flexio\Jobs\Process::create()->execute($list);
+        $list1 = json_decode(\Flexio\Base\Util::getStreamContents($process_list1->getStdout()),true);
+        $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
+        $actual = self::fileExistsInList($filename, $list1) === true && self::fileExistsInList($filename, $list1) === false;
+        $expected = true;
+        TestCheck::assertBoolean("E.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+
+        // TODO: delete an empty folder
+        // TODO: delete a populated folder
     }
 
     public function getOutputPath($output_folder, $input_filename)
@@ -130,5 +155,19 @@ class Test
         $fileextension = \Flexio\Base\File::getFileExtension($input_filename);
         $output_filepath = $output_folder . $filename . "." . $fileextension;
         return $output_filepath;
+    }
+
+    public function fileExistsInList(string $name, array $list) : bool
+    {
+        foreach ($list as $l)
+        {
+            if (!isset($l['name']))
+                continue;
+
+            if ($l['name'] === $name)
+                return true;
+        }
+
+        return false;
     }
 }
