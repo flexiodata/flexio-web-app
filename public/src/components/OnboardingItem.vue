@@ -4,8 +4,8 @@
       <div class="flex-fill mr4-l order-1 order-0-l">
         <div class="bg-white css-dashboard-box cf">
           <div
-            class="ma3 pa4 f6 lh-copy bg-white ba b--black-10 overflow-hidden marked css-onboarding-box"
-            :class="isStepActive(index) ? '' : 'o-40 pointer css-onboarding-box-inactive css-onboarding-box-hover'"
+            class="ma3 pa4 f6 lh-copy bg-white ba overflow-hidden marked css-onboarding-box"
+            :class="isStepActive(index) ? 'bw1 b--blue' : 'b--black-20 o-40 pointer css-onboarding-box-inactive css-onboarding-box-hover'"
             @click="goStep(index)"
             v-for="(step, index) in all_steps"
           >
@@ -139,7 +139,6 @@
         item.code = item.code.replace('{username}', this.active_username)
 
         _.each(item.steps, (step) => {
-          step.blurb = step.blurb.replace(/\/home/g, '/'+this.connection_alias)
           step.blurb = step.blurb.replace(/{connection_alias}/g, this.connection_alias)
           step.blurb = step.blurb.replace(/{pipe_alias}/g, this.pipe_alias)
           step.blurb = step.blurb.replace(/{username}/g, this.active_username || '')
