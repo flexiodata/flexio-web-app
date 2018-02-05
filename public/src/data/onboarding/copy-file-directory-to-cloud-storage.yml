@@ -64,11 +64,11 @@ steps:
 
       ```
       Flexio.pipe()
-        .list('/flexio-public-s3')
+        .list('/{username}-flexio-public-s3')
         .filter('size <= 50000')
         .foreach(
           Flexio.pipe()
-            .read('/flexio-public-s3/${item.name}')
+            .read('/{username}-flexio-public-s3/${item.name}')
             .write('/{connection_alias}/${item.name}')
         )
         .echo('Finished!')
