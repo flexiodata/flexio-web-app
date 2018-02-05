@@ -33,7 +33,7 @@ class Pipe extends ModelBase
                 'display_icon'    => $params['display_icon'] ?? '',
                 'input'           => $params['input'] ?? '{}',
                 'output'          => $params['output'] ?? '{}',
-                'task'            => $params['task'] ?? '[]',
+                'task'            => $params['task'] ?? '{}',
                 'schedule'        => $params['schedule'] ?? '',
                 'schedule_status' => $params['schedule_status'] ?? \Model::PIPE_STATUS_INACTIVE,
                 'created'         => $timestamp,

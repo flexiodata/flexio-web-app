@@ -631,9 +631,9 @@ class User
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
 
         $objects = array(
-            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+            //array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
+            //array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
         );
 
         return $objects;
@@ -748,7 +748,7 @@ class User
         if (\Flexio\Base\Identifier::isValid($ename) === false)
             $ename = '';
 
-        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or nor no ename exists, we need to generate a unique ename
+        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or no ename exists, we need to generate a unique ename
         if ($object !== false || strlen($ename) === 0)
         {
             // reset the ename in case our efforts to find a suitable name fail
