@@ -73,10 +73,18 @@ class Vfs
         // grab path, including preceding slash
         $path = substr($path,11);
 
+        $vfs = new \Flexio\Services\Vfs();
+
+        $headers = apache_request_headers();
+        $headers = array_change_key_case($headers, $case = CASE_LOWER);
+        if (($headers['content-type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
+        {
+            $success = $vfs->createDirectory($path);
+            return array('success' => $success);
+        }
+
         $php_stream_handle = fopen('php://input', 'rb');
         $done = false;
-
-        $vfs = new \Flexio\Services\Vfs();
         $vfs->write($path, function($len) use (&$php_stream_handle, &$done) {
             if ($done)
                 return false;
