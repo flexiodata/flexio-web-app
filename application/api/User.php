@@ -626,19 +626,6 @@ class User
         return $results;
     }
 
-    private static function getExampleObjects() : array
-    {
-        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-
-        $objects = array(
-            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
-        );
-
-        return $objects;
-    }
-
     private static function createConnectionFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
@@ -774,5 +761,18 @@ class User
         }
 
         return $ename;
+    }
+
+    private static function getExampleObjects() : array
+    {
+        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
+
+        $objects = array(
+            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
+        );
+
+        return $objects;
     }
 }
