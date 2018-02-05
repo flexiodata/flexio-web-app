@@ -27,7 +27,7 @@
           :api-key="apiKey"
           :sdk-options="sdkOptions"
           :buttons="['save', 'run']"
-          :code="item.code"
+          :code="edit_item.code"
           @save="showPipePropsModal"
         />
       </div>
@@ -52,13 +52,14 @@
     ></storage-props-modal>
 
     <ui-modal
+      size="large"
       ref="deploy-dialog"
       title="Deploy your pipe"
       @hide="show_deploy_modal = false"
       v-if="show_deploy_modal"
     >
       <div class="lh-copy">
-        <h2 class="flex flex-row items-center mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
+        <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
 
         <p>The <strong>{{pipe.name}}</strong> pipe has been added to your account.</p>
         <p>To deploy your pipe in the wild, try one of these options:</p>
@@ -71,11 +72,9 @@
           [snippet here]
 
           <h4 class="mb2">CRON:</h4>
-          [snippet here]
+          <p>If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
         </div>
-
-        <p>If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
-
+        <hr class="center w-30 mv4 bb-0 b--black-10">
         <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
       </div>
     </ui-modal>
@@ -121,13 +120,32 @@
         show_storage_props_modal: false,
         show_pipe_props_modal: false,
         show_deploy_modal: false,
-        connection: {},
-        pipe: {}
+        connection_alias: 'home',
+        pipe_alias: ''
       }
     },
     computed: {
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
+      },
+      edit_item() {
+        var item = _.assign({
+          code: '',
+          steps: []
+        }, this.item)
+
+        item = _.cloneDeep(item)
+
+        item.code = item.code.replace('{username}', this.active_username)
+
+        _.each(item.steps, (step) => {
+          step.blurb = step.blurb.replace(/\/home/g, '/'+this.connection_alias)
+          step.blurb = step.blurb.replace(/{connection_alias}/g, this.connection_alias)
+          step.blurb = step.blurb.replace(/{pipe_alias}/g, this.pipe_alias)
+          step.blurb = step.blurb.replace(/{username}/g, this.active_username || '')
+        })
+
+        return item
       },
       all_steps() {
         var final_step = {
@@ -144,7 +162,7 @@ If you have any questions, please send us a note using the chat button at the bo
 `
         }
 
-        var arr = [].concat(this.item.steps).concat([final_step])
+        var arr = [].concat(this.edit_item.steps).concat([final_step])
         return _.compact(arr)
       }
     },
@@ -190,8 +208,8 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       showPipePropsModal() {
         var attrs = {
-          name: _.get(this.item, 'name', ''),
-          ename: _.get(this.item, 'id', '')
+          name: _.get(this.edit_item, 'name', ''),
+          ename: _.get(this.edit_item, 'id', '')
         }
 
         // add username as the alias prefix
@@ -233,7 +251,7 @@ If you have any questions, please send us a note using the chat button at the bo
             if (!_.isNil(modal))
               modal.close()
 
-            this.connection = _.assign({}, connection)
+            this.connection_alias = _.get(connection, 'ename', '')
           }
            else
           {
@@ -261,7 +279,7 @@ If you have any questions, please send us a note using the chat button at the bo
             if (!_.isNil(modal))
               modal.close()
 
-            this.pipe = _.assign({}, pipe)
+            this.pipe_alias = _.get(pipe, 'ename', '')
             this.showDeployModal()
           }
            else
