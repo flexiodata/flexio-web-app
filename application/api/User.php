@@ -135,7 +135,7 @@ class User
 
             // if appropriate, create a default project
             if ($create_examples === true)
-                self::createExamplePipes($user_eid);
+                self::createExampleObjects($user_eid);
 
             // track the new user signup
             \Flexio\Object\Action::track(\Flexio\Object\Action::TYPE_SIGNED_UP, $user->getEid(), $user->get());
@@ -548,13 +548,13 @@ class User
         return array();
     }
 
-    public static function createExamples(\Flexio\Api\Request $request) : array
+    public static function createExamples(\Flexio\Api\Request $request)
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // note: this is an API endpoint function for debugging; internally,
-        // createExamplePipes() is used when a user is created so that the owner
+        // createExampleObjects() is used when a user is created so that the owner
         // will be set to the newly created user even though the user and pipes
         // have both been created initially by the system
 
@@ -563,11 +563,10 @@ class User
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $pipes = self::createExamplePipes($requesting_user_eid);
-        return $pipes;
+        self::createExampleObjects($requesting_user_eid);
     }
 
-    private static function createExamplePipes(string $user_eid, array $project_params = null) : array
+    private static function createExampleObjects(string $user_eid, array $project_params = null) : bool
     {
         // create sample pipes; ensure user creation even if sample fails
         try
@@ -594,32 +593,20 @@ class User
                 $project_eid = $project->getEid();
             }
 
-            $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-            $pipe1_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_commit.json', $project_eid);
-            $pipe2_eid = self::createExamplePipe($user_eid, $demo_dir .'pipe_contact.json', $project_eid);
-
-            // get the info for the created pipes
-            $pipe1_object = \Flexio\Object\Pipe::load($pipe1_eid);
-            $pipe2_object = \Flexio\Object\Pipe::load($pipe2_eid);
-
-            $result = array();
-            if ($pipe1_object !== false)
+            $objects = self::getExampleObjects();
+            foreach ($objects as $o)
             {
-                $pipe1_info = array();
-                $pipe1_info['eid'] = $pipe1_object->getEid();
-                $pipe1_info['eid_type'] = $pipe1_object->getType();
-                $pipe1_info['eid_status'] = $pipe1_object->getStatus();
-                $result[] = $pipe1_info;
+                if (!isset($o['eid_type']))
+                    continue;
+
+                switch ($o['eid_type'])
+                {
+                    case 'PIP': self::createPipeFromFile($user_eid, $o['name'], $project_eid); break;
+                    case 'CTN': self::createConnectionFromFile($user_eid, $o['name'], $project_eid); break;
+                }
             }
-            if ($pipe2_object !== false)
-            {
-                $pipe2_info = array();
-                $pipe2_info['eid'] = $pipe2_object->getEid();
-                $pipe2_info['eid_type'] = $pipe2_object->getType();
-                $pipe2_info['eid_status'] = $pipe2_object->getStatus();
-                $result[] = $pipe2_info;
-            }
-            return $result;
+
+            return true;
         }
         catch (\Exception $e)
         {
@@ -628,70 +615,94 @@ class User
         {
         }
 
-        return array(); // no pipes were created
+        return false;
     }
 
-    private static function createExamplePipe(string $user_eid, string $file_name, string $project_eid = null) : string
+    private static function getExampleObjects() : array
+    {
+        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
+
+        $objects = array(
+            array('path' => $demo_dir . 'connection_amazons3.json'),
+            array('path' => $demo_dir . 'pipe_commit.json'),
+            array('path' => $demo_dir . 'pipe_contact.json')
+        );
+
+        return $objects;
+    }
+
+    private static function createConnectionFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
-        $f = @fopen($file_name, 'rb');
-        if (!$f)
+        $buf = \Flexio\Base\File::read($file_name);
+        $definition = @json_decode($buf,true);
+        if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $buf = '';
-        while (!feof($f))
-        {
-            $buf .= fread($f, 65535);
-        }
-
-        fclose($f);
-
-        $pipe_definition = @json_decode($buf,true);
-        if ($pipe_definition === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // STEP 2: create a pipe container and add it to the project
+        // STEP 2: fine a unique ename
         $user = \Flexio\Object\User::load($user_eid);
         $user_info = $user->get();
         $username = $user_info['user_name'];
+        $ename = self::findUniqueEname($username, $ename, 'connection');
 
-        $ename = $pipe_definition['ename'] ?? '';
-        $ename = $username . '-' . $ename;
+        // STEP 3: create the object, and if specified, add it to the project
+        $call_params['name'] = $definition['name'] ?? 'Sample Connection';
+        $call_params['ename'] = $ename;
+        $call_params['description'] = $definition['description'] ?? '';
 
-        if (\Flexio\Base\Identifier::isValid($ename) === false)
-            $ename = '';
+        if (isset($definition['connection_type']))
+            $call_params['connection_type'] = $definition['connection_type'];
+        if (isset($definition['connection_info']))
+            $call_params['connection_info'] = $definition['connection_info'];
+        if (isset($definition['expires']))
+            $call_params['expires'] = $definition['expires'];
 
-        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or nor no ename exists, we need to generate a unique ename
-        if ($object !== false || strlen($ename) === 0)
+        $connection = \Flexio\Object\Connection::create($call_params);
+        $connection->setOwner($user_eid);
+        $connection->setCreatedBy($user_eid);
+
+        $connection->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
+                \Flexio\Object\Right::TYPE_READ_RIGHTS,
+                \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Right::TYPE_READ,
+                \Flexio\Object\Right::TYPE_WRITE,
+                \Flexio\Object\Right::TYPE_DELETE,
+                \Flexio\Object\Right::TYPE_EXECUTE
+            )
+        );
+
+        // if a parent project is specified, add the object as a member of the project
+        if (isset($project_eid))
         {
-            // reset the ename in case our efforts to find a suitable name fail
-            $enamebase = $ename;
-            $ename = '';
-
-            // cycle through 10 random ename possibilies; after that, don't try anymore
-            for ($i = 0; $i < 10; ++$i)
-            {
-                $random_ename = '';
-                if (strlen($enamebase) === 0)
-                    $random_ename = 'pipe-' . \Flexio\Base\Util::generateRandomString(8); // long suffix
-                     else
-                    $random_ename = $enamebase . '-' . \Flexio\Base\Util::generateRandomString(4); // short suffix
-
-                $object = \Flexio\Object\Store::load($random_ename);
-                if ($object === false)
-                {
-                    $ename = $random_ename;
-                    break;
-                }
-            }
+            $project = \Flexio\Object\Project::load($project_eid);
+            if ($project !== false)
+                $project->addConnection($connection);
         }
 
-        $call_params['name'] = $pipe_definition['name'] ?? 'Sample Pipe';
+        return $connection->getEid();
+    }
+
+    private static function createPipeFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
+    {
+        // STEP 1: read the pipe file and convert it to JSON
+        $buf = \Flexio\Base\File::read($file_name);
+        $definition = @json_decode($buf,true);
+        if ($definition === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // STEP 2: fine a unique ename
+        $user = \Flexio\Object\User::load($user_eid);
+        $user_info = $user->get();
+        $username = $user_info['user_name'];
+        $ename = self::findUniqueEname($username, $ename, 'pipe');
+
+        // STEP 3: create the object, and if specified, add it to the project
+        $call_params['name'] = $definition['name'] ?? 'Sample Pipe';
         $call_params['ename'] = $ename;
-        $call_params['description'] = $pipe_definition['description'] ?? '';
+        $call_params['description'] = $definition['description'] ?? '';
         $call_params['task'] = array();
-        if (isset($pipe_definition['task']))
-            $call_params['task'] = $pipe_definition['task'];
+        if (isset($definition['task']))
+            $call_params['task'] = $definition['task'];
 
         $pipe = \Flexio\Object\Pipe::create($call_params);
         $pipe->setOwner($user_eid);
@@ -716,5 +727,42 @@ class User
         }
 
         return $pipe->getEid();
+    }
+
+    private static function findUniqueEname(string $username, string $ename, string $prefix = '') : string
+    {
+        // start of with an ename made up of the username and a general ename
+        $ename = $username . '-' . $ename;
+
+        // see if the ename we have is valid
+        if (\Flexio\Base\Identifier::isValid($ename) === false)
+            $ename = '';
+
+        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or nor no ename exists, we need to generate a unique ename
+        if ($object !== false || strlen($ename) === 0)
+        {
+            // reset the ename in case our efforts to find a suitable name fail
+            $enamebase = $ename;
+            $ename = '';
+
+            // cycle through 10 random ename possibilies; after that, don't try anymore
+            for ($i = 0; $i < 10; ++$i)
+            {
+                $random_ename = '';
+                if (strlen($enamebase) === 0)
+                    $random_ename = $prefix . '-' . \Flexio\Base\Util::generateRandomString(8); // long suffix
+                     else
+                    $random_ename = $enamebase . '-' . \Flexio\Base\Util::generateRandomString(4); // short suffix
+
+                $object = \Flexio\Object\Store::load($random_ename);
+                if ($object === false)
+                {
+                    $ename = $random_ename;
+                    break;
+                }
+            }
+        }
+
+        return $ename;
     }
 }

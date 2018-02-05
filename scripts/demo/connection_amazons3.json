@@ -1,0 +1,15 @@
+{
+    "eid_type": "CTN",
+    "name": "",
+    "ename": "",
+    "description": "",
+    "connection_type" : "amazons3",
+    "connection_info" : {
+        "region": "",
+        "bucket": "",
+        "accesskey": "",
+        "secretkey": ""
+    },
+    "expires" : null
+}
+
