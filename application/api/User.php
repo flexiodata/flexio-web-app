@@ -548,7 +548,7 @@ class User
         return array();
     }
 
-    public static function createExamples(\Flexio\Api\Request $request)
+    public static function createExamples(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -563,12 +563,13 @@ class User
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        self::createExampleObjects($requesting_user_eid);
+        return self::createExampleObjects($requesting_user_eid);
     }
 
-    private static function createExampleObjects(string $user_eid, array $project_params = null) : bool
+    private static function createExampleObjects(string $user_eid, array $project_params = null) : array
     {
         // create sample pipes; ensure user creation even if sample fails
+        $results = array();
         try
         {
             // if project params are specified, create a project and add the pipes to
@@ -601,12 +602,19 @@ class User
 
                 switch ($o['eid_type'])
                 {
-                    case 'PIP': self::createPipeFromFile($user_eid, $o['name'], $project_eid); break;
-                    case 'CTN': self::createConnectionFromFile($user_eid, $o['name'], $project_eid); break;
-                }
-            }
+                    case \Model::TYPE_CONNECTION:
+                        $object_eid = self::createConnectionFromFile($user_eid, $o['path'], $project_eid);
+                        break;
 
-            return true;
+                    case \Model::TYPE_PIPE:
+                        $object_eid = self::createPipeFromFile($user_eid, $o['path'], $project_eid);
+                        break;
+                }
+
+                $object = \Flexio\Object\Store::load($object_eid);
+                if ($object !== false)
+                    $results[] = $object->get();
+            }
         }
         catch (\Exception $e)
         {
@@ -615,7 +623,7 @@ class User
         {
         }
 
-        return false;
+        return $results;
     }
 
     private static function getExampleObjects() : array
@@ -623,9 +631,9 @@ class User
         $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
 
         $objects = array(
-            array('path' => $demo_dir . 'connection_amazons3.json'),
-            array('path' => $demo_dir . 'pipe_commit.json'),
-            array('path' => $demo_dir . 'pipe_contact.json')
+            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
         );
 
         return $objects;
@@ -643,6 +651,7 @@ class User
         $user = \Flexio\Object\User::load($user_eid);
         $user_info = $user->get();
         $username = $user_info['user_name'];
+        $ename = $definition['ename'];
         $ename = self::findUniqueEname($username, $ename, 'connection');
 
         // STEP 3: create the object, and if specified, add it to the project
@@ -694,6 +703,7 @@ class User
         $user = \Flexio\Object\User::load($user_eid);
         $user_info = $user->get();
         $username = $user_info['user_name'];
+        $ename = $definition['ename'];
         $ename = self::findUniqueEname($username, $ename, 'pipe');
 
         // STEP 3: create the object, and if specified, add it to the project
