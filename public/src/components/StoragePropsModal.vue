@@ -291,7 +291,12 @@
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           if (response.ok)
           {
-            this.updateConnection(response.body)
+            var connection = _.cloneDeep(response.body)
+
+            // add username as the alias prefix
+            connection.ename = _.kebabCase(this.active_username + '-' + item.service_name)
+
+            this.updateConnection(connection)
           }
            else
           {
