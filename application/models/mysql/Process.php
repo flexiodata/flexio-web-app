@@ -31,7 +31,7 @@ class Process extends ModelBase
                 'process_mode'   => $params['process_mode'] ?? '',
                 'process_hash'   => $params['process_hash'] ?? '',
                 'impl_revision'  => $params['impl_revision'] ?? '',
-                'task'           => $params['task'] ?? '[]',
+                'task'           => $params['task'] ?? '{}',
                 'input'          => $params['input'] ?? '{}',
                 'output'         => $params['output'] ?? '{}',
                 'started_by'     => $params['started_by'] ?? '',
