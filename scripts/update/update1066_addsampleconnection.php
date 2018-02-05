@@ -59,7 +59,11 @@ try
     while ($result && ($row = $result->fetch()))
     {
         $user_eid = $row['eid'];
-        \Flexio\Api\User::createPipeFromFile($user_eid, $file_name);
+        $user = \Flexio\Object\User::load($user_eid);
+        if ($user === false)
+            continue;
+
+        \Flexio\Api\User::createConnectionFromFile($user_eid, $file_name);
     }
 }
 catch(\Exception $e)
