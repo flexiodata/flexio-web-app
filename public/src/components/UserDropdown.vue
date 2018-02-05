@@ -24,8 +24,8 @@
           icon: 'account_circle'
         },{
           id: 'docs',
-          label: 'Documentation',
-          icon: 'import_contacts'
+          label: 'Docs',
+          icon: 'help'
         },{
           type: 'divider'
         },{
@@ -65,7 +65,7 @@
         'getActiveUser'
       ]),
       openHelpDocs() {
-        window.open('https://'+HOSTNAME+'/docs/web-app/', '_blank')
+        window.open('https://'+HOSTNAME+'/docs', '_blank')
       },
       gotoProjects() {
         this.$router.push({ name: ROUTE_HOME })
