@@ -44,6 +44,41 @@ class Test
 
 
 
+        // TEST: Create Job; Basic Create
+
+        // BEGIN TEST
+        $filename = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $filename, "type" => "FILE"));
+        TestCheck::assertInArray("B.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $foldername = 'empty_folder1';
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '/}}',true); // folder path with path terminator
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        TestCheck::assertInArray("B.2", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $foldername = 'empty_folder2';
+        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '}}',true); // folder path without path terminator
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        TestCheck::assertInArray("B.3", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+
+
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
@@ -63,7 +98,7 @@ class Test
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("B.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("C.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -87,7 +122,7 @@ class Test
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("C.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
     }
 
