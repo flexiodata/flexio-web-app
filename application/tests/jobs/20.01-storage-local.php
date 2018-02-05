@@ -124,6 +124,18 @@ class Test
             $expected = $c;
             TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
+
+
+
+        // TEST: Delete Job; Basic Delete
+
+        // TODO: delete an empty folder
+
+        // TODO: delete a populated folder
+
+        // TODO: delete a file that exists
+
+        // TODO: try to delete a file that doesn't exist
     }
 
     public function getOutputPath($output_folder, $input_filename)

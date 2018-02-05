@@ -53,6 +53,7 @@ class Process implements \Flexio\IFace\IProcess
         'comment'   => '\Flexio\Jobs\Comment',
         'convert'   => '\Flexio\Jobs\Convert',
         'create'    => '\Flexio\Jobs\Create',
+        'delete'    => '\Flexio\Jobs\Delete',
         'distinct'  => '\Flexio\Jobs\Distinct',
         'duplicate' => '\Flexio\Jobs\Duplicate',
         'echo'      => '\Flexio\Jobs\Echo1',
