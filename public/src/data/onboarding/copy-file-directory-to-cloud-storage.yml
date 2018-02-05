@@ -35,7 +35,7 @@ steps:
       ```
       Flexio.pipe()
         .list('/flexio-public-s3')
-        .filter('size >= 50000')
+        .filter('size <= 50000')
       ```
 
       Re-run the pipe and we'll see that only a handful of files match this criteria.  Now let's transfer these files to a cloud storage account.
@@ -65,7 +65,7 @@ steps:
       ```
       Flexio.pipe()
         .list('/flexio-public-s3')
-        .filter('size >= 50000')
+        .filter('size <= 50000')
         .foreach(
           Flexio.pipe()
             .read('/flexio-public-s3/${item.name}')
