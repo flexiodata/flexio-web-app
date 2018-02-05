@@ -566,7 +566,7 @@ class User
         return self::createExampleObjects($requesting_user_eid);
     }
 
-    private static function createExampleObjects(string $user_eid, array $project_params = null) : array
+    public static function createExampleObjects(string $user_eid, array $project_params = null) : array
     {
         // create sample pipes; ensure user creation even if sample fails
         $results = array();
@@ -626,20 +626,7 @@ class User
         return $results;
     }
 
-    private static function getExampleObjects() : array
-    {
-        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
-
-        $objects = array(
-            //array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
-            //array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
-        );
-
-        return $objects;
-    }
-
-    private static function createConnectionFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
+    public static function createConnectionFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $buf = \Flexio\Base\File::read($file_name);
@@ -691,7 +678,7 @@ class User
         return $connection->getEid();
     }
 
-    private static function createPipeFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
+    public static function createPipeFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $buf = \Flexio\Base\File::read($file_name);
@@ -774,5 +761,18 @@ class User
         }
 
         return $ename;
+    }
+
+    private static function getExampleObjects() : array
+    {
+        $demo_dir = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'demo' . DIRECTORY_SEPARATOR;
+
+        $objects = array(
+            array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
+        );
+
+        return $objects;
     }
 }

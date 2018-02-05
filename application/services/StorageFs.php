@@ -51,21 +51,14 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                     $lc_colname = strtolower($col['name']);
                     $lc_storename = strtolower($col['store_name'] ?? $col['name']);
 
+                    $this->keyed_structure[$lc_colname] = $col;
+
                     if ($lc_colname != $lc_storename)
                     {
-                        $this->keyed_structure[$lc_colname] = $col;
                         $this->storefield_map[$lc_storename] = $col['name'];
                     }
-                     else if (isset($col['type']) && $col['type'] == 'boolean')
-                    {
-                        $this->keyed_structure[$lc_colname] = $col;
-                    }
-
                 }
             }
-
-            if (count($this->keyed_structure) == 0)
-                $this->keyed_structure = null; // no type casting necessary
         }
 
         if ($fspath instanceof \Sqlite3)
@@ -229,16 +222,14 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             foreach ($row as $col => &$value)
             {
                 $lc_col = strtolower($col);
+                $type = $this->keyed_structure[$lc_col]['type'] ?? '';
 
-                if (isset($this->keyed_structure[$lc_col]['type']))
+                if ($type == 'boolean')
                 {
-                    if ($this->keyed_structure[$lc_col]['type'] == 'boolean')
-                    {
-                        if ($value === 0 || $value === '0' || $value === false)
-                            $value = false;
-                            else
-                            $value = true;
-                    }
+                    if ($value === 0 || $value === '0' || $value === false)
+                        $value = false;
+                        else
+                        $value = is_null($value) ? null : true;
                 }
             }
         }
@@ -309,7 +300,6 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             $new_schema = array_keys($data);
             if ($new_schema !== $this->cur_schema)
             {
-
                 if (count($this->insert_rows) > 0)
                 {
                     $this->flushRows();
@@ -371,6 +361,8 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return;
         }
 
+        $field_info = [];
+
         // because we checked column schema in write(), all
         // arrays have the same schema in this function
 
@@ -385,12 +377,23 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                     $sql .= ',';
                 $name = $keys[$i];
                 $lc_name = strtolower($name);
-                if (isset($this->keyed_structure[$lc_name]['store_name']))
-                    $name = $this->keyed_structure[$lc_name]['store_name'];
+                $info = $this->keyed_structure[$lc_name] ?? null;
+                if ($info)
+                {
+                    $field_info[] = $info;
+                    if (isset($info['store_name']))
+                        $name = $info['store_name'];
+                }
                 $sql .= StorageFs::quoteIdentifierIfNecessary($name);
             }
 
             $sql .= ') ';
+        }
+
+        // non-assoc array was passed; use all fields
+        if (count($field_info) == 0)
+        {
+            $field_info = $this->structure;
         }
 
         $sql .= 'values ';
@@ -399,8 +402,16 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         foreach ($this->insert_rows as $row)
         {
             $row = array_values($row);
+            $colidx = 0;
             foreach ($row as &$val)
             {
+                $coltype = $field_info[$colidx]['type'] ?? null;
+                if ($coltype === 'boolean' || $coltype === 'date' || $coltype === 'datetime')
+                {
+                    if ($val === '')
+                        $val = null;
+                }
+
                 if (is_null($val))
                 {
                     $val = 'null';
@@ -418,6 +429,8 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                     }
                     $val = "'$val'";
                 }
+
+                ++$colidx;
             }
 
             if ($first)
@@ -434,6 +447,9 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
         //var_dump($this->fspath);
         //echo $sql;
+        //var_dump($sql);
+        //die();
+
 
         $res = @$this->sqlite->exec($sql);
 
