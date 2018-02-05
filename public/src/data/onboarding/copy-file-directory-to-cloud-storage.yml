@@ -5,7 +5,7 @@ want: I want to copy a file directory to cloud storage
 
 code: >
   Flexio.pipe()
-    .list('/flexio-public-s3')
+    .list('/{username}-flexio-public-s3')
 
 steps:
   - #----------------------------------------#
@@ -34,8 +34,8 @@ steps:
 
       ```
       Flexio.pipe()
-        .list('/flexio-public-s3')
-        .filter('size >= 50000')
+        .list('/{username}-flexio-public-s3')
+        .filter('size <= 50000')
       ```
 
       Re-run the pipe and we'll see that only a handful of files match this criteria.  Now let's transfer these files to a cloud storage account.
@@ -64,14 +64,14 @@ steps:
 
       ```
       Flexio.pipe()
-        .list('/flexio-public-s3')
-        .filter('size >= 50000')
+        .list('/{username}-flexio-public-s3')
+        .filter('size <= 50000')
         .foreach(
           Flexio.pipe()
-            .read('/flexio-public-s3/${item.name}')
-            .write('/home/${item.name}')
+            .read('/{username}-flexio-public-s3/${item.name}')
+            .write('/{connection_alias}/${item.name}')
         )
         .echo('Finished!')
       ```
 
-      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${item.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
+      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.

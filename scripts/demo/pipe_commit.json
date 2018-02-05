@@ -1,49 +1,55 @@
 {
+    "eid_type": "PIP",
     "name": "GitHub Commits",
     "ename": "github-commits",
     "description": "Review commits for a repository",
-    "task": [
-        {
-            "op": "request",
-            "description": "Read repository commit histories from GitHub API",
-            "params": {
-                "url": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
-            }
-        },
-        {
-            "op": "convert",
-            "description": "Convert from json to table",
-            "params": {
-                "input": {
-                    "format": "json"
+    "task": {
+        "op": "sequence",
+        "params": {
+            "items": [
+                {
+                    "op": "request",
+                    "description": "Read repository commit histories from GitHub API",
+                    "params": {
+                        "url": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
+                    }
                 },
-                "output": {
-                    "format": "table"
+                {
+                    "op": "convert",
+                    "description": "Convert from json to table",
+                    "params": {
+                        "input": {
+                            "format": "json"
+                        },
+                        "output": {
+                            "format": "table"
+                        }
+                    }
+                },
+                {
+                    "op": "calc",
+                    "description": "Create new field 'repository' which concatenates two different parts of the 'commit.tree.url' field to isolate 'user/repo'",
+                    "params": {
+                        "name": "repository",
+                        "expression": "concat(strpart([commit.tree.url],'\/',5),'\/',strpart([commit.tree.url],'\/',6))"
+                    }
+                },
+                {
+                    "op": "select",
+                    "description": "Select only the relevant columns",
+                    "params": {
+                        "columns": [
+                            "repository",
+                            "commit.author.date",
+                            "commit.author.name",
+                            "commit.author.email",
+                            "commit.committer.name",
+                            "commit.committer.email",
+                            "commit.message"
+                        ]
+                    }
                 }
-            }
-        },
-        {
-            "op": "calc",
-            "description": "Create new field 'repository' which concatenates two different parts of the 'commit.tree.url' field to isolate 'user/repo'",
-            "params": {
-                "name": "repository",
-                "expression": "concat(strpart([commit.tree.url],'\/',5),'\/',strpart([commit.tree.url],'\/',6))"
-            }
-        },
-        {
-            "op": "select",
-            "description": "Select only the relevant columns",
-            "params": {
-                "columns": [
-                    "repository",
-                    "commit.author.date",
-                    "commit.author.name",
-                    "commit.author.email",
-                    "commit.committer.name",
-                    "commit.committer.email",
-                    "commit.message"
-                ]
-            }
+            ]
         }
-    ]
+    }
 }

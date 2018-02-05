@@ -95,4 +95,20 @@ class File
             $result .= DIRECTORY_SEPARATOR;
         return $result . $part;
     }
+
+    public static function read($file_name) : string
+    {
+        $f = @fopen($file_name, 'rb');
+        if (!$f)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $buf = '';
+        while (!feof($f))
+        {
+            $buf .= fread($f, 65535);
+        }
+
+        fclose($f);
+        return $buf;
+    }
 }

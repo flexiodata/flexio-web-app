@@ -1,0 +1,15 @@
+{
+    "eid_type": "CTN",
+    "name": "Flexio Public S3",
+    "ename": "flexio-public-s3",
+    "description": "",
+    "connection_type" : "amazons3",
+    "connection_info" : {
+        "region": "us-east-1",
+        "bucket": "flexio-public-s3",
+        "accesskey": "",
+        "secretkey": ""
+    },
+    "expires" : null
+}
+
