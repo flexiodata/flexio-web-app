@@ -87,7 +87,7 @@ steps:
         .read('/flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
-        .write('{path}/${input.name}')
+        .write('/{connection_alias}/${input.name}')
       ```
 
-      Make sure to add the {path} from Step 3 above or modify it with an additional directory like this: `.write('my-dropbox/foo/${input.name}')`.  Now re-run the pipe; then check your cloud storage to see the file that has been added.
+      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
