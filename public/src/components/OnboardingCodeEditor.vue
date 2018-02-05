@@ -256,6 +256,26 @@
         if (!_.isNil(code_editor))
           code_editor.setValue(code)
       },
+      getTaskJSON() {
+        try {
+          var fn = (Flexio, callback) => {
+            return eval(this.edit_code)
+          }
+
+          // get access to pipe object
+          var pipe = fn.call(this, Flexio)
+
+          // get compiled pipe JSON
+          var pipe_json = pipe.getJSON()
+
+          // pull out task from pipe JSON
+          var task = _.get(pipe_json, 'task', { op: 'sequence', params: {} })
+
+          return task
+        } catch(e) {
+          return { op: 'sequence', params: {} }
+        }
+      },
       copy() {
         if (window.analytics)
           window.analytics.track('Copied Code Example', { label: window.location.pathname })

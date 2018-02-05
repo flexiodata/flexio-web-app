@@ -23,6 +23,7 @@
       </div>
       <div class="flex-fill mb3 order-0 order-1-l">
         <onboarding-code-editor
+          ref="code"
           cls="relative"
           :api-key="apiKey"
           :sdk-options="sdkOptions"
@@ -54,25 +55,38 @@
     <ui-modal
       size="large"
       ref="deploy-dialog"
-      title="Deploy your pipe"
+      :remove-header="true"
       @hide="show_deploy_modal = false"
       v-if="show_deploy_modal"
     >
-      <div class="lh-copy">
+      <div class="lh-copy cf">
+        <div class="fr">
+          <div class="ui-modal__close-button" @click="$refs['deploy-dialog'].close()"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
+        </div>
+
         <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
 
-        <p>The <strong>{{pipe.name}}</strong> pipe has been added to your account.</p>
+        <p>The <strong>{{pipe_name}}</strong> pipe has been added to your account.</p>
         <p>To deploy your pipe in the wild, try one of these options:</p>
 
         <div class="ml3">
           <h4 class="mb2">cURL:</h4>
-          [snippet here]
+          <div class="marked">
+            <code class="db">curl -s -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_alias}}' -H 'Authorization: Bearer {{apiKey}}'</code>
+          </div>
 
           <h4 class="mb2">http:</h4>
-          [snippet here]
-
+          <div class="marked">
+            <pre><code>$.ajax({
+  type: 'POST',
+  url: 'http://www.flex.io/api/v1/pipes/{{pipe_alias}}',
+  beforeSend: function(xhr) {
+    xhr.setRequestHeader('Authorization', 'Bearer {{apiKey}}')
+  }
+})</code></pre>
+          </div>
           <h4 class="mb2">CRON:</h4>
-          <p>If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
+          <p class="mt0">If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
         </div>
         <hr class="center w-30 mv4 bb-0 b--black-10">
         <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
@@ -121,7 +135,8 @@
         show_pipe_props_modal: false,
         show_deploy_modal: false,
         connection_alias: 'home',
-        pipe_alias: ''
+        pipe_alias: '',
+        pipe_name: ''
       }
     },
     computed: {
@@ -262,6 +277,9 @@ If you have any questions, please send us a note using the chat button at the bo
         if (!_.isObject(attrs))
           attrs = { name: 'Untitled Pipe' }
 
+        var task = this.$refs['code'].getTaskJSON()
+        _.assign(attrs, { task })
+
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok)
           {
@@ -278,6 +296,7 @@ If you have any questions, please send us a note using the chat button at the bo
             if (!_.isNil(modal))
               modal.close()
 
+            this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
             this.showDeployModal()
           }

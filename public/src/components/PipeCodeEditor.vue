@@ -126,7 +126,7 @@
           var pipe_json = pipe.getJSON()
 
           // pull out task from pipe JSON
-          var task = _.get(pipe_json, 'task', [])
+          var task = _.get(pipe_json, 'task', { op: 'sequence', params: {} })
 
           var eid = this.pipeEid
           var attrs = { task }
