@@ -17,9 +17,9 @@ steps:
     blurb: |
       ### Step 1.  Access a CSV file from a directory
 
-      For this example, we're going to get a CSV file from one cloud storage account, do some lightweight processing and then send the transformed file to another cloud storage account.
+      For this example, we're going to get a CSV file from one cloud storage account, do some lightweight processing on it and then send the transformed file to another cloud storage account.
 
-      The first step in the pipe is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task get access to the CSV.  Click the Run button to see the raw CSV data.
+      The first step in the pipe is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task to get access to the CSV.  Click the Run button to see the raw CSV data.
 
   - #----------------------------------------#
 
@@ -67,7 +67,7 @@ steps:
       action: storage
 
     blurb: |
-      ### Step 4. Create a connection to a cloud Storage account
+      ### Step 4. Create a connection to a cloud storage account
 
       To copy the file to cloud storage, we first need to set up a connection to Dropbox, Amazon S3, Google Drive, etc.  Click the button below to set up the account.  After connecting, we'll insert the path to the root directory of your account into the code snippet which you can use or modify in the following step.
 
@@ -78,7 +78,7 @@ steps:
       action: next
 
     blurb: |
-      ### Step 5. Transfer the file to your cloud Storage
+      ### Step 5. Transfer the file to your cloud storage
 
       Now we'll copy the file from the S3 account to your cloud storage account.  You just need to add a `write` task to your code as follows:
 

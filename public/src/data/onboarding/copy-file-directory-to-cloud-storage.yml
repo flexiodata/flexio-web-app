@@ -58,7 +58,7 @@ steps:
       action: next
 
     blurb: |
-      ### Step 4. Copy the filtered files to your cloud Storage
+      ### Step 4. Copy the filtered files to your cloud storage
 
       Now we'll copy the files from the S3 account to your cloud storage account. For this, we'll use three tasks in conjunction: `foreach`, `read` and `write` as follows:
 

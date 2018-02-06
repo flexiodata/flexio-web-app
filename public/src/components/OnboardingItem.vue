@@ -168,7 +168,7 @@
             action: 'save'
           },
           blurb: `
-### Step 5. Save and Deploy
+### Step 5. Save and deploy
 
 You should now have a functioning pipe. Next, click the "Save & Deploy" button. This will save the pipe to your account and will provide you with external deployment options, such as a cURL call.  Alternatively, you can go to your pipe list and schedule the pipe to run using the drop-down menu.
 
