@@ -190,20 +190,19 @@ class Test
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
-        $expected = '
-        {
-            "columns": [
-                { "name": "n2", "type": "numeric", "width": 10, "scale": 2 }
-            ],
-            "content": [
-                {"n2" : -1.23},
-                {"n2" : 0.00},
-                {"n2" : 0.99},
-                {"n2" : 4.56},
-                {"n2" : 2.00}
-            ]
-        }
-        ';
+
+        $expected = array(
+            'columns' => array(
+                array("name"=>"n2", "type"=>"numeric", "width"=>10, "scale"=>2)
+            ),
+            'content' => array(
+                array("n2" => (float)-1.23),
+                array("n2" => (float)0.00),
+                array("n2" => (float)0.99),
+                array("n2" => (float)4.56),
+                array("n2" => (float)2.00)
+            )
+        );
         TestCheck::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
