@@ -71,13 +71,13 @@
     inject: ['pipeEid'],
     data() {
       return {
-        edit_code: Flexio.pipe().toCode(this.tasks),
+        edit_code: Flexio.pipe().toCode({ op: 'sequence', params: { items: this.tasks } }),
         syntax_msg: ''
       }
     },
     computed: {
       orig_code() {
-        return Flexio.pipe().toCode(this.tasks)
+        return Flexio.pipe().toCode({ op: 'sequence', params: { items: this.tasks } })
       },
       is_changed() {
         return this.orig_code != this.edit_code
