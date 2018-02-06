@@ -98,6 +98,8 @@ function updatePipeTable($db)
         $pipe_task = json_decode($row['task']);
 
         // if we don't have a task array, we have a top-level task, so move on
+        if (!is_array($pipe_task))
+            continue;
         if (array_key_exists('op', $pipe_task))
             continue;
 
@@ -136,6 +138,8 @@ function updateProcessTable($db)
         $process_task = json_decode($row['task']);
 
         // if we don't have a task array, we have a top-level task, so move on
+        if (!is_array($process_task))
+            continue;
         if (array_key_exists('op', $process_task))
             continue;
 
