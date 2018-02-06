@@ -99,8 +99,12 @@ function updatePipeTable($db)
     {
         $pipe_eid = $row['eid'];
         $pipe_task = json_decode($row['task']);
-        $sequence_task['params']['items'] = $pipe_task;
 
+        // if we don't have a task array, we have a top-level task, so move on
+        if (array_key_exists('op', $pipe_task))
+            continue;
+
+        $sequence_task['params']['items'] = $pipe_task;
         $updated_pipe_task = json_encode($sequence_task);
         //writePipe($db, $pipe_eid, $updated_pipe_task);
     }
@@ -133,9 +137,13 @@ function updateProcessTable($db)
     {
         $process_eid = $row['eid'];
         $process_task = json_decode($row['task']);
-        $sequence_task['params']['items'] = $process_task;
 
-        $updated_process_task = json_encode($sequence_task);
+        // if we don't have a task array, we have a top-level task, so move on
+        if (array_key_exists('op', $process_task))
+            continue;
+
+        $sequence_task['params']['items'] = $process_task;
+        $updated_process_task = json_encode($sequence_task, JSON_PRETTY_PRINT);
         //writeProcess($db, $process_eid, $updated_process_task);
     }
 }
