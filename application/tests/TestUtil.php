@@ -135,7 +135,8 @@ EOD;
 
     public static function getTestApiEndpoint()
     {
-        return 'https://' . $_SERVER['SERVER_ADDR'] . '/api/v1';
+        $host = IS_LOCALHOST() ? $_SERVER['SERVER_ADDR'] : $_SERVER['HTTP_HOST'];
+        return 'https://' . $host . '/api/v1';
     }
 
     public static function getDefaultTestUser()
