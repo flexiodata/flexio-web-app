@@ -49,18 +49,14 @@ class Select extends \Flexio\Jobs\Base
 
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->processStream($instream, $outstream);
+                $this->processTable($instream, $outstream);
                 return;
         }
         
     }
 
-    private function processStream(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
+    private function processTable(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
     {
-        // input/output
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-
         // get the selected columns
         $job_definition = $this->getProperties();
         $columns = $job_definition['params']['columns'] ?? null;
@@ -68,7 +64,10 @@ class Select extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $output_structure = $instream->getStructure()->enum($columns);
-        $outstream->setStructure($output_structure);
+
+
+        $outstream->set(['structure' => $output_structure,
+                         'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE]);
 
         // copy the data with the new structure
         $streamreader = $instream->getReader();
@@ -85,6 +84,5 @@ class Select extends \Flexio\Jobs\Base
         }
 
         $streamwriter->close();
-        $outstream->setSize($streamwriter->getBytesWritten());
     }
 }
