@@ -92,7 +92,7 @@ class Test
             'display_icon' => '',
             'input' => '{}',
             'output' => '{}',
-            'task' => '[]',
+            'task' => '{}',
             'schedule' => '',
             'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
             'eid_status' => \Model::STATUS_AVAILABLE
