@@ -53,9 +53,6 @@ try
 
     // STEP 2: update the process table
     updateProcessTable($db);
-
-    // STEP 3: update the process log table
-    updateProcessLogTable($db);
 }
 catch(\Exception $e)
 {
@@ -106,7 +103,7 @@ function updatePipeTable($db)
 
         $sequence_task['params']['items'] = $pipe_task;
         $updated_pipe_task = json_encode($sequence_task);
-        //writePipe($db, $pipe_eid, $updated_pipe_task);
+        writePipe($db, $pipe_eid, $updated_pipe_task);
     }
 }
 
@@ -143,8 +140,8 @@ function updateProcessTable($db)
             continue;
 
         $sequence_task['params']['items'] = $process_task;
-        $updated_process_task = json_encode($sequence_task, JSON_PRETTY_PRINT);
-        //writeProcess($db, $process_eid, $updated_process_task);
+        $updated_process_task = json_encode($sequence_task);
+        writeProcess($db, $process_eid, $updated_process_task);
     }
 }
 
