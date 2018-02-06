@@ -190,20 +190,19 @@ class Test
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = TestUtil::getTable($process->getStdout());
-        $expected = '
-        {
-            "columns": [
-                { "name": "n2", "type": "numeric", "width": 10, "scale": 2 }
-            ],
-            "content": [
-                {"n2" : -1.23},
-                {"n2" : 0.00},
-                {"n2" : 0.99},
-                {"n2" : 4.56},
-                {"n2" : 2.00}
-            ]
-        }
-        ';
+
+        $expected = array(
+            'columns' => array(
+                array("name"=>"n2", "type"=>"numeric", "width"=>10, "scale"=>2)
+            ),
+            'content' => array(
+                array("n2" => (float)-1.23),
+                array("n2" => (float)0.00),
+                array("n2" => (float)0.99),
+                array("n2" => (float)4.56),
+                array("n2" => (float)2.00)
+            )
+        );
         TestCheck::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -302,11 +301,11 @@ class Test
                     { "name": "b1", "type": "boolean" }
                 ],
                 "content": [
-                    { "c1" : "aBC", "c2": "()[]{}<>", "n1" : "-1", "n2" : "-1.23", "d1" : "1776-07-04", "b1" : true },
-                    { "c1" : "c a", "c2": "| \\/", "n1" : null, "n2" : "0.00", "d1" : "1970-11-22", "b1" : null },
-                    { "c1" : " -1", "c2": ":;\"\'", "n1" : "0", "n2" : "0.99", "d1" : "1999-12-31", "b1" : false },
-                    { "c1" : "0% ", "c2": ",.?", "n1" : "1", "n2" : "4.56", "d1" : "2000-01-01", "b1" : null },
-                    { "c1" : null,  "c2": "~`!@#$%^&*-+_=", "n1" : "2.00", "n2" : null, "d1" : null, "b1" : true }
+                    { "c1": "aBC", "c2": "()[]{}<>", "n1": "-1", "n2": "-1.23", "d1": "1776-07-04", "b1": true },
+                    { "c1": "c a", "c2": "| \\/", "n1": null, "n2": "0.00", "d1": "1970-11-22", "b1": null },
+                    { "c1": " -1", "c2": ":;\"\'", "n1": "0", "n2": "0.99", "d1": "1999-12-31", "b1": false },
+                    { "c1": "0% ", "c2": ",.?", "n1": "1", "n2": "4.56", "d1": "2000-01-01", "b1": null },
+                    { "c1": null,  "c2": "~`!@#$%^&*-+_=", "n1": "2.00", "n2": null, "d1": null, "b1": true }
                 ]
             }
         }
@@ -324,11 +323,11 @@ class Test
                 { "name": "b1", "type": "boolean" }
             ],
             "content": [
-                { "c1" : "aBC", "c2": "()[]{}<>", "n1" : "-1", "n2" : "-1.23", "d1" : "1776-07-04", "b1" : true },
-                { "c1" : "c a", "c2": "| \\/", "n1" : null, "n2" : "0.00", "d1" : "1970-11-22", "b1" : null },
-                { "c1" : " -1", "c2": ":;\"\'", "n1" : "0", "n2" : "0.99", "d1" : "1999-12-31", "b1" : false },
-                { "c1" : "0% ", "c2": ",.?", "n1" : "1", "n2" : "4.56", "d1" : "2000-01-01", "b1" : null },
-                { "c1" : null,  "c2": "~`!@#$%^&*-+_=", "n1" : "2", "n2" : null, "d1" : null, "b1" : true }
+                { "c1": "aBC", "c2": "()[]{}<>", "n1": -1, "n2": -1.23, "d1": "1776-07-04", "b1": true },
+                { "c1": "c a", "c2": "| \\/", "n1": null, "n2": 0.00, "d1": "1970-11-22", "b1": null },
+                { "c1": " -1", "c2": ":;\"\'", "n1": 0, "n2": 0.99, "d1": "1999-12-31", "b1": false },
+                { "c1": "0% ", "c2": ",.?", "n1": 1, "n2": 4.56, "d1": "2000-01-01", "b1": null },
+                { "c1": null,  "c2": "~`!@#$%^&*-+_=", "n1": 2, "n2": null, "d1": null, "b1": true }
             ]
         }
         ';

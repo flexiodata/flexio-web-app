@@ -51,13 +51,13 @@ steps:
 
       Now that we have our data in tabular format, let's store it somewhere. You could store it externally if you'd like. However, for this example, we'll store it in the local storage that comes with your Flex.io account. Local storage provides a quick access point for data collection or to enrich your pipes.
 
-      The root path of your local storage is `/{addpathhere?}`.  So, to collect this data in local storage, we'll simply add a `write` task; make sure to replace the {path} below with your own:
+      The root path of your local storage is `/home`.  So, to collect this data in local storage, we'll simply add a `write` task. If you want to place the file in a subfolder, simply add a subfolder to the specified path like this: `.write('/home/foo/sample-api.csv')`.
 
       ```
       Flexio.pipe()
         .request('http://uinames.com/api/?amount=10/')
         .convert('json', 'table')
-        .write('{path}/sample-api.csv')
+        .write('/home/sample-api.csv')
       ```
 
-      Re-run your pipe.  The data from the API is now stored in Flex.io locally as a csv file called 'sample-api.csv'.
+      Re-run your pipe.  The data from the API is now stored in Flex.io locally as a CSV file called 'sample-api.csv'.

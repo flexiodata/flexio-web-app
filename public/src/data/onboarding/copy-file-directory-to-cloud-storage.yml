@@ -19,7 +19,7 @@ steps:
 
       For this example, we're going to copy files from one cloud storage directory into another.  In addition, we'll filter out files that are greater than 50KB in size.
 
-      The first step in the pipe is to access to a sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory. Click the Run button to see the files.
+      The first step in the pipe is to access a sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `list` task to read through each of the files in the directory. Click the Run button to see the files.
 
   - #----------------------------------------#
 
@@ -30,7 +30,7 @@ steps:
     blurb: |
       ### Step 2. Add a filter
 
-      Now that we see our files, let's say we only want move files that are less than 50KB in size. To do this, add a `filter` task like this:
+      Now that we see our files, let's say we only want to move files that are less than 50KB in size. To do this, add a `filter` task like this:
 
       ```
       Flexio.pipe()
@@ -49,7 +49,7 @@ steps:
     blurb: |
       ### Step 3. Create a connection to a cloud storage account
 
-      To copy the file to cloud storage, we first need to set up a connection to Dropbox, Box, S3, etc.  Click the button below to set up the account.  After connecting, we'll give you the path of your root directory you can use or modify in step 4.
+      To copy the files to cloud storage, we first need to set up a connection to Dropbox, Amazon S3, Google Drive, etc.  Click the button below to set up the account.  After connecting, we'll insert the path to the root directory of your account into the code snippet which you can use or modify in the following step.
 
   - #----------------------------------------#
 
@@ -74,4 +74,4 @@ steps:
         .echo('Finished!')
       ```
 
-      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`  Now re-run the pipe; then check your cloud storage to see the files that have been added.
+      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`.  Now re-run the pipe; then check your cloud storage to see the files that have been added.
