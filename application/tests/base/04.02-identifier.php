@@ -39,26 +39,27 @@ class Test
 
 
 
-        // TEST: identifiers should be between 3 and 39 chars in length
+        // TEST: identifiers should be between 3 and 80 chars in length
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('xx');
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.1', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 80 chars', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('xxx');
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.2', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 80 chars', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 39 chars
+        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 80 chars
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.3', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 80 chars', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 40 chars
+        $actual = \Flexio\Base\Identifier::isValid('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'); // 81 chars
         $expected = false;
-        TestCheck::assertBoolean('B.4', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 39 chars', $actual, $expected, $results);
+        TestCheck::assertBoolean('B.4', '\Flexio\Base\Identifier::isValid(); identifiers should be between 3 and 80 chars', $actual, $expected, $results);
+
     }
 }
