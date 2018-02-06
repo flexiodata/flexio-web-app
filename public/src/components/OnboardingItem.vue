@@ -266,6 +266,8 @@ If you have any questions, please send us a note using the chat button at the bo
               modal.close()
 
             this.connection_alias = _.get(connection, 'ename', '')
+
+            this.goStep(this.active_step + 1)
           }
            else
           {
