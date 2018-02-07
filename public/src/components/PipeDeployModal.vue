@@ -5,7 +5,7 @@
     :remove-header="isOnboarding"
   >
     <div slot="header" class="w-100">
-      <span class="f4">Deploy your pipe</span>
+      <span class="f4">Deploy '{{pipe_name}}'</span>
     </div>
 
     <div class="lh-copy cf">
@@ -16,7 +16,7 @@
 
         <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
 
-        <p>The <strong>{{pipeName}}</strong> pipe has been added to your account and is now in your pipe list.</p>
+        <p>The <strong>{{pipe_name}}</strong> pipe has been added to your account and is now in your pipe list.</p>
         <p>To deploy your pipe in the wild, try one of these options:</p>
       </div>
       <p class="mt0" v-else>To deploy your pipe in the wild, try one of these options:</p>
@@ -24,21 +24,21 @@
       <div class="ml3">
         <h4 class="mb2">cURL:</h4>
         <div class="marked">
-          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipeAlias}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
+          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_alias}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
         </div>
 
         <h4 class="mb2">HTTP:</h4>
         <div class="marked">
           <pre><code>$.ajax({
   type: 'POST',
-  url: 'http://www.flex.io/api/v1/pipes/{{pipeAlias}}/run',
+  url: 'http://www.flex.io/api/v1/pipes/{{pipe_alias}}/run',
   beforeSend: function(xhr) {
     xhr.setRequestHeader('Authorization', 'Bearer {{api_key}}')
   }
 })</code></pre>
         </div>
         <h4 class="mb2">CRON:</h4>
-        <p class="mt0">If you want to stay in-app, you may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
+        <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       </div>
       <hr class="mv4 bb-0 b--black-10">
       <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
@@ -54,14 +54,12 @@
       'is-onboarding': {
         type: Boolean,
         default: true
-      },
-      'pipe-name': {
-        type: String,
-        default: ''
-      },
-      'pipe-alias': {
-        type: String,
-        default: ''
+      }
+    },
+    data() {
+      return {
+        pipe_name: '',
+        pipe_alias: ''
       }
     },
     computed: {
@@ -87,7 +85,10 @@
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       },
-      open() {
+      open(item) {
+        this.pipe_name = _.get(item, 'name', '')
+        this.pipe_alias = _.get(item, 'ename', '')
+
         this.$refs['dialog'].open()
         return this
       },

@@ -23,6 +23,7 @@
       @share="onItemShare"
       @embed="onItemEmbed"
       @schedule="onItemSchedule"
+      @deploy="onItemDeploy"
     ></pipe-item>
     <div class="h4"></div>
   </div>
@@ -88,6 +89,9 @@
       },
       onItemSchedule(item) {
         this.$emit('item-schedule', item)
+      },
+      onItemDeploy(item) {
+        this.$emit('item-deploy', item)
       }
     }
   }
