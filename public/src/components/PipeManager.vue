@@ -35,6 +35,7 @@
       @item-share="openPipeShareModal"
       @item-embed="openPipeEmbedModal"
       @item-schedule="openPipeScheduleModal"
+      @item-deploy="openPipeDeployModal"
     ></pipe-list>
 
     <!-- add modal -->
@@ -74,6 +75,14 @@
       @hide="show_pipe_schedule_modal = false"
       v-if="show_pipe_schedule_modal"
     ></pipe-schedule-modal>
+
+    <!-- deploy modal -->
+    <pipe-deploy-modal
+      ref="modal-deploy-pipe"
+      :is-onboarding="false"
+      @hide="show_pipe_deploy_modal = false"
+      v-if="show_pipe_deploy_modal"
+    ></pipe-deploy-modal>
   </div>
 </template>
 
@@ -87,6 +96,7 @@
   import PipeShareModal from './PipeShareModal.vue'
   import PipeEmbedModal from './PipeEmbedModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
+  import PipeDeployModal from './PipeDeployModal.vue'
   import Btn from './Btn.vue'
 
   export default {
@@ -97,6 +107,7 @@
       PipeShareModal,
       PipeEmbedModal,
       PipeScheduleModal,
+      PipeDeployModal,
       Btn
     },
     data() {
@@ -107,6 +118,7 @@
         show_pipe_share_modal: false,
         show_pipe_embed_modal: false,
         show_pipe_schedule_modal: false,
+        show_pipe_deploy_modal: false,
         show_connection_add_modal: false
       }
     },
@@ -143,6 +155,10 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
+      },
+      openPipeDeployModal(item) {
+        this.show_pipe_deploy_modal = true
+        this.$nextTick(() => { this.$refs['modal-deploy-pipe'].open(item) })
       },
       duplicatePipe(item) {
         var attrs = {

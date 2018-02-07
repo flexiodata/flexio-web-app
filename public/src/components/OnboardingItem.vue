@@ -47,8 +47,6 @@
     <pipe-deploy-modal
       ref="modal-pipe-deploy"
       :is-onboarding="true"
-      :pipe-name="pipe_name"
-      :pipe-alias="pipe_alias"
       @hide="show_pipe_deploy_modal = false"
       v-if="show_pipe_deploy_modal"
     ></pipe-deploy-modal>
@@ -204,9 +202,9 @@ If you have any questions, please send us a note using the chat button at the bo
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
         analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
-      showPipeDeployModal() {
+      showPipeDeployModal(item) {
         this.show_pipe_deploy_modal = true
-        this.$nextTick(() => { this.$refs['modal-pipe-deploy'].open() })
+        this.$nextTick(() => { this.$refs['modal-pipe-deploy'].open(item) })
       },
       tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
@@ -271,7 +269,7 @@ If you have any questions, please send us a note using the chat button at the bo
 
             this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
-            this.showPipeDeployModal()
+            this.showPipeDeployModal(_.cloneDeep(pipe))
           }
            else
           {

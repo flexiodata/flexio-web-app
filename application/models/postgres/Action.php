@@ -17,61 +17,120 @@ declare(strict_types=1);
 
 class Action extends ModelBase
 {
-    public function record(array $params) : bool
+    public function create(array $params = null) : string
     {
-
-/*
-// TODO: update action model; possible table structure:
-
---
--- Table structure for table tbl_action
---
-
-DROP TABLE IF EXISTS tbl_action;
-CREATE TABLE tbl_action (
-  id serial,
-  eid varchar(12) NOT NULL default '',           // the eid of the action
-  invoker_type varchar(3) NOT NULL default '',   // the type of agent used to invoke the action: api, email, scheduler, etc
-  invoked_from text default '',                  // where the action was invoked from; e.g. api, email, the scheduler, etc
-  invoked_by varchar(12) NOT NULL default '',    // user that invoked the action
-  action_type text default '',                   // the type of action being peformed
-  action_params json,                            // the parameters passed to the action
-  action_object varchar(12) NOT NULL default '', // the eid of the object being acted on
-  result_type text default '',                   // the type of result; success or failure
-  result_info json,                              // extra info about the result in case of failure
-  started timestamp NULL default NULL,           // when the action was invoked
-  finished timestamp NULL default NULL,          // when the action finished
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE (eid)
-);
-*/
-
-
         $db = $this->getDatabase();
+        $db->beginTransaction(); // needed to make sure eid generation is safe
         try
         {
+            $eid = $this->generateActionEid();
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'user_eid' => $params['user_eid'],
-                'subject_eid' => $params['subject_eid'],
-                'object_eid' => $params['object_eid'],
-                'action' => $params['action'],
-                'params' => json_encode($params),
-                'created' => $timestamp,
-                'updated' => $timestamp,
+                'eid'            => $eid,
+                'created'        => $timestamp,
+                'updated'        => $timestamp
             );
 
-            // add the properties
             if ($db->insert('tbl_action', $process_arr) === false)
                 throw new \Exception();
 
+            $db->commit();
+            return $eid;
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        }
+    }
+
+    public function set(string $eid, array $params) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        $db = $this->getDatabase();
+        $db->beginTransaction();
+        try
+        {
+            // see if the action exists; return false otherwise; this check is to
+            // achieve the same behavior as other model set functions
+            $row = $db->fetchRow("select tac.eid as eid
+                                  from tbl_action tac
+                                  where tac.eid = ?
+                                 ", $eid);
+            if (!$row)
+            {
+                $db->commit();
+                return false;
+            }
+
+            // set the properties
+            $db->update('tbl_action', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            return false;
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
+    }
+
+    public function get(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        $row = false;
+        $db = $this->getDatabase();
+        try
+        {
+            $row = $db->fetchRow("select tac.eid as eid,
+                                         tac.created as created,
+                                         tac.updated as updated
+                                  from tbl_action tac
+                                  where tac.eid = ?
+                                 ", $eid);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$row)
+            return false; // don't flag an error, but acknowledge that object doesn't exist
+
+        return array('eid'              => $row['eid'],
+                     'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+    }
+
+    private function generateActionEid() : string
+    {
+        // note: this function generates a unique action eid; this function
+        // is nearly identical to \Model::generateUniqueEid() except that
+        // this function checks the tbl_action table for the eid since the
+        // action eids aren't added to the object table; to avoid future
+        // potential clashes, the object table is also checked; however,
+        // the object able doesn't check the action table, but this reduces
+        // some possibility of a clash
+
+        $eid = \Flexio\Base\Eid::generate();
+        $result1 = $this->getDatabase()->fetchOne("select eid from tbl_action where eid = ?", $eid);
+        $result2 = $this->getDatabase()->fetchOne("select eid from tbl_object where eid = ?", $eid);
+
+        if ($result1 === false && $result2 === false)
+            return $eid;
+
+        return $this->generateActionEid();
     }
 }

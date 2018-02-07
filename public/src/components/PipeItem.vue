@@ -173,6 +173,12 @@
           label: 'Schedule',
           icon: 'date_range'
         },{
+          id: 'deploy',
+          label: 'Deploy',
+          icon: 'archive'
+        },{
+          type: 'divider'
+        },{
           id: 'delete',
           //label: 'Move to Trash',
           label: 'Delete',
@@ -211,6 +217,7 @@
           case 'share':     return this.$emit('share', this.item)
           case 'embed':     return this.$emit('embed', this.item)
           case 'schedule':  return this.$emit('schedule', this.item)
+          case 'deploy':    return this.$emit('deploy', this.item)
           case 'delete':    return this.trashPipe()
         }
       },

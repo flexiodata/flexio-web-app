@@ -329,22 +329,25 @@ CREATE TABLE tbl_comment (
 
 DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
-  id serial,
-  user_eid varchar(12) NOT NULL default '',
-  subject_eid varchar(12) NOT NULL default '',
-  object_eid varchar(12) NOT NULL default '',
-  action varchar(80) NOT NULL default '',
-  params text default NULL,
+  id int UNSIGNED NOT NULL auto_increment,
+  eid varchar(12) NOT NULL default '',           -- the eid of the action
+  invoked_from varchar(3) NOT NULL default '',   -- where the action was invoked from; (e.g. api, email, the scheduler)
+  invoked_by varchar(12) NOT NULL default '',    -- eid of the user that invoked the action
+  action_type text default '',                   -- the name of action being peformed
+  action_info json,                              -- the parameters when invoking the action (e.g. url, method, params)
+  action_target varchar(12) NOT NULL default '', -- the eid of the object being acted on
+  result_type text default '',                   -- the type of result; success or failure
+  result_info json,                              -- extra info about the result in case of failure
+  started timestamp NULL default NULL,           -- when the action was invoked
+  finished timestamp NULL default NULL,          -- when the action finished
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
-  PRIMARY KEY (id)
-);
+  PRIMARY KEY (id),
+  UNIQUE (eid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_action_user_eid ON tbl_action (user_eid);
-CREATE INDEX idx_action_subject_eid ON tbl_action (subject_eid);
-CREATE INDEX idx_action_object_eid ON tbl_action (object_eid);
-CREATE INDEX idx_action_action ON tbl_action (action);
-CREATE INDEX idx_action_created ON tbl_action (created);
+CREATE INDEX idx_action_invoked_by ON tbl_action (invoked_by);
+CREATE INDEX idx_action_action_target ON tbl_action (action_target);
 
 
 
