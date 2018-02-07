@@ -138,36 +138,36 @@ class Factory
             case self::TYPE_BOX:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
-                        'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['expires'] ?? 0
+                        'refresh_token' => $connection_info['refresh_token'] ?? ''
                     );
+                    if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\Box::create($auth_params);
                 break;
 
             case self::TYPE_GOOGLEDRIVE:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
-                        'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['expires'] ?? 0
+                        'refresh_token' => $connection_info['refresh_token'] ?? ''
                     );
+                    if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
 
             case self::TYPE_GOOGLESHEETS:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
-                        'refresh_token' => $connection_info['refresh_token'] ?? '',
-                        'expires' => $connection_info['expires'] ?? 0
+                        'refresh_token' => $connection_info['refresh_token'] ?? ''
                     );
+                    if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
             case self::TYPE_GITHUB:
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
-                    'refresh_token' => $connection_info['refresh_token'] ?? '',
-                    'expires' => $connection_info['expires'] ?? 0
+                    'refresh_token' => $connection_info['refresh_token'] ?? ''
                 );
+                if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                 $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
 

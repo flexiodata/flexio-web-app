@@ -184,15 +184,14 @@ class Connection extends \Flexio\Object\Base
         // DEBUG:
         // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
 
-        $expires = null;
-        if (!is_null($tokens['expires']) && $tokens['expires'] > 0)
-            $expires = date("Y-m-d H:i:s", $tokens['expires']);
-
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
-        $properties['expires'] = $expires;
         $properties['connection_info']['access_token'] = $tokens['access_token'];
         $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
+        if (isset($tokens['expires']))
+        {
+            $properties['connection_info']['expires'] = $tokens['expires'];
+        }
         $this->set($properties);
 
         return true;
@@ -221,16 +220,24 @@ class Connection extends \Flexio\Object\Base
                 // in every subsequent call
 
                 $tokens = $service->getTokens();
+
                 $connection_info = $connection_properties['connection_info'];
 
                 if (isset($tokens['access_token']) && isset($tokens['expires']) && isset($connection_info) &&
                     $tokens['access_token'] != $connection_info['access_token'])
                 {
-                    $properties = array();
-                    $properties['expires'] = date("Y-m-d H:i:s", $tokens['expires']);
-                    $properties['connection_info']['access_token'] = $tokens['access_token'];
-                    $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
-                    $this->set($connection_params_to_update);
+                    $connection_info['access_token'] = $tokens['access_token'];
+                    $connection_info['refresh_token'] = $tokens['refresh_token'];
+                    if (isset($tokens['expires']))
+                    {
+                        $connection_info['expires'] = $tokens['expires'];
+                    }
+                     else
+                    {
+                        unset($connection_info['expires']);
+                    }
+
+                    $this->set([ 'connection_info' => $connection_info]);
 
                     // DEBUG:
                     // file_put_contents('/tmp/tokens.txt', "Refresh:" . json_encode($tokens)."\n", FILE_APPEND);
