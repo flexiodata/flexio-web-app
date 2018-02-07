@@ -31,7 +31,7 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
         $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
         $process_write = \Flexio\Jobs\Process::create()->execute($write);
@@ -46,7 +46,7 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
         $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
         $process_create = \Flexio\Jobs\Process::create()->execute($create);
@@ -85,7 +85,7 @@ class Test
         {
             $idx++;
 
-            $output_filepath = self::getOutputPath($output_folder, $filename);
+            $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
             $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
             $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
 
@@ -105,7 +105,7 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
         $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
         $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
         $contents = ["", "abc", "cba", "", "abcd"];
@@ -131,7 +131,7 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = self::getOutputPath($output_folder, $filename);
+        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
         $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
         $delete = json_decode('{"op": "delete", "params": { "path": "'. $output_filepath . '"}}',true);
         $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
@@ -141,33 +141,11 @@ class Test
         $process_list2 = \Flexio\Jobs\Process::create()->execute($list);
         $list1 = json_decode(\Flexio\Base\Util::getStreamContents($process_list1->getStdout()),true);
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
-        $actual = self::fileExistsInList($filename, $list1) === true && self::fileExistsInList($filename, $list1) === false;
+        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list1) === false;
         $expected = true;
         TestCheck::assertBoolean("E.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
-    }
-
-    public function getOutputPath($output_folder, $input_filename)
-    {
-        $filename = \Flexio\Base\File::getFilename($input_filename);
-        $fileextension = \Flexio\Base\File::getFileExtension($input_filename);
-        $output_filepath = $output_folder . $filename . "." . $fileextension;
-        return $output_filepath;
-    }
-
-    public function fileExistsInList(string $name, array $list) : bool
-    {
-        foreach ($list as $l)
-        {
-            if (!isset($l['name']))
-                continue;
-
-            if ($l['name'] === $name)
-                return true;
-        }
-
-        return false;
     }
 }

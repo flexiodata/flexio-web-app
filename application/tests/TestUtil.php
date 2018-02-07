@@ -310,6 +310,29 @@ EOD;
         return $result;
     }
 
+
+    public static function getOutputFilePath(string $output_folderpath, string $input_filepath) : string
+    {
+        $filename = \Flexio\Base\File::getFilename($input_filepath);
+        $fileextension = \Flexio\Base\File::getFileExtension($input_filepath);
+        $output_filepath = $output_folder . $filename . "." . $fileextension;
+        return $output_filepath;
+    }
+
+    public static function fileExistsInList(string $name, array $list) : bool
+    {
+        foreach ($list as $l)
+        {
+            if (!isset($l['name']))
+                continue;
+
+            if ($l['name'] === $name)
+                return true;
+        }
+
+        return false;
+    }
+
     public static function getTimestampName() : string
     {
         return date("YmdHis", time());
