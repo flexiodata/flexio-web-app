@@ -2,6 +2,7 @@
   <ui-modal
     size="large"
     ref="dialog"
+    dismiss-on="close-button"
     :remove-header="isOnboarding"
   >
     <div slot="header" class="w-100">
