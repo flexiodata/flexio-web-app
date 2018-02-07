@@ -101,7 +101,6 @@ class Write extends \Flexio\Jobs\Base
                 $field_names = array_column($stream_properties['structure'], 'name');
                 fputcsv($fp, $field_names);
 
-
                 $reader = $instream->getReader();
                 $files = $vfs->write($path, function($length) use (&$reader, &$fp) {
 
@@ -132,6 +131,11 @@ class Write extends \Flexio\Jobs\Base
                     fwrite($fp, substr($contents, $length));
                     return substr($contents, 0, $length);
                 });
+
+                if ($fp)
+                {
+                    fclose($fp);
+                }
             }
              else
             {
