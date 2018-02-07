@@ -22,11 +22,11 @@ class Test
     {
         // SETUP
         $files = TestUtil::getTestDataFiles();
-        $store_alias = "testsuite-dropbox";
+        $store_alias = "awilliams-dropbox";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
 
 
-
+/*
         // TEST: List Job; Basic List
 
         // BEGIN TEST
@@ -122,6 +122,54 @@ class Test
             $expected = $c;
             TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
+*/
+
+
+        // TEST: Write/Read Job; Implicit Format Conversion
+        $create = json_decode('
+        {
+            "op": "create",
+            "params": {
+                "name": "table",
+                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
+                "columns": [
+                    { "name": "c1", "type": "character", "width": 3 },
+                    { "name": "c2", "type": "character", "width": 20 },
+                    { "name": "n1", "type": "numeric", "width": 6, "scale": 2 },
+                    { "name": "n2", "type": "double", "width": 10, "scale": 4 },
+                    { "name": "n3", "type": "integer" },
+                    { "name": "d1", "type": "date" },
+                    { "name": "d2", "type": "datetime" },
+                    { "name": "b1", "type": "boolean" }
+                ],
+                "content": [
+                    { "c1": "aBC", "c2": "()[]{}<>",       "n1": -1.02, "n2": -1.23, "n3": -1,   "d1": "1776-07-04", "d2": "1776-07-04 01:02:03", "b1": true  },
+                    { "c1": "c a", "c2": "| \\/",          "n1": null,  "n2": 0.00,  "n3": 0,    "d1": "1970-11-22", "d2": "1970-11-22 01:02:03", "b1": null  },
+                    { "c1": " -1", "c2": ":;\"\'",         "n1": 0.00,  "n2": 0.99,  "n3": 1,    "d1": "1999-12-31", "d2": "1999-12-31 01:02:03", "b1": false },
+                    { "c1": "0% ", "c2": ",.?",            "n1": 0.99,  "n2": 4.56,  "n3": 2,    "d1": "2000-01-01", "d2": "2000-01-01 01:02:03", "b1": null  },
+                    { "c1": null,  "c2": "~`!@#$%^&*-+_=", "n1": 2.00,  "n2": null,  "n3": null, "d1": null,         "d2": null,                  "b1": true  }
+                ]
+            }
+        }
+        ',true);
+        $filename = \Flexio\Base\Util::generateHandle() . '.csv';
+        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
+        $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
+        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($create)->execute($write);
+        $process_read = \Flexio\Jobs\Process::create()->execute($read);
+        $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
+        $expected_contents = <<<EOD
+c1,c2,n1,n2,n3,d1,d2,b1
+aBC,()[]{}<>,-1.02,-1.23,-1,1776-07-04,"1776-07-04 01:02:03",1
+"c a","| /",,0,0,1970-11-22,"1970-11-22 01:02:03",
+" -1",":;""'",0,0.99,1,1999-12-31,"1999-12-31 01:02:03",0
+"0% ",",.?",0.99,4.56,2,2000-01-01,"2000-01-01 01:02:03",
+,~`!@#$%^&*-+_=,2,,,,,1
+EOD;
+        $actual = $actual_contents;
+        $expected = $expected_contents;
+        TestCheck::assertString("E.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $output_filepath, $actual, $expected, $results);
 
 
 
@@ -143,7 +191,7 @@ class Test
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
         $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list1) === false;
         $expected = true;
-        TestCheck::assertBoolean("E.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertBoolean("F.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
