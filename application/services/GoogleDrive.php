@@ -135,7 +135,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
             $result = @json_decode($result,true);
             if (!isset($result['files'][0]['id']))
-                return $default_result;
+                return [];
             $current_id = $result['files'][0]['id'];
             $current_content_type = $result['files'][0]['mimeType'];
         }
@@ -257,7 +257,12 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             return false; // bad folderid
 
         // see if the file already exists by getting its id
-        $fileid = $this->getFileId($folder . '/' . $filename);
+        $fullpath = $folder;
+        if (substr($fullpath, -1) != '/')
+            $fullpath .= '/';
+        $fullpath .= $filename;
+
+        $fileid = $this->getFileId($fullpath);
 
         // if the file doesn't already exist, create the file (otherwise overwrite it)
         if (!$fileid)
@@ -336,8 +341,8 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     public function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
         $info = $this->getFileInfo($path);
-        if (!$info)
-            return $info;
+        if (!isset($info['id']))
+            return null;
         return $info['id'];
     }
 
