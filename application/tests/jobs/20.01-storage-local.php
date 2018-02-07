@@ -127,6 +127,11 @@ class Test
 
 
 
+        // TEST: Write/Read Job; Implicit Format Conversion
+        // TODO: do we need an implicit format conversion for internal storage?
+
+
+
         // TEST: Delete Job; Basic Delete
 
         // TODO: try to delete a file that doesn't exist
@@ -145,7 +150,7 @@ class Test
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
         $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list1) === false;
         $expected = true;
-        TestCheck::assertBoolean("E.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertBoolean("F.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
