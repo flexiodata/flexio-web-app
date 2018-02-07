@@ -22,11 +22,11 @@ class Test
     {
         // SETUP
         $files = TestUtil::getTestDataFiles();
-        $store_alias = "awilliams-dropbox";
+        $store_alias = "testsuite-dropbox";
         $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
 
 
-/*
+
         // TEST: List Job; Basic List
 
         // BEGIN TEST
@@ -122,7 +122,7 @@ class Test
             $expected = $c;
             TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
-*/
+
 
 
         // TEST: Write/Read Job; Implicit Format Conversion
