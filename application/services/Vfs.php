@@ -361,6 +361,15 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
+        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        $service = $connection->getService();
+        $this->service_map[$connection_identifier] = $service;
+        return $service;
+
+            /*
+        $connection_info = $connection->get();
 
         if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
@@ -371,5 +380,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $this->service_map[$connection_identifier] = $service;
         return $service;
+        */
     }
 }
