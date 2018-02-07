@@ -227,7 +227,7 @@ If you have any questions, please send us a note using the chat button at the bo
         }
 
         // add username as the alias prefix
-        attrs.ename = _.kebabCase(this.active_username + '-' + attrs.ename)
+        attrs.ename = _.lowerCase(this.active_username) + '-' + _.kebabCase(attrs.ename)
 
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
