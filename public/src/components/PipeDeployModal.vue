@@ -16,7 +16,7 @@
 
         <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
 
-        <p>The <strong>{{pipeName}}</strong> pipe has been added to your account.</p>
+        <p>The <strong>{{pipeName}}</strong> pipe has been added to your account and is now in your pipe list.</p>
         <p>To deploy your pipe in the wild, try one of these options:</p>
       </div>
       <p class="mt0" v-else>To deploy your pipe in the wild, try one of these options:</p>
