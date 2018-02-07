@@ -74,4 +74,6 @@ steps:
         .echo('Finished!')
       ```
 
-      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`.  Now re-run the pipe; then check your cloud storage to see the files that have been added.
+      **NOTE:** You'll notice that the alias `{connection_alias}` from the connection created in the previous step is referenced in the `write` command. If you want to place the files in a subfolder, simply add a subfolder to the specified path like this: `.write('/{connection_alias}/foo/${item.name}')`.
+
+      Now re-run the pipe; then check your cloud storage to see the files that have been added.
