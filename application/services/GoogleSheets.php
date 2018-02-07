@@ -438,15 +438,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
             $curtime = time();
-
-            $expires = $params['expires'] ?? null;
-            if (is_null($expires))
-                $expires = 0;
-            if (!is_int($expires))
-                $expires = strtotime($expires);
-            if ($expires == 0)
-                $expires = $curtime + 3600; // default
-
+            $expires = $params['expires'] ?? 0;
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
@@ -470,7 +462,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
-                if (isset($params['expires']) && !is_null($params['expires']) && $params['expires'] > 0)
+                if ($expires > 0)
                     $token->setEndOfLife($params['expires']);
 
                 try
@@ -486,11 +478,13 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
-                $object->access_token = $token->getAccessToken();
-                $object->refresh_token = $refresh_token;
-                $object->expires = $token->getEndOfLife();
                 $object->is_ok = true;
-                if (is_null($object->refresh_token)) $object->refresh_token = '';
+                $object->expires = $token->getEndOfLife();
+                $object->access_token = $token->getAccessToken();
+                $object->refresh_token = $token->getRefreshToken();
+                if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
+                    $object->refresh_token = $refresh_token;
+
                 return $object;
             }
         }

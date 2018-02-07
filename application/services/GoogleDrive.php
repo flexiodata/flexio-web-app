@@ -135,7 +135,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
             $result = @json_decode($result,true);
             if (!isset($result['files'][0]['id']))
-                return $default_result;
+                return [];
             $current_id = $result['files'][0]['id'];
             $current_content_type = $result['files'][0]['mimeType'];
         }
@@ -257,7 +257,12 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             return false; // bad folderid
 
         // see if the file already exists by getting its id
-        $fileid = $this->getFileId($folder . '/' . $filename);
+        $fullpath = $folder;
+        if (substr($fullpath, -1) != '/')
+            $fullpath .= '/';
+        $fullpath .= $filename;
+
+        $fileid = $this->getFileId($fullpath);
 
         // if the file doesn't already exist, create the file (otherwise overwrite it)
         if (!$fileid)
@@ -336,8 +341,8 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     public function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
         $info = $this->getFileInfo($path);
-        if (!$info)
-            return $info;
+        if (!isset($info['id']))
+            return null;
         return $info['id'];
     }
 
@@ -375,21 +380,12 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         // authentication url; when initialization is complete the following
         // will return an object with a serialized access token
 
-
         // STEP 1: if we have an access token and it's not expired, create an object
         // from the access token and return it
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
             $curtime = time();
-
-            $expires = $params['expires'] ?? null;
-            if (is_null($expires))
-                $expires = 0;
-            if (!is_int($expires))
-                $expires = strtotime($expires);
-            if ($expires == 0)
-                $expires = $curtime + 3600; // default
-
+            $expires = $params['expires'] ?? 0;
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
@@ -413,7 +409,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 $refresh_token = $params['refresh_token'];
 
                 $token = new \OAuth\OAuth2\Token\StdOAuth2Token($access_token, $refresh_token);
-                if (isset($params['expires']) && !is_null($params['expires']) && $params['expires'] > 0)
+                if ($expires > 0)
                     $token->setEndOfLife($params['expires']);
 
                 try
@@ -429,11 +425,13 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
+                $object->is_ok = true;
+                $object->expires = $token->getEndOfLife();
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $token->getRefreshToken();
-                $object->expires = $token->getEndOfLife();
-                $object->is_ok = true;
-                if (is_null($object->refresh_token)) $object->refresh_token = '';
+                if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
+                    $object->refresh_token = $refresh_token;
+
                 return $object;
             }
         }
