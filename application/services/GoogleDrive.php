@@ -432,7 +432,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
                     $object->refresh_token = $refresh_token;
 
-                if (is_null($object->refresh_token)) $object->refresh_token = '';
                 return $object;
             }
         }
