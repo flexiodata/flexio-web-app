@@ -24,14 +24,14 @@
       <div class="ml3">
         <h4 class="mb2">cURL:</h4>
         <div class="marked">
-          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_alias}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
+          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
         </div>
 
         <h4 class="mb2">HTTP:</h4>
         <div class="marked">
           <pre><code>$.ajax({
   type: 'POST',
-  url: 'http://www.flex.io/api/v1/pipes/{{pipe_alias}}/run',
+  url: 'http://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run',
   beforeSend: function(xhr) {
     xhr.setRequestHeader('Authorization', 'Bearer {{api_key}}')
   }
@@ -59,7 +59,7 @@
     data() {
       return {
         pipe_name: '',
-        pipe_alias: ''
+        pipe_identifier: ''
       }
     },
     computed: {
@@ -87,7 +87,8 @@
       },
       open(item) {
         this.pipe_name = _.get(item, 'name', '')
-        this.pipe_alias = _.get(item, 'ename', '')
+        this.pipe_identifier = _.get(item, 'ename', '') || _.get(item, 'eid', '')
+
 
         this.$refs['dialog'].open()
         return this
