@@ -315,7 +315,7 @@ EOD;
     {
         $filename = \Flexio\Base\File::getFilename($input_filepath);
         $fileextension = \Flexio\Base\File::getFileExtension($input_filepath);
-        $output_filepath = $output_folder . $filename . "." . $fileextension;
+        $output_filepath = $output_folderpath . $filename . "." . $fileextension;
         return $output_filepath;
     }
 
