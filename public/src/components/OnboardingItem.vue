@@ -72,14 +72,14 @@
         <div class="ml3">
           <h4 class="mb2">cURL:</h4>
           <div class="marked">
-            <code class="db">curl -s -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_alias}}' -H 'Authorization: Bearer {{apiKey}}'</code>
+            <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_alias}}/run' -H 'Authorization: Bearer {{apiKey}}'</code>
           </div>
 
-          <h4 class="mb2">http:</h4>
+          <h4 class="mb2">HTTP:</h4>
           <div class="marked">
             <pre><code>$.ajax({
   type: 'POST',
-  url: 'http://www.flex.io/api/v1/pipes/{{pipe_alias}}',
+  url: 'http://www.flex.io/api/v1/pipes/{{pipe_alias}}/run',
   beforeSend: function(xhr) {
     xhr.setRequestHeader('Authorization', 'Bearer {{apiKey}}')
   }
