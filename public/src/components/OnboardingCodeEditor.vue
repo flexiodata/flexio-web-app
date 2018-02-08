@@ -71,7 +71,14 @@
         </div>
       </div>
     </div>
-    <textarea :id="textarea_id" v-show="false">{{copy_code}}</textarea>
+    <textarea
+      class="fixed"
+      style="left: 9999px; top: 9999px"
+      :id="textarea_id"
+      v-model="copy_code"
+      v-if="show_copy_button"
+    >
+    </textarea>
   </div>
 </template>
 
