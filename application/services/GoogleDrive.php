@@ -296,6 +296,9 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return false;
+        
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
