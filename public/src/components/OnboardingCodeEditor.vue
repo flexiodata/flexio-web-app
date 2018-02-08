@@ -45,7 +45,7 @@
         v-if="is_inited"
       />
     </div>
-    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" v-else>
+    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" style="padding-top: 24px" v-else>
       <pre class="f7 lh-title"><code class="db" spellcheck="false">{{edit_code}}</code></pre>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
