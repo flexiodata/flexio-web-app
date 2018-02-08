@@ -115,8 +115,12 @@
       },
       saveChanges() {
         try {
+          // TODO: we need to give this code editor quite a bit of love...
+          // this is a bit of a kludge that allows pipe code to be pasted with a .run()
+          var save_code = this.edit_code.substring(0, this.edit_code.indexOf('.run('))
+
           var fn = (Flexio, callback) => {
-            return eval(this.edit_code)
+            return eval(save_code)
           }
 
           // get access to pipe object
