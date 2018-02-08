@@ -35,6 +35,7 @@
         @item-activate="onConnectionActivate"
         @item-edit="openEditModal"
         @item-delete="tryDeleteConnection"
+        v-if="false"
       />
       <div class="flex-fill">
         <file-chooser
@@ -73,6 +74,12 @@
   import Btn from './Btn.vue'
   import ConnectionInfoMixin from './mixins/connection-info'
 
+  const LOCAL_STORAGE_ITEM = {
+    connection_type: CONNECTION_TYPE_HOME,
+    eid: 'home',
+    name: 'Local Storage'
+  }
+
   export default {
     mixins: [ConnectionInfoMixin],
     components: {
@@ -85,7 +92,7 @@
     },
     data() {
       return {
-        connection: {},
+        connection: LOCAL_STORAGE_ITEM,
         show_connection_props_modal: false
       }
     },
@@ -97,7 +104,7 @@
       }),
       connections() {
         var items = _.filter(this.getAllConnections(), this.isStorageConnection)
-        return [{ connection_type: CONNECTION_TYPE_HOME, eid: 'home', name: 'Local Storage' }].concat(items)
+        return [LOCAL_STORAGE_ITEM].concat(items)
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
