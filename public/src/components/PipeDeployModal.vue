@@ -24,20 +24,27 @@
 
       <div class="ml3">
         <h4 class="mb2">cURL:</h4>
-        <div class="marked">
-          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
-        </div>
-
+        <onboarding-code-editor
+          cls="relative"
+          :is-editable="false"
+          :buttons="['copy']"
+        >
+curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run' -H 'Authorization: Bearer {{api_key}}'
+        </onboarding-code-editor>
         <h4 class="mb2">HTTP:</h4>
-        <div class="marked">
-          <pre><code>$.ajax({
+        <onboarding-code-editor
+          cls="relative"
+          :is-editable="false"
+          :buttons="['copy']"
+        >
+$.ajax({
   type: 'POST',
   url: 'http://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run',
   beforeSend: function(xhr) {
     xhr.setRequestHeader('Authorization', 'Bearer {{api_key}}')
   }
-})</code></pre>
-        </div>
+})
+        </onboarding-code-editor>
         <h4 class="mb2">CRON:</h4>
         <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       </div>
@@ -49,6 +56,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
     props: {
@@ -56,6 +64,9 @@
         type: Boolean,
         default: true
       }
+    },
+    components: {
+      OnboardingCodeEditor
     },
     data() {
       return {
