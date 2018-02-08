@@ -342,7 +342,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
             {
                 $folder_items[] = array('id'=> null, // TODO: available?
                                         'name' => $entry['name'],
-                                        'path' => $entry['path'],
+                                        'path' => '/' . $repository . '/' . $entry['path'],
                                         'size' => $entry['size'] ?? '',
                                         'modified' => '',  // TODO: available?
                                         'type' => ($entry['type'] == 'dir' ? 'DIR' : 'FILE'));
