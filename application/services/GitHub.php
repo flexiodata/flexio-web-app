@@ -230,7 +230,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
             {
                 $repository_items[] = array('id'=> null, // TODO: available?
                                             'name' => $entry['name'],
-                                            'path' => $entry['full_name'],
+                                            'path' => '/' . $entry['full_name'],
                                             'size' => null,
                                             'modified' => '',  // TODO: available?
                                             'type' => 'DIR');
