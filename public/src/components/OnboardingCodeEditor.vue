@@ -46,7 +46,7 @@
       />
     </div>
     <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" style="padding-top: 24px" v-else>
-      <pre class="f7 lh-title"><code class="db" spellcheck="false">{{edit_code}}</code></pre>
+      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{edit_code}}</code></pre>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
       <div class="v-mid fw6 dark-gray"><span class="fa fa-spin fa-spinner"></span> Running...</div>
@@ -214,8 +214,7 @@
         }
       },
       code_to_show() {
-        var slot_text = _.get(this.$slots, 'default[0].text', null)
-        var code = _.isString(slot_text) ? slot_text.trim() : this.code.trim()
+        var code = this.code.trim()
         var replace_str = ''
 
         switch (this.responseType)
