@@ -94,7 +94,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return _.filter(this.getAllConnections(), { connection_type: CONNECTION_TYPE_HTTP })
+        return this.getAllConnections()
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
