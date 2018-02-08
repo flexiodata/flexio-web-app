@@ -194,6 +194,15 @@
       show_see_it_work_button() {
         return this.buttons.indexOf('see-it-work') != -1
       },
+      save_code() {
+        // TODO: we need to give this code editor quite a bit of love...
+        // this is a bit of a kludge that allows pipe code to be pasted with a .run()
+        var code = this.edit_code
+        var idx = code.indexOf('.run')
+        if (idx >= 0)
+          code = code.substring(0, idx)
+        return code.trim()
+      },
       run_code() {
         var code = this.edit_code
         var idx = code.indexOf('.run')
@@ -268,7 +277,7 @@
       getTaskJSON() {
         try {
           var fn = (Flexio, callback) => {
-            return eval(this.edit_code)
+            return eval(this.save_code)
           }
 
           // get access to pipe object
