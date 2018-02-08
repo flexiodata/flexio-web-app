@@ -121,7 +121,7 @@ router.beforeEach((to, from, next) => {
 
 // global clipboard access
 
-var copy = new Clipboard('.clipboardjs, [data-clipboard-text]')
+var copy = new Clipboard('.clipboardjs, [data-clipboard-text], [data-clipboard-target]')
 
 copy.on('success', function(evt) {
   var t = evt.trigger

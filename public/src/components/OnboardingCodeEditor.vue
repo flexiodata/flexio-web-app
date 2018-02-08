@@ -10,9 +10,9 @@
       <button
         type="button"
         aria-label="Copy to Clipboard"
-        class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10 hint--top"
+        class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10 hint--top clipboardjs"
         :class="show_run_button || show_see_it_work_button ? '' : 'br2 br--top br--right'"
-        :data-clipboard-text="copy_code"
+        :data-clipboard-target="'#'+textarea_id"
         @click="copy"
         v-if="show_copy_button"
       ><span class="f6 ttu b">Copy</span></button>
@@ -35,7 +35,7 @@
       <pre><code class="db ph3">{{description}}</code></pre>
       <div class="mv3 bb b--black-10"></div>
     </div>
-    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
+    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)" v-if="isEditable">
       <code-editor
         ref="code"
         lang="javascript"
@@ -44,6 +44,9 @@
         @change="updateCode"
         v-if="is_inited"
       />
+    </div>
+    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" style="padding-top: 24px" v-else>
+      <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{edit_code}}</code></pre>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
       <div class="v-mid fw6 dark-gray"><span class="fa fa-spin fa-spinner"></span> Running...</div>
@@ -68,6 +71,14 @@
         </div>
       </div>
     </div>
+    <textarea
+      class="fixed"
+      style="left: 9999px; top: 9999px"
+      :id="textarea_id"
+      v-model="copy_code"
+      v-if="show_copy_button"
+    >
+    </textarea>
   </div>
 </template>
 
@@ -129,6 +140,10 @@
         type: Boolean,
         default: true
       },
+      'is-editable': {
+        type: Boolean,
+        default: true
+      },
       'buttons': {
         type: Array,
         default: () => { return ['copy', 'run'] }
@@ -158,6 +173,7 @@
         text_result: '',
         img_src: '',
         pdf_src: '',
+        textarea_id: _.uniqueId('textarea-'),
         show_output: true,
         is_loading: false,
         is_inited: false
@@ -184,6 +200,15 @@
       },
       show_see_it_work_button() {
         return this.buttons.indexOf('see-it-work') != -1
+      },
+      save_code() {
+        // TODO: we need to give this code editor quite a bit of love...
+        // this is a bit of a kludge that allows pipe code to be pasted with a .run()
+        var code = this.edit_code
+        var idx = code.indexOf('.run')
+        if (idx >= 0)
+          code = code.substring(0, idx)
+        return code.trim()
       },
       run_code() {
         var code = this.edit_code
@@ -231,7 +256,7 @@
         return code.replace('callback)', replace_str)
       },
       copy_code() {
-        return this.copyPrefix + this.code_to_show + this.copySuffix
+        return this.copyPrefix + this.edit_code + this.copySuffix
       }
     },
     mounted() {
@@ -259,7 +284,7 @@
       getTaskJSON() {
         try {
           var fn = (Flexio, callback) => {
-            return eval(this.edit_code)
+            return eval(this.save_code)
           }
 
           // get access to pipe object

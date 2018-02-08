@@ -92,6 +92,15 @@
       },
       last_stream_eid() {
         return _.get(this.last_subprocess, 'output.stdout.eid', '')
+      },
+      save_code() {
+        // TODO: we need to give this code editor quite a bit of love...
+        // this is a bit of a kludge that allows pipe code to be pasted with a .run()
+        var code = this.edit_code
+        var idx = code.indexOf('.run')
+        if (idx >= 0)
+          code = code.substring(0, idx)
+        return code.trim()
       }
     },
     methods: {
@@ -116,7 +125,7 @@
       saveChanges() {
         try {
           var fn = (Flexio, callback) => {
-            return eval(this.edit_code)
+            return eval(this.save_code)
           }
 
           // get access to pipe object

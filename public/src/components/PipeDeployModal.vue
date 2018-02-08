@@ -2,6 +2,7 @@
   <ui-modal
     size="large"
     ref="dialog"
+    dismiss-on="close-button"
     :remove-header="isOnboarding"
   >
     <div slot="header" class="w-100">
@@ -23,20 +24,19 @@
 
       <div class="ml3">
         <h4 class="mb2">cURL:</h4>
-        <div class="marked">
-          <code class="db">curl -X POST 'https://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run' -H 'Authorization: Bearer {{api_key}}'</code>
-        </div>
-
+        <onboarding-code-editor
+          cls="relative"
+          :is-editable="false"
+          :buttons="['copy']"
+          :code="curl_code"
+        />
         <h4 class="mb2">HTTP:</h4>
-        <div class="marked">
-          <pre><code>$.ajax({
-  type: 'POST',
-  url: 'http://www.flex.io/api/v1/pipes/{{pipe_identifier}}/run',
-  beforeSend: function(xhr) {
-    xhr.setRequestHeader('Authorization', 'Bearer {{api_key}}')
-  }
-})</code></pre>
-        </div>
+        <onboarding-code-editor
+          cls="relative"
+          :is-editable="false"
+          :buttons="['copy']"
+          :code="http_code"
+        />
         <h4 class="mb2">CRON:</h4>
         <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       </div>
@@ -48,6 +48,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
     props: {
@@ -55,6 +56,9 @@
         type: Boolean,
         default: true
       }
+    },
+    components: {
+      OnboardingCodeEditor
     },
     data() {
       return {
@@ -73,6 +77,19 @@
           return ''
 
         return _.get(tokens, '[0].access_code', '')
+      },
+      curl_code() {
+        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
+      },
+      http_code() {
+        return "" +
+"$.ajax({\n" +
+"  type: 'POST',\n" +
+"  url: 'http://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run',\n" +
+"  beforeSend: function(xhr) {\n" +
+"    xhr.setRequestHeader('Authorization', 'Bearer "+this.api_key+"')\n" +
+"  }\n" +
+"})"
       }
     },
     mounted() {

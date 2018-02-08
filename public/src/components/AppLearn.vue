@@ -62,7 +62,7 @@
         return _.get(tokens, '[0].access_code', '')
       },
       sdk_options() {
-        return { baseUrl: 'https://' + window.location.hostname + '/api/v1' }
+        return { baseUrl: 'https://' + window.location.host + '/api/v1' }
       },
       active_item() {
         var step = _.find(this.items, { id: this.active_item_id })

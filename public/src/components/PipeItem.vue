@@ -14,9 +14,12 @@
         <service-icon :type="output_type" class="dib v-mid br2 square-3 ml2"></service-icon>
       </div>
       <div class="flex-fill mh2 fw6 f6 f5-ns">
-        <h1 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h1>
+        <div class="flex flex-row items-center">
+          <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h3>
+          <div class="dib f8 silver pv1 ph2 ml2 bg-black-05 br1" v-if="item.ename">{{item.ename}}</div>
+        </div>
         <div class="dn db-l mw7" v-if="has_description">
-          <h2 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h2>
+          <h4 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h4>
         </div>
       </div>
       <div class="dn db-l flex-none mh3 f7 fw6 mid-gray" style="min-width: 160px" v-if="false">
