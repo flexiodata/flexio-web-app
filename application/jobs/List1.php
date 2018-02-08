@@ -50,6 +50,7 @@ class List1 extends \Flexio\Jobs\Base
         {
             $entry = array(
                 'name' => $f['name'],
+                'path' => $f['path'],
                 'size' => $f['size'],
                 'modified' => $f['modified'],
                 'type' => $f['type']
