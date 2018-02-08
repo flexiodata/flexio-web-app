@@ -153,6 +153,10 @@ class Connection extends \Flexio\Object\Base
                 $response = \Flexio\Services\Box::create($auth_params);
                 break;
 
+            case 'github':
+                $response = \Flexio\Services\GitHub::create($auth_params);
+                break;
+
             case 'googledrive':
                 $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;

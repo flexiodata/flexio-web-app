@@ -29,7 +29,6 @@ class AController extends \Flexio\System\FxControllerAction
 
         $this->renderRaw();
         $params = $this->getRequest()->getParams();
-
         $auth_params = array();
 
         if (isset($params['service']))
@@ -53,6 +52,15 @@ class AController extends \Flexio\System\FxControllerAction
         {
             if (strlen(''.($GLOBALS['g_config']->box_client_id ?? '')) == 0 ||
                 strlen(''.($GLOBALS['g_config']->box_client_secret ?? '')) == 0)
+            {
+                die('This function is presently not available.');
+            }
+        }
+
+        if (($params['service'] ?? '') == 'github')
+        {
+            if (strlen(''.($GLOBALS['g_config']->github_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->github_client_secret ?? '')) == 0)
             {
                 die('This function is presently not available.');
             }

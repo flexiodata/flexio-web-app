@@ -35,7 +35,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     private function isStorageConnectionType(string $type) : bool
     {
         switch ($type)
@@ -48,6 +48,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             case 'postgres':
             case 'dropbox':
             case 'box':
+            case 'github':
             case 'googledrive':
             case 'googlesheets':
             case 'amazons3':
@@ -193,7 +194,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         return $service->createDirectory($rpath, $properties);
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
@@ -286,7 +287,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             {
                 return [ substr($path, 0, $urlsep_pos+3), $path ];
             }
-            
+
         }
 
 
