@@ -52,9 +52,9 @@ const ELASTICSEARCH = {
   connection_type: types.CONNECTION_TYPE_ELASTICSEARCH,
   icon: require('../assets/icon/icon-elasticsearch-128.png'),
   is_service: true,
-  is_input: false,
+  is_input: true,
   is_output: true,
-  is_storage: false
+  is_storage: true
 }
 
 const EMAIL = {
@@ -70,12 +70,23 @@ const EMAIL = {
 
 const FIREBASE = {
   service_name: 'Firebase',
-  service_description: 'Mobile and web application development platform ',
+  service_description: 'Mobile and web application development platform',
   connection_type: types.CONNECTION_TYPE_FIREBASE,
   icon: require('../assets/icon/icon-firebase-128.png'),
   is_service: true,
   is_input: true,
   is_output: false,
+  is_storage: true
+}
+
+const GITHUB = {
+  service_name: 'GitHub',
+  service_description: 'Source control and code management',
+  connection_type: types.CONNECTION_TYPE_GITHUB,
+  icon: require('../assets/icon/icon-github-128.png'),
+  is_service: true,
+  is_input: true,
+  is_output: true,
   is_storage: true
 }
 
@@ -246,6 +257,7 @@ export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 //export const CONNECTION_INFO_FIREBASE      = FIREBASE
+export const CONNECTION_INFO_GITHUB        = GITHUB
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HOME          = HOME
