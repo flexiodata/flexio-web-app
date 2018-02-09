@@ -9,7 +9,7 @@
       <div class="code light-silver ml2 ml3-ns" v-if="false && identifier.length > 0">({{identifier}})</div>
     </div>
 
-    <div class="mv3 mt4-ns">
+    <div class="mv3">
       <div class="flex flex-column flex-row-ns">
         <ui-textbox
           class="flex-fill mr4-ns"
@@ -54,8 +54,8 @@
       </div>
     </div>
 
-    <div class="mv3 mt4-ns">
-      <ui-tabs v-if="is_inited" :raised="true">
+    <div class="mv3">
+      <ui-tabs v-if="is_inited">
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <value-select
@@ -165,7 +165,7 @@
       </ui-tabs>
     </div>
 
-    <div class="flex flex-row justify-end mt4 mt5-ns pa3 bt b--black-05 bg-near-white">
+    <div class="flex flex-row justify-end mv4 pa3 bt b--black-05 bg-near-white">
       <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
       <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>
