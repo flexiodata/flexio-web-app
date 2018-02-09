@@ -21,7 +21,7 @@
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
       </div>
-      <div class="code light-silver f8 ml3 ml4-ns dn db-ns" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
+      <div class="code light-silver f8 ml3 ml4-l dn db-l" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
       <div class="ml2" v-if="showDropdown && !is_home">
         <a
           ref="dropdown-trigger"

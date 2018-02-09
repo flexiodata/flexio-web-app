@@ -1,32 +1,32 @@
 <template>
   <div class="flex flex-column items-stretch">
     <h1 v-if="false" class="flex-none f3 f2-l fw6 ph2 pv2 pv3-m pv4-l ma0 truncate white bg-blue tc">Account</h1>
-    <h1 class="flex-none f3 f2-l fw6 ph2 pv2 pv3-m pv4-l ma0 truncate mid-gray tc">Account</h1>
+    <h1 v-if="false" class="flex-none f3 f2-l fw6 ph2 pv2 pv3-m pv4-l ma0 truncate mid-gray tc">Account</h1>
     <ui-tabs
       class="flex-fill flex flex-column ui-tabs--centered ui-tabs--fill"
       ref="tabs"
       @tab-change="onTabChange"
     >
       <ui-tab id="profile" title="Profile">
-        <div class="mw6 center mt3">
+        <div class="mw6 center mv4">
           <account-profile-form></account-profile-form>
         </div>
       </ui-tab>
 
       <ui-tab id="region" title="Region">
-        <div class="mw6 center mt3">
+        <div class="mw6 center mv4">
           <account-region-form></account-region-form>
         </div>
       </ui-tab>
 
       <ui-tab id="api" title="API">
-        <div class="mw6 center mt3">
+        <div class="mw6 center mv4">
           <account-api-form v-if="has_user"></account-api-form>
         </div>
       </ui-tab>
 
       <ui-tab id="password" title="Password">
-        <div class="mw6 center mt3">
+        <div class="mw6 center mv4">
           <account-password-form></account-password-form>
         </div>
       </ui-tab>

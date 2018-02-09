@@ -55,7 +55,7 @@
     </div>
 
     <div class="mv3 mt4-ns">
-      <ui-tabs ref="tabs" :raised="true">
+      <ui-tabs v-if="is_inited">
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <value-select
@@ -245,7 +245,8 @@
         refresh_token: '',
         expires: '',
         headers: [],
-        data: []
+        data: [],
+        is_inited: false
       }
     },
     computed: {
@@ -267,7 +268,10 @@
       }
     },
     mounted() {
-      this.$nextTick(() => { this.reset() })
+      this.$nextTick(() => {
+        this.reset()
+        this.is_inited = true
+      })
     },
     methods: {
       reset() {
