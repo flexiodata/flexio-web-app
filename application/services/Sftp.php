@@ -128,15 +128,6 @@ class Sftp implements \Flexio\IFace\IFileSystem
                 return array();
         }
 
-        $b = $this->connection->lstat($this->getFullPath("newfile.txt"));
-        var_dump($b);
-        $b = $this->connection->lstat($this->getFullPath("folder"));
-        var_dump($b);
-        $b = $this->connection->lstat($this->getFullPath("folder2"));
-        var_dump($b);
-        die();
-
-
         $list_path = $path;
         if ($list_path == '')
             $list_path = '/';
