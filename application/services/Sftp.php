@@ -40,6 +40,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
     private $password;
     private $connection = false;
     private $is_ok = false;
+    private $base_path = '';
 
     public static function create(array $params = null) : \Flexio\Services\Sftp
     {
@@ -47,7 +48,8 @@ class Sftp implements \Flexio\IFace\IFileSystem
         if (($validator->check($params, array(
                 'host' => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
-                'password' => array('type' => 'string', 'required' => true)
+                'password' => array('type' => 'string', 'required' => true),
+                'base_path' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -55,12 +57,56 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $host = $validated_params['host'];
         $username = $validated_params['username'];
         $password = $validated_params['password'];
+        $base_path = $validated_params['base_path'];
 
         $service = new self;
-        if ($service->initialize($host, $username, $password) === false)
+        if ($service->initialize($host, $username, $password, $base_path) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    private static function mergePath(string $basepath, string $path) : string
+    {
+        if ($path === '')
+            $path = '/';
+        
+        if ($basepath === '')
+            return $path;
+
+        $parts = explode('/', trim($path,'/'));
+        $out = [];
+        foreach ($parts as $part)
+        {
+            if ($part === '.' || $part == '')
+                continue;
+            if ($part === '..')
+            {
+                array_pop($out);
+                continue;
+            }
+
+            $out[] = $part;
+        }
+
+        $path = implode('/', $out);
+
+        $res = $basepath;
+        if (substr($res, -1) == '/')
+            $res = substr($res, 0, strlen($res)-1);
+
+        if (strlen($path) == 0 || $path == '/')
+            return $res;
+        
+        if ($path[0] == '/')
+            return $res . $path;
+             else
+            return $res . '/' . $path;
+    }
+
+    private function getFullPath(string $path) : string
+    {
+        return self::mergePath($this->base_path, $path);
     }
 
     ////////////////////////////////////////////////////////////
@@ -87,7 +133,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
             $list_path = '/';
 
         // TODO: handle subdirectories
-        $files = $this->connection->rawlist($list_path);
+        $files = $this->connection->rawlist($this->getFullPath($path));
         if (!is_array($files))
             return array();
 
@@ -158,7 +204,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
                 return;
         }
 
-        $this->connection->getWithCallback($path, function($type, $data) use (&$callback) {
+        $this->connection->getWithCallback($this->getFullPath($path), function($type, $data) use (&$callback) {
             if ($type == 'data')
             {
                 $length = strlen($data);
@@ -181,7 +227,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
                 return;
         }
 
-        $this->connection->put($path, function($length) use (&$callback) {
+        $this->connection->put($this->getFullPath($path), function($length) use (&$callback) {
             $res = $callback($length);
             if ($res === false) return null; // SFTP.php expects null upon eof
             return $res;
@@ -204,11 +250,12 @@ class Sftp implements \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private function initialize(string $host, string $username, string $password) : bool
+    private function initialize(string $host, string $username, string $password, string $base_path) : bool
     {
         $this->host = $host;
         $this->username = $username;
         $this->password = $password;
+        $this->base_path = $base_path;
 
         if ($this->connection !== false)
             $this->connection->disconnect();
