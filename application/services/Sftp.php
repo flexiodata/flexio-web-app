@@ -128,6 +128,15 @@ class Sftp implements \Flexio\IFace\IFileSystem
                 return array();
         }
 
+        $b = $this->connection->lstat($this->getFullPath("newfile.txt"));
+        var_dump($b);
+        $b = $this->connection->lstat($this->getFullPath("folder"));
+        var_dump($b);
+        $b = $this->connection->lstat($this->getFullPath("folder2"));
+        var_dump($b);
+        die();
+
+
         $list_path = $path;
         if ($list_path == '')
             $list_path = '/';
@@ -192,6 +201,17 @@ class Sftp implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
+
+    private function isDirectory(string $path) : bool
+    {
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        $info = $this->connection->lstat($this->getFullPath($path));
+        $type = $info['type'] ?? 0;
+        return ($type == 2 ? true : false);
+    }
+
     public function read(array $params, callable $callback)
     {
         if (!$this->checkConnect())
@@ -216,6 +236,22 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+
+        $folder = trim($path,'/');
+        while (false !== strpos($folder,'//'))
+            $folder = str_replace('//','/',$folder);
+        $parts = explode('/',$folder);
+        
+        $filename = array_pop($parts);
+        $folder = '/' . join('/',$parts);
+
+        if (strlen($filename) == 0)
+            return false;
+        
+        if (!$this->isDirectory($folder))
+        {
+            $this->connection->mkdir($this->getFullPath($folder), -1, true);
+        }
 
         $this->connection->put($this->getFullPath($path), function($length) use (&$callback) {
             $res = $callback($length);
@@ -265,7 +301,8 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $this->connection = false;
         $this->is_ok = false;
 
-        if (strlen(trim($host)) == 0) {
+        if (strlen(trim($host)) == 0)
+        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Missing host name");
         }
 

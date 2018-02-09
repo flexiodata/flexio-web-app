@@ -310,6 +310,9 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         $filename = array_pop($parts);
         $folder = '/' . join('/',$parts);
 
+        if (strlen($filename) == 0)
+            return false;
+        
         $folderid = $this->getFileId($folder);
         if (is_null($folderid) || strlen($folderid) == 0)
         {
