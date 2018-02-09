@@ -114,7 +114,7 @@ class Box implements \Flexio\IFace\IFileSystem
             }
 
             if (!$found)
-                return $default_result;
+                return [];
         }
 
 
@@ -177,14 +177,64 @@ class Box implements \Flexio\IFace\IFileSystem
         curl_close($ch);
     }
 
+    
+    private function internalCreateFolder($parentid, $name)
+    {
+        $postdata = json_encode(array(
+            'name' => $name,
+            'parent' => [ 'id' => $parentid ]
+        ));
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/folders");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+
+        $result = @json_decode($result, true);
+        $fileid = $result['id'] ?? '';
+        if (strlen($fileid) == 0)
+            return false;
+
+        return $fileid;
+    }
+
+    private function createFolderStructure($path)
+    {
+        $folder = trim($path,'/');
+        if ($folder == '')
+            return '0';
+
+        $parts = explode('/',$folder);
+        
+        $path = '';
+        $parentid = '0';
+        for ($i = 0; $i < count($parts); ++$i)
+        {
+            $path .= ('/'.$parts[$i]);
+
+            $folderid = $this->getFileId($path);
+
+            if (!$folderid)
+            {
+                $folderid = $this->internalCreateFolder($parentid, $parts[$i]);
+                if (!$folderid)
+                    return false;
+            }
+
+            $parentid = $folderid;
+        }
+
+        return $folderid;
+    }
+
     public function write(array $params, callable $callback)
     {
         if (!$this->authenticated())
-            return false;
-
-        // Box unfortunately requires a content size
-        $size = $params['size'] ?? null;
-        if (!isset($size))
             return false;
 
         $path = $params['path'] ?? '';
@@ -200,13 +250,23 @@ class Box implements \Flexio\IFace\IFileSystem
 
         $folderid = $this->getFileId($folder);
         if (is_null($folderid) || strlen($folderid) == 0)
-            return false; // bad folderid
+        {
+            $folderid = $this->createFolderStructure($folder);
+            if (is_null($folderid) || strlen($folderid) == 0)
+                return false; // bad folderid
+        }
+        
 
         // see if the file already exists by getting its id
-        $fileid = $this->getFileId($folder . '/' . $filename);
+        $fullpath = $folder;
+        if (substr($fullpath, -1) != '/')
+            $fullpath .= '/';
+        $fullpath .= $filename;
+
+        $fileid = $this->getFileId($fullpath);
 
 
-        if ($fileid !== false)
+        if ($fileid !== null)
         {
             // file already exists -- update content
             $box_args = null;
@@ -219,18 +279,9 @@ class Box implements \Flexio\IFace\IFileSystem
             $url = "https://upload.box.com/api/2.0/files/content";
         }
 
-
-        // upload/write the file
-        $ch = curl_init();
-
+        $buf = '';
         $boundary = "---------------------------2523643".time()."1927533";
         $content_type = "multipart/form-data; boundary=$boundary";
-        $content_finished = false;
-        $total_written = 0;
-
-        $header = fopen('php://memory', 'rw+');
-        $buf = '';
-
         if (isset($box_args))
         {
             $buf .= "--$boundary\r\n".
@@ -244,65 +295,35 @@ class Box implements \Flexio\IFace\IFileSystem
                 "Content-Type: application/octet-stream\r\n".
                 "\r\n";
 
-        $header_len = strlen($buf);
-        fwrite($header, $buf);
-        fseek($header, 0);
+        $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
+        $writer->write($buf);
+        while (($data = $callback(32768)) !== false)
+        {
+            $writer->write($data);
+        }
 
-        $footer = fopen('php://memory', 'rw+');
         $buf = "\r\n--$boundary--";
-        $footer_len = strlen($buf);
-        fwrite($footer, $buf);
-        fseek($footer, 0);
+        $writer->write($buf);
+        $total_payload_size = $writer->getBytesWritten();
+        $writer->close();
+        unset($writer);
+
+        $reader = $stream->getReader();
+
+        // upload/write the file
+        $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Length: " . ($header_len + $size + $footer_len), 'Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Length: " . $total_payload_size, 'Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback, &$total_written, &$header, &$footer, &$content_finished) {
-
-            $res = '';
-            if ($length > 0 && $header)
-            {
-                $chunk = fread($header, $length);
-                $chunk_len = strlen($chunk);
-                if ($chunk_len < $length)
-                    $header = null;
-                $res .= $chunk;
-                $length -= $chunk_len;
-            }
-
-
-            if ($length > 0 && !$content_finished)
-            {
-                $chunk = $callback($length);
-                if ($chunk === false)
-                {
-                    $content_finished = true;
-                }
-                else
-                {
-                    $chunk_len = strlen($chunk);
-                    if ($chunk_len < $length)
-                        $content_finished = true;
-                    $length -= $chunk_len;
-                    $res .= $chunk;
-                }
-            }
-
-
-            if ($length > 0 && $content_finished && $footer)
-            {
-                $chunk = fread($footer, $length);
-                $chunk_len = strlen($chunk);
-                if ($chunk_len < $length)
-                    $footer = null;
-                $res .= $chunk;
-                $length -= $chunk_len;
-            }
-
-            $total_written += strlen($res);
-            return $res;
+        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$reader) {
+            $data = $reader->read($length);
+            if ($data === false)
+                return '';
+            return $data;
         });
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -357,8 +378,8 @@ class Box implements \Flexio\IFace\IFileSystem
     private function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
         $info = $this->getFileInfo($path);
-        if (!$info)
-            return $info;
+        if (!isset($info['id']))
+            return null;
         return $info['id'];
     }
 
@@ -402,15 +423,7 @@ class Box implements \Flexio\IFace\IFileSystem
         if (isset($params['access_token']) && strlen($params['access_token']) > 0)
         {
             $curtime = time();
-
-            $expires = $params['expires'] ?? null;
-            if (is_null($expires))
-                $expires = 0;
-            if (!is_int($expires))
-                $expires = strtotime($expires);
-            if ($expires == 0)
-                $expires = $curtime + 3600; // default
-
+            $expires = $params['expires'] ?? 0;
             if ($curtime < $expires)
             {
                 // access token is valid (not expired); use it
@@ -449,11 +462,14 @@ class Box implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
+                $object->is_ok = true;
+                $object->expires = $token->getEndOfLife();
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $token->getRefreshToken();
-                $object->expires = $token->getEndOfLife();
-                $object->is_ok = true;
-                if (is_null($object->refresh_token)) $object->refresh_token = '';
+
+                if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
+                    $object->refresh_token = $refresh_token;
+
                 return $object;
             }
         }

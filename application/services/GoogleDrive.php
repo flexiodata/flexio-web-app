@@ -239,8 +239,66 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         }
     }
 
+    private function internalCreateFolder($parentid, $name)
+    {
+        $postdata = json_encode(array(
+            'name' => $name,
+            'parents' => [ $parentid ],
+            'mimeType' => 'application/vnd.google-apps.folder'
+        ));
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+
+        $result = @json_decode($result, true);
+        $fileid = $result['id'] ?? '';
+        if (strlen($fileid) == 0)
+            return false;
+
+        return $fileid;
+    }
+
+    private function createFolderStructure($path)
+    {
+        $folder = trim($path,'/');
+        if ($folder == '')
+            return 'root';
+
+        $parts = explode('/',$folder);
+        
+        $path = '';
+        $parentid = 'root';
+        for ($i = 0; $i < count($parts); ++$i)
+        {
+            $path .= ('/'.$parts[$i]);
+
+            $folderid = $this->getFileId($path);
+
+            if (!$folderid)
+            {
+                $folderid = $this->internalCreateFolder($parentid, $parts[$i]);
+                if (!$folderid)
+                    return false;
+            }
+
+            $parentid = $folderid;
+        }
+
+        return $folderid;
+    }
+
     public function write(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return false;
+        
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
@@ -254,7 +312,11 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
         $folderid = $this->getFileId($folder);
         if (is_null($folderid) || strlen($folderid) == 0)
-            return false; // bad folderid
+        {
+            $folderid = $this->createFolderStructure($folder);
+            if (is_null($folderid) || strlen($folderid) == 0)
+                return false; // bad folderid
+        }
 
         // see if the file already exists by getting its id
         $fullpath = $folder;

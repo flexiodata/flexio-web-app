@@ -243,7 +243,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $service = $this->getService($connection_identifier);
 
-        return $service->write([ 'path' => $rpath ], $callback);
+        $arr = [ 'path' => $rpath ];
+        if (isset($path['size']))
+            $arr['size'] = $path['size'];
+
+        return $service->write($arr, $callback);
     }
 
     public function insert(string $path, array $rows)
