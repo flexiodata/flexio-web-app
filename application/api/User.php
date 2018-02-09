@@ -337,9 +337,9 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $user_identifier = $ $validated_params['eid'];
-        $old_password = $ $validated_params['old_password'];
-        $new_password = $ $validated_params['new_password'];
+        $user_identifier = $validated_params['eid'];
+        $old_password = $validated_params['old_password'];
+        $new_password = $validated_params['new_password'];
 
         // make sure the new password is valid
         if (\Flexio\Base\Util::isValidPassword($new_password) === false)
