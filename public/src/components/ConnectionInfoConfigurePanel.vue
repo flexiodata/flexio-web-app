@@ -55,7 +55,7 @@
     </div>
 
     <div class="mv3 mt4-ns">
-      <ui-tabs v-if="is_inited">
+      <ui-tabs v-if="is_inited" :raised="true">
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <value-select
