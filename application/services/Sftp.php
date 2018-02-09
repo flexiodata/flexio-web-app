@@ -57,7 +57,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $host = $validated_params['host'];
         $username = $validated_params['username'];
         $password = $validated_params['password'];
-        $base_path = $validated_params['base_path'] ? '';
+        $base_path = $validated_params['base_path'] ?? '';
 
         $service = new self;
         if ($service->initialize($host, $username, $password, $base_path) === false)
@@ -194,15 +194,10 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
+        if (!$this->checkConnect())
+            return false;
+        
         $path = $params['path'] ?? '';
-
-        if (!$this->isOk())
-        {
-            // try to reconnect
-            $this->connect();
-            if (!$this->isOk())
-                return;
-        }
 
         $this->connection->getWithCallback($this->getFullPath($path), function($type, $data) use (&$callback) {
             if ($type == 'data')
@@ -216,16 +211,11 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback)
     {
+        if (!$this->checkConnect())
+            return false;
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-
-        if (!$this->isOk())
-        {
-            // try to reconnect
-            $this->connect();
-            if (!$this->isOk())
-                return;
-        }
 
         $this->connection->put($this->getFullPath($path), function($length) use (&$callback) {
             $res = $callback($length);
@@ -237,6 +227,18 @@ class Sftp implements \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
+
+    private function checkConnect() : bool
+    {
+        if (!$this->isOk())
+        {
+            // try to reconnect
+            $this->connect();
+            if (!$this->isOk())
+                return false;
+        }
+        return true;
+    }
 
     private function connect() : bool
     {
