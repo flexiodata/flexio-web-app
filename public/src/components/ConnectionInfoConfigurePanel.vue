@@ -55,103 +55,117 @@
     </div>
 
     <div class="mv3 mt4-ns">
-      <div class="f4">Authorization</div>
-      <div class="mv3 mw6">
-        <value-select
-          placeholder="Authorization Type"
-          :options="auth_options"
-          v-model="auth"
-        />
-        <ui-textbox
-          autocomplete="off"
-          placeholder="Username"
-          help=" "
-          v-model="username"
-          v-if="auth == 'basic'"
-        />
-        <ui-textbox
-          type="password"
-          autocomplete="off"
-          placeholder="Password"
-          help=" "
-          v-model="password"
-          v-if="auth == 'basic'"
-        />
-        <ui-textbox
-          type="password"
-          autocomplete="off"
-          placeholder="Token"
-          help=" "
-          v-model="token"
-          v-if="auth == 'bearer'"
-        />
-        <ui-textbox
-          type="password"
-          autocomplete="off"
-          placeholder="Access Token"
-          help=" "
-          v-model="access_token"
-          v-if="auth == 'oauth2'"
-        />
-        <ui-textbox
-          type="password"
-          autocomplete="off"
-          placeholder="Refresh Token"
-          help=" "
-          v-model="refresh_token"
-          v-if="auth == 'oauth2'"
-        />
-        <ui-textbox
-          autocomplete="off"
-          placeholder="Expires"
-          help=" "
-          v-model="expires"
-          v-if="auth == 'oauth2'"
-        />
-      </div>
+      <ui-tabs ref="tabs" :raised="true">
+        <ui-tab id="authorization" title="Authorization">
+          <div class="ma3 mw6">
+            <value-select
+              placeholder="Authorization Type"
+              label="Authorization Type"
+              floating-label
+              :options="auth_options"
+              v-model="auth"
+            />
+            <ui-textbox
+              autocomplete="off"
+              placeholder="Username"
+              label="Username"
+              floating-label
+              help=" "
+              v-model="username"
+              v-if="auth == 'basic'"
+            />
+            <ui-textbox
+              type="password"
+              autocomplete="off"
+              placeholder="Password"
+              label="Password"
+              floating-label
+              help=" "
+              v-model="password"
+              v-if="auth == 'basic'"
+            />
+            <ui-textbox
+              type="password"
+              autocomplete="off"
+              placeholder="Token"
+              label="Token"
+              floating-label
+              help=" "
+              v-model="token"
+              v-if="auth == 'bearer'"
+            />
+            <ui-textbox
+              type="password"
+              autocomplete="off"
+              placeholder="Access Token"
+              label="Access Token"
+              floating-label
+              help=" "
+              v-model="access_token"
+              v-if="auth == 'oauth2'"
+            />
+            <ui-textbox
+              type="password"
+              autocomplete="off"
+              placeholder="Refresh Token"
+              label="Refresh Token"
+              help=" "
+              v-model="refresh_token"
+              v-if="auth == 'oauth2'"
+            />
+            <ui-textbox
+              autocomplete="off"
+              placeholder="Expires"
+              label="Expires"
+              floating-label
+              help=" "
+              v-model="expires"
+              v-if="auth == 'oauth2'"
+            />
+          </div>
+        </ui-tab>
+
+        <ui-tab id="form-data" title="Form Data">
+          <div class="ma3">
+            <keypair-item
+              :item="{ key: 'Key', val: 'Value' }"
+              :is-static="true"
+              v-if="false"
+            />
+            <keypair-item
+              v-for="(item, index) in data"
+              :key="index"
+              :item="item"
+              :index="index"
+              :count="data.length"
+              @change="onFormDataItemChange"
+              @delete="onFormDataItemDelete"
+            />
+          </div>
+        </ui-tab>
+
+        <ui-tab id="headers" title="Headers">
+          <div class="ma3">
+            <keypair-item
+              :item="{ key: 'Key', val: 'Value' }"
+              :is-static="true"
+              v-if="false"
+            />
+            <keypair-item
+              v-for="(item, index) in headers"
+              :key="index"
+              :item="item"
+              :index="index"
+              :count="headers.length"
+              @change="onHeaderItemChange"
+              @delete="onHeaderItemDelete"
+            />
+          </div>
+        </ui-tab>
+      </ui-tabs>
     </div>
 
-    <div class="mv3 mt4-ns">
-      <div class="f4">Form Data</div>
-      <div class="mv3">
-        <keypair-item
-          :item="{ key: 'Key', val: 'Value' }"
-          :is-static="true"
-          v-if="false"
-        />
-        <keypair-item
-          v-for="(item, index) in data"
-          :key="index"
-          :item="item"
-          :index="index"
-          :count="data.length"
-          @change="onFormDataItemChange"
-          @delete="onFormDataItemDelete"
-        />
-      </div>
-    </div>
-
-    <div class="mv3 mt4-ns">
-      <div class="f4">Headers</div>
-      <div class="mv3">
-        <keypair-item
-          :item="{ key: 'Key', val: 'Value' }"
-          :is-static="true"
-          v-if="false"
-        />
-        <keypair-item
-          v-for="(item, index) in headers"
-          :key="index"
-          :item="item"
-          :index="index"
-          :count="headers.length"
-          @change="onHeaderItemChange"
-          @delete="onHeaderItemDelete"
-        />
-      </div>
-    </div>
-
-    <div class="flex flex-row justify-end mt3 mt4-ns pa3 bt b--black-05 bg-near-white">
+    <div class="flex flex-row justify-end mt4 mt5-ns pa3 bt b--black-05 bg-near-white">
       <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
       <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>
@@ -192,8 +206,8 @@
   const auth_options = [
     { val: 'none',   label: 'No Auth'      },
     { val: 'basic',  label: 'Basic Auth'   },
-    { val: 'bearer', label: 'Bearer Token' },
-    { val: 'oauth2', label: 'OAuth 2.0'    }
+    { val: 'bearer', label: 'Bearer Token' }/*,
+    { val: 'oauth2', label: 'OAuth 2.0'    }*/
   ]
 
   export default {
