@@ -117,8 +117,6 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _
-        // assemble non-empty values for submitting to the backend
         var attrs = _.assign({}, this.$data)
         attrs = _.pick(attrs, ['email', 'verify_code', 'password', 'password2'])
         return _.omitBy(attrs, _.isEmpty)
