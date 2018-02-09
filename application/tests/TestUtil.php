@@ -319,8 +319,18 @@ EOD;
         return $output_filepath;
     }
 
-    public static function fileExistsInList(string $name, array $list) : bool
+    public static function fileExistsInList($name, $list) : bool
     {
+        // note: be tolerant in parameters, since this is used for testing and not
+        // all results passed in may be what's needed to evaluate if the name is
+        // in the list
+
+        if (!is_string($name))
+            return false;
+
+        if (!is_array($list))
+            return false;
+
         foreach ($list as $l)
         {
             if (!isset($l['name']))
