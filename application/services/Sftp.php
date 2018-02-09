@@ -57,7 +57,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $host = $validated_params['host'];
         $username = $validated_params['username'];
         $password = $validated_params['password'];
-        $base_path = $validated_params['base_path'];
+        $base_path = $validated_params['base_path'] ? '';
 
         $service = new self;
         if ($service->initialize($host, $username, $password, $base_path) === false)
