@@ -76,16 +76,6 @@
     components: {
       Btn
     },
-    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        // access to component instance via `vm`
-        vm.email = _.get(to, 'query.email', '')
-        vm.verify_code = _.get(to, 'query.verify_code', '')
-
-        // now that we have them, we can remove the query params from the url
-        vm.$router.replace(to.path)
-      })
-    },
     watch: {
       password: function(val, old_val) {
         if (val.length > 0)
@@ -94,8 +84,8 @@
     },
     data() {
       return {
-        email: '',
-        verify_code: '',
+        email: _.get(this.$route, 'query.email', ''),
+        verify_code: _.get(this.$route, 'query.verify_code', ''),
         password: '',
         password2: '',
         is_submitting: false,
@@ -118,7 +108,7 @@
       getAttrs() {
         // assemble non-empty values for submitting to the backend
         var attrs = _.assign({}, this.$data)
-        attrs = _.pick(attrs, ['email', 'verify_code', 'password', 'password2'])
+        attrs = _.pick(attrs, ['email', 'verify_code', 'password'])
         return _.omitBy(attrs, _.isEmpty)
       },
       validateForm: _.debounce(function(validate_key, callback) {
