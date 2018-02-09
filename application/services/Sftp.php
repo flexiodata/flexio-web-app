@@ -82,12 +82,12 @@ class Sftp implements \Flexio\IFace\IFileSystem
                 return array();
         }
 
-        $base_path = $path;
-        if ($base_path == '')
-            $base_path = '/';
+        $list_path = $path;
+        if ($list_path == '')
+            $list_path = '/';
 
         // TODO: handle subdirectories
-        $files = $this->connection->rawlist($base_path);
+        $files = $this->connection->rawlist($list_path);
         if (!is_array($files))
             return array();
 
@@ -97,7 +97,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
             if ($file == '.' || $file == '..')
                 continue;
 
-            $full_path = $base_path;
+            $full_path = $list_path;
             if (substr($full_path, -1) != '/')
                 $full_path .= '/';
             $full_path .= $file;
