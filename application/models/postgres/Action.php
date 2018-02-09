@@ -27,6 +27,15 @@ class Action extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
+                'invoked_from'   => $params['invoked_from'] ?? '',
+                'invoked_by'     => $params['invoked_by'] ?? '',
+                'action_type'    => $params['action_type'] ?? '',
+                'action_info'    => $params['action_info'] ?? '{}',
+                'action_target'  => $params['action_target'] ?? '',
+                'result_type'    => $params['result_type'] ?? '',
+                'result_info'    => $params['result_info'] ?? '{}',
+                'started'        => $params['started'] ?? null,
+                'finished'       => $params['finished'] ?? null,
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );
@@ -51,6 +60,15 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'invoked_from'   => array('type' => 'string',  'required' => false),
+                'invoked_by'     => array('type' => 'string',  'required' => false),
+                'action_type'    => array('type' => 'string',  'required' => false),
+                'action_info'    => array('type' => 'string',  'required' => false),
+                'action_target'  => array('type' => 'string',  'required' => false),
+                'result_type'    => array('type' => 'string',  'required' => false),
+                'result_info'    => array('type' => 'string',  'required' => false),
+                'started'        => array('type' => 'string',  'required' => false),
+                'finished'      => array('type' => 'string',  'required' => false),
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -95,6 +113,15 @@ class Action extends ModelBase
         try
         {
             $row = $db->fetchRow("select tac.eid as eid,
+                                         tac.invoked_from as invoked_from,
+                                         tac.invoked_by as invoked_by,
+                                         tac.action_type as action_type,
+                                         tac.action_info as action_info,
+                                         tac.action_target as action_target,
+                                         tac.result_type as result_type,
+                                         tac.result_info as result_info,
+                                         tac.started as started,
+                                         tac.finished as finished,
                                          tac.created as created,
                                          tac.updated as updated
                                   from tbl_action tac
@@ -109,9 +136,18 @@ class Action extends ModelBase
         if (!$row)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        return array('eid'              => $row['eid'],
-                     'created'          => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+        return array('eid'           => $row['eid'],
+                     'invoked_from'  => $row['invoked_from'],
+                     'invoked_by'    => $row['invoked_by'],
+                     'action_type'   => $row['action_type'],
+                     'action_info'   => $row['action_info'],
+                     'action_target' => $row['action_target'],
+                     'result_type'   => $row['result_type'],
+                     'result_info'   => $row['result_info'],
+                     'started'       => $row['started'],
+                     'finished'      => $row['finished'],
+                     'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                     'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     private function generateActionEid() : string

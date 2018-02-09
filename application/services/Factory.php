@@ -90,7 +90,8 @@ class Factory
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
                         'username' => $connection_info['username'] ?? '',
-                        'password' => $connection_info['password'] ?? ''
+                        'password' => $connection_info['password'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     $service = \Flexio\Services\Sftp::create($auth_params);
                 break;
