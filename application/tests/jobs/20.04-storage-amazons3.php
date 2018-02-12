@@ -189,7 +189,7 @@ EOD;
         $process_list2 = \Flexio\Jobs\Process::create()->execute($list);
         $list1 = json_decode(\Flexio\Base\Util::getStreamContents($process_list1->getStdout()),true);
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
-        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list1) === false;
+        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list2) === false;
         $expected = true;
         TestCheck::assertBoolean("F.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
