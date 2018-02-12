@@ -52,7 +52,7 @@ class Test
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $foldername, "type" => "DIR"));
-        TestCheck::assertInArray("B.1", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        TestCheck::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
@@ -62,7 +62,7 @@ class Test
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $foldername, "type" => "DIR"));
-        TestCheck::assertInArray("B.2", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
