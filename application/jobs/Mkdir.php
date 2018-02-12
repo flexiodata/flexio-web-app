@@ -30,5 +30,15 @@ class Mkdir extends \Flexio\Jobs\Base
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
+
+        $job_definition = $this->getProperties();
+        $path = $job_definition['params']['path'] ?? null;
+
+        if (is_null($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
+        $vfs->createDirectory($path);
     }
 }
