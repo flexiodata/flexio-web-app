@@ -128,11 +128,20 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
+    {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+        return $this->internalCreateFolder($path);
+    }
+    
+
+    private function internalCreateFolder(string $path)
     {
         $postdata = json_encode(array('path' => $path, 'autorename' => false));
 
@@ -148,11 +157,16 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
         $result = curl_exec($ch);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        return true;
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
-    
+
+
+
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -163,6 +177,8 @@ class Dropbox implements \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
 
         $dropbox_args = json_encode(array('path' => $path));
 
@@ -188,6 +204,11 @@ class Dropbox implements \Flexio\IFace\IFileSystem
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
+
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $filename = rawurlencode($path);
 
