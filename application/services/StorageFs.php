@@ -640,13 +640,9 @@ class StorageFs
         return @mkdir($fspath, 0750, true) ? true : false;
     }
 
-
-
-    public function deleteFile(string $path) : bool
+    public function unlink(string $path) : bool
     {
-        $fspath = self::getFsPath($path);
-
-        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 

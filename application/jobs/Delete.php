@@ -31,6 +31,14 @@ class Delete extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        // TODO: fill out
+        $job_definition = $this->getProperties();
+        $path = $job_definition['params']['path'] ?? null;
+
+        if (is_null($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
+        $vfs->unlink($path);
     }
 }

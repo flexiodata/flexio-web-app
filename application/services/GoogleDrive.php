@@ -169,6 +169,12 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
     
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
+    
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';

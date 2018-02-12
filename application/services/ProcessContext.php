@@ -155,6 +155,12 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
     
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
+    
     public function open($params) : \Flexio\IFace\IStream
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');

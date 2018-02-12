@@ -140,6 +140,31 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         return $this->internalCreateFolder($path);
     }
     
+    public function unlink(string $path) : bool
+    {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+        $postdata = json_encode(array('path' => $path));
+
+        // download the file
+        $ch = curl_init();
+
+        $filename = rawurlencode($path);
+        curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/delete_v2");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+
+        $result = curl_exec($ch);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
+    }
 
     private function internalCreateFolder(string $path)
     {
