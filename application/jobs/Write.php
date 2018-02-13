@@ -120,6 +120,13 @@ class Write extends \Flexio\Jobs\Base
                         }
 
                         $row = array_values($row);
+                        foreach ($row as &$v)
+                        {
+                            if ($v === true)
+                                $v = 'true';
+                            else if ($v === false)
+                                $v = 'false';
+                        }
                         fputcsv($fp, $row);
                     }
 
