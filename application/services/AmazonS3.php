@@ -64,7 +64,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
             $s3 = new \Aws\S3\S3Client([
                 'version'     => 'latest',
-               // 'region'      => $this->region,
+                'region'      => $this->region,
                 'endpoint' => $urlparts['host'],
                 'credentials' => false
             ]);
@@ -229,20 +229,57 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
+        // S3 directories are created by adding an object with a '/' as the last character
+        if (substr($path,-1) != '/')
+            $path .= '/';
+
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function unlink(string $path) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        if (!$this->isOk())
+            return false;
+        
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
+        try
+        {
+            $response = $this->s3->deleteObject(array(
+                'Bucket' => $this->bucket,
+                'Key'    => $path
+            ));
+        }
+        catch (\Aws\Exception\AwsException $e)
+        {
+            $message = $e->getAwsErrorMessage();
+            if (strlen($message) == 0)
+                $message = "An error occurred while attempting to delete the specified resource";
+                 else
+                $message = "AWS Error Message: $message";
+
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED, $message);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED, "An error occurred while attempting to delete the specified resource");
+        }
+
+        return true;
     }
     
     public function open($path) : \Flexio\IFace\IStream
@@ -256,6 +293,9 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         // TODO: let exceptions through on failure?
 
         $path = $params['path'] ?? '';
+
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
 
         if (!$this->isOk())
             return false;
@@ -301,6 +341,9 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
         if (!$this->isOk())
             return false;
 
