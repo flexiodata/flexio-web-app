@@ -239,6 +239,12 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
+    
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
