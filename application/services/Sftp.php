@@ -176,20 +176,35 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        $this->connection->mkdir($this->getFullPath($path), -1, true);
+        return $this->isDirectory($path);
     }
     
     public function unlink(string $path) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        if ($this->isDirectory($path))
+        {
+            return $this->connection->delete($this->getFullPath($path), true /*recursive*/);
+        }
+         else
+        {
+            return $this->connection->delete($this->getFullPath($path), false);
+        }
     }
     
     public function open($path) : \Flexio\IFace\IStream
