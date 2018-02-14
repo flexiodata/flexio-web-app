@@ -167,6 +167,9 @@ class Store implements \Flexio\IFace\IFileSystem
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        $stream->delete();
+
         return false;
     }
     
