@@ -154,13 +154,19 @@ class Store implements \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $stream = $this->getStreamFromPath($path);
+        if ($stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+
+        $parent_stream = $this->getStreamFromPath($path, true /* create directory structure if it doesn't already exist */);
+        return $parent_stream ? true : false;
     }
     
     public function unlink(string $path) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $stream = $this->getStreamFromPath($path);
+        if (!$stream)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         return false;
     }
     
@@ -294,8 +300,12 @@ class Store implements \Flexio\IFace\IFileSystem
             return null;
 
         $parts = explode('/', $path);
+
         foreach ($parts as $part)
         {
+            if (strlen($part) == 0)
+                continue; // handle paths like /abc//def
+
             $arr = $stream->getChildStreams($part);
             $child = $arr[0] ?? null;
             if (is_null($child))
