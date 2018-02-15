@@ -211,12 +211,11 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function exists(string $path) : bool
     {
-        if (substr($path,0,1) == '/')
-            $path = substr($path,1);
+        $path = $this->getS3KeyFromPath($path);
 
         try
         {
-            $s3 = self::getS3();
+            $s3 = self::getS3($path);
             return $s3->doesObjectExist($this->bucket, $path);
         }
         catch (\Exception $e)
@@ -235,13 +234,13 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        if ($this->exists($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
-        
         // S3 directories are created by adding an object with a '/' as the last character
         if (substr($path,-1) != '/')
             $path .= '/';
 
+        if ($this->exists($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+        
         if (!$this->write([ 'path' => $path ], function($length) { return false; }))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         
