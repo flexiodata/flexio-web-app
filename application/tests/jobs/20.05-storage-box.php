@@ -90,6 +90,18 @@ class Test
         $expected = array(array("name" => $filename, "type" => "FILE"));
         TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
 
+        // BEGIN TEST
+        $name = 'test_folder';
+        $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
+        $create_file = json_decode('{"op": "create","params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create_folder);
+        $has_error_after_first_attempt = $process_create->hasError();
+        $process_create = \Flexio\Jobs\Process::create()->execute($create_file);
+        $has_error_after_second_attempt = $process_create->hasError();
+        $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
+        $expected = true;
+        TestCheck::assertBoolean("C.2", 'Create; throw an exception when attempting to create a file with the same name as a folder', $actual, $expected, $results);
+
 
 
         // TEST: Write/Read Job; Basic Copy
