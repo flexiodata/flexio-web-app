@@ -94,8 +94,8 @@ class Test
 
         // BEGIN TEST
         $name = \Flexio\Base\Util::generateHandle();
-        $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $name . '"}}',true);
-        $create_file = json_decode('{"op": "create", "params": { "path": "'. $name . '"}}',true);
+        $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
+        $create_file = json_decode('{"op": "create","params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
         $process_create = \Flexio\Jobs\Process::create()->execute($create_folder);
         $has_error_after_first_attempt = $process_create->hasError();
         $process_create = \Flexio\Jobs\Process::create()->execute($create_file);
