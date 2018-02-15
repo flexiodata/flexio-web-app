@@ -235,11 +235,16 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
+        if ($this->exists($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+        
         // S3 directories are created by adding an object with a '/' as the last character
         if (substr($path,-1) != '/')
             $path .= '/';
 
-        $this->write([ 'path' => $path ], function($length) { return false; });
+        if (!$this->write([ 'path' => $path ], function($length) { return false; }))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        
         return true;
     }
 
