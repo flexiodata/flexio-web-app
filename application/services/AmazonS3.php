@@ -211,12 +211,11 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function exists(string $path) : bool
     {
-        if (substr($path,0,1) == '/')
-            $path = substr($path,1);
+        $path = $this->getS3KeyFromPath($path);
 
         try
         {
-            $s3 = self::getS3();
+            $s3 = self::getS3($path);
             return $s3->doesObjectExist($this->bucket, $path);
         }
         catch (\Exception $e)
@@ -239,7 +238,12 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         if (substr($path,-1) != '/')
             $path .= '/';
 
-        $this->write([ 'path' => $path ], function($length) { return false; });
+        if ($this->exists($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+        
+        if (!$this->write([ 'path' => $path ], function($length) { return false; }))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        
         return true;
     }
 

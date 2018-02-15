@@ -58,7 +58,7 @@ class Box implements \Flexio\IFace\IFileSystem
         $entries = $this->getFolderItems($fileinfo['id'], 'name,type,size,modified_at');
 
         $files = [];
-        
+
         foreach ($entries as $entry)
         {
             $fullpath = $path;
@@ -138,10 +138,10 @@ class Box implements \Flexio\IFace\IFileSystem
     public function createDirectory(string $path, array $properties = []) : bool
     {
         if ($this->getFileId($path))
-            return false; // already exists
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
 
         if ($this->createFolderStructure($path) === false)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         
         return true;
     }
