@@ -188,6 +188,9 @@ class Sftp implements \Flexio\IFace\IFileSystem
         if (!$this->checkConnect())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
+        if ($this->connection->file_exists($this->getFullPath($path)))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+
         $this->connection->mkdir($this->getFullPath($path), -1, true);
         return $this->isDirectory($path);
     }
