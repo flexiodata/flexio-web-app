@@ -44,7 +44,7 @@ class Test
 
 
 
-        // TEST: Create Job; Basic Create
+        // TEST: Mkdir Job; Basic Directory Creation
 
         // BEGIN TEST
         $foldername = 'empty_folder1';
@@ -66,6 +66,10 @@ class Test
         $expected = array(array("name" => $foldername, "type" => "DIR"));
         TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
+
+
+        // TEST: Create Job; Basic Create
+
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
         $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
@@ -75,7 +79,7 @@ class Test
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $filename, "type" => "FILE"));
-        TestCheck::assertInArray("B.3", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
 
 
 
@@ -98,7 +102,7 @@ class Test
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("C.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -122,7 +126,7 @@ class Test
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -150,7 +154,7 @@ class Test
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
         $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list2) === false;
         $expected = true;
-        TestCheck::assertBoolean("F.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertBoolean("G.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
