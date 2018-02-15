@@ -93,7 +93,7 @@ class Test
         TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
 
         // BEGIN TEST
-        $name = \Flexio\Base\Util::generateHandle();
+        $name = 'test_folder';
         $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
         $create_file = json_decode('{"op": "create","params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
         $process_create = \Flexio\Jobs\Process::create()->execute($create_folder);
