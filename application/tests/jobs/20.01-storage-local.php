@@ -66,6 +66,17 @@ class Test
         $expected = array(array("name" => $foldername, "type" => "DIR"));
         TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
+        // BEGIN TEST
+        $foldername = 'empty_folder3';
+        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path with path terminator
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $has_error_after_first_attempt = $process_create->hasError();
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $has_error_after_second_attempt = $process_create->hasError();
+        $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
+        $expected = true;
+        TestCheck::assertBoolean("B.3", 'Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
+
 
 
         // TEST: Create Job; Basic Create
