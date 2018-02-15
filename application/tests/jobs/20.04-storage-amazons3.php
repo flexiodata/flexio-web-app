@@ -107,7 +107,16 @@ class Test
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
-        $idx = 0;
+        $filename = 'file_that_does_not_exist.txt';
+        $filepath = TestUtil::getOutputFilePath($output_folder, $filename);
+        $read = json_decode('{"op": "read", "params": {"path": "'. $filepath . '"}}',true);
+        $process_read = \Flexio\Jobs\Process::create()->execute($read);
+        $actual = $process_read->hasError();
+        $expected = true;
+        TestCheck::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $idx = 1;
         foreach ($files as $filename)
         {
             $idx++;
