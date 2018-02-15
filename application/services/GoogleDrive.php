@@ -173,11 +173,11 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         {
             $folderid = $this->createFolderStructure($path);
             if (is_null($folderid) || strlen($folderid) == 0)
-                return false; // bad folderid
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
             return true;
         }
         
-        return false; // already exists
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
     }
     
     public function unlink(string $path) : bool
