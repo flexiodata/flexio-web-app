@@ -15,9 +15,6 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class Dropbox implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
