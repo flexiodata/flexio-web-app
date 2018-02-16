@@ -9,6 +9,8 @@
  *
  */
 
+@include_once '../vendor/autoload.php';
+
 $g_start_time = microtime(true);
 
 if (file_exists(__DIR__ . '/../config/config.json'))

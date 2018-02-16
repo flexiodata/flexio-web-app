@@ -61,7 +61,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         {
             $urlparts = parse_url($path);
 
-            require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
+           // require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
             $s3 = new \Aws\S3\S3Client([
                 'version'     => 'latest',
                 'region'      => $this->region,
@@ -435,7 +435,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         if (strlen($this->region) == 0)
             $this->region = 'us-east-1';
 
-        require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
+        //require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
         //setAutoloaderIgnoreErrors(true);
 
 
