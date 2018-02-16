@@ -450,7 +450,7 @@ class XferFsS3
     {
         //setAutoloaderIgnoreErrors(true);
 
-        require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
+        //require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
 
         global $g_config;
 
