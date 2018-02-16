@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpseclib/phpseclib": "^2.0",
+        "lusitanian/oauth": "^0.8.10",
+        "aws/aws-sdk-php": "^3.52"
+    }
+}
