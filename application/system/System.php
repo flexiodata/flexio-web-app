@@ -169,6 +169,7 @@ class System
         {
             $access_code = $_GET['flexio_api_key'];
             $access_code = trim($access_code);
+            unset($_GET['flexio_api_key']);
 
             $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
             if ($token_info)
