@@ -40,7 +40,7 @@ RUN git clone git@github.com:flexiodata/flexio.git /srv/www/flexio/src
 # will simply stay on the master branch
 RUN cd /srv/www/flexio/src && git checkout tags/${VERSION}
 
-RUN cd /srv/www/flexio/src && composer install
+RUN cd /srv/www/flexio/src && export HOME=/root && composer install
 
 #RUN rm /root/.ssh/id_rsa_github
 #RUN rm /root/.ssh/id_rsa_github.pub
