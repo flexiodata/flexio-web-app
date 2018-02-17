@@ -160,7 +160,6 @@ function fxStartSession()
 }
 
 spl_autoload_register(function ($class) {
-    $class = ltrim($class, '\\');
     if (strpos($class, 'Flexio\\') === 0)
     {
         $parts = explode('\\',$class);
