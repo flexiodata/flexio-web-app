@@ -37,7 +37,7 @@ $g_store->user_email = '';
 $g_store->user_first_name = '';
 $g_store->user_last_name = '';
 $g_store->user_eid = '';
-$g_store->dir_home = dirname(__DIR__);
+$g_store->dir_home = ($g_config->dir_home ?? dirname(__DIR__));
 $g_store->http_host = null;    // see GET_HTTP_HOST() below
 $g_store->lang = '';
 $g_store->thousands_separator = ',';
@@ -49,8 +49,6 @@ $g_store->model = null;
 $g_store->connections = [];
 $g_store->connection_enckey = '9i$8iw]aKmZzq12r8';
 
-if (isset($g_config->dir_home))
-    $g_store->dir_home = $g_config->dir_home;
 
 //require_once __DIR__ . '/profiler.php'; // uncomment this line to enabled profiling
 
