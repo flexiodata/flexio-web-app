@@ -9,12 +9,12 @@
  *
  */
 
-@include_once '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $g_start_time = microtime(true);
 
 
-    $configjson = @file_get_contents(__DIR__ . '/../config/config.json');
+$configjson = @file_get_contents(__DIR__ . '/../config/config.json');
 if ($configjson !== false)
 {
     $g_config = json_decode($configjson);
