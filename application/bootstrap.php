@@ -13,9 +13,10 @@
 
 $g_start_time = microtime(true);
 
-if (file_exists(__DIR__ . '/../config/config.json'))
+
+    $configjson = @file_get_contents(__DIR__ . '/../config/config.json');
+if ($configjson !== false)
 {
-    $configjson = file_get_contents(__DIR__ . '/../config/config.json');
     $g_config = json_decode($configjson);
     unset($configjson);
     if (is_null($g_config))
