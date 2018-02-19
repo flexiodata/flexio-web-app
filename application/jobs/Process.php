@@ -59,14 +59,12 @@ class Process implements \Flexio\IFace\IProcess
         'echo'      => '\Flexio\Jobs\Echo1',
         'email'     => '\Flexio\Jobs\Email',
         'request'   => '\Flexio\Jobs\Request',
-        'output'    => '\Flexio\Jobs\Output',
         'filter'    => '\Flexio\Jobs\Filter',
         'foreach'   => '\Flexio\Jobs\Foreach1',
         'read'      => '\Flexio\Jobs\Read',
         'replace'   => '\Flexio\Jobs\Replace',
         'grep'      => '\Flexio\Jobs\Grep',
         'group'     => '\Flexio\Jobs\Group',
-        'input'     => '\Flexio\Jobs\Input',
         'insert'    => '\Flexio\Jobs\Insert',
         'limit'     => '\Flexio\Jobs\Limit',
         'merge'     => '\Flexio\Jobs\Merge',
@@ -87,7 +85,8 @@ class Process implements \Flexio\IFace\IProcess
         'list'      => '\Flexio\Jobs\List1',
         'write'     => '\Flexio\Jobs\Write',
         'report'    => '\Flexio\Jobs\Report',
-        'set'       => '\Flexio\Jobs\Set'
+        'set'       => '\Flexio\Jobs\Set',
+        'mkdir'     => '\Flexio\Jobs\Mkdir'
     );
 
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)

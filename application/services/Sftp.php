@@ -16,21 +16,26 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-
-spl_autoload_register(function ($class) {
-    $class = ltrim($class, '\\');
-    if (strpos($class, 'phpseclib\\') === 0)
+class SftpCapture
+{
+    function stream_open($path, $mode, $options, &$opened_path)
     {
-        $class = str_replace('\\', '/', $class);
-        $class = dirname(dirname(__DIR__)) . '/library/phpseclib/' . $class . '.php';
-        if (file_exists($class))
-        {
-            require_once $class;
-            return true;
-        }
-        return false;
+        return true;
     }
-});
+
+    function stream_stat()
+    {
+        return [ 'size' => 0 ];
+    }
+
+    function stream_write($data)
+    {
+        $len = strlen($data);
+        $GLOBALS['g_sftp_callback']($data);
+        return $len;
+    }
+}
+
 
 
 class Sftp implements \Flexio\IFace\IFileSystem
@@ -176,14 +181,38 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        if ($this->connection->file_exists($this->getFullPath($path)))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+
+        $this->connection->mkdir($this->getFullPath($path), -1, true);
+        return $this->isDirectory($path);
+    }
+    
+    public function unlink(string $path) : bool
+    {
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        if ($this->isDirectory($path))
+        {
+            return $this->connection->delete($this->getFullPath($path), true /*recursive*/);
+        }
+         else
+        {
+            return $this->connection->delete($this->getFullPath($path), false);
+        }
     }
     
     public function open($path) : \Flexio\IFace\IStream
@@ -208,16 +237,15 @@ class Sftp implements \Flexio\IFace\IFileSystem
         if (!$this->checkConnect())
             return false;
         
-        $path = $params['path'] ?? '';
+        $GLOBALS['g_sftp_callback'] = $callback;
+        stream_wrapper_register('sftpcapture', 'Flexio\Services\SftpCapture') or die("Failed to register protocol");
+        $fp = fopen("sftpcapture://", "wb");
 
-        $this->connection->getWithCallback($this->getFullPath($path), function($type, $data) use (&$callback) {
-            if ($type == 'data')
-            {
-                $length = strlen($data);
-                $callback($data);
-                return $length;
-            }
-        });
+        $path = $params['path'] ?? '';
+        $this->connection->get($this->getFullPath($path), $fp);
+
+        fclose($fp);
+        stream_wrapper_unregister('sftpcapture');
     }
 
     public function write(array $params, callable $callback)

@@ -147,9 +147,60 @@ class System
         $g_store->date_format = 'm/d/Y';
         $g_store->timezone = 'UTC';
 
+/*
+        // note: always return dates in the API using UTC rather than local
+        // timezone; the UI will do the appropriate conversion; see
+        // date_default_timezone_set('UTC') in bootstrap.php for the default
 
-        // next, check if there is an authorization header -- this takes precedence over any session cookie
-        $headers = apache_request_headers();
+        // set current timezone
+        if (!@date_default_timezone_set($g_store->timezone))
+        {
+            // bad timezone identifier -- use UTC
+            $g_store->timezone = 'UTC';
+        }
+*/
+        // set the language to use
+        if (strlen($g_store->lang) > 0)
+            \Flexio\System\System::setCurrentLanguage($g_store->lang);
+
+
+        // AUTHENTICATION TYPE 1: try to authenticate the user using an API key in the query params
+        if (isset($_GET['flexio_api_key']))
+        {
+            $access_code = $_GET['flexio_api_key'];
+            $access_code = trim($access_code);
+            unset($_GET['flexio_api_key']);
+
+            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
+            if ($token_info)
+            {
+                $user = \Flexio\Object\User::load($token_info['user_eid']);
+                if ($user !== false)
+                {
+                    $user_info = $user->get();
+                    if ($user_info)
+                    {
+                        // set user info
+                        $g_store->user_first_name = $user_info['first_name'];
+                        $g_store->user_last_name = $user_info['last_name'];
+                        $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+                        $g_store->user_email = $user_info['email'];
+                        $g_store->user_eid = $user_info['eid'];
+                        $g_store->lang = $user_info['locale_language'];
+                        $g_store->thousands_separator = $user_info['locale_thousands'];
+                        $g_store->decimal_separator = $user_info['locale_decimal'];
+                        $g_store->date_format = $user_info['locale_dateformat'];
+                        $g_store->timezone = $user_info['timezone'];
+
+                        return true;
+                    }
+                }
+            }
+        }
+
+
+        // AUTHENTICATION TYPE 2: try to authenticate the user using an authorization token in the header
+        $headers = getallheaders();
         $headers = array_change_key_case($headers, $case = CASE_LOWER);
 
         if (isset($headers['authorization']))
@@ -185,6 +236,8 @@ class System
                             $g_store->decimal_separator = $user_info['locale_decimal'];
                             $g_store->date_format = $user_info['locale_dateformat'];
                             $g_store->timezone = $user_info['timezone'];
+
+                            return true;
                         }
                     }
                 }
@@ -196,41 +249,25 @@ class System
                 exit(0);
             }
         }
-         else
-        {
-            if (!isset($_SESSION['env']['user_name']) || strlen($_SESSION['env']['user_name']) == 0)
-                return false;
-            if ($_SESSION['env']['session_version'] < \Flexio\System\System::SESSION_VERSION)
-                return false;
 
-            // set user info
-            $g_store->user_first_name = $_SESSION['env']['user_first_name'];
-            $g_store->user_last_name = $_SESSION['env']['user_last_name'];
-            $g_store->user_name = $_SESSION['env']['user_name'];
-            $g_store->user_email = $_SESSION['env']['user_email'];
-            $g_store->user_eid = $_SESSION['env']['user_eid'];
-            $g_store->lang = $_SESSION['env']['lang'];
-            $g_store->thousands_separator = $_SESSION['env']['thousands_separator'];
-            $g_store->decimal_separator = $_SESSION['env']['decimal_separator'];
-            $g_store->date_format = $_SESSION['env']['date_format'];
-            $g_store->timezone = $_SESSION['env']['timezone'];
-        }
 
-/*
-        // note: always return dates in the API using UTC rather than local
-        // timezone; the UI will do the appropriate conversion; see
-        // date_default_timezone_set('UTC') in bootstrap.php for the default
+        // AUTHENTICATION TYPE 3: try to authenticate the user using a session cookie
+        if (!isset($_SESSION['env']['user_name']) || strlen($_SESSION['env']['user_name']) == 0)
+            return false;
+        if ($_SESSION['env']['session_version'] < \Flexio\System\System::SESSION_VERSION)
+            return false;
 
-        // set current timezone
-        if (!@date_default_timezone_set($g_store->timezone))
-        {
-            // bad timezone identifier -- use UTC
-            $g_store->timezone = 'UTC';
-        }
-*/
-        // set the language to use
-        if (strlen($g_store->lang) > 0)
-            \Flexio\System\System::setCurrentLanguage($g_store->lang);
+        // set user info
+        $g_store->user_first_name = $_SESSION['env']['user_first_name'];
+        $g_store->user_last_name = $_SESSION['env']['user_last_name'];
+        $g_store->user_name = $_SESSION['env']['user_name'];
+        $g_store->user_email = $_SESSION['env']['user_email'];
+        $g_store->user_eid = $_SESSION['env']['user_eid'];
+        $g_store->lang = $_SESSION['env']['lang'];
+        $g_store->thousands_separator = $_SESSION['env']['thousands_separator'];
+        $g_store->decimal_separator = $_SESSION['env']['decimal_separator'];
+        $g_store->date_format = $_SESSION['env']['date_format'];
+        $g_store->timezone = $_SESSION['env']['timezone'];
 
         return true;
     }
@@ -294,10 +331,10 @@ class System
         $pk = $GLOBALS['g_config']->private_key;
         $time = ''.time();
         $token = "autht1:sha256:$user_eid:$time";
-        
+
         $hash_input = "$user_eid:$time:$pk";
         $hash = hash('sha256', $hash_input);
-        
+
         return "$token:$hash";
     }
 
@@ -310,7 +347,7 @@ class System
             return null;
         return $parts[2];
     }
-    
+
     public static function verifyTemporaryAuthToken(string $token, int $timestamp_tolerance = 60) : bool
     {
         $pk = $GLOBALS['g_config']->private_key;
@@ -325,7 +362,7 @@ class System
         // verify hash is ok
         $hash_input = $parts[2] . ':' . $parts[3] . ':' . $pk;
         $hash = hash('sha256', $hash_input);
-        
+
         if ($parts[4] != $hash)
             return false; // hash mismatch
 

@@ -212,6 +212,23 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->open([ 'path' => $rpath ]);
     }
 
+    public function unlink($path) : bool
+    {
+        // path can either be an array [ 'path' => value ] or a string containing the path
+        if (is_array($path))
+        {
+            $path = $path['path'] ?? '';
+        }
+
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->unlink($rpath);
+    }
+
     public function read($path, callable $callback)
     {
         // path can either be an array [ 'path' => value ] or a string containing the path

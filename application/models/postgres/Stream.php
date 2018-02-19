@@ -74,6 +74,8 @@ class Stream extends ModelBase
         $db->beginTransaction();
         try
         {
+            $db->delete('tbl_stream', 'eid = ' . $db->quote($eid));
+            
             // delete the object
             $result = $this->getModel()->deleteObjectBase($eid);
             $db->commit();

@@ -78,6 +78,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
     }
 
 
+    public function delete() : \Flexio\Object\Base
+    {
+        return parent::delete();
+    }
+
+
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copyFrom(\Flexio\IFace\IStream $source)
     {

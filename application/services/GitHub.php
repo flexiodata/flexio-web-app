@@ -15,9 +15,6 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class GitHub implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
@@ -89,6 +86,12 @@ class GitHub implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -130,8 +133,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
         if (!isset($result['content']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $content = base64_decode($result['content']);
-        $callback($content);
+        $callback($result['content']);
     }
 
     public function write(array $params, callable $callback)
@@ -195,7 +197,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
             return array();
 
         // note: get the repositories for the user
-        $url = "https://api.github.com/user/repos?page=1&per_page=100";
+        $url = "https://api.github.com/user/repos?per_page=100";
 
         $repository_items = array();
 
@@ -231,7 +233,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
             {
                 $repository_items[] = array('id'=> null, // TODO: available?
                                             'name' => $entry['name'],
-                                            'path' => '/' . $entry['full_name'],
+                                            'path' => $entry['full_name'],
                                             'size' => null,
                                             'modified' => '',  // TODO: available?
                                             'type' => 'DIR');
@@ -342,7 +344,7 @@ class GitHub implements \Flexio\IFace\IFileSystem
             {
                 $folder_items[] = array('id'=> null, // TODO: available?
                                         'name' => $entry['name'],
-                                        'path' => '/' . $repository . '/' . $entry['path'],
+                                        'path' => $entry['path'],
                                         'size' => $entry['size'] ?? '',
                                         'modified' => '',  // TODO: available?
                                         'type' => ($entry['type'] == 'dir' ? 'DIR' : 'FILE'));
@@ -423,11 +425,9 @@ class GitHub implements \Flexio\IFace\IFileSystem
             $oauth_callback
         );
 
-        // instantiate the github service using the credentials, http client and
-        // storage mechanism for the token; note: the array() parameter contains a list
-        // of allowed scopes for connection; here, 'repo' is used to request read/write
-        // access to public and private repositories; see: https://developer.github.com/apps/building-oauth-apps/scopes-for-oauth-apps/
-        $service = $service_factory->createService('GitHub', $credentials, $storage, array('repo'));
+        // instantiate the github service using the credentials,
+        // http client and storage mechanism for the token
+        $service = $service_factory->createService('GitHub', $credentials, $storage, array());
         if (!isset($service))
             return null;
 

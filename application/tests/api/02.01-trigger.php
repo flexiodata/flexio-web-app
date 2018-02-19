@@ -24,37 +24,7 @@ class Test
 
         // BEGIN TEST
         $properties = array();
-        $properties['task'] = json_decode('
-        [
-            {
-                "op": "input",
-                "params": {
-                    "connection" : {
-                        "connection_type": "upload"
-                    },
-                    "items" : [
-                    ]
-                }
-            },
-            {
-                "op": "convert",
-                "params": {
-                    "input": {
-                        "format": "delimited_text",
-                        "delimiter": "{comma}",
-                        "header_row": true,
-                        "text_qualifier": "{none}"
-                    }
-                }
-            },
-            {
-                "op": "limit",
-                "params": {
-                    "rows": 2
-                }
-            }
-        ]
-        ', true);
+        $properties['task'] = json_decode('{}', true);
         $user_eid = TestUtil::getDefaultTestUser();
         $pipe = \Flexio\Object\Pipe::create($properties);
         $pipe->setOwner($user_eid);

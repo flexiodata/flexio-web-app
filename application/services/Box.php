@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class Box implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
@@ -55,8 +53,9 @@ class Box implements \Flexio\IFace\IFileSystem
         if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::FLEXIO_FOLDER)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);  // not a folder
 
-
         $entries = $this->getFolderItems($fileinfo['id'], 'name,type,size,modified_at');
+
+        $files = [];
 
         foreach ($entries as $entry)
         {
@@ -130,14 +129,42 @@ class Box implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if ($this->getFileId($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+
+        if ($this->createFolderStructure($path) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        
+        return true;
+    }
+
+    public function unlink(string $path) : bool
+    {
+        if (!$this->authenticated())
+            return false;
+
+        $fileid = $this->getFileId($path);
+        if ($fileid === null || $fileid === '0' || $fileid === 0)
+            return false;
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
 
     public function open($path) : \Flexio\IFace\IStream
@@ -215,6 +242,9 @@ class Box implements \Flexio\IFace\IFileSystem
         $parentid = '0';
         for ($i = 0; $i < count($parts); ++$i)
         {
+            if (strlen($parts[$i]) == 0)
+                continue;
+            
             $path .= ('/'.$parts[$i]);
 
             $folderid = $this->getFileId($path);

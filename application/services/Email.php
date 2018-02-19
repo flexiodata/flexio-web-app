@@ -20,31 +20,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-// library for building up mime email
-if (!isset($GLOBALS['phpmailmime_included']))
-{
-    $GLOBALS['phpmailmime_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (\Flexio\System\System::getBaseDirectory() . '/library/phpmailmime'));
-}
-
-
-spl_autoload_register(function ($class) {
-    $class = ltrim($class, '\\');
-    if (strpos($class, 'ZBateson\\MailMimeParser') === 0)
-    {
-        $sl = strpos($class,'\\', 10);
-        $class = str_replace('\\', '/', $class);
-        $class = dirname(dirname(__DIR__)) . '/library/mailmimeparser/src/' . substr($class,$sl+1) . '.php';
-        if (file_exists($class))
-        {
-            require_once $class;
-            return true;
-        }
-        return false;
-    }
-});
-
-
 class Email
 {
     const EMAIL_ADDRESS_NO_REPLY = 'no-reply@flex.io';
@@ -560,7 +535,7 @@ class Email
     private function getSes() : \Aws\Ses\SesClient
     {
         //setAutoloaderIgnoreErrors(true);
-        require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
+        //require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
         global $g_config;
 
         if (null === $this->_ses)

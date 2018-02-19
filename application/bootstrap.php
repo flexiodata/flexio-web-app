@@ -9,11 +9,14 @@
  *
  */
 
+require __DIR__ . '/../vendor/autoload.php';
+
 $g_start_time = microtime(true);
 
-if (file_exists(__DIR__ . '/../config/config.json'))
+
+$configjson = @file_get_contents(__DIR__ . '/../config/config.json');
+if ($configjson !== false)
 {
-    $configjson = file_get_contents(__DIR__ . '/../config/config.json');
     $g_config = json_decode($configjson);
     unset($configjson);
     if (is_null($g_config))
@@ -34,7 +37,7 @@ $g_store->user_email = '';
 $g_store->user_first_name = '';
 $g_store->user_last_name = '';
 $g_store->user_eid = '';
-$g_store->dir_home = dirname(dirname(__FILE__));
+$g_store->dir_home = ($g_config->dir_home ?? dirname(__DIR__));
 $g_store->http_host = null;    // see GET_HTTP_HOST() below
 $g_store->lang = '';
 $g_store->thousands_separator = ',';
@@ -46,8 +49,6 @@ $g_store->model = null;
 $g_store->connections = [];
 $g_store->connection_enckey = '9i$8iw]aKmZzq12r8';
 
-if (isset($g_config->dir_home))
-    $g_store->dir_home = $g_config->dir_home;
 
 //require_once __DIR__ . '/profiler.php'; // uncomment this line to enabled profiling
 
@@ -158,8 +159,21 @@ function fxStartSession()
     }
 }
 
+if (!function_exists('getallheaders'))
+{
+    function getallheaders()
+    {
+        $headers = [];
+        foreach ($_SERVER as $name => $value)
+        {
+            if (substr($name, 0, 5) == 'HTTP_')
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        }
+        return $headers;
+    }
+} 
+
 spl_autoload_register(function ($class) {
-    $class = ltrim($class, '\\');
     if (strpos($class, 'Flexio\\') === 0)
     {
         $parts = explode('\\',$class);
@@ -261,69 +275,13 @@ require_once __DIR__ . '/models/Model.php';
 
 
 
-
-class DatabaseSessionHandler implements SessionHandlerInterface
-{
-    private $registry_model;
-    private $session_data = '';
-
-    function __construct()
-    {
-    }
-
-    function open($path, $name)
-    {
-        $this->registry_model = \Flexio\System\System::getModel()->registry;
-        return true;
-    }
-
-    function close()
-    {
-        $this->registry_model = null;
-        $this->session_data = '';
-        return true;
-    }
-
-    function read($session_id)
-    {
-        $this->session_data = $this->registry_model->getString('', "session;$session_id", '');
-        //file_put_contents("c:\\fxsite\\ben.txt", "GET ($session_id): ".$this->session_data . "\n", FILE_APPEND);
-        return $this->session_data;
-    }
-
-    function write($session_id, $data)
-    {
-        if ($this->session_data !== $data)
-        {
-            // if data changed, write it
-            $this->session_data = $this->registry_model->setString('', "session;$session_id", $data, 86400);
-            $this->session_data = $data;
-            //file_put_contents("c:\\fxsite\\ben.txt", "WRITE ($session_id): ".$data . "\n", FILE_APPEND);
-        }
-    }
-
-    function destroy($session_id)
-    {
-        $this->registry_model->deleteEntryByName('', "session;$session_id");
-        $this->session_data = '';
-        //file_put_contents("c:\\fxsite\\ben.txt", "DELETE ($session_id)\n", FILE_APPEND);
-    }
-
-    function gc($age)
-    {
-        $this->registry_model->cleanupExpiredEntries();
-    }
-}
-
-
-
 $g_session_handler = 'files';
 if (isset($g_config->session_handler))
     $g_session_handler = $g_config->session_handler;
 
 if ($g_session_handler == 'database')
 {
-    $session_handler = new DatabaseSessionHandler();
+    $session_handler = new \Flexio\System\DatabaseSessionHandler();
     session_set_save_handler($session_handler, true);
 
 }

@@ -40,7 +40,7 @@ class Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function create(array $properties = null) : \Flexio\Object\Base
+    public static function create(array $properties = null)
     {
         $object = new static();
         $model = $object->getModel();
@@ -94,7 +94,7 @@ class Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function set(array $properties) : \Flexio\Object\Base
+    public function set(array $properties)
     {
         $this->clearCache();
 

@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class GoogleSheets implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
@@ -174,6 +172,12 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+    
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
     }
     
     public function open($path) : \Flexio\IFace\IStream

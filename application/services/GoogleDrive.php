@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class GoogleDrive implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
@@ -159,14 +157,48 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->authenticated())
+            return false;
+
+        $folderid = $this->getFileId($path);
+        if (is_null($folderid) || strlen($folderid) == 0)
+        {
+            $folderid = $this->createFolderStructure($path);
+            if (is_null($folderid) || strlen($folderid) == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            return true;
+        }
+        
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+    }
+    
+    public function unlink(string $path) : bool
+    {
+        if (!$this->authenticated())
+            return false;
+
+        $fileid = $this->getFileId($path);
+        if ($fileid === null || $fileid === 'root' || strlen($fileid) == 0)
+            return false;
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/" . $fileid);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
     
     public function read(array $params, callable $callback)
@@ -254,8 +286,9 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
+
+        curl_close($ch);
 
         $result = @json_decode($result, true);
         $fileid = $result['id'] ?? '';

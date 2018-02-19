@@ -85,6 +85,12 @@ class Firebase implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
+
+    public function unlink(string $path) : bool
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        return false;
+    }
     
     public function open($path) : \Flexio\IFace\IStream
     {

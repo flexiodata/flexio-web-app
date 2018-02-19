@@ -15,9 +15,6 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-
-require_once dirname(dirname(__DIR__)) . '/library/phpoauthlib/src/OAuth/bootstrap.php';
-
 class Dropbox implements \Flexio\IFace\IFileSystem
 {
     private $is_ok = false;
@@ -128,11 +125,54 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
+    {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+        $error_summary = '';
+        if (!$this->internalCreateFolder($path, $error_summary))
+        {
+            if (substr($error_summary, 0, 14) == 'path/conflict/')
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+        }
+
+        return true;
+    }
+    
+    public function unlink(string $path) : bool
+    {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+        $postdata = json_encode(array('path' => $path));
+
+        // download the file
+        $ch = curl_init();
+
+        $filename = rawurlencode($path);
+        curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/delete_v2");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Content-Type: application/json"));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+
+        $result = curl_exec($ch);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
+    }
+
+    private function internalCreateFolder(string $path, string &$error_summary)
     {
         $postdata = json_encode(array('path' => $path, 'autorename' => false));
 
@@ -148,11 +188,23 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
         $result = curl_exec($ch);
+        $result = @json_decode($result, true);
+
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        return true;
+        $error_summary = '';
+        if (isset($result['error_summary']))
+        {
+            $error_summary = $result['error_summary'];
+        }
+
+        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
-    
+
+
+
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -163,6 +215,8 @@ class Dropbox implements \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
 
         $dropbox_args = json_encode(array('path' => $path));
 
@@ -188,6 +242,11 @@ class Dropbox implements \Flexio\IFace\IFileSystem
     public function write(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
+
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $filename = rawurlencode($path);
 

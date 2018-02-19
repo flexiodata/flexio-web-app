@@ -42,6 +42,41 @@ class Test
 
 
 
+        // TEST: Mkdir Job; Basic Directory Creation
+
+        // BEGIN TEST
+        $foldername = 'empty_folder1';
+        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '/"}}',true); // folder path with path terminator
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        TestCheck::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $foldername = 'empty_folder2';
+        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path without path terminator
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
+        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $foldername = 'empty_folder3';
+        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path with path terminator
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $has_error_after_first_attempt = $process_create->hasError();
+        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $has_error_after_second_attempt = $process_create->hasError();
+        $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
+        $expected = true;
+        TestCheck::assertBoolean("B.3", 'Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
+
+
+
         // TEST: Create Job; Basic Create
 
         // BEGIN TEST
@@ -53,34 +88,35 @@ class Test
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
         $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
         $expected = array(array("name" => $filename, "type" => "FILE"));
-        TestCheck::assertInArray("B.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
 
         // BEGIN TEST
-        $foldername = 'empty_folder1';
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '/"}}',true); // folder path with path terminator
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $foldername, "type" => "DIR"));
-        TestCheck::assertInArray("B.2", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
-
-        // BEGIN TEST
-        $foldername = 'empty_folder2';
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path without path terminator
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $foldername, "type" => "DIR"));
-        TestCheck::assertInArray("B.3", 'Create; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        $name = 'test_folder';
+        $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
+        $create_file = json_decode('{"op": "create","params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
+        $process_create = \Flexio\Jobs\Process::create()->execute($create_folder);
+        $has_error_after_first_attempt = $process_create->hasError();
+        $process_create = \Flexio\Jobs\Process::create()->execute($create_file);
+        $has_error_after_second_attempt = $process_create->hasError();
+        $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
+        $expected = true;
+        TestCheck::assertBoolean("C.2", 'Create; throw an exception when attempting to create a file with the same name as a folder', $actual, $expected, $results);
 
 
 
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
-        $idx = 0;
+        $filename = 'file_that_does_not_exist.txt';
+        $filepath = TestUtil::getOutputFilePath($output_folder, $filename);
+        $read = json_decode('{"op": "read", "params": {"path": "'. $filepath . '"}}',true);
+        $process_read = \Flexio\Jobs\Process::create()->execute($read);
+        $actual = $process_read->hasError();
+        $expected = true;
+        TestCheck::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $idx = 1;
         foreach ($files as $filename)
         {
             $idx++;
@@ -96,7 +132,7 @@ class Test
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("C.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -120,7 +156,7 @@ class Test
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("D.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
         }
 
 
@@ -161,15 +197,16 @@ class Test
         $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
         $expected_contents = <<<EOD
 c1,c2,n1,n2,n3,d1,d2,b1
-aBC,()[]{}<>,-1.02,-1.23,-1,1776-07-04,"1776-07-04 01:02:03",1
+aBC,()[]{}<>,-1.02,-1.23,-1,1776-07-04,"1776-07-04 01:02:03",true
 "c a","| /",,0,0,1970-11-22,"1970-11-22 01:02:03",
-" -1",":;""'",0,0.99,1,1999-12-31,"1999-12-31 01:02:03",0
+" -1",":;""'",0,0.99,1,1999-12-31,"1999-12-31 01:02:03",false
 "0% ",",.?",0.99,4.56,2,2000-01-01,"2000-01-01 01:02:03",
-,~`!@#$%^&*-+_=,2,,,,,1
+,~`!@#$%^&*-+_=,2,,,,,true
+
 EOD;
         $actual = $actual_contents;
         $expected = $expected_contents;
-        TestCheck::assertString("E.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertString("F.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $output_filepath, $actual, $expected, $results);
 
 
 
@@ -189,9 +226,9 @@ EOD;
         $process_list2 = \Flexio\Jobs\Process::create()->execute($list);
         $list1 = json_decode(\Flexio\Base\Util::getStreamContents($process_list1->getStdout()),true);
         $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
-        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list1) === false;
+        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list2) === false;
         $expected = true;
-        TestCheck::assertBoolean("F.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+        TestCheck::assertBoolean("G.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
