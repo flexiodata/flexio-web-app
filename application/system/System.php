@@ -200,7 +200,7 @@ class System
 
 
         // AUTHENTICATION TYPE 2: try to authenticate the user using an authorization token in the header
-        $headers = apache_request_headers();
+        $headers = getallheaders();
         $headers = array_change_key_case($headers, $case = CASE_LOWER);
 
         if (isset($headers['authorization']))
