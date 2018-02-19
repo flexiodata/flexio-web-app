@@ -731,9 +731,6 @@ class Util
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 
-        if (substr($ciphertext,0,5) == 'ZZXV1')
-            return self::oldDecrypt($ciphertext, $key);
-
         if (substr($ciphertext,0,6) != 'ZZXV2/')
             return null;
 
@@ -761,42 +758,6 @@ class Util
         {
             return null;
         }
-    }
-
-    public static function oldEncrypt(string $string, string $key) : string
-    {
-        if ($key == '') // empty keys not allowed in mcrypt
-            $key = 'A';
-
-        $td = mcrypt_module_open('des', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_DEV_URANDOM);
-        mcrypt_generic_init($td, substr($key,0,8), $iv);
-        $enc = @mcrypt_generic($td, $string);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-        return 'ZZXV1'.base64_encode($enc);
-    }
-
-    public static function oldDecrypt(string $string, string $key) : string
-    {
-        if ($key == '') // empty keys not allowed in mcrypt
-            $key = 'A';
-
-        if (substr($string,0,5) != 'ZZXV1')
-            return '';
-
-        $string = base64_decode(substr($string,5));
-        if (strlen($string) === 0)
-            return '';
-
-        $td = mcrypt_module_open('des', '', 'ecb', '');
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_DEV_URANDOM);
-        mcrypt_generic_init($td, substr($key,0,8), $iv);
-        $data = @mdecrypt_generic($td, $string);
-        mcrypt_generic_deinit($td);
-        mcrypt_module_close($td);
-
-        return rtrim($data, "\0");
     }
 
     public static function appendUrlPath(string $url, string $part) : string
