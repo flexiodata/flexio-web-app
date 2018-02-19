@@ -124,8 +124,8 @@
         item.code = item.code.replace('{{username}}', this.username)
 
         _.each(item.steps, (step) => {
-          step.blurb = step.blurb.replace(/{connection_alias}/g, this.connection_alias)
-          step.blurb = step.blurb.replace(/{pipe_alias}/g, this.pipe_alias)
+          step.blurb = step.blurb.replace(/{{connection_alias}}/g, this.connection_alias)
+          step.blurb = step.blurb.replace(/{{pipe_alias}}/g, this.pipe_alias)
           step.blurb = step.blurb.replace(/{{username}}/g, this.username || '')
         })
 
