@@ -9,14 +9,12 @@
             "items": [
                 {
                     "op": "request",
-                    "description": "Read repository commit histories from GitHub API",
                     "params": {
                         "url": "https:\/\/api.github.com\/repos\/flexiodata\/docs-api\/commits"
                     }
                 },
                 {
                     "op": "convert",
-                    "description": "Convert from json to table",
                     "params": {
                         "input": {
                             "format": "json"
@@ -28,7 +26,6 @@
                 },
                 {
                     "op": "calc",
-                    "description": "Create new field 'repository' which concatenates two different parts of the 'commit.tree.url' field to isolate 'user/repo'",
                     "params": {
                         "name": "repository",
                         "expression": "concat(strpart([commit.tree.url],'\/',5),'\/',strpart([commit.tree.url],'\/',6))"
@@ -36,7 +33,6 @@
                 },
                 {
                     "op": "select",
-                    "description": "Select only the relevant columns",
                     "params": {
                         "columns": [
                             "repository",

@@ -9,14 +9,12 @@
             "items": [
                 {
                     "op": "request",
-                    "description": "Read CSV file from GitHub url",
                     "params": {
                         "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
                     }
                 },
                 {
                     "op": "convert",
-                    "description": "Convert from CSV to table",
                     "params": {
                         "input": {
                             "format": "delimited",
@@ -30,7 +28,6 @@
                 },
                 {
                     "op": "select",
-                    "description": "Select only the relevant columns",
                     "params": {
                         "columns": [
                             "streetaddress"
@@ -39,7 +36,6 @@
                 },
                 {
                     "op": "execute",
-                    "description": "Make all text uppercase for consistency",
                     "params": {
                         "lang": "python",
                         "code": "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
