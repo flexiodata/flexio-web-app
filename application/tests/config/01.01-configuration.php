@@ -53,34 +53,29 @@ class Test
         TestCheck::assertBoolean('A.6', 'Configuration; php ftp extension must be installed', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = extension_loaded('mcrypt');
-        $expected = true;
-        TestCheck::assertBoolean('A.7', 'Configuration; php mcrypt library must be installed; please install php7.0-mcrypt', $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = extension_loaded('curl');
         $expected = true;
-        TestCheck::assertBoolean('A.8', 'Configuration; php curl library must be installed; please install php7.0-curl', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.7', 'Configuration; php curl library must be installed; please install php7.0-curl', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = extension_loaded('zlib');
         $expected = true;
-        TestCheck::assertBoolean('A.9', 'Configuration; php zlip extension must be installed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.8', 'Configuration; php zlip extension must be installed', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = extension_loaded('gd');
         $expected = true;
-        TestCheck::assertBoolean('A.10', 'Configuration; php gd library must be installed; please install php7.0-gd', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.9', 'Configuration; php gd library must be installed; please install php7.0-gd', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = extension_loaded('mbstring');
         $expected = true;
-        TestCheck::assertBoolean('A.11', 'Configuration; php mbstring extension must be installed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.10', 'Configuration; php mbstring extension must be installed', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = extension_loaded('intl');
         $expected = true;
-        TestCheck::assertBoolean('A.12', 'Configuration; php intl extension must be installed', $actual, $expected, $results);
+        TestCheck::assertBoolean('A.11', 'Configuration; php intl extension must be installed', $actual, $expected, $results);
 
 
 
