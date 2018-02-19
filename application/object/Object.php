@@ -16,14 +16,14 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Object extends \Flexio\Object\Base
+class Object1 extends \Flexio\Object\Base
 {
     public function __construct()
     {
         $this->setType(\Model::TYPE_OBJECT);
     }
 
-    public static function create(array $properties = null) : \Flexio\Object\Object
+    public static function create(array $properties = null) : \Flexio\Object\Object1
     {
         $object = new static();
         $model = $object->getModel();
@@ -34,7 +34,7 @@ class Object extends \Flexio\Object\Base
         return $object;
     }
 
-    public function set(array $properties) : \Flexio\Object\Object
+    public function set(array $properties) : \Flexio\Object\Object1
     {
         $this->clearCache();
 
