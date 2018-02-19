@@ -23,19 +23,21 @@
       <p class="mt0" v-else>To deploy your pipe in the wild, try one of these options:</p>
 
       <div class="ml3">
-        <h4 class="mb2">cURL:</h4>
-        <onboarding-code-editor
-          cls="relative"
-          :is-editable="false"
-          :buttons="['copy']"
-          :code="curl_code"
-        />
         <h4 class="mb2">HTTP:</h4>
         <onboarding-code-editor
           cls="relative"
+          copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
-          :code="http_code"
+          :code="jquery_get_code"
+        />
+        <h4 class="mb2">cURL:</h4>
+        <onboarding-code-editor
+          cls="relative"
+          copy-prefix=""
+          :is-editable="false"
+          :buttons="['copy']"
+          :code="curl_code"
         />
         <h4 class="mb2">CRON:</h4>
         <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
@@ -81,15 +83,8 @@
       curl_code() {
         return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
       },
-      http_code() {
-        return "" +
-"$.ajax({\n" +
-"  type: 'POST',\n" +
-"  url: 'http://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run',\n" +
-"  beforeSend: function(xhr) {\n" +
-"    xhr.setRequestHeader('Authorization', 'Bearer "+this.api_key+"')\n" +
-"  }\n" +
-"})"
+      jquery_get_code() {
+        return "$.get('https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run?flexio_api_key="+this.api_key+"')"
       }
     },
     mounted() {

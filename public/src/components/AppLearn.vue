@@ -1,8 +1,8 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns">Hi {{first_name}}, let's build some data feeds!</div>
-      <p class="mw7 lh-copy">Welcome to our live tutorial. Choose a topic from the drop-down menu to get started.<br>Follow the steps below to get a deployable pipe in just a few minutes.</p>
+      <div class="f3 f2-ns">Let's build a data feed!</div>
+      <p class="mw7 lh-copy">Welcome to our interactive tutorial. Choose a topic from the drop-down menu to get started.<br>Then, follow the steps below to get a deployable pipe in just a few minutes.</p>
       <div class="mv3 f5 lh-copy">
         <span class="dib mr1 ml0">I want to</span>
         <select class="pa1 pr4-ns ba b--black-10" v-model="active_item_id">
@@ -18,6 +18,7 @@
         :item="active_item"
         :api-key="api_key"
         :sdk-options="sdk_options"
+        :username="active_username"
       />
     </div>
   </div>
@@ -46,12 +47,8 @@
       ...mapState([
         'active_user_eid'
       ]),
-      active_user() {
-        var user = this.getActiveUser()
-        return user ? user : {}
-      },
-      first_name() {
-        return _.get(this.active_user, 'first_name', ' ')
+      active_username() {
+        return _.get(this.getActiveUser(), 'user_name', '')
       },
       api_key() {
         var tokens = this.getAllTokens()

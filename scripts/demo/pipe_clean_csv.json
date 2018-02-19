@@ -1,26 +1,25 @@
 {
     "eid_type": "PIP",
-    "name": "Contact Refinement",
-    "ename": "contact-refinement",
-    "description": "Standardize contact information",
+    "name": "Clean a CSV",
+    "ename": "clean-csv",
+    "description": "Clean a CSV by removing some columns",
     "task": {
         "op": "sequence",
         "params": {
             "items": [
                 {
                     "op": "request",
-                    "description": "Read CSV file from GitHub url",
                     "params": {
                         "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
                     }
                 },
                 {
                     "op": "convert",
-                    "description": "Convert from CSV to table",
                     "params": {
                         "input": {
                             "format": "delimited",
                             "delimiter": "{comma}",
+                            "qualifier": "{double-quote}",
                             "header": true
                         },
                         "output": {
@@ -30,19 +29,13 @@
                 },
                 {
                     "op": "select",
-                    "description": "Select only the relevant columns",
                     "params": {
                         "columns": [
-                            "streetaddress"
+                            "streetaddress",
+                            "city",
+                            "state",
+                            "zipcode"
                         ]
-                    }
-                },
-                {
-                    "op": "execute",
-                    "description": "Make all text uppercase for consistency",
-                    "params": {
-                        "lang": "python",
-                        "code": "aW1wb3J0IGpzb24NCmRlZiBmbGV4aW9faGFuZGxlcihjb250ZXh0KToNCiAgICBmb3Igcm93IGluIGNvbnRleHQuaW5wdXQ6DQogICAgICAgIGNvbnRleHQub3V0cHV0LndyaXRlKGpzb24uZHVtcHMocm93KS51cHBlcigpICsgIlxuIikNCg=="
                     }
                 }
             ]
