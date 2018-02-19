@@ -766,8 +766,11 @@ class User
 
         $objects = array(
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_commit.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_contact.json')
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_clean_csv.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_convert_csv.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_thumbnail.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_pivot_table.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_chart.json')
         );
 
         return $objects;
