@@ -110,6 +110,13 @@ class Test
         $actual = TestUtil::convertToNumber($val) >= 3600;
         $expected = true;
         TestCheck::assertBoolean('B.5', 'Configuration; max_input_time must be 3600 or greater; current value is ' . $val, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $val = ini_get('magic_quotes_gpc');
+        $actual = $val;
+        $expected = false;
+        TestCheck::assertBoolean('B.5', 'Configuration; magic_quotes_gpc must be set to false; current value is ' . $val, $actual, $expected, $results);
+
     }
 }
 
