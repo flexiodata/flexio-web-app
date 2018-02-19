@@ -30,7 +30,7 @@ class Store
                 return false; // unknown eid type
 
             case \Model::TYPE_OBJECT:
-                return \Flexio\Object\Object::load($identifier);
+                return \Flexio\Object\Object1::load($identifier);
 
             case \Model::TYPE_COMMENT:
                 return \Flexio\Object\Comment::load($identifier);

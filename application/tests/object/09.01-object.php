@@ -65,7 +65,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Object1::load($eid);
-        $actual = 'Flexio\Object\Object';
+        $actual = 'Flexio\Object\Object1';
         $expected = get_class($object);
         TestCheck::assertString('B.3', 'Object::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
@@ -90,7 +90,7 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Object1::create();
         $object = $object->delete();
-        $actual =  'Flexio\Object\Object1;
+        $actual =  'Flexio\Object\Object1';
         $expected = get_class($object);
         TestCheck::assertString('C.1', 'Object::delete(); return the object',  $actual, $expected, $results);
 
