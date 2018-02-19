@@ -475,19 +475,25 @@ class Util
     }
 
     // sorts an array in ascending order by a specified field
-    public static function sortByFieldAsc(array &$arr, string $field) // TODO: set function return type
+    public static function sortByFieldAsc(array &$arr, string $field) : array
     {
-        $code="if (\$a['$field'] == \$b['$field']) return 0;".
-            "return (\$a['$field'] < \$b['$field']) ? -1 : 1;";
-        usort($arr, create_function('$a,$b',$code));
+        usort($arr, function($a, $b) use ($field) {
+            if ($a[$field] == $b[$field]) return 0;
+            return ($a[$field] < $b[$field]) ? -1 : 1;
+        });
+
+        return $arr;
     }
 
     // sorts an array in descending order by a specified field
-    public static function sortByFieldDesc(array &$arr, string $field) // TODO: set function return type
+    public static function sortByFieldDesc(array &$arr, string $field) : array
     {
-        $code="if (\$a['$field'] == \$b['$field']) return 0;".
-            "return (\$a['$field'] > \$b['$field']) ? -1 : 1;";
-        usort($arr, create_function('$a,$b',$code));
+        usort($arr, function($a, $b) use ($field) {
+            if ($a[$field] == $b[$field]) return 0;
+            return ($a[$field] > $b[$field]) ? -1 : 1;
+        });
+        
+        return $arr;
     }
 
     public static function getDaysDiff(string $dt1, string $dt2) // TODO: set function return type
