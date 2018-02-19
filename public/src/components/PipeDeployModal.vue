@@ -26,6 +26,7 @@
         <h4 class="mb2">cURL:</h4>
         <onboarding-code-editor
           cls="relative"
+          copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
           :code="curl_code"
@@ -33,6 +34,7 @@
         <h4 class="mb2">HTTP:</h4>
         <onboarding-code-editor
           cls="relative"
+          copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
           :code="http_code"
