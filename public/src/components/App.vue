@@ -79,21 +79,17 @@
         return true
       },
       config_show_onboarding() {
-        // don't ever show the onboarding modal (at least for now
-        // until we can figure out if we want it or not)
-        return false
-
         // we have to do 'config_show_onboarding' as a computed value since
         // we need to wait to check if we have an active user or not
         if (this.active_user_eid.length == 0)
           return false
 
         var params = _.get(this.$route, 'query', {})
-        if (params['app.prompt.tour.shown'] === 'true')
+        if (params['app.prompt.onboarding.shown'] === 'true')
           return true
 
         var cfg = _.get(this.getActiveUser(), 'config')
-        if (this.show_intercom_button && _.get(cfg, 'app.prompt.tour.shown') !== true)
+        if (this.show_intercom_button && _.get(cfg, 'app.prompt.onboarding.shown') !== true)
           return true
 
         return false

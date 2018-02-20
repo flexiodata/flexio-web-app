@@ -1,106 +1,130 @@
 <template>
   <ui-modal
+  size="large"
     ref="dialog"
-    class="ui-modal-onboarding"
+    dismiss-on="close-button"
     :remove-header="true"
-    :remove-close-button="true"
-    :dismissible="false"
     @hide="updateUserConfig"
   >
-    <div class="relative w-100 tc">
-      <div class="absolute top-0 right-0">
-        <ui-icon-button
-          icon="close"
-          type="secondary"
-          @click="close('close')"
-        ></ui-icon-button>
+    <div slot="header" class="w-100">
+      <span class="f4">Welcome to Flex.io, {{first_name}}</span>
+    </div>
+
+    <div class="lh-copy cf">
+      <div class="fr">
+        <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
       </div>
-      <div class="f2 pt4 mbv">Welcome to Flex.io</div>
-      <div class="mv3 f5 fw6 black-60 lh-copy mw7 center">Below are three simple templates to show how pipes work. Click on one below to get started, and then you can modify them with your own inputs and commands.</div>
-      <div class="mv3 center" style="max-width: 1280px">
-        <div class="flex flex-column flex-row-l">
-          <onboarding-tile-item
-            v-for="(item, index) in items"
-            :item="item"
-            :index="index"
-            @use-template-click="close('template')"
-          ></onboarding-tile-item>
+
+        <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
+        <p class="mt4">Here is an API key to get you started:</p>
+        <div class="flex flex-row">
+          <div class="flex-fill pv2 ph3 f3 tc b black code ba b--black-10">{{api_key}}</div>
         </div>
-      </div>
-      <div class="mv3 f7 fw6 black-60">
-        Prefer to live dangerously? Skip these templates and <a href="#" class="blue" @click.prevent="close('skip')">jump straight into the deep end</a>. Click on the chat button at the bottom right to call a lifeguard. :)
-      </div>
+        <h3>Try it out</h3>
+        <p>Here's a sample Flex.io API endpoint.</p>
+        <ol>
+          <li>
+            <h4 class="">HTTP</h4>
+            <p>Click the link to run the example pipe and see the output:</p>
+            <a
+              target="_blank"
+              class="blue"
+              :class="pipe_identifier.length == 0 ? 'o-40 no-pointer-events' : ''"
+              :href="example_href"
+            >{{example_href}}</a>
+          </li>
+          <li>
+            <h4 class="">cURL</h4>
+            <p>Copy and paste the following cURL call into your command line to run the example pipe and see the output:</p>
+            <onboarding-code-editor
+              copy-prefix=""
+              :cls="pipe_identifier.length == 0 ? 'o-40 no-pointer-events relative' : 'relative'"
+              :is-editable="false"
+              :buttons="['copy']"
+              :code="example_curl"
+            />
+          </li>
+        </ol>
+        <hr class="mv4 bb-0 b--black-10">
+        <p>Now that you've got a sense of deployment, let's build your first data feed!</p>
+        <div class="cf">
+          <btn
+            btn-md
+            btn-primary
+            class="b ttu fr"
+            @click="close"
+          >Let's build a data feed!</btn>
+        </div>
     </div>
   </ui-modal>
 </template>
 
 <script>
-  import * as ctypes from '../constants/connection-type'
-  import * as ops from '../constants/task-op'
   import { mapState, mapGetters } from 'vuex'
-  import OnboardingTileItem from './OnboardingTileItem.vue'
   import Btn from './Btn.vue'
-
-  const items = {
-    'transform-an-image-with-python': {
-      title: 'Transform an Image with Python',
-      short_description: 'This template grabs a web-based image and shrinks it using Python. Then, it emails the new thumbnail as an attachment.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ops.TASK_OP_EXECUTE, ctypes.CONNECTION_TYPE_EMAIL]
-    },
-    'convert-a-dirty-csv-to-clean-json': {
-      title: 'Convert a Dirty CSV to Clean JSON',
-      short_description: 'This template takes a CSV file and concatenates various columns. Then, it removes and renames various columns and, finally, converts the file into a tidy JSON output.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ops.TASK_OP_CONVERT, ctypes.CONNECTION_TYPE_EMAIL]
-    },
-    'add-search-to-a-static-website': {
-      title: 'Add Search to a Static Website',
-      short_description: 'This pipe powers a search application on a static site using the Flex.io API. The website user inputs a search term, which is passed to the pipe as a variable. The pipe then returns the filtered data set to the website, which displays the result.',
-      highlight_steps: [ctypes.CONNECTION_TYPE_HTTP, ops.TASK_OP_FILTER, ctypes.CONNECTION_TYPE_STDOUT]
-    }
-  }
+  import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
     components: {
-      OnboardingTileItem,
-      Btn
+      Btn,
+      OnboardingCodeEditor
     },
     computed: {
       ...mapState([
         'active_user_eid'
       ]),
-      items() {
-        // add slug and filenames based on they object's key
-        return _.map(items, (val, key) => {
-          return _.assign({}, val, {
-            slug: key,
-            markdown_file: key+'.md',
-            json_file: key+'.json'
-          })
-        })
+      pipe_identifier() {
+        var pipe = _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'ename'), 'pivot-table') })
+
+        return _.get(pipe, 'ename', '') || _.get(pipe, 'eid', '')
       },
+      first_name() {
+        return _.get(this.getActiveUser(), 'first_name', '')
+      },
+      api_key() {
+        var tokens = this.getAllTokens()
+
+        if (tokens.length == 0)
+          return ''
+
+        return _.get(tokens, '[0].access_code', '')
+      },
+      example_href() {
+        return 'https://www.flex.io/api/v1/pipes/'+this.pipe_identifier+'/run?flexio_api_key='+this.api_key
+      },
+      example_curl() {
+        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
+      },
+    },
+    mounted() {
+      this.tryFetchTokens()
+      this.tryFetchPipes()
     },
     methods: {
       ...mapGetters([
-        'getActiveUser'
+        'getActiveUser',
+        'getAllPipes',
+        'getAllTokens'
       ]),
       open() {
         this.$refs['dialog'].open()
       },
       close(close_type) {
-        /*
-        if (close_type == 'close')
-          //analytics.track('Closed Onboarding Modal: Close Button', { close_type })
-           else if (close_type == 'skip')
-          //analytics.track('Closed Onboarding Modal: Skip Button', { close_type })
-        */
-
         this.$refs['dialog'].close()
       },
+      tryFetchTokens() {
+        this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+      },
+      tryFetchPipes() {
+        this.$store.dispatch('fetchPipes')
+      },
       updateUserConfig() {
+        return
+
         var cfg = _.get(this.getActiveUser(), 'config', {})
         if (_.isArray(cfg))
           cfg = {}
-        cfg['app.prompt.tour.shown'] = true
+        cfg['app.prompt.onboarding.shown'] = true
 
         this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
 
@@ -111,11 +135,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  .ui-modal-onboarding {
-    .ui-modal__container {
-      width: 1280px;
-    }
-  }
-</style>
