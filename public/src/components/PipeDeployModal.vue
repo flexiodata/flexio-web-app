@@ -18,32 +18,36 @@
         <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
 
         <p>The <strong>{{pipe_name}}</strong> pipe has been added to your account and is now in your pipe list.</p>
-        <p>To deploy your pipe in the wild, try one of these options:</p>
       </div>
-      <p class="mt0" v-else>To deploy your pipe in the wild, try one of these options:</p>
-
-      <div class="ml3">
-        <h4 class="mb2">HTTP:</h4>
+      <h3>Deploy as an API endpoint:</h3>
+      <div class="mh3">
         <onboarding-code-editor
+          label="HTTP"
           cls="relative"
           copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
-          :code="jquery_get_code"
+          :code="example_href"
         />
-        <h4 class="mb2">cURL:</h4>
+      </div>
+      <div class="mh3 mt3">
         <onboarding-code-editor
+          label="cURL"
           cls="relative"
           copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
-          :code="curl_code"
+          :code="example_curl"
         />
-        <h4 class="mb2">CRON:</h4>
-        <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       </div>
-      <hr class="mv4 bb-0 b--black-10">
-      <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
+      <h3>Schedule from the app:</h3>
+      <p class="mh3">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
+      <hr class="mt4 mb3 bb-0 b--black-10">
+      <help-items
+        help-message="I need help getting started with Flex.io..."
+        :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
+        :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer moon-gray hover-blue bg-near-white darken-05'"
+      ></help-items>
     </div>
   </ui-modal>
 </template>
@@ -51,6 +55,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
+  import HelpItems from './HelpItems.vue'
 
   export default {
     props: {
@@ -60,7 +65,8 @@
       }
     },
     components: {
-      OnboardingCodeEditor
+      OnboardingCodeEditor,
+      HelpItems
     },
     data() {
       return {
@@ -80,11 +86,11 @@
 
         return _.get(tokens, '[0].access_code', '')
       },
-      curl_code() {
-        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
+      example_href() {
+        return "https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run?flexio_api_key="+this.api_key
       },
-      jquery_get_code() {
-        return "$.get('https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run?flexio_api_key="+this.api_key+"')"
+      example_curl() {
+        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
       }
     },
     mounted() {
