@@ -46,10 +46,10 @@ class Copy extends \Flexio\Jobs\Base
 
         $subprocess = \Flexio\Jobs\Process::create();
         $subprocess->setStdout($data);
-        $subprocess->execute([ [ 'op' => 'read', 'params' => [ 'path' => $from ] ] ]);
+        $subprocess->execute([ 'op' => 'read', 'params' => [ 'path' => $from ] ]);
 
         $subprocess = \Flexio\Jobs\Process::create();
         $subprocess->setStdin($data);
-        $subprocess->execute([ [ 'op' => 'write', 'params' => [ 'path' => $to ] ] ]);
+        $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);
     }
 }
