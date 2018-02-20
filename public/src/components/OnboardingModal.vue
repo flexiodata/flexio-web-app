@@ -17,7 +17,7 @@
 
         <h2 class="flex flex-row items-center f3 mt0 mb4"><i class="dn material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
         <h3>This is your API key:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
             cls="relative"
@@ -27,7 +27,7 @@
           />
         </div>
         <h3>Here's a simple pipe we created for you:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
             cls="relative"
@@ -37,8 +37,9 @@
           />
         </div>
         <h3>Try running it:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
+            label="HTTP"
             copy-prefix=""
             cls="relative"
             :is-editable="false"
@@ -46,8 +47,9 @@
             :code="example_href"
           />
         </div>
-        <div class="ml4 mt3">
+        <div class="mh3 mt3">
           <onboarding-code-editor
+            label="cURL"
             copy-prefix=""
             cls="relative"
             :is-editable="false"
