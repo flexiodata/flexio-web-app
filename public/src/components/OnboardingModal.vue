@@ -144,8 +144,6 @@
         this.$store.dispatch('fetchPipes')
       },
       updateUserConfig() {
-        return
-
         var cfg = _.get(this.getActiveUser(), 'config', {})
         if (_.isArray(cfg))
           cfg = {}
