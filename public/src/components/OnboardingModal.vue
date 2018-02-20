@@ -1,6 +1,6 @@
 <template>
   <ui-modal
-  size="large"
+    size="large"
     ref="dialog"
     dismiss-on="close-button"
     :remove-header="true"
@@ -14,9 +14,10 @@
       <div class="fr">
         <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
       </div>
-
-        <h2 class="flex flex-row items-center f3 mt0 mb4"><i class="dn material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
-        <h3>1. This is your API key:</h3>
+        <div class="tc">
+          <h2 class="f3 mt2 mb3">Welcome to Flex.io, {{first_name}}!</h2>
+        </div>
+        <h3>This is your API key:</h3>
         <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
@@ -26,7 +27,7 @@
             :code="api_key"
           />
         </div>
-        <h3>2. Here's a simple pipe we created for you:</h3>
+        <h3>Here's a simple pipe we created for you:</h3>
         <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
@@ -36,7 +37,7 @@
             :code="pipe_code"
           />
         </div>
-        <h3>3. Try running it:</h3>
+        <h3>Try running it:</h3>
         <div class="mh3">
           <onboarding-code-editor
             label="HTTP"
@@ -63,7 +64,7 @@
             btn-primary
             class="b ttu"
             @click="close"
-          >Now build your own data feed!</btn>
+          >Now build your own data feed</btn>
         </div>
     </div>
   </ui-modal>
