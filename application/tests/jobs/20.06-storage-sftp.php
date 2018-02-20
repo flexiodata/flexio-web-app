@@ -40,6 +40,24 @@ class Test
         $expected = array(array("name" => $filename, "type" => "FILE"));
         TestCheck::assertInArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
 
+        // BEGIN TEST
+        $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
+        $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
+        $output_filepath1 = TestUtil::getOutputFilePath($output_folder, $filename1);
+        $output_filepath2 = TestUtil::getOutputFilePath($output_folder, $filename2);
+        $write1 = json_decode('{"op": "write", "params": { "path": "'. $output_filepath1 . '"}}',true);
+        $write2 = json_decode('{"op": "write", "params": { "path": "'. $output_filepath2 . '"}}',true);
+        $list = json_decode('{"op": "list", "params": {"path": "'. $output_filepath1 . '"}}',true);
+        $process_write = \Flexio\Jobs\Process::create()->execute($write1);
+        $process_write = \Flexio\Jobs\Process::create()->execute($write2);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $actual = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
+        $expected = array(array("name" => $filename, "type" => "FILE"));
+        $actual_count = count($actual);
+        $expected_count = 1;
+        TestCheck::assertNumber("A.2", 'List; listing of folder with single file ' . $output_folder, $actual_count, $expected_count, $results);
+        TestCheck::assertInArray("A.3", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+
 
 
         // TEST: Mkdir Job; Basic Directory Creation
