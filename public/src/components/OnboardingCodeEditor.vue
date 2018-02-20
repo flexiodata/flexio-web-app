@@ -35,7 +35,7 @@
       <pre><code class="db ph3">{{description}}</code></pre>
       <div class="mv3 bb b--black-10"></div>
     </div>
-    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)" v-if="isEditable">
+    <div class="relative bg-white b--white-box ba lh-title" :style="cstyle" v-if="isEditable">
       <code-editor
         ref="code"
         lang="javascript"
@@ -45,7 +45,7 @@
         v-if="is_inited"
       />
     </div>
-    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" style="padding-top: 24px" v-else>
+    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" :style="cstyle" v-else>
       <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{edit_code}}</code></pre>
     </div>
     <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
@@ -99,6 +99,10 @@
       'cls': {
         type: String,
         default: 'relative pa3 bg-near-white br2 box-shadow'
+      },
+      'style': {
+        type: String,
+        default: ''
       },
       'code': {
         type: String,
@@ -200,6 +204,12 @@
       },
       show_see_it_work_button() {
         return this.buttons.indexOf('see-it-work') != -1
+      },
+      cstyle() {
+        if (this.style.length > 0)
+          return this.style
+
+        return this.isEditable ? 'box-shadow: 0 1px 4px rgba(0,0,0,0.125)' : this.showButtons && this.buttons.length > 0 ? 'padding-top: 24px' : ''
       },
       save_code() {
         // TODO: we need to give this code editor quite a bit of love...
