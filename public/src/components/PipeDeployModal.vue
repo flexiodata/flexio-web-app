@@ -17,7 +17,7 @@
 
         <div class="tc">
           <div class="dib">
-            <h2 class="flex flex-row items-center f3 mt0 mb2"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success, your pipe has been saved!</h2>
+            <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success, your pipe has been saved!</h2>
           </div>
         </div>
       </div>
@@ -55,11 +55,12 @@
       </div>
       <h3>Schedule from the app:</h3>
       <p class="mh3">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
-      <hr class="mt4 mb4 bb-0 b--black-10">
+      <hr class="mv4 bb-0 b--black-10">
       <help-items
+        class="mv3"
         help-message="I need help getting started with Flex.io..."
         :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
-        :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer moon-gray hover-blue bg-near-white darken-05'"
+        :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
       ></help-items>
     </div>
   </ui-modal>

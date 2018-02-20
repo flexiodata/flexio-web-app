@@ -16,7 +16,7 @@
       </div>
         <div class="tc">
           <div class="dib">
-            <h2 class="f3 mt0 mb2">Welcome to Flex.io, {{first_name}}!</h2>
+            <h2 class="f3 mt0 mb3">Welcome to Flex.io, {{first_name}}!</h2>
           </div>
         </div>
         <h3>This is your API key:</h3>
