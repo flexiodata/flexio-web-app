@@ -70,6 +70,7 @@
 </template>
 
 <script>
+  import { ROUTE_HOME_LEARN } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import Flexio from 'flexio-sdk-js'
   import Btn from './Btn.vue'
@@ -128,6 +129,9 @@
         this.$refs['dialog'].open()
       },
       close(close_type) {
+        if (this.$route.name != ROUTE_HOME_LEARN)
+          this.$router.push({ name: ROUTE_HOME_LEARN })
+
         this.$refs['dialog'].close()
       },
       tryFetchTokens() {
