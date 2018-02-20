@@ -15,45 +15,53 @@
         <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
       </div>
 
-        <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
-        <p class="mt4">Here is an API key to get you started:</p>
-        <div class="flex flex-row">
-          <div class="flex-fill pv2 ph3 f3 tc b black code ba b--black-10">{{api_key}}</div>
+        <h2 class="flex flex-row items-center f3 mt0 mb4"><i class="dn material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
+        <h3>This is your API key:</h3>
+        <div class="ml4">
+          <onboarding-code-editor
+            copy-prefix=""
+            cls="relative"
+            :is-editable="false"
+            :show-buttons="false"
+            :code="api_key"
+          />
         </div>
-        <h3>Try it out</h3>
-        <p>Here's a sample Flex.io API endpoint.</p>
-        <ol>
-          <li>
-            <h4 class="">HTTP</h4>
-            <p>Click the link to run the example pipe and see the output:</p>
-            <a
-              target="_blank"
-              class="blue"
-              :class="pipe_identifier.length == 0 ? 'o-40 no-pointer-events' : ''"
-              :href="example_href"
-            >{{example_href}}</a>
-          </li>
-          <li>
-            <h4 class="">cURL</h4>
-            <p>Copy and paste the following cURL call into your command line to run the example pipe and see the output:</p>
-            <onboarding-code-editor
-              copy-prefix=""
-              :cls="pipe_identifier.length == 0 ? 'o-40 no-pointer-events relative' : 'relative'"
-              :is-editable="false"
-              :buttons="['copy']"
-              :code="example_curl"
-            />
-          </li>
-        </ol>
-        <hr class="mv4 bb-0 b--black-10">
-        <p>Now that you've got a sense of deployment, let's build your first data feed!</p>
-        <div class="cf">
+        <h3>Here's a simple pipe we created for you:</h3>
+        <div class="ml4">
+          <onboarding-code-editor
+            copy-prefix=""
+            cls="relative"
+            :is-editable="false"
+            :show-buttons="false"
+            :code="pipe_code"
+          />
+        </div>
+        <h3>Try running it:</h3>
+        <div class="ml4">
+          <onboarding-code-editor
+            copy-prefix=""
+            cls="relative"
+            :is-editable="false"
+            :buttons="['copy']"
+            :code="example_href"
+          />
+        </div>
+        <div class="ml4 mt3">
+          <onboarding-code-editor
+            copy-prefix=""
+            cls="relative"
+            :is-editable="false"
+            :buttons="['copy']"
+            :code="example_curl"
+          />
+        </div>
+        <div class="mt4 mb2 tc">
           <btn
-            btn-md
+            btn-lg
             btn-primary
-            class="b ttu fr"
+            class="b ttu"
             @click="close"
-          >Let's build a data feed!</btn>
+          >Now build your own data feed!</btn>
         </div>
     </div>
   </ui-modal>
@@ -73,10 +81,15 @@
       ...mapState([
         'active_user_eid'
       ]),
-      pipe_identifier() {
-        var pipe = _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'ename'), 'pivot-table') })
+      pipe() {
+        return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'ename'), 'convert-csv-to-json') })
 
-        return _.get(pipe, 'ename', '') || _.get(pipe, 'eid', '')
+      },
+      pipe_identifier() {
+        return _.get(this.pipe, 'ename', '') || _.get(this.pipe, 'eid', '')
+      },
+      pipe_code() {
+        return 'Flexio.pipe() code goes here...'
       },
       first_name() {
         return _.get(this.getActiveUser(), 'first_name', '')
