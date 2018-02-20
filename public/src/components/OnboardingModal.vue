@@ -71,6 +71,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import Flexio from 'flexio-sdk-js'
   import Btn from './Btn.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
@@ -85,13 +86,15 @@
       ]),
       pipe() {
         return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'ename'), 'convert-csv-to-json') })
-
       },
       pipe_identifier() {
         return _.get(this.pipe, 'ename', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
-        return 'Flexio.pipe() code goes here...'
+        if (this.pipe_identifier.length == 0)
+          return 'Loading...'
+
+        return Flexio.pipe(this.pipe.task).toCode()
       },
       first_name() {
         return _.get(this.getActiveUser(), 'first_name', '')
