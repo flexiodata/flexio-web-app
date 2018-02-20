@@ -48,8 +48,8 @@ RUN cd /srv/www/flexio/src && export HOME=/root && composer install
 COPY config.json /srv/www/flexio/src/config/config.json
 
 #RUN cd /srv/www/flexio/src && git checkout develop
-#RUN cp /srv/www/flexio/src/scripts/webserver/flexio-with-ssl.conf /etc/apache2/sites-available
-RUN cp /srv/www/flexio/src/scripts/webserver/flexio.conf /etc/apache2/sites-available
+#RUN cp /srv/www/flexio/src/scripts/webserver/apache-ssl.conf /etc/apache2/sites-available
+RUN cp /srv/www/flexio/src/scripts/webserver/apache.conf /etc/apache2/sites-available
 #RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/www/flexio/ssl/app_flex_io.key -out /srv/www/flexio/ssl/app_flex_io.crt -subj "/C=US/ST=Illinois/L=Chicago/O=Flex.io/OU=Development/CN=app.flex.io"
 RUN a2dissite 000-default
 RUN a2ensite flexio
