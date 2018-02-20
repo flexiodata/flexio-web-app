@@ -16,7 +16,7 @@
       </div>
 
         <h2 class="flex flex-row items-center f3 mt0 mb4"><i class="dn material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
-        <h3>This is your API key:</h3>
+        <h3>1. This is your API key:</h3>
         <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
@@ -26,7 +26,7 @@
             :code="api_key"
           />
         </div>
-        <h3>Here's a simple pipe we created for you:</h3>
+        <h3>2. Here's a simple pipe we created for you:</h3>
         <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
@@ -36,7 +36,7 @@
             :code="pipe_code"
           />
         </div>
-        <h3>Try running it:</h3>
+        <h3>3. Try running it:</h3>
         <div class="mh3">
           <onboarding-code-editor
             label="HTTP"
