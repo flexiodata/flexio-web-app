@@ -15,7 +15,9 @@
         <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
       </div>
         <div class="tc">
-          <h2 class="f3 mt2 mb3">Welcome to Flex.io, {{first_name}}!</h2>
+          <div class="dib">
+            <h2 class="f3 mt0 mb2">Welcome to Flex.io, {{first_name}}!</h2>
+          </div>
         </div>
         <h3>This is your API key:</h3>
         <div class="mh3">
