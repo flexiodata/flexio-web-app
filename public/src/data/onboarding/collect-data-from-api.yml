@@ -17,9 +17,15 @@ steps:
     blurb: |
       ### Step 1. Access an API endpoint
 
-      For this example, we're going to collect data from an API endpoint and store it locally in Flex.io. This pipe can then be scheduled to re-run regularly to collect new data.
+      Here's the pipe we're going to build:
 
-      The first step in the pipe is to access an API endpoint. You can save authenticated API endpoints in the Connections area. However, for this example, we'll use a `request` task to get JSON from a sample name generator API.  Click the Run button on the right to show the output.
+      * Make a request to a public API
+      * Convert JSON to a table
+      * Copy file to local storage
+
+      The first step in the pipe is to access an API endpoint. You can save authenticated API endpoints in the Connections area. However, for this example, we'll use a `request` task to get JSON from a sample name generator API.
+
+      Click the **Run** button on the right to show the output.
 
   - #----------------------------------------#
 

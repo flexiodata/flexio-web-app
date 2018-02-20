@@ -84,6 +84,10 @@
       'sdk-options': {
         type: Object,
         default: () => { return {} }
+      },
+      'username': {
+        type: String,
+        required: true
       }
     },
     components: {
@@ -109,9 +113,6 @@
       }
     },
     computed: {
-      active_username() {
-        return _.get(this.getActiveUser(), 'user_name', '')
-      },
       edit_item() {
         var item = _.assign({
           code: '',
@@ -120,12 +121,12 @@
 
         item = _.cloneDeep(item)
 
-        item.code = item.code.replace('{username}', this.active_username)
+        item.code = item.code.replace('{{username}}', this.username)
 
         _.each(item.steps, (step) => {
-          step.blurb = step.blurb.replace(/{connection_alias}/g, this.connection_alias)
-          step.blurb = step.blurb.replace(/{pipe_alias}/g, this.pipe_alias)
-          step.blurb = step.blurb.replace(/{username}/g, this.active_username || '')
+          step.blurb = step.blurb.replace(/{{connection_alias}}/g, this.connection_alias)
+          step.blurb = step.blurb.replace(/{{pipe_alias}}/g, this.pipe_alias)
+          step.blurb = step.blurb.replace(/{{username}}/g, this.username || '')
         })
 
         return item
@@ -196,7 +197,7 @@ If you have any questions, please send us a note using the chat button at the bo
         }
 
         // add username as the alias prefix
-        attrs.ename = _.lowerCase(this.active_username) + '-' + _.kebabCase(attrs.ename)
+        attrs.ename = _.lowerCase(this.username) + '-' + _.kebabCase(attrs.ename)
 
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })

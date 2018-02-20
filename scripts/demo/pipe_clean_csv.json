@@ -1,0 +1,44 @@
+{
+    "eid_type": "PIP",
+    "name": "Clean a CSV",
+    "ename": "clean-csv",
+    "description": "Clean a CSV by removing some columns",
+    "task": {
+        "op": "sequence",
+        "params": {
+            "items": [
+                {
+                    "op": "request",
+                    "params": {
+                        "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
+                    }
+                },
+                {
+                    "op": "convert",
+                    "params": {
+                        "input": {
+                            "format": "delimited",
+                            "delimiter": "{comma}",
+                            "qualifier": "{double-quote}",
+                            "header": true
+                        },
+                        "output": {
+                            "format": "table"
+                        }
+                    }
+                },
+                {
+                    "op": "select",
+                    "params": {
+                        "columns": [
+                            "streetaddress",
+                            "city",
+                            "state",
+                            "zipcode"
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

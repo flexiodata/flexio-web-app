@@ -1,0 +1,33 @@
+{
+    "eid_type": "PIP",
+    "name": "Convert a CSV to JSON",
+    "ename": "convert-csv-to-json",
+    "description": "Create a JSON data feed from a CSV",
+    "task": {
+        "op": "sequence",
+        "params": {
+            "items": [
+                {
+                    "op": "request",
+                    "params": {
+                        "url": "https://api.iextrading.com/1.0/stock/AAPL/chart/1y?format=csv"
+                    }
+                },
+                {
+                    "op": "convert",
+                    "params": {
+                        "input": {
+                            "format": "delimited",
+                            "delimiter": "{comma}",
+                            "qualifier": "{double-quote}",
+                            "header": true
+                        },
+                        "output": {
+                            "format": "json"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

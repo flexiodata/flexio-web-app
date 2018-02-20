@@ -44,7 +44,7 @@ class Test
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\Store::load($eid);
-        $actual = 'Flexio\Object\Object';
+        $actual = 'Flexio\Object\Object1';
         $expected = get_class($object);
         TestCheck::assertString('A.2', 'Store::load(); return the an object if it\'s successfully loaded',  $actual, $expected, $results);
 
