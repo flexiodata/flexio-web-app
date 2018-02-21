@@ -286,31 +286,6 @@ EOD;
         return $result;
     }
 
-    public static function getTable(\Flexio\IFace\IStream $stream) : array
-    {
-        $content = \Flexio\Base\Util::getStreamContents($stream);
-        $result = array();
-        $result['columns'] = $stream->getStructure()->get();
-        $result['content'] = is_array($content) ? $content : array();
-        return $result;
-    }
-
-    public static function getContent(\Flexio\IFace\IStream $stream) : array
-    {
-        $content = \Flexio\Base\Util::getStreamContents($stream);
-        $result = array();
-        if (is_array($content))
-        {
-            foreach ($content as $row)
-            {
-                $result[] = array_values($row);
-            }
-        }
-
-        return $result;
-    }
-
-
     public static function getOutputFilePath(string $output_folderpath, string $input_filepath) : string
     {
         $filename = \Flexio\Base\File::getFilename($input_filepath);
