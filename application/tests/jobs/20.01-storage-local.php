@@ -53,12 +53,26 @@ class Test
         $process_write = \Flexio\Jobs\Process::create()->execute($write1);
         $process_write = \Flexio\Jobs\Process::create()->execute($write2);
         $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
-        $expected = array(array("name" => $filename, "type" => "FILE"));
-        $actual_count = count($actual);
-        $expected_count = 1;
-        TestCheck::assertNumber("A.2", 'List; listing of folder with single file ' . $output_folder, $actual_count, $expected_count, $results);
-        TestCheck::assertInArray("A.3", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+        $result = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
+        $actual = array_column($result, 'name');
+        $expected = [$filename1];
+        TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+
+        // BEGIN TEST
+        $folder = $output_folder . '/subfolder';
+        $filenames = ["file1.txt","file2.csv","file3.png","file4.jpg","file5.csv"];
+        foreach ($filenames as $f)
+        {
+            $output_filepath = TestUtil::getOutputFilePath($folder, $f);
+            $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+            $process_write = \Flexio\Jobs\Process::create()->execute($write);
+        }
+        $list = json_decode('{"op": "list", "params": {"path": "'. $folder . '/file*.csv"}}',true);
+        $process_list = \Flexio\Jobs\Process::create()->execute($list);
+        $result = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
+        $actual = array_column($result, 'name');
+        $expected = ["file2.csv", "file5.csv"];
+        TestCheck::assertInArray("A.3", 'List; listing of folder with wildcard' . $output_folder, $actual, $expected, $results);
 
 
 
