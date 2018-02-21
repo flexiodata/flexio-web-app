@@ -23,6 +23,16 @@ class File
         return fnmatch($pattern, $str, $case_sensitive ? 0 : FNM_CASEFOLD);  // FNM_CASEFOLD triggers caseless match
     }
 
+    public static function splitPath(string $path) : array
+    {
+        $path = trim($path, '/');
+        if (strlen($path) == 0)
+            return [];
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        return explode('/', $path);
+    }
+
     public static function getFilename(string $filename) : string
     {
         // pathinfo will parse paths differently, depending on the
