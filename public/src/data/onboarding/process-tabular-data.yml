@@ -24,7 +24,7 @@ steps:
       * Select three fields
       * Copy to cloud storage (e.g., Dropbox)
 
-      The first step in the pipe is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the read task to get access to the CSV.
+      The first step in the pipe is to access a CSV file from the sample Amazon S3 directory included with your Flex.io account. As you see in the console, we'll use the `read` task to access the CSV.
 
       Click the **Run** button on the right to see the raw CSV data.
 
@@ -45,7 +45,7 @@ steps:
         .convert('csv', 'table')
       ```
 
-      Add this task to the code and re-run the pipe; you'll now see the output converted to a tabular format.  Now, let's store this data.
+      Add this task and click the **Run** button again; you'll now see the output converted to a tabular format.
 
   - #----------------------------------------#
 
@@ -56,7 +56,7 @@ steps:
     blurb: |
       ### Step 3.  Add a processing step
 
-      For this example, we'll simply add a `select` step to reduce the number of columns in the table. The CSV we are using is a fictitious contact list with 12 fields. Here we'll simply grab the First Name, Last Name and City from the list:
+      For this example, we'll add a `select` step to reduce the number of columns in the table. The CSV we are using is a fictitious contact list with 12 fields. We'll select the `First Name`, `Last Name` and `City` fields:
 
       ```
       Flexio.pipe()
@@ -65,7 +65,7 @@ steps:
         .select('firstname', 'lastname', 'city')
       ```
 
-      Add the step and re-run the pipe. Now we see only the columns we selected. OK, now let's send this file somewhere.
+      Add this task and click the **Run** button again; now we see only the columns that we selected.
 
   - #----------------------------------------#
 
@@ -76,7 +76,9 @@ steps:
     blurb: |
       ### Step 4. Create a connection to a cloud storage account
 
-      To copy the file to cloud storage, we first need to set up a connection to Dropbox, Amazon S3, Google Drive, etc.  Click the button below to set up the account.  After connecting, we'll insert the path to the root directory of your account into the code snippet which you can use or modify in the following step.
+      To copy the files to cloud storage, we first need to set up a connection to an external account like Dropbox, Amazon S3, or Google Drive.
+
+      Click **Connect to Storage** below to set up your account. After connecting, we'll insert the path into the next snippet using the new connection alias.
 
   - #----------------------------------------#
 
@@ -94,9 +96,9 @@ steps:
         .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
-        .write('/{{connection_alias}}/${process.time.started}/contact-list-1.csv')
+        .write('/{{connection_alias}}/flexio-${process.time.unix}/contact-list-1.csv')
       ```
 
       **NOTE:** You'll notice that the alias `{{connection_alias}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/contact-list-1.csv')`.
 
-      Now re-run the pipe; then check your cloud storage to see the files that have been added.
+      Add this task, click the **Run** button again and then check your cloud storage account to see the copied file.
