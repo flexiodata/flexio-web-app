@@ -23,7 +23,7 @@ steps:
       * Convert JSON to a table
       * Copy file to local storage
 
-      The first step in the pipe is to access an API endpoint. You can save authenticated API endpoints in the Connections area. However, for this example, we'll use a `request` task to get JSON from a sample name generator API.
+      **NOTE:** You can create authenticated API endpoints in the Connections area, but for this example we're simply using a public API that generates sample names.
 
       Click the **Run** button on the right to show the output.
 
@@ -44,7 +44,7 @@ steps:
         .convert('json', 'table')
       ```
 
-      Add this task to the code and re-run the pipe; you'll now see the output converted to a tabular format.  Now, let's store this data.
+      Add this task and click the **Run** button again; you'll now see the output converted to a tabular format.
 
   - #----------------------------------------#
 
@@ -55,7 +55,7 @@ steps:
     blurb: |
       ### Step 3. Store the data locally in Flex.io storage
 
-      Now that we have our data in tabular format, let's store it somewhere. You could store it externally if you'd like. However, for this example, we'll store it in the local storage that comes with your Flex.io account. Local storage provides a quick access point for data collection or to enrich your pipes.
+      Now that we have our data in tabular format, let's store it somewhere. For this example, we'll add it to our local Storage in your Flex.io account. Storage provides a quick access point for data collection or enrichment.
 
       The root path of your local storage is `/home`.  So, to collect this data in local storage, we'll simply add a `write` task.
 
@@ -68,4 +68,4 @@ steps:
 
       **NOTE:** Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/sample-api.csv')`.
 
-      Re-run your pipe.  The data from the API is now stored in Flex.io locally as a CSV file called 'sample-api.csv'.
+      Add this task and click the **Run** button again. The data from the API will now appear as a CSV file in your local Storage.
