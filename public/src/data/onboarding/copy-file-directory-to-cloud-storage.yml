@@ -77,7 +77,7 @@ steps:
         .foreach(
           Flexio.pipe()
             .read('/{{username}}-flexio-public-s3/${item.name}')
-            .write('/{{connection_alias}}/${process.time.started}/${item.name}')
+            .write('/{{connection_alias}}/${process.time.unix}/${item.name}')
         )
         .echo('Finished!')
       ```
