@@ -1,6 +1,6 @@
 <template>
   <ui-modal
-  size="large"
+    size="large"
     ref="dialog"
     dismiss-on="close-button"
     :remove-header="true"
@@ -14,10 +14,13 @@
       <div class="fr">
         <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
       </div>
-
-        <h2 class="flex flex-row items-center f3 mt0 mb4"><i class="dn material-icons v-mid dark-green mr2">tag_faces</i> Welcome to Flex.io, {{first_name}}!</h2>
+        <div class="tc">
+          <div class="dib">
+            <h2 class="f3 mt0 mb3">Welcome to Flex.io, {{first_name}}!</h2>
+          </div>
+        </div>
         <h3>This is your API key:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
             cls="relative"
@@ -27,7 +30,7 @@
           />
         </div>
         <h3>Here's a simple pipe we created for you:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
             copy-prefix=""
             cls="relative"
@@ -37,8 +40,9 @@
           />
         </div>
         <h3>Try running it:</h3>
-        <div class="ml4">
+        <div class="mh3">
           <onboarding-code-editor
+            label="HTTP"
             copy-prefix=""
             cls="relative"
             :is-editable="false"
@@ -46,8 +50,9 @@
             :code="example_href"
           />
         </div>
-        <div class="ml4 mt3">
+        <div class="mh3 mt3">
           <onboarding-code-editor
+            label="cURL"
             copy-prefix=""
             cls="relative"
             :is-editable="false"
@@ -61,14 +66,16 @@
             btn-primary
             class="b ttu"
             @click="close"
-          >Now build your own data feed!</btn>
+          >Now build your own data feed</btn>
         </div>
     </div>
   </ui-modal>
 </template>
 
 <script>
+  import { ROUTE_HOME_LEARN } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
+  import Flexio from 'flexio-sdk-js'
   import Btn from './Btn.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
@@ -83,13 +90,15 @@
       ]),
       pipe() {
         return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'ename'), 'convert-csv-to-json') })
-
       },
       pipe_identifier() {
         return _.get(this.pipe, 'ename', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
-        return 'Flexio.pipe() code goes here...'
+        if (this.pipe_identifier.length == 0)
+          return 'Loading...'
+
+        return Flexio.pipe(this.pipe.task).toCode()
       },
       first_name() {
         return _.get(this.getActiveUser(), 'first_name', '')
@@ -123,6 +132,9 @@
         this.$refs['dialog'].open()
       },
       close(close_type) {
+        if (this.$route.name != ROUTE_HOME_LEARN)
+          this.$router.push({ name: ROUTE_HOME_LEARN })
+
         this.$refs['dialog'].close()
       },
       tryFetchTokens() {
@@ -132,8 +144,6 @@
         this.$store.dispatch('fetchPipes')
       },
       updateUserConfig() {
-        return
-
         var cfg = _.get(this.getActiveUser(), 'config', {})
         if (_.isArray(cfg))
           cfg = {}
