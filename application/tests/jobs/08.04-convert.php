@@ -54,7 +54,7 @@ EOD;
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getContent($process->getStdout());
+        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
 
         // note: this line uses excel's rules
         //$expected = '[["a1"," \\"b1\\""],["a2"," \\"b2\\""]]';

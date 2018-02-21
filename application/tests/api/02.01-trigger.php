@@ -45,7 +45,7 @@ class Test
         $process_eid = $process_info['eid'];
         $process = \Flexio\Object\Process::load($process_eid);
         $output = \Flexio\Jobs\StoredProcess::create($process)->getStdout();
-        $actual = TestUtil::getContent($output);
+        $actual = \Flexio\Tests\Content::getRows($output);
         $expected = '
         [
             ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],

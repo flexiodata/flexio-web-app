@@ -33,28 +33,22 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_write = \Flexio\Jobs\Process::create()->execute($write);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $filename, "type" => "FILE"));
-        TestCheck::assertInArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+        $filepath = $output_folder . '/' . $filename;
+        $process_write = \Flexio\Tests\Process::write($filepath);
+        $process_list = \Flexio\Tests\Process::list($output_folder);
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+        $expected = [$filename];
+        TestCheck::assertArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
 
         // BEGIN TEST
         $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
         $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath1 = TestUtil::getOutputFilePath($output_folder, $filename1);
-        $output_filepath2 = TestUtil::getOutputFilePath($output_folder, $filename2);
-        $write1 = json_decode('{"op": "write", "params": { "path": "'. $output_filepath1 . '"}}',true);
-        $write2 = json_decode('{"op": "write", "params": { "path": "'. $output_filepath2 . '"}}',true);
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_filepath1 . '"}}',true);
-        $process_write = \Flexio\Jobs\Process::create()->execute($write1);
-        $process_write = \Flexio\Jobs\Process::create()->execute($write2);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $result = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
-        $actual = array_column($result, 'name');
+        $filepath1 = $output_folder . '/' . $filename1;
+        $filepath2 = $output_folder . '/' . $filename2;
+        $process_write = \Flexio\Tests\Process::write($filepath1);
+        $process_write = \Flexio\Tests\Process::write($filepath2);
+        $process_list = \Flexio\Tests\Process::list($filepath1);
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename1];
         TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
 
@@ -63,18 +57,15 @@ class Test
         $filenames = ["file1.txt","file2.csv","file3.png","file4.jpg","file5.csv"];
         foreach ($filenames as $f)
         {
-            $output_filepath = TestUtil::getOutputFilePath($folder, $f);
-            $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
-            $process_write = \Flexio\Jobs\Process::create()->execute($write);
+            $filepath = $folder . '/' . $f;
+            $process_write = \Flexio\Tests\Process::write($filepath);
         }
-        $list = json_decode('{"op": "list", "params": {"path": "'. $folder . '/file*.csv"}}',true);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $result = json_decode(\Flexio\Base\Util::getStreamContents($process_list->getStdout()),true);
-        $actual = array_column($result, 'name');
+        $process_list = \Flexio\Tests\Process::list($folder . '/file*.csv');
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = ["file2.csv", "file5.csv"];
-        TestCheck::assertInArray("A.3", 'List; listing of folder with wildcard' . $output_folder, $actual, $expected, $results);
+        TestCheck::assertArray("A.3", 'List; listing of folder with wildcard' . $output_folder, $actual, $expected, $results);
 
-
+return;
 
         // TEST: Mkdir Job; Basic Directory Creation
 

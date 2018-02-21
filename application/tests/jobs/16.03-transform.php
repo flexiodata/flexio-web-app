@@ -94,7 +94,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -149,7 +149,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -200,7 +200,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -250,7 +250,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -306,7 +306,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -358,7 +358,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -414,7 +414,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -469,7 +469,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -522,7 +522,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -574,7 +574,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -635,7 +635,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -699,7 +699,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -750,7 +750,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -805,7 +805,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -860,7 +860,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -913,7 +913,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -964,7 +964,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [
@@ -1015,7 +1015,7 @@ class Test
         ]
         ',true);
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
-        $actual = TestUtil::getTable($process->getStdout());
+        $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
         	"columns": [

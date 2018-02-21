@@ -73,7 +73,7 @@ return;
 
         // BEGIN TEST
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1])->execute($task[2]);
-        $actual = TestUtil::getContent($process->getStdout());
+        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","b",null],["b","B",null],["c","b",null],["d",null,"e"]];
         TestCheck::assertArray('A.1', 'Merge Job; check basic functionality',  $actual, $expected, $results);
     }
