@@ -96,7 +96,7 @@ steps:
         .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
-        .write('/{{connection_alias}}/${process.time.unix}/contact-list-1.csv')
+        .write('/{{connection_alias}}/flexio-${process.time.unix}/contact-list-1.csv')
       ```
 
       **NOTE:** You'll notice that the alias `{{connection_alias}}` from the connection created in the previous step is referenced in the `write` command. Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/contact-list-1.csv')`.

@@ -63,7 +63,7 @@ steps:
       Flexio.pipe()
         .request('http://uinames.com/api/?amount=10/')
         .convert('json', 'table')
-        .write('/home/${process.time.unix}/sample-api.csv')
+        .write('/home/flexio-${process.time.unix}/sample-api.csv')
       ```
 
       **NOTE:** Currently the files are placed in timestamped subfolders; if you want to place the files in a different location, simply update the path like this: `.write('/{{connection_alias}}/foo/sample-api.csv')`.
