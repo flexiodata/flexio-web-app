@@ -361,6 +361,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
         $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
         $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
+        $environment_params['process.time.unix'] = (string)time();
 
         return $environment_params;
     }

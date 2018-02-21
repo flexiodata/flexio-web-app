@@ -39,7 +39,32 @@ class List1 extends \Flexio\Jobs\Base
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
+        $parts = \Flexio\Base\File::splitPath($path);
+        $lastpart = array_pop($parts);
+        
+        if (is_null($lastpart))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'");
+
+        foreach ($parts as $part)
+        {
+            if (strpos($part, '*') !== false)
+            {
+                // only the last part of the path may contain a wildcard
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
+            }
+        }
+
+        $wildcard = null;
+        if (strpos($lastpart, '*') !== false)
+            $wildcard = $lastpart;
+             else
+            $parts[] = $lastpart;
+
+        $path = '/' . implode('/', $parts);
+
         $streamwriter = $outstream->getWriter();
+
+
 
         $vfs = new \Flexio\Services\Vfs();
         $vfs->setProcess($process);
@@ -48,6 +73,12 @@ class List1 extends \Flexio\Jobs\Base
         $results = [];
         foreach ($files as $f)
         {
+            if ($wildcard !== null)
+            {
+                if (!\Flexio\Base\File::matchPath($f['name'], $wildcard, false))
+                    continue;
+            }
+
             $entry = array(
                 'name' => $f['name'],
                 'path' => $f['path'],

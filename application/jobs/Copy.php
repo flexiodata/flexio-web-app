@@ -20,6 +20,8 @@ namespace Flexio\Jobs;
 {
     "op": "copy",
     "params": {
+        "from": "",
+        "to": ""
     }
 }
 */
@@ -33,23 +35,21 @@ class Copy extends \Flexio\Jobs\Base
         // stdin/stdout
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
-        $this->processStream($instream, $outstream);
+        $params = $this->getJobParameters();
+
+        $this->copyFile($params['from'], $params['to']);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function copyFile(string $from, string $to)
     {
-        $mime_type = $instream->getMimeType();
-        switch ($mime_type)
-        {
-            default:
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
-                $this->getOutput($instream, $outstream);
-                return;
-        }
-    }
+        $data = \Flexio\Base\Stream::create();
 
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
-    {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setStdout($data);
+        $subprocess->execute([ 'op' => 'read', 'params' => [ 'path' => $from ] ]);
+
+        $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setStdin($data);
+        $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);
     }
 }

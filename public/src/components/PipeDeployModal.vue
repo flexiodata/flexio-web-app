@@ -15,42 +15,62 @@
           <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
         </div>
 
-        <h2 class="flex flex-row items-center f3 mt0"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success!</h2>
-
-        <p>The <strong>{{pipe_name}}</strong> pipe has been added to your account and is now in your pipe list.</p>
-        <p>To deploy your pipe in the wild, try one of these options:</p>
+        <div class="tc">
+          <div class="dib">
+            <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success, your pipe has been saved!</h2>
+          </div>
+        </div>
       </div>
-      <p class="mt0" v-else>To deploy your pipe in the wild, try one of these options:</p>
-
-      <div class="ml3">
-        <h4 class="mb2">HTTP:</h4>
+      <h3>Deploy as an API endpoint:</h3>
+      <div class="mh3">
         <onboarding-code-editor
+          label="HTTP"
           cls="relative"
           copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
-          :code="jquery_get_code"
+          :code="example_href"
         />
-        <h4 class="mb2">cURL:</h4>
+      </div>
+      <div class="mh3 mt3">
         <onboarding-code-editor
+          label="cURL"
           cls="relative"
           copy-prefix=""
           :is-editable="false"
           :buttons="['copy']"
-          :code="curl_code"
+          :code="example_curl"
         />
-        <h4 class="mb2">CRON:</h4>
-        <p class="mt0">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       </div>
+      <h3>Deploy in Javascript:</h3>
+      <div class="mh3">
+        <onboarding-code-editor
+          label="Javascript"
+          cls="relative"
+          copy-prefix=""
+          :is-editable="false"
+          :buttons="['copy']"
+          :code="pipe_code"
+        />
+      </div>
+      <h3>Schedule from the app:</h3>
+      <p class="mh3">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       <hr class="mv4 bb-0 b--black-10">
-      <p>If you have any questions about deployment, please send us a note using the chat button at the bottom right of the screen; we're more than happy to help! Thanks.</p>
+      <help-items
+        class="mv3"
+        help-message="I need help getting started with Flex.io..."
+        :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
+        :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
+      ></help-items>
     </div>
   </ui-modal>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import Flexio from 'flexio-sdk-js'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
+  import HelpItems from './HelpItems.vue'
 
   export default {
     props: {
@@ -60,10 +80,12 @@
       }
     },
     components: {
-      OnboardingCodeEditor
+      OnboardingCodeEditor,
+      HelpItems
     },
     data() {
       return {
+        pipe: {},
         pipe_name: '',
         pipe_identifier: ''
       }
@@ -80,11 +102,16 @@
 
         return _.get(tokens, '[0].access_code', '')
       },
-      curl_code() {
-        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
+      pipe_code() {
+        var code = "Flexio.setup('"+this.api_key+"')\n\n"
+        code += Flexio.pipe(this.pipe.task).toCode()
+        return code
       },
-      jquery_get_code() {
-        return "$.get('https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run?flexio_api_key="+this.api_key+"')"
+      example_href() {
+        return 'https://' + location.hostname + '/api/v1/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
+      },
+      example_curl() {
+        return "curl -X POST 'https://" + location.hostname + "/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
       }
     },
     mounted() {
@@ -98,6 +125,7 @@
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       },
       open(item) {
+        this.pipe = _.assign({}, item)
         this.pipe_name = _.get(item, 'name', '')
         this.pipe_identifier = _.get(item, 'ename', '') || _.get(item, 'eid', '')
 

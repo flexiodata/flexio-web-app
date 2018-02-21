@@ -1,16 +1,19 @@
 <template>
   <div :class="cls" v-show="is_inited">
-    <div class="flex flex-row absolute top-0 right-0" style="z-index: 10" v-if="showButtons">
+    <div class="absolute top-0 left-0 fw6 moon-gray ph2 pv1 no-select" style="z-index: 10; font-size: 10px" v-if="label.length > 0">{{label}}</div>
+    <div class="absolute top-0 right-0 flex flex-row" style="z-index: 10; overflow: hidden" v-if="showButtons">
       <button
         type="button"
-        class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10"
+        class="btn border-box no-select pointer lh-copy white bg-black-20 hover-bg-blue darken-10"
+        style="padding: 1px 12px"
         @click="$emit('save')"
         v-if="show_save_button"
       ><span class="f6 ttu b">Save &amp; Deploy</span></button>
       <button
         type="button"
         aria-label="Copy to Clipboard"
-        class="btn border-box no-select pointer f6 pv1 lh-copy ph3 white bg-black-20 hover-bg-blue darken-10 hint--top clipboardjs"
+        class="btn border-box no-select pointer lh-copy white bg-black-20 hover-bg-blue darken-10 hint--top clipboardjs"
+        style="padding: 1px 12px"
         :class="show_run_button || show_see_it_work_button ? '' : 'br2 br--top br--right'"
         :data-clipboard-target="'#'+textarea_id"
         @click="copy"
@@ -18,13 +21,15 @@
       ><span class="f6 ttu b">Copy</span></button>
       <button
         type="button"
-        class="border-box no-select pointer f6 pv1 lh-copy ph3 white bg-blue darken-10"
+        class="border-box no-select pointer lh-copy white bg-blue darken-10"
+        style="padding: 1px 12px"
         :class="show_see_it_work_button ? '' : 'br2 br--top br--right'"
         @click="run"
         v-if="show_run_button"
       ><span class="f6 ttu b">Run</span></button>
       <a
-        class="border-box no-select pointer f6 pv1 lh-copy ph3 br2 br--top br--right white bg-blue darken-10"
+        class="border-box no-select pointer lh-copy br2 br--top br--right white bg-blue darken-10"
+        style="padding: 1px 12px"
         target="_blank"
         :href="externalLink"
         v-if="show_see_it_work_button"
@@ -96,11 +101,15 @@
         type: String,
         default: ''
       },
+      'label': {
+        type: String,
+        default: ''
+      },
       'cls': {
         type: String,
         default: 'relative pa3 bg-near-white br2 box-shadow'
       },
-      'style': {
+      'sty': {
         type: String,
         default: ''
       },
@@ -206,10 +215,10 @@
         return this.buttons.indexOf('see-it-work') != -1
       },
       cstyle() {
-        if (this.style.length > 0)
-          return this.style
+        if (this.sty.length > 0)
+          return this.sty
 
-        return this.isEditable ? 'box-shadow: 0 1px 4px rgba(0,0,0,0.125)' : this.showButtons && this.buttons.length > 0 ? 'padding-top: 24px' : ''
+        return this.isEditable ? 'box-shadow: 0 1px 4px rgba(0,0,0,0.125)' : this.showButtons && this.buttons.length > 0 ? 'padding-top: 20px' : ''
       },
       save_code() {
         // TODO: we need to give this code editor quite a bit of love...

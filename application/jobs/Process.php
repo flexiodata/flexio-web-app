@@ -52,6 +52,7 @@ class Process implements \Flexio\IFace\IProcess
         'calc'      => '\Flexio\Jobs\CalcField',
         'comment'   => '\Flexio\Jobs\Comment',
         'convert'   => '\Flexio\Jobs\Convert',
+        'copy'      => '\Flexio\Jobs\Copy',
         'create'    => '\Flexio\Jobs\Create',
         'delete'    => '\Flexio\Jobs\Delete',
         'distinct'  => '\Flexio\Jobs\Distinct',

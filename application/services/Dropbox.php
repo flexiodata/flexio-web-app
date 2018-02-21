@@ -65,6 +65,22 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
         $files = [];
 
+        if (isset($result['error_summary']))
+        {
+            curl_close($ch);
+            if (substr($result['error_summary'], 0, 15) == 'path/not_folder')
+            {
+                $arr = $this->getFileInfo($path);
+                $arr['path'] = $path;
+                return [ $arr ];
+            }
+            else if (substr($result['error_summary'], 0, 14) == 'path/not_found')
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            }
+
+        }
+
         while (true)
         {
             if (isset($result['entries']))
@@ -113,7 +129,39 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $postdata = json_encode([
+            "path" => $path
+        ]);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.dropboxapi.com/2/files/get_metadata");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $result = json_decode($result, true);
+        curl_close($ch);
+
+        if (isset($result['error_summary']))
+        {
+            if (substr($result['error_summary'], 0, 14) == 'path/not_found')
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            }
+            else
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+            }
+        }
+
+        $entry = $result;
+        return array('id'=> $entry['id'] ?? null,
+                     'name' => $entry['name'],
+                     'size' => $entry['size'] ?? null,
+                     'modified' => $entry['client_modified'] ?? '',
+                     'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
     }
     
     public function exists(string $path) : bool
