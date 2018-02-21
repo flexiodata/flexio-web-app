@@ -108,10 +108,10 @@
         return code
       },
       example_href() {
-        return "https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run?flexio_api_key="+this.api_key
+        return 'https://' + location.hostname + '/api/v1/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
       },
       example_curl() {
-        return "curl -X POST 'https://www.flex.io/api/v1/pipes/"+this.pipe_identifier+"/run' -H 'Authorization: Bearer "+this.api_key+"'"
+        return 'curl ' + this.example_href
       }
     },
     mounted() {
