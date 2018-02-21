@@ -51,17 +51,38 @@ class Test
         TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
 
         // BEGIN TEST
-        $folder = $folderpath . '/subfolder';
+        $folder = $folderpath . 'subfolder';
         $filenames = ["file1.txt","file2.csv","file3.png","file4.jpg","file5.csv"];
         foreach ($filenames as $f)
         {
             $filepath = $folder . '/' . $f;
             $process_write = \Flexio\Tests\Process::write($filepath);
         }
-        $process_list = \Flexio\Tests\Process::list($folder . '/file*.csv');
-        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
-        $expected = ["file2.csv", "file5.csv"];
-        TestCheck::assertArray("A.3", 'List; listing of folder with wildcard' . $folderpath, $actual, $expected, $results);
+        $tests = [
+            ["pattern" => "$folder/*.txt",       "expected" => ["file1.txt"]],
+            ["pattern" => "$folder/*.csv",       "expected" => ["file2.csv","file5.csv"]],
+            ["pattern" => "$folder/*.png",       "expected" => ["file3.png"]],
+            ["pattern" => "$folder/*.jpg",       "expected" => ["file4.jpg"]],
+            ["pattern" => "$folder/*.xls",       "expected" => []],
+            ["pattern" => "$folder/file1.*",     "expected" => ["file1.txt"]],
+            ["pattern" => "$folder/file2.*",     "expected" => ["file2.csv"]],
+            ["pattern" => "$folder/file3.*",     "expected" => ["file3.png"]],
+            ["pattern" => "$folder/file4.*",     "expected" => ["file4.jpg"]],
+            ["pattern" => "$folder/file5.*",     "expected" => ["file5.csv"]],
+            ["pattern" => "$folder/file*.CSV",   "expected" => ["file2.csv", "file5.csv"]],
+            ["pattern" => "$folder/file1.*",     "expected" => ["file1.txt"]],
+            ["pattern" => "$folder/file[2-3].*", "expected" => ["file2.csv", "file3.png"]],
+            ["pattern" => "$folder/file[0-9].*", "expected" => ["file1.txt","file2.csv","file3.png","file4.jpg","file5.csv"]]
+        ];
+        $idx = 2;
+        foreach ($tests as $t)
+        {
+            $idx++;
+            $process_list = \Flexio\Tests\Process::list($t['pattern']);
+            $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+            $expected = $t['expected'];
+            TestCheck::assertArray("A.$idx", 'List; listing of folder with wildcard' . $folder, $actual, $expected, $results);
+        }
 
 
 
