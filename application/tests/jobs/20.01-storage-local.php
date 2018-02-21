@@ -25,7 +25,7 @@ class Test
         // SETUP
         $files = TestUtil::getTestDataFiles();
         $store_alias = "home";
-        $output_folder = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
+        $folderpath = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
 
 
 
@@ -33,27 +33,27 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $filepath = $output_folder . '/' . $filename;
+        $filepath = $folderpath . '/' . $filename;
         $process_write = \Flexio\Tests\Process::write($filepath);
-        $process_list = \Flexio\Tests\Process::list($output_folder);
+        $process_list = \Flexio\Tests\Process::list($folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename];
-        TestCheck::assertArray("A.1", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+        TestCheck::assertArray("A.1", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
 
         // BEGIN TEST
         $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
         $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
-        $filepath1 = $output_folder . '/' . $filename1;
-        $filepath2 = $output_folder . '/' . $filename2;
+        $filepath1 = $folderpath . '/' . $filename1;
+        $filepath2 = $folderpath . '/' . $filename2;
         $process_write = \Flexio\Tests\Process::write($filepath1);
         $process_write = \Flexio\Tests\Process::write($filepath2);
         $process_list = \Flexio\Tests\Process::list($filepath1);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename1];
-        TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $output_folder, $actual, $expected, $results);
+        TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
 
         // BEGIN TEST
-        $folder = $output_folder . '/subfolder';
+        $folder = $folderpath . '/subfolder';
         $filenames = ["file1.txt","file2.csv","file3.png","file4.jpg","file5.csv"];
         foreach ($filenames as $f)
         {
@@ -63,38 +63,33 @@ class Test
         $process_list = \Flexio\Tests\Process::list($folder . '/file*.csv');
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = ["file2.csv", "file5.csv"];
-        TestCheck::assertArray("A.3", 'List; listing of folder with wildcard' . $output_folder, $actual, $expected, $results);
+        TestCheck::assertArray("A.3", 'List; listing of folder with wildcard' . $folderpath, $actual, $expected, $results);
 
-return;
+
 
         // TEST: Mkdir Job; Basic Directory Creation
 
         // BEGIN TEST
         $foldername = 'empty_folder1';
-        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '/"}}',true); // folder path with path terminator
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername . '/'); // folder path with path terminator
+        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+        $expected = [$foldername];
         TestCheck::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
-        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path without path terminator
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $foldername, "type" => "DIR"));
+        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername); // folder path without path terminator
+        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+        $expected = [$foldername];
         TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder3';
-        $create = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $foldername . '"}}',true); // folder path with path terminator
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername);
         $has_error_after_first_attempt = $process_create->hasError();
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
+        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername);
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
@@ -106,22 +101,17 @@ return;
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list = \Flexio\Jobs\Process::create()->execute($list);
-        $actual = \Flexio\Base\Util::getStreamContents($process_list->getStdout());
-        $expected = array(array("name" => $filename, "type" => "FILE"));
-        TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $output_filepath, $actual, $expected, $results);
+        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $filename);
+        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+        $expected = [$filename];
+        TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $filename, $actual, $expected, $results);
 
         // BEGIN TEST
         $name = 'test_folder';
-        $create_folder = json_decode('{"op": "mkdir", "params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
-        $create_file = json_decode('{"op": "create","params": { "path": "'. $output_folder . '/' . $name . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create_folder);
+        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name);
         $has_error_after_first_attempt = $process_create->hasError();
-        $process_create = \Flexio\Jobs\Process::create()->execute($create_file);
+        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name);
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
@@ -133,9 +123,7 @@ return;
 
         // BEGIN TEST
         $filename = 'file_that_does_not_exist.txt';
-        $filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-        $read = json_decode('{"op": "read", "params": {"path": "'. $filepath . '"}}',true);
-        $process_read = \Flexio\Jobs\Process::create()->execute($read);
+        $process_read = \Flexio\Tests\Process::read($folderpath . '/' . $filename);
         $actual = $process_read->hasError();
         $expected = true;
         TestCheck::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
@@ -146,18 +134,15 @@ return;
         {
             $idx++;
 
-            $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-            $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
-            $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
-
+            $filepath = TestUtil::getOutputFilePath($folderpath, $filename);
             $stream = TestUtil::createStreamFromFile($filename);
-            $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
-            $process_read = \Flexio\Jobs\Process::create()->execute($read);
+            $process_write = \Flexio\Tests\Process::write($filepath, $stream);
+            $process_read = \Flexio\Tests\Process::read($filepath);
             $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
 
@@ -166,9 +151,7 @@ return;
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-        $read = json_decode('{"op": "read", "params": {"path": "'. $output_filepath . '"}}',true);
-        $write = json_decode('{"op": "write", "params": { "path": "'. $output_filepath . '"}}',true);
+        $filepath = $folderpath . '/' . $filename;
         $contents = ["", "abc", "cba", "", "abcd"];
 
         $idx = 0;
@@ -177,11 +160,11 @@ return;
             $idx++;
             $stream = \Flexio\Base\Stream::create();
             $stream->getWriter()->write($c);
-            $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write); // first write
-            $process_read = \Flexio\Jobs\Process::create()->execute($read);
+            $process_write = \Flexio\Tests\Process::write($filepath, $stream);
+            $process_read = \Flexio\Tests\Process::read($filepath);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $output_filepath, $actual, $expected, $results);
+            TestCheck::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
 
@@ -197,19 +180,16 @@ return;
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $output_filepath = TestUtil::getOutputFilePath($output_folder, $filename);
-        $create = json_decode('{"op": "create", "params": { "path": "'. $output_filepath . '"}}',true);
-        $delete = json_decode('{"op": "delete", "params": { "path": "'. $output_filepath . '"}}',true);
-        $list = json_decode('{"op": "list", "params": {"path": "'. $output_folder . '"}}',true);
-        $process_create = \Flexio\Jobs\Process::create()->execute($create);
-        $process_list1 = \Flexio\Jobs\Process::create()->execute($list);
-        $process_delete = \Flexio\Jobs\Process::create()->execute($delete);
-        $process_list2 = \Flexio\Jobs\Process::create()->execute($list);
-        $list1 = json_decode(\Flexio\Base\Util::getStreamContents($process_list1->getStdout()),true);
-        $list2 = json_decode(\Flexio\Base\Util::getStreamContents($process_list2->getStdout()),true);
-        $actual = TestUtil::fileExistsInList($filename, $list1) === true && TestUtil::fileExistsInList($filename, $list2) === false;
-        $expected = true;
-        TestCheck::assertBoolean("G.1", 'Delete; delete a file that exists; file is ' . $output_filepath, $actual, $expected, $results);
+        $filepath = $folderpath . '/' . $filename;
+        $process_create = \Flexio\Tests\Process::create($filepath);
+        $process_list1 = \Flexio\Tests\Process::list($folderpath);
+        $process_delete = \Flexio\Tests\Process::delete($filepath);
+        $process_list2 = \Flexio\Tests\Process::list($folderpath);
+        $list1 = \Flexio\Tests\Content::getValues($process_list1->getStdout(),'name');
+        $list2 = \Flexio\Tests\Content::getValues($process_list2->getStdout(),'name');
+        $actual = array_values(array_diff($list1, $list2));
+        $expected = [$filename];
+        TestCheck::assertArray("G.1", 'Delete; delete a file that exists; file is ' . $filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder
