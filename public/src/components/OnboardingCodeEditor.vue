@@ -1,6 +1,6 @@
 <template>
   <div :class="cls" v-show="is_inited">
-    <div class="absolute top-0 left-0 fw6 moon-gray ph2 pv1" style="z-index: 10; font-size: 10px" v-if="label.length > 0">{{label}}</div>
+    <div class="absolute top-0 left-0 fw6 moon-gray ph2 pv1 no-select" style="z-index: 10; font-size: 10px" v-if="label.length > 0">{{label}}</div>
     <div class="absolute top-0 right-0 flex flex-row" style="z-index: 10; overflow: hidden" v-if="showButtons">
       <button
         type="button"
