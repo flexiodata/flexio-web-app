@@ -35,13 +35,13 @@ class Test
             $name = null;
             $value = null;
             $model->registry->setNumber($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.1', 'Registry\Model::setNumber(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -52,13 +52,13 @@ class Test
             $name = '';
             $value = '';
             $model->registry->setNumber($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.2', 'Registry\Model::setNumber(); throw an error with an invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -69,13 +69,13 @@ class Test
             $name = \Flexio\Base\Util::generateHandle();
             $value = '';
             $model->registry->setNumber($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.3', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -86,13 +86,13 @@ class Test
             $name = \Flexio\Base\Util::generateHandle();
             $value = '';
             $model->registry->setNumber($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.4', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -103,13 +103,13 @@ class Test
             $name = \Flexio\Base\Util::generateHandle();
             $value = '';
             $model->registry->setNumber($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.5', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -121,13 +121,13 @@ class Test
             $value = 1;
             $expires = false;
             $model->registry->setNumber($object_eid, $name, $value, $expires);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.6', 'Registry\Model::setNumber(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -168,13 +168,13 @@ class Test
             $object_eid = null;
             $name = null;
             $model->registry->entryExists($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.1', 'Registry\Model::entryExists(); throw error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -222,13 +222,13 @@ class Test
             $object_eid = null;
             $name = null;
             $entry = $model->registry->getNumber($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('C.1', 'Registry\Model::getNumber(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST

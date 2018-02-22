@@ -36,62 +36,62 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; if() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; if() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.3', 'Expression; if() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,1,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.4', 'Expression; if() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(0,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.5', 'Expression; if() function; fail if conditional param is not boolean',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if("a",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.6', 'Expression; if() function; fail if conditional param is not boolean',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,1,"a")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.7', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,"a",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.8', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,true,"a")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.9', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,"a",true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.10', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,1,true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.11', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('if(true,true,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.12', 'Expression; if() function; fail if output parameters are different types',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -165,12 +165,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('isnull()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; isnull() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('isnull(null,null)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.2', 'Expression; isnull() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -224,27 +224,27 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.1', 'Expression; iskindof() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof(null)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.2', 'Expression; iskindof() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof(null,null,null)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.3', 'Expression; iskindof() function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("",false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.4', 'Expression; iskindof() function; fail if the second parameter is something besides a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.5', 'Expression; iskindof() function; fail if the second parameter is something besides a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -282,7 +282,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof(\'"firstnamelastname"@domain.com\',"email")');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('D.5', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.5', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("firstname-lastname@domain.com","email")');
@@ -292,7 +292,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("firstname+lastname@domain.com","email")');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('D.7', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.7', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("firstname_lastname@domain.com","email")');
@@ -322,12 +322,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@[123.123.123.123]","email")');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('D.13', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.13', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("\"email\"@domain.com","email")');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('D.14', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.14', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@domain-one.com","email")');
@@ -372,7 +372,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@-domain.com","email")');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('D.23', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.23', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("@domain.com","email")');
@@ -392,17 +392,17 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof(".email@domain.com","email")');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('D.27', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.27', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email.@domain.com","email")');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('D.28', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.28', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email..email@domain.com","email")');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('D.29', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.29', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("あ@domain.com","email")');
@@ -432,7 +432,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@domain..com","email")');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('D.35', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.35', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxx.com","email")');
@@ -442,7 +442,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('iskindof("email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxx.com","email")');
         $expected = false; // 254 chars
-        \Flexio\Tests\Check::assertBoolean('D.37', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.37', 'Expression; iskindof() function; return true if the first parameter is a type of the kind specified in the second parameter; false otherwise',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 

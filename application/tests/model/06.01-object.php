@@ -78,7 +78,7 @@ class Test
         }
         catch (\Exception $e)
         {
-            $actual = TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);

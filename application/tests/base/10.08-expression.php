@@ -304,7 +304,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0+(1>0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.3', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -314,7 +314,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(1>0)+0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.5', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -334,7 +334,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0+(0>=0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.9', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -344,7 +344,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0>=0)+0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.11', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -359,7 +359,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0<1)+0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.14', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -379,7 +379,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0+(0<1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.18', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -394,7 +394,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0+(0<=0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.21', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -404,7 +404,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0<=0)+0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.23', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -424,7 +424,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0-(1>0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.27', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -434,7 +434,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(1>0)-0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.29', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -454,7 +454,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0-(0>=0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.33', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -464,7 +464,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0>=0)-0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.35', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -479,7 +479,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0<1)-0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.38', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -499,7 +499,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0-(0<1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.42', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -514,7 +514,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('0-(0<=0)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.45', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -524,7 +524,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('(0<=0)-0');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.47', 'Expression; +,- operators take precedence over <,<=,>,>= operators',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -947,7 +947,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('2/*2');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.2', 'Expression; *,/,% operators are evaluted left to right',  $actual, $expected, $results);
     }
 }

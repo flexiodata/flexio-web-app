@@ -16,20 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestError
-{
-    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
-    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
-    const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
-    const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
-}
-
-
 class Util
 {
-    const EPSILON = 0.000000000001;
-    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
-
     public static function getModel()
     {
         return new \Model;
@@ -114,7 +102,7 @@ class Util
         $retval = null;
         $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
         if ($success === false)
-            return TestError::ERROR_BAD_PARSE;
+            return \Flexio\Tests\Base::ERROR_BAD_PARSE;
 
         return $retval;
     }
@@ -324,9 +312,9 @@ EOD;
         if (is_nan($b))
             return 1;
 
-        if (($a - $b) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * self::EPSILON))
+        if (($a - $b) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * \Flexio\Tests\Base::DOUBLE_EPSILON))
             return 1;
-        if (($b - $a) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * self::EPSILON))
+        if (($b - $a) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * \Flexio\Tests\Base::DOUBLE_EPSILON))
             return -1;
 
         return 0;

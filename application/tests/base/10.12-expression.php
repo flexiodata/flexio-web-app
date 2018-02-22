@@ -52,12 +52,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ascii()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; ascii() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ascii("Apples","Oranges")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; ascii() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -116,7 +116,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('concat()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; concat() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -330,17 +330,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('contains()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.1', 'Expression; contains() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('contains("Apples","",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.2', 'Expression; contains() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('contains("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.3', 'Expression; contains() text function; fail if the search string parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -464,12 +464,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('initcap()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.1', 'Expression; initcap() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('initcap("apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.2', 'Expression; initcap() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -495,7 +495,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('initcap("text separated by delimiters: a b,c, d;e.f_g-h+i/j(k)l!m@n#o$p%q^r&s*t")');
         $expected = 'Text Separated By Delimiters: A B,C, D;E.F_G-H+I/J(K)L!M@N#O$P%Q^R&S*T';
-        \Flexio\Tests\Check::assertString('D.7', 'Expression; initcap() text function with delimiters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('D.7', 'Expression; initcap() text function with delimiters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('initcap(123)');
@@ -540,7 +540,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('initcap("international characters: â, ê,î,ô,û,ð and Â, Ê,Î,Ô,Û,Ð (are there others?)")');
         $expected = "International Characters: Â, Ê,Î,Ô,Û,Ð And Â, Ê,Î,Ô,Û,Ð (Are There Others?)";
-        \Flexio\Tests\Check::assertString('D.16', 'Expression; initcap() text function; international chars',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('D.16', 'Expression; initcap() text function; international chars',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -548,27 +548,27 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('left()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.1', 'Expression; left() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('left("Apples and Oranges")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.2', 'Expression; left() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('left("Apples and Oranges",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.3', 'Expression; left() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('left("Apples and Oranges","1")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.4', 'Expression; left() text function; fail if the length parameter isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('left("Apples and Oranges",1.1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.5', 'Expression; left() text function; fail if the length parameter isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -652,12 +652,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('length()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.1', 'Expression; length() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('length("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.2', 'Expression; length() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -726,12 +726,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lower()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.1', 'Expression; lower() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lower("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.2', 'Expression; lower() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -805,22 +805,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lpad()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.1', 'Expression; lpad() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lpad("Apples",1,"0",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.2', 'Expression; lpad() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lpad("Apples",1.1,"0")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.3', 'Expression; lpad() text function; fail if the length parameter is not an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('lpad("Apples",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.4', 'Expression; lpad() text function; fail if the pad parameter is not a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -909,17 +909,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ltrim()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.1', 'Expression; ltrim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ltrim("Apples","",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.2', 'Expression; ltrim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ltrim("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.3', 'Expression; ltrim() text function; fail if the characters-to-trim parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -993,12 +993,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('md5()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.1', 'Expression; md5() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('md5("","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.2', 'Expression; md5() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1087,28 +1087,28 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.1', 'Expression; regexp_replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("Apples","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.2', 'Expression; regexp_replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("Apples","","","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.3', 'Expression; regexp_replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("Apples","+","")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('K.4', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('K.4', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("Apples","\","")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('K.5', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('K.5', 'Expression; regexp_replace() text function; return null if a bad regex is passed',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("Apples","A","a")');
@@ -1335,34 +1335,34 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('regexp_replace("ABABAbaBAB","a","","CIG")');
         $expected = 'BBbBB';
-        \Flexio\Tests\Check::assertString('K.50', 'Expression; regexp_replace() text function; match parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('K.50', 'Expression; regexp_replace() text function; match parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
         // TEST: text function: replace()
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('replace()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.1', 'Expression; replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('replace("Apples","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.2', 'Expression; replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('replace("Apples","","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.3', 'Expression; replace() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('replace("Apples",1,"A")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.4', 'Expression; replace() text function; fail if the search string parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('replace("Apples","A",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.5', 'Expression; replace() text function; fail if the replace string parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1506,12 +1506,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('reverse()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.1', 'Expression; reverse() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('reverse("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.2', 'Expression; reverse() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1580,27 +1580,27 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('right()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.1', 'Expression; right() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('right("Apples and Oranges")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.2', 'Expression; right() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('right("Apples and Oranges",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.3', 'Expression; right() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('right("Apples and Oranges","1")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.4', 'Expression; right() text function; fail if the length parameter isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('right("Apples and Oranges",1.1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.5', 'Expression; right() text function; fail if the length parameter isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1684,22 +1684,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rpad()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.1', 'Expression; rpad() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rpad("Apples",1,"0",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.2', 'Expression; rpad() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rpad("Apples",1.1,"0")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.3', 'Expression; rpad() text function; fail if the length parameter is not an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rpad("Apples",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.4', 'Expression; rpad() text function; fail if the pad parameter is not a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1788,17 +1788,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rtrim()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.1', 'Expression; rtrim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rtrim("Apples","",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.2', 'Expression; rtrim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('rtrim("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.3', 'Expression; rtrim() text function; fail if the characters-to-trim parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1872,22 +1872,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpart()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.1', 'Expression; strpart() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpart("","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.2', 'Expression; strpart() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpart("","",1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.3', 'Expression; strpart() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpart("",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.4', 'Expression; strpart() text function; fail if the search string parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2101,17 +2101,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpos()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.1', 'Expression; strpos() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpos("Apples","",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.2', 'Expression; strpos() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('strpos("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.3', 'Expression; strpos() text function; fail if the search string parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2265,32 +2265,32 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.1', 'Expression; substr() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr("Apples",1,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.2', 'Expression; substr() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr("Apples","1",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.3', 'Expression; substr() text function; fail if the starting offset isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr("Apples",1,"1")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.4', 'Expression; substr() text function; fail if the length param isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr("Apples",1.1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.5', 'Expression; substr() text function; fail if the starting offset isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('substr("Apples",1,1.1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('S.6', 'Expression; substr() text function; fail if the length param isn\'t an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2399,17 +2399,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trim()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('T.1', 'Expression; trim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trim("Apples","",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('T.2', 'Expression; trim() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trim("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('T.3', 'Expression; trim() text function; fail if the characters-to-trim parameter isn\'t a string',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -2488,12 +2488,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('upper()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('U.1', 'Expression; upper() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('upper("Apples",1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('U.2', 'Expression; upper() text function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST

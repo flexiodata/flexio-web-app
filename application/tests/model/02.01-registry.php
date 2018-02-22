@@ -35,13 +35,13 @@ class Test
             $name = null;
             $value = null;
             $result = $model->registry->setString($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.1', 'Registry\Model::setString(); throw error when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -60,13 +60,13 @@ class Test
             $name = \Flexio\Base\Util::generateHandle();
             $value = '';
             $result = $model->registry->setString($object_eid, $name, $value);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.3', 'Registry\Model::setString(); throw an error if the object_eid isn\'t a string', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -94,13 +94,13 @@ class Test
             $value = '';
             $expires = 'a';
             $model->registry->setString($object_eid, $name, $value, $expires);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.6', 'Registry\Model::setString(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -140,13 +140,13 @@ class Test
             $object_eid = null;
             $name = null;
             $model->registry->entryExists($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.1', 'Registry\Model::entryExists(); throw an error with null object input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -194,13 +194,13 @@ class Test
             $object_eid = null;
             $name = null;
             $entry = $model->registry->getString($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('C.1', 'Registry\Model::getString(); handle null input; default output is null', $actual, $expected, $results);
 
         // BEGIN TEST

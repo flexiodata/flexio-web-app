@@ -24,27 +24,27 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression(null);
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; non-string input',  $actual, $expected, $results);
 
         $actual = \Flexio\Tests\Util::evalExpression(true);
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; non-string input',  $actual, $expected, $results);
 
         $actual = \Flexio\Tests\Util::evalExpression(1);
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.3', 'Expression; non-string input',  $actual, $expected, $results);
 
         $actual = \Flexio\Tests\Util::evalExpression(array());
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.4', 'Expression; non-string input',  $actual, $expected, $results);
 
         $actual = \Flexio\Tests\Util::evalExpression(new \stdClass());
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.5', 'Expression; non-string input',  $actual, $expected, $results);
 
         $actual = \Flexio\Tests\Util::evalExpression('');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.6', 'Expression; empty string',  $actual, $expected, $results);
     }
 }

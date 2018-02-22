@@ -125,7 +125,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["SchwÃ¤bische SoftwarelÃ¶sungen AG"]]';
-        \Flexio\Tests\Check::assertArray('C.3', 'Convert; troublesome characters in content',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('C.3', 'Convert; troublesome characters in content',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -149,7 +149,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["1"]]';
-        \Flexio\Tests\Check::assertArray('D.2', 'Convert Job; numeric range check',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('D.2', 'Convert Job; numeric range check',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -296,7 +296,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["1.1000"],["0.0001"],["-0.0001"]]';
-        \Flexio\Tests\Check::assertArray('E.7', 'Convert Job; numeric range check',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('E.7', 'Convert Job; numeric range check',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -370,7 +370,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["1999-12-31"]]';
-        \Flexio\Tests\Check::assertArray('G.3', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('G.3', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -380,7 +380,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["2001-01-01"]]';
-        \Flexio\Tests\Check::assertArray('G.4', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('G.4', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -390,7 +390,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["1999-12-31"]]';
-        \Flexio\Tests\Check::assertArray('G.5', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('G.5', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD
@@ -400,7 +400,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["2001-01-01"]]';
-        \Flexio\Tests\Check::assertArray('G.6', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('G.6', 'Convert Job; valid date values should load',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -415,7 +415,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = '[["1969-07-20"],["1970-01-01"]]';
-        \Flexio\Tests\Check::assertArray('H.1', 'Convert Job; valid date values should load if the format is recognized',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('H.1', 'Convert Job; valid date values should load if the format is recognized',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $data = <<<EOD

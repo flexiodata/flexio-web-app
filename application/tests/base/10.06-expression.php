@@ -30,22 +30,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('NOT');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('AND');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('OR');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.3', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('!');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.4', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
 
@@ -54,22 +54,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true NOT');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true AND');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.2', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true OR');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.3', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true!');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.4', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the right side',  $actual, $expected, $results);
 
 
@@ -88,22 +88,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('AND true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.3', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('AND false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.4', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('OR true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.5', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('OR false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.6', 'Expression; fail if logical operator doesn\'t have appropriate paired types on the left side',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -122,82 +122,82 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true NOT "a"');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.1', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('"a" NOT true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.2', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true NOT 1');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.3', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('1 NOT true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.4', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true AND "a"');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.5', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('"a" AND true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.6', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true AND 1');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.7', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('1 AND true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.8', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true OR "a"');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.9', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('"a" OR true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.10', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true OR 1');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.11', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('1 OR true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.12', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true !"a"');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.13', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('"a" !true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.14', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true !1');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.15', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('1 !true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.16', 'Expression; fail if comparison operator doesn\'t have appropriate paired types on the left and right side',  $actual, $expected, $results);
 
 
@@ -206,22 +206,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true NOT true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.1', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true NOT false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.2', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false NOT true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.3', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false NOT false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.4', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -236,22 +236,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true not true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.7', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true not false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.8', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false not true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.9', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false not false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.10', 'Expression; fail if NOT operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -266,22 +266,22 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true ! true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.13', 'Expression; fail if ! operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('true ! false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.14', 'Expression; fail if ! operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false ! true');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.15', 'Expression; fail if ! operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('false ! false');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.16', 'Expression; fail if ! operand has a left operand',  $actual, $expected, $results);
 
         // BEGIN TEST

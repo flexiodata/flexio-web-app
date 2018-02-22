@@ -18,11 +18,7 @@ namespace Flexio\Tests;
 
 class Check
 {
-    const FLAG_NONE = '';
-    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
-
-
-    public static function assertNull($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNull($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -50,7 +46,7 @@ class Check
         $test_result->message = 'Expected null value;  Returned ' . self::stringify($actual);
     }
 
-    public static function assertNan($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNan($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -79,7 +75,7 @@ class Check
     }
 
 
-    public static function assertString($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertString($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -108,7 +104,7 @@ class Check
         $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -144,7 +140,7 @@ class Check
         $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
-    public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // note: this returns true if the actual datetime is within a tolerance
         // of the expected; it's used to test values where there might be a slight
@@ -187,7 +183,7 @@ class Check
         $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
-    public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -223,7 +219,7 @@ class Check
     }
 
 
-    public static function assertArrayKeys($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertArrayKeys($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // succeeds if the keys of the array are the same, without regard to the values
 
@@ -271,7 +267,7 @@ class Check
         $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertArray($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // add a \Flexio\Tests\Result onto the result array
         $test_result = new \Flexio\Tests\Result;
@@ -315,7 +311,7 @@ class Check
         $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // note: returns true if the key/value pairs in the expected array
         // are in the actual array; false otherwise

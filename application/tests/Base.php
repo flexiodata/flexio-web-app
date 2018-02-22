@@ -18,6 +18,17 @@ namespace Flexio\Tests;
 
 class Base
 {
+    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
+    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
+    const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
+    const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
+
+    const DOUBLE_EPSILON = 0.000000000001;
+    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
+
+    const FLAG_NONE = '';
+    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
+
     public static function testsAllowed()
     {
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);

@@ -45,7 +45,7 @@ class Test
         // TEST: \Model::getType(); tests for when object exists
 
         // BEGIN TEST
-        $actual = TestError::ERROR_NO_EXCEPTION;
+        $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
             $info = array(
@@ -56,7 +56,7 @@ class Test
         }
         catch (\Exception $e)
         {
-            $actual = TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Model::TYPE_OBJECT;
         \Flexio\Tests\Check::assertString('B.1', '\Model::getType(); return correct object type',  $actual, $expected, $results);

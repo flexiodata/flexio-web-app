@@ -659,7 +659,7 @@ class Test
         	]
         }
         ';
-		\Flexio\Tests\Check::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -714,7 +714,7 @@ class Test
         	]
         }
         ';
-		\Flexio\Tests\Check::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -765,7 +765,7 @@ class Test
         	]
         }
         ';
-		\Flexio\Tests\Check::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -820,7 +820,7 @@ class Test
         	]
         }
         ';
-		\Flexio\Tests\Check::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -875,7 +875,7 @@ class Test
         	]
         }
         ';
-		\Flexio\Tests\Check::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 

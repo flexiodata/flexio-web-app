@@ -36,13 +36,13 @@ class Test
                 'name' => $handle
             );
             $model->set(null, $info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.1', '\Model::set(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST

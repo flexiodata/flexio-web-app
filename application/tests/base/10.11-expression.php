@@ -50,12 +50,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('abs()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('abs(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -160,12 +160,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('abs(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.24', 'Expression; abs() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('abs(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.25', 'Expression; abs() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -179,12 +179,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('acos()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('acos(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -239,12 +239,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('acos(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.13', 'Expression; acos() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('acos(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.14', 'Expression; acos() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -258,12 +258,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('asin()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('asin(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -318,12 +318,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('asin(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.13', 'Expression; asin() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('asin(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.14', 'Expression; asin() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -337,12 +337,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('atan()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('atan(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -397,12 +397,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('atan(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.13', 'Expression; atan() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('atan(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.14', 'Expression; atan() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -416,12 +416,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ceiling()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ceiling(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -526,12 +526,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ceiling(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.23', 'Expression; ceiling() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ceiling(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.24', 'Expression; ceiling() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -545,12 +545,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('cos()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('cos(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -620,12 +620,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('cos(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.16', 'Expression; cos() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('cos(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.17', 'Expression; cos() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -639,12 +639,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('exp()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('exp(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -714,12 +714,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('exp(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.16', 'Expression; exp() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('exp(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.17', 'Expression; exp() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -733,12 +733,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('floor()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('floor(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -843,12 +843,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('floor(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.24', 'Expression; floor() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('floor(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.25', 'Expression; floor() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -862,12 +862,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ln()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ln(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -922,12 +922,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ln(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.13', 'Expression; ln() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('ln(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('I.14', 'Expression; ln() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -941,12 +941,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('log()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('log(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1001,12 +1001,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('log(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.13', 'Expression; log() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('log(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('J.14', 'Expression; log() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1023,12 +1023,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('mod()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('mod(1,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1113,17 +1113,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('mod(true,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.19', 'Expression; mod() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('mod(1,true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.20', 'Expression; mod() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('mod(true,true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('K.21', 'Expression; mod() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1147,7 +1147,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pi(1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('L.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1167,18 +1167,18 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(1,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(10,1000)');
-        $expected = TestError::ERROR_BAD_PARSE;
-        \Flexio\Tests\Check::assertString('M.3', 'Expression; fail on numeric overflow',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('M.3', 'Expression; fail on numeric overflow',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(100,0)');
@@ -1257,17 +1257,17 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(true,2)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.19', 'Expression; pow() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(2,true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.20', 'Expression; pow() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('pow(true,true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('M.21', 'Expression; pow() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1291,12 +1291,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('round()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('round(1,1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1401,12 +1401,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('round(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.24', 'Expression; round() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('round(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('N.25', 'Expression; round() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1420,12 +1420,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sign()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sign(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1530,12 +1530,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sign(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.24', 'Expression; sign() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sign(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('O.25', 'Expression; sign() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1549,12 +1549,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sin()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sin(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1624,12 +1624,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sin(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.16', 'Expression; sin() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('sin(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('P.17', 'Expression; sin() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1643,12 +1643,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('tan()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('tan(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1718,12 +1718,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('tan(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.16', 'Expression; tan() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('tan(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('Q.17', 'Expression; tan() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1737,12 +1737,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trunc()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.1', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trunc(1,1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.2', 'Expression; fail if function has incorrect number of parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -1847,12 +1847,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trunc(true)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.24', 'Expression; trunc() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('trunc(false)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('R.25', 'Expression; trunc() numeric function; implicit conversion; TODO: handle this way?',  $actual, $expected, $results);
 
         // BEGIN TEST

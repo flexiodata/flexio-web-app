@@ -36,13 +36,13 @@ class Test
             $value = '';
             $creation = $model->registry->setString($object_eid, $name, $value);
             $model->registry->deleteEntryByName($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.1', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
@@ -54,13 +54,13 @@ class Test
             $value = '';
             $creation = $model->registry->setString($object_eid, $name, $value);
             $model->registry->deleteEntryByName($object_eid, $name);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.2', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST

@@ -103,12 +103,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; to_char() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.2', 'Expression; to_char() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -143,37 +143,37 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(false,"FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.9', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(true,"FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.10', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char("0","FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.11', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char("1","FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.12', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char("10","FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.13', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char("123","FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.14', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char("abc","FM00000")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.15', 'Expression; to_char() conversion function; ambiguous coercion not possible',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -218,12 +218,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"9")');
         $expected = " 0";
-        \Flexio\Tests\Check::assertString('B.5', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('B.5', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"999")');
         $expected = "   0";
-        \Flexio\Tests\Check::assertString('B.6', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('B.6', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.9,"9")');
@@ -567,27 +567,27 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.1,"99.")');
         $expected = "  0";
-        \Flexio\Tests\Check::assertString('C.44', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('C.44', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,".99")');
         $expected = "-.##";
-        \Flexio\Tests\Check::assertString('C.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('C.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"99.")');
         $expected = "  0";
-        \Flexio\Tests\Check::assertString('C.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('C.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"99..99999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('C.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('C.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"99.99.999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('C.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('C.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -616,12 +616,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"0")');
         $expected = " 0";
-        \Flexio\Tests\Check::assertString('D.5', 'Expression; to_char() conversion function; \'0\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('D.5', 'Expression; to_char() conversion function; \'0\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"000")');
         $expected = " 000";
-        \Flexio\Tests\Check::assertString('D.6', 'Expression; to_char() conversion function; \'0\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('D.6', 'Expression; to_char() conversion function; \'0\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.9,"0")');
@@ -970,22 +970,22 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,".00")');
         $expected = "-.##";
-        \Flexio\Tests\Check::assertString('E.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('E.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"00.")');
         $expected = " 00";
-        \Flexio\Tests\Check::assertString('E.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('E.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"00..00000")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('E.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('E.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"00.00.000")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('E.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('E.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -1068,7 +1068,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9.,9")');
         $expected = "  .,0";
-        \Flexio\Tests\Check::assertString('G.2', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.2', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9,.9")');
@@ -1088,7 +1088,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9.,9")');
         $expected = " 1.,0";
-        \Flexio\Tests\Check::assertString('G.6', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.6', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9,.9")');
@@ -1118,7 +1118,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"999.,999")');
         $expected = "  12.,340";
-        \Flexio\Tests\Check::assertString('G.12', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.12', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"999,.999")');
@@ -1158,7 +1158,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"0.,0")');
         $expected = " 0.,0";
-        \Flexio\Tests\Check::assertString('G.20', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.20', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"0,.0")');
@@ -1178,7 +1178,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"0.,0")');
         $expected = " 1.,0";
-        \Flexio\Tests\Check::assertString('G.24', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.24', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"0,.0")');
@@ -1208,7 +1208,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"000.,000")');
         $expected = " 012.,340";
-        \Flexio\Tests\Check::assertString('G.30', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('G.30', 'Expression; to_char() conversion function; \',\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"000,.000")');
@@ -1257,12 +1257,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9$.9")');
         $expected = "  $.0";
-        \Flexio\Tests\Check::assertString('H.3', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('H.3', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"$9.9")');
         $expected = "  $.0";
-        \Flexio\Tests\Check::assertString('H.4', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('H.4', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9.9$")');
@@ -1322,7 +1322,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"$999.999")');
         $expected = " $ 12.340";
-        \Flexio\Tests\Check::assertString('H.16', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('H.16', 'Expression; to_char() conversion function; \'$\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"99$9.99$9")');
@@ -1646,37 +1646,37 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.1,"99D")');
         $expected = "  0";
-        \Flexio\Tests\Check::assertString('I.44', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('I.44', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"D99")');
         $expected = "-.##";
-        \Flexio\Tests\Check::assertString('I.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('I.45', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.1,"9D")');
         $expected = " 0";
-        \Flexio\Tests\Check::assertString('I.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('I.46', 'Expression; to_char() conversion function; \'9\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"99DD99999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('I.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('I.47', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"99D99D999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('I.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('I.48', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"99.99D999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('I.49', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('I.49', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.3456,"D99.99999")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('I.50', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('I.50', 'Expression; to_char() conversion function; return null with multiple decimal places',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -1690,7 +1690,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9.G9")');
         $expected = "  .,0";
-        \Flexio\Tests\Check::assertString('J.2', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.2', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9G.9")');
@@ -1710,7 +1710,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9.G9")');
         $expected = " 1.,0";
-        \Flexio\Tests\Check::assertString('J.6', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.6', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9G.9")');
@@ -1740,7 +1740,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"999.G999")');
         $expected = "  12.,340";
-        \Flexio\Tests\Check::assertString('J.12', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.12', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"999G.999")');
@@ -1780,7 +1780,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"0.G0")');
         $expected = " 0.,0";
-        \Flexio\Tests\Check::assertString('J.20', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.20', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"0G.0")');
@@ -1800,7 +1800,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"0.G0")');
         $expected = " 1.,0";
-        \Flexio\Tests\Check::assertString('J.24', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.24', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"0G.0")');
@@ -1830,7 +1830,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"000.G000")');
         $expected = " 012.,340";
-        \Flexio\Tests\Check::assertString('J.30', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('J.30', 'Expression; to_char() conversion function; \'G\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"000G.000")');
@@ -1879,12 +1879,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"9L.9")');
         $expected = "  $.0";
-        \Flexio\Tests\Check::assertString('K.3', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('K.3', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"L9.9")');
         $expected = "  $.0";
-        \Flexio\Tests\Check::assertString('K.4', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('K.4', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"9.9L")');
@@ -1944,7 +1944,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"L999.999")');
         $expected = " $ 12.340";
-        \Flexio\Tests\Check::assertString('K.16', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('K.16', 'Expression; to_char() conversion function; \'L\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.34,"99L9.99L9")');
@@ -2670,12 +2670,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"0PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.2', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.2', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.3', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.3', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.2,"0.0PR")');
@@ -2685,12 +2685,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.2,"0PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.5', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.5', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.2,"PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.6', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.6', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.2,"0.0PR")');
@@ -2700,12 +2700,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.2,"0PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.8', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.8', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.2,"PR0.0")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('O.9', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('O.9', 'Expression; to_char() conversion function; \'PR\' format element needs to occur at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -2884,22 +2884,22 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.15,"EEEE9.9")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('P.35', 'Expression; to_char() conversion function; \'EEEE\' format element must be at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('P.35', 'Expression; to_char() conversion function; \'EEEE\' format element must be at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.15,"EEEE9.9")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('P.36', 'Expression; to_char() conversion function; \'EEEE\' format element must be at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('P.36', 'Expression; to_char() conversion function; \'EEEE\' format element must be at the end of the format string',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.15,"MI9.9EEEE")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('P.37', 'Expression; to_char() conversion function; \'EEEE\' format element can only be used with decimal point patterns',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('P.37', 'Expression; to_char() conversion function; \'EEEE\' format element can only be used with decimal point patterns',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-0.15,"MI9.9EEEE")');
         $expected = null;
-        \Flexio\Tests\Check::assertNull('P.38', 'Expression; to_char() conversion function; \'EEEE\' format element can only be used with decimal point patterns',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNull('P.38', 'Expression; to_char() conversion function; \'EEEE\' format element can only be used with decimal point patterns',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -3033,12 +3033,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"$RN")');
         $expected = "$              I";
-        \Flexio\Tests\Check::assertString('Q.26', 'Expression; to_char() conversion function; \'RN\' format element; number must be an integer between 1 and 3999',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Q.26', 'Expression; to_char() conversion function; \'RN\' format element; number must be an integer between 1 and 3999',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"LRN")');
         $expected = "$              I";
-        \Flexio\Tests\Check::assertString('Q.27', 'Expression; to_char() conversion function; \'RN\' format element; number must be an integer between 1 and 3999',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Q.27', 'Expression; to_char() conversion function; \'RN\' format element; number must be an integer between 1 and 3999',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -3047,12 +3047,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"FM9.99")');
         $expected = ".00";
-        \Flexio\Tests\Check::assertString('R.1', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.1', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0,"FM999.99")');
         $expected = ".00";
-        \Flexio\Tests\Check::assertString('R.2', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.2', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.01,"FM9,999.99")');
@@ -3072,12 +3072,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.01,"FM9,999.99PL")');
         $expected = "-1.01";
-        \Flexio\Tests\Check::assertString('R.6', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.6', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.01,"FM9,999.99MI")');
         $expected = "1.01";
-        \Flexio\Tests\Check::assertString('R.7', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.7', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.01,"FM9,999.99MI")');
@@ -3087,7 +3087,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1.01,"FMMI9,999.99")');
         $expected = "1.01";
-        \Flexio\Tests\Check::assertString('R.9', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.9', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-1.01,"FMMI9,999.99")');
@@ -3112,17 +3112,17 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"FMRN")');
         $expected = "I";
-        \Flexio\Tests\Check::assertString('R.14', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.14', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"FMRN")');
         $expected = "I";
-        \Flexio\Tests\Check::assertString('R.15', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.15', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(1,"FMEEEE")');
         $expected = "0e+00";
-        \Flexio\Tests\Check::assertString('R.16', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('R.16', 'Expression; to_char() conversion function; \'FM\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -3199,7 +3199,7 @@ class Test
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485, "FM999MI")');
         $expected = "485";
-        \Flexio\Tests\Check::assertString('S.18', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.18', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485, "PL999")');
         $expected = "+ 485";
@@ -3207,15 +3207,15 @@ class Test
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485, "SG999")');
         $expected = "+485";
-        \Flexio\Tests\Check::assertString('S.20', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.20', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-485, "SG999")');
         $expected = "-485";
-        \Flexio\Tests\Check::assertString('S.21', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.21', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-485, "9SG99")');
         $expected = "4-85";
-        \Flexio\Tests\Check::assertString('S.22', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.22', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(-485, "999PR")');
         $expected = "<485>";
@@ -3231,39 +3231,39 @@ class Test
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485, "FMRN")');
         $expected = "CDLXXXV";
-        \Flexio\Tests\Check::assertString('S.26', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.26', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(5.2, "FMRN")');
         $expected = "V";
-        \Flexio\Tests\Check::assertString('S.27', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.27', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(482, "999th")');
         $expected = " 482nd";
-        \Flexio\Tests\Check::assertString('S.28', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.28', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485, \'"Good number:"999\')');
         $expected = "Good number: 485";
-        \Flexio\Tests\Check::assertString('S.29', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.29', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(485.8, \'"Pre:"999" Post:" .999\')');
         $expected = "Pre: 485 Post: .800";
-        \Flexio\Tests\Check::assertString('S.30', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.30', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12, "99V999")');
         $expected = " 12000";
-        \Flexio\Tests\Check::assertString('S.31', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.31', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.4, "99V999")');
         $expected = " 12400";
-        \Flexio\Tests\Check::assertString('S.32', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.32', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(12.45, "99V9")');
         $expected = " 125";
-        \Flexio\Tests\Check::assertString('S.33', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.33', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         $actual = \Flexio\Tests\Util::evalExpression('to_char(0.0004859, "9.99EEEE")');
         $expected = " 4.86e-04";
-        \Flexio\Tests\Check::assertString('S.34', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('S.34', 'Expression; to_char() conversion function; combinations of numeric format parameters',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -3272,7 +3272,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp(""), "YYYY")');
         $expected = "";
-        \Flexio\Tests\Check::assertString('T.1', 'Expression; to_char() conversion function; \'YYYY\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('T.1', 'Expression; to_char() conversion function; \'YYYY\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1460-01-01 00:00:01"), "YYYY")');
@@ -3672,12 +3672,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1460-01-01 00:00:01"), "HH12")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Y.2', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Y.2', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1509-02-02 00:01:02"), "HH12")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Y.3', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Y.3', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1558-03-03 01:02:03"), "HH12")');
@@ -3732,7 +3732,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("2048-01-01 00:00:00"), "HH12")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Y.14', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Y.14', 'Expression; to_char() conversion function; \'HH12\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("2097-02-02 12:00:00"), "HH12")');
@@ -3751,12 +3751,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1460-01-01 00:00:01"), "HH")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Z.2', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Z.2', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1509-02-02 00:01:02"), "HH")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Z.3', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Z.3', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("1558-03-03 01:02:03"), "HH")');
@@ -3811,7 +3811,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("2048-01-01 00:00:00"), "HH")');
         $expected = "00";
-        \Flexio\Tests\Check::assertString('Z.14', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('Z.14', 'Expression; to_char() conversion function; \'HH\' format element',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("2097-02-02 12:00:00"), "HH")');
@@ -5009,12 +5009,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_date()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AX.1', 'Expression; to_date() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_date("2001-01-01","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AX.2', 'Expression; to_date() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -5056,12 +5056,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_datetime()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAA.1', 'Expression; to_datetime() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_datetime("2001-01-01","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAA.2', 'Expression; to_datetime() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -5089,12 +5089,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_number()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAB.1', 'Expression; to_number() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_number("1","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAB.2', 'Expression; to_number() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -5118,12 +5118,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_timestamp()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAC.1', 'Expression; to_timestamp() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_timestamp("2001-01-01","","")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('AAC.2', 'Expression; to_timestamp() conversion function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -5154,7 +5154,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('to_char(to_timestamp("20010203230506","YYYYMMDDHHMISS"))');
         $expected = "2001-02-03 23:05:06+00";
-        \Flexio\Tests\Check::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('AAC.8', 'Expression; to_timestamp() conversion function; HH24 hour specified with HH specifier',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
         // TEST: cast to text: cast(various, text)

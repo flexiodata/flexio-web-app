@@ -248,13 +248,13 @@ class Test
             $object = \Flexio\Object\User::create();
             $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
             $status2 = $object->setStatus('.')->getStatus();
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('F.4', 'User::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST

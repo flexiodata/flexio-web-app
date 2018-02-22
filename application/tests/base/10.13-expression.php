@@ -35,7 +35,7 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('current_date(1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('A.1', 'Expression; current_date() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -54,12 +54,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('day()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; day() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('day(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('B.2', 'Expression; day() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -93,12 +93,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('hour()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('C.1', 'Expression; hour() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('hour(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('C.2', 'Expression; hour() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -132,12 +132,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('minute()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('D.1', 'Expression; minute() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('minute(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('D.2', 'Expression; minute() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -171,12 +171,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('month()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('E.1', 'Expression; month() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('month(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('E.2', 'Expression; month() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -210,13 +210,13 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('now(1)');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('F.1', 'Expression; now() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('now()');
         $expected = \Flexio\System\System::getTimestamp();
-        \Flexio\Tests\Check::assertDateApprox('F.2', 'Expression; now() date function',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertDateApprox('F.2', 'Expression; now() date function',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -224,12 +224,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('second()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('G.1', 'Expression; second() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('second(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('G.2', 'Expression; second() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -263,12 +263,12 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('year()');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertString('H.1', 'Expression; year() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Util::evalExpression('year(to_date("2001-02-03","YYYY-MM-DD"),"")');
-        $expected = TestError::ERROR_BAD_PARSE;
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
         \Flexio\Tests\Check::assertNumber('H.2', 'Expression; year() date function; fail if an incorrect number of parameters are specified',  $actual, $expected, $results);
 
         // BEGIN TEST

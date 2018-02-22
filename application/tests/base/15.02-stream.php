@@ -40,7 +40,7 @@ class Test
         $actual = $reader->read();
         $reader->close();
         $expected = "";
-        \Flexio\Tests\Check::assertString('A.1', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('A.1', 'StreamReader/StreamWriter; check basic file read/write ',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $stream_info = array();
