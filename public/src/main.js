@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import KeenUi from 'keen-ui'
+import { Button, Dialog } from 'element-ui'
 import VeeValidate from 'vee-validate'
 import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
@@ -21,6 +22,11 @@ Vue.use(VeeValidate)
 // setup for KeenUi
 
 Vue.use(KeenUi)
+
+// setup for Element UI
+
+Vue.use(Button)
+Vue.use(Dialog)
 
 // setup for VueScrollTo (programmatic scrolling)
 

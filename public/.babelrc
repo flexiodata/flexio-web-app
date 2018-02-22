@@ -1,7 +1,11 @@
 {
   "presets": ["env"],
   "plugins": [
-    "transform-object-rest-spread"
+    "transform-object-rest-spread",
+    ["component", {
+      "libraryName": "element-ui",
+      "styleLibraryName": "theme-chalk"
+    }]
   ],
   "comments": false
 }
