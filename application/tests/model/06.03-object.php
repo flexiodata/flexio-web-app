@@ -31,7 +31,7 @@ class Test
         $delete_result = $model->delete('');
         $actual = $delete_result;
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::delete(); invalid eid should return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::delete(); invalid eid should return false',  $actual, $expected, $results);
 
 
 
@@ -42,7 +42,7 @@ class Test
         $delete_result = $model->delete($eid);
         $actual = $delete_result;
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Model::delete(); eid that doesn\'t exist should return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::delete(); eid that doesn\'t exist should return false',  $actual, $expected, $results);
 
 
 
@@ -55,7 +55,7 @@ class Test
         $delete_result = $model->delete($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) === true && $delete_result === true;
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::delete(); for object deletion, return true when object is deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::delete(); for object deletion, return true when object is deleted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -66,6 +66,6 @@ class Test
         $status_after_delete = $model->getStatus($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) === true && $status_after_add !== \Model::STATUS_DELETED && $status_after_delete === \Model::STATUS_DELETED;
         $expected = true;
-        TestCheck::assertBoolean('C.2', '\Model::delete(); for object deletion, make sure an object is actually deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Model::delete(); for object deletion, make sure an object is actually deleted',  $actual, $expected, $results);
     }
 }

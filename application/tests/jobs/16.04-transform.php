@@ -57,7 +57,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = $process->hasError();
         $expected = true;
-		TestCheck::assertBoolean('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertBoolean('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -106,7 +106,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('A.2', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('A.2', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -155,7 +155,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('A.3', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('A.3', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -204,7 +204,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('A.4', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('A.4', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -253,7 +253,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('A.5', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('A.5', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 
 
@@ -294,7 +294,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = $process->hasError();
         $expected = true;
-		TestCheck::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -343,7 +343,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.2', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.2', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -392,7 +392,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.3', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.3', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -441,7 +441,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.4', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.4', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -490,7 +490,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.5', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.5', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -542,7 +542,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.6', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.6', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -595,7 +595,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.7', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.7', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -644,7 +644,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.8', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.8', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -693,7 +693,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.9', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.9', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -742,7 +742,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.10', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.10', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -791,7 +791,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.11', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.11', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -843,7 +843,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.12', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.12', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -895,7 +895,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.13', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.13', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 
 
@@ -936,7 +936,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = $process->hasError();
         $expected = true;
-		TestCheck::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -985,7 +985,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.2', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.2', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -1034,7 +1034,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.3', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.3', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -1083,7 +1083,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.4', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.4', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -1133,6 +1133,6 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.5', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.5', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
     }
 }

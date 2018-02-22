@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Dropbox;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Dropbox';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Dropbox::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Dropbox::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

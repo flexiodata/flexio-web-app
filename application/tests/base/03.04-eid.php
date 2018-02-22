@@ -37,6 +37,6 @@ class Test
 
         $actual = ($valid_eid_count === $total_eid_count); // all eids that were created should be valid
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Eid::generate() test for valid eid creation', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Eid::generate() test for valid eid creation', $actual, $expected, $results);
     }
 }

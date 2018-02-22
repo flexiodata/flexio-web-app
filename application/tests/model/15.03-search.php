@@ -37,6 +37,6 @@ class Test
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
     }
 }

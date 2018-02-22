@@ -231,7 +231,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "People" API call result',  $actual, $expected, $results);
 
 
         // BEGIN TEST; See here for example documentation: https://app.pipelinedeals.com/api/docs/resources/documents
@@ -289,6 +289,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); subset of PipelineDeals "Documents" API call result',  $actual, $expected, $results);
     }
 }

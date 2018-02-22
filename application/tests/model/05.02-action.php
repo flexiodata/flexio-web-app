@@ -33,7 +33,7 @@ class Test
         $eid = $model->action->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Action::create(); for action creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Action::create(); for action creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
 
@@ -64,6 +64,6 @@ class Test
             'started' => '2018-01-02 01:02:03',
             'finished' => '2018-01-02 01:02:04'
         );
-        TestCheck::assertInArray('B.1', 'Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
     }
 }

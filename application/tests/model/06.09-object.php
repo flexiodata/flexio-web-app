@@ -46,7 +46,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.1', '\Model::assoc_change_type(); throw an exception when an invalid new edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::assoc_change_type(); throw an exception when an invalid new edge is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -67,7 +67,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.2', '\Model::assoc_change_type(); throw an exception when an invalid identifying edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::assoc_change_type(); throw an exception when an invalid identifying edge is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -78,7 +78,7 @@ class Test
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_FROM, $eid2, \Model::EDGE_LINKED_TO);
         $actual = $add_operation === true && $change_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Model::assoc_change_type(); return false when an identifying edge that doesn\'t exist is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::assoc_change_type(); return false when an identifying edge that doesn\'t exist is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -89,7 +89,7 @@ class Test
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_TO, $eid2, \Model::EDGE_LINKED_TO);
         $actual = $add_operation === true && $change_operation === true;
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\Model::assoc_change_type(); return true when an identifying edge is the same as the same type as the new edge even though no change is made',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Model::assoc_change_type(); return true when an identifying edge is the same as the same type as the new edge even though no change is made',  $actual, $expected, $results);
 
 
 
@@ -104,7 +104,7 @@ class Test
         $change_operation = $model->assoc_change_type('x', \Model::EDGE_LINKED_TO, $eid2, \Model::EDGE_LINKED_FROM);
         $actual = $add_operation === true && $change_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::assoc_change_type(); return false when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::assoc_change_type(); return false when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -115,7 +115,7 @@ class Test
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_TO, 'x', \Model::EDGE_LINKED_FROM);
         $actual = $add_operation === true && $change_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Model::assoc_change_type(); return false when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::assoc_change_type(); return false when an invalid eid is specified',  $actual, $expected, $results);
 
 
 
@@ -130,7 +130,7 @@ class Test
         $change_operation = $model->assoc_change_type($eid1, \Model::EDGE_LINKED_TO, $eid2, \Model::EDGE_LINKED_FROM);
         $actual = $add_operation === true && $change_operation === true;
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::assoc_change_type(); return true when an association is changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::assoc_change_type(); return true when an association is changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -144,7 +144,7 @@ class Test
         $count_new_after_change = $model->assoc_count($eid1, \Model::EDGE_LINKED_FROM);
         $actual = $count_after_addition === 1 && $count_original_after_change === 0 && $count_new_after_change === 1;
         $expected = true;
-        TestCheck::assertBoolean('C.2', '\Model::assoc_change_type(); make sure the association is changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Model::assoc_change_type(); make sure the association is changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -158,7 +158,7 @@ class Test
         $assoc_count2 = count($model->assoc_get($eid1, \Model::EDGE_LINKED_FROM, [$eid2]));
         $actual = $add_operation1 === true && $add_operation2 === true && $change_operation === true && $assoc_count1 === 0 && $assoc_count2 === 1;
         $expected = true;
-        TestCheck::assertBoolean('C.3', '\Model::assoc_change_type(); return true when trying to change to an association that already exists, but make sure to not add a new association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.3', '\Model::assoc_change_type(); return true when trying to change to an association that already exists, but make sure to not add a new association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -173,7 +173,7 @@ class Test
         $count_new_after_change = $model->assoc_count($eid1, \Model::EDGE_LINKED_FROM);
         $actual = $count_after_addition === 1 && $count_original_after_change === 1 && $count_new_after_change === 0;
         $expected = true;
-        TestCheck::assertBoolean('C.4', '\Model::assoc_change_type(); make sure the association is sensitive to eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.4', '\Model::assoc_change_type(); make sure the association is sensitive to eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -188,7 +188,7 @@ class Test
         $count_new_after_change = $model->assoc_count($eid1, \Model::EDGE_LINKED_FROM);
         $actual = $count_after_addition === 1 && $count_original_after_change === 1 && $count_new_after_change === 0;
         $expected = true;
-        TestCheck::assertBoolean('C.5', '\Model::assoc_change_type(); make sure the association is sensitive to eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.5', '\Model::assoc_change_type(); make sure the association is sensitive to eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -204,6 +204,6 @@ class Test
         $count_new_after_change = $model->assoc_count($eid1, \Model::EDGE_LINKED_FROM);
         $actual = $count_association1 === 1 && $count_association2 === 1 && $count_original_after_change === 0 && $count_new_after_change === 1;
         $expected = true;
-        TestCheck::assertBoolean('C.6', '\Model::assoc_change_type(); make sure the association is sensitive to the association type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.6', '\Model::assoc_change_type(); make sure the association is sensitive to the association type',  $actual, $expected, $results);
     }
 }

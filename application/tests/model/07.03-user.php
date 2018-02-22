@@ -46,6 +46,6 @@ class Test
         }
         $actual = count($created_eids) == $total_count && $failed_user_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
     }
 }

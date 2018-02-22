@@ -61,6 +61,6 @@ EOD;
 
         // note: this line uses php's fgetcsv rules
         $expected = '[["a1","b1"],["a2","b2"]]';
-        TestCheck::assertArray('A.1', 'Convert Job; basic content upload test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Convert Job; basic content upload test',  $actual, $expected, $results);
     }
 }

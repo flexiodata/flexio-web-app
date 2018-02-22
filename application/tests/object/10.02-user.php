@@ -29,21 +29,21 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_UNDEFINED;
         $expected = '';
-        TestCheck::assertString('A.1', 'User member type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_OWNER;
         $expected = 'owner';
-        TestCheck::assertString('A.2', 'User member type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_GROUP;
         $expected = 'member';
-        TestCheck::assertString('A.3', 'User member type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'User member type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Object\User::MEMBER_PUBLIC;
         $expected = 'public';
-        TestCheck::assertString('A.4', 'User member type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'User member type',  $actual, $expected, $results);
     }
 }

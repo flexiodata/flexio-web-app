@@ -31,19 +31,19 @@ class Test
         $object = \Flexio\Object\User::create();
         $actual = 'Flexio\Object\User';
         $expected = get_class($object);
-        TestCheck::assertString('A.1', 'User::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'User::create(); return the object if it\'s successfully created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $actual = $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('A.2', 'User::create(); make sure the correct type is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'User::create(); make sure the correct type is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $actual = \Flexio\Base\Eid::isValid($object->getEid());
         $expected = true;
-        TestCheck::assertBoolean('A.4', 'User::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', 'User::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
 
 
@@ -53,14 +53,14 @@ class Test
         $object = \Flexio\Object\User::load('');
         $actual = $object;
         $expected = false;
-        TestCheck::assertBoolean('B.1', 'User::load(); return false if an object fails to load',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', 'User::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object;
         $expected = false;
-        TestCheck::assertBoolean('B.2', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
@@ -70,7 +70,7 @@ class Test
         $object = \Flexio\Object\User::load($eid);
         $actual = 'Flexio\Object\User';
         $expected = get_class($object);
-        TestCheck::assertString('B.3', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', 'User::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
@@ -80,7 +80,7 @@ class Test
         $object = \Flexio\Object\User::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('B.4', 'User::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', 'User::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
@@ -90,7 +90,7 @@ class Test
         $object = \Flexio\Object\User::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
-        TestCheck::assertString('B.5', 'User::load(); make sure the eid is set when an object is loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.5', 'User::load(); make sure the eid is set when an object is loaded',  $actual, $expected, $results);
 
 
 
@@ -101,7 +101,7 @@ class Test
         $object = $object->delete();
         $actual =  'Flexio\Object\User';
         $expected = get_class($object);
-        TestCheck::assertString('C.1', 'User::delete(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', 'User::delete(); return the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -109,14 +109,14 @@ class Test
         $eid2 = $object->delete()->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
-        TestCheck::assertBoolean('C.2', 'User::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', 'User::delete(); deleting an object shouldn\'t change its eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->delete();
         $actual =  $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('C.3', 'User::delete(); deleting an object shouldn\'t change its type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.3', 'User::delete(); deleting an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -124,7 +124,7 @@ class Test
         $status2 = $object->delete()->getStatus();
         $actual =  ($status1 !== \Model::STATUS_DELETED && $status2 === \Model::STATUS_DELETED);
         $expected = true;
-        TestCheck::assertBoolean('C.4', 'User::delete(); make sure the status is set to deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.4', 'User::delete(); make sure the status is set to deleted',  $actual, $expected, $results);
 
 
 
@@ -135,7 +135,7 @@ class Test
         $object = $object->set([]);
         $actual =  'Flexio\Object\User';
         $expected = get_class($object);
-        TestCheck::assertString('D.1', 'User::set(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', 'User::set(); return the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -143,7 +143,7 @@ class Test
         $eid2 = $object->set([])->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
-        TestCheck::assertBoolean('D.2', 'User::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.2', 'User::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -151,21 +151,21 @@ class Test
         $eid2 = $object->set(array('eid'=>'xxxxxxxxxxxx'))->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
-        TestCheck::assertBoolean('D.3', 'User::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.3', 'User::set(); don\'t allow the eid to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->set([]);
         $actual =  $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('D.4', 'User::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.4', 'User::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->set(array('eid_type'=>\Model::TYPE_OBJECT));
         $actual =  $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('D.5', 'User::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.5', 'User::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
 
 
 
@@ -176,7 +176,7 @@ class Test
         $properties = $object->get();
         $actual =  is_array($properties);
         $expected = true;
-        TestCheck::assertString('E.1', 'User::get(); return the properties as an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.1', 'User::get(); return the properties as an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -213,7 +213,7 @@ class Test
             "updated" : null
         }
         ',true);
-        TestCheck::assertArrayKeys('E.2', 'User::get(); return the properties as an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArrayKeys('E.2', 'User::get(); return the properties as an array',  $actual, $expected, $results);
 
 
 
@@ -224,7 +224,7 @@ class Test
         $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  'Flexio\Object\User';
         $expected = get_class($object);
-        TestCheck::assertString('F.1', 'User::setStatus(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.1', 'User::setStatus(); return the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -232,14 +232,14 @@ class Test
         $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
-        TestCheck::assertBoolean('F.2', 'User::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.2', 'User::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
         $object = $object->setStatus(\Model::STATUS_TRASH);
         $actual =  $object->getType();
         $expected = \Model::TYPE_USER;
-        TestCheck::assertString('F.3', 'User::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.3', 'User::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -255,7 +255,7 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('F.4', 'User::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.4', 'User::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\User::create();
@@ -263,6 +263,6 @@ class Test
         $status2 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
         $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_TRASH);
         $expected = true;
-        TestCheck::assertBoolean('F.5', 'User::setStatus(); make sure the status is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.5', 'User::setStatus(); make sure the status is set',  $actual, $expected, $results);
     }
 }

@@ -62,7 +62,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -104,7 +104,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -146,7 +146,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -188,7 +188,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -230,7 +230,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -272,7 +272,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -314,7 +314,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -356,7 +356,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,true,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -398,7 +398,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,true,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -440,7 +440,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -482,7 +482,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -524,7 +524,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,true,false,false,false,false,false,false);
-        TestCheck::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -566,7 +566,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,true,false,false,false,false,false);
-        TestCheck::assertArray('A.13', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.13', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -608,7 +608,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false);
-        TestCheck::assertArray('A.14', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.14', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -650,7 +650,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false);
-        TestCheck::assertArray('A.15', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.15', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -692,7 +692,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false);
-        TestCheck::assertArray('A.16', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.16', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -734,7 +734,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false);
-        TestCheck::assertArray('A.17', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.17', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -776,7 +776,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true);
-        TestCheck::assertArray('A.18', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.18', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
 
 
@@ -822,7 +822,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -864,7 +864,7 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(false,false,false,false,false,false,false,false,false,true,false,false,true,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -906,6 +906,6 @@ EOD;
         $r16 = \Flexio\Base\ValidatorSchema::check($v16, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16);
         $expected = array(true,false,false,true,true,false,true,false,false,false,false,false,false,true,false,false);
-        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if value isn\'t one of the enumerated values',  $actual, $expected, $results);
     }
 }

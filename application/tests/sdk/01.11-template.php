@@ -28,7 +28,7 @@ class Test
 EOD;
         $actual = json_deocdTestUtil::execSDKJS($script);
         $expected = "";
-        TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
 */
     }
 }

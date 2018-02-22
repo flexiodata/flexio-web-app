@@ -42,6 +42,6 @@ class Test
             "description": "Test connection"
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Api\Connection::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\Connection::create(); return the object',  $actual, $expected, $results);
     }
 }

@@ -36,7 +36,7 @@ class Test
         [
         ]
         ';
-        TestCheck::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -56,7 +56,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -80,7 +80,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -132,6 +132,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); a simple array of values maps to an array to an array of key values; the key is either the parent node or a default if no key is available',  $actual, $expected, $results);
     }
 }

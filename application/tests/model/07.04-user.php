@@ -48,7 +48,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::MISSING_PARAMETER
         );
-        TestCheck::assertInArray('A.1', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -71,7 +71,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.2', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -94,7 +94,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::MISSING_PARAMETER
         );
-        TestCheck::assertInArray('A.3', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -117,7 +117,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.4', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -129,7 +129,7 @@ class Test
         $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.5', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -145,6 +145,6 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        TestCheck::assertInArray('A.6', '\Model::create(); make sure that eid and user_name are set when a user is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', '\Model::create(); make sure that eid and user_name are set when a user is created',  $actual, $expected, $results);
     }
 }

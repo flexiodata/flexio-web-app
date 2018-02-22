@@ -45,7 +45,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.1', '\Model::assoc_add(); throw an exception when an invalid edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::assoc_add(); throw an exception when an invalid edge is specified',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -66,7 +66,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('A.2', '\Model::assoc_add(); throw an exception when an invalid edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::assoc_add(); throw an exception when an invalid edge is specified',  $actual, $expected, $results);
 
 
 
@@ -90,7 +90,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('B.1', '\Model::assoc_add(); throw an exception when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', '\Model::assoc_add(); throw an exception when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -110,7 +110,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('B.2', '\Model::assoc_add(); throw an exception when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Model::assoc_add(); throw an exception when an invalid eid is specified',  $actual, $expected, $results);
 
 
 
@@ -124,7 +124,7 @@ class Test
         $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $actual = $association;
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::assoc_add(); return true when a valid association is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::assoc_add(); return true when a valid association is created',  $actual, $expected, $results);
 
 
 
@@ -140,7 +140,7 @@ class Test
         $assoc_count = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid2]));
         $actual = $association1 === true && $association2 === true && $assoc_count === 1;
         $expected = true;
-        TestCheck::assertBoolean('D.1', '\Model::assoc_add(); if the same association is created twice, don\'t create it twice but succeed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.1', '\Model::assoc_add(); if the same association is created twice, don\'t create it twice but succeed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -151,7 +151,7 @@ class Test
         $association2 = $model->assoc_add($eid2, \Model::EDGE_LINKED_TO, $eid1);
         $actual = $association1 === true && $association2 === true;
         $expected = true;
-        TestCheck::assertBoolean('D.2', '\Model::assoc_add(); two objects should allow the same association to be used bidirectionally; return true when both associations are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.2', '\Model::assoc_add(); two objects should allow the same association to be used bidirectionally; return true when both associations are created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -162,6 +162,6 @@ class Test
         $association2 = $model->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
         $actual = $association1 === true && $association2 === true;
         $expected = true;
-        TestCheck::assertBoolean('D.3', '\Model::assoc_add(); two objects should allow associations of different types; return true when both associations are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.3', '\Model::assoc_add(); two objects should allow associations of different types; return true when both associations are created',  $actual, $expected, $results);
     }
 }

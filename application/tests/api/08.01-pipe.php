@@ -42,6 +42,6 @@ class Test
             "description": "Test pipe"
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Api\Pipe::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\Pipe::create(); return the object',  $actual, $expected, $results);
     }
 }

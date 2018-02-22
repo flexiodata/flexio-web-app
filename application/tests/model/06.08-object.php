@@ -36,7 +36,7 @@ class Test
         $delete_operation = $model->assoc_delete($eid1, '', $eid2);
         $actual = $add_operation === true && $delete_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::assoc_delete(); return false when an invalid edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::assoc_delete(); return false when an invalid edge is specified',  $actual, $expected, $results);
 
 
 
@@ -51,7 +51,7 @@ class Test
         $delete_operation = $model->assoc_delete('x', \Model::EDGE_LINKED_TO, $eid2);
         $actual = $add_operation === true && $delete_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::assoc_delete(); return false when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::assoc_delete(); return false when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -63,7 +63,7 @@ class Test
         $delete_operation = $model->assoc_delete($eid1, \Model::EDGE_LINKED_TO, $eid3);
         $actual = $add_operation === true && $delete_operation === false;
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Model::assoc_delete(); return false when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::assoc_delete(); return false when an invalid eid is specified',  $actual, $expected, $results);
 
 
 
@@ -78,7 +78,7 @@ class Test
         $delete_operation = $model->assoc_delete($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $actual = $add_operation === true && $delete_operation === true;
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::assoc_delete(); return true when a valid association is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::assoc_delete(); return true when a valid association is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -91,7 +91,7 @@ class Test
         $count_after_deletion = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count_after_addition === 1 && $count_after_deletion === 0;
         $expected = true;
-        TestCheck::assertBoolean('C.2', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -106,7 +106,7 @@ class Test
         $count_after_deletion = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count_after_addition === 2 && $count_after_deletion === 1;
         $expected = true;
-        TestCheck::assertBoolean('C.3', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.3', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -121,7 +121,7 @@ class Test
         $count_after_deletion = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count_after_addition === 2 && $count_after_deletion === 2;
         $expected = true;
-        TestCheck::assertBoolean('C.4', '\Model::assoc_delete(); make sure deletion is sensitive to the association type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.4', '\Model::assoc_delete(); make sure deletion is sensitive to the association type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -136,7 +136,7 @@ class Test
         $count_after_deletion = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count_after_addition === 2 && $count_after_deletion === 2;
         $expected = true;
-        TestCheck::assertBoolean('C.5', '\Model::assoc_delete(); make sure deletion is sensitive to the eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.5', '\Model::assoc_delete(); make sure deletion is sensitive to the eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -151,6 +151,6 @@ class Test
         $count_after_deletion = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count_of_all_items === 2 && $count_after_deletion === 1;
         $expected = true;
-        TestCheck::assertBoolean('C.6', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.6', '\Model::assoc_delete(); make sure deletion removes association',  $actual, $expected, $results);
     }
 }

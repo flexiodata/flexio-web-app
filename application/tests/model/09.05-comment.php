@@ -37,7 +37,7 @@ class Test
         $eid = $model->create(\Model::TYPE_COMMENT, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_USER;  // try something besides \Model::TYPE_UNDEFINED
@@ -50,7 +50,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_COMMENT;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -61,7 +61,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['name']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
@@ -76,7 +76,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -90,7 +90,7 @@ class Test
             'comment' => '',
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        TestCheck::assertInArray('B.2', '\Model::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
@@ -106,7 +106,7 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('C.1', '\Model::create(); in comment creation, allow eid_status to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', '\Model::create(); in comment creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -118,6 +118,6 @@ class Test
         $expected = array(
             'comment' => 'Test comment'
         );
-        TestCheck::assertInArray('C.2', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

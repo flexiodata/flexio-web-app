@@ -37,7 +37,7 @@ class Test
         $eid = $model->create(\Model::TYPE_PROJECT, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); in project creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in project creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_COMMENT;  // try something besides \Model::TYPE_UNDEFINED
@@ -50,7 +50,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PROJECT;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::create(); in project creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in project creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -61,7 +61,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['user_name']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::create(); in project creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in project creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
@@ -75,7 +75,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::create(); in project creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in project creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -91,7 +91,7 @@ class Test
             'display_icon' => '',
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        TestCheck::assertInArray('B.2', '\Model::create(); in project creation, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in project creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
@@ -107,7 +107,7 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('C.1', '\Model::create(); in project creation, allow eid_status to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', '\Model::create(); in project creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -127,7 +127,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('C.2', '\Model::create(); in project creation, throw an exception for an invalid property value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in project creation, throw an exception for an invalid property value',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -139,7 +139,7 @@ class Test
         $expected = array(
             'name' => 'Test Project'
         );
-        TestCheck::assertInArray('C.3', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -151,7 +151,7 @@ class Test
         $expected = array(
             'description' => 'Test project description'
         );
-        TestCheck::assertInArray('C.4', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.4', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -163,6 +163,6 @@ class Test
         $expected = array(
             'display_icon' => 'Test project display icon'
         );
-        TestCheck::assertInArray('C.5', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

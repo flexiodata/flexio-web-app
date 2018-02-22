@@ -34,7 +34,7 @@ Flexio.pipe()
 EOD;
         $actual = TestUtil::execSDKJS($script);
         $expected = "Hello World!\n";
-        TestCheck::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
     }
 }
 

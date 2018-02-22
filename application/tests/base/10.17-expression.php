@@ -39,22 +39,22 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression("LEFT('ABC',1)");
         $expected = 'A';
-        TestCheck::assertString('A.1', 'Expression; LEFT() function',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression("left('ABC',1)");
         $expected = 'A';
-        TestCheck::assertString('A.2', 'Expression; LEFT() function',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression("Left('ABC',2)");
         $expected = 'AB';
-        TestCheck::assertString('A.3', 'Expression; LEFT() function',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression("LefT('ABC',2)");
         $expected = 'AB';
-        TestCheck::assertString('A.4', 'Expression; LEFT() function',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'Expression; LEFT() function',  $actual, $expected, $results);
 
 
 
@@ -63,24 +63,24 @@ class Test
         // BEGIN TEST
         $actual = TestUtil::evalExpression("upper(trim(null))");
         $expected = null;
-        TestCheck::assertString('B.1', 'Expression; common case standardization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '  company name  ';
         $actual = TestUtil::evalExpression("upper(trim('$expr'))");
         $expected = 'COMPANY NAME';
-        TestCheck::assertString('B.2', 'Expression; common case standardization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestUtil::evalExpression("concat(upper(substr((null),1,1)) , lower(substr((null),2)))");
         $expected = null;
-        TestCheck::assertString('B.3', 'Expression; common case standardization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'this is a sentence.';
         $actual = TestUtil::evalExpression("concat(upper(substr(('$expr'),1,1)) , lower(substr(('$expr'),2)))");
         $expected = 'This is a sentence.';
-        TestCheck::assertString('B.4', 'Expression; common case standardization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', 'Expression; common case standardization',  $actual, $expected, $results);
 
 
 
@@ -90,7 +90,7 @@ class Test
         $expr = '  123  ';
         $actual = TestUtil::evalExpression("lpad(trim('$expr'),10,'0')");
         $expected = '0000000123';
-        TestCheck::assertString('C.1', 'Expression; common padding standardization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', 'Expression; common padding standardization',  $actual, $expected, $results);
 
 
 
@@ -106,7 +106,7 @@ class Test
         \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
-        TestCheck::assertNull('D.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('D.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'lpad((f),0,\'0\')';
@@ -118,7 +118,7 @@ class Test
         \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = null;
-        TestCheck::assertNull('D.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('D.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
 
 
 
@@ -134,7 +134,7 @@ class Test
         \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "a";
-        TestCheck::assertString('E.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.1', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'if(!isnull(f),"a",if(isnull(f),"b","c"))';
@@ -146,7 +146,7 @@ class Test
         \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "b";
-        TestCheck::assertString('E.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.2', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'if(isnull(f) = false,"a",if(!isnull(f),"b","c"))';
@@ -158,7 +158,7 @@ class Test
         \Flexio\Base\ExprEvaluate::evaluate($expr, $row, $structure, $retval);
         $actual = $retval;
         $expected = "c";
-        TestCheck::assertString('E.3', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.3', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
 
 
 

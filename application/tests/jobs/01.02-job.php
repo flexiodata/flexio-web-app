@@ -41,7 +41,7 @@ class Test
             "params": ""
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Jobs\Base::replaceParameterTokens(); handle case with no replacement', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Jobs\Base::replaceParameterTokens(); handle case with no replacement', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -58,7 +58,7 @@ class Test
             "params": ""
         }
         ';
-        TestCheck::assertInArray('A.2', '\Flexio\Jobs\Base::replaceParameterTokens(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Jobs\Base::replaceParameterTokens(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -76,7 +76,7 @@ class Test
             "params": ""
         }
         ';
-        TestCheck::assertInArray('A.3', '\Flexio\Jobs\Base::replaceParameterTokens(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Jobs\Base::replaceParameterTokens(); variables that aren\'t set should be replaced with a space', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -94,7 +94,7 @@ class Test
             "params": "field1"
         }
         ';
-        TestCheck::assertInArray('A.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -112,7 +112,7 @@ class Test
             "params": "field1"
         }
         ';
-        TestCheck::assertInArray('A.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -130,7 +130,7 @@ class Test
             "params": ""
         }
         ';
-        TestCheck::assertInArray('A.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('A.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; case-sensitive check', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -148,7 +148,7 @@ class Test
             "params": "$ {v1}"
         }
         ';
-        TestCheck::assertInArray('A.7', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -166,7 +166,7 @@ class Test
             "params": "${ v1}"
         }
         ';
-        TestCheck::assertInArray('A.8', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -184,7 +184,7 @@ class Test
             "params": "${v1 }"
         }
         ';
-        TestCheck::assertInArray('A.9', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.9', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -202,7 +202,7 @@ class Test
             "params": "  field1  "
         }
         ';
-        TestCheck::assertInArray('A.10', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.10', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -220,7 +220,7 @@ class Test
             "params": "{v1}"
         }
         ';
-        TestCheck::assertInArray('A.11', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.11', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -238,7 +238,7 @@ class Test
             "params": "$v1}"
         }
         ';
-        TestCheck::assertInArray('A.12', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.12', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -256,7 +256,7 @@ class Test
             "params": "${v1"
         }
         ';
-        TestCheck::assertInArray('A.13', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.13', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; check for bad variable syntax', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -274,7 +274,7 @@ class Test
             "params": "test@flex.io"
         }
         ';
-        TestCheck::assertInArray('A.14', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('A.14', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -292,7 +292,7 @@ class Test
             "params": "test@flex.io"
         }
         ';
-        TestCheck::assertInArray('A.15', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.15', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -310,7 +310,7 @@ class Test
             "params": "test@flex.io"
         }
         ';
-        TestCheck::assertInArray('A.16', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.16', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -328,7 +328,7 @@ class Test
             "params": "test@flex.io"
         }
         ';
-        TestCheck::assertInArray('A.17', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.17', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable names can be combinations of letters, numbers, underscores and hyphens', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -346,7 +346,7 @@ class Test
             "params": "\'"
         }
         ';
-        TestCheck::assertInArray('A.18', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.18', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -364,7 +364,7 @@ class Test
             "params": "${}"
         }
         ';
-        TestCheck::assertInArray('A.19', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.19', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -382,7 +382,7 @@ class Test
             "params": "\\\\"
         }
         ';
-        TestCheck::assertInArray('A.20', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.20', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; variable values with symbols', $actual, $expected, $results);
 
 
 
@@ -404,7 +404,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.1', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.1', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -422,7 +422,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.2', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -440,7 +440,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.3', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.3', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -458,7 +458,7 @@ class Test
             "params": false
         }
         ';
-        TestCheck::assertInArray('B.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -476,7 +476,7 @@ class Test
             "params": true
         }
         ';
-        TestCheck::assertInArray('B.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -494,7 +494,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -512,7 +512,7 @@ class Test
             "params": 10
         }
         ';
-        TestCheck::assertInArray('B.7', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.7', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -530,7 +530,7 @@ class Test
             "params": -2.1
         }
         ';
-        TestCheck::assertInArray('B.8', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.8', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -548,7 +548,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.9', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.9', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -566,7 +566,7 @@ class Test
             "params": [1,2,3]
         }
         ';
-        TestCheck::assertInArray('B.10', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.10', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -584,7 +584,7 @@ class Test
             "params": null
         }
         ';
-        TestCheck::assertInArray('B.11', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.11', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -602,7 +602,7 @@ class Test
             "params": {"a": "b"}
         }
         ';
-        TestCheck::assertInArray('B.12', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.12', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -620,7 +620,7 @@ class Test
             "params": "The value is:  units."
         }
         ';
-        TestCheck::assertInArray('B.13', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.13', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -638,7 +638,7 @@ class Test
             "params": "The value is: 10 units."
         }
         ';
-        TestCheck::assertInArray('B.14', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.14', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -656,7 +656,7 @@ class Test
             "params": "The statement is ."
         }
         ';
-        TestCheck::assertInArray('B.15', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('B.15', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -674,7 +674,7 @@ class Test
             "params": "The statement is true."
         }
         ';
-        TestCheck::assertInArray('B.16', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.16', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -692,7 +692,7 @@ class Test
             "params": "The value is ."
         }
         ';
-        TestCheck::assertInArray('B.17', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string; nulls become empty', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.17', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; convert variable value to a string if it\'s part of a string; nulls become empty', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -710,7 +710,7 @@ class Test
             "params": "10/10 is 1"
         }
         ';
-        TestCheck::assertInArray('B.18', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; replace multiple values in a string', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.18', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; replace multiple values in a string', $actual, $expected, $results);
 
 
 
@@ -733,7 +733,7 @@ class Test
             "params": [ "field1", "field2" ]
         }
         ';
-        TestCheck::assertInArray('C.1', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -752,7 +752,7 @@ class Test
             "params": [ "field2", "field1" ]
         }
         ';
-        TestCheck::assertInArray('C.2', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -771,7 +771,7 @@ class Test
             "params": [ "field2", "field1", "field2", "field1" ]
         }
         ';
-        TestCheck::assertInArray('C.3', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -790,7 +790,7 @@ class Test
             "params": [ "field2", "${v1}", "field2", "${v1}" ]
         }
         ';
-        TestCheck::assertInArray('C.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -809,7 +809,7 @@ class Test
             "params": {"a": "b"}
         }
         ';
-        TestCheck::assertInArray('C.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -828,7 +828,7 @@ class Test
             "params": "The key is value."
         }
         ';
-        TestCheck::assertInArray('C.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.6', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -847,7 +847,7 @@ class Test
             "params": "Value is key."
         }
         ';
-        TestCheck::assertInArray('C.7', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.7', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -866,7 +866,7 @@ class Test
             "params": {"a": "A", "b": "B"}
         }
         ';
-        TestCheck::assertInArray('C.8', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
 
 
 
@@ -907,7 +907,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.1', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -945,7 +945,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.2', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('D.2', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -982,7 +982,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.3', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertInArray('D.3', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results, \Flexio\Tests\Check::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -1026,7 +1026,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.4', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -1078,7 +1078,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.5', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
@@ -1134,7 +1134,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertInArray('D.6', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', '\Flexio\Jobs\Base::replaceParameterTokens(); replace variables in params only based on case-sensitive, whole-variable-word match', $actual, $expected, $results);
 
     }
 }

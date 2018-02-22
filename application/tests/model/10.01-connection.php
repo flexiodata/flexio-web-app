@@ -30,22 +30,22 @@ class Test
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_UNDEFINED;
         $expected = '';
-        TestCheck::assertString('A.1', 'Connection status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_AVAILABLE;
         $expected = 'A';
-        TestCheck::assertString('A.2', 'Connection status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $expected = 'U';
-        TestCheck::assertString('A.3', 'Connection status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'Connection status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::CONNECTION_STATUS_ERROR;
         $expected = 'E';
-        TestCheck::assertString('A.4', 'Connection status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'Connection status constant',  $actual, $expected, $results);
 
 
 
@@ -54,6 +54,6 @@ class Test
         // BEGIN TEST
         $actual = true;
         $expected = true;
-        TestCheck::assertBoolean('B.1', 'Misc connection functions; TODO: fill out',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', 'Misc connection functions; TODO: fill out',  $actual, $expected, $results);
     }
 }

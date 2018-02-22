@@ -38,7 +38,7 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.1', '\Flexio\Services\Email::isValid() null input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Services\Email::isValid() null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -52,7 +52,7 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.2', '\Flexio\Services\Email::isValid() false input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Services\Email::isValid() false input', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -66,7 +66,7 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.3', '\Flexio\Services\Email::isValid() true input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', '\Flexio\Services\Email::isValid() true input', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -80,7 +80,7 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.4', '\Flexio\Services\Email::isValid() numeric input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', '\Flexio\Services\Email::isValid() numeric input', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -94,6 +94,6 @@ class Test
             $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.5', '\Flexio\Services\Email::isValid() array input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Services\Email::isValid() array input', $actual, $expected, $results);
     }
 }

@@ -43,6 +43,6 @@ class Test
         }
         $actual = count($created_eids) == $total_count && $failed_project_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); creating projects should succeed and produce a unique eid for each new project',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); creating projects should succeed and produce a unique eid for each new project',  $actual, $expected, $results);
     }
 }

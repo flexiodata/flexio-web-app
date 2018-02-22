@@ -73,7 +73,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -123,7 +123,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -173,7 +173,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the items parameter isn\'t an array or an object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -223,7 +223,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -273,7 +273,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -323,7 +323,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -373,7 +373,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,true,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -423,7 +423,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,true,false,false,false,true,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -473,7 +473,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,false,true,false,false,false,false,false,false);
-        TestCheck::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -523,7 +523,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,true,false,false,false,false,false,false,true,false);
-        TestCheck::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -573,7 +573,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,true,false,false,false,false,false,false,false,false,true);
-        TestCheck::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -623,7 +623,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,true,true,false,false,true,true,true,true,true,true,false,false);
-        TestCheck::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -673,7 +673,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.13', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.13', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -723,7 +723,7 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,true);
-        TestCheck::assertArray('A.14', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.14', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -773,6 +773,6 @@ EOD;
         $r20 = \Flexio\Base\ValidatorSchema::check($v20, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18,$r19,$r20);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.15', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.15', '\Flexio\Base\ValidatorSchema::check(); return false if an array doesn\'t validate against the items schema parameter',  $actual, $expected, $results);
     }
 }

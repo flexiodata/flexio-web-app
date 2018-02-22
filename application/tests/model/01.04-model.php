@@ -38,7 +38,7 @@ class Test
             $actual = TestError::ERROR_EXCEPTION;
         }
         $expected = TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestError::ERROR_NO_EXCEPTION;
@@ -51,7 +51,7 @@ class Test
             $actual = TestError::ERROR_EXCEPTION;
         }
         $expected = TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.2', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestError::ERROR_NO_EXCEPTION;
@@ -64,7 +64,7 @@ class Test
             $actual = TestError::ERROR_EXCEPTION;
         }
         $expected = TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = TestError::ERROR_NO_EXCEPTION;
@@ -77,7 +77,7 @@ class Test
             $actual = TestError::ERROR_EXCEPTION;
         }
         $expected = TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
 
 
 
@@ -94,6 +94,6 @@ class Test
             $actual = TestError::ERROR_EXCEPTION;
         }
         $expected = TestError::ERROR_NO_EXCEPTION;
-        TestCheck::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Model::setTimezone(); throw an exception with a bad input',  $actual, $expected, $results);
     }
 }

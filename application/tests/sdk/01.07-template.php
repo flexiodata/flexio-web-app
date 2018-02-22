@@ -44,7 +44,7 @@ Flexio.pipe()
 EOD;
         $actual = TestUtil::execSDKJS($script);
         $expected = "HELLO WORLD!\n";
-        TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
     }
 }
 

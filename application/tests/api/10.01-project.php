@@ -47,6 +47,6 @@ class Test
             "description": "Test project"
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Api\Project::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\Project::create(); return the object',  $actual, $expected, $results);
     }
 }

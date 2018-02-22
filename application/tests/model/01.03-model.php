@@ -31,7 +31,7 @@ class Test
         $db = $model->getDatabase();
         $actual = is_object($db);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::getDatabase(); basic connection with default credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::getDatabase(); basic connection with default credentials',  $actual, $expected, $results);
 
 
 
@@ -53,6 +53,6 @@ class Test
             }
         }
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::getDatabase(); connection caching',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::getDatabase(); connection caching',  $actual, $expected, $results);
     }
 }

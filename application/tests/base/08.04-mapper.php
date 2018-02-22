@@ -41,7 +41,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -64,7 +64,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -89,7 +89,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -116,7 +116,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -143,7 +143,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.5', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -175,7 +175,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.6', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -201,7 +201,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.7', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -232,7 +232,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.8', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -267,7 +267,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.9', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -319,7 +319,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.10', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.10', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -375,7 +375,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.11', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -405,7 +405,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.12', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.12', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -435,7 +435,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.13', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.13', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -465,7 +465,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.14', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object; duplicate keys are removed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.14', '\Flexio\Base\Mapper::flatten(); a top-level object with nested objects flattens the keys to a single object; duplicate keys are removed',  $actual, $expected, $results);
 
 
 
@@ -491,7 +491,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.1', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -515,7 +515,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.2', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -539,7 +539,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.3', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -562,7 +562,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.4', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -589,7 +589,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.5', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -619,7 +619,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.6', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\Mapper::flatten(); an object with an array of non-objects distributes the key for each element in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -661,7 +661,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.7', '\Flexio\Base\Mapper::flatten(); an object with multiple subarray creates a cross product of the array; equivalent to a header table being joined to two child tables on differnet keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.7', '\Flexio\Base\Mapper::flatten(); an object with multiple subarray creates a cross product of the array; equivalent to a header table being joined to two child tables on differnet keys',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -692,7 +692,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.8', '\Flexio\Base\Mapper::flatten(); an object with an array of objects uses the object keys in the array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.8', '\Flexio\Base\Mapper::flatten(); an object with an array of objects uses the object keys in the array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -721,7 +721,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.9', '\Flexio\Base\Mapper::flatten(); an object with an array of arrays distributes the parent key',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.9', '\Flexio\Base\Mapper::flatten(); an object with an array of arrays distributes the parent key',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -755,7 +755,7 @@ class Test
             {"key1.key3" : "value3"}
         ]
         ';
-        TestCheck::assertArray('B.10', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.10', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -783,7 +783,7 @@ class Test
             {"key1" : "value1", "key2" : "value2", "key3.key5" : "value5", "key6" : "value6", "key7" : "value7"}
         ]
         ';
-        TestCheck::assertArray('B.11', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.11', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -819,7 +819,7 @@ class Test
             {"key4" : "value4", "key5" : "value5", "key1.key3" : "value3"}
         ]
         ';
-        TestCheck::assertArray('B.12', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.12', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -910,7 +910,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.12', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.12', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
 
 
@@ -936,7 +936,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.1', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -960,7 +960,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.2', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -988,7 +988,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.3', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1020,7 +1020,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.4', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1047,7 +1047,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.5', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\Mapper::flatten(); an array with an object flattens the object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1079,7 +1079,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('C.6', '\Flexio\Base\Mapper::flatten(); an array with mixed types flattens each type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.6', '\Flexio\Base\Mapper::flatten(); an array with mixed types flattens each type',  $actual, $expected, $results);
 
 
 
@@ -1109,7 +1109,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.1', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1137,7 +1137,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.2', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1165,7 +1165,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.3', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1193,7 +1193,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.4', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1229,7 +1229,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.5', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -1265,6 +1265,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('D.6', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\Mapper::flatten(); an array of arrays unions the nested arrays',  $actual, $expected, $results);
     }
 }

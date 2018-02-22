@@ -29,7 +29,7 @@ class Test
         $str = \Flexio\Base\Util::encrypt($unencrypted_str, 'abcdefg');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::encrypt() test for string encryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Util::encrypt() test for string encryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -37,7 +37,7 @@ class Test
         $str = \Flexio\Base\Util::encrypt($unencrypted_str, 'hijklmn');
         $actual = ($str === $encrypted_str_key);
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::encrypt() test for string encryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::encrypt() test for string encryption',  $actual, $expected, $results);
 
 
 
@@ -47,7 +47,7 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, ''); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -55,7 +55,7 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'a'); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
-        TestCheck::assertBoolean('B.2', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -63,7 +63,7 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'abcdefg'); // encrypted with key 'abcdefg' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -71,7 +71,7 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, ''); // encrypted with key 'hijklmn' using sodium implementation
         $actual = ($str === $unencrypted_str);
         $expected = false;
-        TestCheck::assertBoolean('B.4', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -79,7 +79,7 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'h');
         $actual = ($str === $unencrypted_str);
         $expected = false;
-        TestCheck::assertBoolean('B.5', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
 
         // BEGIN TEST
         $unencrypted_str = 'ENCRYPTION TEST';
@@ -87,6 +87,6 @@ class Test
         $str = \Flexio\Base\Util::decrypt($encrypted_str_key, 'hijklmn');
         $actual = ($str === $unencrypted_str);
         $expected = true;
-        TestCheck::assertBoolean('B.6', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.6', '\Flexio\Base\Util::decrypt() test for string decryption',  $actual, $expected, $results);
     }
 }

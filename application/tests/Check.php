@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestCheck
+class Check
 {
     const FLAG_NONE = '';
     const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
@@ -47,7 +47,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected null value;  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected null value;  Returned ' . self::stringify($actual);
     }
 
     public static function assertNan($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -75,7 +75,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected NaN value;  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected NaN value;  Returned ' . self::stringify($actual);
     }
 
 
@@ -105,7 +105,7 @@ class TestCheck
 
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
     public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -141,7 +141,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
     public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -184,7 +184,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
     public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -219,7 +219,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
 
@@ -248,7 +248,7 @@ class TestCheck
         if ((!is_array($actual) && !is_string($actual)) || (!is_array($expected) && !is_string($expected)))
         {
             $test_result->passed = false;
-            $test_result->message = 'Invalid test assertion.  Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+            $test_result->message = 'Invalid test assertion.  Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
             return;
         }
 
@@ -268,7 +268,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
     public static function assertArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -294,7 +294,7 @@ class TestCheck
         if (!is_array($actual) || (!is_array($expected) && !is_string($expected)))
         {
             $test_result->passed = false;
-            $test_result->message = 'Invalid test assertion.  Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+            $test_result->message = 'Invalid test assertion.  Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
             return;
         }
 
@@ -312,7 +312,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
     public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
@@ -405,7 +405,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = $test_result->message = 'Expected ' . TestCheck::stringify($expected) . 'to be a subset of ' . TestCheck::stringify($actual);
+        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . 'to be a subset of ' . self::stringify($actual);
     }
 
     public static function arrayKeysEqual($item1, $item2)

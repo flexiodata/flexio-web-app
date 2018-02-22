@@ -25,21 +25,21 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_UNDEFINED;
         $expected = '';
-        TestCheck::assertString('A.2', '\Flexio\Base\Validator::ERROR_UNDEFINED; check for existence of constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Base\Validator::ERROR_UNDEFINED; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_GENERAL;
         $expected = 'general';
-        TestCheck::assertString('A.3', '\Flexio\Base\Validator::ERROR_GENERAL; check for existence of constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', '\Flexio\Base\Validator::ERROR_GENERAL; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_MISSING_PARAMETER;
         $expected = 'missing-parameter';
-        TestCheck::assertString('A.4', '\Flexio\Base\Validator::ERROR_MISSING_PARAMETER; check for existence of constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', '\Flexio\Base\Validator::ERROR_MISSING_PARAMETER; check for existence of constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Validator::ERROR_INVALID_PARAMETER;
         $expected = 'invalid-parameter';
-        TestCheck::assertString('A.5', '\Flexio\Base\Validator::ERROR_INVALID_PARAMETER; check for existence of constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Base\Validator::ERROR_INVALID_PARAMETER; check for existence of constant',  $actual, $expected, $results);
     }
 }

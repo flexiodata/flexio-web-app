@@ -36,7 +36,7 @@ class Test
         $get_result = $model->assoc_get($eid1, 'x', [$eid2]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::assoc_get(); return an empty array() when an invalid edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::assoc_get(); return an empty array() when an invalid edge is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -47,7 +47,7 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_UNDEFINED, [$eid2]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::assoc_get(); return an empty array() when an undefined edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::assoc_get(); return an empty array() when an undefined edge is specified',  $actual, $expected, $results);
 
 
 
@@ -62,7 +62,7 @@ class Test
         $get_result = $model->assoc_get('x', \Model::EDGE_LINKED_TO, [$eid2]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -73,7 +73,7 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, ['x']);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::assoc_get(); return an empty array() when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -85,7 +85,7 @@ class Test
         $get_result = $model->assoc_get($eid3, \Model::EDGE_LINKED_TO, [$eid2]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.3', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -97,7 +97,7 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid3]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.4', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -109,7 +109,7 @@ class Test
         $get_result = $model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid3,$eid3]);
         $actual = $add_result === true && $get_result === array();
         $expected = true;
-        TestCheck::assertBoolean('B.5', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Model::assoc_get(); return an empty array() when a non-existing eid is specified',  $actual, $expected, $results);
 
 
 
@@ -126,7 +126,7 @@ class Test
         $expected = array(
             array('eid' => $eid2)
         );
-        TestCheck::assertInArray('C.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -141,7 +141,7 @@ class Test
         $expected = array(
             array('eid' => $eid2)
         );
-        TestCheck::assertInArray('C.2', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -156,7 +156,7 @@ class Test
         $expected = array(
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('C.3', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
 
 
@@ -173,7 +173,7 @@ class Test
         $actual = $get_result;
         $expected = array(
         );
-        TestCheck::assertInArray('D.1', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return deleted associations',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return deleted associations',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -186,7 +186,7 @@ class Test
         $actual = $get_result;
         $expected = array(
         );
-        TestCheck::assertInArray('D.2', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return associations for deleted objects',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return associations for deleted objects',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -199,7 +199,7 @@ class Test
         $actual = $get_result;
         $expected = array(
         );
-        TestCheck::assertInArray('D.3', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return associations for deleted objects',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.3', '\Model::assoc_get(); return array() of eids that have the specified association; don\'t return associations for deleted objects',  $actual, $expected, $results);
 
 
 
@@ -219,7 +219,7 @@ class Test
             array('eid' => $eid2),
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('E.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', '\Model::assoc_get(); return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -235,7 +235,7 @@ class Test
             array('eid' => $eid2),
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('E.2', '\Model::assoc_get(); in return array(), order eids in order they were created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.2', '\Model::assoc_get(); in return array(), order eids in order they were created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -252,7 +252,7 @@ class Test
             array('eid' => $eid2),
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('E.3', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.3', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -269,7 +269,7 @@ class Test
             array('eid' => $eid2),
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('E.4', '\Model::assoc_get(); when getting associated eids, only return eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.4', '\Model::assoc_get(); when getting associated eids, only return eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -285,7 +285,7 @@ class Test
         $expected = array(
             array('eid' => $eid2)
         );
-        TestCheck::assertInArray('E.5', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.5', '\Model::assoc_get(); when getting associated eids, only return eids that have that association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -301,7 +301,7 @@ class Test
         $expected = array(
             array('eid' => $eid2)
         );
-        TestCheck::assertInArray('E.6', '\Model::assoc_get(); when getting associated eids, only return a given eid once',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.6', '\Model::assoc_get(); when getting associated eids, only return a given eid once',  $actual, $expected, $results);
 
 
 
@@ -320,7 +320,7 @@ class Test
         $expected = array(
             array('eid' => $eid2)
         );
-        TestCheck::assertInArray('F.1', '\Model::assoc_get(); allow second parameter to be array of eids; return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.1', '\Model::assoc_get(); allow second parameter to be array of eids; return array() of target eids that have the specified association',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -336,6 +336,6 @@ class Test
             array('eid' => $eid2),
             array('eid' => $eid3)
         );
-        TestCheck::assertInArray('F.2', '\Model::assoc_get(); allow second parameter to be array of eids; return array() of target eids that have the specified association',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.2', '\Model::assoc_get(); allow second parameter to be array of eids; return array() of target eids that have the specified association',  $actual, $expected, $results);
     }
 }

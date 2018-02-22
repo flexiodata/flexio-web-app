@@ -52,6 +52,6 @@ class Test
         $process_list_target = \Flexio\Jobs\Process::create()->execute($list);
         $actual_contents = \Flexio\Base\Util::getStreamContents($process_list_source->getStdout());
         $expected_contents = \Flexio\Base\Util::getStreamContents($process_expected_contents->getStdout());
-        TestCheck::assertArray("A.1", 'Copy; compare contents of copied folder ' . $output_folder, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray("A.1", 'Copy; compare contents of copied folder ' . $output_folder, $actual, $expected, $results);
     }
 }

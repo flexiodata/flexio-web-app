@@ -30,6 +30,6 @@ class Test
         // BEGIN TEST
         $actual = true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model tempdata tests',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Model tempdata tests',  $actual, $expected, $results);
     }
 }

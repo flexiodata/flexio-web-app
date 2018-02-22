@@ -26,13 +26,13 @@ class Test
         $str = \Flexio\Base\Util::generateHandle();
         $actual = is_string($str);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::generateHandle() test for string return type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Util::generateHandle() test for string return type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $str = \Flexio\Base\Util::generateHandle();
         $actual = strlen($str) === 20;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::generateHandle() test for length',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::generateHandle() test for length',  $actual, $expected, $results);
 
 
 
@@ -48,6 +48,6 @@ class Test
         $random_str_count = count($random_str);
         $actual = $random_str_count === 1000;  // we should have enough variation to have 1000 unique values
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Util::generateHandle() test for randomness',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Util::generateHandle() test for randomness',  $actual, $expected, $results);
     }
 }

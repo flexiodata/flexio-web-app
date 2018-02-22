@@ -36,7 +36,7 @@ class Test
         $count = $model->assoc_count($eid1, '');
         $actual = $association === true && $count === 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::assoc_count(); return zero when an invalid edge is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::assoc_count(); return zero when an invalid edge is specified',  $actual, $expected, $results);
 
 
 
@@ -51,7 +51,7 @@ class Test
         $count = $model->assoc_count('', \Model::EDGE_LINKED_TO);
         $actual = 0;
         $expected = 0;
-        TestCheck::assertNumber('B.1', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('B.1', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -63,7 +63,7 @@ class Test
         $count = $model->assoc_count($eid3, \Model::EDGE_LINKED_TO);
         $actual = 0;
         $expected = 0;
-        TestCheck::assertNumber('B.2', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('B.2', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
 
 
 
@@ -78,7 +78,7 @@ class Test
         $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
-        TestCheck::assertNumber('C.1', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('C.1', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -90,7 +90,7 @@ class Test
         $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
-        TestCheck::assertNumber('C.2', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('C.2', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -102,7 +102,7 @@ class Test
         $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
-        TestCheck::assertNumber('C.3', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('C.3', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -117,7 +117,7 @@ class Test
         $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 3;
-        TestCheck::assertNumber('C.4', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('C.4', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -137,6 +137,6 @@ class Test
         $count_deleted = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_DELETED)));
         $actual = $count_all === 3 && $count_all_with_filter ===3 && $count_available === 1 && $count_deleted === 2;
         $expected = true;
-        TestCheck::assertBoolean('C.5', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.5', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
     }
 }

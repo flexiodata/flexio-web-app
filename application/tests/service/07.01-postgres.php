@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Postgres;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Postgres';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Postgres::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Postgres::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -41,7 +41,7 @@ class Test
         $process_info = \Flexio\Api\Process::create($request);
         $actual = $process_info['task'][0]['op'];
         $expected = 'sleep';
-        TestCheck::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
 
 
         // TEST: process background job processing and status
@@ -81,6 +81,6 @@ class Test
         $status3 = $process_info3['process_status'];
         $actual = ($status2 === \Flexio\Jobs\Process::STATUS_RUNNING && $status3 === \Flexio\Jobs\Process::STATUS_COMPLETED);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Api\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
     }
 }

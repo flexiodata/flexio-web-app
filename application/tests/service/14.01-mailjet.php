@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\MailJet;
         $actual = get_class($service);
         $expected = 'Flexio\Services\MailJet';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\MailJet::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\MailJet::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

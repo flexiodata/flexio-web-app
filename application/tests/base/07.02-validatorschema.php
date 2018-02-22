@@ -58,7 +58,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t valid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -96,7 +96,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t valid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -134,7 +134,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t recognized',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t recognized',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -172,7 +172,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t recognized',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if the type parameter isn\'t recognized',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -210,7 +210,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); \'any\' type no longer allowed in schema validation standard; return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); \'any\' type no longer allowed in schema validation standard; return false',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -248,7 +248,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a null value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a null value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -286,7 +286,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,true,true,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if a boolean value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if a boolean value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -324,7 +324,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,true,true,true,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if an integer value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Base\ValidatorSchema::check(); return false if an integer value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -362,7 +362,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,true,true,true,true,true,false,false,false,false,false,false);
-        TestCheck::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -400,7 +400,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,true,true,true,true,false,false);
-        TestCheck::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.10', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -438,7 +438,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,true,false);
-        TestCheck::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if an object value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if an object value doesn\'t match the specified type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -476,7 +476,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,true);
-        TestCheck::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if an array value doesn\'t match the specified type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.12', '\Flexio\Base\ValidatorSchema::check(); return false if an array value doesn\'t match the specified type',  $actual, $expected, $results);
 
 
 
@@ -518,7 +518,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false when empty array of multiple types is specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false when empty array of multiple types is specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -556,7 +556,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -594,7 +594,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,true,true,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -632,7 +632,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -670,7 +670,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,true,true,true,true,true,true,true,true,true,true,true,false,false);
-        TestCheck::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -708,6 +708,6 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,false,false,false,false,false,false,false,false,false,false,false,true,true);
-        TestCheck::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if none of the types in an array of types match the given type',  $actual, $expected, $results);
     }
 }

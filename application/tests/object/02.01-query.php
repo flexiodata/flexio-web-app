@@ -41,7 +41,7 @@ class Test
         $query = null;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
-        TestCheck::assertNull('A.1', 'Query::exec(); invalid eid value should return null',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('A.1', 'Query::exec(); invalid eid value should return null',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = true;
@@ -52,21 +52,21 @@ class Test
         ');
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
-        TestCheck::assertNull('A.2', 'Query::exec(); invalid eid value should return null',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('A.2', 'Query::exec(); invalid eid value should return null',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $query = null;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
-        TestCheck::assertNull('A.3', 'Query::exec(); invalid query should return null',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('A.3', 'Query::exec(); invalid query should return null',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $query = 1;
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = null;
-        TestCheck::assertNull('A.4', 'Query::exec(); invalid query should return null',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNull('A.4', 'Query::exec(); invalid query should return null',  $actual, $expected, $results);
 
 
 
@@ -81,7 +81,7 @@ class Test
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
         );
-        TestCheck::assertArray('B.1', 'Query::exec(); empty query should return an empty object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Query::exec(); empty query should return an empty object',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -94,7 +94,7 @@ class Test
         $expected = array(
             "eid" => null
         );
-        TestCheck::assertArray('B.2', 'Query::exec(); query with top-level properties that don\'t match anything should return object with same properties',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', 'Query::exec(); query with top-level properties that don\'t match anything should return object with same properties',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -109,6 +109,6 @@ class Test
             "property1" => "value1",
             "property2" => "value2"
         );
-        TestCheck::assertArray('B.3', 'Query::exec(); query with top-level properties that don\'t match anything should return object with same properties',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', 'Query::exec(); query with top-level properties that don\'t match anything should return object with same properties',  $actual, $expected, $results);
     }
 }
