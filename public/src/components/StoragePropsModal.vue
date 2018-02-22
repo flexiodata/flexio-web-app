@@ -294,7 +294,8 @@
             var connection = _.cloneDeep(response.body)
 
             // add username as the alias prefix
-            connection.ename = _.lowerCase(this.active_username) + '-' + _.kebabCase(item.service_name)
+            connection.ename = this.active_username + '-' + _.kebabCase(item.service_name)
+            connection.ename = connection.ename.toLowerCase()
 
             this.updateConnection(connection)
           }
