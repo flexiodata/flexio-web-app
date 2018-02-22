@@ -127,13 +127,13 @@ class Test
         {
             $object = \Flexio\Object\Object1::create();
             $object = $object->set(null);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('D.1', 'Object::set(); if no input is set, throw an exeption',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -210,13 +210,13 @@ class Test
             $object = \Flexio\Object\Object1::create();
             $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
             $status2 = $object->setStatus('.')->getStatus();
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('F.4', 'Object::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST

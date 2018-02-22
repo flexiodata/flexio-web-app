@@ -33,13 +33,13 @@ class Test
         {
             $path = null;
             $result = $model->search($path);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.1', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -48,13 +48,13 @@ class Test
         {
             $path = true;
             $result = $model->search($path);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('A.2', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST

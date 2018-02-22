@@ -52,13 +52,13 @@ class Test
         try
         {
             \Flexio\Base\Structure::union(false);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.2', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -66,13 +66,13 @@ class Test
         try
         {
             \Flexio\Base\Structure::union(true);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.3', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -80,13 +80,13 @@ class Test
         try
         {
             \Flexio\Base\Structure::union(1);
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.4', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -94,13 +94,13 @@ class Test
         try
         {
             \Flexio\Base\Structure::union('a');
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.5', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -108,13 +108,13 @@ class Test
         try
         {
             \Flexio\Base\Structure::union(new \stdClass());
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('B.6', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
 

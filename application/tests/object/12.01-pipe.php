@@ -239,13 +239,13 @@ class Test
             $object = \Flexio\Object\Pipe::create();
             $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
             $status2 = $object->setStatus('.')->getStatus();
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\\Flexio\Tests\Base::ERROR_EXCEPTION;
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
         \Flexio\Tests\Check::assertString('F.4', 'Pipe::setStatus(); don\'t allow an invalid status',  $actual, $expected, $results);
 
         // BEGIN TEST
