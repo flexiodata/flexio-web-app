@@ -196,6 +196,9 @@
       ...mapGetters([
         'getActiveUser'
       ]),
+      setPipeAttributes(attrs) {
+        this.pipe = _.assign({}, defaultAttrs(), attrs)
+      },
       open(attrs) {
         this.reset(attrs)
         this.mode = _.get(attrs, 'mode', this.has_eid ? 'edit-pipe' : 'create-pipe'),
