@@ -197,8 +197,8 @@ If you have any questions, please send us a note using the chat button at the bo
         }
 
         // add username as the alias prefix
-        attrs.ename = this.username + '-' + _.kebabCase(attrs.ename)
-        attrs.ename = attrs.ename.toLowerCase()
+        attrs.ename = this.username.trim() + ' ' + attrs.ename.trim()
+        attrs.ename = _.kebabCase(attrs.ename.toLowerCase())
 
         this.show_pipe_props_modal = true
         this.$nextTick(() => {
