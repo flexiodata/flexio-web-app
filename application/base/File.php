@@ -28,10 +28,25 @@ class File
         $path = trim($path, '/');
         if (strlen($path) == 0)
             return [];
+        $urlpos = strpos($path, '://');
+        if ($urlpos !== false)
+        {
+            $urlpart = substr($path, 0, $urlpos+3);
+            $path = substr($path, $urlpos+3);
+        }
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
-        return explode('/', $path);
+        $path = trim($path, '/');
+        $parts = explode('/', $path);
+        if ($urlpos !== false)
+        {
+            array_unshift($parts, $urlpart);
+        }
+        return $parts;
     }
+
+
+
 
     public static function getFilename(string $filename) : string
     {
