@@ -57,6 +57,24 @@ class Test
             $vfs->createDirectory($folderpath);
             $vfs->createFile($filepath);
 
+            // check file info on a path that doesn't exist
+            $idx++;
+            try
+            {
+                $vfs->getFileInfo(\Flexio\Base\Util::generateHandle());
+                $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+                $expected = 'Exception: ' . \Flexio\Base\Error::NOT_FOUND;
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $s,  $actual, $expected, $results);
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                $error = json_decode($e->getMessage(),true);
+                $actual = $error['code'];
+                $expected = \Flexio\Base\Error::NOT_FOUND;
+                \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $s,  $actual, $expected, $results);
+            }
+
+            // check file info on a directory that exists
             $idx++;
             try
             {
@@ -71,6 +89,7 @@ class Test
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); basic file info check on: ' . $s,  $actual, $expected, $results);
             }
 
+            // check file info on a file that exists
             $idx++;
             try
             {
