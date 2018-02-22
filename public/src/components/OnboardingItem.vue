@@ -197,10 +197,14 @@ If you have any questions, please send us a note using the chat button at the bo
         }
 
         // add username as the alias prefix
-        attrs.ename = _.lowerCase(this.username) + '-' + _.kebabCase(attrs.ename)
+        attrs.ename = this.username.trim() + ' ' + attrs.ename.trim()
+        attrs.ename = _.kebabCase(attrs.ename.toLowerCase())
 
         this.show_pipe_props_modal = true
-        this.$nextTick(() => { this.$refs['modal-pipe-props'].open(attrs) })
+        this.$nextTick(() => {
+          var modal = this.$refs['modal-pipe-props'].open()
+          modal.setPipeAttributes(attrs)
+        })
         analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
       showPipeDeployModal(item) {

@@ -42,7 +42,7 @@ class Process
         return \Flexio\Jobs\Process::create()->execute($task);
     }
 
-    public static function write(string $path, \Flexio\IFace\Stream $stream = null) : \Flexio\Jobs\Process
+    public static function write(string $path, \Flexio\Base\Stream $stream = null) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "write", "params": {"path": "'. $path . '"}}',true);
         $process = \Flexio\Jobs\Process::create();
