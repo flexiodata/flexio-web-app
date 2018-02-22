@@ -356,7 +356,7 @@ EOD;
         return 0;
     }
 
-    public static function getCreateSampleDataTask()
+    public static function createSampleDataTask()
     {
         $task = <<<EOD
         {
