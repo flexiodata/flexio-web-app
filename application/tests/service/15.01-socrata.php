@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Socrata;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Socrata';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Socrata::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Socrata::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

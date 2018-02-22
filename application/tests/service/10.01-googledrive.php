@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\GoogleDrive;
         $actual = get_class($service);
         $expected = 'Flexio\Services\GoogleDrive';
-        TestCheck::assertString('A.1', 'new \GoogleDrive::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \GoogleDrive::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -24,13 +24,13 @@ class Test
         $str = \Flexio\Base\Util::generateRandomString(1);
         $actual = strlen($str) === 1;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $str = \Flexio\Base\Util::generateRandomString(8);
         $actual = strlen($str) === 8;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::generateRandomString() test for numeric input',  $actual, $expected, $results);
 
 
 
@@ -46,6 +46,6 @@ class Test
         $random_str_count = count($random_str);
         $actual = $random_str_count === 1000;  // with 20 chars, we should have enough variation to have 1000 unique values
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Util::generateRandomString() test for randomness',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Util::generateRandomString() test for randomness',  $actual, $expected, $results);
     }
 }

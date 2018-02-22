@@ -44,7 +44,7 @@ class Test
         $parser = \Flexio\Base\MultipartParser::create();
         $actual = get_class($parser);
         $expected = 'Flexio\Base\MultipartParser';
-        TestCheck::assertString('A.1', '\Flexio\Base\MultipartParser::create(); empty input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Base\MultipartParser::create(); empty input', $actual, $expected, $results);
 
 
         // TEST: \Flexio\Base\MultipartParser::parse()
@@ -57,7 +57,7 @@ class Test
         });
         $actual = $content;
         $expected = '';
-        TestCheck::assertString('B.1', '\Flexio\Base\MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Base\MultipartParser::create(); make sure parse function checks for valid resource', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getEmptyUpload();
@@ -69,7 +69,7 @@ class Test
         });
         $actual = substr($file_content, 0, 1);
         $expected = '';
-        TestCheck::assertString('B.2', '\Flexio\Base\MultipartParser: basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Base\MultipartParser: basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getSingleEmptyTextFileUpload();
@@ -81,7 +81,7 @@ class Test
         });
         $actual = substr($file_content, 0, 1);
         $expected = '';
-        TestCheck::assertString('B.3', '\Flexio\Base\MultipartParser: basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', '\Flexio\Base\MultipartParser: basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getSinglePopulatedTextFileUpload();
@@ -93,7 +93,7 @@ class Test
         });
         $actual = substr($file_content, 0, 4);
         $expected = 'This';
-        TestCheck::assertString('B.4', '\Flexio\Base\MultipartParser: simple file upload test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', '\Flexio\Base\MultipartParser: simple file upload test', $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -125,7 +125,7 @@ class Test
         });
         $actual = "$names;$filenames;$content;$values";
         $expected = "file1,file2,file3;basic-1.txt,basic-2.txt,basic-3.txt;This is test 1.,DONE,This is test 2.,DONE,This is test 4.,DONE;simplekeyvalue:This is test 3.";
-        TestCheck::assertString('B.5', '\Flexio\Base\MultipartParser: multiple-file upload', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.5', '\Flexio\Base\MultipartParser: multiple-file upload', $actual, $expected, $results);
 
         // BEGIN TEST
         $test_info = getFormUrlEncodedPost();
@@ -141,7 +141,7 @@ class Test
         });
         $actual = $values;
         $expected = "first:value,second:test space,third:Übermäßig";
-        TestCheck::assertString('B.6', '\Flexio\Base\MultipartParser: should be able to handle normal form url encoded strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.6', '\Flexio\Base\MultipartParser: should be able to handle normal form url encoded strings', $actual, $expected, $results);
     }
 }
 

@@ -65,6 +65,6 @@ class Test
             { "name": "field2", "type": "character", "width": 3 }
         ]
         ';
-        TestCheck::assertInArray('A.1', 'Rename Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Rename Job; check basic functionality',  $actual, $expected, $results);
     }
 }

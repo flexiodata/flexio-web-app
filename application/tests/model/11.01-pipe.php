@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -30,16 +30,16 @@ class Test
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_UNDEFINED;
         $expected = '';
-        TestCheck::assertString('A.1', 'Pipe status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_ACTIVE;
         $expected = 'A';
-        TestCheck::assertString('A.2', 'Pipe status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'Pipe status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::PIPE_STATUS_INACTIVE;
         $expected = 'I';
-        TestCheck::assertString('A.3', 'Pipe status constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'Pipe status constant',  $actual, $expected, $results);
     }
 }

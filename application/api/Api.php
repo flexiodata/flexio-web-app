@@ -312,8 +312,8 @@ class Api
             case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';    // display process info
 
             // TEST (internal):
-            case 'GET /tests/configure'                : return '\Flexio\Tests\TestBase::configure';
-            case 'GET /tests/run'                      : return '\Flexio\Tests\TestBase::run';
+            case 'GET /tests/configure'                : return '\Flexio\Tests\Base::configure';
+            case 'GET /tests/run'                      : return '\Flexio\Tests\Base::run';
         }
     }
 }

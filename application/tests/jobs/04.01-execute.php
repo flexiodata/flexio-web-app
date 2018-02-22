@@ -40,7 +40,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello, World!';
-        TestCheck::assertString('A.1', 'Execute Job; check basic python execution functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Execute Job; check basic python execution functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -59,7 +59,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello, World!';
-        TestCheck::assertString('A.2', 'Execute Job; check basic javascript execution functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'Execute Job; check basic javascript execution functionality',  $actual, $expected, $results);
 
 
 
@@ -78,7 +78,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello,World!';
-        TestCheck::assertString('B.1', 'Execute Job; sha256 integrity check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', 'Execute Job; sha256 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -93,7 +93,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello,World!';
-        TestCheck::assertString('B.2', 'Execute Job; sha256 integrity check with uppercase sha256 code',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', 'Execute Job; sha256 integrity check with uppercase sha256 code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
@@ -108,7 +108,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
-        TestCheck::assertBoolean('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', 'Execute Job; check code integrity; sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -123,7 +123,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
-        TestCheck::assertBoolean('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', 'Execute Job; check code integrity; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -138,7 +138,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
-        TestCheck::assertBoolean('B.5', 'Execute Job; check code integrity; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', 'Execute Job; check code integrity; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
 
 
 
@@ -157,7 +157,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello,World!';
-        TestCheck::assertString('C.1', 'Execute Job; sha384 integrity check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', 'Execute Job; sha384 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
@@ -172,7 +172,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
-        TestCheck::assertBoolean('C.2', 'Execute Job; check code integrity; sha384 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', 'Execute Job; check code integrity; sha384 integrity failure',  $actual, $expected, $results);
 
 
 
@@ -191,7 +191,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello,World!';
-        TestCheck::assertString('D.1', 'Execute Job; sha512 integrity check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', 'Execute Job; sha512 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
@@ -206,7 +206,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
-        TestCheck::assertBoolean('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.2', 'Execute Job; check code integrity; sha512 integrity failure',  $actual, $expected, $results);
 
 
 
@@ -223,7 +223,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello, World!';
-        TestCheck::assertString('E.1', 'Execute Job; remote execution',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.1', 'Execute Job; remote execution',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('{
@@ -237,7 +237,7 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'Hello, World!';
-        TestCheck::assertString('E.2', 'Execute Job; remote execution with sha256 check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.2', 'Execute Job; remote execution with sha256 check',  $actual, $expected, $results);
 
 
 
@@ -260,6 +260,6 @@ EOD;
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read(50);
         $expected = 'This is local.';
-        TestCheck::assertString('F.1', 'Execute Job; local code override',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.1', 'Execute Job; local code override',  $actual, $expected, $results);
     }
 }

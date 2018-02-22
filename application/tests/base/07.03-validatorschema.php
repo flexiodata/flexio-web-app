@@ -58,7 +58,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -96,7 +96,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -134,7 +134,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,true,true,true,true,true,true,true);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -172,7 +172,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,true,true,true,true,true,true);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -210,7 +210,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,true,true,true,true,true);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -248,7 +248,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,false,true,true,true,true);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -286,7 +286,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,true,true,true);
-        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than or equal to the minimum allowed',  $actual, $expected, $results);
 
 
 
@@ -329,7 +329,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -368,7 +368,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minimum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -407,7 +407,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,true,true,true,true,true,true);
-        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -446,7 +446,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,true,true,true,true,true);
-        TestCheck::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -485,7 +485,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,false,true,true,true,true);
-        TestCheck::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -524,7 +524,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,true,true,true);
-        TestCheck::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -563,7 +563,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,false,false,false,true,true);
-        TestCheck::assertArray('B.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is less than the minimum allowed',  $actual, $expected, $results);
 
 
 
@@ -605,7 +605,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('C.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -643,7 +643,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('C.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -681,7 +681,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,false,false,false,false,false,false);
-        TestCheck::assertArray('C.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -719,7 +719,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -757,7 +757,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,true,false,false,false,false);
-        TestCheck::assertArray('C.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -795,7 +795,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,false,false,false);
-        TestCheck::assertArray('C.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than or equal to the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -833,7 +833,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,true,false,false);
-        TestCheck::assertArray('C.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greatear than or equal to the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greatear than or equal to the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -876,7 +876,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('D.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -915,7 +915,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('D.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maximum value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -954,7 +954,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,false,false,false,false,false,false);
-        TestCheck::assertArray('D.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greatear than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greatear than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -993,7 +993,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,false,false,false,false,false,false);
-        TestCheck::assertArray('D.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1032,7 +1032,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('D.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1071,7 +1071,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,true,false,false,false,false);
-        TestCheck::assertArray('D.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1110,7 +1110,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,true,true,true,true,false,false,false);
-        TestCheck::assertArray('D.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is greater than the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -1152,7 +1152,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('E.1', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.1', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1190,7 +1190,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('E.2', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.2', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1228,7 +1228,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('E.3', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid; multipleOf must be strictly greater than zero',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.3', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid; multipleOf must be strictly greater than zero',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1266,7 +1266,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(false,false,false,false,false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('E.4', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid; multipleOf must be strictly greater than zero',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.4', '\Flexio\Base\ValidatorSchema::check(); return false if the multipleOf value is invalid; multipleOf must be strictly greater than zero',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1304,7 +1304,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,true,true,true,false,false,true);
-        TestCheck::assertArray('E.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.5', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1342,7 +1342,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,true,false,false,false,true);
-        TestCheck::assertArray('E.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.6', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1380,7 +1380,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,true,false,true,false,true,false,false);
-        TestCheck::assertArray('E.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.7', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1418,7 +1418,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,true,false);
-        TestCheck::assertArray('E.8', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.8', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1456,7 +1456,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,true,true,true,false,true,true);
-        TestCheck::assertArray('E.9', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.9', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1494,7 +1494,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,true,false);
-        TestCheck::assertArray('E.10', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.10', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1532,7 +1532,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,true,false,true,false,true,false,false);
-        TestCheck::assertArray('E.11', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.11', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1570,7 +1570,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,true,false);
-        TestCheck::assertArray('E.12', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.12', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1608,7 +1608,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,true,false,false,false,false);
-        TestCheck::assertArray('E.13', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.13', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1646,7 +1646,7 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,false,false,false,true,false,false,false,false);
-        TestCheck::assertArray('E.14', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.14', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -1684,6 +1684,6 @@ EOD;
         $r14 = \Flexio\Base\ValidatorSchema::check($v14, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14);
         $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,true,false);
-        TestCheck::assertArray('E.15', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.15', '\Flexio\Base\ValidatorSchema::check(); return false if a numeric value is not a multiple of the validation parameter',  $actual, $expected, $results);
     }
 }

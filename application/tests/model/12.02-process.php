@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -33,7 +33,7 @@ class Test
         $eid = $model->create(\Model::TYPE_PROCESS, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
 

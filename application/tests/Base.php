@@ -16,24 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestResult
+class Base
 {
-    public $name;
-    public $description;
-    public $passed;
-    public $message;
+    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
+    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
+    const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
+    const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
 
-    public function __construct($name = '', $description = '', $passed = false, $message = '')
-    {
-        $this->name = $name;
-        $this->description = $description;
-        $this->passed = $passed;
-        $this->message = $message;
-    }
-}
+    const DOUBLE_EPSILON = 0.000000000001;
+    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
 
-class TestBase
-{
+    const FLAG_NONE = '';
+    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
+
     public static function testsAllowed()
     {
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
@@ -41,20 +36,20 @@ class TestBase
 
     public static function configure(\Flexio\Api\Request $request) : array
     {
-        if (!TestBase::testsAllowed())
+        if (!self::testsAllowed())
             return array();
 
         $tests = array();
-        TestBase::addTests('test', $tests);
-        TestBase::addTests('config', $tests);
-        TestBase::addTests('base', $tests);
-        TestBase::addTests('system', $tests);
-        TestBase::addTests('service', $tests);
-        TestBase::addTests('model', $tests);
-        TestBase::addTests('object', $tests);
-        TestBase::addTests('jobs', $tests);
-        TestBase::addTests('api', $tests);
-        TestBase::addTests('sdk', $tests);
+        self::addTests('test', $tests);
+        self::addTests('config', $tests);
+        self::addTests('base', $tests);
+        self::addTests('system', $tests);
+        self::addTests('service', $tests);
+        self::addTests('model', $tests);
+        self::addTests('object', $tests);
+        self::addTests('jobs', $tests);
+        self::addTests('api', $tests);
+        self::addTests('sdk', $tests);
 
         return $tests;
     }
@@ -63,7 +58,7 @@ class TestBase
     {
         $params = $request->getQueryParams();
 
-        if (!TestBase::testsAllowed())
+        if (!self::testsAllowed())
         {
             $r = array();
             $r['name'] = "Error: tests aren't allowed";
@@ -103,7 +98,7 @@ class TestBase
         // load the job's php file and instantiate the job object
         include_once $test_path;
         $test = new Test;
-        $results = array(); // array of TestResult
+        $results = array(); // array of \Flexio\Tests\Result
 
         if (!$test)
         {

@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -100,7 +100,7 @@ class Test
             "char_1h": "00000E"
         }
         ',true);
-        TestCheck::assertArray('A.1', 'StreamReader/StreamWriter; test character type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'StreamReader/StreamWriter; test character type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -177,7 +177,7 @@ class Test
             "num_1h": 0.000000000005
         }
         ',true);
-        TestCheck::assertArray('B.1', 'StreamReader/StreamWriter; test numeric type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'StreamReader/StreamWriter; test numeric type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -252,7 +252,7 @@ class Test
             "num_2g" => (float)5000000000000,
             "num_2h" => (float)0.000000000005
         );
-        TestCheck::assertArray('C.1', 'StreamReader/StreamWriter; test double type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', 'StreamReader/StreamWriter; test double type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -329,7 +329,7 @@ class Test
             "num_3h": 5
         }
         ',true);
-        TestCheck::assertArray('D.1', 'StreamReader/StreamWriter; test integer type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', 'StreamReader/StreamWriter; test integer type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -407,7 +407,7 @@ class Test
             "date_1h": "2001-01-06"
         }
         ',true);
-        TestCheck::assertArray('E.1', 'StreamReader/StreamWriter; test date type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.1', 'StreamReader/StreamWriter; test date type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -485,7 +485,7 @@ class Test
             "date_2h": "2000-01-01 01:00:00"
         }
         ',true);
-        TestCheck::assertArray('F.1', 'StreamReader/StreamWriter; test datetime type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.1', 'StreamReader/StreamWriter; test datetime type with multiple rows and combinations of values',  $actual, $expected, $results);
 
 
 
@@ -563,6 +563,6 @@ class Test
             "bool_1h": false
         }
         ',true);
-        TestCheck::assertArray('G.1', 'StreamReader/StreamWriter; test boolean type with multiple rows and combinations of values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('G.1', 'StreamReader/StreamWriter; test boolean type with multiple rows and combinations of values',  $actual, $expected, $results);
     }
 }

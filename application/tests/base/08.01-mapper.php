@@ -32,7 +32,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = false;
@@ -44,7 +44,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = true;
@@ -56,7 +56,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = -1;
@@ -68,7 +68,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = -0.1;
@@ -80,7 +80,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.5', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 0;
@@ -92,7 +92,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.6', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 0.1;
@@ -104,7 +104,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.7', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 1;
@@ -116,7 +116,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.8', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '';
@@ -128,7 +128,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.9', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'a';
@@ -140,7 +140,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.10', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.10', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'A';
@@ -152,7 +152,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.11', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = 'aB';
@@ -164,7 +164,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.12', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.12', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -174,7 +174,7 @@ class Test
         [
         ]
         ';
-        TestCheck::assertArray('A.13', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.13', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '{}';
@@ -185,7 +185,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.14', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.14', '\Flexio\Base\Mapper::flatten(); values are a single field with a single row and a default field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -204,7 +204,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('A.15', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.15', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
 
 
@@ -227,7 +227,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.1', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -240,7 +240,7 @@ class Test
         $schema = false;
         $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.2', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -253,7 +253,7 @@ class Test
         $schema = 1;
         $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.3', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -266,7 +266,7 @@ class Test
         $schema = 'a';
         $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.4', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -279,7 +279,7 @@ class Test
         $schema = '[]';
         $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.5', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -298,7 +298,7 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.6', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -311,7 +311,7 @@ class Test
         $schema = array();
         $actual = \Flexio\Base\Mapper::flatten($data, $schema);
         $expected =  false;
-        TestCheck::assertBoolean('B.7', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.7', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -330,6 +330,6 @@ class Test
             }
         ]
         ';
-        TestCheck::assertArray('B.8', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.8', '\Flexio\Base\Mapper::flatten(); schema input needs to be null or an object; return false otherwise',  $actual, $expected, $results);
     }
 }

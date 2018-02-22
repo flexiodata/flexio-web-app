@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2015-2016, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-02-01
+ * Created:  2015-04-22
  *
  * @package flexio
  * @subpackage Controller
@@ -16,44 +16,311 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestSample
+class Util
 {
-    public static function createProjectSample($user_count = 4, $project_count = 2, $pipe_count = 2)
+    public static function getModel()
     {
-        for ($user = 1; $user <= $user_count; ++$user)
+        return new \Model;
+    }
+
+    public static function execSDKJS(string $code)
+    {
+        $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".base64_encode($code)." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/script.js)' 2>&1";
+
+        $f = popen($cmd, 'r');
+        $result = stream_get_contents($f);
+        pclose($f);
+
+        return $result;
+    }
+
+    // $method = GET, POST, PUT, DELETE
+    // $path = /api/v1/... + GET parameters
+    // $token = authentication token
+    // $params = php array for normal post (files prefixed with @), or a string for a post buffer
+    // $content_type = in the case the $params is a string, specify its content type here
+    // returns an array [ "code" => http code, "response" => response body ];
+
+    public static function callApi($method, $path, $token, $params, $content_type = null)
+    {
+        if (strlen($path) == 0)
         {
-            if (($user % 10) == 0)
-                echo "<br>$user";
+            throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
+        }
+        if ($path[0] != '/')
+            $path = '/' . $path;
 
-            $user_name = "user$user";
-            $email = "user$user@flex.io";
-            $password = 'test99';
-
-            if (\Flexio\Base\Eid::isValid(TestUtil::getModel()->user->getEidFromIdentifier($user_name)))
+        foreach ($params as $key => &$value)
+        {
+            if (substr($value, 0, 1) == '@')
             {
-                // this user already exists
-                continue;
+                $value = curl_file_create(substr($value, 1));
             }
+        }
+        unset($value);
 
-            $user_eid = TestUtil::createUser($user_name, $email, $password);
+        $ch = curl_init();
 
-            for ($project = 1; $project <= $project_count; ++$project)
+        switch ($method)
+        {
+            case 'GET':
+                curl_setopt($ch, CURLOPT_HTTPGET, true);
+                break;
+            case 'POST':
+                curl_setopt($ch, CURLOPT_POST, TRUE);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+                if (isset($content_type))
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Content-Type: '. $content_type ]);
+                break;
+            case 'PUT':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');    break;
+            case 'DELETE':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;
+            default:
+                throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
+                break;
+        }
+
+
+        curl_setopt($ch, CURLOPT_URL, "https://localhost" . $path);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // because using localhost
+        $result = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return [ 'code' => $http_code, 'response' => $result ];
+    }
+
+    public static function evalExpression($expr)
+    {
+        $retval = null;
+        $success = \Flexio\Base\ExprEvaluate::evaluate($expr, [], [], $retval);
+        if ($success === false)
+            return \Flexio\Tests\Base::ERROR_BAD_PARSE;
+
+        return $retval;
+    }
+
+    public static function getTestSDKSetup()
+    {
+        $default_user_token = \Flexio\Tests\Util::getDefaultTestUserToken();
+        $test_api_endpoint = \Flexio\Tests\Util::getTestApiEndpoint();
+
+        $script = <<<EOD
+
+const Flexio = require('flexio-sdk-js');
+Flexio.setup('$default_user_token', { baseUrl: '$test_api_endpoint', insecure: true });
+
+EOD;
+        return $script;
+    }
+
+    public static function getTestApiEndpoint()
+    {
+        $host = IS_LOCALHOST() ? $_SERVER['SERVER_ADDR'] : $_SERVER['HTTP_HOST'];
+        return 'https://' . $host . '/api/v1';
+    }
+
+    public static function getDefaultTestUser()
+    {
+        // returns the eid of a default test user; creates the user if the
+        // user doesn't exist
+        $user_name = "testuser";
+        $email = "test@flex.io";
+        $password = 'test@flex.io';
+
+        // see if the user already exists
+        $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($user_name);
+        if (\Flexio\Base\Eid::isValid($user_eid))
+            return $user_eid;
+
+        $user_eid = \Flexio\Tests\Util::createUser($user_name, $email, $password);
+        return $user_eid;
+    }
+
+    public static function getDefaultTestUserToken()
+    {
+        // returns an api token for the default test user
+        $user_eid = self::getDefaultTestUser();
+        $user = \Flexio\Object\User::load($user_eid);
+        $tokens = $user->getTokenList();
+
+        if (count($tokens) === 0)
+            $tokens[] = \Flexio\Object\Token::create(array('user_eid' => $user_eid));
+
+        // return the first token
+        $token_info = $tokens[0]->get();
+        return $token_info['access_code'];
+    }
+
+    public static function getDefaultTestProject()
+    {
+        // returns the eid of a default test project; creates the project if the
+        // project doesn't exist
+        $project_name = 'Test Project';
+
+        // see if the project exists (look for a project named the same that's owned by
+        // the default test user)
+        $user_eid = self::getDefaultTestUser();
+
+        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
+        $projects = \Flexio\Tests\Util::getModel()->search($search_path);
+
+        if ($projects !== false)
+        {
+            foreach ($projects as $project_eid)
             {
-                $project_name = "Project$project";
-                $project_eid = TestUtil::createProject($user_eid, $project_name);
-
-                for ($pipe = 1; $pipe <= $pipe_count; ++$pipe)
-                {
-                    $pipe_name = "Pipe$pipe";
-                    $pipe_eid = TestUtil::createPipe($user_eid, $project_eid, $pipe_name);
-                }
+                $object = \Flexio\Tests\Util::getModel()->get($project_eid);
+                if ($object['name'] === $project_name)
+                    return $project_eid;
             }
         }
 
-        return true;
+        // we couldn't find a default test project for the default test user;
+        // create a default project for the specified user
+        $project_eid = \Flexio\Tests\Util::createProject($user_eid, $project_name);
+        return $project_eid;
     }
 
-    public static function getCreateSampleDataTask()
+    public static function createUser($username, $email, $password)
+    {
+        $verify_code = \Flexio\Base\Util::generateHandle();
+        $new_user_info = array('user_name' => $username,
+                               'email' => $email,
+                               'full_name' => $username,
+                               'eid_status' => \Model::STATUS_AVAILABLE,
+                               'password' => $password,
+                               'verify_code' => '');
+
+        $user = \Flexio\Object\User::create($new_user_info);
+        return $user->getEid();
+    }
+
+    public static function createProject($user_eid, $name = null, $description = null)
+    {
+        $properties['name'] = $name ?? 'Test Project';
+        $properties['description'] = $description ?? 'Test project with test data.';
+
+        $project = \Flexio\Object\Project::create($properties);
+        $project->setOwner($user_eid);
+        $project->setCreatedBy($user_eid);
+
+        return $project->getEid();
+    }
+
+    public static function createPipe($user_eid, $project_eid, $pipe_name)
+    {
+        $properties['name'] = $pipe_name;
+
+        $pipe = \Flexio\Object\Pipe::create($properties);
+        $pipe->setOwner($user_eid);
+        $pipe->setCreatedBy($user_eid);
+
+        // if a parent project is specified, add the object as a member of the project
+        $project = \Flexio\Object\Project::load($project_eid);
+        if ($project !== false)
+            $project->addPipe($pipe);
+
+        return $pipe->getEid();
+    }
+
+    public static function createStreamFromFile($path) : \Flexio\Base\Stream
+    {
+        $f = @fopen($path, 'rb');
+        if (!$f)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $stream = \Flexio\Base\Stream::create();
+        while (!feof($f))
+        {
+            $buffer = fread($f, 2048);
+            $stream->getWriter()->write($buffer);
+        }
+
+        fclose($f);
+
+        return $stream;
+    }
+
+    public static function createEmailAddress()
+    {
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Base\Util::generateHandle();
+        return $handle1 . '@' . $handle2 . '.com';
+    }
+
+    public static function getTestDataFiles() : array
+    {
+        $testdata_dir = __DIR__ . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR;
+        $files = scandir($testdata_dir);
+        if (!$files)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $result = array();
+        foreach ($files as $f)
+        {
+            if ($f == '.' || $f == '..')
+                continue;
+
+            $result[] = $testdata_dir . $f;
+        }
+
+        return $result;
+    }
+
+    public static function getOutputFilePath(string $output_folderpath, string $input_filepath) : string
+    {
+        $filename = \Flexio\Base\File::getFilename($input_filepath);
+        $fileextension = \Flexio\Base\File::getFileExtension($input_filepath);
+        $output_filepath = $output_folderpath . $filename . "." . $fileextension;
+        return $output_filepath;
+    }
+
+    public static function getTimestampName() : string
+    {
+        return date("YmdHis", time());
+    }
+
+    public static function convertToNumber($size_str)
+    {
+        switch (strtoupper(substr($size_str, -1)))
+        {
+            case 'G': return (int)$size_str * 1073741824;
+            case 'M': return (int)$size_str * 1048576;
+            case 'K': return (int)$size_str * 1024;
+            default:  return (int)$size_str;
+        }
+    }
+
+    public static function dblcompare($a, $b)
+    {
+        // note: this implementation currently parallels the implementation in ExprEvaluate
+
+        $a = (double)$a;
+        $b = (double)$b;
+
+        if (is_nan($a) && is_nan($b))
+            return 0;
+        if (is_nan($a))
+            return -1;
+        if (is_nan($b))
+            return 1;
+
+        if (($a - $b) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * \Flexio\Tests\Base::DOUBLE_EPSILON))
+            return 1;
+        if (($b - $a) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * \Flexio\Tests\Base::DOUBLE_EPSILON))
+            return -1;
+
+        return 0;
+    }
+
+    public static function createSampleDataTask()
     {
         $task = <<<EOD
         {

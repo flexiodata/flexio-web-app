@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\GoogleSheets;
         $actual = get_class($service);
         $expected = 'Flexio\Services\GoogleSheets';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\GoogleSheets; basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\GoogleSheets; basic file syntax check',  $actual, $expected, $results);
     }
 }

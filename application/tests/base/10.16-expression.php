@@ -40,44 +40,44 @@ class Test
         // TEST: runtime NaN checks
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('1 % 0');
+        $actual = \Flexio\Tests\Util::evalExpression('1 % 0');
         $expected = NAN;
-        TestCheck::assertNaN('A.1', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.1', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('1 % sin(0)');
+        $actual = \Flexio\Tests\Util::evalExpression('1 % sin(0)');
         $expected = NAN;
-        TestCheck::assertNaN('A.2', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.2', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('1 % sign(0)');
+        $actual = \Flexio\Tests\Util::evalExpression('1 % sign(0)');
         $expected = NAN;
-        TestCheck::assertNaN('A.3', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.3', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('mod(1.0,floor(0))');
+        $actual = \Flexio\Tests\Util::evalExpression('mod(1.0,floor(0))');
         $expected = NAN;
-        TestCheck::assertNaN('A.4', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.4', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('log(cos(pi()))');
+        $actual = \Flexio\Tests\Util::evalExpression('log(cos(pi()))');
         $expected = NAN;
-        TestCheck::assertNaN('A.5', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNaN('A.5', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('pow(cos(pi()),0.5)');
+        $actual = \Flexio\Tests\Util::evalExpression('pow(cos(pi()),0.5)');
         $expected = NAN;
-        TestCheck::assertNaN('A.6', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNaN('A.6', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('1.23456789e300*1.23456789e300');
+        $actual = \Flexio\Tests\Util::evalExpression('1.23456789e300*1.23456789e300');
         $expected = NAN;
-        TestCheck::assertNaN('A.7', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.7', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('pow(10,1000)');
+        $actual = \Flexio\Tests\Util::evalExpression('pow(10,1000)');
         $expected = NAN;
-        TestCheck::assertNaN('A.8', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertNaN('A.8', 'Expression; runtime out-of-bounds checks',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -85,75 +85,75 @@ class Test
 
         // BEGIN TEST
         $expr = chr(0); // null char
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.1', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.1', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(0) . '"'; // null char
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(0);
-        TestCheck::assertString('B.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('B.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
         $expr = chr(10); // line feed
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.3', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.3', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(10) . '"'; // line feed
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(10);
-        TestCheck::assertString('B.4', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = chr(13); // carriage return
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.5', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.5', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(13) . '"'; // carriage return
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(13);
-        TestCheck::assertString('B.6', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.6', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = chr(47); // slash
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.7', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.7', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(47) . '"'; // slash
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(47);
-        TestCheck::assertString('B.8', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.8', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = chr(92); // backslash
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.9', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.9', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(92) . '"'; // backslash
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(92);
-        TestCheck::assertString('B.10', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.10', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = chr(255); // nbsp
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('B.11', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('B.11', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"' . chr(255) . '"'; // nbsp
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = chr(255);
-        TestCheck::assertString('B.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertString('B.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -161,88 +161,88 @@ class Test
 
         // BEGIN TEST
         $expr = '// /*';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.1', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.1', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"// /*"';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = '// /*';
-        TestCheck::assertString('C.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '.*';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.3', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.3', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '".*"';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = '.*';
-        TestCheck::assertString('C.4', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.4', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '/.*/';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.5', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.5', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"/.*/"';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = '/.*/';
-        TestCheck::assertString('C.6', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.6', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'true;';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.7', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.7', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '"true;"';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = 'true;';
-        TestCheck::assertString('C.8', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.8', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = ';break;';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.9', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.9', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '";break;"';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = ';break;';
-        TestCheck::assertString('C.10', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.10', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = ';$a=1/0;$b=';
-        $actual = TestUtil::evalExpression($expr);
-        $expected = TestError::ERROR_BAD_PARSE;
-        TestCheck::assertString('C.11', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
+        $expected = \Flexio\Tests\Base::ERROR_BAD_PARSE;
+        \Flexio\Tests\Check::assertString('C.11', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '\';$a=1/0;$b=\'';
-        $actual = TestUtil::evalExpression($expr);
+        $actual = \Flexio\Tests\Util::evalExpression($expr);
         $expected = ';$a=1/0;$b=';
-        TestCheck::assertString('C.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.12', 'Expression; make sure injected code doesn\'t run when parsing expressions',  $actual, $expected, $results);
 
 
 
         // TEST: tests for code injection in evaluation
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('"+" ~ "+"');
+        $actual = \Flexio\Tests\Util::evalExpression('"+" ~ "+"');
         $expected = true;
-        TestCheck::assertBoolean('D.1', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertBoolean('D.1', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression('"{}" ~ "{"');
+        $actual = \Flexio\Tests\Util::evalExpression('"{}" ~ "{"');
         $expected = true;
-        TestCheck::assertBoolean('D.2', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.2', 'Expression; make sure injected code doesn\'t run when evaluating expressions',  $actual, $expected, $results);
     }
 }

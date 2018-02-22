@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Twilio;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Twilio';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Twilio; basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Twilio; basic file syntax check',  $actual, $expected, $results);
     }
 }

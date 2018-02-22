@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -37,7 +37,7 @@ class Test
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -49,7 +49,7 @@ class Test
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -61,6 +61,6 @@ class Test
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.3', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
     }
 }

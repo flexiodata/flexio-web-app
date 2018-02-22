@@ -30,7 +30,7 @@ class Test
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -40,7 +40,7 @@ class Test
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Validator::check(); should return false and flag an error if values param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -49,7 +49,7 @@ class Test
         $result = $validator->check($values, $checks)->getParams();
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Validator::check(); don\'t flag an error if the input values is an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Validator::check(); don\'t flag an error if the input values is an array',  $actual, $expected, $results);
 
 
 
@@ -63,7 +63,7 @@ class Test
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -73,7 +73,7 @@ class Test
         $has_errors = $validator->hasErrors();
         $actual = $result === false && $has_errors === true;
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Flexio\Base\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Base\Validator::check(); should return false and flag an error if the checks param isn\'t an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -82,7 +82,7 @@ class Test
         $result = $validator->check($values, $checks)->getParams();
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('B.3', '\Flexio\Base\Validator::check(); don\'t flag an error if the checks param is an array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Base\Validator::check(); don\'t flag an error if the checks param is an array',  $actual, $expected, $results);
 
         // BEGIN TEST
         // TODO: check format of validation parameter
@@ -98,7 +98,7 @@ class Test
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
         );
-        TestCheck::assertArray('C.1', '\Flexio\Base\Validator::check(); return parameter should be an empty array when values param is empty',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Validator::check(); return parameter should be an empty array when values param is empty',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -110,7 +110,7 @@ class Test
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
         );
-        TestCheck::assertArray('C.2', '\Flexio\Base\Validator::check(); return parameter should be an empty array when checks param is empty',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Validator::check(); return parameter should be an empty array when checks param is empty',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -129,7 +129,7 @@ class Test
             'eid' => $eid,
             'description' => 'Object description'
         );
-        TestCheck::assertArray('C.3', '\Flexio\Base\Validator::check(); return parameter should be filtered values param based on keys existing in the checks param',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\Validator::check(); return parameter should be filtered values param based on keys existing in the checks param',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -145,7 +145,7 @@ class Test
             'eid' => $eid,
             'description' => 'Object description'
         );
-        TestCheck::assertArray('C.4', '\Flexio\Base\Validator::check(); return parameters should add in default values that aren\'t specified in the input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\Validator::check(); return parameters should add in default values that aren\'t specified in the input',  $actual, $expected, $results);
 
 
 
@@ -159,7 +159,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('D.1', '\Flexio\Base\Validator::check(); should return false when required parameter isn\'t present',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.1', '\Flexio\Base\Validator::check(); should return false when required parameter isn\'t present',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -184,7 +184,7 @@ class Test
                 'message' => 'Invalid parameter(s): name:-1'
             )
         );
-        TestCheck::assertArray('D.2', '\Flexio\Base\Validator::check(); flag an error when the input values don\t pass the checks',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Validator::check(); flag an error when the input values don\t pass the checks',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -199,7 +199,7 @@ class Test
         $result = $validator->check($values, $checks)->getParams();
         $actual = $validator->hasErrors();
         $expected = false;
-        TestCheck::assertBoolean('D.3', '\Flexio\Base\Validator::check(); make sure an error isn\'t flagged when the input values pass the checks',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.3', '\Flexio\Base\Validator::check(); make sure an error isn\'t flagged when the input values pass the checks',  $actual, $expected, $results);
 
 
 
@@ -218,7 +218,7 @@ class Test
         $expected = array(
             'eid' => $eid
         );
-        TestCheck::assertInArray('E.1', '\Flexio\Base\Validator::check(); return parameter if it passes an eid check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Base\Validator::check(); return parameter if it passes an eid check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -231,7 +231,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('E.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -244,7 +244,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('E.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an eid check',  $actual, $expected, $results);
 
 
 
@@ -263,7 +263,7 @@ class Test
         $expected = array(
             'id' => $handle
         );
-        TestCheck::assertInArray('F.1', '\Flexio\Base\Validator::check(); return parameter if it passes an identifier check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.1', '\Flexio\Base\Validator::check(); return parameter if it passes an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -275,7 +275,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('F.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -287,7 +287,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('F.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -299,7 +299,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('F.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an identifier check',  $actual, $expected, $results);
 
 
 
@@ -317,7 +317,7 @@ class Test
         $expected = array(
             'definition' => '{"name" : "value", "properties" : [1,2,3]}'
         );
-        TestCheck::assertInArray('G.1', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.1', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -331,7 +331,7 @@ class Test
         $expected = array(
             'definition' => '{}'
         );
-        TestCheck::assertInArray('G.2', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.2', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -345,7 +345,7 @@ class Test
         $expected = array(
             'definition' => '[]'
         );
-        TestCheck::assertInArray('G.3', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.3', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -357,7 +357,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.4', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.4', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -369,7 +369,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.5', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.5', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -381,7 +381,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.6', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.6', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -393,7 +393,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.7', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.7', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -405,7 +405,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.8', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.8', '\Flexio\Base\Validator::check(); return parameter if it passes a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -417,7 +417,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.9', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.9', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -429,7 +429,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.10', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.10', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -441,7 +441,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('G.11', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.11', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a json check',  $actual, $expected, $results);
 
 
 
@@ -459,7 +459,7 @@ class Test
         $expected = array(
             'name' => 'John Williams'
         );
-        TestCheck::assertInArray('H.1', '\Flexio\Base\Validator::check(); return parameter if it passes a string check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.1', '\Flexio\Base\Validator::check(); return parameter if it passes a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -471,7 +471,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('H.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -483,7 +483,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('H.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -495,7 +495,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('H.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a string check',  $actual, $expected, $results);
 
 
 
@@ -513,7 +513,7 @@ class Test
         $expected = array(
             'value' => 2
         );
-        TestCheck::assertInArray('I.1', '\Flexio\Base\Validator::check(); return parameter if it passes an integer check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('I.1', '\Flexio\Base\Validator::check(); return parameter if it passes an integer check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -526,7 +526,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('I.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('I.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -539,7 +539,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('I.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('I.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass an integer check',  $actual, $expected, $results);
 
 
 
@@ -557,7 +557,7 @@ class Test
         $expected = array(
             'value' => 2.1
         );
-        TestCheck::assertInArray('J.1', '\Flexio\Base\Validator::check(); return parameter if it passes a number check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.1', '\Flexio\Base\Validator::check(); return parameter if it passes a number check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -570,7 +570,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('J.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('J.2', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -583,7 +583,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('J.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('J.3', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a number check',  $actual, $expected, $results);
 
 
 
@@ -601,7 +601,7 @@ class Test
         $expected = array(
             'value' => true
         );
-        TestCheck::assertInArray('K.1', '\Flexio\Base\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('K.1', '\Flexio\Base\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -616,7 +616,7 @@ class Test
         $expected = array(
             'value' => false
         );
-        TestCheck::assertInArray('K.2', '\Flexio\Base\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('K.2', '\Flexio\Base\Validator::check(); return parameter if it passes a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -631,7 +631,7 @@ class Test
         $expected = array(
             'value' => true
         );
-        TestCheck::assertInArray('K.3', '\Flexio\Base\Validator::check(); allow boolean parameters to be specified as true/false string',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('K.3', '\Flexio\Base\Validator::check(); allow boolean parameters to be specified as true/false string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -644,7 +644,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('K.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('K.4', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -657,7 +657,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('K.5', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('K.5', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -670,7 +670,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('K.6', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('K.6', '\Flexio\Base\Validator::check(); fail if parameter doesn\'t pass a boolean check',  $actual, $expected, $results);
 
 
 
@@ -698,7 +698,7 @@ class Test
             'address' => null,
             'active' => true
         );
-        TestCheck::assertArray('L.1', '\Flexio\Base\Validator::check(); return parameter if it passes an "any type" check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('L.1', '\Flexio\Base\Validator::check(); return parameter if it passes an "any type" check',  $actual, $expected, $results);
 
 
 
@@ -716,7 +716,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('M.1', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('M.1', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -729,7 +729,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('M.2', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('M.2', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -745,7 +745,7 @@ class Test
         $expected = array(
             'eid' => $eid
         );
-        TestCheck::assertInArray('M.3', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.3', '\Flexio\Base\Validator::check(); make sure non-required parameters type are enforced when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -763,7 +763,7 @@ class Test
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
         );
-        TestCheck::assertInArray('M.4', '\Flexio\Base\Validator::check(); make sure non-required parameters aren\'t enforced if they\'re not present in input values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.4', '\Flexio\Base\Validator::check(); make sure non-required parameters aren\'t enforced if they\'re not present in input values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -787,7 +787,7 @@ class Test
             'f5' => true,
             'f6' => 'def'
         );
-        TestCheck::assertInArray('M.5', '\Flexio\Base\Validator::check(); make sure defaults are supplied for non-required parameters that aren\'t in input values',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.5', '\Flexio\Base\Validator::check(); make sure defaults are supplied for non-required parameters that aren\'t in input values',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -799,7 +799,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('M.6', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('M.6', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -811,7 +811,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('M.7', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('M.7', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -823,7 +823,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('M.8', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('M.8', '\Flexio\Base\Validator::check(); make sure default values conform to validation type',  $actual, $expected, $results);
 
 
 
@@ -846,7 +846,7 @@ class Test
                 $eid2
             )
         );
-        TestCheck::assertInArray('N.1', '\Flexio\Base\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('N.1', '\Flexio\Base\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -859,7 +859,7 @@ class Test
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
-        TestCheck::assertBoolean('N.2', '\Flexio\Base\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('N.2', '\Flexio\Base\Validator::check(); if array parameter is specified, allow a comma-delimited list, but make sure each value conforms to validation type',  $actual, $expected, $results);
 
 
 
@@ -879,7 +879,7 @@ class Test
         $expected = array(
             'info' => false
         );
-        TestCheck::assertInArray('M.1', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter as json; return false if json is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.1', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter as json; return false if json is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -899,7 +899,7 @@ class Test
                 3
             )
         );
-        TestCheck::assertInArray('M.2', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.2', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
@@ -916,6 +916,6 @@ class Test
                 "a"=>"b"
             )
         );
-        TestCheck::assertInArray('M.3', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('M.3', '\Flexio\Base\Validator::check(); if decode is specified, then try to decode the parameter',  $actual, $expected, $results);
     }
 }

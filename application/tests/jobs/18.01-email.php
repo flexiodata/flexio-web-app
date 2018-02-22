@@ -42,6 +42,6 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Base\Util::getStreamContents($process->getStdout());
         $expected = '';
-        TestCheck::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Email; check basic functionality',  $actual, $expected, $results);
     }
 }

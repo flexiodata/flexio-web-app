@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -43,7 +43,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -61,7 +61,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
 
 
 
@@ -78,9 +78,9 @@ class Test
         }
         catch (\Exception $e)
         {
-            $actual = TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
     }
 }

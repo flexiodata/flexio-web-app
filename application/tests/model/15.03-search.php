@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -37,6 +37,6 @@ class Test
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
     }
 }

@@ -29,7 +29,7 @@ try
     $show_failures_only = $argv[2] ?? false;
     $show_failures_only = toBoolean($show_failures_only);
 
-    $result = \Flexio\Tests\TestBase::run($test_params);
+    $result = \Flexio\Tests\Base::run($test_params);
     echoResult($result, $show_failures_only);
 }
 catch (\Exception $e)

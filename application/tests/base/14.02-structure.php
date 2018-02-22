@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
         // TODO:
@@ -35,7 +35,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::create()->get();
         $expected = array();
-        TestCheck::assertArray('A.1', 'Structure::create(); if no input is specified, create an empty structure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Structure::create(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
 
 
@@ -47,77 +47,77 @@ class Test
         [
         ]
         ';
-        TestCheck::assertInArray('B.1', 'Structure::create(); if no input is specified, create an empty structure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Structure::create(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::create(false);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.2', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.2', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::create(true);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.3', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.3', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::create(1);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.4', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.4', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::create('a');
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.5', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.5', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::create(new \stdClass());
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.6', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.6', 'Structure::create(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -129,7 +129,7 @@ class Test
         [
         ]
         ';
-        TestCheck::assertInArray('B.7', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.7', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -141,14 +141,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.8', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.8', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -160,14 +160,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.9', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.9', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -179,14 +179,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.10', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.10', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -200,7 +200,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('B.11', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.11', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -213,14 +213,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.12', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.12', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -233,14 +233,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.13', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.13', 'Structure::create(); if an array is specified, don\'t create the structure if the array entries aren\'t valid columns',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -256,7 +256,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('B.14', 'Structure::create(); make sure basic creation happens with text input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.14', 'Structure::create(); make sure basic creation happens with text input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -272,7 +272,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ',true);
-        TestCheck::assertInArray('B.15', 'Structure::create(); make sure basic creation happens with text input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.15', 'Structure::create(); make sure basic creation happens with text input',  $actual, $expected, $results);
 
 
 
@@ -288,14 +288,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('C.1', 'Structure::create(); make sure the name is populated and is a character',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('C.1', 'Structure::create(); make sure the name is populated and is a character',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -307,14 +307,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('C.2', 'Structure::create(); make sure the name is populated and is a character',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('C.2', 'Structure::create(); make sure the name is populated and is a character',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -328,7 +328,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('C.3', 'Structure::create(); if only the name is specified, set the type to text',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', 'Structure::create(); if only the name is specified, set the type to text',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -342,7 +342,7 @@ class Test
             {"name":"field 1"}
         ]
         ';
-        TestCheck::assertInArray('C.4', 'Structure::create(); for the name, convert to lowercase, and preserve internal spaces',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.4', 'Structure::create(); for the name, convert to lowercase, and preserve internal spaces',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -356,7 +356,7 @@ class Test
             {"name":"field 1"}
         ]
         ';
-        TestCheck::assertInArray('C.5', 'Structure::create(); for the name, trim leading/trailing spaces',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', 'Structure::create(); for the name, trim leading/trailing spaces',  $actual, $expected, $results);
 
 
 
@@ -374,7 +374,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.1', 'Structure::create(); if only the name is specified, set the type to text',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', 'Structure::create(); if only the name is specified, set the type to text',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -386,14 +386,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('D.2', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.2', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -405,14 +405,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('D.3', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.3', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -424,14 +424,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('D.4', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('D.4', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -445,7 +445,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.5', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -459,7 +459,7 @@ class Test
             {"name":"field1", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('D.6', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -473,7 +473,7 @@ class Test
             {"name":"field1", "type":"widecharacter"}
         ]
         ';
-        TestCheck::assertInArray('D.7', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.7', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -487,7 +487,7 @@ class Test
             {"name":"field1", "type":"numeric"}
         ]
         ';
-        TestCheck::assertInArray('D.8', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.8', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -501,7 +501,7 @@ class Test
             {"name":"field1", "type":"double"}
         ]
         ';
-        TestCheck::assertInArray('D.9', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.9', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -515,7 +515,7 @@ class Test
             {"name":"field1", "type":"integer"}
         ]
         ';
-        TestCheck::assertInArray('D.10', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.10', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -529,7 +529,7 @@ class Test
             {"name":"field1", "type":"date"}
         ]
         ';
-        TestCheck::assertInArray('D.11', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.11', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -543,7 +543,7 @@ class Test
             {"name":"field1", "type":"datetime"}
         ]
         ';
-        TestCheck::assertInArray('D.12', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.12', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -557,7 +557,7 @@ class Test
             {"name":"field1", "type":"boolean"}
         ]
         ';
-        TestCheck::assertInArray('D.13', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.13', 'Structure::create(); if type is populated, make sure it\'s one of the allowed types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -571,7 +571,7 @@ class Test
             {"name":"field1", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('D.14', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.14', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -585,7 +585,7 @@ class Test
             {"name":"field1", "type":"date"}
         ]
         ';
-        TestCheck::assertInArray('D.15', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.15', 'Structure::create(); type parameter should be case-insensitive and converted to a lowercase value',  $actual, $expected, $results);
 
 
 
@@ -601,14 +601,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('E.1', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('E.1', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -620,14 +620,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('E.2', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('E.2', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -639,14 +639,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('E.3', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('E.3', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -660,7 +660,7 @@ class Test
             {"name":"field1", "type":"character", "width":1}
         ]
         ';
-        TestCheck::assertInArray('E.4', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.4', 'Structure::create(); if width is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -674,7 +674,7 @@ class Test
             {"name":"field1", "type":"text", "width":null}
         ]
         ';
-        TestCheck::assertInArray('E.5', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.5', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info =json_decode( '
@@ -688,7 +688,7 @@ class Test
             {"name":"field1", "type":"text", "width":null}
         ]
         ';
-        TestCheck::assertInArray('E.6', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.6', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -702,7 +702,7 @@ class Test
             {"name":"field1", "type":"character", "width":1}
         ]
         ';
-        TestCheck::assertInArray('E.7', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.7', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -716,7 +716,7 @@ class Test
             {"name":"field1", "type":"character", "width":255}
         ]
         ';
-        TestCheck::assertInArray('E.8', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.8', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -730,7 +730,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":1}
         ]
         ';
-        TestCheck::assertInArray('E.9', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.9', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -744,7 +744,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":255}
         ]
         ';
-        TestCheck::assertInArray('E.10', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.10', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -758,7 +758,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":2}
         ]
         ';
-        TestCheck::assertInArray('E.11', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.11', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -772,7 +772,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":18}
         ]
         ';
-        TestCheck::assertInArray('E.12', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.12', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -786,7 +786,7 @@ class Test
             {"name":"field1", "type":"double", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.13', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.13', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -800,7 +800,7 @@ class Test
             {"name":"field1", "type":"double", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.14', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.14', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -814,7 +814,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.15', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.15', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -828,7 +828,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.16', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.16', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -842,7 +842,7 @@ class Test
             {"name":"field1", "type":"date", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.17', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.17', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -856,7 +856,7 @@ class Test
             {"name":"field1", "type":"date", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.18', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.18', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -870,7 +870,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.19', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.19', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -884,7 +884,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8}
         ]
         ';
-        TestCheck::assertInArray('E.20', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.20', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -898,7 +898,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1}
         ]
         ';
-        TestCheck::assertInArray('E.21', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.21', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -912,7 +912,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1}
         ]
         ';
-        TestCheck::assertInArray('E.22', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.22', 'Structure::create(); adjust integer width values so they are appropriate for the type',  $actual, $expected, $results);
 
 
 
@@ -928,14 +928,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('F.1', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('F.1', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = '
@@ -947,14 +947,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('F.2', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('F.2', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -966,14 +966,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('F.3', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('F.3', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -987,7 +987,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":10, "scale":1}
         ]
         ';
-        TestCheck::assertInArray('F.4', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.4', 'Structure::create(); if scale is populated, make sure it\'s an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1001,7 +1001,7 @@ class Test
             {"name":"field1", "type":"text", "width":null, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.5', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.5', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1015,7 +1015,7 @@ class Test
             {"name":"field1", "type":"text", "width":null, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.6', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.6', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1029,7 +1029,7 @@ class Test
             {"name":"field1", "type":"character", "width":1, "scale":null}
         ]
         ',true);
-        TestCheck::assertInArray('F.7', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.7', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1043,7 +1043,7 @@ class Test
             {"name":"field1", "type":"character", "width":1, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.8', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.8', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1057,7 +1057,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":1, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.9', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.9', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1071,7 +1071,7 @@ class Test
             {"name":"field1", "type":"widecharacter", "width":1, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.10', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.10', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1085,7 +1085,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":18, "scale":0}
         ]
         ';
-        TestCheck::assertInArray('F.11', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.11', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1099,7 +1099,7 @@ class Test
             {"name":"field1", "type":"numeric", "width":18, "scale":12}
         ]
         ';
-        TestCheck::assertInArray('F.12', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.12', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1113,7 +1113,7 @@ class Test
             {"name":"field1", "type":"double", "width":8, "scale":0}
         ]
         ';
-        TestCheck::assertInArray('F.13', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.13', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1127,7 +1127,7 @@ class Test
             {"name":"field1", "type":"double", "width":8, "scale":12}
         ]
         ';
-        TestCheck::assertInArray('F.14', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.14', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1141,7 +1141,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.15', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.15', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1155,7 +1155,7 @@ class Test
             {"name":"field1", "type":"integer", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.16', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.16', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1169,7 +1169,7 @@ class Test
             {"name":"field1", "type":"date", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.17', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.17', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1183,7 +1183,7 @@ class Test
             {"name":"field1", "type":"date", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.18', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.18', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1197,7 +1197,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.19', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.19', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1211,7 +1211,7 @@ class Test
             {"name":"field1", "type":"datetime", "width":8, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.20', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.20', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1225,7 +1225,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.21', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.21', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1239,7 +1239,7 @@ class Test
             {"name":"field1", "type":"boolean", "width":1, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('F.22', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.22', 'Structure::create(); adjust integer scale values so they are appropriate for the type',  $actual, $expected, $results);
 
 
 
@@ -1255,14 +1255,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('G.1', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('G.1', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1274,14 +1274,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('G.2', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('G.2', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1293,14 +1293,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Exception $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('G.3', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('G.3', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1314,7 +1314,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":""}
         ]
         ';
-        TestCheck::assertInArray('G.4', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.4', 'Structure::create(); if expression is populated, make sure it\'s a string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1328,7 +1328,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":"abc"}
         ]
         ';
-        TestCheck::assertInArray('G.5', 'Structure::create(); if expression is populated and a string, make sure case-sensitive expression is saved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.5', 'Structure::create(); if expression is populated and a string, make sure case-sensitive expression is saved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1342,7 +1342,7 @@ class Test
             {"name":"field1", "type":"character", "width":10, "expression":"aBC"}
         ]
         ';
-        TestCheck::assertInArray('G.6', 'Structure::create(); if expression is populated and a string, make sure case-sensitive expression is saved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.6', 'Structure::create(); if expression is populated and a string, make sure case-sensitive expression is saved',  $actual, $expected, $results);
 
 
 
@@ -1360,7 +1360,7 @@ class Test
             {"name":"field1", "store_name":"field1"}
         ]
         ';
-        TestCheck::assertInArray('H.1', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.1', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1374,7 +1374,7 @@ class Test
             {"name":"field 1", "store_name":"field_1"}
         ]
         ';
-        TestCheck::assertInArray('H.2', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.2', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1388,7 +1388,7 @@ class Test
             {"name":"field #", "store_name":"field_no"}
         ]
         ';
-        TestCheck::assertInArray('H.3', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.3', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1402,7 +1402,7 @@ class Test
             {"name":"field %", "store_name":"field_pct"}
         ]
         ';
-        TestCheck::assertInArray('H.3', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.3', 'Structure::create(); make sure a suitable internal store_name is created from the input name',  $actual, $expected, $results);
 
 
 
@@ -1417,7 +1417,7 @@ class Test
         $columns = \Flexio\Base\Structure::create($column_info)->get();
         $actual = isset($columns['unknown']) === false;
         $expected = true;
-        TestCheck::assertBoolean('I.1', 'Structure::create(); make sure unknown parameters aren\'t saved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('I.1', 'Structure::create(); make sure unknown parameters aren\'t saved',  $actual, $expected, $results);
 
 
 
@@ -1437,7 +1437,7 @@ class Test
             {"name":"field2", "type":"character", "width":10, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('J.1', 'Structure::create(); make sure multiple columns can be added',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.1', 'Structure::create(); make sure multiple columns can be added',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1453,7 +1453,7 @@ class Test
             {"name":"field_1", "type":"character", "width":10, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('J.2', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.2', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1471,7 +1471,7 @@ class Test
             {"name":"field_1_1", "type":"character", "width":15, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('J.3', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.3', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1489,7 +1489,7 @@ class Test
             {"name":"field_2", "type":"character", "width":15, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('J.4', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.4', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1507,6 +1507,6 @@ class Test
             {"name":"column", "store_name":"f_column", "width":15, "scale":null}
         ]
         ';
-        TestCheck::assertInArray('J.5', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('J.5', 'Structure::create(); make sure duplicate fields are properly incremented',  $actual, $expected, $results);
     }
 }

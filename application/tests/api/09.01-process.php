@@ -37,11 +37,11 @@ class Test
         ]',true);
         $request = \Flexio\Api\Request::create();
         $request->setPostParams($params);
-        $request->setRequestingUser(TestUtil::getDefaultTestUser());
+        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
         $process_info = \Flexio\Api\Process::create($request);
         $actual = $process_info['task'][0]['op'];
         $expected = 'sleep';
-        TestCheck::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Api\Process::create(); return the object',  $actual, $expected, $results);
 
 
         // TEST: process background job processing and status
@@ -58,7 +58,7 @@ class Test
                 }
             }
         ]',true);
-        $user_eid = TestUtil::getDefaultTestUser();
+        $user_eid = \Flexio\Tests\Util::getDefaultTestUser();
         $request_create = \Flexio\Api\Request::create();
         $request_create->setPostParams($params);
         $request_create->setRequestingUser($user_eid);
@@ -73,7 +73,7 @@ class Test
         sleep(2);
         $request_get = \Flexio\Api\Request::create();
         $request_get->setQueryParams($process_info1);
-        $request_get->setRequestingUser(TestUtil::getDefaultTestUser());
+        $request_get->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
         $process_info2 = \Flexio\Api\Process::get($request_get);
         $status2 = $process_info2['process_status'];
         sleep(4);
@@ -81,6 +81,6 @@ class Test
         $status3 = $process_info3['process_status'];
         $actual = ($status2 === \Flexio\Jobs\Process::STATUS_RUNNING && $status3 === \Flexio\Jobs\Process::STATUS_COMPLETED);
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Api\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
     }
 }

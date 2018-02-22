@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Http;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Http';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Http; basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Http; basic file syntax check',  $actual, $expected, $results);
     }
 }

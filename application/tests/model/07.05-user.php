@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -30,7 +30,7 @@ class Test
         // BEGIN TEST
         $input_eid = 'xxxxxxxxxxxx';
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'eid' => $input_eid,
             'user_name' => $handle1,
@@ -39,12 +39,12 @@ class Test
         $eid = $model->create(\Model::TYPE_USER, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); don\'t allow the eid to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_UNDEFINED;
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'eid_type' => $eid_type,
             'user_name' => $handle1,
@@ -54,11 +54,11 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_USER;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Model::create(); don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -68,7 +68,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['xyz']);
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Model::create(); don\'t allow random parameters to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
@@ -77,7 +77,7 @@ class Test
         // BEGIN TEST
         $eid_type = \Model::TYPE_UNDEFINED;
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -87,7 +87,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['password']);
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Model::create(); password shouldn\'t be returned in the output',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); password shouldn\'t be returned in the output',  $actual, $expected, $results);
 
 
 
@@ -95,7 +95,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -104,11 +104,11 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::create(); when creating user, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::create(); when creating user, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -132,7 +132,7 @@ class Test
             'timezone' => 'UTC',
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        TestCheck::assertInArray('C.2', '\Model::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
@@ -140,7 +140,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -151,11 +151,11 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('D.1', '\Model::create(); when creating user, allow eid_status to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Model::create(); when creating user, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -166,11 +166,11 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        TestCheck::assertInArray('D.2', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -181,11 +181,11 @@ class Test
         $expected = array(
             'first_name' => 'John'
         );
-        TestCheck::assertInArray('D.3', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.3', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -196,11 +196,11 @@ class Test
         $expected = array(
             'last_name' => 'Williams'
         );
-        TestCheck::assertInArray('D.4', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -213,11 +213,11 @@ class Test
             'last_name' => '',
             'full_name' => 'John Williams'
         );
-        TestCheck::assertInArray('D.5', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -232,11 +232,11 @@ class Test
             'last_name' => 'Williams',
             'full_name' => 'Another Name'
         );
-        TestCheck::assertInArray('D.6', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -246,11 +246,11 @@ class Test
         $expected = array(
             'email' => $handle2
         );
-        TestCheck::assertInArray('D.7', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.7', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -261,11 +261,11 @@ class Test
         $expected = array(
             'phone' => '123-456-7890'
         );
-        TestCheck::assertInArray('D.8', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.8', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -276,11 +276,11 @@ class Test
         $expected = array(
             'locale_language' => 'e'
         );
-        TestCheck::assertInArray('D.9', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.9', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -291,11 +291,11 @@ class Test
         $expected = array(
             'locale_decimal' => 'd'
         );
-        TestCheck::assertInArray('D.10', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.10', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -306,11 +306,11 @@ class Test
         $expected = array(
             'locale_thousands' => 't'
         );
-        TestCheck::assertInArray('D.11', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.11', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -321,11 +321,11 @@ class Test
         $expected = array(
             'locale_dateformat' => 'f',
         );
-        TestCheck::assertInArray('D.12', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.12', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2,
@@ -336,6 +336,6 @@ class Test
         $expected = array(
             'timezone' => 'CDT'
         );
-        TestCheck::assertInArray('D.13', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.13', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
     }
 }

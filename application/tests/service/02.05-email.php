@@ -39,7 +39,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
         // TODO: fill out tests
@@ -50,7 +50,7 @@ class Test
         $email = \Flexio\Services\Email::parseFile('');
         $actual = get_class($email);
         $expected = 'Flexio\Services\Email';
-        TestCheck::assertString('A.1', '\Flexio\Services\Email::parseStream(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Services\Email::parseStream(); basic test', $actual, $expected, $results);
 
 
         // TEST: content parsing; "from" information
@@ -60,6 +60,6 @@ class Test
         $email = \Flexio\Services\Email::parseFile($file);
         $actual = $email->getFrom();
         $expected = '["Doug Sauder <doug@example.com>"]';
-        TestCheck::assertArray('B.1', '\Flexio\Services\Email::parseText(); get the "from" addresses', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Services\Email::parseText(); get the "from" addresses', $actual, $expected, $results);
     }
 }

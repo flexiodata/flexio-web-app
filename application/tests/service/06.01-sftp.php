@@ -28,6 +28,6 @@ class Test
         $service = new \Flexio\Services\Sftp;
         $actual = get_class($service);
         $expected = 'Flexio\Services\Sftp';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Sftp::create(); basic file syntax check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Sftp::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -45,7 +45,7 @@ class Test
         $expected = array(
             $eid3,
         );
-        TestCheck::assertArray('A.1', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -65,7 +65,7 @@ class Test
         $expected = array(
             $eid3,
         );
-        TestCheck::assertArray('A.2', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -88,6 +88,6 @@ class Test
         $expected = array(
             $eid3,
         );
-        TestCheck::assertArray('A.3', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); search eids multiple levels deep',  $actual, $expected, $results);
     }
 }
