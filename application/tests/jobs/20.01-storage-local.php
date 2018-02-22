@@ -24,8 +24,7 @@ class Test
 
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataFiles();
-        $store_alias = "home";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_LOCAL . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 

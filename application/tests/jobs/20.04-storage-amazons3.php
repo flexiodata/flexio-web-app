@@ -22,8 +22,7 @@ class Test
     {
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataFiles();
-        $store_alias = "testsuite-amazons3";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_AMAZONS3 . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 

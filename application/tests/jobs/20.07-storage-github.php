@@ -22,8 +22,7 @@ class Test
     {
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataFiles();
-        $store_alias = "testsuite-github";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GITHUB . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 

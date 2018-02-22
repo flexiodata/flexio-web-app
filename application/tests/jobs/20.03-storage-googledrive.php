@@ -22,8 +22,7 @@ class Test
     {
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataFiles();
-        $store_alias = "testsuite-googledrive";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 

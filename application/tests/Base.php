@@ -18,6 +18,14 @@ namespace Flexio\Tests;
 
 class Base
 {
+    const STORAGE_LOCAL = 'home';
+    const STORAGE_AMAZONS3 = 'testsuite-amazons3';
+    const STORAGE_BOX = 'testsuite-box';
+    const STORAGE_DROPBOX = 'testsuite-dropbox';
+    const STORAGE_GITHUB = 'testsuite-github';
+    const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
+    const STORAGE_SFTP = 'testsuite-sftp';
+
     const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
     const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
     const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
