@@ -22,7 +22,7 @@ class Test
     {
         // SETUP
         $files = \Flexio\Tests\Util::getTestDataFiles();
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GITHUB . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GITHUB . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 
