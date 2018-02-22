@@ -20,9 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TEST: \Flexio\Jobs\Base::replaceParameterTokens(); variable serialization with single variable
 
         // BEGIN TEST

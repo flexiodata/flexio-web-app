@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); invalid type
 
         // BEGIN TEST
@@ -33,7 +28,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create('', $info);
+            $eid = \Flexio\Tests\Util::getModel()->create('', $info);
         }
         catch (\Exception $e)
         {
@@ -51,7 +46,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_UNDEFINED, $info);
         }
         catch (\Exception $e)
         {
@@ -73,7 +68,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_OBJECT, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
             $actual = \Flexio\Base\Eid::isValid($eid);
         }
         catch (\Exception $e)

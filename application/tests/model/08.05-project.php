@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: when creating a project, reject invalid parameters
 
         // BEGIN TEST
@@ -34,7 +29,7 @@ class Test
             'eid' => $input_eid,
             'name' => $handle
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in project creation, don\'t allow the eid to be set',  $actual, $expected, $results);
@@ -46,8 +41,8 @@ class Test
             'eid_type' => $eid_type,
             'name' => $handle
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PROJECT;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in project creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
@@ -57,8 +52,8 @@ class Test
         $info = array(
             'user_name' => ''
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['user_name']);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in project creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
@@ -71,8 +66,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in project creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
@@ -81,8 +76,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_PROJECT,
@@ -102,8 +97,8 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
@@ -117,7 +112,7 @@ class Test
             $info = array(
                 'eid_status' => 'bad' // invalid status
             );
-            $eid = $model->create(\Model::TYPE_PROJECT, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         }
         catch (\Exception $e)
         {
@@ -134,8 +129,8 @@ class Test
         $info = array(
             'name' => 'Test Project'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'name' => 'Test Project'
         );
@@ -146,8 +141,8 @@ class Test
         $info = array(
             'description' => 'Test project description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'description' => 'Test project description'
         );
@@ -158,8 +153,8 @@ class Test
         $info = array(
             'display_icon' => 'Test project display icon'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'display_icon' => 'Test project display icon'
         );

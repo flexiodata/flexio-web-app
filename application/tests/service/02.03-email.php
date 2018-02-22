@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TEST: set/get email 'from'
 
         // BEGIN TEST

@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TODO:
         //   - TEST: column entry parameter name adjustments; e.g. duplicates
         //   - TEST: make sure internal column storage names are set automatically and can't be overridden

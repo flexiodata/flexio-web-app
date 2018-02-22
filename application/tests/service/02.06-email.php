@@ -38,10 +38,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TODO: fix bad tests that are commented out
 
         // TEST: content parsing; empty input

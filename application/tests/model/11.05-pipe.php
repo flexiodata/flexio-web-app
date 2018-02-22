@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: when creating a pipe, reject invalid parameters
 
         // BEGIN TEST
@@ -34,7 +29,7 @@ class Test
             'eid' => $input_eid,
             'name' => $handle
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
@@ -46,8 +41,8 @@ class Test
             'eid_type' => $eid_type,
             'name' => $handle
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PIPE;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in pipe creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
@@ -57,8 +52,8 @@ class Test
         $info = array(
             'xxx' => $handle
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['xxx']);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in pipe creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
@@ -72,8 +67,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in pipe creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
@@ -82,8 +77,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_PIPE,
@@ -108,8 +103,8 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
@@ -120,8 +115,8 @@ class Test
         $info = array(
             'name' => 'Test pipe name'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'name' => 'Test pipe name'
         );
@@ -132,8 +127,8 @@ class Test
         $info = array(
             'description' => 'Test pipe description'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'description' => 'Test pipe description'
         );
@@ -144,8 +139,8 @@ class Test
         $info = array(
             'display_icon' => 'Test pipe display icon data'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'display_icon' => 'Test pipe display icon data'
         );
@@ -156,8 +151,8 @@ class Test
         $info = array(
             'input' => '{}'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'input' => '{}'
         );
@@ -168,8 +163,8 @@ class Test
         $info = array(
             'output' => '{}'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'output' => '{}'
         );
@@ -180,8 +175,8 @@ class Test
         $info = array(
             'task' => '{}'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'task' => '{}'
         );
@@ -192,8 +187,8 @@ class Test
         $info = array(
             'schedule' => '{}'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'schedule' => '{}'
         );
@@ -204,8 +199,8 @@ class Test
         $info = array(
             'schedule_status' => 'A'
         );
-        $eid = $model->create(\Model::TYPE_PIPE, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'schedule_status' => \Model::PIPE_STATUS_ACTIVE
         );
@@ -219,7 +214,7 @@ class Test
             $info = array(
                 'schedule_status' => 'D' // valid inputs are A and I
             );
-            $eid = $model->create(\Model::TYPE_PIPE, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         }
         catch (\Exception $e)
         {

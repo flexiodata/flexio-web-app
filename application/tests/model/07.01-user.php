@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::checkPasswordHash(); tests for empty string input
 
         // BEGIN TEST

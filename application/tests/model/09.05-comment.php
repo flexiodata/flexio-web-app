@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: when creating a comment, reject invalid parameters
 
         // BEGIN TEST
@@ -34,7 +29,7 @@ class Test
             'eid' => $input_eid,
             'comment' => $handle
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
         $actual = $eid !== $input_eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in comment creation, don\'t allow the eid to be set',  $actual, $expected, $results);
@@ -46,8 +41,8 @@ class Test
             'eid_type' => $eid_type,
             'comment' => $handle
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_COMMENT;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in comment creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
@@ -57,8 +52,8 @@ class Test
         $info = array(
             'name' => $handle
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['name']);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
@@ -72,8 +67,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $info = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $info = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in comment creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
@@ -82,8 +77,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_COMMENT,
@@ -101,8 +96,8 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
@@ -113,8 +108,8 @@ class Test
         $info = array(
             'comment' => 'Test comment'
         );
-        $eid = $model->create(\Model::TYPE_COMMENT, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'comment' => 'Test comment'
         );

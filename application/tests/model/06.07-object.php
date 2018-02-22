@@ -20,20 +20,15 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: Model:assoc_count(); tests for bad edge type input
 
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $count = $model->assoc_count($eid1, '');
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid1, '');
         $actual = $association === true && $count === 0;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::assoc_count(); return zero when an invalid edge is specified',  $actual, $expected, $results);
@@ -45,10 +40,10 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $count = $model->assoc_count('', \Model::EDGE_LINKED_TO);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count('', \Model::EDGE_LINKED_TO);
         $actual = 0;
         $expected = 0;
         \Flexio\Tests\Check::assertNumber('B.1', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
@@ -56,11 +51,11 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $eid3 = \Flexio\Base\Eid::generate();
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $count = $model->assoc_count($eid3, \Model::EDGE_LINKED_TO);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid3, \Model::EDGE_LINKED_TO);
         $actual = 0;
         $expected = 0;
         \Flexio\Tests\Check::assertNumber('B.2', '\Model::assoc_count(); return zero when an invalid eid is specified',  $actual, $expected, $results);
@@ -72,10 +67,10 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
         \Flexio\Tests\Check::assertNumber('C.1', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
@@ -83,11 +78,11 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association = $model->assoc_add($eid2, \Model::EDGE_LINKED_TO, $eid1);
-        $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid2, \Model::EDGE_LINKED_TO, $eid1);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
         \Flexio\Tests\Check::assertNumber('C.2', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
@@ -95,11 +90,11 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
-        $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 1;
         \Flexio\Tests\Check::assertNumber('C.3', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
@@ -107,14 +102,14 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid4 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid3);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid4);
-        $count = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid3 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid4 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid3);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid4);
+        $count = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO);
         $actual = $count;
         $expected = 3;
         \Flexio\Tests\Check::assertNumber('C.4', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);
@@ -122,19 +117,19 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid3 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid4 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid3);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid4);
-        $association = $model->delete($eid3);
-        $association = $model->delete($eid4);
-        $count_all = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO);
-        $count_all_with_filter = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE, \Model::STATUS_DELETED)));
-        $count_available = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE)));
-        $count_deleted = $model->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_DELETED)));
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid3 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid4 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid3);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid4);
+        $association = \Flexio\Tests\Util::getModel()->delete($eid3);
+        $association = \Flexio\Tests\Util::getModel()->delete($eid4);
+        $count_all = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO);
+        $count_all_with_filter = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE, \Model::STATUS_DELETED)));
+        $count_available = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_AVAILABLE)));
+        $count_deleted = \Flexio\Tests\Util::getModel()->assoc_count($eid1, \Model::EDGE_LINKED_TO, array('eid_status' => array(\Model::STATUS_DELETED)));
         $actual = $count_all === 3 && $count_all_with_filter ===3 && $count_available === 1 && $count_deleted === 2;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.5', '\Model::assoc_count(); return the number of associations of a given type for a particular eid',  $actual, $expected, $results);

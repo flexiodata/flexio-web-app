@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); when creating a user, make sure the required parameters are valid
 
         // BEGIN TEST
@@ -38,7 +33,7 @@ class Test
                 'email' => $handle2,
                 'password' => $handle1
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -61,7 +56,7 @@ class Test
                 'email' => $handle2,
                 'password' => $handle1
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -84,7 +79,7 @@ class Test
                 'email' => null,
                 'password' => $handle1
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -107,7 +102,7 @@ class Test
                 'email' => 'abc',
                 'password' => $handle1
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -126,7 +121,7 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.5', '\Model::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
@@ -138,8 +133,8 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'eid' => $eid,
             'user_name' => $handle1,

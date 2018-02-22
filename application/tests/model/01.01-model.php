@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: Model type constants; the database stores raw values for
         // some of these constants, so these tests ensure that the constants
         // are consistent between various models and the values in the

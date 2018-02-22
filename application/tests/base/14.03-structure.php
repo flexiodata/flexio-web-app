@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TODO: add tests for merging of structures where there are slight differences
         // in fieldnames cause by capitalization; equality rules used for matching should
         // follow the same rules as used for looking up a field (e.g. if fieldnames are not

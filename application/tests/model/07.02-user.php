@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); user creation with invalid input
 
         // BEGIN TEST
@@ -33,7 +28,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -53,7 +48,7 @@ class Test
             $info = array(
                 'email' => $handle
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -73,7 +68,7 @@ class Test
             $info = array(
                 'user_name' => $handle
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         }
         catch (\Exception $e)
         {
@@ -96,7 +91,7 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); make sure a valid eid is returned when user is created',  $actual, $expected, $results);
@@ -115,8 +110,8 @@ class Test
                 'user_name' => $handle1,
                 'email' => $handle2
             );
-            $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
-            $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
+            $eid_first_time_creation = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info1);
+            $eid_second_time_creation = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info2);
         }
         catch (\Exception $e)
         {
@@ -142,8 +137,8 @@ class Test
                 'user_name' => $handle1 . 'b',
                 'email' => $handle2
             );
-            $eid_first_time_creation = $model->create(\Model::TYPE_USER, $info1);
-            $eid_second_time_creation = $model->create(\Model::TYPE_USER, $info2);
+            $eid_first_time_creation = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info1);
+            $eid_second_time_creation = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info2);
         }
         catch (\Exception $e)
         {
@@ -163,7 +158,7 @@ class Test
         $actual = '';
         try
         {
-            $username = $model->user->getUsernameFromEid(null);
+            $username = \Flexio\Tests\Util::getModel()->user->getUsernameFromEid(null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -174,7 +169,7 @@ class Test
         \Flexio\Tests\Check::assertString('C.1', 'User\Model::getUsernameFromEid(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $username = $model->user->getUsernameFromEid('xxxxxxxxxxxx');
+        $username = \Flexio\Tests\Util::getModel()->user->getUsernameFromEid('xxxxxxxxxxxx');
         $actual = $username === false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.2', 'User\Model::getUsernameFromEid(); return false when username can\'t be found',  $actual, $expected, $results);
@@ -186,8 +181,8 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->getUsernameFromEid($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->getUsernameFromEid($eid);
         $expected = $handle1;
         \Flexio\Tests\Check::assertString('C.3', '\Model::getUsernameFromEid(); use the eid to get the username',  $actual, $expected, $results);
 
@@ -198,8 +193,8 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->getUsernameFromEid($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->getUsernameFromEid($eid);
         $expected = strtolower($handle1);
         \Flexio\Tests\Check::assertString('C.4', '\Model::getUsernameFromEid(); make sure username is case insensitive',  $actual, $expected, $results);
 
@@ -211,7 +206,7 @@ class Test
         $actual = '';
         try
         {
-            $email = $model->user->getEmailFromEid(null);
+            $email = \Flexio\Tests\Util::getModel()->user->getEmailFromEid(null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -222,7 +217,7 @@ class Test
         \Flexio\Tests\Check::assertString('D.1', 'User\Model::getEmailFromEid(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = $model->user->getEmailFromEid('xxxxxxxxxxxx');
+        $email = \Flexio\Tests\Util::getModel()->user->getEmailFromEid('xxxxxxxxxxxx');
         $actual = $email === false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('D.2', 'User\Model::getEmailFromEid(); return false when a user\'s email can\'t be found',  $actual, $expected, $results);
@@ -234,8 +229,8 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->getEmailFromEid($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->getEmailFromEid($eid);
         $expected = $handle2;
         \Flexio\Tests\Check::assertString('D.3', '\Model::getEmailFromEid(); use the eid to get the user\'s email',  $actual, $expected, $results);
 
@@ -246,8 +241,8 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->getEmailFromEid($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->getEmailFromEid($eid);
         $expected = strtolower($handle2);
         \Flexio\Tests\Check::assertString('D.4', '\Model::getEmailFromEid(); make sure the returned email is case insensitive',  $actual, $expected, $results);
 
@@ -259,7 +254,7 @@ class Test
         $actual = '';
         try
         {
-            $eid = $model->user->getEidFromIdentifier(null);
+            $eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier(null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -271,7 +266,7 @@ class Test
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
-        $eid = $model->user->getEidFromIdentifier($handle);
+        $eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($handle);
         $actual = $eid === false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('E.2', 'User\Model::getEidFromIdentifier(); return false when eid can\'t be found',  $actual, $expected, $results);
@@ -283,9 +278,9 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $actual = $eid;
-        $expected = $model->user->getEidFromIdentifier($handle1);
+        $expected = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($handle1);
         \Flexio\Tests\Check::assertString('E.3', '\Model::getEidFromIdentifier(); use the username to get the eid',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -295,9 +290,9 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $actual = $eid;
-        $expected = $model->user->getEidFromIdentifier(strtolower($handle1));
+        $expected = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier(strtolower($handle1));
         \Flexio\Tests\Check::assertString('E.4', '\Model::getEidFromIdentifier(); make sure username is case insensitive',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -307,9 +302,9 @@ class Test
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $actual = $eid;
-        $expected = $model->user->getEidFromIdentifier(strtoupper($handle1));
+        $expected = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier(strtoupper($handle1));
         \Flexio\Tests\Check::assertString('E.5', '\Model::getEidFromIdentifier(); make sure username is case insensitive',  $actual, $expected, $results);
 
 
@@ -320,7 +315,7 @@ class Test
         $actual = '';
         try
         {
-            $actual = $model->user->checkUserPassword(null, null);
+            $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword(null, null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -332,7 +327,7 @@ class Test
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
-        $actual = $model->user->checkUserPassword($handle,'');
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword($handle,'');
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('F.2', 'User\Model::checkUserPassword(); return false if user cannot be found',  $actual, $expected, $results);
 
@@ -345,8 +340,8 @@ class Test
             'email' => $email,
             'password' => $password
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->checkUserPassword($username,$password.'x');
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword($username,$password.'x');
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('F.3', 'User\Model::checkUserPassword(); return false if password does not match',  $actual, $expected, $results);
 
@@ -359,8 +354,8 @@ class Test
             'email' => $email,
             'password' => $password
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->checkUserPassword($username.'x',$password);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword($username.'x',$password);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('F.4', 'User\Model::checkUserPassword(); return false if password does not match',  $actual, $expected, $results);
 
@@ -373,8 +368,8 @@ class Test
             'email' => $email,
             'password' => $password
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->checkUserPassword($username,$password);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword($username,$password);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.5', 'User\Model::checkUserPassword(); return true if password matches',  $actual, $expected, $results);
 
@@ -387,8 +382,8 @@ class Test
             'email' => $email,
             'password' => $password
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->checkUserPassword(strtolower($username),$password);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword(strtolower($username),$password);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.6', 'User\Model::checkUserPassword(); make sure username is case insensitive',  $actual, $expected, $results);
 
@@ -401,8 +396,8 @@ class Test
             'email' => $email,
             'password' => $password
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $actual = $model->user->checkUserPassword(strtoupper($username),$password);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $actual = \Flexio\Tests\Util::getModel()->user->checkUserPassword(strtoupper($username),$password);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.7', 'User\Model::checkUserPassword(); make sure username is case insensitive',  $actual, $expected, $results);
     }

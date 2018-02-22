@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); multiple unique user creation
 
         // BEGIN TEST
@@ -39,7 +34,7 @@ class Test
                 'user_name' => $handle1,
                 'email' => $handle2
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_user_creation++;

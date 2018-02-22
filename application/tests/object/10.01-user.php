@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: object creation
 
         // BEGIN TEST
@@ -56,7 +51,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'User::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->create(\Model::TYPE_OBJECT, null);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, null);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object;
         $expected = false;
@@ -66,7 +61,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = $model->create(\Model::TYPE_USER, $properties);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = 'Flexio\Object\User';
         $expected = get_class($object);
@@ -76,7 +71,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = $model->create(\Model::TYPE_USER, $properties);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_USER;
@@ -86,7 +81,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = $model->create(\Model::TYPE_USER, $properties);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

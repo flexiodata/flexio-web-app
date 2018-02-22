@@ -20,19 +20,14 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: make sure that duplicate edges and eids are removed in search
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "$eid,$eid";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
@@ -42,9 +37,9 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid)";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
@@ -54,9 +49,9 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid)";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid

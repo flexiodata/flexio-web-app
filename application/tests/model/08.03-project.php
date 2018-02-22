@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); multiple unique project creation
 
         // BEGIN TEST
@@ -36,7 +31,7 @@ class Test
             $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_PROJECT, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_project_creation++;

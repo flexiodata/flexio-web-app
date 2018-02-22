@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: Model:assoc_add(); tests for bad edge type input
 
         // BEGIN TEST
@@ -33,9 +28,9 @@ class Test
         {
             $info = array(
             );
-            $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-            $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-            $association = $model->assoc_add($eid1, '', $eid2);
+            $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, '', $eid2);
         }
         catch (\Exception $e)
         {
@@ -54,9 +49,9 @@ class Test
         {
             $info = array(
             );
-            $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-            $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-            $association = $model->assoc_add($eid1, 'x', $eid2);
+            $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, 'x', $eid2);
         }
         catch (\Exception $e)
         {
@@ -78,9 +73,9 @@ class Test
         {
             $info = array(
             );
-            $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-            $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-            $association = $model->assoc_add('x', \Model::EDGE_LINKED_TO, $eid2);
+            $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $association = \Flexio\Tests\Util::getModel()->assoc_add('x', \Model::EDGE_LINKED_TO, $eid2);
         }
         catch (\Exception $e)
         {
@@ -98,9 +93,9 @@ class Test
         {
             $info = array(
             );
-            $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-            $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-            $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, 'x');
+            $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, 'x');
         }
         catch (\Exception $e)
         {
@@ -119,9 +114,9 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
         $actual = $association;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.1', '\Model::assoc_add(); return true when a valid association is created',  $actual, $expected, $results);
@@ -133,11 +128,11 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association1 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association2 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $assoc_count = count($model->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid2]));
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association1 = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association2 = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $assoc_count = count(\Flexio\Tests\Util::getModel()->assoc_get($eid1, \Model::EDGE_LINKED_TO, [$eid2]));
         $actual = $association1 === true && $association2 === true && $assoc_count === 1;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('D.1', '\Model::assoc_add(); if the same association is created twice, don\'t create it twice but succeed',  $actual, $expected, $results);
@@ -145,10 +140,10 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association1 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association2 = $model->assoc_add($eid2, \Model::EDGE_LINKED_TO, $eid1);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association1 = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association2 = \Flexio\Tests\Util::getModel()->assoc_add($eid2, \Model::EDGE_LINKED_TO, $eid1);
         $actual = $association1 === true && $association2 === true;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('D.2', '\Model::assoc_add(); two objects should allow the same association to be used bidirectionally; return true when both associations are created',  $actual, $expected, $results);
@@ -156,10 +151,10 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid2 = $model->create(\Model::TYPE_OBJECT, $info);
-        $association1 = $model->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
-        $association2 = $model->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $association1 = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_TO, $eid2);
+        $association2 = \Flexio\Tests\Util::getModel()->assoc_add($eid1, \Model::EDGE_LINKED_FROM, $eid2);
         $actual = $association1 === true && $association2 === true;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('D.3', '\Model::assoc_add(); two objects should allow associations of different types; return true when both associations are created',  $actual, $expected, $results);

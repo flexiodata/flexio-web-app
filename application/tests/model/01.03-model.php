@@ -20,15 +20,10 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: Model database connection
 
         // BEGIN TEST
-        $db = $model->getDatabase();
+        $db = \Flexio\Tests\Util::getModel()->getDatabase();
         $actual = is_object($db);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::getDatabase(); basic connection with default credentials',  $actual, $expected, $results);
@@ -45,7 +40,7 @@ class Test
         $actual = true;
         for ($i = 0; $i < 10000; $i++)
         {
-            $db = $model->getDatabase();
+            $db = \Flexio\Tests\Util::getModel()->getDatabase();
             if (!$db)
             {
                 $actual = false;

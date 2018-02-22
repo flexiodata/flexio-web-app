@@ -22,12 +22,6 @@ class Test
     {
         // TODO: add tests for grant, revoke, etc
 
-
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // BEGIN TEST
         $actual = \Flexio\Object\Right::TYPE_UNDEFINED;
         $expected = '';

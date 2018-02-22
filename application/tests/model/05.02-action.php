@@ -20,17 +20,12 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::create(); action creation with no parameters
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->action->create($info);
+        $eid = \Flexio\Tests\Util::getModel()->action->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', 'Action::create(); for action creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
@@ -51,8 +46,8 @@ class Test
             'started' => '2018-01-02 01:02:03',
             'finished' => '2018-01-02 01:02:04'
         );
-        $eid = $model->action->create($info);
-        $actual = $model->action->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->action->create($info);
+        $actual = \Flexio\Tests\Util::getModel()->action->get($eid);
         $expected = array(
             'invoked_from' => 'API',
             'invoked_by' => 'xxxxxxxxxxxx',

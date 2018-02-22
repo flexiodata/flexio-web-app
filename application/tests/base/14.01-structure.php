@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::TYPE_INVALID;
         $expected = '';

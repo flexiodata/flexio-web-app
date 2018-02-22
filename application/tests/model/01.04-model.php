@@ -20,18 +20,13 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: \Model::setTimezone(); invalid input
 
         // BEGIN TEST
         $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
-            $result = $model->setTimezone(null);
+            $result = \Flexio\Tests\Util::getModel()->setTimezone(null);
         }
         catch (\Error $e)
         {
@@ -44,7 +39,7 @@ class Test
         $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
-            $result = $model->setTimezone(true);
+            $result = \Flexio\Tests\Util::getModel()->setTimezone(true);
         }
         catch (\Error $e)
         {
@@ -57,7 +52,7 @@ class Test
         $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
-            $result = $model->setTimezone('');
+            $result = \Flexio\Tests\Util::getModel()->setTimezone('');
         }
         catch (\Exception $e)
         {
@@ -70,7 +65,7 @@ class Test
         $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
-            $result = $model->setTimezone('\\');
+            $result = \Flexio\Tests\Util::getModel()->setTimezone('\\');
         }
         catch (\Exception $e)
         {
@@ -87,7 +82,7 @@ class Test
         $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
-            $result = $model->setTimezone('UTC');
+            $result = \Flexio\Tests\Util::getModel()->setTimezone('UTC');
         }
         catch (\Exception $e)
         {

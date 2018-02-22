@@ -38,10 +38,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TODO: fill out tests
 
         // TEST: stream parsing; empty input

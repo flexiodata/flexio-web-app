@@ -20,7 +20,7 @@ class Util
 {
     public static function getModel()
     {
-        return new \Model;
+        return \Flexio\System\System::getModel();
     }
 
     public static function execSDKJS(string $code)

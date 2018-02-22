@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        $model = \Flexio\Tests\Util::getModel();
-
-
-
         // TEST: Process mode constants
 
         // BEGIN TEST

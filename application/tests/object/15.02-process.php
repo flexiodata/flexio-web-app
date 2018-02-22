@@ -20,36 +20,32 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = \Flexio\Tests\Util::getModel();
-
-
         // TEST: Process::cancel()
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
         $actual = $object->cancel()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_CANCELLED;
         \Flexio\Tests\Check::assertString('A.1', 'Process::cancel(); make sure process status is set to cancelled',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_FAILED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_FAILED);
         $actual = $object->cancel()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
         \Flexio\Tests\Check::assertString('A.2', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
         $actual = $object->cancel()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
         \Flexio\Tests\Check::assertString('A.3', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_PAUSED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_PAUSED);
         $actual = $object->cancel()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_CANCELLED;
         \Flexio\Tests\Check::assertString('A.4', 'Process::cancel(); if a job has already finished, don\'t allow it to be cancelled',  $actual, $expected, $results);
@@ -60,28 +56,28 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_RUNNING);
         $actual = $object->pause()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_PAUSED;
         \Flexio\Tests\Check::assertString('B.1', 'Process::pause(); if a running job is paused, make sure process status is set to paused',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_FAILED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_FAILED);
         $actual = $object->pause()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_FAILED;
         \Flexio\Tests\Check::assertString('B.2', 'Process::pause(); only jobs that are running can be paused',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_CANCELLED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_CANCELLED);
         $actual = $object->pause()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_CANCELLED;
         \Flexio\Tests\Check::assertString('B.3', 'Process::pause(); only jobs that are running can be paused',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $model->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
+        \Flexio\Tests\Util::getModel()->process->setProcessStatus($object->getEid(), \Flexio\Jobs\Process::STATUS_COMPLETED);
         $actual = $object->pause()->getProcessStatus();
         $expected = \Flexio\Jobs\Process::STATUS_COMPLETED;
         \Flexio\Tests\Check::assertString('B.4', 'Process::pause(); only jobs that are running can be paused',  $actual, $expected, $results);
