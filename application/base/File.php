@@ -45,6 +45,21 @@ class File
         return $parts;
     }
 
+    public static function splitBasePathAndName(string $path) : array
+    {
+        $parts = \Flexio\Base\File::splitPath($path);
+
+        $name = (count($parts) > 0) ? array_pop($parts) : '';
+        $base = implode('/', $parts);
+        $base = str_replace(':///', '://', $base);
+
+        if (substr($path,0,1) == '/')
+        {
+            $base = '/' . $base;
+        }
+
+        return [ 'base' => $base, 'name' => $name ];
+    }
 
 
 
