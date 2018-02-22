@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -29,7 +29,7 @@ class Test
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
-        $email = TestUtil::createEmailAddress();
+        $email = \Flexio\Tests\Util::createEmailAddress();
         $password = \Flexio\Base\Util::generatePassword();
 
         $params = json_decode('
@@ -59,7 +59,7 @@ class Test
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
-        $email = TestUtil::createEmailAddress();
+        $email = \Flexio\Tests\Util::createEmailAddress();
         $password1 = \Flexio\Base\Util::generatePassword();
         $password2 = \Flexio\Base\Util::generatePassword();
 

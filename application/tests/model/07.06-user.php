@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 
@@ -62,7 +62,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -74,7 +74,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
@@ -89,7 +89,7 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2

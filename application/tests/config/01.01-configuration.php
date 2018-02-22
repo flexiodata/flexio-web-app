@@ -83,31 +83,31 @@ class Test
 
         // BEGIN TEST
         $val = ini_get('post_max_size');
-        $actual = TestUtil::convertToNumber($val) >= 1048576000;
+        $actual = \Flexio\Tests\Util::convertToNumber($val) >= 1048576000;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', 'Configuration; post_max_size must be 1000M or greater; current value is ' . $val, $actual, $expected, $results);
 
         // BEGIN TEST
         $val = ini_get('upload_max_filesize');
-        $actual = TestUtil::convertToNumber($val) >= 1048576000;
+        $actual = \Flexio\Tests\Util::convertToNumber($val) >= 1048576000;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.2', 'Configuration; upload_max_filesize must be 1000M or greater; current value is ' . $val, $actual, $expected, $results);
 
         // BEGIN TEST
         $val = ini_get('memory_limit');
-        $actual = TestUtil::convertToNumber($val) >= 268435456;
+        $actual = \Flexio\Tests\Util::convertToNumber($val) >= 268435456;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.3', 'Configuration; memory_limit must be 256M or greater; current value is ' . $val, $actual, $expected, $results);
 
         // BEGIN TEST
         $val = ini_get('max_execution_time');
-        $actual = TestUtil::convertToNumber($val) >= 3600;
+        $actual = \Flexio\Tests\Util::convertToNumber($val) >= 3600;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.4', 'Configuration; max_execution_time must be 3600 or greater; current value is ' . $val, $actual, $expected, $results);
 
         // BEGIN TEST
         $val = ini_get('max_input_time');
-        $actual = TestUtil::convertToNumber($val) >= 3600;
+        $actual = \Flexio\Tests\Util::convertToNumber($val) >= 3600;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.5', 'Configuration; max_input_time must be 3600 or greater; current value is ' . $val, $actual, $expected, $results);
 

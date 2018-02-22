@@ -23,7 +23,7 @@ class Test
         // TEST: SDK template tests
 
         // BEGIN TEST
-        $script = TestUtil::getTestSDKSetup() . <<<EOD
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<EOD
 Flexio.pipe()
 .javascript(function(context) {
     context.output.write('Hello World!')        // write text to stdout
@@ -36,7 +36,7 @@ Flexio.pipe()
     console.log(response.text)
 })
 EOD;
-        $actual = TestUtil::execSDKJS($script);
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "HELLO WORLD!\n";
         \Flexio\Tests\Check::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
     }

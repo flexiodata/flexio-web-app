@@ -25,7 +25,7 @@ class TestError
 }
 
 
-class TestUtil
+class Util
 {
     const EPSILON = 0.000000000001;
     const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
@@ -61,7 +61,7 @@ class TestUtil
     {
         if (strlen($path) == 0)
         {
-            throw new \Error("Invalid method specified in call to TestUtil::callApi");
+            throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
         }
         if ($path[0] != '/')
             $path = '/' . $path;
@@ -91,7 +91,7 @@ class TestUtil
             case 'PUT':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');    break;
             case 'DELETE':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;
             default:
-                throw new \Error("Invalid method specified in call to TestUtil::callApi");
+                throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
                 break;
         }
 
@@ -121,8 +121,8 @@ class TestUtil
 
     public static function getTestSDKSetup()
     {
-        $default_user_token = TestUtil::getDefaultTestUserToken();
-        $test_api_endpoint = TestUtil::getTestApiEndpoint();
+        $default_user_token = \Flexio\Tests\Util::getDefaultTestUserToken();
+        $test_api_endpoint = \Flexio\Tests\Util::getTestApiEndpoint();
 
         $script = <<<EOD
 
@@ -148,11 +148,11 @@ EOD;
         $password = 'test@flex.io';
 
         // see if the user already exists
-        $user_eid = TestUtil::getModel()->user->getEidFromIdentifier($user_name);
+        $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($user_name);
         if (\Flexio\Base\Eid::isValid($user_eid))
             return $user_eid;
 
-        $user_eid = TestUtil::createUser($user_name, $email, $password);
+        $user_eid = \Flexio\Tests\Util::createUser($user_name, $email, $password);
         return $user_eid;
     }
 
@@ -182,13 +182,13 @@ EOD;
         $user_eid = self::getDefaultTestUser();
 
         $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
-        $projects = TestUtil::getModel()->search($search_path);
+        $projects = \Flexio\Tests\Util::getModel()->search($search_path);
 
         if ($projects !== false)
         {
             foreach ($projects as $project_eid)
             {
-                $object = TestUtil::getModel()->get($project_eid);
+                $object = \Flexio\Tests\Util::getModel()->get($project_eid);
                 if ($object['name'] === $project_name)
                     return $project_eid;
             }
@@ -196,7 +196,7 @@ EOD;
 
         // we couldn't find a default test project for the default test user;
         // create a default project for the specified user
-        $project_eid = TestUtil::createProject($user_eid, $project_name);
+        $project_eid = \Flexio\Tests\Util::createProject($user_eid, $project_name);
         return $project_eid;
     }
 

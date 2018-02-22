@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 

@@ -24,7 +24,7 @@ class Test
 
 
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
 

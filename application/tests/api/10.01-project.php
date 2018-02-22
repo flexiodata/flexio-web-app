@@ -38,7 +38,7 @@ class Test
         ',true);
         $request = \Flexio\Api\Request::create();
         $request->setPostParams($params);
-        $request->setRequestingUser(TestUtil::getDefaultTestUser());
+        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
         $actual = \Flexio\Api\Project::create($request);
         $expected = '
         {

@@ -126,7 +126,7 @@ class Check
         }
 
         // comparing doubles always requires usage of epsilon tolerance
-        if (is_double($actual) && is_double($expected) && TestUtil::dblcompare($actual, $expected) === 0)
+        if (is_double($actual) && is_double($expected) && \Flexio\Tests\Util::dblcompare($actual, $expected) === 0)
         {
             $test_result->passed = true;
             $test_result->message = '';

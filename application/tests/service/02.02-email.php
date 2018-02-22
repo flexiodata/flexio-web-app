@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $model = TestUtil::getModel();
+        $model = \Flexio\Tests\Util::getModel();
 
 
         // note: more extensive tests for email are included in tests of \Flexio\Base\Util::isValidEmail()

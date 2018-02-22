@@ -23,9 +23,9 @@ class Test
         // TODO: writing with bad info (e.g. malformed paths, no file extension, bad file characters)
 
         // SETUP
-        $files = TestUtil::getTestDataFiles();
+        $files = \Flexio\Tests\Util::getTestDataFiles();
         $store_alias = "home";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
+        $folderpath = "/" . $store_alias . "/" . 'tests' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 
@@ -155,8 +155,8 @@ class Test
         {
             $idx++;
 
-            $filepath = TestUtil::getOutputFilePath($folderpath, $filename);
-            $stream = TestUtil::createStreamFromFile($filename);
+            $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);
+            $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
             $process_write = \Flexio\Tests\Process::write($filepath, $stream);
             $process_read = \Flexio\Tests\Process::read($filepath);
             $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());

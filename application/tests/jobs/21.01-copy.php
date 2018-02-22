@@ -21,18 +21,18 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $files = TestUtil::getTestDataFiles();
-        $test_folder = 'tests' . TestUtil::getTimestampName();
+        $files = \Flexio\Tests\Util::getTestDataFiles();
+        $test_folder = 'tests' . \Flexio\Tests\Util::getTimestampName();
         $source_directory = '/home/' . $test_folder . '/';
         $target_directory = '/testsuite-dropbox/' . $test_folder . '/';
 
         foreach ($files as $filename) // copy files into home directory
         {
-            $source_filepath = TestUtil::getOutputFilePath($source_directory, $filename);
+            $source_filepath = \Flexio\Tests\Util::getOutputFilePath($source_directory, $filename);
             $read = json_decode('{"op": "read", "params": {"path": "'. $source_filepath . '"}}',true);
             $write = json_decode('{"op": "write", "params": { "path": "'. $source_filepath . '"}}',true);
 
-            $stream = TestUtil::createStreamFromFile($filename);
+            $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
             $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
             $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());

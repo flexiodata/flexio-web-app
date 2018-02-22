@@ -37,22 +37,22 @@ class Test
         // TEST: basic expression example
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("LEFT('ABC',1)");
+        $actual = \Flexio\Tests\Util::evalExpression("LEFT('ABC',1)");
         $expected = 'A';
         \Flexio\Tests\Check::assertString('A.1', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("left('ABC',1)");
+        $actual = \Flexio\Tests\Util::evalExpression("left('ABC',1)");
         $expected = 'A';
         \Flexio\Tests\Check::assertString('A.2', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("Left('ABC',2)");
+        $actual = \Flexio\Tests\Util::evalExpression("Left('ABC',2)");
         $expected = 'AB';
         \Flexio\Tests\Check::assertString('A.3', 'Expression; LEFT() function',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("LefT('ABC',2)");
+        $actual = \Flexio\Tests\Util::evalExpression("LefT('ABC',2)");
         $expected = 'AB';
         \Flexio\Tests\Check::assertString('A.4', 'Expression; LEFT() function',  $actual, $expected, $results);
 
@@ -61,24 +61,24 @@ class Test
         // TEST: common case standardization tests
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("upper(trim(null))");
+        $actual = \Flexio\Tests\Util::evalExpression("upper(trim(null))");
         $expected = null;
         \Flexio\Tests\Check::assertString('B.1', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = '  company name  ';
-        $actual = TestUtil::evalExpression("upper(trim('$expr'))");
+        $actual = \Flexio\Tests\Util::evalExpression("upper(trim('$expr'))");
         $expected = 'COMPANY NAME';
         \Flexio\Tests\Check::assertString('B.2', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = TestUtil::evalExpression("concat(upper(substr((null),1,1)) , lower(substr((null),2)))");
+        $actual = \Flexio\Tests\Util::evalExpression("concat(upper(substr((null),1,1)) , lower(substr((null),2)))");
         $expected = null;
         \Flexio\Tests\Check::assertString('B.3', 'Expression; common case standardization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $expr = 'this is a sentence.';
-        $actual = TestUtil::evalExpression("concat(upper(substr(('$expr'),1,1)) , lower(substr(('$expr'),2)))");
+        $actual = \Flexio\Tests\Util::evalExpression("concat(upper(substr(('$expr'),1,1)) , lower(substr(('$expr'),2)))");
         $expected = 'This is a sentence.';
         \Flexio\Tests\Check::assertString('B.4', 'Expression; common case standardization',  $actual, $expected, $results);
 
@@ -88,7 +88,7 @@ class Test
 
         // BEGIN TEST
         $expr = '  123  ';
-        $actual = TestUtil::evalExpression("lpad(trim('$expr'),10,'0')");
+        $actual = \Flexio\Tests\Util::evalExpression("lpad(trim('$expr'),10,'0')");
         $expected = '0000000123';
         \Flexio\Tests\Check::assertString('C.1', 'Expression; common padding standardization',  $actual, $expected, $results);
 
