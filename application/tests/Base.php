@@ -32,7 +32,7 @@ class TestResult
     }
 }
 
-class TestBase
+class Base
 {
     public static function testsAllowed()
     {
@@ -41,20 +41,20 @@ class TestBase
 
     public static function configure(\Flexio\Api\Request $request) : array
     {
-        if (!TestBase::testsAllowed())
+        if (!self::testsAllowed())
             return array();
 
         $tests = array();
-        TestBase::addTests('test', $tests);
-        TestBase::addTests('config', $tests);
-        TestBase::addTests('base', $tests);
-        TestBase::addTests('system', $tests);
-        TestBase::addTests('service', $tests);
-        TestBase::addTests('model', $tests);
-        TestBase::addTests('object', $tests);
-        TestBase::addTests('jobs', $tests);
-        TestBase::addTests('api', $tests);
-        TestBase::addTests('sdk', $tests);
+        self::addTests('test', $tests);
+        self::addTests('config', $tests);
+        self::addTests('base', $tests);
+        self::addTests('system', $tests);
+        self::addTests('service', $tests);
+        self::addTests('model', $tests);
+        self::addTests('object', $tests);
+        self::addTests('jobs', $tests);
+        self::addTests('api', $tests);
+        self::addTests('sdk', $tests);
 
         return $tests;
     }
@@ -63,7 +63,7 @@ class TestBase
     {
         $params = $request->getQueryParams();
 
-        if (!TestBase::testsAllowed())
+        if (!self::testsAllowed())
         {
             $r = array();
             $r['name'] = "Error: tests aren't allowed";
