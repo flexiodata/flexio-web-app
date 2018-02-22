@@ -16,22 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestResult
-{
-    public $name;
-    public $description;
-    public $passed;
-    public $message;
-
-    public function __construct($name = '', $description = '', $passed = false, $message = '')
-    {
-        $this->name = $name;
-        $this->description = $description;
-        $this->passed = $passed;
-        $this->message = $message;
-    }
-}
-
 class Base
 {
     public static function testsAllowed()
@@ -103,7 +87,7 @@ class Base
         // load the job's php file and instantiate the job object
         include_once $test_path;
         $test = new Test;
-        $results = array(); // array of TestResult
+        $results = array(); // array of \Flexio\Tests\Result
 
         if (!$test)
         {

@@ -24,8 +24,8 @@ class TestCheck
 
     public static function assertNull($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -52,8 +52,8 @@ class TestCheck
 
     public static function assertNan($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -81,8 +81,8 @@ class TestCheck
 
     public static function assertString($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -110,8 +110,8 @@ class TestCheck
 
     public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -154,8 +154,8 @@ class TestCheck
         // right now, allow a one-minute difference
         $tolerance = 60;
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -189,8 +189,8 @@ class TestCheck
 
     public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -227,8 +227,8 @@ class TestCheck
     {
         // succeeds if the keys of the array are the same, without regard to the values
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -273,8 +273,8 @@ class TestCheck
 
     public static function assertArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
@@ -320,8 +320,8 @@ class TestCheck
         // note: returns true if the key/value pairs in the expected array
         // are in the actual array; false otherwise
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;

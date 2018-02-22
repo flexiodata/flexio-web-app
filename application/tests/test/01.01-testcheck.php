@@ -36,7 +36,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNull() working' : 'TestCheck::assertNull() not working');
-        $results[] = new TestResult('A.1', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('A.1', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -45,7 +45,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNull() working' : 'TestCheck::assertNull() not working');
-        $results[] = new TestResult('A.2', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('A.2', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -54,7 +54,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNull() working' : 'TestCheck::assertNull() not working');
-        $results[] = new TestResult('A.3', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('A.3', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -63,7 +63,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNull() working' : 'TestCheck::assertNull() not working');
-        $results[] = new TestResult('A.4', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('A.4', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -72,7 +72,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNull() working' : 'TestCheck::assertNull() not working');
-        $results[] = new TestResult('A.5', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('A.5', 'TestCheck::assertNull(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
 
 
@@ -85,7 +85,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNan() working' : 'TestCheck::assertNan() not working');
-        $results[] = new TestResult('B.1', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('B.1', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -94,7 +94,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNan() working' : 'TestCheck::assertNan() not working');
-        $results[] = new TestResult('B.2', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('B.2', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -103,7 +103,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNan() working' : 'TestCheck::assertNan() not working');
-        $results[] = new TestResult('B.3', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('B.3', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -112,7 +112,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNan() working' : 'TestCheck::assertNan() not working');
-        $results[] = new TestResult('B.4', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('B.4', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -121,7 +121,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertNan() working' : 'TestCheck::assertNan() not working');
-        $results[] = new TestResult('B.5', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('B.5', 'TestCheck::assertNan(); fail if \'actual\' parameter is anything besides null', $test_result, $test_message);
 
 
 
@@ -134,7 +134,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.1', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.1', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -143,7 +143,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.2', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.2', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -152,7 +152,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.3', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.3', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -161,7 +161,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.4', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.4', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -170,7 +170,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.5', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.5', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -179,7 +179,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.6', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.6', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -188,7 +188,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertBoolean() working' : 'TestCheck::assertBoolean() not working');
-        $results[] = new TestResult('C.7', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('C.7', 'TestCheck::assertBoolean(); succeed if inputs are boolean and are equal', $test_result, $test_message);
 
 
 
@@ -201,7 +201,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.1', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.1', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -210,7 +210,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.2', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.2', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -219,7 +219,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.3', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.3', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -228,7 +228,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.4', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.4', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -237,7 +237,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.5', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.5', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -246,7 +246,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.6', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.6', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -255,7 +255,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertString() working' : 'TestCheck::assertString() not working');
-        $results[] = new TestResult('D.7', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('D.7', 'TestCheck::assertString(); succeed if inputs are strings and are equal', $test_result, $test_message);
 
 
 
@@ -289,7 +289,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.1', 'TestCheck::assertArrayKeys(); succeed with two empty objects', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.1', 'TestCheck::assertArrayKeys(); succeed with two empty objects', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -307,7 +307,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.2', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.2', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -325,7 +325,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.3', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.3', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -344,7 +344,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.4', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.4', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -364,7 +364,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.5', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.5', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -384,7 +384,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -405,7 +405,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.6', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -427,7 +427,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.7', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.7', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -449,7 +449,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.8', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.8', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -472,7 +472,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.9', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.9', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -496,7 +496,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.10', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.10', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -520,7 +520,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.11', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.11', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -545,7 +545,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.12', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.12', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -571,7 +571,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.13', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.13', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -597,7 +597,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.14', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.14', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -624,7 +624,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.15', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.15', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -653,7 +653,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.16', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.16', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -683,7 +683,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.17', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.17', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -713,7 +713,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertArrayKeys() working' : 'TestCheck::assertArrayKeys() not working');
-        $results[] = new TestResult('H.18', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('H.18', 'TestCheck::assertArrayKeys(); succeed if the key\'s are the same; fail otherwise', $test_result, $test_message);
 
 
 
@@ -736,7 +736,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.1', 'TestCheck::assertInArray(); fail when there\'s a bad string input', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.1', 'TestCheck::assertInArray(); fail when there\'s a bad string input', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -753,7 +753,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.2', 'TestCheck::assertInArray(); succeed with two empty arrays', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.2', 'TestCheck::assertInArray(); succeed with two empty arrays', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -770,7 +770,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.3', 'TestCheck::assertInArray(); succeed with two empty objects', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.3', 'TestCheck::assertInArray(); succeed with two empty objects', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -789,7 +789,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.4', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.4', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -808,7 +808,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.5', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.5', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -826,7 +826,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === false ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.6', 'TestCheck::assertInArray(); fail if expected array values are not contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.6', 'TestCheck::assertInArray(); fail if expected array values are not contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -847,7 +847,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.7', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.7', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -868,7 +868,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.8', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.8', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -890,7 +890,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.9', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.9', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -913,7 +913,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === false ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.10', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.10', 'TestCheck::assertInArray(); succeed if expected array values are contained in the actual array values', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -932,7 +932,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.11', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.11', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
 
         // BEGIN TEST
@@ -952,7 +952,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.12', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.12', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -973,7 +973,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.13', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.13', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -992,7 +992,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.14', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.14', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1011,7 +1011,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.15', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.15', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1030,7 +1030,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.16', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.16', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1049,7 +1049,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.17', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.17', 'TestCheck::assertInArray(); succeed with two objects with the same key/value', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1070,7 +1070,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.18', 'TestCheck::assertInArray(); fail if an expected key is in the actual array and the values are different', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.18', 'TestCheck::assertInArray(); fail if an expected key is in the actual array and the values are different', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1090,7 +1090,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.19', 'TestCheck::assertInArray(); succeed if all keys in the expected array are in the actual array and the associated values are equivalent', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.19', 'TestCheck::assertInArray(); succeed if all keys in the expected array are in the actual array and the associated values are equivalent', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1111,7 +1111,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.20', 'TestCheck::assertInArray(); fail if the expected array has a key that the actual array doesn\'t', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.20', 'TestCheck::assertInArray(); fail if the expected array has a key that the actual array doesn\'t', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1136,7 +1136,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.21', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.21', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1160,7 +1160,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.22', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.22', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1184,7 +1184,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.23', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.23', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1209,7 +1209,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.24', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.24', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1233,7 +1233,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.25', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.25', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1257,7 +1257,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.26', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.26', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1281,7 +1281,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.27', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.27', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1305,7 +1305,7 @@ class Test
         $expected = true;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.28', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.28', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1329,7 +1329,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.29', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.29', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
 
         // BEGIN TEST
         $assert_result = array();
@@ -1355,7 +1355,7 @@ class Test
         $expected = false;
         $test_result = ($actual === $expected);
         $test_message = ($test_result === true ? 'TestCheck::assertInArray() working' : 'TestCheck::assertInArray() not working');
-        $results[] = new TestResult('J.30', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
+        $results[] = new \Flexio\Tests\Result('J.30', 'TestCheck::assertInArray(); make sure key/values are checked recursively', $test_result, $test_message);
     }
 }
 
