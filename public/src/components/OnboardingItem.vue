@@ -181,7 +181,7 @@ If you have any questions, please send us a note using the chat button at the bo
             this.showStoragePropsModal()
             return
           case 'save':
-            this.showPipeDeployModal()
+            this.showPipePropsModal()
             return
         }
       },
