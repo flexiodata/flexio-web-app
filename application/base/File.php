@@ -125,14 +125,14 @@ class File
         return $temp_file;
     }
 
-    public static function appendPath(string $path, string $part) : string
+    public static function appendPath(string $path, string $part, string $delimiter = DIRECTORY_SEPARATOR) : string
     {
         $result = $path;
         $len = strlen($result);
         if ($len == 0)
             return $part;
-        if (substr($part, $len - 1, 1) != DIRECTORY_SEPARATOR)
-            $result .= DIRECTORY_SEPARATOR;
+        if (substr($part, $len - 1, 1) != $delimiter)
+            $result .= $delimiter;
         return $result . $part;
     }
 
