@@ -165,7 +165,7 @@
       </ui-tabs>
     </div>
 
-    <div class="flex flex-row justify-end mv4 pa3 bt b--black-05 bg-near-white">
+    <div class="flex flex-row justify-end mv4 pa3 bt b--black-05 bg-near-white" v-if="showFooter">
       <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
       <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>
@@ -219,6 +219,10 @@
       'is-new': {
         type: Boolean,
         default: false
+      },
+      'show-footer': {
+        type: Boolean,
+        default: true
       }
     },
     components: {

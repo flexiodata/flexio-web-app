@@ -11,23 +11,29 @@
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Connections</div>
         </div>
-        <div class="flex-none flex flex-row items-center">
-          <btn
-            btn-md
-            btn-primary
-            class="btn-add ttu b ba"
+        <div class="flex-none flex flex-row items-center ml3">
+          <el-button
+            type="primary"
+            class="ttu"
             :disabled="is_new"
-            @click="createPendingConnection"
-          >New Connection</btn>
+            @click="openAddConnectionModal2"
+          >New Connection 2</el-button>
         </div>
         <div class="flex-none flex flex-row items-center ml3">
-          <btn
-            btn-md
-            btn-primary
-            class="btn-add ttu b ba"
+          <el-button
+            type="primary"
+            class="ttu"
+            :disabled="is_new"
+            @click="createPendingConnection"
+          >New Connection</el-button>
+        </div>
+        <div class="flex-none flex flex-row items-center ml3">
+          <el-button
+            type="primary"
+            class="ttu"
             :disabled="is_new"
             @click="openAddConnectionModal"
-          >New Storage</btn>
+          >New Storage</el-button>
         </div>
       </div>
     </div>
@@ -70,6 +76,14 @@
         v-if="show_connection_props_modal"
       ></storage-props-modal>
 
+      <connection-dialog
+        custom-class="no-header"
+        width="40vw"
+        :modal-append-to-body="false"
+        :visible.sync="show_connection_modal"
+        :show-close="false"
+        v-if="show_connection_modal"
+      />
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
       <empty-item>
@@ -88,6 +102,7 @@
   import AbstractList from './AbstractList.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
+  import ConnectionDialog from './ConnectionDialog.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
@@ -97,6 +112,7 @@
       AbstractList,
       ConnectionInfoConfigurePanel,
       StoragePropsModal,
+      ConnectionDialog,
       EmptyItem,
       Btn
     },
@@ -105,6 +121,7 @@
         connection: {},
         last_selected: {},
         is_new: false,
+        show_connection_modal: false,
         show_connection_props_modal: false
       }
     },
@@ -138,6 +155,9 @@
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
         analytics.track('Clicked New Connection Button')
+      },
+      openAddConnectionModal2() {
+        this.show_connection_modal = true
       },
       createPendingConnection(item) {
         this.is_new = true
