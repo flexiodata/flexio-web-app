@@ -42,7 +42,7 @@ class Copy extends \Flexio\Jobs\Base
 
         $from = $params['from'] ?? null;
         $to = $params['to'] ?? null;
-
+        $this->recursive = $params['options']['recursive'] ?? false; // recursive (similar to cp -r) is off by default
 
         if (is_null($from))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'from'");
@@ -56,6 +56,12 @@ class Copy extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs();
         $vfs->setProcess($process);
 
+        $this->copyFiles($vfs, $from, $to);
+    }
+
+
+    private function copyFiles(\Flexio\Services\Vfs $vfs, string $from, string $to)
+    {
 
         $arr = \Flexio\Base\File::splitBasePathAndName($from);
         $base = $arr['base'];
@@ -111,17 +117,23 @@ class Copy extends \Flexio\Jobs\Base
             $full_to_path = $destination_is_directory ? \Flexio\Base\File::appendPath($to, $file['name']) : $to;
 
             if ($file['type'] == 'FILE')
-                $this->copyFile($full_from_path, $full_to_path);
+                $this->copyFile($vfs, $full_from_path, $full_to_path);
                  else
-                $this->copyDirectory($full_from_path, $full_to_path);
+                $this->copyDirectory($vfs, $full_from_path, $full_to_path);
         }
     }
 
-    private function copyDirectory(string $from, string $to)
+
+    private function copyDirectory(\Flexio\Services\Vfs $vfs, string $from, string $to)
     {
+        if (!$this->recursive) // if recursive mode is off (which is the default), then directory copying is disabled
+            return;
+
+        $vfs->createDirectory($to);
+        $this->copyFiles($vfs, $from . '/*', $to);
     }
 
-    private function copyFile(string $from, string $to)
+    private function copyFile(\Flexio\Services\Vfs $vfs, string $from, string $to)
     {
         $data = \Flexio\Base\Stream::create();
 
