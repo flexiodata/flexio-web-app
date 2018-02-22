@@ -20,6 +20,15 @@
             @click="createPendingConnection"
           >New Connection</btn>
         </div>
+        <div class="flex-none flex flex-row items-center ml3">
+          <btn
+            btn-md
+            btn-primary
+            class="btn-add ttu b ba"
+            :disabled="is_new"
+            @click="openAddConnectionModal"
+          >New Storage</btn>
+        </div>
       </div>
     </div>
 
@@ -52,6 +61,15 @@
           @submit="saveChanges"
         />
       </div>
+
+      <!-- connection props modal (used for both add and edit) -->
+      <storage-props-modal
+        ref="modal-connection-props"
+        @submit="tryUpdateConnection"
+        @hide="show_connection_props_modal = false"
+        v-if="show_connection_props_modal"
+      ></storage-props-modal>
+
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
       <empty-item>
@@ -69,6 +87,7 @@
   import Spinner from 'vue-simple-spinner'
   import AbstractList from './AbstractList.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
+  import StoragePropsModal from './StoragePropsModal.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
@@ -77,6 +96,7 @@
       Spinner,
       AbstractList,
       ConnectionInfoConfigurePanel,
+      StoragePropsModal,
       EmptyItem,
       Btn
     },
@@ -84,7 +104,8 @@
       return {
         connection: {},
         last_selected: {},
-        is_new: false
+        is_new: false,
+        show_connection_props_modal: false
       }
     },
     computed: {
@@ -113,6 +134,11 @@
       ...mapGetters([
         'getAllConnections'
       ]),
+      openAddConnectionModal() {
+        this.show_connection_props_modal = true
+        this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
+        analytics.track('Clicked New Connection Button')
+      },
       createPendingConnection(item) {
         this.is_new = true
         this.connection = false
@@ -138,7 +164,7 @@
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
       },
-      tryUpdateConnection(attrs) {
+      tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
@@ -150,6 +176,12 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            if (modal)
+              modal.close()
+
+            // try to connect to the connection
+            this.$store.dispatch('testConnection', { eid, attrs })
+
             this.connection = _.assign({}, _.get(response, 'body', {}))
 
             if (is_pending)
