@@ -221,7 +221,8 @@
           case 'embed':     return this.$emit('embed', this.item)
           case 'schedule':  return this.$emit('schedule', this.item)
           case 'deploy':    return this.$emit('deploy', this.item)
-          case 'delete':    return this.trashPipe()
+          case 'delete':    return this.$emit('delete', this.item)
+          case 'trash':     return this.trashPipe()
         }
       },
       onMouseEnter() {

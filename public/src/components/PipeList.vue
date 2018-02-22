@@ -24,6 +24,7 @@
       @embed="onItemEmbed"
       @schedule="onItemSchedule"
       @deploy="onItemDeploy"
+      @delete="onItemDelete"
     ></pipe-item>
     <div class="h4"></div>
   </div>
@@ -92,6 +93,9 @@
       },
       onItemDeploy(item) {
         this.$emit('item-deploy', item)
+      },
+      onItemDelete(item) {
+        this.$emit('item-delete', item)
       }
     }
   }

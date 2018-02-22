@@ -36,6 +36,7 @@
       @item-embed="openPipeEmbedModal"
       @item-schedule="openPipeScheduleModal"
       @item-deploy="openPipeDeployModal"
+      @item-delete="tryDeletePipe"
     ></pipe-list>
 
     <!-- add modal -->
@@ -214,6 +215,9 @@
             // TODO: add error handling
           }
         })
+      },
+      tryDeletePipe(attrs) {
+        this.$store.dispatch('deletePipe', { attrs })
       },
       trySchedulePipe(attrs, modal) {
         var eid = attrs.eid
