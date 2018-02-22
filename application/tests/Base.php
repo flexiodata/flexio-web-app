@@ -26,16 +26,16 @@ class Base
     const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
     const STORAGE_SFTP = 'testsuite-sftp';
 
-    const ERROR_EXCEPTION = 'ERROR_EXCEPTION';
-    const ERROR_NO_EXCEPTION = 'ERROR_NO_EXCEPTION';
-    const ERROR_BAD_PARSE = 'ERROR_BAD_PARSE';
-    const ERROR_EVAL_MISMATCH = 'ERROR_EVAL_MISMATCH';
+    const ERROR_EXCEPTION = 'error-exception';
+    const ERROR_NO_EXCEPTION = 'error-no-exception';
+    const ERROR_BAD_PARSE = 'error-bad-parse';
+    const ERROR_EVAL_MISMATCH = 'error-eval-mismatch';
 
     const DOUBLE_EPSILON = 0.000000000001;
     const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
 
     const FLAG_NONE = '';
-    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
+    const FLAG_ERROR_SUPPRESS = 'flag-error-suppress';
 
     public static function testsAllowed()
     {
