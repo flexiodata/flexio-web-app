@@ -28,7 +28,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -56,7 +56,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -85,7 +85,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -114,7 +114,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -158,7 +158,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -193,7 +193,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -231,7 +231,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -277,7 +277,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -324,7 +324,7 @@ class Check
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
