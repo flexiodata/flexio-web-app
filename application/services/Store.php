@@ -46,6 +46,20 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$folder_stream)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        $entry =  $folder_stream->get();
+        if ($entry['stream_type'] != 'SD')
+        {
+            // not a folder -- single file listing
+            return [
+                [ 'id'=> $entry['eid'] ?? null,
+                  'name' => $entry['name'],
+                  'path' => $path,
+                  'size' => $entry['size'] ?? '',
+                  'modified' => $entry['updated'] ?? '',
+                  'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE') ]
+            ];
+        }
+
         $files = [];
         $streams = $folder_stream->getChildStreams();
         foreach ($streams as $stream)
