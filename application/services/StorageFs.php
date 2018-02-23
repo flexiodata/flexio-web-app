@@ -16,8 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-
-
 class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IFace\IStreamWriter
 {
     private $fspath = null;
@@ -145,7 +143,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return false;
         if ($this->file === NULL)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $this->sqlite ? "Cannot read a table as a file stream" : null);
-        
+
         $res = fread($this->file, $length);
         if ($res === false)
             return false;
@@ -349,7 +347,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return;
         if (count($this->insert_rows) == 0)
             return;
-        
+
         $sql = 'insert into fxtbl ';
 
         if (count($this->insert_rows[0]) == 0)
@@ -579,7 +577,7 @@ class StorageFs
                     if (@unlink($fspath) === false)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
                 }
-                
+
                 $sqlite = new \SQLite3($fspath);
             }
 
@@ -827,5 +825,5 @@ class StorageFs
     {
         return '"' . str_replace('"', '""', $str) . '"';
     }
-    
+
 }

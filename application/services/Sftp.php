@@ -37,15 +37,14 @@ class SftpCapture
 }
 
 
-
-class Sftp implements \Flexio\IFace\IFileSystem
+class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $host;
     private $username;
     private $password;
     private $connection = false;
-    private $is_ok = false;
     private $base_path = '';
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\Sftp
     {
@@ -71,11 +70,16 @@ class Sftp implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     private static function mergePath(string $basepath, string $path) : string
     {
         if ($path === '')
             $path = '/';
-        
+
         if ($basepath === '')
             return $path;
 
@@ -102,7 +106,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
         if (strlen($path) == 0 || $path == '/')
             return $res;
-        
+
         if ($path[0] == '/')
             return $res . $path;
              else
@@ -122,14 +126,14 @@ class Sftp implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return array();
         }
 
@@ -191,7 +195,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
             'type' => (($info['type'] ?? 0) == 2) ? 'DIR' : 'FILE'
         ];
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -203,7 +207,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
     {
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
-        
+
         $this->write([ 'path' => $path ], function($length) { return false; });
         return true;
     }
@@ -219,7 +223,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $this->connection->mkdir($this->getFullPath($path), -1, true);
         return $this->isDirectory($path);
     }
-    
+
     public function unlink(string $path) : bool
     {
         if (!$this->checkConnect())
@@ -234,7 +238,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
             return $this->connection->delete($this->getFullPath($path), false);
         }
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -256,7 +260,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
     {
         if (!$this->checkConnect())
             return false;
-        
+
         $GLOBALS['g_sftp_callback'] = $callback;
         stream_wrapper_register('sftpcapture', 'Flexio\Services\SftpCapture') or die("Failed to register protocol");
         $fp = fopen("sftpcapture://", "wb");
@@ -280,13 +284,13 @@ class Sftp implements \Flexio\IFace\IFileSystem
         while (false !== strpos($folder,'//'))
             $folder = str_replace('//','/',$folder);
         $parts = explode('/',$folder);
-        
+
         $filename = array_pop($parts);
         $folder = '/' . join('/',$parts);
 
         if (strlen($filename) == 0)
             return false;
-        
+
         if (!$this->isDirectory($folder))
         {
             $this->connection->mkdir($this->getFullPath($folder), -1, true);
@@ -305,11 +309,11 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     private function checkConnect() : bool
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return false;
         }
         return true;
@@ -333,12 +337,12 @@ class Sftp implements \Flexio\IFace\IFileSystem
         $this->username = $username;
         $this->password = $password;
         $this->base_path = $base_path;
+        $this->authenticated = false;
 
         if ($this->connection !== false)
             $this->connection->disconnect();
 
         $this->connection = false;
-        $this->is_ok = false;
 
         if (strlen(trim($host)) == 0)
         {
@@ -351,12 +355,7 @@ class Sftp implements \Flexio\IFace\IFileSystem
         }
 
         $this->connection = $sftp;
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 }

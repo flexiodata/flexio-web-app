@@ -16,13 +16,13 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Ftp implements \Flexio\IFace\IFileSystem
+class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $host;
     private $username;
     private $password;
     private $connection = false;
-    private $is_ok = false;
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\Ftp
     {
@@ -46,6 +46,11 @@ class Ftp implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -54,17 +59,17 @@ class Ftp implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return array();
         }
 
@@ -109,7 +114,7 @@ class Ftp implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -134,7 +139,7 @@ class Ftp implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -145,11 +150,11 @@ class Ftp implements \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return;
         }
 
@@ -162,11 +167,11 @@ class Ftp implements \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return;
         }
 
@@ -195,12 +200,12 @@ class Ftp implements \Flexio\IFace\IFileSystem
         $this->host = $host;
         $this->username = $username;
         $this->password = $password;
+        $this->authenticated = false;
 
         if ($this->connection !== false)
             ftp_close($this->connection);
 
         $this->connection = false;
-        $this->is_ok = false;
 
         $ftp = ftp_connect($host);
         if ($ftp === false)
@@ -209,12 +214,7 @@ class Ftp implements \Flexio\IFace\IFileSystem
             return false;
 
         $this->connection = $ftp;
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 }

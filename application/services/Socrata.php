@@ -16,12 +16,12 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Socrata implements \Flexio\IFace\IFileSystem
+class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $host;
     private $port;
     private $base_url = null;
-    private $is_ok = false;
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\Socrata
     {
@@ -43,24 +43,29 @@ class Socrata implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
-    
+
     public function getFlags() : int
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         // TODO: filter based on a specified path
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return array();
         }
 
@@ -162,7 +167,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -187,7 +192,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -298,11 +303,11 @@ class Socrata implements \Flexio\IFace\IFileSystem
 
     public function describeTable(string $path) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
         {
             // try to reconnect
             $this->connect();
-            if (!$this->isOk())
+            if (!$this->authenticated())
                 return array();
         }
 
@@ -407,12 +412,7 @@ class Socrata implements \Flexio\IFace\IFileSystem
             $url = substr($url, 0, strlen($url)-1);
 
         $this->base_url = $url;
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 }

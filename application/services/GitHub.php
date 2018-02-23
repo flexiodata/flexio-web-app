@@ -15,9 +15,9 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-class GitHub implements \Flexio\IFace\IFileSystem
+
+class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
     private $access_token = '';
 
     public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
@@ -26,6 +26,14 @@ class GitHub implements \Flexio\IFace\IFileSystem
             return new self;
 
         return self::initialize($params);
+    }
+
+    public function authenticated() : bool
+    {
+        if (strlen($this->access_token) > 0)
+            return true;
+
+        return false;
     }
 
     ////////////////////////////////////////////////////////////
@@ -362,22 +370,9 @@ class GitHub implements \Flexio\IFace\IFileSystem
         return $folder_items;
     }
 
-    private function authenticated() : bool
-    {
-        if (strlen($this->access_token) > 0)
-            return true;
-
-        return false;
-    }
-
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private static function initialize(array $params)
@@ -406,7 +401,6 @@ class GitHub implements \Flexio\IFace\IFileSystem
         {
             $object = new self;
             $object->access_token = $params['access_token'];
-            $object->is_ok = true;
             return $object;
         }
 
@@ -438,7 +432,6 @@ class GitHub implements \Flexio\IFace\IFileSystem
             $object = new self;
             $token = $service->requestAccessToken($params['code']);
             $object->access_token = $token->getAccessToken();
-            $object->is_ok = true;
             return $object;
         }
 

@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class PipelineDeals implements \Flexio\IFace\IFileSystem
+class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $access_token = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
@@ -41,6 +41,11 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -49,10 +54,10 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         $objects = array();
@@ -76,7 +81,7 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -95,13 +100,13 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -112,7 +117,7 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
 
         // TODO: only read the buffer amount
@@ -152,7 +157,7 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
 
     public function describeTable(string $path)
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
 
         $path = self::cleanPath($path);
@@ -283,13 +288,8 @@ class PipelineDeals implements \Flexio\IFace\IFileSystem
         // TODO: test api key
 
         $this->access_token = $access_token;
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

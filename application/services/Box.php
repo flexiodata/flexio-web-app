@@ -16,9 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Box implements \Flexio\IFace\IFileSystem
+class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
@@ -30,6 +29,14 @@ class Box implements \Flexio\IFace\IFileSystem
             return new self;
 
         return self::initialize($params);
+    }
+
+    public function authenticated() : bool
+    {
+        if (strlen($this->access_token) > 0)
+            return true;
+
+        return false;
     }
 
     ////////////////////////////////////////////////////////////
@@ -75,12 +82,12 @@ class Box implements \Flexio\IFace\IFileSystem
         return $files;
     }
 
-    
+
     public function getFileInfo(string $path) : array
     {
         if (!$this->authenticated())
             return false;
- 
+
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
@@ -194,7 +201,7 @@ class Box implements \Flexio\IFace\IFileSystem
 
         if ($this->createFolderStructure($path) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-        
+
         return true;
     }
 
@@ -258,7 +265,7 @@ class Box implements \Flexio\IFace\IFileSystem
         curl_close($ch);
     }
 
-    
+
     private function internalCreateFolder($parentid, $name)
     {
         $postdata = json_encode(array(
@@ -291,14 +298,14 @@ class Box implements \Flexio\IFace\IFileSystem
             return '0';
 
         $parts = explode('/',$folder);
-        
+
         $path = '';
         $parentid = '0';
         for ($i = 0; $i < count($parts); ++$i)
         {
             if (strlen($parts[$i]) == 0)
                 continue;
-            
+
             $path .= ('/'.$parts[$i]);
 
             $folderid = $this->getFileId($path);
@@ -342,7 +349,7 @@ class Box implements \Flexio\IFace\IFileSystem
             if (is_null($folderid) || strlen($folderid) == 0)
                 return false; // bad folderid
         }
-        
+
 
         // see if the file already exists by getting its id
         $fullpath = $folder;
@@ -430,14 +437,6 @@ class Box implements \Flexio\IFace\IFileSystem
                  'expires' => $this->expires ];
     }
 
-    private function authenticated() : bool
-    {
-        if (strlen($this->access_token) > 0)
-            return true;
-
-        return false;
-    }
-
     private function getFolderItems($folder_id, $fields = null)// : array
     {
         if (!$this->authenticated())
@@ -473,11 +472,6 @@ class Box implements \Flexio\IFace\IFileSystem
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private static function initialize(array $params)
@@ -518,7 +512,6 @@ class Box implements \Flexio\IFace\IFileSystem
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
-                $object->is_ok = true;
                 return $object;
             }
              else
@@ -549,7 +542,6 @@ class Box implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
-                $object->is_ok = true;
                 $object->expires = $token->getEndOfLife();
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $token->getRefreshToken();
@@ -577,7 +569,6 @@ class Box implements \Flexio\IFace\IFileSystem
             $object->access_token = $token->getAccessToken();
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
-            $object->is_ok = true;
             if (is_null($object->refresh_token)) $object->refresh_token = '';
 
             return $object;

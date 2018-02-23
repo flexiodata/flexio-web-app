@@ -32,7 +32,7 @@ class Http implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         // TODO: implement
@@ -44,7 +44,7 @@ class Http implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -63,13 +63,13 @@ class Http implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -131,11 +131,6 @@ class Http implements \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
 
     private function connect() : bool
-    {
-        return true;
-    }
-
-    private function isOk() : bool
     {
         return true;
     }

@@ -77,9 +77,16 @@ class Connection extends \Flexio\Object\Base
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
 
         $service = $this->getService();
-        $res = $service->list();
-        if (is_array($res) === true)
+
+        if ($service instanceof \Flexio\IFace\IConnection)
+        {
+            if ($service->authenticated())
+                $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+        }
+         else
+        {
             $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+        }
 
         $this->set($properties);
         return $this;

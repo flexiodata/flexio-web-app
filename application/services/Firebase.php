@@ -16,14 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Firebase implements \Flexio\IFace\IFileSystem
+class Firebase implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
 
     public static function create(array $params = null) : \Flexio\Services\Firebase
     {
         $service = new self;
         return $service;
+    }
+
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
     }
 
     ////////////////////////////////////////////////////////////
@@ -34,10 +39,10 @@ class Firebase implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         // get the tables in the database
@@ -73,7 +78,7 @@ class Firebase implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function createFile(string $path, array $properties = []) : bool
     {
         // TODO: implement
@@ -91,7 +96,7 @@ class Firebase implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -119,10 +124,5 @@ class Firebase implements \Flexio\IFace\IFileSystem
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 }
