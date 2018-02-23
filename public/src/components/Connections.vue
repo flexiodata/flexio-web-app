@@ -16,18 +16,15 @@
             type="primary"
             class="ttu"
             :disabled="is_new"
-            @click="openAddConnectionModal2"
-          >New Connection 2</el-button>
-        </div>
-        <div class="flex-none flex flex-row items-center ml3">
+            @click="openNewConnectionModal"
+          >New Connection</el-button>
           <el-button
             type="primary"
             class="ttu"
             :disabled="is_new"
             @click="createPendingConnection"
+            v-if="false"
           >New Connection</el-button>
-        </div>
-        <div class="flex-none flex flex-row items-center ml3">
           <el-button
             type="primary"
             class="ttu"
@@ -77,12 +74,13 @@
       ></storage-props-modal>
 
       <connection-dialog
-        custom-class="no-header"
-        width="40vw"
+        custom-class="no-header no-footer"
+        width="51rem"
         :modal-append-to-body="false"
-        :visible.sync="show_connection_modal"
+        :visible.sync="show_new_connection_modal"
         :show-close="false"
-        v-if="show_connection_modal"
+        @submit="tryUpdateConnection"
+        v-if="show_new_connection_modal"
       />
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
@@ -121,7 +119,7 @@
         connection: {},
         last_selected: {},
         is_new: false,
-        show_connection_modal: false,
+        show_new_connection_modal: false,
         show_connection_props_modal: false
       }
     },
@@ -156,8 +154,8 @@
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
         analytics.track('Clicked New Connection Button')
       },
-      openAddConnectionModal2() {
-        this.show_connection_modal = true
+      openNewConnectionModal() {
+        this.show_new_connection_modal = true
       },
       createPendingConnection(item) {
         this.is_new = true

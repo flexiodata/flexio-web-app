@@ -2,31 +2,35 @@
   <el-dialog v-bind="$props">
     <span slot="title" class="dialog-title"></span>
 
-    <connection-info-configure-panel
-      :is-new="true"
-      :connection="{}"
-      :show-footer="false"
+    <connection-edit-panel
+      title="New Connection"
+      :show-steps="true"
+      @close="close"
+      @submit="submit"
     />
 
-    <span slot="footer" class="dialog-footer">
-      <el-button type="plain" @click="close">Cancel</el-button>
-      <el-button type="primary" @click="close">Confirm</el-button>
+    <span slot="footer">
+      <el-button class="ttu" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu" type="primary" @click="close">Confirm</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
   import { Dialog } from 'element-ui'
-  import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
+  import ConnectionEditPanel from './ConnectionEditPanel.vue'
 
   export default {
     extends: Dialog,
     components: {
-      ConnectionInfoConfigurePanel
+      ConnectionEditPanel
     },
     methods: {
       close() {
         this.$emit('update:visible', false)
+      },
+      submit(connection) {
+        this.$emit('submit', connection, this)
       }
     }
   }
