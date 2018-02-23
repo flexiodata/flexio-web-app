@@ -25,7 +25,7 @@ class Test
         // BEGIN TEST
         $properties = array();
         $properties['task'] = json_decode('{}', true);
-        $user_eid = TestUtil::getDefaultTestUser();
+        $user_eid = \Flexio\Tests\Util::getDefaultTestUser();
         $pipe = \Flexio\Object\Pipe::create($properties);
         $pipe->setOwner($user_eid);
         $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
@@ -51,7 +51,7 @@ class Test
             ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],
             ["53","CRUNCHIES","PO BOX 5800","","ATLANTA","GA","30320","A","","30","0","2013/01/13"]
         ]';
-        TestCheck::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
     }
 }
 

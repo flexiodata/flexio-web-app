@@ -55,7 +55,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($create)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","b","A"],["b","B","B"],["c","b","C"]];
-        TestCheck::assertString('A.1', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('{
@@ -69,7 +69,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($create)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","b","a.b"],["b","B","b.B"],["c","b","c.b"]];
-        TestCheck::assertString('A.2', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('{
@@ -83,7 +83,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($create)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","b",".b"],["b","B",".B"],["c","b",".b"]];
-        TestCheck::assertString('A.3', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('{
@@ -97,6 +97,6 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($create)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","b","00b"],["b","B","00B"],["c","b","00b"]];
-        TestCheck::assertString('A.4', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'CalcField Job; check basic functionality',  $actual, $expected, $results);
     }
 }

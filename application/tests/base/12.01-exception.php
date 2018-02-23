@@ -35,6 +35,6 @@ class Test
             $expected = $e->getMessage();
         }
         $actual = array('code' => $code, 'message' => $message);
-        TestCheck::assertArray('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
     }
 }

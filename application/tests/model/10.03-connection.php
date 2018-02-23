@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::create(); multiple unique connection creation
 
         // BEGIN TEST
@@ -38,13 +33,13 @@ class Test
                 'name' => $handle,
                 'description' => "Test connection $i"
             );
-            $eid = $model->create(\Model::TYPE_CONNECTION, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_connection_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_connection_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); creating connections should succeed and produce a unique eid for each new connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); creating connections should succeed and produce a unique eid for each new connection',  $actual, $expected, $results);
     }
 }

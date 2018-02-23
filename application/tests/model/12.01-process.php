@@ -20,7 +20,5 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
     }
 }

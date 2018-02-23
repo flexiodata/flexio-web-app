@@ -27,28 +27,28 @@ class Test
         $buffer = '';
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/x-empty';
-        TestCheck::assertString('A.1', '\Flexio\Base\ContentType::getMimeType() input serialization',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Base\ContentType::getMimeType() input serialization',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = '';
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/x-empty';
-        TestCheck::assertString('A.2', '\Flexio\Base\ContentType::getMimeType() mime type for empty string',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Base\ContentType::getMimeType() mime type for empty string',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = 'a';
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/octet-stream';
-        TestCheck::assertString('A.3', '\Flexio\Base\ContentType::getMimeType() mime type for stream',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', '\Flexio\Base\ContentType::getMimeType() mime type for stream',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = 'aa';
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'text/plain';
-        TestCheck::assertString('A.4', '\Flexio\Base\ContentType::getMimeType() mime type for plain text',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', '\Flexio\Base\ContentType::getMimeType() mime type for plain text',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
@@ -61,7 +61,7 @@ class Test
 EOD;
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'text/html';
-        TestCheck::assertString('A.5', '\Flexio\Base\ContentType::getMimeType() mime type for html',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Base\ContentType::getMimeType() mime type for html',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
@@ -71,91 +71,91 @@ EOD;
 EOD;
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'text/html';
-        TestCheck::assertString('A.6', '\Flexio\Base\ContentType::getMimeType() mime type for html',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', '\Flexio\Base\ContentType::getMimeType() mime type for html',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getGifExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/gif';
-        TestCheck::assertString('A.7', '\Flexio\Base\ContentType::getMimeType() mime type for a gif',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', '\Flexio\Base\ContentType::getMimeType() mime type for a gif',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getGifExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getGifExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/gif';
-        TestCheck::assertString('A.8', '\Flexio\Base\ContentType::getMimeType() mime type for part of a gif',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.8', '\Flexio\Base\ContentType::getMimeType() mime type for part of a gif',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getPngExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/png';
-        TestCheck::assertString('A.9', '\Flexio\Base\ContentType::getMimeType() mime type for a png',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.9', '\Flexio\Base\ContentType::getMimeType() mime type for a png',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getPngExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getPngExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/png';
-        TestCheck::assertString('A.10', '\Flexio\Base\ContentType::getMimeType() mime type for part of a png',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.10', '\Flexio\Base\ContentType::getMimeType() mime type for part of a png',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getJpgExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/jpeg';
-        TestCheck::assertString('A.11', '\Flexio\Base\ContentType::getMimeType() mime type for a jpg',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.11', '\Flexio\Base\ContentType::getMimeType() mime type for a jpg',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getJpgExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getJpgExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/jpeg';
-        TestCheck::assertString('A.12', '\Flexio\Base\ContentType::getMimeType() mime type for part of a jpg',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.12', '\Flexio\Base\ContentType::getMimeType() mime type for part of a jpg',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getBmpExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/x-ms-bmp';
-        TestCheck::assertString('A.13', '\Flexio\Base\ContentType::getMimeType() mime type for a bmp',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.13', '\Flexio\Base\ContentType::getMimeType() mime type for a bmp',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getBmpExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getBmpExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'image/x-ms-bmp';
-        TestCheck::assertString('A.14', '\Flexio\Base\ContentType::getMimeType() mime type for part of a bmp',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.14', '\Flexio\Base\ContentType::getMimeType() mime type for part of a bmp',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getPdfExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/pdf';
-        TestCheck::assertString('A.15', '\Flexio\Base\ContentType::getMimeType() mime type for a pdf',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.15', '\Flexio\Base\ContentType::getMimeType() mime type for a pdf',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getPdfExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getPdfExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/pdf';
-        TestCheck::assertString('A.16', '\Flexio\Base\ContentType::getMimeType() mime type for part of a pdf',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.16', '\Flexio\Base\ContentType::getMimeType() mime type for part of a pdf',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('A.17', '\Flexio\Base\ContentType::getMimeType() mime type for an xlsx',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.17', '\Flexio\Base\ContentType::getMimeType() mime type for an xlsx',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('A.18', '\Flexio\Base\ContentType::getMimeType(); mime type for part of an xlsx',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.18', '\Flexio\Base\ContentType::getMimeType(); mime type for part of an xlsx',  $actual, $expected, $results);
 
 
 
@@ -166,196 +166,196 @@ EOD;
         $buffer = '';
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.1', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.2', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.3', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = '';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.4', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.zip';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.5', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.5', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.zip';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.6', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.6', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.zip';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.7', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.7', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.txt';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.8', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.8', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.txt';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.9', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.9', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.txt';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.10', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.10', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.csv';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.11', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.11', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.csv';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.12', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.12', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.csv';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.13', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.13', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.pdf';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.14', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.14', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.pdf';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.15', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.15', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.pdf';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.16', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.16', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.png';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.17', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.17', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.png';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.18', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.18', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.png';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.19', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.19', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.docx';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.20', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.20', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.docx';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.21', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.21', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.docx';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.22', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.22', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xlsx';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.23', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.23', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xlsx';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.24', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.24', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xlsx';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.25', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.25', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xls';
         $buffer = base64_decode(getExcelExample());
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.26', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.26', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xls';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.27', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.27', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
         // BEGIN TEST
         $filename = 'http://www.url.com/test.xls';
-        $buffer = substr(base64_decode(getExcelExample()),0,TestUtil::CONTENT_TYPE_BUFFER_TEST_SIZE);
+        $buffer = substr(base64_decode(getExcelExample()),0,\Flexio\Tests\Base::CONTENT_TYPE_BUFFER_TEST_SIZE);
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer, strlen(getExcelExample()));
         $expected = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        TestCheck::assertString('B.28', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.28', '\Flexio\Base\ContentType::getMimeType()',  $actual, $expected, $results);
 
 
 
@@ -366,7 +366,7 @@ This is a raw text file
 EOD;
         $actual = \Flexio\Base\ContentType::getMimeType($filename, $buffer);
         $expected = 'text/plain';
-        TestCheck::assertString('C.1', '\Flexio\Base\ContentType::getMimeType(); check raw url endpoint with no extension',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Base\ContentType::getMimeType(); check raw url endpoint with no extension',  $actual, $expected, $results);
     }
 }
 

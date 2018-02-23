@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::create(); invalid type
 
         // BEGIN TEST
@@ -33,7 +28,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create('', $info);
+            $eid = \Flexio\Tests\Util::getModel()->create('', $info);
         }
         catch (\Exception $e)
         {
@@ -43,7 +38,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); invalid type should throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -51,7 +46,7 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_UNDEFINED, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_UNDEFINED, $info);
         }
         catch (\Exception $e)
         {
@@ -61,7 +56,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
-        TestCheck::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); undefined type should throw an exception',  $actual, $expected, $results);
 
 
 
@@ -73,14 +68,14 @@ class Test
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_OBJECT, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
             $actual = \Flexio\Base\Eid::isValid($eid);
         }
         catch (\Exception $e)
         {
-            $actual = TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); for object creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
     }
 }

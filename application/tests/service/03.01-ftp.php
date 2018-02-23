@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\MySql;
+        $service = new \Flexio\Services\Ftp;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\MySql';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\MySql::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Ftp';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Ftp::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

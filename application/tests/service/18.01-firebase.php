@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Vfs;
+        $service = new \Flexio\Services\Firebase;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Vfs';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Vfs; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Firebase';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Firebase; basic file syntax check',  $actual, $expected, $results);
     }
 }

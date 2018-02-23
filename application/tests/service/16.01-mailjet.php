@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\PipelineDeals;
+        $service = new \Flexio\Services\MailJet;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\PipelineDeals';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\PipelineDeals; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\MailJet';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\MailJet::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

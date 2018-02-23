@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::create(); multiple unique pipe creation
 
         // BEGIN TEST
@@ -38,13 +33,13 @@ class Test
                 'name' => "Test $i",
                 'description' => "Test $i description"
             );
-            $eid = $model->create(\Model::TYPE_PIPE, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_pipe_creation++;
         }
         $actual = count($created_eids) == $total_count && $failed_pipe_creation == 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); creating pipes should succeed and produce a unique eid for each new pipe',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); creating pipes should succeed and produce a unique eid for each new pipe',  $actual, $expected, $results);
     }
 }

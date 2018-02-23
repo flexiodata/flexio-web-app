@@ -21,9 +21,8 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $files = TestUtil::getTestDataFiles();
-        $store_alias = "testsuite-amazons3";
-        $folderpath = "/" . $store_alias . "/" . 'tests' . TestUtil::getTimestampName() . "/";
+        $files = \Flexio\Tests\Util::getTestDataFiles();
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_AMAZONS3 . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
 
@@ -36,7 +35,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename];
-        TestCheck::assertArray("A.1", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray("A.1", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
 
         // BEGIN TEST
         $filename1 = \Flexio\Base\Util::generateHandle() . '.txt';
@@ -48,7 +47,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($filepath1);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename1];
-        TestCheck::assertArray("A.2", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray("A.2", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
 
         // BEGIN TEST
         $folder = $folderpath . 'subfolder';
@@ -81,7 +80,7 @@ class Test
             $process_list = \Flexio\Tests\Process::list($t['pattern']);
             $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
             $expected = $t['expected'];
-            TestCheck::assertArray("A.$idx", 'List; listing of folder with wildcard' . $folder, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertArray("A.$idx", 'List; listing of folder with wildcard' . $folder, $actual, $expected, $results);
         }
 
 
@@ -94,7 +93,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
-        TestCheck::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
@@ -102,7 +101,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
-        TestCheck::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder3';
@@ -112,7 +111,7 @@ class Test
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
-        TestCheck::assertBoolean("B.3", 'Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean("B.3", 'Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
 
 
 
@@ -124,7 +123,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename];
-        TestCheck::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $filename, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $filename, $actual, $expected, $results);
 
         // BEGIN TEST
         $name = 'test_folder';
@@ -134,7 +133,7 @@ class Test
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
-        TestCheck::assertBoolean("C.2", 'Create; throw an exception when attempting to create a file with the same name as a folder', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean("C.2", 'Create; throw an exception when attempting to create a file with the same name as a folder', $actual, $expected, $results);
 
 
 
@@ -145,7 +144,7 @@ class Test
         $process_read = \Flexio\Tests\Process::read($folderpath . '/' . $filename);
         $actual = $process_read->hasError();
         $expected = true;
-        TestCheck::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
 
         // BEGIN TEST
         $idx = 1;
@@ -153,15 +152,15 @@ class Test
         {
             $idx++;
 
-            $filepath = TestUtil::getOutputFilePath($folderpath, $filename);
-            $stream = TestUtil::createStreamFromFile($filename);
+            $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);
+            $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
             $process_write = \Flexio\Tests\Process::write($filepath, $stream);
             $process_read = \Flexio\Tests\Process::read($filepath);
             $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
-            TestCheck::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
 
@@ -183,7 +182,7 @@ class Test
             $process_read = \Flexio\Tests\Process::read($filepath);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
-            TestCheck::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
 
@@ -233,7 +232,7 @@ aBC,()[]{}<>,-1.02,-1.23,-1,1776-07-04,"1776-07-04 01:02:03",true
 EOD;
         $actual = $actual_contents;
         $expected = $expected_contents;
-        TestCheck::assertString("F.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $filepath, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString("F.1", 'Read/Write; check write/read with implicit type conversion; file output here: ' . $filepath, $actual, $expected, $results);
 
 
 
@@ -252,7 +251,7 @@ EOD;
         $list2 = \Flexio\Tests\Content::getValues($process_list2->getStdout(),'name');
         $actual = array_values(array_diff($list1, $list2));
         $expected = [$filename];
-        TestCheck::assertArray("G.1", 'Delete; delete a file that exists; file is ' . $filepath, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray("G.1", 'Delete; delete a file that exists; file is ' . $filepath, $actual, $expected, $results);
 
         // TODO: delete an empty folder
         // TODO: delete a populated folder

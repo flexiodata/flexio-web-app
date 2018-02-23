@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: set tests with non-eid input
 
         // BEGIN TEST
@@ -35,24 +30,24 @@ class Test
             $info = array(
                 'user_name' => $handle
             );
-            $model->set(null, $info);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            \Flexio\Tests\Util::getModel()->set(null, $info);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('A.1', '\Model::set(); throw an error with null input',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('A.1', '\Model::set(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'user_name' => $handle
         );
-        $actual = $model->set('', $info);
+        $actual = \Flexio\Tests\Util::getModel()->set('', $info);
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
 
 
 
@@ -64,23 +59,23 @@ class Test
             'user_name' => $handle
         );
         $eid = \Flexio\Base\Eid::generate();
-        $actual = $model->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Model::set(); return false when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::set(); return false when trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
-        $delete_result = $model->delete($eid);
-        $set_result = $model->set($eid, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
+        $delete_result = \Flexio\Tests\Util::getModel()->delete($eid);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === false;
         $expected = true;
-        TestCheck::assertBoolean('B.2', '\Model::set(); return false when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::set(); return false when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
 
 
 
@@ -88,78 +83,78 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $info = array(
         );
-        $actual = $model->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $info = array(
             'user_name' => $handle1
         );
-        $actual = $model->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.2', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $info = array(
             'xxx' => 'abc'
         );
-        $actual = $model->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.3', '\Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.3', '\Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $info = array(
             'full_name' => 'John Williams'
         );
-        $actual = $model->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->set($eid, $info);
         $expected = true;
-        TestCheck::assertBoolean('C.4', '\Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.4', '\Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
         try
         {
             $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = TestUtil::createEmailAddress();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
                 'user_name' => $handle1,
                 'email' => $handle2
             );
-            $eid = $model->create(\Model::TYPE_USER, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
             $info = array(
                 'user_name' => null
             );
-            $result = $model->set($eid, $info);
+            $result = \Flexio\Tests\Util::getModel()->set($eid, $info);
         }
         catch (\Exception $e)
         {
@@ -169,7 +164,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('C.5', '\Model::set(); throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Model::set(); throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
 
@@ -177,22 +172,22 @@ class Test
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = TestUtil::createEmailAddress();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
             'user_name' => $handle1,
             'email' => $handle2
         );
-        $eid = $model->create(\Model::TYPE_USER, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $info);
         $info = array(
             'company_name' => 'Express Kitchen'
         );
-        $result = $model->set($eid, $info);
-        $actual = $model->get($eid);
+        $result = \Flexio\Tests\Util::getModel()->set($eid, $info);
+        $actual = \Flexio\Tests\Util::getModel()->get($eid);
         $expected = array(
             'user_name' => $handle1,
             'email' => $handle2,
             'company_name' => 'Express Kitchen'
         );
-        TestCheck::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
     }
 }

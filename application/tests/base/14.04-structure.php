@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
         // TEST: Structure::enum(); no input
 
         // BEGIN TEST
@@ -42,7 +38,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('A.1', 'Structure::enum(); if no input is specified, return all the columns',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Structure::enum(); if no input is specified, return all the columns',  $actual, $expected, $results);
 
 
 
@@ -51,7 +47,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::create()->enum(null);
         $expected = array();
-        TestCheck::assertInArray('B.1', 'Structure::enum(); if a non-array input is specified, return an empty array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Structure::enum(); if a non-array input is specified, return an empty array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -65,14 +61,14 @@ class Test
         try
         {
             \Flexio\Base\Structure::create($column_info)->enum('a');
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.2', 'Structure::enum(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.2', 'Structure::enum(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
 
 
@@ -87,7 +83,7 @@ class Test
         $specified_columns = array();
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.1', 'Structure::enum(); return empty array if no columns are specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', 'Structure::enum(); return empty array if no columns are specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -97,7 +93,7 @@ class Test
         $specified_columns = array('a');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.2', 'Structure::enum(); return empty array if no columns are available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', 'Structure::enum(); return empty array if no columns are available',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -114,7 +110,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -131,7 +127,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -148,7 +144,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -166,7 +162,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -184,7 +180,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -202,7 +198,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -221,7 +217,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -240,7 +236,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -259,7 +255,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -278,7 +274,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -291,7 +287,7 @@ class Test
         $specified_columns = array('a');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.13', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.13', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -304,7 +300,7 @@ class Test
         $specified_columns = array('b');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.14', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.14', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -317,7 +313,7 @@ class Test
         $specified_columns = array('c');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.15', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.15', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -334,7 +330,7 @@ class Test
             {"name":"aa", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.16', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.16', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -351,7 +347,7 @@ class Test
             {"name":"ab", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.17', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.17', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -368,7 +364,7 @@ class Test
             {"name":"ac", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('C.18', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.18', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -381,7 +377,7 @@ class Test
         $specified_columns = array('aab');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.19', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.19', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -394,7 +390,7 @@ class Test
         $specified_columns = array('zac');
         $actual = \Flexio\Base\Structure::create($column_info)->enum($specified_columns);
         $expected = array();
-        TestCheck::assertInArray('C.20', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.20', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
 
 
@@ -415,7 +411,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.1', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -432,7 +428,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.2', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -449,7 +445,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -466,7 +462,7 @@ class Test
             {"name":"aa", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -483,7 +479,7 @@ class Test
             {"name":"ab", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -500,7 +496,7 @@ class Test
             {"name":"ac", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -517,7 +513,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -534,7 +530,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -551,7 +547,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -568,7 +564,7 @@ class Test
             {"name":"aa", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -585,7 +581,7 @@ class Test
             {"name":"ab", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -602,7 +598,7 @@ class Test
             {"name":"ac", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('D.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
 
 
@@ -621,7 +617,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.1', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -640,7 +636,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.2', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.2', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -662,7 +658,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.3', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.3', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -684,7 +680,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.4', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.4', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -703,7 +699,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.5', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.5', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -722,7 +718,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.6', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.6', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -749,7 +745,7 @@ class Test
             {"name":"g", "type":"boolean"}
         ]
         ',true);
-        TestCheck::assertInArray('E.7', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.7', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -769,7 +765,7 @@ class Test
         [
         ]
         ',true);
-        TestCheck::assertInArray('E.8', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.8', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -790,7 +786,7 @@ class Test
             {"name":"ab", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -808,7 +804,7 @@ class Test
         [
         ]
         ',true);
-        TestCheck::assertInArray('E.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -827,7 +823,7 @@ class Test
             {"name":"bca", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.11', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -847,7 +843,7 @@ class Test
             {"name":"bca", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.12', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -869,7 +865,7 @@ class Test
             {"name":"ab", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.13', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.13', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -890,7 +886,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('E.14', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.14', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -913,7 +909,7 @@ class Test
             {"name":"d", "type":"integer"}
         ]
         ',true);
-        TestCheck::assertInArray('E.15', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.15', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -934,7 +930,7 @@ class Test
             {"name":"e", "type":"date"}
         ]
         ',true);
-        TestCheck::assertInArray('E.16', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.16', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -955,7 +951,7 @@ class Test
             {"name":"f", "type":"datetime"}
         ]
         ',true);
-        TestCheck::assertInArray('E.17', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.17', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -976,7 +972,7 @@ class Test
             {"name":"g", "type":"boolean"}
         ]
         ',true);
-        TestCheck::assertInArray('E.18', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.18', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1000,7 +996,7 @@ class Test
             {"name":"d", "type":"integer"}
         ]
         ',true);
-        TestCheck::assertInArray('E.19', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.19', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1022,7 +1018,7 @@ class Test
             {"name":"f", "type":"datetime"}
         ]
         ',true);
-        TestCheck::assertInArray('E.20', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.20', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1045,7 +1041,7 @@ class Test
             {"name":"g", "type":"boolean"}
         ]
         ',true);
-        TestCheck::assertInArray('E.21', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.21', 'Structure::enum(); return columns satisfying wildcard conditions',  $actual, $expected, $results);
 
 
 
@@ -1066,7 +1062,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.1', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.1', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1083,7 +1079,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.2', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.2', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1100,7 +1096,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.3', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1119,7 +1115,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.4', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1135,7 +1131,7 @@ class Test
             {"name":"a", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.5', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1151,7 +1147,7 @@ class Test
             {"name":"b", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.6', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1167,7 +1163,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.7', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1189,7 +1185,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.8', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1211,7 +1207,7 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.9', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info = json_decode('
@@ -1230,6 +1226,6 @@ class Test
             {"name":"c", "type":"character"}
         ]
         ',true);
-        TestCheck::assertInArray('F.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.10', 'Structure::enum(); return specified columns that exist in the order they\'re listed',  $actual, $expected, $results);
     }
 }

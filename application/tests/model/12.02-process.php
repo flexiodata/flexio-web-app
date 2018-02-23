@@ -20,20 +20,15 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::create(); process creation with no parameters
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_PROCESS, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROCESS, $info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
 

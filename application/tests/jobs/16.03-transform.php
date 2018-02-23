@@ -108,7 +108,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('A.1', 'Transform Job; conversion from character to character (identity)',  $actual, $expected, $results);
 
 
 
@@ -165,7 +165,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.1', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.1', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -214,7 +214,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.2', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.2', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -265,7 +265,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('B.3', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('B.3', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 
 
@@ -322,7 +322,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.1', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.1', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -373,7 +373,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('C.2', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('C.2', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
 
 
 
@@ -430,7 +430,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('D.1', 'Transform Job; conversion from integer to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('D.1', 'Transform Job; conversion from integer to character',  $actual, $expected, $results);
 
 
 
@@ -483,7 +483,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('E.1', 'Transform Job; conversion from date to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('E.1', 'Transform Job; conversion from date to character',  $actual, $expected, $results);
 
 
 
@@ -536,7 +536,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('F.1', 'Transform Job; conversion from datetime to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('F.1', 'Transform Job; conversion from datetime to character',  $actual, $expected, $results);
 
 
 
@@ -587,7 +587,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('G.1', 'Transform Job; conversion from boolean to character',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('G.1', 'Transform Job; conversion from boolean to character',  $actual, $expected, $results);
 
 
         // TEST: Transform Job; conversion to boolean type from character type
@@ -659,7 +659,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('H.1', 'Transform Job; conversion from character to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -714,7 +714,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
 		$task = json_decode('
@@ -765,7 +765,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('I.2', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -820,7 +820,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('J.1', 'Transform Job; conversion from double to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -875,7 +875,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results, TestCheck::FLAG_ERROR_SUPPRESS);
+		\Flexio\Tests\Check::assertInArray('K.1', 'Transform Job; conversion from integer to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 
 
@@ -926,7 +926,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('L.1', 'Transform Job; conversion from date to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('L.1', 'Transform Job; conversion from date to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
 
 
 
@@ -977,7 +977,7 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('M.1', 'Transform Job; conversion from datetime to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('M.1', 'Transform Job; conversion from datetime to boolean.  Non-null values are true, null-values false',  $actual, $expected, $results);
 
 
 
@@ -1028,6 +1028,6 @@ class Test
         	]
         }
         ';
-		TestCheck::assertInArray('N.1', 'Transform Job; conversion from boolean to boolean (identity)',  $actual, $expected, $results);
+		\Flexio\Tests\Check::assertInArray('N.1', 'Transform Job; conversion from boolean to boolean (identity)',  $actual, $expected, $results);
     }
 }

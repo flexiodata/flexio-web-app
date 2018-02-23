@@ -23,7 +23,7 @@ class Test
         // TEST: SDK template tests
 
         // BEGIN TEST
-        $script = TestUtil::getTestSDKSetup() . <<<EOD
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<EOD
 Flexio.pipe()
 .request('https://git.io/vFBSw')       // short url for names-and-ip-addresses.csv
 .convert('csv', 'table')               // convert to a table to process by row/column
@@ -41,9 +41,9 @@ Flexio.pipe()
     console.log(response.text)
 })
 EOD;
-        $actual = json_decode(TestUtil::execSDKJS($script),true);
+        $actual = json_decode(\Flexio\Tests\Util::execSDKJS($script),true);
         $expected = array("males" => 50, "females" => 50);
-        TestCheck::assertInArray('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
     }
 }
 

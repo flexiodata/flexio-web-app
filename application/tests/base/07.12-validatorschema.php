@@ -44,7 +44,7 @@ EOD;
         $validschemaobject = \Flexio\Base\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = <<<EOD
@@ -77,7 +77,7 @@ EOD;
         $validschemaobject = \Flexio\Base\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = <<<EOD
@@ -142,7 +142,7 @@ EOD;
         $validschemaobject = \Flexio\Base\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\ValidatorSchema::check(); basic object validation test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = array(
@@ -203,6 +203,6 @@ EOD;
         $validschemaobject = \Flexio\Base\ValidatorSchema::check($object, $template)->hasErrors() === false;
         $actual = $validschema === true && $validobject === true && $validschemaobject === true;
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Base\ValidatorSchema::check(); basic object validation test using array object definition',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Base\ValidatorSchema::check(); basic object validation test using array object definition',  $actual, $expected, $results);
     }
 }

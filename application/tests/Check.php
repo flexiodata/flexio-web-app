@@ -16,23 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Tests;
 
 
-class TestCheck
+class Check
 {
-    const FLAG_NONE = '';
-    const FLAG_ERROR_SUPPRESS = 'flag.error.suppress';
-
-
-    public static function assertNull($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNull($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -47,20 +43,20 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected null value;  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected null value;  Returned ' . self::stringify($actual);
     }
 
-    public static function assertNan($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNan($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -75,21 +71,21 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected NaN value;  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected NaN value;  Returned ' . self::stringify($actual);
     }
 
 
-    public static function assertString($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertString($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -105,20 +101,20 @@ class TestCheck
 
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertNumber($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -126,7 +122,7 @@ class TestCheck
         }
 
         // comparing doubles always requires usage of epsilon tolerance
-        if (is_double($actual) && is_double($expected) && TestUtil::dblcompare($actual, $expected) === 0)
+        if (is_double($actual) && is_double($expected) && \Flexio\Tests\Util::dblcompare($actual, $expected) === 0)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -141,10 +137,10 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
-    public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertDateApprox($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // note: this returns true if the actual datetime is within a tolerance
         // of the expected; it's used to test values where there might be a slight
@@ -154,15 +150,15 @@ class TestCheck
         // right now, allow a one-minute difference
         $tolerance = 60;
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -184,20 +180,20 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
-    public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertBoolean($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -219,23 +215,23 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected,true) . ';  Returned ' . TestCheck::stringify($actual,true);
+        $test_result->message = 'Expected ' . self::stringify($expected,true) . ';  Returned ' . self::stringify($actual,true);
     }
 
 
-    public static function assertArrayKeys($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertArrayKeys($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // succeeds if the keys of the array are the same, without regard to the values
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -248,7 +244,7 @@ class TestCheck
         if ((!is_array($actual) && !is_string($actual)) || (!is_array($expected) && !is_string($expected)))
         {
             $test_result->passed = false;
-            $test_result->message = 'Invalid test assertion.  Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+            $test_result->message = 'Invalid test assertion.  Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
             return;
         }
 
@@ -268,20 +264,20 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertArray($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -294,7 +290,7 @@ class TestCheck
         if (!is_array($actual) || (!is_array($expected) && !is_string($expected)))
         {
             $test_result->passed = false;
-            $test_result->message = 'Invalid test assertion.  Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+            $test_result->message = 'Invalid test assertion.  Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
             return;
         }
 
@@ -312,23 +308,23 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = 'Expected ' . TestCheck::stringify($expected) . ';  Returned ' . TestCheck::stringify($actual);
+        $test_result->message = 'Expected ' . self::stringify($expected) . ';  Returned ' . self::stringify($actual);
     }
 
-    public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = self::FLAG_NONE)
+    public static function assertInArray($name, $description, $actual, $expected, &$results, $flag = \Flexio\Tests\Base::FLAG_NONE)
     {
         // note: returns true if the key/value pairs in the expected array
         // are in the actual array; false otherwise
 
-        // add a TestResult onto the result array
-        $test_result = new TestResult;
+        // add a \Flexio\Tests\Result onto the result array
+        $test_result = new \Flexio\Tests\Result;
         $results[] = $test_result;
 
         $test_result->name = $name;
         $test_result->description = $description;
 
         // if the issue is flagged as known issue, don't include it in the report
-        if ($flag === self::FLAG_ERROR_SUPPRESS)
+        if ($flag === \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS)
         {
             $test_result->passed = true;
             $test_result->message = '';
@@ -405,7 +401,7 @@ class TestCheck
         }
 
         $test_result->passed = false;
-        $test_result->message = $test_result->message = 'Expected ' . TestCheck::stringify($expected) . 'to be a subset of ' . TestCheck::stringify($actual);
+        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . 'to be a subset of ' . self::stringify($actual);
     }
 
     public static function arrayKeysEqual($item1, $item2)

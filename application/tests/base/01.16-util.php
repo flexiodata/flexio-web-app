@@ -26,30 +26,30 @@ class Test
         $arr = \Flexio\Base\Util::filterArrayofArrays(array(array('a'=>'','b'=>''),array('b'=>'','c'=>'')),array());
         $actual = (json_encode($arr) == '[[],[]]' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::filterArrayofArrays(array(array('a'=>'','b'=>''),array('b'=>'','c'=>'')),array('b'));
         $actual = (json_encode($arr) == '[{"b":""},{"b":""}]' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::filterArrayofArrays(array(array('a'=>'','b'=>''),array('b'=>'','c'=>'')),array('b','c'));
         $actual = (json_encode($arr) == '[{"b":""},{"b":"","c":""}]' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::filterArrayofArrays(array(array('a'=>'','b'=>''),array('b'=>'','c'=>'')),array('a','b'));
         $actual = (json_encode($arr) == '[{"a":"","b":""},{"b":""}]' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::filterArrayofArrays(array(array('a'=>'','b'=>''),array('b'=>'','c'=>'')),array('a','b','c'));
         $actual = (json_encode($arr) == '[{"a":"","b":""},{"b":"","c":""}]' ? true : false);
         $expected = true;
-        TestCheck::assertBoolean('A.5', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Base\Util::filterArrayofArrays() array input',  $actual, $expected, $results);
     }
 }

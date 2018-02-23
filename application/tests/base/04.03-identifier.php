@@ -25,27 +25,27 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc');
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('1bc');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('.bc');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('/bc');
         $expected = false;
-        TestCheck::assertBoolean('A.4', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('\bc');
         $expected = false;
-        TestCheck::assertBoolean('A.5', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Base\Identifier::isValid(); identifiers should start with a character', $actual, $expected, $results);
 
 
 
@@ -54,41 +54,41 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abcdef123');
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc.def');
         $expected = false;
-        TestCheck::assertBoolean('B.2', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc/def');
         $expected = false;
-        TestCheck::assertBoolean('B.3', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc\def');
         $expected = false;
-        TestCheck::assertBoolean('B.4', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc-def');
         $expected = true;
-        TestCheck::assertBoolean('B.5', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters; hyphens and underscores are allowed', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters; hyphens and underscores are allowed', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc_def');
         $expected = true;
-        TestCheck::assertBoolean('B.6', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters; hyphens and underscores are allowed', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.6', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters; hyphens and underscores are allowed', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc/');
         $expected = false;
-        TestCheck::assertBoolean('B.7', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.7', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Identifier::isValid('abc.');
         $expected = false;
-        TestCheck::assertBoolean('B.8', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.8', '\Flexio\Base\Identifier::isValid(); non-alphanumeric characters', $actual, $expected, $results);
     }
 }

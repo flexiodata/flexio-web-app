@@ -38,7 +38,7 @@ class Test
         ',true);
         $request = \Flexio\Api\Request::create();
         $request->setPostParams($params);
-        $request->setRequestingUser(TestUtil::getDefaultTestUser());
+        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
         $actual = \Flexio\Api\Project::create($request);
         $expected = '
         {
@@ -47,6 +47,6 @@ class Test
             "description": "Test project"
         }
         ';
-        TestCheck::assertInArray('A.1', '\Flexio\Api\Project::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\Project::create(); return the object',  $actual, $expected, $results);
     }
 }

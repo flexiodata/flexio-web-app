@@ -25,17 +25,17 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Eid::isValid('');
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Eid::isValid('xxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Eid::isValid('xxxxxxxxxxxxx');
         $expected = false;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Eid::isValid() invalid length', $actual, $expected, $results);
 
 
 
@@ -44,6 +44,6 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Eid::isValid('xxxxxxxxxxxx');
         $expected = true;
-        TestCheck::assertBoolean('B.1', '\Flexio\Base\Eid::isValid() valid length', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Eid::isValid() valid length', $actual, $expected, $results);
     }
 }

@@ -50,7 +50,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maxLength value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maxLength value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -80,7 +80,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maxLength value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maxLength value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -110,7 +110,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -140,7 +140,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,false,false,false);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -170,7 +170,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,true,false,false);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -200,7 +200,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,true,true,false);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is greater than the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -234,7 +234,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minLength value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minLength value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -264,7 +264,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minLength value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minLength value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -294,7 +294,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -324,7 +324,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,true,true,true,true);
-        TestCheck::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -354,7 +354,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,true,true,true);
-        TestCheck::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -384,7 +384,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,true,true);
-        TestCheck::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if a string value length is less than the minimum allowed',  $actual, $expected, $results);
 
 
 
@@ -418,7 +418,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('C.1', '\Flexio\Base\ValidatorSchema::check(); return false if the pattern value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\ValidatorSchema::check(); return false if the pattern value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -448,7 +448,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(false,false,false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('C.2', '\Flexio\Base\ValidatorSchema::check(); return false if the pattern value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\ValidatorSchema::check(); return false if the pattern value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -478,7 +478,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('C.3', '\Flexio\Base\ValidatorSchema::check(); return true for empty pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\ValidatorSchema::check(); return true for empty pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -508,7 +508,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.4', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -538,7 +538,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.5', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -568,7 +568,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.6', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.6', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -598,7 +598,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.7', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.7', '\Flexio\Base\ValidatorSchema::check(); return false for bad pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -628,7 +628,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,true,true,true,true);
-        TestCheck::assertArray('C.8', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.8', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -658,7 +658,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,true,true,true);
-        TestCheck::assertArray('C.9', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.9', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -688,7 +688,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.10', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.10', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -718,7 +718,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,true,true,true);
-        TestCheck::assertArray('C.11', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.11', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -748,7 +748,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,true,true);
-        TestCheck::assertArray('C.12', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.12', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -778,7 +778,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,false,false,false);
-        TestCheck::assertArray('C.13', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.13', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -808,7 +808,7 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('C.14', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.14', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -838,6 +838,6 @@ EOD;
         $r10 = \Flexio\Base\ValidatorSchema::check($v10, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10);
         $expected = array(true,true,true,true,true,false,false,true,true,true);
-        TestCheck::assertArray('C.15', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.15', '\Flexio\Base\ValidatorSchema::check(); return false if a string value doesn\'t match the pattern',  $actual, $expected, $results);
     }
 }

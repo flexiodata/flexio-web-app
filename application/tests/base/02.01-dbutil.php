@@ -25,47 +25,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_TEXT;
         $expected = 'text';
-        TestCheck::assertString('A.1', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_CHARACTER;
         $expected = 'character';
-        TestCheck::assertString('A.2', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
         $expected = 'widecharacter';
-        TestCheck::assertString('A.3', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_NUMERIC;
         $expected = 'numeric';
-        TestCheck::assertString('A.4', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_DOUBLE;
         $expected = 'double';
-        TestCheck::assertString('A.5', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_INTEGER;
         $expected = 'integer';
-        TestCheck::assertString('A.6', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_DATE;
         $expected = 'date';
-        TestCheck::assertString('A.7', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_DATETIME;
         $expected = 'datetime';
-        TestCheck::assertString('A.8', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.8', '\DbUtil field type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::TYPE_BOOLEAN;
         $expected = 'boolean';
-        TestCheck::assertString('A.9', '\DbUtil field type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.9', '\DbUtil field type constant',  $actual, $expected, $results);
 
 
 
@@ -74,12 +74,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, false);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('B.1', '\Flexio\Base\DbUtil::getCompatibleType() default test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Base\DbUtil::getCompatibleType() default test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(false, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('B.2', '\Flexio\Base\DbUtil::getCompatibleType() default test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', '\Flexio\Base\DbUtil::getCompatibleType() default test',  $actual, $expected, $results);
 
 
 
@@ -88,47 +88,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_TEXT, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('C.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -137,47 +137,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('D.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('D.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_CHARACTER, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('D.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -186,47 +186,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('E.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_WIDECHARACTER, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('E.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('E.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -235,47 +235,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('F.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('F.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('F.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_NUMERIC;
-        TestCheck::assertString('F.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_NUMERIC;
-        TestCheck::assertString('F.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_NUMERIC;
-        TestCheck::assertString('F.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('F.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('F.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_NUMERIC, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('F.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('F.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -284,47 +284,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('G.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('G.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('G.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_NUMERIC;
-        TestCheck::assertString('G.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_DOUBLE;
-        TestCheck::assertString('G.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_DOUBLE;
-        TestCheck::assertString('G.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('G.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('G.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DOUBLE, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('G.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('G.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -333,47 +333,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('H.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('H.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('H.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_NUMERIC;
-        TestCheck::assertString('H.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_DOUBLE;
-        TestCheck::assertString('H.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_INTEGER;
-        TestCheck::assertString('H.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('H.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('H.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_INTEGER, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('H.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('H.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -382,47 +382,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('I.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('I.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('I.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('I.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('I.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('I.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_DATE;
-        TestCheck::assertString('I.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_DATETIME;
-        TestCheck::assertString('I.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATE, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('I.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('I.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -431,47 +431,47 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('J.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('J.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('J.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('J.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('J.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('J.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_DATETIME;
-        TestCheck::assertString('J.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_DATETIME;
-        TestCheck::assertString('J.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_DATETIME, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('J.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('J.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
 
 
@@ -480,46 +480,46 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_TEXT);
         $expected = \Flexio\Base\DbUtil::TYPE_TEXT;
-        TestCheck::assertString('K.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.1', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_CHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.2', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_WIDECHARACTER);
         $expected = \Flexio\Base\DbUtil::TYPE_WIDECHARACTER;
-        TestCheck::assertString('K.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.3', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_NUMERIC);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.4', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_DOUBLE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.5', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_INTEGER);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.6', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_DATE);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.7', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_DATETIME);
         $expected = \Flexio\Base\DbUtil::TYPE_CHARACTER;
-        TestCheck::assertString('K.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.8', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\DbUtil::getCompatibleType(\Flexio\Base\DbUtil::TYPE_BOOLEAN, \Flexio\Base\DbUtil::TYPE_BOOLEAN);
         $expected = \Flexio\Base\DbUtil::TYPE_BOOLEAN;
-        TestCheck::assertString('K.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('K.9', '\Flexio\Base\DbUtil::getCompatibleType() test',  $actual, $expected, $results);
     }
 }

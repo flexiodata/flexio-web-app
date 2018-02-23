@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Twilio;
+        $service = new \Flexio\Services\Socrata;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Twilio';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Twilio; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Socrata';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Socrata::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-10-13
+ * Created:  2017-06-26
  *
  * @package flexio
  * @subpackage Tests
@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\GitHub;
+        $service = new \Flexio\Services\ElasticSearch;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\GitHub';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\GitHub; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\ElasticSearch';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\ElasticSearch; basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -20,21 +20,16 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: search tests when results can't be found
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('A.1', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -42,22 +37,22 @@ class Test
         $edge_following = \Model::EDGE_FOLLOWING;
         $type_project = \Model::TYPE_PROJECT;
         $path = "$eid->($edge_owns,$edge_following)->($type_project)";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('A.2', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $eid2 = \Flexio\Base\Eid::generate();
         $path = "$eid2";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
         );
-        TestCheck::assertArray('A.3', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
     }
 }

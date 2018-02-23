@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-05-16
+ * Created:  2016-10-31
  *
  * @package flexio
  * @subpackage Tests
@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Ftp;
+        $service = new \Flexio\Services\Rss;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Ftp';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Ftp::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Rss';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Rss; basic file syntax check',  $actual, $expected, $results);
     }
 }

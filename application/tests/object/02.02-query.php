@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
         // TODO: handle commented out tests
 
         // TEST: Query::exec(); valid query with properties that are a subset of those available
@@ -33,7 +29,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -46,7 +42,7 @@ class Test
             "eid" => $eid,
             "name" => "Sample Project"
         );
-        TestCheck::assertArray('A.1', 'Query::exec(); only requested properties should be returned, even if more are available',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Query::exec(); only requested properties should be returned, even if more are available',  $actual, $expected, $results);
 
 
 
@@ -57,7 +53,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -74,14 +70,14 @@ class Test
             "property1" => null,
             "property2" => "abc"
         );
-        TestCheck::assertArray('B.1', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -94,14 +90,14 @@ class Test
             "eid" => $eid,
             "property" => array()
         );
-        TestCheck::assertArray('B.2', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
 /*
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -116,14 +112,14 @@ class Test
             "property" => array(
             )
         );
-        TestCheck::assertArray('B.3', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "eid" : null,
@@ -141,7 +137,7 @@ class Test
                 "b" => "2"
             )
         );
-        TestCheck::assertArray('B.4', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', 'Query::exec(); requested properties that don\'t exist should be echoed back',  $actual, $expected, $results);
 */
 
 
@@ -152,7 +148,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "description" : "Sample Description",
@@ -165,14 +161,14 @@ class Test
             'description' => 'Sample Description',
             'name' => 'Sample Project'
         );
-        TestCheck::assertArray('C.1', 'Query::exec(); return properties in requested order',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', 'Query::exec(); return properties in requested order',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "property2" : null,
@@ -189,7 +185,7 @@ class Test
             "property1" => "abc",
             "eid" => $eid
         );
-        TestCheck::assertArray('C.2', 'Query::exec(); return properties in requested order',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', 'Query::exec(); return properties in requested order',  $actual, $expected, $results);
 
 
 
@@ -200,7 +196,7 @@ class Test
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_eid=eid" : null,
@@ -213,14 +209,14 @@ class Test
             "object_eid" => $eid,
             "object_name" => "Sample Project"
         );
-        TestCheck::assertArray('D.1', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_name=name" : null,
@@ -233,14 +229,14 @@ class Test
             "object_name" => "Sample Project",
             "object_eid" => $eid
         );
-        TestCheck::assertArray('D.2', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'name' => 'Sample Project',
             'description' => 'Sample Description'
         );
-        $eid = $model->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
         $query = '
         {
             "object_eid=eid" : null,
@@ -253,6 +249,6 @@ class Test
             "object_eid" => $eid,
             "object_property1" => "abc"
         );
-        TestCheck::assertArray('D.3', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
     }
 }

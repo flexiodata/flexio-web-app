@@ -20,16 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: model tempdata tests
 
         // BEGIN TEST
         $actual = true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Model tempdata tests',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Model tempdata tests',  $actual, $expected, $results);
     }
 }

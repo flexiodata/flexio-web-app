@@ -61,6 +61,6 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","D"],["D","B"],["c","D"]];
-        TestCheck::assertString('A.1', 'Replace Job; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Replace Job; check basic functionality',  $actual, $expected, $results);
     }
 }

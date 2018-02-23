@@ -28,10 +28,40 @@ class File
         $path = trim($path, '/');
         if (strlen($path) == 0)
             return [];
+        $urlpos = strpos($path, '://');
+        if ($urlpos !== false)
+        {
+            $urlpart = substr($path, 0, $urlpos+3);
+            $path = substr($path, $urlpos+3);
+        }
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
-        return explode('/', $path);
+        $path = trim($path, '/');
+        $parts = explode('/', $path);
+        if ($urlpos !== false)
+        {
+            array_unshift($parts, $urlpart);
+        }
+        return $parts;
     }
+
+    public static function splitBasePathAndName(string $path) : array
+    {
+        $parts = \Flexio\Base\File::splitPath($path);
+
+        $name = (count($parts) > 0) ? array_pop($parts) : '';
+        $base = implode('/', $parts);
+        $base = str_replace(':///', '://', $base);
+
+        if (substr($path,0,1) == '/')
+        {
+            $base = '/' . $base;
+        }
+
+        return [ 'base' => $base, 'name' => $name ];
+    }
+
+
 
     public static function getFilename(string $filename) : string
     {
@@ -95,14 +125,14 @@ class File
         return $temp_file;
     }
 
-    public static function appendPath(string $path, string $part) : string
+    public static function appendPath(string $path, string $part, string $delimiter = DIRECTORY_SEPARATOR) : string
     {
         $result = $path;
         $len = strlen($result);
         if ($len == 0)
             return $part;
-        if (substr($part, $len - 1, 1) != DIRECTORY_SEPARATOR)
-            $result .= DIRECTORY_SEPARATOR;
+        if (substr($part, $len - 1, 1) != $delimiter)
+            $result .= $delimiter;
         return $result . $part;
     }
 

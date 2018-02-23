@@ -148,16 +148,27 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
-        $service = $this->getService($connection_identifier);
+        try
+        {
+            $service = $this->getService($connection_identifier);
+        }
+        catch(\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
 
         return $service->getFileInfo($rpath);
     }
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        $arr = $this->splitPath($path);
+        $connection_identifier = $arr[0];
+        $rpath = rtrim(trim($arr[1]), '/');
+
+        $service = $this->getService($connection_identifier);
+
+        return $service->exists($rpath);
     }
 
 

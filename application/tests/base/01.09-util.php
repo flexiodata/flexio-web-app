@@ -36,72 +36,72 @@ class Test
         $arr = \Flexio\Base\Util::diff(array(),array());
         $actual = (json_encode($arr) == '[]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a'),array('a'));
         $actual = (json_encode($arr) == '[{"=":"a"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.2', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a'),array());
         $actual = (json_encode($arr) == '[{"-":"a"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.3', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array(),array('a'));
         $actual = (json_encode($arr) == '[{"+":"a"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.4', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','b','c'),array('a','b','c','d'));
         $actual = (json_encode($arr) == '[{"=":"a"},{"=":"b"},{"=":"c"},{"+":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.5', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','b','c','d'),array('a','b','c'));
         $actual = (json_encode($arr) == '[{"=":"a"},{"=":"b"},{"=":"c"},{"-":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.6', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.6', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','b','c','d'),array('b','c','d'));
         $actual = (json_encode($arr) == '[{"-":"a"},{"=":"b"},{"=":"c"},{"=":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.7', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.7', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('b','c','d'),array('a','b','c','d'));
         $actual = (json_encode($arr) == '[{"+":"a"},{"=":"b"},{"=":"c"},{"=":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.8', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.8', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','d'),array('a','b','c','d'));
         $actual = (json_encode($arr) == '[{"=":"a"},{"+":"b"},{"+":"c"},{"=":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.9', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.9', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','b','c','d'),array('a','d'));
         $actual = (json_encode($arr) == '[{"=":"a"},{"-":"b"},{"-":"c"},{"=":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.10', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.10', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('b','c','d'),array('a','b','c','e'));
         $actual = (json_encode($arr) == '[{"+":"a"},{"=":"b"},{"=":"c"},{"-":"d"},{"+":"e"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.11', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.11', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
 
         // BEGIN TEST
         $arr = \Flexio\Base\Util::diff(array('a','b','c','e'),array('b','c','d'));
         $actual = (json_encode($arr) == '[{"-":"a"},{"=":"b"},{"=":"c"},{"-":"e"},{"+":"d"}]') ? true : false;
         $expected = true;
-        TestCheck::assertBoolean('A.12', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.12', '\Flexio\Base\Util::diff() basic comparisons',  $actual, $expected, $results);
     }
 }

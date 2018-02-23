@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-10-31
+ * Created:  2017-11-11
  *
  * @package flexio
  * @subpackage Tests
@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Sftp;
+        $service = new \Flexio\Services\Box;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Sftp';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Sftp::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Box';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Box; basic file syntax check',  $actual, $expected, $results);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-11-11
+ * Created:  2016-10-31
  *
  * @package flexio
  * @subpackage Tests
@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\AmazonS3;
+        $service = new \Flexio\Services\PipelineDeals;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\AmazonS3';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\AmazonS3; basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\PipelineDeals';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\PipelineDeals; basic file syntax check',  $actual, $expected, $results);
     }
 }

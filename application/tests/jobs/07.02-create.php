@@ -52,7 +52,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.1', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -90,7 +90,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.2', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -128,7 +128,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.3', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -166,7 +166,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.4', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -203,7 +203,7 @@ class Test
                 array("n2" => (float)2.00)
             )
         );
-        TestCheck::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -241,7 +241,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.6', 'Create Job; date field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'Create Job; date field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -279,7 +279,7 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('A.7', 'Create Job; boolean field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'Create Job; boolean field creation with row creation',  $actual, $expected, $results);
 
 
 
@@ -331,6 +331,6 @@ class Test
             ]
         }
         ';
-        TestCheck::assertInArray('B.1', 'Create Job; multiple field creation with row creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Create Job; multiple field creation with row creation',  $actual, $expected, $results);
     }
 }

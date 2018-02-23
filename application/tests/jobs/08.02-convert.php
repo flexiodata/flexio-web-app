@@ -64,7 +64,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('A.1', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -75,7 +75,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
-        TestCheck::assertArray('A.2', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -86,7 +86,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
-        TestCheck::assertArray('A.3', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', 'Convert Job; valid fieldname first row should create correctly',  $actual, $expected, $results);
 
 
 
@@ -101,7 +101,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('B.1', 'Convert Job; leading spaces in a fieldname should be trimmed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Convert Job; leading spaces in a fieldname should be trimmed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -112,7 +112,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('B.2', 'Convert Job; trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', 'Convert Job; trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -123,7 +123,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('B.3', 'Convert Job; leading and trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', 'Convert Job; leading and trailing spaces in a fieldname should be trimmed',  $actual, $expected, $results);
 
 
 
@@ -138,7 +138,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field 1"]';
-        TestCheck::assertArray('C.1', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -149,7 +149,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field  1"]';
-        TestCheck::assertArray('C.2', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.2', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -160,7 +160,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field  1"]';
-        TestCheck::assertArray('C.3', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.3', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -171,7 +171,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field one   and  the   same"]';
-        TestCheck::assertArray('C.4', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', 'Convert Job; embedded spaces should be preserved',  $actual, $expected, $results);
 
 
 
@@ -186,7 +186,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('D.1', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -197,7 +197,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1"]';
-        TestCheck::assertArray('D.2', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', 'Convert Job; uppercase characters should be converted to lowercase',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -208,7 +208,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["httpresponsecode"]';
-        TestCheck::assertArray('D.3', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -219,7 +219,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["http_response_code"]';
-        TestCheck::assertArray('D.4', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.4', 'Convert Job; camelcase should be converted to lowercase',  $actual, $expected, $results);
 
 
 
@@ -234,7 +234,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field_#"]';
-        TestCheck::assertArray('E.1', 'Convert Job; # should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.1', 'Convert Job; # should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -245,7 +245,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["% total"]';
-        TestCheck::assertArray('E.2', 'Convert Job; % should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.2', 'Convert Job; % should be converted to alphanumeric abbreviation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -256,7 +256,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["% (of total amount)"]';
-        TestCheck::assertArray('E.3', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.3', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -267,7 +267,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["amount (total)"]';
-        TestCheck::assertArray('E.4', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.4', 'Convert Job; paranthesis, braces, and brackets should be removed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -278,7 +278,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field.name"]';
-        TestCheck::assertArray('E.5', 'Convert Job; special characters in field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.5', 'Convert Job; special characters in field name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -289,7 +289,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["123"]';
-        TestCheck::assertArray('E.6', 'Convert Job; special characters in field name',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.6', 'Convert Job; special characters in field name',  $actual, $expected, $results);
 
 
 
@@ -304,7 +304,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["select"]';
-        TestCheck::assertArray('F.1', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.1', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -315,7 +315,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["update"]';
-        TestCheck::assertArray('F.2', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.2', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -326,7 +326,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["delete"]';
-        TestCheck::assertArray('F.3', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.3', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -337,7 +337,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["where"]';
-        TestCheck::assertArray('F.4', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.4', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -348,7 +348,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["true"]';
-        TestCheck::assertArray('F.5', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.5', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -359,7 +359,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["false"]';
-        TestCheck::assertArray('F.6', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.6', 'Convert Job; check keyword',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -370,7 +370,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["null"]';
-        TestCheck::assertArray('F.7', 'Convert Job; check keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.7', 'Convert Job; check keyword',  $actual, $expected, $results);
 
 
 
@@ -385,7 +385,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["field1","field2"]';
-        TestCheck::assertArray('G.1', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('G.1', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -396,7 +396,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["order #","order (total)"]';
-        TestCheck::assertArray('G.2', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('G.2', 'Convert Job; multiple fieldnames',  $actual, $expected, $results);
 
 
 
@@ -411,7 +411,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["id","id_1"]';
-        TestCheck::assertArray('H.1', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('H.1', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -422,7 +422,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["order #","order #_1"]';
-        TestCheck::assertArray('H.2', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('H.2', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
 
         // BEGIN TEST
         $data = '
@@ -433,6 +433,6 @@ class Test
         $process = \Flexio\Jobs\Process::create()->execute(self::buildCreateTask($data))->execute(self::buildConvertTask());
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["count","count_1"]';
-        TestCheck::assertArray('H.3', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('H.3', 'Convert Job; duplicate fieldnames should be enumerated to avoid duplication',  $actual, $expected, $results);
     }
 }

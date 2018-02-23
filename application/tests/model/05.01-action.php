@@ -20,16 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: misc action functions
 
         // BEGIN TEST
         $actual = true;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Misc action functions; TODO: fill out',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Misc action functions; TODO: fill out',  $actual, $expected, $results);
     }
 }

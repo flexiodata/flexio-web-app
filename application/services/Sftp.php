@@ -169,7 +169,27 @@ class Sftp implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->checkConnect())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
+        $info = $this->connection->lstat($this->getFullPath($path));
+
+        if (!isset($info['type']))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
+
+        $arr = \Flexio\Base\File::splitBasePathAndName($path);
+        $base = $arr['base'];
+        $name = $arr['name'];
+
+        return [
+            'name' => $name,
+            'path' => $path,
+            'size' => $info['size'] ?? null,
+            'modified' => date('c', ($info['mtime'] ?? time())),
+            'type' => (($info['type'] ?? 0) == 2) ? 'DIR' : 'FILE'
+        ];
     }
     
     public function exists(string $path) : bool

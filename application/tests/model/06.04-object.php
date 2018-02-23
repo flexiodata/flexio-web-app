@@ -20,20 +20,15 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::set(); invalid type
 
         // BEGIN TEST
         $params = array(
         );
-        $set_result = $model->set('', $params);
+        $set_result = \Flexio\Tests\Util::getModel()->set('', $params);
         $actual = $set_result;
         $expected = false;
-        TestCheck::assertBoolean('A.1', '\Model::set(); invalid eid should return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::set(); invalid eid should return false',  $actual, $expected, $results);
 
 
 
@@ -43,10 +38,10 @@ class Test
         $eid = \Flexio\Base\Eid::generate();
         $params = array(
         );
-        $set_result = $model->set($eid, $params);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
         $actual = $set_result;
         $expected = false;
-        TestCheck::assertBoolean('B.1', '\Model::set(); invalid eid should return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::set(); invalid eid should return false',  $actual, $expected, $results);
 
 
 
@@ -55,13 +50,13 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $params = array(
         );
-        $set_result = $model->set($eid, $params);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
         $actual = \Flexio\Base\Eid::isValid($eid) === true && $set_result === true;
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Model::set(); for object update, return true when set operation is performed on a valid eid, even if no values change',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::set(); for object update, return true when set operation is performed on a valid eid, even if no values change',  $actual, $expected, $results);
 
 
 
@@ -70,34 +65,34 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $eid_new = \Flexio\Base\Eid::generate();
         $params = array(
             'eid' => $eid_new,
             'eid_type' => \Model::TYPE_COMMENT
         );
-        $set_result = $model->set($eid, $params);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
         $actual = \Flexio\Base\Eid::isValid($eid) === true && $set_result === true;
         $expected = true;
-        TestCheck::assertBoolean('D.1', '\Model::set(); for object update, simply filter parameters that can\'t be set; don\'t return false',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.1', '\Model::set(); for object update, simply filter parameters that can\'t be set; don\'t return false',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $eid_new = \Flexio\Base\Eid::generate();
         $params = array(
             'eid' => $eid_new,
             'eid_type' => \Model::TYPE_COMMENT
         );
-        $set_result = $model->set($eid, $params);
-        $get_result = $model->get($eid);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
+        $get_result = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = $get_result;
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_OBJECT
         );
-        TestCheck::assertInArray('D.2', '\Model::set(); for object update, make sure filtered parameters aren\'t set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', '\Model::set(); for object update, make sure filtered parameters aren\'t set',  $actual, $expected, $results);
 
 
 
@@ -107,16 +102,16 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $get_result_before_set = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $get_result_before_set = \Flexio\Tests\Util::getModel()->get($eid);
         $params = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        $set_result = $model->set($eid, $params);
-        $get_result_after_set = $model->get($eid);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
+        $get_result_after_set = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = $get_result_before_set['eid_status'] === \Model::STATUS_AVAILABLE && $get_result_after_set['eid_status'] === \Model::STATUS_PENDING;
         $expected = true;
-        TestCheck::assertBoolean('E.1', '\Model::set(); for object update, make sure an object is actually updated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.1', '\Model::set(); for object update, make sure an object is actually updated',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -125,11 +120,11 @@ class Test
             $info = array(
                 'eid_status' => \Model::STATUS_AVAILABLE
             );
-            $eid = $model->create(\Model::TYPE_OBJECT, $info);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
             $params = array(
                 'eid_status' => 'ZZZ'
             );
-            $set_result = $model->set($eid, $params);
+            $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
         }
         catch (\Exception $e)
         {
@@ -139,7 +134,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        TestCheck::assertInArray('E.2', '\Model::create(); bad parameter should throw an exception',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.2', '\Model::create(); bad parameter should throw an exception',  $actual, $expected, $results);
 
 
 
@@ -149,19 +144,19 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $get_result_before_set = $model->get($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $get_result_before_set = \Flexio\Tests\Util::getModel()->get($eid);
         $params = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        $set_result = $model->set($eid, $params);
-        $get_result_after_set = $model->get($eid);
+        $set_result = \Flexio\Tests\Util::getModel()->set($eid, $params);
+        $get_result_after_set = \Flexio\Tests\Util::getModel()->get($eid);
         $actual = $get_result_after_set;
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_OBJECT,
             'eid_status' => \Model::STATUS_PENDING
         );
-        TestCheck::assertInArray('F.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
     }
 }

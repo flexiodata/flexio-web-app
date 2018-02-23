@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\GoogleDrive;
+        $service = new \Flexio\Services\Dropbox;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\GoogleDrive';
-        TestCheck::assertString('A.1', 'new \GoogleDrive::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\Dropbox';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Dropbox::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

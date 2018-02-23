@@ -24,11 +24,11 @@ class Test
         // TEST: SDK template tests
 
         // BEGIN TEST
-        $script = TestUtil::getTestSDKSetup() . <<<EOD
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<EOD
 EOD;
-        $actual = json_deocdTestUtil::execSDKJS($script);
+        $actual = json_deocd\Flexio\Tests\Util::execSDKJS($script);
         $expected = "";
-        TestCheck::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'SDK; check basic functionality',  $actual, $expected, $results);
 */
     }
 }

@@ -20,47 +20,42 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: make sure that duplicate edges and eids are removed in search
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "$eid,$eid";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid)";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid)";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.3', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
     }
 }

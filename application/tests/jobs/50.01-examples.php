@@ -73,7 +73,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "{\"STREETADDRESS\": \"1690 MILL STREET\"}\n{\"STREETADDRESS\": \"783 ELK AVENUE\"}\n{\"STREETADDRESS\": \"1748 HE";
-        TestCheck::assertString('A.1', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = json_decode('
@@ -129,7 +129,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->getRows(0,1);
         $expected = json_decode('[{"repository":"flexiodata\/docs-api","commit.author.date":"2017-11-18T12:16:39Z","commit.author.name":"Ben Williams","commit.author.email":"ben@flex.io","commit.committer.name":"Ben Williams","commit.committer.email":"ben@flex.io","commit.message":"missing comma"}]',true);
-        TestCheck::assertArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
 
 
 
@@ -187,7 +187,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->readRow(0);
         $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980\/12\/29"}',true);
-        TestCheck::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
 
 
 
@@ -272,7 +272,7 @@ class Test
             "ups": "1Z 3W5 6V5 59 2261 267 6"
         }
         ',true);
-        TestCheck::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
 
 
 
@@ -351,7 +351,7 @@ class Test
         }
         $actual = $process->getStdout()->getReader()->read(100);
         $expected = "[\n{\"url\":\"http:\/\/saastr.libsyn.com\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-wit";
-        TestCheck::assertString('D.1', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
 }
 

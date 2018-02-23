@@ -26,7 +26,7 @@ class Test
         $session_version = \Flexio\System\System::SESSION_VERSION;
         $actual = is_integer($session_version) && $session_version > 0;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'System class constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'System class constant',  $actual, $expected, $results);
 
 
 
@@ -36,7 +36,7 @@ class Test
         $model = \Flexio\System\System::getModel();
         $actual = get_class($model);
         $expected = 'Model';
-        TestCheck::assertString('B.1', '\Flexio\System\System::getModel(); make sure function returns a Model object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\System\System::getModel(); make sure function returns a Model object',  $actual, $expected, $results);
 
 
 
@@ -46,7 +46,7 @@ class Test
         $date = \Flexio\System\System::getTimestamp();
         $actual = is_string($date);
         $expected = true;
-        TestCheck::assertBoolean('C.1', '\Flexio\System\System::getTimestamp(); make sure function returns a string',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\System\System::getTimestamp(); make sure function returns a string',  $actual, $expected, $results);
 
 
 
@@ -56,52 +56,52 @@ class Test
         $file = '';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 0;
-        TestCheck::assertNumber('D.1', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.1', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
 
         $file = 'update';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 0;
-        TestCheck::assertNumber('D.2', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.2', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
 
         $file = 'update.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 0;
-        TestCheck::assertNumber('D.3', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.3', '\Flexio\System\System::getTimestamp(); make sure function returns zero if the file doesn\'t match the pattern',  $actual, $expected, $results);
 
         $file = 'badprefix1';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 0;
-        TestCheck::assertNumber('D.4', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.4', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update1';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 1;
-        TestCheck::assertNumber('D.5', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.5', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update1.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 1;
-        TestCheck::assertNumber('D.6', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.6', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update0001.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 1;
-        TestCheck::assertNumber('D.7', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.7', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update0001_name.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 1;
-        TestCheck::assertNumber('D.8', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.8', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update1001_name.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 1001;
-        TestCheck::assertNumber('D.9', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.9', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
         $file = 'update9999_name.php';
         $actual = \Flexio\System\System::getUpdateVersionFromFilename($file);
         $expected = 9999;
-        TestCheck::assertNumber('D.10', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('D.10', '\Flexio\System\System::getTimestamp(); return the numeric portion of the file matching the pattern',  $actual, $expected, $results);
 
 
 
@@ -111,13 +111,13 @@ class Test
         $version = \Flexio\System\System::getLatestVersionNumber();
         $actual = is_integer($version);
         $expected = true;
-        TestCheck::assertBoolean('E.1', '\Flexio\System\System::getLatestVersionNumber(); make sure function returns an integer',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.1', '\Flexio\System\System::getLatestVersionNumber(); make sure function returns an integer',  $actual, $expected, $results);
 
         // BEGIN TEST
         $version = \Flexio\System\System::getLatestVersionNumber();
         $actual = intval($version) > 0;
         $expected = true;
-        TestCheck::assertBoolean('E.2', '\Flexio\System\System::getLatestVersionNumber(); make sure function returns an integer that\'s positive',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.2', '\Flexio\System\System::getLatestVersionNumber(); make sure function returns an integer that\'s positive',  $actual, $expected, $results);
 
 
 
@@ -127,7 +127,7 @@ class Test
         $git_revision = \Flexio\System\System::getGitRevision();
         $actual = is_string($git_revision) === true && preg_match('/^[0-9a-f]{40}$/', $git_revision) === 1;
         $expected = true;
-        TestCheck::assertBoolean('F.1', '\Flexio\System\System::getGitRevision() test to verify a valid hash is returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.1', '\Flexio\System\System::getGitRevision() test to verify a valid hash is returned',  $actual, $expected, $results);
 
 
 
@@ -140,6 +140,6 @@ class Test
         $platform_check = $is_windows || $is_mac || $is_linux;
         $actual = $platform_check;
         $expected = true;
-        TestCheck::assertBoolean('G.1', 'Platform detection test',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('G.1', 'Platform detection test',  $actual, $expected, $results);
     }
 }

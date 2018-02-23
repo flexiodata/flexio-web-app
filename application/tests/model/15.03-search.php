@@ -20,23 +20,18 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: search tests when results for single eid
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "$eid";
-        $result = $model->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(
             $eid
         );
-        TestCheck::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); search for single eid that exists',  $actual, $expected, $results);
     }
 }

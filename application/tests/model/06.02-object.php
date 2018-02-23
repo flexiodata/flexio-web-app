@@ -20,63 +20,58 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: \Model::getType(); tests for when object doesn't exist
 
         // BEGIN TEST
-        $type = $model->getType('x');
+        $type = \Flexio\Tests\Util::getModel()->getType('x');
         $actual = $type;
         $expected = \Model::TYPE_UNDEFINED;
-        TestCheck::assertString('A.1', '\Model::getType(); return undefined type if eid is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Model::getType(); return undefined type if eid is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
-        $type = $model->getType($eid);
+        $type = \Flexio\Tests\Util::getModel()->getType($eid);
         $actual = $type;
         $expected = \Model::TYPE_UNDEFINED;
-        TestCheck::assertString('A.2', '\Model::getType(); return undefined type if eid doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Model::getType(); return undefined type if eid doesn\'t exist',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::getType(); tests for when object exists
 
         // BEGIN TEST
-        $actual = TestError::ERROR_NO_EXCEPTION;
+        $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         try
         {
             $info = array(
             );
-            $eid = $model->create(\Model::TYPE_OBJECT, $info);
-            $type = $model->getType($eid);
+            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+            $type = \Flexio\Tests\Util::getModel()->getType($eid);
             $actual = $type;
         }
         catch (\Exception $e)
         {
-            $actual = TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Model::TYPE_OBJECT;
-        TestCheck::assertString('B.1', '\Model::getType(); return correct object type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Model::getType(); return correct object type',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::getStatus(); tests for when object doesn't exist
 
         // BEGIN TEST
-        $status = $model->getStatus('x');
+        $status = \Flexio\Tests\Util::getModel()->getStatus('x');
         $actual = $status;
         $expected = \Model::STATUS_UNDEFINED;
-        TestCheck::assertString('C.1', '\Model::getStatus(); return undefined type if eid is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Model::getStatus(); return undefined type if eid is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
-        $status = $model->getStatus($eid);
+        $status = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_UNDEFINED;
-        TestCheck::assertString('C.2', '\Model::getStatus(); return undefined type if eid doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.2', '\Model::getStatus(); return undefined type if eid doesn\'t exist',  $actual, $expected, $results);
 
 
 
@@ -86,48 +81,48 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $status = $model->getStatus($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $status = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_PENDING;
-        TestCheck::assertString('D.1', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'eid_status' => \Model::STATUS_AVAILABLE
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $status = $model->getStatus($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $status = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_AVAILABLE;
-        TestCheck::assertString('D.2', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.2', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'eid_status' => \Model::STATUS_DELETED
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $status = $model->getStatus($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $status = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = $status;
         $expected = \Model::STATUS_DELETED;
-        TestCheck::assertString('D.3', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.3', '\Model::getStatus(); return correct object type',  $actual, $expected, $results);
 
 
 
         // TEST: \Model::setStatus(); tests for when object doesn't exist
 
         // BEGIN TEST
-        $result = $model->setStatus('x', \Model::STATUS_AVAILABLE);
+        $result = \Flexio\Tests\Util::getModel()->setStatus('x', \Model::STATUS_AVAILABLE);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('E.1', '\Model::setStatus(); return false if eid is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.1', '\Model::setStatus(); return false if eid is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
-        $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
+        $result = \Flexio\Tests\Util::getModel()->setStatus($eid, \Model::STATUS_AVAILABLE);
         $actual = $result;
         $expected = false;
-        TestCheck::assertBoolean('E.2', '\Model::setStatus(); return false if eid doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('E.2', '\Model::setStatus(); return false if eid doesn\'t exist',  $actual, $expected, $results);
 
 
 
@@ -137,34 +132,34 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $result = \Flexio\Tests\Util::getModel()->setStatus($eid, \Model::STATUS_AVAILABLE);
         $actual = $result;
         $expected = true;
-        TestCheck::assertBoolean('F.1', '\Model::setStatus(); return true if status is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.1', '\Model::setStatus(); return true if status is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid_status1 = $model->getStatus($eid);
-        $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
-        $eid_status2 = $model->getStatus($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid_status1 = \Flexio\Tests\Util::getModel()->getStatus($eid);
+        $result = \Flexio\Tests\Util::getModel()->setStatus($eid, \Model::STATUS_AVAILABLE);
+        $eid_status2 = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = ($eid_status1 === \Model::STATUS_PENDING && $eid_status2 === \Model::STATUS_AVAILABLE);
         $expected = true;
-        TestCheck::assertBoolean('F.2', '\Model::setStatus(); make sure status is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.2', '\Model::setStatus(); make sure status is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
             'eid_status' => \Model::STATUS_DELETED
         );
-        $eid = $model->create(\Model::TYPE_OBJECT, $info);
-        $eid_status1 = $model->getStatus($eid);
-        $result = $model->setStatus($eid, \Model::STATUS_AVAILABLE);
-        $eid_status2 = $model->getStatus($eid);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid_status1 = \Flexio\Tests\Util::getModel()->getStatus($eid);
+        $result = \Flexio\Tests\Util::getModel()->setStatus($eid, \Model::STATUS_AVAILABLE);
+        $eid_status2 = \Flexio\Tests\Util::getModel()->getStatus($eid);
         $actual = ($eid_status1 === \Model::STATUS_DELETED && $eid_status2 === \Model::STATUS_AVAILABLE);
         $expected = true;
-        TestCheck::assertBoolean('F.3', '\Model::setStatus(); make sure status is recoverable from \'deleted\'',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('F.3', '\Model::setStatus(); make sure status is recoverable from \'deleted\'',  $actual, $expected, $results);
     }
 }

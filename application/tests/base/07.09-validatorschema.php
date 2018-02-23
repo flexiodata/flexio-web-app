@@ -46,7 +46,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -72,7 +72,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -98,7 +98,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\ValidatorSchema::check(); return false if the maxProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -124,7 +124,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,false,false,false,false,true);
-        TestCheck::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -150,7 +150,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,false,false,false,true);
-        TestCheck::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -176,7 +176,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,false,false,true);
-        TestCheck::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -202,7 +202,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,false,true);
-        TestCheck::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is greater than the maximum allowed',  $actual, $expected, $results);
 
 
 
@@ -232,7 +232,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -258,7 +258,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -284,7 +284,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(false,false,false,false,false,false,false,false);
-        TestCheck::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\ValidatorSchema::check(); return false if the minProperties value is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -310,7 +310,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,true,true,true,true,true,true);
-        TestCheck::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -336,7 +336,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,true,true,true,true,true);
-        TestCheck::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -362,7 +362,7 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,true,true,true,true);
-        TestCheck::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
 
         // BEGIN TEST
         $v1 = null;
@@ -388,6 +388,6 @@ EOD;
         $r8 = \Flexio\Base\ValidatorSchema::check($v8, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8);
         $expected = array(true,true,false,false,false,true,true,true);
-        TestCheck::assertArray('B.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.7', '\Flexio\Base\ValidatorSchema::check(); return false if an array size is less than the minimum allowed',  $actual, $expected, $results);
     }
 }

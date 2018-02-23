@@ -20,11 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
-
         // TEST: multiple registry entry creation
 
         // BEGIN TEST
@@ -35,8 +30,8 @@ class Test
             $object_eid = '';
             $name = \Flexio\Base\Util::generateHandle();
             $value = $i;
-            $model->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
-            if ($model->registry->entryExists($object_eid, $name))
+            \Flexio\Tests\Util::getModel()->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
+            if (\Flexio\Tests\Util::getModel()->registry->entryExists($object_eid, $name))
                 $entries[] = $name;
         }
         $read_successes = 0;
@@ -45,13 +40,13 @@ class Test
         {
             $object_eid = '';
             $name = $i;
-            $read_value = $model->registry->getNumber($object_eid, $name);
+            $read_value = \Flexio\Tests\Util::getModel()->registry->getNumber($object_eid, $name);
             if ($read_value === $entry_idx)
                 $read_successes++;
             $entry_idx++;
         }
         $actual = count($entries) === $entry_count && $read_successes === $entry_count;
         $expected = true;
-        TestCheck::assertBoolean('A.1', 'Registry; number of actual created entries vs. expected created entries', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Registry; number of actual created entries vs. expected created entries', $actual, $expected, $results);
     }
 }

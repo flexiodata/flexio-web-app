@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
         // note: more extensive tests for email are included in tests of \Flexio\Base\Util::isValidEmail()
 
         // TEST: email should be a string
@@ -31,7 +27,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('user@flex.io');
         $expected = true;
-        TestCheck::assertBoolean('A.1', '\Flexio\Services\Email::isValid(); email should be a string', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Services\Email::isValid(); email should be a string', $actual, $expected, $results);
 
 
 
@@ -40,17 +36,17 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('a@b.com');
         $expected = true; // 7 chars
-        TestCheck::assertBoolean('B.1', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxx.com');
         $expected = true; // 254 chars
-        TestCheck::assertBoolean('B.2', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('email@xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxxxxxx.xxxxx.com');
         $expected = false; // 255 chars
-        TestCheck::assertBoolean('B.3', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Services\Email::isValid(); email must not be longer than 254 chars', $actual, $expected, $results);
 
 
 
@@ -59,12 +55,12 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('name.domain.com');
         $expected = false;
-        TestCheck::assertBoolean('C.1', '\Flexio\Services\Email::isValid(); email should contain an @ somewhere', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Services\Email::isValid(); email should contain an @ somewhere', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('name@domain.com');
         $expected = true;
-        TestCheck::assertBoolean('C.2', '\Flexio\Services\Email::isValid(); email should contain an @ somewhere', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Services\Email::isValid(); email should contain an @ somewhere', $actual, $expected, $results);
 
 
 
@@ -73,21 +69,21 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('@domain.com');
         $expected = false;
-        TestCheck::assertBoolean('D.1', '\Flexio\Services\Email::isValid(); email is missing a name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.1', '\Flexio\Services\Email::isValid(); email is missing a name', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('name@');
         $expected = false;
-        TestCheck::assertBoolean('D.2', '\Flexio\Services\Email::isValid(); email is missing a domain', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.2', '\Flexio\Services\Email::isValid(); email is missing a domain', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('name@domain.');
         $expected = false;
-        TestCheck::assertBoolean('D.3', '\Flexio\Services\Email::isValid(); email doesn\'t contain a valid domain;', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.3', '\Flexio\Services\Email::isValid(); email doesn\'t contain a valid domain;', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Services\Email::isValid('name@.com');
         $expected = false;
-        TestCheck::assertBoolean('D.4', '\Flexio\Services\Email::isValid(); email doesn\'t contain a valid domain', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.4', '\Flexio\Services\Email::isValid(); email doesn\'t contain a valid domain', $actual, $expected, $results);
     }
 }

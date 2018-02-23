@@ -25,9 +25,9 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Postgres;
+        $service = new \Flexio\Services\GoogleDrive;
         $actual = get_class($service);
-        $expected = 'Flexio\Services\Postgres';
-        TestCheck::assertString('A.1', 'new \Flexio\Services\Postgres::create(); basic file syntax check',  $actual, $expected, $results);
+        $expected = 'Flexio\Services\GoogleDrive';
+        \Flexio\Tests\Check::assertString('A.1', 'new \GoogleDrive::create(); basic file syntax check',  $actual, $expected, $results);
     }
 }

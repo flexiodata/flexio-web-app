@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // SETUP
-        $model = TestUtil::getModel();
-
-
         // TODO: add tests for merging of structures where there are slight differences
         // in fieldnames cause by capitalization; equality rules used for matching should
         // follow the same rules as used for looking up a field (e.g. if fieldnames are not
@@ -36,7 +32,7 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::union()->get();
         $expected = array();
-        TestCheck::assertArray('A.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
 
 
@@ -45,77 +41,77 @@ class Test
         // BEGIN TEST
         $actual = \Flexio\Base\Structure::union(null)->get();
         $expected = array();
-        TestCheck::assertArray('B.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Structure::union(); if no input is specified, create an empty structure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::union(false);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.2', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.2', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::union(true);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.3', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.3', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::union(1);
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.4', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.4', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::union('a');
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.5', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.5', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
         try
         {
             \Flexio\Base\Structure::union(new \stdClass());
-            $actual = \Flexio\Tests\TestError::ERROR_NO_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
         {
-            $actual = \Flexio\Tests\TestError::ERROR_EXCEPTION;
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = \Flexio\Tests\TestError::ERROR_EXCEPTION;
-        TestCheck::assertString('B.6', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.6', 'Structure::union(); if a non-array input is specified, throw an exception',  $actual, $expected, $results);
 
 
 
@@ -133,7 +129,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('C.1', 'Structure::union(); single column info input should produce a valid structure object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', 'Structure::union(); single column info input should produce a valid structure object',  $actual, $expected, $results);
 
 
 
@@ -157,7 +153,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.1', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -176,7 +172,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.2', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -202,7 +198,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.3', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.3', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -227,7 +223,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -252,7 +248,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -277,7 +273,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -303,7 +299,7 @@ class Test
             {"name":"field1", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.5', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', 'Structure::union(); input structure columns with the same name should be combined into a single column',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -331,7 +327,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.6', 'Structure::union(); merge fields that only differ by case',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', 'Structure::union(); merge fields that only differ by case',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -359,7 +355,7 @@ class Test
             {"name":"field2", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('D.7', 'Structure::union(); merge fields that only differ by leading/trailing spaces',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.7', 'Structure::union(); merge fields that only differ by leading/trailing spaces',  $actual, $expected, $results);
 
 
 
@@ -393,7 +389,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.1', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -423,7 +419,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.2', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.2', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -453,7 +449,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.3', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.3', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -484,7 +480,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.4', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.4', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -515,7 +511,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.5', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.5', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -546,7 +542,7 @@ class Test
             {"name":"field3", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.6', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.6', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -582,7 +578,7 @@ class Test
             {"name":"field5", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.7', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.7', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -620,7 +616,7 @@ class Test
             {"name":"field5", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('E.8', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.8', 'Structure::union(); insert columns in output starting with most common structures',  $actual, $expected, $results);
 
 
 
@@ -667,7 +663,7 @@ class Test
             {"name":"field9", "type":"text"}
         ]
         ';
-        TestCheck::assertInArray('F.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -710,7 +706,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -753,7 +749,7 @@ class Test
             {"name":"field9", "type":"widecharacter"}
         ]
         ';
-        TestCheck::assertInArray('F.3', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.3', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -796,7 +792,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.4', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.4', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -839,7 +835,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.5', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.5', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -882,7 +878,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.6', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.6', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -925,7 +921,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.7', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.7', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -968,7 +964,7 @@ class Test
             {"name":"field9", "type":"character"}
         ]
         ';
-        TestCheck::assertInArray('F.8', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.8', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -1012,7 +1008,7 @@ class Test
             {"name":"field9", "type":"boolean"}
         ]
         ';
-        TestCheck::assertInArray('F.9', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('F.9', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
 
 
@@ -1038,7 +1034,7 @@ class Test
             {"name":"field2", "type":"character", "width": 40}
         ]
         ';
-        TestCheck::assertInArray('G.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -1060,7 +1056,7 @@ class Test
             {"name":"field2", "type":"widecharacter", "width": 40}
         ]
         ';
-        TestCheck::assertInArray('G.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.2', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
         // BEGIN TEST
         $column_info1 = json_decode('
@@ -1082,7 +1078,7 @@ class Test
             {"name":"field2", "type":"numeric", "width": 12}
         ]
         ';
-        TestCheck::assertInArray('G.3', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('G.3', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
 
 
 
@@ -1108,6 +1104,6 @@ class Test
             {"name":"field2", "type":"numeric", "width": 10, "scale": 4}
         ]
         ';
-        TestCheck::assertInArray('H.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('H.1', 'Structure::union(); use compatible type when fields have the same name and different types',  $actual, $expected, $results);
     }
 }
