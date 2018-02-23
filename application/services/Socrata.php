@@ -43,6 +43,11 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
