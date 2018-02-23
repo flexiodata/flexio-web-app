@@ -80,21 +80,39 @@ class Box implements \Flexio\IFace\IFileSystem
     {
         if (!$this->authenticated())
             return false;
-
-        $fileid = $this->getFileId($path);
-        if ($fileid === null)
+ 
+        $info = $this->internalGetFileInfo($path);
+        if (!isset($info['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        $fileid = $info['id'];
 
-        $ch = curl_init();
+        if (($info['content_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
+        {
+            $type = 'DIR';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/folders/" . $fileid . "?fields=modified_at,name");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $info = @json_decode($result, true);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
 
-        curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid . "?fields=modified_at,name,size,type");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $info = @json_decode($result, true);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        }
+         else
+        {
+            $type = 'FILE';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid . "?fields=modified_at,name,size");
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $info = @json_decode($result, true);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+        }
 
         if (($info['code'] ?? '') === 'not_found')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
@@ -106,7 +124,7 @@ class Box implements \Flexio\IFace\IFileSystem
             'name' => $info['name'],
             'size' => $info['size'] ?? null,
             'modified' => $info['modified_at'] ?? '',
-            'type' => (($info['type']??'') == 'folder' ? 'DIR' : 'FILE')
+            'type' => $type
         ];
     }
 
