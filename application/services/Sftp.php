@@ -141,10 +141,13 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($list_path == '')
             $list_path = '/';
 
-        // TODO: handle subdirectories
         $files = $this->connection->rawlist($this->getFullPath($path));
         if (!is_array($files))
-            return array();
+        {
+            $arr = $this->getFileInfo($path);
+            $arr['path'] = $path;
+            return [ $arr ];
+        }
 
         $result = array();
         foreach ($files as $file => $info)
