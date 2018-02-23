@@ -71,7 +71,7 @@
               class="hint--bottom-left hint--large cursor-default"
               aria-label="Connections can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we recommend prefixing your alias with your username (e.g., username-foo)."
             >
-              <i class="material-icons blue md-18">info</i>
+              <i class="material-icons blue md-24">info</i>
             </div>
           </div>
           <ui-textbox
@@ -84,13 +84,14 @@
           ></ui-textbox>
         </form>
 
-        <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Authentication" open disable-ripple>
+        <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
+        <div class="pa3 ba bt-0 b--black-05">
           <connection-configure-panel
             :connection="connection"
             :mode="mode"
             @change="updateConnection"
           ></connection-configure-panel>
-        </ui-collapsible>
+        </div>
       </div>
     </div>
 
