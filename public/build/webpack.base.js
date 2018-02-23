@@ -17,6 +17,7 @@ module.exports = {
       'chart.js',
       'vue-chartjs',
       'keen-ui',
+      'element-ui',
       'axios',
       'autosize',
       'filesize',
