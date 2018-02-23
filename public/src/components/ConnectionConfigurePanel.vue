@@ -28,6 +28,7 @@
       <div class="flex flex-column w-50-ns center mt1 mb3">
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           label="AWS Access Key"
           floating-label
           v-model.trim="info.aws_key"
@@ -35,6 +36,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           label="AWS Secret Key"
           floating-label
           v-model.trim="info.aws_secret"
@@ -42,6 +44,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           label="Bucket"
           floating-label
           v-model.trim="info.bucket"
@@ -57,6 +60,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           label="Token"
           floating-label
           v-model.trim="info.token"
@@ -64,6 +68,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           floating-label
           :label="host_label"
           v-model.trim="info.host"
@@ -71,6 +76,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           label="Port"
           floating-label
           v-model.trim.number="info.port"
@@ -78,6 +84,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           floating-label
           :label="username_label"
           v-model.trim="info.username"
@@ -85,6 +92,7 @@
         />
         <ui-textbox
           type="password"
+          spellcheck="false"
           autocomplete="off"
           :label="password_label"
           floating-label
@@ -93,6 +101,7 @@
         />
         <ui-textbox
           autocomplete="off"
+          spellcheck="false"
           :label="database_label"
           floating-label
           v-model.trim="info.database"

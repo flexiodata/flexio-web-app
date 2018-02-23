@@ -25,13 +25,6 @@
             @click="createPendingConnection"
             v-if="false"
           >New Connection</el-button>
-          <el-button
-            type="primary"
-            class="ttu"
-            :disabled="is_new"
-            @click="openAddConnectionModal"
-            v-if="false"
-          >New Storage</el-button>
         </div>
       </div>
     </div>
@@ -68,14 +61,6 @@
         />
       </div>
 
-      <!-- connection props modal (used for both add and edit) -->
-      <storage-props-modal
-        ref="modal-connection-props"
-        @submit="tryUpdateConnection"
-        @hide="show_connection_props_modal = false"
-        v-if="show_connection_props_modal"
-      ></storage-props-modal>
-
       <connection-dialog
         custom-class="no-header no-footer"
         width="51rem"
@@ -103,7 +88,6 @@
   import Spinner from 'vue-simple-spinner'
   import AbstractList from './AbstractList.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
-  import StoragePropsModal from './StoragePropsModal.vue'
   import ConnectionDialog from './ConnectionDialog.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
@@ -113,7 +97,6 @@
       Spinner,
       AbstractList,
       ConnectionEditPanel,
-      StoragePropsModal,
       ConnectionDialog,
       EmptyItem,
       Btn
@@ -153,11 +136,6 @@
       ...mapGetters([
         'getAllConnections'
       ]),
-      openAddConnectionModal() {
-        this.show_connection_props_modal = true
-        this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
-        analytics.track('Clicked New Connection Button')
-      },
       openNewConnectionModal() {
         this.show_new_connection_modal = true
       },

@@ -60,6 +60,7 @@
             <div class="flex-fill">
               <ui-textbox
                 autocomplete="off"
+                spellcheck="false"
                 label="Alias"
                 help=" "
                 :placeholder="alias_placeholder"
@@ -225,7 +226,6 @@
       return {
         ss_errors: {},
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
-        original_connection: _.assign({}, defaultAttrs(), this.connection),
         prefix_services: []//[connections.CONNECTION_INFO_CUSTOMAPI]
       }
     },
@@ -253,7 +253,7 @@
           return this.title
 
         return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.original_connection, 'name') + '" Connection'
+          ? 'Edit "' + _.get(this.connection, 'name') + '" Connection'
           : 'New Connection'
       },
       submit_label() {
@@ -266,7 +266,7 @@
         return _.kebabCase('username-my-alias')
       },
       ename_error() {
-        if (_.get(this.edit_connection, 'ename') === _.get(this.original_connection, 'ename'))
+        if (this.mode == 'edit' && _.get(this.edit_connection, 'ename') === _.get(this.connection, 'ename'))
           return ''
 
         return _.get(this.ss_errors, 'ename.message', '')
@@ -307,7 +307,6 @@
       reset(attrs) {
         this.ss_errors = {}
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
-        this.original_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
         var attrs = _.assign({}, this.edit_connection, {
