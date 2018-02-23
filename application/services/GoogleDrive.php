@@ -102,10 +102,42 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        $default_result = array('id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
+        if (!$this->authenticated())
+            return false;
 
+        $fileid = $this->getFileId($path);
+        if ($fileid === null)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/" . $fileid . "?fields=id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $info = @json_decode($result, true);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (!isset($info['name']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+
+        return [
+            'name' => $info['name'],
+            'size' => $info['size'] ?? null,
+            'modified' => $info['modifiedTime'] ?? '',
+            'type' => (($info['mimeType']??'') == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE')
+        ];
+    }
+
+    private function internalGetFileInfo(string $path)
+    {
         if (is_null($path) || $path == '' || $path == '/')
-            return $default_result;
+        {
+            return [ 'id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER ];
+        }
+
 
         $path = trim($path, '/');
         while (false !== strpos($path,'//'))
@@ -122,7 +154,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         {
             $p = str_replace("'", "\\'", $p);
             $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
+            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
 
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
@@ -130,10 +162,10 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
-
             $result = @json_decode($result,true);
+
             if (!isset($result['files'][0]['id']))
-                return [];
+                return null;
             $current_id = $result['files'][0]['id'];
             $current_content_type = $result['files'][0]['mimeType'];
         }
@@ -208,7 +240,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return false;
 
-        $fileinfo = $this->getFileInfo($path);
+        $fileinfo = $this->internalGetFileInfo($path);
         if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
             return false; // bad filename / fileid
         $fileid = $fileinfo['id'];
@@ -438,7 +470,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
     public function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
-        $info = $this->getFileInfo($path);
+        $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             return null;
         return $info['id'];
