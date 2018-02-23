@@ -46,7 +46,7 @@ class Box implements \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return array();
 
-        $fileinfo = $this->getFileInfo($path);
+        $fileinfo = $this->internalGetFileInfo($path);
         if (!isset($fileinfo['id']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -75,12 +75,48 @@ class Box implements \Flexio\IFace\IFileSystem
         return $files;
     }
 
+    
     public function getFileInfo(string $path) : array
     {
-        $default_result = array('id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER);
+        if (!$this->authenticated())
+            return false;
 
+        $fileid = $this->getFileId($path);
+        if ($fileid === null)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.box.com/2.0/files/" . $fileid . "?fields=modified_at,name,size,type");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        $info = @json_decode($result, true);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if (($info['code'] ?? '') === 'not_found')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        if (!isset($info['name']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+
+        return [
+            'name' => $info['name'],
+            'size' => $info['size'] ?? null,
+            'modified' => $info['modified_at'] ?? '',
+            'type' => (($info['type']??'') == 'folder' ? 'DIR' : 'FILE')
+        ];
+    }
+
+
+    public function internalGetFileInfo(string $path)
+    {
         if (is_null($path) || $path == '' || $path == '/')
-            return $default_result;
+        {
+            return [ 'id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER ];
+        }
 
         $path = trim($path, '/');
         while (false !== strpos($path,'//'))
@@ -113,7 +149,7 @@ class Box implements \Flexio\IFace\IFileSystem
             }
 
             if (!$found)
-                return [];
+                return null;
         }
 
 
@@ -410,7 +446,7 @@ class Box implements \Flexio\IFace\IFileSystem
 
     private function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
-        $info = $this->getFileInfo($path);
+        $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
             return null;
         return $info['id'];
