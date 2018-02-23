@@ -7,13 +7,13 @@
           <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
         </div>
         <div class="mt3 mb2 tc">
-          <btn btn-lg btn-outline class="b--black-20 bg-white" @click="onDisconnectClick">Disconnect from your {{service_name}} account</btn>
+          <el-button size="large" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
         </div>
       </div>
       <div v-else>
         <div class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
         <div class="mt3 mb2 tc">
-          <btn btn-lg btn-primary @click="onConnectClick">Authenticate your {{service_name}} account</btn>
+          <el-button size="large" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
         </div>
       </div>
     </div>
@@ -98,8 +98,8 @@
           v-model.trim="info.database"
           v-if="showInput('database') && !is_sftp && !is_elasticsearch"
         />
-        <div class="mt3 css-btn-test">
-          <btn btn-lg btn-primary class="w-100 ttu b" @click="onTestClick">Test connection</btn>
+        <div class="mt3">
+          <el-button type="primary" class="ttu" @click="onTestClick">Test connection</el-button>
         </div>
       </div>
     </div>
