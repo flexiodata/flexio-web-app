@@ -61,16 +61,13 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         {
             $urlparts = parse_url($path);
 
-           // require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
             $s3 = new \Aws\S3\S3Client([
                 'version'     => 'latest',
                 'region'      => $this->region,
-                'endpoint' => $urlparts['host'],
+                'endpoint'    => $urlparts['host'],
                 'credentials' => false
             ]);
 
-            var_dump($s3);
-            die();
             return $s3;
         }
     }
@@ -86,6 +83,9 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function list(string $path = '', array $options = []) : array
     {
+        $this->getFileInfo('tests20180130223101/basic-1.bmp');
+        die();
+
         $s3 = $this->getS3($path);
 
         if (!$this->isOk())
@@ -102,8 +102,6 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         // add a trailing slash if necessary
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
-
-
 
         $arr = array();
         $maxkey = '';
@@ -206,7 +204,33 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = $this->getS3KeyFromPath($path);
+        $path = rtrim($path, '/');
+
+        try
+        {
+            $arr = \Flexio\Base\File::splitBasePathAndName($path);
+            $base = $arr['base'];
+            $name = $arr['name'];
+    
+            $result = $this->s3->headObject([ 'Bucket' => $this->bucket, 
+                                              'Key' =>  $path  ]);
+
+            $ret = [
+                'name' => $name,
+                'path' => $path,
+                'size' => $result['ContentLength'] ?? null,
+                'modified' => (string)$result['LastModified'],
+                'type' => 'FILE'
+            ];
+
+            return $ret;
+        }
+        catch (\Exception $e)
+        {
+        }
+
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
     }
 
     public function exists(string $path) : bool
@@ -434,10 +458,6 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
         if (strlen($this->region) == 0)
             $this->region = 'us-east-1';
-
-        //require_once dirname(dirname(__DIR__)) . '/library/aws/aws.phar';
-        //setAutoloaderIgnoreErrors(true);
-
 
         if ($accesskey == '' && $secretkey == '')
         {
