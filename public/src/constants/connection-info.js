@@ -24,6 +24,17 @@ const BOX = {
   is_storage: true
 }
 
+const CUSTOMAPI = {
+  service_name: 'Custom API',
+  service_description: '',
+  connection_type: types.CONNECTION_TYPE_HTTP,
+  icon: require('../assets/icon/icon-link-128.png'),
+  is_service: false,
+  is_input: true,
+  is_output: false,
+  is_storage: false
+}
+
 const DOWNLOAD = {
   service_name: 'Download',
   service_description: 'Download files to your computer',
@@ -254,6 +265,7 @@ const UPLOAD = {
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
+export const CONNECTION_INFO_CUSTOMAPI     = CUSTOMAPI
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
 //export const CONNECTION_INFO_FIREBASE      = FIREBASE

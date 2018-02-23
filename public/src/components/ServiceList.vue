@@ -38,6 +38,14 @@
       'filter-items': {
         type: String,
         default: '' // '', 'storage', 'services' or by connection type
+      },
+      'prefix-items': {
+        type: Array,
+        default: () => { return [] }
+      },
+      'suffix-items': {
+        type: Array,
+        default: () => { return [] }
       }
     },
     components: {
@@ -59,7 +67,7 @@
            else if (_.size(this.filterItems) > 0)
           services = _.filter(services, { connection_type: this.filterItems })
 
-        return services
+        return [].concat(this.prefixItems).concat(services).concat(this.suffixItems)
       }
     },
     methods: {

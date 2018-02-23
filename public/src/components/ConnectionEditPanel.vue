@@ -34,6 +34,7 @@
     <div>
       <service-list v-show="!has_connection"
         filter-items="storage"
+        :prefix-items="prefix_services"
         @item-activate="createPendingConnection"
       ></service-list>
       <div v-if="has_connection">
@@ -187,7 +188,8 @@
         mode: 'add',
         ss_errors: {},
         connection: _.assign({}, defaultAttrs()),
-        original_connection: _.assign({}, defaultAttrs())
+        original_connection: _.assign({}, defaultAttrs()),
+        prefix_services: [connections.CONNECTION_INFO_CUSTOMAPI]
       }
     },
     computed: {
