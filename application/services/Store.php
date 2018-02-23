@@ -70,7 +70,23 @@ class Store implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = $path['path'] ?? (is_string($path) ? $path : '');
+        if ($path == '')
+            $path = '/';
+        
+        $stream = $this->getStreamFromPath($path);
+        if (!$stream)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
+
+        $entry = $stream->get();
+
+        return array('id' => $entry['id'] ?? null,
+                     'name' => $entry['name'],
+                     'size' => $entry['size'] ?? '',
+                     'modified' => $entry['updated'] ?? '',
+                     'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE'));
     }
     
     public function exists(string $path) : bool
