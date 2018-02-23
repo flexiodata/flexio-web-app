@@ -226,7 +226,7 @@
         ss_errors: {},
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
         original_connection: _.assign({}, defaultAttrs(), this.connection),
-        prefix_services: [connections.CONNECTION_INFO_CUSTOMAPI]
+        prefix_services: []//[connections.CONNECTION_INFO_CUSTOMAPI]
       }
     },
     computed: {

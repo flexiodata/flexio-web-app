@@ -30,6 +30,7 @@
             class="ttu"
             :disabled="is_new"
             @click="openAddConnectionModal"
+            v-if="false"
           >New Storage</el-button>
         </div>
       </div>
