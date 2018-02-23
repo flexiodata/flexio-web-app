@@ -54,11 +54,15 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return array();
 
         $fileinfo = $this->internalGetFileInfo($path);
-        if (!isset($fileinfo['id']))
+        if (!isset($fileinfo['id']) || !isset($fileinfo['content_type']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        if (!isset($fileinfo['content_type']) || $fileinfo['content_type'] != \Flexio\Base\ContentType::FLEXIO_FOLDER)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);  // not a folder
+        if ($fileinfo['content_type'] != \Flexio\Base\ContentType::FLEXIO_FOLDER)
+        {
+            $arr = $this->getFileInfo($path);
+            $arr['path'] = $path;
+            return [ $arr ];
+        }
 
         $entries = $this->getFolderItems($fileinfo['id'], 'name,type,size,modified_at');
 
@@ -72,11 +76,11 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $fullpath .= $entry['name'];
 
             $files[] = array('id'=> $entry['id'] ?? null,
-                                'name' => $entry['name'],
-                                'path' => $fullpath,
-                                'size' => $entry['size'] ?? '',
-                                'modified' => $entry['modified_at'] ?? '',
-                                'type' => ($entry['type'] == 'folder' ? 'DIR' : 'FILE'));
+                             'name' => $entry['name'],
+                             'path' => $fullpath,
+                             'size' => $entry['size'] ?? '',
+                             'modified' => $entry['modified_at'] ?? '',
+                             'type' => ($entry['type'] == 'folder' ? 'DIR' : 'FILE'));
         }
 
         return $files;
