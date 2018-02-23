@@ -52,13 +52,16 @@
     ></pipe-deploy-modal>
 
     <!-- storage props modal -->
-    <storage-props-modal
-      title="Connect to Storage"
-      ref="modal-storage-props"
+    <connection-dialog
+      custom-class="no-header no-footer"
+      width="51rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_new_connection_dialog"
+      :show-close="false"
       @submit="tryUpdateConnection"
-      @hide="show_storage_props_modal = false"
-      v-if="show_storage_props_modal"
-    ></storage-props-modal>
+      v-if="show_new_connection_dialog"
+    />
   </div>
 </template>
 
@@ -66,7 +69,7 @@
   import marked from 'marked'
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import StoragePropsModal from './StoragePropsModal.vue'
+  import ConnectionDialog from './ConnectionDialog.vue'
   import PipePropsModal from './PipePropsModal.vue'
   import PipeDeployModal from './PipeDeployModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
@@ -91,7 +94,7 @@
       }
     },
     components: {
-      StoragePropsModal,
+      ConnectionDialog,
       PipePropsModal,
       PipeDeployModal,
       OnboardingCodeEditor
@@ -104,7 +107,7 @@
     data() {
       return {
         active_step: 0,
-        show_storage_props_modal: false,
+        show_new_connection_dialog: false,
         show_pipe_props_modal: false,
         show_pipe_deploy_modal: false,
         connection_alias: 'home',
@@ -178,15 +181,15 @@ If you have any questions, please send us a note using the chat button at the bo
             this.goStep(idx + 1)
             return
           case 'storage':
-            this.showStoragePropsModal()
+            this.showNewConnectionDialog()
             return
           case 'save':
             this.showPipePropsModal()
             return
         }
       },
-      showStoragePropsModal() {
-        this.show_storage_props_modal = true
+      showNewConnectionDialog() {
+        this.show_new_connection_dialog = true
         this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
         analytics.track('Clicked `Connect to Storage` button in Onboarding')
       },
