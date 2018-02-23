@@ -76,6 +76,7 @@
       <connection-dialog
         custom-class="no-header no-footer"
         width="51rem"
+        top="8vh"
         :modal-append-to-body="false"
         :visible.sync="show_new_connection_modal"
         :show-close="false"
