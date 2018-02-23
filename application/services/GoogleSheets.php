@@ -16,9 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleSheets implements \Flexio\IFace\IFileSystem
+class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
     private $access_token = '';
     private $refresh_token = '';
     private $updated = '';
@@ -32,6 +31,14 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
         return self::initialize($params);
     }
 
+    public function authenticated() : bool
+    {
+        if (strlen($this->access_token) > 0)
+            return true;
+
+        return false;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -40,7 +47,7 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         $spreadsheets = $this->getSpreadsheets();
@@ -173,13 +180,13 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -394,22 +401,9 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                  'expires' => $this->expires ];
     }
 
-    private function authenticated() : bool
-    {
-        if (strlen($this->access_token) > 0)
-            return true;
-
-        return false;
-    }
-
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private static function initialize(array $params)
@@ -450,7 +444,6 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
-                $object->is_ok = true;
                 return $object;
             }
              else
@@ -482,7 +475,6 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
-                $object->is_ok = true;
                 $object->expires = $token->getEndOfLife();
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $token->getRefreshToken();
@@ -509,7 +501,6 @@ class GoogleSheets implements \Flexio\IFace\IFileSystem
             $object->access_token = $token->getAccessToken();
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
-            $object->is_ok = true;
             if (is_null($object->refresh_token)) $object->refresh_token = '';
 
             return $object;

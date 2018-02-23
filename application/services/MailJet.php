@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class MailJet implements \Flexio\IFace\IFileSystem
+class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $username = '';
     private $password = '';
     private $pagesize = 1; // rows to request per request; 1000 is maximum allowed per request
@@ -44,6 +44,11 @@ class MailJet implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -52,10 +57,10 @@ class MailJet implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         $objects = array();
@@ -79,7 +84,7 @@ class MailJet implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -98,13 +103,13 @@ class MailJet implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -115,7 +120,7 @@ class MailJet implements \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
 
         // TODO: only read the buffer amount
@@ -155,7 +160,7 @@ class MailJet implements \Flexio\IFace\IFileSystem
 
     public function describeTable(string $path)
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
 
         $path = self::cleanPath($path);
@@ -314,13 +319,8 @@ class MailJet implements \Flexio\IFace\IFileSystem
 
         $this->username = $username;
         $this->password = $password;
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private function lookupDefinition(string $path)

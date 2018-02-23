@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Store implements \Flexio\IFace\IFileSystem
+class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     public static function create(array $params = null) : \Flexio\Services\Store
     {
@@ -27,7 +27,7 @@ class Store implements \Flexio\IFace\IFileSystem
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
-    
+
     public function getFlags() : int
     {
         return \Flexio\IFace\IFileSystem::FLAG_RANDOM_ACCESS;
@@ -35,13 +35,13 @@ class Store implements \Flexio\IFace\IFileSystem
 
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         $path = $path['path'] ?? (is_string($path) ? $path : '');
         if ($path == '')
             $path = '/';
-        
+
         $folder_stream = $this->getStreamFromPath($path);
         if (!$folder_stream)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
@@ -68,12 +68,17 @@ class Store implements \Flexio\IFace\IFileSystem
         return $files;
     }
 
+    public function authenticated() : bool
+    {
+        return true;
+    }
+
     public function getFileInfo(string $path) : array
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
         if ($path == '')
             $path = '/';
-        
+
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
         {
@@ -88,7 +93,7 @@ class Store implements \Flexio\IFace\IFileSystem
                      'modified' => $entry['updated'] ?? '',
                      'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE'));
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -135,7 +140,7 @@ class Store implements \Flexio\IFace\IFileSystem
             {
                 $stream_properties['mime_type'] = $properties['mime_type'];
             }
-            
+
             if (isset($properties['structure']) && count($properties['structure']) > 0)
             {
                 $stream_properties['structure'] = $properties['structure'];
@@ -177,7 +182,7 @@ class Store implements \Flexio\IFace\IFileSystem
         $parent_stream = $this->getStreamFromPath($path, true /* create directory structure if it doesn't already exist */);
         return $parent_stream ? true : false;
     }
-    
+
     public function unlink(string $path) : bool
     {
         $stream = $this->getStreamFromPath($path);
@@ -188,7 +193,7 @@ class Store implements \Flexio\IFace\IFileSystem
 
         return false;
     }
-    
+
     public function open($path) :  \Flexio\Iface\IStream
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
@@ -256,7 +261,7 @@ class Store implements \Flexio\IFace\IFileSystem
             $streamwriter->write($buf);
     }
 
-    
+
 
 
     public function insert(array $params, array $rows)  // $rows is an array of rows
@@ -293,12 +298,6 @@ class Store implements \Flexio\IFace\IFileSystem
     {
         return true;
     }
-
-    private function isOk() : bool
-    {
-        return true;
-    }
-
 
     private function getStreamFromPath(string $path, bool $create_dir_structure = false) // : ?\Flexio\Object\Stream
     {
