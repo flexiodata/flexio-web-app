@@ -1,38 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-row items-center mb4" v-if="showHeader">
-      <service-icon class="br1 square-3 mr3" :url="curl" :type="ctype" />
-      <div class="f3 fw6 lh-title">
-        <span v-if="isNew">New Connection</span>
-        <span v-else>{{connection.name}}</span>
-      </div>
-      <div class="code light-silver ml2 ml3-ns" v-if="false && identifier.length > 0">({{identifier}})</div>
-    </div>
-
     <div>
-      <div class="flex flex-column flex-row-ns">
-        <ui-textbox
-          class="flex-fill mr4-ns"
-          autocomplete="off"
-          placeholder="Name"
-          label="Name"
-          floating-label
-          help=" "
-          required
-          v-model="name"
-          :autofocus="true"
-        />
-        <ui-textbox
-          class="flex-fill"
-          autocomplete="off"
-          placeholder="Alias"
-          label="Alias"
-          floating-label
-          help=" "
-          v-model="ename"
-        />
-      </div>
-
       <div class="flex flex-column flex-row-ns">
         <value-select
           class="w-25-ns min-w4-ns"
@@ -55,7 +23,7 @@
     </div>
 
     <div class="mv3">
-      <ui-tabs v-if="is_inited">
+      <ui-tabs>
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <value-select
@@ -164,14 +132,6 @@
         </ui-tab>
       </ui-tabs>
     </div>
-
-    <div class="flex flex-row justify-end mv4 pa3 bt b--black-05 bg-near-white" v-if="showFooter">
-      <el-button class="ttu" type="plain" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</el-button>
-      <el-button class="ttu" type="primary" :disabled="!isNew && !is_changed" @click="onSave">
-        <span v-if="isNew">Create Connection</span>
-        <span v-else>Save Changes</span>
-      </el-button>
-    </div>
   </div>
 </template>
 
@@ -215,18 +175,6 @@
       'connection': {
         type: Object,
         required: true
-      },
-      'is-new': {
-        type: Boolean,
-        default: false
-      },
-      'show-header': {
-        type: Boolean,
-        default: true
-      },
-      'show-footer': {
-        type: Boolean,
-        default: true
       }
     },
     components: {
@@ -235,14 +183,15 @@
       ValueSelect,
       KeypairItem
     },
+    watch: {
+      '$data': function(val, old_val) {
+        this.$emit('update:connection', this.getConnection())
+      }
+    },
     data() {
       return {
         method_options,
         auth_options,
-        name: 'My Connection',
-        ename: '',
-        description: '',
-        connection_type: CONNECTION_TYPE_HTTP,
         method: '',
         url: '',
         auth: 'none',
@@ -253,40 +202,16 @@
         refresh_token: '',
         expires: '',
         headers: [],
-        data: [],
-        is_inited: false
-      }
-    },
-    computed: {
-      eid() {
-        return _.get(this.connection, 'eid', '')
-      },
-      ctype() {
-        return _.get(this.connection, 'connection_type', '')
-      },
-      curl() {
-        return _.get(this.connection, 'connection_info.url', '')
-      },
-      identifier() {
-        var cid = _.get(this.connection, 'ename', '')
-        return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
-      },
-      is_changed() {
-        return true
+        data: []
       }
     },
     mounted() {
       this.$nextTick(() => {
         this.reset()
-        this.is_inited = true
       })
     },
     methods: {
       reset() {
-        this.name = _.get(this.connection, 'name', '')
-        this.ename = _.get(this.connection, 'ename', '')
-        this.description = _.get(this.connection, 'description', '')
-
         _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
           if (_.isString(val))
             this[key] = val
@@ -304,8 +229,6 @@
         this.headers = [].concat(this.headers).concat(newKeypairItem())
       },
       getConnection() {
-        var eid = this.eid
-        var connection = _.pick(this.$data, ['name', 'ename', 'description', 'connection_type'])
         var connection_info = _.pick(this.$data, ['method', 'url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
 
         var data = _.keyBy(this.$data.data, 'key')
@@ -319,7 +242,7 @@
         connection_info.data = data
         connection_info.headers = headers
 
-        return _.assign({}, connection, { eid, connection_info })
+        return _.assign({}, this.connection, { connection_info })
       },
       onFormDataItemChange(item, index) {
         if (index == _.size(this.data) - 1)
@@ -348,13 +271,6 @@
         _.pullAt(tmp, [index])
         this.headers = []
         this.$nextTick(() => { this.headers = [].concat(tmp) })
-      },
-      onCancel() {
-        this.reset()
-        this.$emit('cancel', this.getConnection(), this.connection)
-      },
-      onSave() {
-        this.$emit('submit', this.getConnection())
       }
     }
   }

@@ -38,7 +38,7 @@
         @item-activate="createPendingConnection"
       ></service-list>
       <div v-if="has_connection">
-        <form novalidate @submit.prevent="submit" v-if="!is_http">
+        <form novalidate @submit.prevent="submit">
           <div class="flex flex-row items-center">
             <div class="flex-fill mr4">
               <ui-textbox
@@ -50,10 +50,10 @@
                 v-deferred-focus
                 :error="errors.first('name')"
                 :invalid="errors.has('name')"
-                v-model="connection.name"
+                v-model="edit_connection.name"
                 v-validate
                 data-vv-name="name"
-                data-vv-value-path="connection.name"
+                data-vv-value-path="edit_connection.name"
                 data-vv-rules="required"
               ></ui-textbox>
             </div>
@@ -65,7 +65,7 @@
                 :placeholder="alias_placeholder"
                 :error="ename_error"
                 :invalid="ename_error.length > 0"
-                v-model="connection.ename"
+                v-model="edit_connection.ename"
               ></ui-textbox>
             </div>
             <div
@@ -81,22 +81,20 @@
             help=" "
             :multi-line="true"
             :rows="1"
-            v-model="connection.description"
+            v-model="edit_connection.description"
           ></ui-textbox>
         </form>
 
-        <connection-info-configure-panel
-          :connection="connection"
-          :show-header="false"
-          :show-footer="false"
-          v-if="is_http"
-        />
-
+        <div v-if="is_http">
+          <connection-info-configure-panel
+            :connection.sync="edit_connection"
+          />
+        </div>
         <div v-else>
           <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
           <div class="pa3 ba bt-0 b--black-05">
             <connection-configure-panel
-              :connection="connection"
+              :connection="edit_connection"
               :mode="mode"
               @change="updateConnection"
             ></connection-configure-panel>
@@ -106,8 +104,8 @@
     </div>
 
     <div class="pt4 w-100 flex flex-row justify-end" v-show="has_connection">
-      <el-button class="ttu" type="plain" @click="close()">Cancel</el-button>
-      <el-button class="ttu" type="primary" @click="submit()">{{submit_label}}</el-button>
+      <el-button class="ttu" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu" type="primary" @click="submit">{{submit_label}}</el-button>
     </div>
   </div>
 </template>
@@ -156,9 +154,22 @@
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
       name: '',
+      ename: '',
       description: '',
       connection_type: '',
-      connection_info: {},
+      connection_info: {
+        method: '',
+        url: '',
+        auth: 'none',
+        username: '',
+        password: '',
+        token: '',
+        access_token: '',
+        refresh_token: '',
+        expires: '',
+        headers: [],
+        data: []
+      },
       rights: defaultRights()
     }
   }
@@ -176,6 +187,14 @@
       'show-steps': {
         type: Boolean,
         default: true
+      },
+      'connection': {
+        type: Object,
+        default: () => { return {} }
+      },
+      'mode': {
+        type: String,
+        default: 'add'
       }
     },
     mixins: [Validation],
@@ -188,7 +207,11 @@
       RightsList
     },
     watch: {
-      'connection.ename': function(val, old_val) {
+      'connection': function(val, old_val) {
+        this.edit_connection = _.cloneDeep(val)
+        this.updateConnection(val)
+      },
+      'edit_connection.ename': function(val, old_val) {
         var ename = val
 
         this.validateEname(val, (response, errors) => {
@@ -200,19 +223,18 @@
     },
     data() {
       return {
-        mode: 'add',
         ss_errors: {},
-        connection: _.assign({}, defaultAttrs()),
-        original_connection: _.assign({}, defaultAttrs()),
+        edit_connection: _.assign({}, defaultAttrs(), this.connection),
+        original_connection: _.assign({}, defaultAttrs(), this.connection),
         prefix_services: [connections.CONNECTION_INFO_CUSTOMAPI]
       }
     },
     computed: {
       eid() {
-        return _.get(this, 'connection.eid', '')
+        return _.get(this, 'edit_connection.eid', '')
       },
       ctype() {
-        return _.get(this, 'connection.connection_type', '')
+        return _.get(this, 'edit_connection.connection_type', '')
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
@@ -244,7 +266,7 @@
         return _.kebabCase('username-my-alias')
       },
       ename_error() {
-        if (_.get(this.connection, 'ename') === _.get(this.original_connection, 'ename'))
+        if (_.get(this.edit_connection, 'ename') === _.get(this.original_connection, 'ename'))
           return ''
 
         return _.get(this.ss_errors, 'ename.message', '')
@@ -259,7 +281,6 @@
       },
       open(attrs, mode) {
         this.reset(attrs)
-        this.mode = _.defaultTo(mode, 'add')
         this.$emit('open')
       },
       close() {
@@ -271,7 +292,7 @@
           if (!success)
             return
 
-          var ename = _.get(this.connection, 'ename', '')
+          var ename = _.get(this.edit_connection, 'ename', '')
 
           this.validateEname(ename, (response, errors) => {
             this.ss_errors = ename.length > 0 && _.size(errors) > 0
@@ -279,17 +300,17 @@
               : _.assign({})
 
             if (this.ename_error.length == 0)
-              this.$nextTick(() => { this.$emit('submit', this.connection) })
+              this.$nextTick(() => { this.$emit('submit', this.edit_connection) })
           })
         })
       },
       reset(attrs) {
         this.ss_errors = {}
-        this.connection = _.assign({}, defaultAttrs(), attrs)
+        this.edit_connection = _.assign({}, defaultAttrs(), attrs)
         this.original_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
-        var attrs = _.assign({}, this.connection, {
+        var attrs = _.assign({}, this.edit_connection, {
           name: item.service_name,
           connection_type: item.connection_type
         })
@@ -316,7 +337,7 @@
         connection_info = _.omitBy(connection_info, (val, key) => { return val == '*****' })
 
         var update_attrs = _.assign({}, attrs, { connection_info })
-        this.connection = _.assign({}, this.connection, update_attrs)
+        this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
       }
     }
   }

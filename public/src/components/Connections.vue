@@ -58,6 +58,7 @@
         <connection-edit-panel
           class="pa3 pa4-l"
           style="max-width: 60rem"
+          mode="edit"
           :show-header="false"
           :show-steps="false"
           :connection="connection"
