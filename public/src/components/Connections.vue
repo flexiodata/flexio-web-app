@@ -55,13 +55,14 @@
         v-if="connections.length > 0"
       />
       <div class="flex-fill overflow-y-auto" v-if="connection">
-        <connection-info-configure-panel
+        <connection-edit-panel
           class="pa3 pa4-l"
           style="max-width: 60rem"
-          :is-new="is_new"
+          :show-header="false"
+          :show-steps="false"
           :connection="connection"
-          @cancel="cancelChanges"
-          @submit="saveChanges"
+          @close="cancelChanges"
+          @submit="tryUpdateConnection"
         />
       </div>
 
@@ -99,7 +100,7 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import AbstractList from './AbstractList.vue'
-  import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
+  import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
   import ConnectionDialog from './ConnectionDialog.vue'
   import EmptyItem from './EmptyItem.vue'
@@ -109,7 +110,7 @@
     components: {
       Spinner,
       AbstractList,
-      ConnectionInfoConfigurePanel,
+      ConnectionEditPanel,
       StoragePropsModal,
       ConnectionDialog,
       EmptyItem,

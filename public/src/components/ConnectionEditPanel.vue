@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-100 mb3">
-      <div class="flex flex-row items-center">
+      <div class="flex flex-row items-center" v-if="showHeader">
         <div class="flex-fill">
           <span class="f4">{{our_title}}</span>
         </div>
@@ -12,7 +12,7 @@
           &times;
         </div>
       </div>
-      <div class="flex flex-row mt2 pt2 bt b--black-10" v-if="has_connection">
+      <div class="flex flex-row" :class="showHeader ? 'mt2 pt2 bt b--black-10' : ''" v-if="has_connection">
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" style="max-height: 3rem"></service-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="mid-gray f4 fw6">{{service_name}}</div>
@@ -168,6 +168,10 @@
       'title': {
         type: String,
         default: ''
+      },
+      'show-header': {
+        default: true,
+        type: Boolean
       },
       'show-steps': {
         default: true,
