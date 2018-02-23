@@ -16,9 +16,8 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class GoogleDrive implements \Flexio\IFace\IFileSystem
+class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
@@ -29,6 +28,14 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             return new self;
 
         return self::initialize($params);
+    }
+
+    public function authenticated() : bool
+    {
+        if (strlen($this->access_token) > 0)
+            return true;
+
+        return false;
     }
 
     ////////////////////////////////////////////////////////////
@@ -206,10 +213,10 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
             return true;
         }
-        
+
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
     }
-    
+
     public function unlink(string $path) : bool
     {
         if (!$this->authenticated())
@@ -232,7 +239,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
         return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
-    
+
     public function read(array $params, callable $callback)
     {
         $path = $params['path'] ?? '';
@@ -337,7 +344,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             return 'root';
 
         $parts = explode('/',$folder);
-        
+
         $path = '';
         $parentid = 'root';
         for ($i = 0; $i < count($parts); ++$i)
@@ -363,7 +370,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     {
         if (!$this->authenticated())
             return false;
-        
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
@@ -377,7 +384,7 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
 
         if (strlen($filename) == 0)
             return false;
-        
+
         $folderid = $this->getFileId($folder);
         if (is_null($folderid) || strlen($folderid) == 0)
         {
@@ -460,14 +467,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                  'expires' => $this->expires ];
     }
 
-    private function authenticated() : bool
-    {
-        if (strlen($this->access_token) > 0)
-            return true;
-
-        return false;
-    }
-
     public function getFileId(string $path)  // TODO: set function return type   (: ?string)
     {
         $info = $this->internalGetFileInfo($path);
@@ -479,11 +478,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private static function initialize(array $params)
@@ -523,7 +517,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
-                $object->is_ok = true;
                 return $object;
             }
              else
@@ -555,7 +548,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
                 }
 
                 $object = new self;
-                $object->is_ok = true;
                 $object->expires = $token->getEndOfLife();
                 $object->access_token = $token->getAccessToken();
                 $object->refresh_token = $token->getRefreshToken();
@@ -582,7 +574,6 @@ class GoogleDrive implements \Flexio\IFace\IFileSystem
             $object->access_token = $token->getAccessToken();
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
-            $object->is_ok = true;
             if (is_null($object->refresh_token)) $object->refresh_token = '';
 
             return $object;

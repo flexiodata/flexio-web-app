@@ -15,9 +15,9 @@
 declare(strict_types=1);
 namespace Flexio\Services;
 
-class Dropbox implements \Flexio\IFace\IFileSystem
+
+class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
     private $access_token = '';
 
     public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
@@ -26,6 +26,14 @@ class Dropbox implements \Flexio\IFace\IFileSystem
             return new self;
 
         return self::initialize($params);
+    }
+
+    public function authenticated() : bool
+    {
+        if (strlen($this->access_token) > 0)
+            return true;
+
+        return false;
     }
 
     ////////////////////////////////////////////////////////////
@@ -163,7 +171,7 @@ class Dropbox implements \Flexio\IFace\IFileSystem
                      'modified' => $entry['client_modified'] ?? '',
                      'type' => ($entry['.tag'] == 'folder' ? 'DIR' : 'FILE'));
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -193,7 +201,7 @@ class Dropbox implements \Flexio\IFace\IFileSystem
 
         return true;
     }
-    
+
     public function unlink(string $path) : bool
     {
         while (false !== strpos($path,'//'))
@@ -402,22 +410,9 @@ class Dropbox implements \Flexio\IFace\IFileSystem
                  'expires' => 0  ];               // dropbox tokens are usable until revocation
     }
 
-    private function authenticated() : bool
-    {
-        if (strlen($this->access_token) > 0)
-            return true;
-
-        return false;
-    }
-
     private function connect() : bool
     {
         return true;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
     }
 
     private static function initialize(array $params)
@@ -446,7 +441,6 @@ class Dropbox implements \Flexio\IFace\IFileSystem
         {
             $object = new self;
             $object->access_token = $params['access_token'];
-            $object->is_ok = true;
             return $object;
         }
 
@@ -478,7 +472,6 @@ class Dropbox implements \Flexio\IFace\IFileSystem
             $object = new self;
             $token = $service->requestAccessToken($params['code']);
             $object->access_token = $token->getAccessToken();
-            $object->is_ok = true;
             return $object;
         }
 

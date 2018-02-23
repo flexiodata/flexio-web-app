@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class MySql implements \Flexio\IFace\IFileSystem
+class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $host = '';
     private $port = '';
     private $database = '';
@@ -61,6 +61,11 @@ class MySql implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -69,10 +74,10 @@ class MySql implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         // get the tables in the database
@@ -101,7 +106,7 @@ class MySql implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -120,13 +125,13 @@ class MySql implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -177,20 +182,13 @@ class MySql implements \Flexio\IFace\IFileSystem
         $this->dbresult = null;
         $this->dbtablestructure = null;
         $this->rowbuffersize = 100;
-        $this->is_ok = false;
-
+        $this->authenticated = false;
 
         $this->db = $this->newConnection();
-
         if (!is_null($this->db))
-            $this->is_ok = true;
+            $this->authenticated = true;
 
-        return $this->is_ok;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
+        return $this->authenticated;
     }
 
     private function newConnection()
@@ -235,7 +233,7 @@ class MySql implements \Flexio\IFace\IFileSystem
 
     public function createTable(string $table, array $structure) : bool
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
 
         $this->dbtable = $table;

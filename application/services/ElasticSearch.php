@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class ElasticSearch implements \Flexio\IFace\IFileSystem
+class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $host = '';
     private $port = '';
     private $user = '';
@@ -52,6 +52,11 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         return $service;
     }
 
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
+    }
+
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
     ////////////////////////////////////////////////////////////
@@ -60,12 +65,12 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         // note: right now, the list is flat; path isn't used
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         // get the indexes
@@ -109,7 +114,7 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function exists(string $path) : bool
     {
         // TODO: implement
@@ -128,13 +133,13 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -416,18 +421,13 @@ class ElasticSearch implements \Flexio\IFace\IFileSystem
         $this->port = $port;
         $this->username = $username;
         $this->password = $password;
-        $this->is_ok = false;
+        $this->authenticated = false;
 
         if ($this->testConnection() === false)
             return false;
 
-        $this->is_ok = true;
-        return $this->is_ok;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
+        $this->authenticated = true;
+        return true;
     }
 
     private function testConnection() : bool

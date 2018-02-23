@@ -39,7 +39,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
     {
         return 0;
     }
-    
+
     public function list(string $path = '', array $options = []) : array
     {
         if (!$this->isOk())
@@ -154,13 +154,13 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($params) : \Flexio\IFace\IStream
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');

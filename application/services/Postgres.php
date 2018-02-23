@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class Postgres implements \Flexio\IFace\IFileSystem
+class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $db = null;
     private $host, $port, $database, $username, $password;
 
@@ -50,6 +50,11 @@ class Postgres implements \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
     }
 
     ////////////////////////////////////////////////////////////
@@ -189,13 +194,13 @@ class Postgres implements \Flexio\IFace\IFileSystem
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
-    
+
     public function unlink(string $path) : bool
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -314,14 +319,10 @@ class Postgres implements \Flexio\IFace\IFileSystem
         $this->password = $password;
 
         $this->db = $this->newConnection();
-        $this->is_ok = is_null($this->db) ? false : true;
+        if (!is_null($this->db))
+            $this->authenticated = true;
 
-        return $this->is_ok;
-    }
-
-    private function isOk() : bool
-    {
-        return $this->is_ok;
+        return $this->authenticated;
     }
 
     public function exec(string $sql) : bool

@@ -16,9 +16,9 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
-class AmazonS3 implements \Flexio\IFace\IFileSystem
+class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    private $is_ok = false;
+    private $authenticated = false;
     private $bucket = '';
     private $accesskey = '';
     private $secretkey = '';
@@ -49,6 +49,11 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
+    }
+
+    public function authenticated() : bool
+    {
+        return $this->authenticated;
     }
 
     private function getS3(string $path)
@@ -88,7 +93,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
         $s3 = $this->getS3($path);
 
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return array();
 
         $path = trim($path);
@@ -128,7 +133,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
                     $message = "An error occurred while attempting to access the requested resource";
                      else
                     $message = "AWS Error Message: $message";
-    
+
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, $message);
             }
             catch (\Exception $e)
@@ -212,8 +217,8 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
             $arr = \Flexio\Base\File::splitBasePathAndName($path);
             $base = $arr['base'];
             $name = $arr['name'];
-    
-            $result = $this->s3->headObject([ 'Bucket' => $this->bucket, 
+
+            $result = $this->s3->headObject([ 'Bucket' => $this->bucket,
                                               'Key' =>  $path  ]);
 
             $ret = [
@@ -264,20 +269,20 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
         if ($this->exists($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
-        
+
         if (!$this->write([ 'path' => $path ], function($length) { return false; }))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-        
+
         return true;
     }
 
     public function unlink(string $path) : bool
     {
-        if (!$this->isOk())
+        if (!$this->authenticated())
             return false;
-        
+
         $path = $this->getS3KeyFromPath($path);
-    
+
         try
         {
             $response = $this->s3->deleteObject(array(
@@ -294,7 +299,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
                 $message = "AWS Error Message: $message";
 
             die($message);
-            
+
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED, $message);
         }
         catch (\Exception $e)
@@ -304,7 +309,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
         return true;
     }
-    
+
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
@@ -317,8 +322,8 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
         $path = $params['path'] ?? '';
         $path = $this->getS3KeyFromPath($path);
-        
-        if (!$this->isOk())
+
+        if (!$this->authenticated())
             return false;
 
         try
@@ -360,10 +365,10 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
         $path = $this->getS3KeyFromPath($path);
-        
-        if (!$this->isOk())
+
+        if (!$this->authenticated())
             return false;
-        
+
         try
         {
             $response = $this->s3->createMultipartUpload(array(
@@ -450,6 +455,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     private function initialize(string $region, string $bucket, string $accesskey, string $secretkey) : bool
     {
+        $this->authenticated = false;
         $this->region = $region;
         $this->bucket = $bucket;
         $this->accesskey = $accesskey;
@@ -468,7 +474,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         {
             $credentials = new \Aws\Credentials\Credentials($this->accesskey, $this->secretkey);
         }
-        
+
         $this->s3 = new \Aws\S3\S3Client([
             'version'     => 'latest',
             'region'      => $this->region,
@@ -478,12 +484,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         if (!$this->s3)
             return false;
 
-        $this->is_ok = true;
+        $this->authenticated = true;
         return true;
-   }
-
-   private function isOk() : bool
-   {
-       return $this->is_ok;
    }
 }
