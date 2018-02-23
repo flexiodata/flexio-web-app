@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-row items-center mb4">
+    <div class="flex flex-row items-center mb4" v-if="showHeader">
       <service-icon class="br1 square-3 mr3" :url="curl" :type="ctype" />
       <div class="f3 fw6 lh-title">
         <span v-if="isNew">New Connection</span>
@@ -9,7 +9,7 @@
       <div class="code light-silver ml2 ml3-ns" v-if="false && identifier.length > 0">({{identifier}})</div>
     </div>
 
-    <div class="mv3">
+    <div>
       <div class="flex flex-column flex-row-ns">
         <ui-textbox
           class="flex-fill mr4-ns"
@@ -166,11 +166,11 @@
     </div>
 
     <div class="flex flex-row justify-end mv4 pa3 bt b--black-05 bg-near-white" v-if="showFooter">
-      <btn btn-md class="b ttu blue mr2" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</btn>
-      <btn btn-md btn-primary class="ttu b" :disabled="!isNew && !is_changed" @click="onSave">
+      <el-button class="ttu" type="plain" :disabled="!isNew && !is_changed" @click="onCancel">Cancel</el-button>
+      <el-button class="ttu" type="primary" :disabled="!isNew && !is_changed" @click="onSave">
         <span v-if="isNew">Create Connection</span>
         <span v-else>Save Changes</span>
-      </btn>
+      </el-button>
     </div>
   </div>
 </template>
@@ -219,6 +219,10 @@
       'is-new': {
         type: Boolean,
         default: false
+      },
+      'show-header': {
+        type: Boolean,
+        default: true
       },
       'show-footer': {
         type: Boolean,

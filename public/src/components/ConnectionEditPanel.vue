@@ -38,7 +38,7 @@
         @item-activate="createPendingConnection"
       ></service-list>
       <div v-if="has_connection">
-        <form novalidate @submit.prevent="submit">
+        <form novalidate @submit.prevent="submit" v-if="!is_http">
           <div class="flex flex-row items-center">
             <div class="flex-fill mr4">
               <ui-textbox
@@ -85,13 +85,22 @@
           ></ui-textbox>
         </form>
 
-        <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
-        <div class="pa3 ba bt-0 b--black-05">
-          <connection-configure-panel
-            :connection="connection"
-            :mode="mode"
-            @change="updateConnection"
-          ></connection-configure-panel>
+        <connection-info-configure-panel
+          :connection="connection"
+          :show-header="false"
+          :show-footer="false"
+          v-if="is_http"
+        />
+
+        <div v-else>
+          <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
+          <div class="pa3 ba bt-0 b--black-05">
+            <connection-configure-panel
+              :connection="connection"
+              :mode="mode"
+              @change="updateConnection"
+            ></connection-configure-panel>
+          </div>
         </div>
       </div>
     </div>
@@ -115,6 +124,7 @@
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
+  import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
@@ -170,6 +180,7 @@
       ServiceList,
       ServiceIcon,
       ConnectionConfigurePanel,
+      ConnectionInfoConfigurePanel,
       RightsList
     },
     watch: {
@@ -208,16 +219,19 @@
       has_connection() {
         return this.ctype.length > 0
       },
+      is_http() {
+        return this.ctype == ctypes.CONNECTION_TYPE_HTTP
+      },
       our_title() {
         if (this.title.length > 0)
           return this.title
 
         return this.mode == 'edit'
-          ? 'Edit "' + _.get(this.original_connection, 'name') + '" Storage'
-          : 'New Storage'
+          ? 'Edit "' + _.get(this.original_connection, 'name') + '" Connection'
+          : 'New Connection'
       },
       submit_label() {
-        return this.mode == 'edit' ? 'Save changes' : 'Create storage'
+        return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
