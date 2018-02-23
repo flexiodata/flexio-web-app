@@ -105,8 +105,8 @@
     </div>
 
     <div class="pt4 w-100 flex flex-row justify-end" v-show="has_connection">
-      <el-button class="ttu" type="plain" @click="close">Cancel</el-button>
-      <el-button class="ttu" type="primary" @click="submit">{{submit_label}}</el-button>
+      <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu b" type="primary" @click="submit">{{submit_label}}</el-button>
     </div>
   </div>
 </template>

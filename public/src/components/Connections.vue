@@ -13,30 +13,21 @@
         </div>
         <div class="flex-none flex flex-row items-center ml3">
           <el-button
+            class="ttu b"
             type="primary"
-            class="ttu"
-            :disabled="is_new"
             @click="openNewConnectionModal"
-          >New Connection</el-button>
-          <el-button
-            type="primary"
-            class="ttu"
-            :disabled="is_new"
-            @click="createPendingConnection"
-            v-if="false"
           >New Connection</el-button>
         </div>
       </div>
     </div>
 
-    <div class="flex flex-row h-100" v-if="is_new || connections.length > 0">
+    <div class="flex flex-row h-100" v-if="connections.length > 0">
       <abstract-list
         ref="list"
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
         :auto-select-item="true"
-        :disabled="is_new"
         :items="connections"
         :item-options="{
           'item-cls': 'min-w5 pa3 pr2 darken-05',
@@ -105,9 +96,7 @@
       return {
         connection: {},
         last_selected: {},
-        is_new: false,
-        show_new_connection_modal: false,
-        show_connection_props_modal: false
+        show_new_connection_modal: false
       }
     },
     computed: {
@@ -138,27 +127,6 @@
       ]),
       openNewConnectionModal() {
         this.show_new_connection_modal = true
-      },
-      createPendingConnection(item) {
-        this.is_new = true
-        this.connection = false
-
-        var attrs = {
-          name: 'My Connection',
-          connection_type: CONNECTION_TYPE_HTTP,
-          eid_status: OBJECT_STATUS_PENDING
-        }
-
-        this.$store.dispatch('createConnection', { attrs }).then(response => {
-          if (response.ok)
-          {
-            this.connection = _.get(response, 'body', {})
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
       },
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
@@ -213,12 +181,10 @@
       },
       cancelChanges(item) {
         var tmp = this.last_selected
-        this.is_new = false
         this.connection = false
         this.$nextTick(() => { this.connection = _.assign({}, tmp) })
       },
       saveChanges(item) {
-        this.is_new = false
         this.tryUpdateConnection(item)
       }
     }
