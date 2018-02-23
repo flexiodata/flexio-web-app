@@ -83,8 +83,8 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function list(string $path = '', array $options = []) : array
     {
-        $this->getFileInfo('tests20180130223101/basic-1.bmp');
-        die();
+        //$this->getFileInfo('tests20180130223101/basic-1.bmp');
+        //die();
 
         $s3 = $this->getS3($path);
 
