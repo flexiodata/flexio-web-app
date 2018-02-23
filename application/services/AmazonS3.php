@@ -83,9 +83,6 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
 
     public function list(string $path = '', array $options = []) : array
     {
-        //$this->getFileInfo('tests20180130223101/basic-1.bmp');
-        //die();
-
         $s3 = $this->getS3($path);
 
         if (!$this->isOk())
@@ -207,6 +204,7 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         $path = $this->getS3KeyFromPath($path);
         $path = rtrim($path, '/');
 
+        // look for a file
         try
         {
             $arr = \Flexio\Base\File::splitBasePathAndName($path);
@@ -228,6 +226,92 @@ class AmazonS3 implements \Flexio\IFace\IFileSystem
         }
         catch (\Exception $e)
         {
+        }
+
+
+        // now look for a folder
+        $path .= '/';
+
+        $params = array(
+            'Bucket' => $this->bucket,
+            'Prefix' => $path,
+            'Delimiter' => '/',
+            'MaxKeys' => 1
+        );
+
+
+
+        try
+        {
+            $result = $this->s3->listObjects($params);
+
+            $common_prefixes = $result->get('CommonPrefixes');
+            if ($common_prefixes)
+            {
+                $dir = null;
+                foreach ($common_prefixes as $object)
+                {
+                    $key = $object['Prefix'];
+                    if (substr($key, 0, strlen($path)) == $path)
+                    {
+                        $path = rtrim($path, '/');
+                        if (substr($path, 0, 1) != '/')
+                            $path = '/' . $path;
+
+                        $arr = \Flexio\Base\File::splitBasePathAndName($path);
+                        $base = $arr['base'];
+                        $name = $arr['name'];
+
+                        $ret = [
+                            'name' => $name,
+                            'path' => $path,
+                            'size' => 0,
+                            'modified' => '2017-02-23T19:00:43+00:0',
+                            'type' => 'DIR'
+                        ];
+
+                        return $ret;
+                    }
+
+                }
+            }
+
+            $objects = $result->get('Contents');
+            if ($objects)
+            {
+                foreach ($objects as $object)
+                {
+                    $key = $object['Key'];
+                    if (substr($key, 0, strlen($path)) == $path)
+                    {
+                        $path = rtrim($path, '/');
+                        if (substr($path, 0, 1) != '/')
+                            $path = '/' . $path;
+                        
+                        $arr = \Flexio\Base\File::splitBasePathAndName($path);
+                        $base = $arr['base'];
+                        $name = $arr['name'];
+
+                        $ret = [
+                            'name' => $name,
+                            'path' => $path,
+                            'size' => (int)$object['Size'] ?? null,
+                            'modified' => (string)$object['LastModified'],
+                            'type' => 'DIR'
+                        ];
+
+                        return $ret;
+                    }
+                }
+            }
+        }
+        catch (\Aws\Exception\AwsException $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
         }
 
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
