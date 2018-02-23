@@ -170,12 +170,12 @@
         default: ''
       },
       'show-header': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       },
       'show-steps': {
-        default: true,
-        type: Boolean
+        type: Boolean,
+        default: true
       }
     },
     mixins: [Validation],
@@ -301,7 +301,7 @@
 
             // add username as the alias prefix
             connection.ename = this.active_username.trim() + ' ' + item.service_name.trim()
-            connection.ename = _.kebabCase(connection.ename.toLowerCase())
+            connection.ename = connection.ename.toLowerCase().replace(/\s/g, '-')
 
             this.updateConnection(connection)
           }

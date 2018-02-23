@@ -183,7 +183,7 @@
         return _.get(this.getActiveUser(), 'user_name', '')
       },
       alias_placeholder() {
-        return _.kebabCase('username-my-alias')
+        return 'username-my-alias'
       },
       ename_error() {
         if (_.get(this.pipe, 'ename') === _.get(this.original_pipe, 'ename'))

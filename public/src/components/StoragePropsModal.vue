@@ -227,7 +227,7 @@
         return _.get(this.getActiveUser(), 'user_name', '')
       },
       alias_placeholder() {
-        return _.kebabCase('username-my-alias')
+        return 'username-my-alias'
       },
       ename_error() {
         if (_.get(this.connection, 'ename') === _.get(this.original_connection, 'ename'))
@@ -295,7 +295,7 @@
 
             // add username as the alias prefix
             connection.ename = this.active_username.trim() + ' ' + item.service_name.trim()
-            connection.ename = _.kebabCase(connection.ename.toLowerCase())
+            connection.ename = connection.ename.toLowerCase().replace(/\s/g, '-')
 
             this.updateConnection(connection)
           }
