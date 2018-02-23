@@ -42,7 +42,7 @@ class Test
             \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
-            \Flexio\Tests\Base::STORAGE_SFTP,
+            \Flexio\Tests\Base::STORAGE_SFTP
         ];
 
         $idx = 0;
