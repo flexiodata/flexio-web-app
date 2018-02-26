@@ -100,7 +100,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
                 // TODO: include other information from the stats
                 $indexes[] = array('name' => $index_name,
-                                   'path' => $index_name,
+                                   'path' => '/' . $index_name,
                                    'size' => null,
                                    'modified' => null,
                                    'type' => 'FILE');
