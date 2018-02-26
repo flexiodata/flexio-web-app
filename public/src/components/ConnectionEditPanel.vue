@@ -85,8 +85,8 @@
           />
         </div>
         <div v-else>
-          <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
-          <div class="pa3 ba bt-0 b--black-05">
+          <div class="pv2 ph3 bg-light-gray br2 br--top mid-gray lh-copy fw6">Authentication</div>
+          <div class="pa3 ba bt-0 b--light-gray br2 br--bottom">
             <connection-authentication-panel
               :connection="edit_connection"
               :mode="mode"
