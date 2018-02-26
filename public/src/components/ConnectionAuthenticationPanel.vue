@@ -2,17 +2,17 @@
   <div>
     <div v-if="is_oath">
       <div v-if="is_connected">
-        <div class="lh-copy">
-          <i class="material-icons v-mid dark-green">check_circle</i>
+        <div class="flex flex-row items-center mv1 lh-copy">
+          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
           <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
         </div>
-        <div class="mt3 mb2 tc">
+        <div class="mv3 tc">
           <el-button class="b" size="large" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
         </div>
       </div>
       <div v-else>
-        <div class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
-        <div class="mt3 mb2 tc">
+        <div class="mv1 lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
+        <div class="mv3 tc">
           <el-button class="b" size="large" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
         </div>
       </div>
