@@ -159,9 +159,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         // TODO: for now, set default type to 'rows'; should be based on path somehow
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-            return false;
+        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        //    return false;
 
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
@@ -176,7 +176,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
         while (true)
         {
-            $row = $callback();
+            $row = $callback($buffer_size);
             if ($row === false)
                 break;
 
@@ -209,9 +209,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         // create an index with the specified mapping
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-            return false;
+        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        //    return false;
 
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
