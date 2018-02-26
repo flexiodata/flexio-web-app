@@ -35,6 +35,7 @@ class Error
     const INTEGRITY_FAILED       =  'integrity-failed';
     const CONNECTION_FAILED      =  'connection-failed';
     const CREATE_FAILED          =  'create-failed';
+    const OPEN_FAILED            =  'open-failed';
     const READ_FAILED            =  'read-failed';
     const WRITE_FAILED           =  'write-failed';
     const DELETE_FAILED          =  'delete-failed';
