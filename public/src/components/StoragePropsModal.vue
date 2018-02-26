@@ -91,11 +91,11 @@
         </form>
 
         <ui-collapsible class="ui-collapsible--sm" style="margin: 1.5rem 0 0 0" title="Authentication" open disable-ripple>
-          <connection-configure-panel
+          <connection-authentication-panel
             :connection="connection"
             :mode="mode"
             @change="updateConnection"
-          ></connection-configure-panel>
+          ></connection-authentication-panel>
         </ui-collapsible>
       </div>
     </div>
@@ -118,7 +118,7 @@
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
-  import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
+  import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
@@ -173,7 +173,7 @@
       Btn,
       ServiceList,
       ServiceIcon,
-      ConnectionConfigurePanel,
+      ConnectionAuthenticationPanel,
       RightsList
     },
     watch: {

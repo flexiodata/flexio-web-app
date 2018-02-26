@@ -87,11 +87,11 @@
         <div v-else>
           <div class="pv2 ph3 bg-black-05 fw6">Authentication</div>
           <div class="pa3 ba bt-0 b--black-05">
-            <connection-configure-panel
+            <connection-authentication-panel
               :connection="edit_connection"
               :mode="mode"
               @change="updateConnection"
-            ></connection-configure-panel>
+            ></connection-authentication-panel>
           </div>
         </div>
       </div>
@@ -115,7 +115,7 @@
   import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
-  import ConnectionConfigurePanel from './ConnectionConfigurePanel.vue'
+  import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
@@ -196,7 +196,7 @@
       Btn,
       ServiceList,
       ServiceIcon,
-      ConnectionConfigurePanel,
+      ConnectionAuthenticationPanel,
       ConnectionInfoConfigurePanel,
       RightsList
     },
