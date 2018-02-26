@@ -130,7 +130,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $name = substr($path, $last_slash+1);
             $path = substr($path, 0, $last_slash);
-            $parent_stream = $this->getStreamFromPath($path);
+            $parent_stream = $this->getStreamFromPath($path, true /* create directory structure if it doesn't already exist */);
         }
 
         if (!$parent_stream)
@@ -138,6 +138,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // if the stream already exists, overwrite it
         $arr = $parent_stream->getChildStreams($name);
+
         $stream = $arr[0] ?? null;
 
         if ($stream === null)
@@ -214,6 +215,11 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
+        $info = $stream->get();
+        if ($info['stream_type'] == 'SD')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::OPEN_FAILED);
+
         return $stream;
     }
 
@@ -253,6 +259,13 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // if the stream already exists, overwrite it
         $arr = $parent_stream->getChildStreams($name);
         $stream = $arr[0] ?? null;
+
+        if ($stream !== null)
+        {
+            $info = $stream->get();
+            if ($info['stream_type'] == 'SD')
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
 
         if ($stream === null)
         {
@@ -327,17 +340,10 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($path == '/')
             return $stream; // return the root
 
-        $path = trim($path, "/ \t\n\r\0\x0B");
-        if (strlen($path) == 0)
-            return null;
-
-        $parts = explode('/', $path);
+        $parts = \Flexio\Base\File::splitPath($path);
 
         foreach ($parts as $part)
         {
-            if (strlen($part) == 0)
-                continue; // handle paths like /abc//def
-
             $arr = $stream->getChildStreams($part);
             $child = $arr[0] ?? null;
             if (is_null($child))
