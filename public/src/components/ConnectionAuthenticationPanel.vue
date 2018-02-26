@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="is_oath">
+    <div v-if="is_oauth">
       <div v-if="is_connected">
         <div class="flex flex-row items-center mv1 lh-copy">
           <i class="el-icon-success v-mid dark-green f3 mr2"></i>
@@ -11,7 +11,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="mv1 lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
+        <div class="mv1 lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
         <div class="mv3 tc">
           <el-button class="ttu b" size="large" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
         </div>
@@ -24,7 +24,7 @@
       <ui-alert type="error" :dismissible="true" @dismiss="error_msg = ''" v-show="error_msg.length > 0">
         {{error_msg}}
       </ui-alert>
-      <div class="lh-copy">To use this connection, you must connect {{service_name}} to Flex.io.</div>
+      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div class="flex flex-column w-50-ns center mt1 mb3">
         <ui-textbox
           autocomplete="off"
@@ -243,7 +243,7 @@
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
       },
-      is_oath() {
+      is_oauth() {
         switch (this.ctype)
         {
           case ctypes.CONNECTION_TYPE_BOX:
