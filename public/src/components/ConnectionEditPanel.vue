@@ -1,25 +1,18 @@
 <template>
   <div>
-    <div class="w-100 mb3">
+    <div class="w-100 mb3 mid-gray">
       <div class="flex flex-row items-center" v-if="showHeader">
-        <div class="flex-fill">
-          <span class="f4">{{our_title}}</span>
-        </div>
-        <div
-          class="pointer f3 lh-solid b child black-30 hover-black-60"
-          @click="close"
-        >
-          &times;
-        </div>
+        <span class="flex-fill f4">{{our_title}}</span>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
       </div>
       <div class="flex flex-row" :class="showHeader ? 'mt2 pt2 bt b--black-10' : ''" v-if="has_connection">
-        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" style="max-height: 3rem"></service-icon>
+        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4"></service-icon>
         <div class="flex-fill flex flex-column ml2">
-          <div class="mid-gray f4 fw6">{{service_name}}</div>
-          <div class="mid-gray f6 fw4 mt1">{{service_description}}</div>
+          <div class="f4 fw6 lh-title">{{service_name}}</div>
+          <div class="f6 fw4 mt1">{{service_description}}</div>
         </div>
-        <div class="mid-gray" v-if="showSteps && mode != 'edit'">
-          <i class="material-icons fw6 v-mid">chevron_left</i>
+        <div v-if="showSteps && mode != 'edit'">
+          <i class="material-icons v-mid nr1">chevron_left</i>
           <div
             class="dib f5 fw6 underline-hover pointer v-mid"
             title="Back to Step 1"
