@@ -95,8 +95,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             foreach ($indices as $index_name => $index_info)
             {
                 // only show indices that aren't hidden
-                if (substr($index_name, 0, 1) === '.')
-                    continue;
+                //if (substr($index_name, 0, 1) === '.')
+                //    continue;
 
                 // TODO: include other information from the stats
                 $indexes[] = array('name' => $index_name,
