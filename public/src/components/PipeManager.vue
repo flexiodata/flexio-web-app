@@ -39,22 +39,6 @@
       @item-delete="tryDeletePipe"
     ></pipe-list>
 
-    <!-- add modal -->
-    <pipe-props-modal
-      ref="modal-add-pipe"
-      @submit="tryCreatePipe"
-      @hide="show_pipe_add_modal = false"
-      v-if="show_pipe_add_modal"
-    ></pipe-props-modal>
-
-    <!-- edit modal -->
-    <pipe-props-modal
-      ref="modal-edit-pipe"
-      @submit="tryUpdatePipe"
-      @hide="show_pipe_edit_modal = false"
-      v-if="show_pipe_edit_modal"
-    ></pipe-props-modal>
-
     <!-- share modal -->
     <pipe-share-modal
       ref="modal-share-pipe"
@@ -93,7 +77,6 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
-  import PipePropsModal from './PipePropsModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import PipeEmbedModal from './PipeEmbedModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
@@ -104,7 +87,6 @@
     components: {
       Spinner,
       PipeList,
-      PipePropsModal,
       PipeShareModal,
       PipeEmbedModal,
       PipeScheduleModal,
@@ -114,8 +96,6 @@
     data() {
       return {
         filter: '',
-        show_pipe_add_modal: false,
-        show_pipe_edit_modal: false,
         show_pipe_share_modal: false,
         show_pipe_embed_modal: false,
         show_pipe_schedule_modal: false,
@@ -136,14 +116,6 @@
     methods: {
       openPipe(eid) {
         this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-      },
-      openPipeAddModal(ref, attrs) {
-        this.show_pipe_add_modal = true
-        this.$nextTick(() => { this.$refs['modal-add-pipe'].open() })
-      },
-      openPipeEditModal(item) {
-        this.show_pipe_edit_modal = true
-        this.$nextTick(() => { this.$refs['modal-edit-pipe'].open(item) })
       },
       openPipeShareModal(item) {
         this.show_pipe_share_modal = true

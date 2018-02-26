@@ -14,8 +14,8 @@
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewConnectionModal">New Connection Modal</btn></div>
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Pipe Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipePropsModal">New Pipe Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipePropsModal">Edit Pipe Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipeDialog">New Pipe Modal</btn></div>
+      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipeDialog">Edit Pipe Modal</btn></div>
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
       <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Other Modals</div>
@@ -144,7 +144,7 @@
   import ProjectPropsModal from './ProjectPropsModal.vue'
   import ProjectDeleteModal from './ProjectDeleteModal.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
-  import PipePropsModal from './PipePropsModal.vue'
+  import PipeDialog from './PipeDialog.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
@@ -182,7 +182,7 @@
       ProjectPropsModal,
       ProjectDeleteModal,
       StoragePropsModal,
-      PipePropsModal,
+      PipeDialog,
       PipeScheduleModal,
       PipeShareModal,
       EmailSupportModal,
@@ -243,12 +243,12 @@
         this.$nextTick(() => { this.$refs['modal-connection-props'].open(exampleConnection()) })
       },
 
-      openNewPipePropsModal() {
+      openNewPipeDialog() {
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open() })
       },
 
-      openEditPipePropsModal() {
+      openEditPipeDialog() {
         this.show_pipe_props_modal = true
         this.$nextTick(() => { this.$refs['modal-pipe-props'].open(examplePipe()) })
       },

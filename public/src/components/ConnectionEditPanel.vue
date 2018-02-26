@@ -97,7 +97,7 @@
       </div>
     </div>
 
-    <div class="pt4 w-100 flex flex-row justify-end" v-show="has_connection">
+    <div class="pt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
       <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
       <el-button class="ttu b" type="primary" @click="submit">{{submit_label}}</el-button>
     </div>
@@ -112,7 +112,6 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import api from '../api'
-  import Btn from './Btn.vue'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
@@ -178,6 +177,10 @@
         type: Boolean,
         default: true
       },
+      'show-footer': {
+        type: Boolean,
+        default: true
+      },
       'show-steps': {
         type: Boolean,
         default: true
@@ -193,7 +196,6 @@
     },
     mixins: [Validation],
     components: {
-      Btn,
       ServiceList,
       ServiceIcon,
       ConnectionAuthenticationPanel,
@@ -256,7 +258,7 @@
         return _.get(this.getActiveUser(), 'user_name', '')
       },
       alias_placeholder() {
-        return _.kebabCase('username-my-alias')
+        return 'username-my-alias'
       },
       ename_error() {
         if (this.mode == 'edit' && _.get(this.edit_connection, 'ename') === _.get(this.connection, 'ename'))

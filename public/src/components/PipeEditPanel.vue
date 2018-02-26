@@ -1,18 +1,14 @@
 <template>
-  <ui-modal
-    ref="dialog"
-    dismiss-on="close-button"
-    @hide="onHide"
-  >
-    <div slot="header" class="w-100">
-      <span class="f4">{{our_title}}</span>
+  <div>
+    <div class="w-100 mb4" v-if="showHeader">
+      <div class="flex flex-row items-center" v-if="showHeader">
+        <span class="flex-fill f4">{{our_title}}</span>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+      </div>
     </div>
 
     <div>
-      <form
-        novalidate
-        @submit.prevent="submit"
-      >
+      <form novalidate @submit.prevent="submit">
         <div class="flex flex-column">
           <div class="flex-fill">
             <ui-textbox
@@ -24,29 +20,30 @@
               v-deferred-focus
               :error="errors.first('name')"
               :invalid="errors.has('name')"
-              v-model="pipe.name"
+              v-model="edit_pipe.name"
               v-validate
               data-vv-name="name"
-              data-vv-value-path="pipe.name"
+              data-vv-value-path="edit_pipe.name"
               data-vv-rules="required"
-            ></ui-textbox>
+            />
           </div>
           <div class="flex-fill flex flex-row items-center">
             <ui-textbox
               class="flex-fill"
               autocomplete="off"
+              spellcheck="false"
               label="Alias"
               help=" "
               :placeholder="alias_placeholder"
               :error="ename_error"
               :invalid="ename_error.length > 0"
-              v-model="pipe.ename"
-            ></ui-textbox>
+              v-model="edit_pipe.ename"
+            />
             <div
               class="hint--bottom-left hint--large cursor-default"
               aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we recommend prefixing your alias with your username (e.g., username-foo)."
             >
-              <i class="material-icons blue md-18">info</i>
+              <i class="material-icons blue md-24">info</i>
             </div>
           </div>
         </div>
@@ -56,38 +53,22 @@
           help=" "
           :multi-line="true"
           :rows="1"
-          v-model="pipe.description"
-        ></ui-textbox>
+          v-model="edit_pipe.description"
+        />
       </form>
     </div>
 
-    <div slot="footer" class="flex flex-row w-100">
-      <div class="flex-fill">&nbsp;</div>
-      <btn btn-md class="b ttu blue mr2" @click="close()">Cancel</btn>
-      <btn btn-md class="b ttu blue" @click="submit()">{{submit_label}}</btn>
+    <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
+      <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors">{{submit_label}}</el-button>
     </div>
-  </ui-modal>
+  </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
-  import {
-    CONNECTION_TYPE_HTTP,
-    CONNECTION_TYPE_RSS,
-    CONNECTION_TYPE_MYSQL,
-    CONNECTION_TYPE_POSTGRES
-  } from '../constants/connection-type'
-  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import * as mt from '../constants/member-type'
   import * as at from '../constants/action-type'
-  import * as connections from '../constants/connection-info'
-  import Btn from './Btn.vue'
-  import ServiceIcon from './ServiceIcon.vue'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
-  import FileExplorerBar from './FileExplorerBar.vue'
-  import FileChooserList from './FileChooserList.vue'
-  import UrlInputList from './UrlInputList.vue'
-  import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
   const defaultRights = () => {
@@ -128,23 +109,34 @@
       'title': {
         type: String,
         default: ''
+      },
+      'show-header': {
+        type: Boolean,
+        default: true
+      },
+      'show-footer': {
+        type: Boolean,
+        default: true
+      },
+      'pipe': {
+        type: Object,
+        default: () => { return {} }
+      },
+      'mode': {
+        type: String,
+        default: 'add'
       }
     },
     mixins: [Validation],
-    components: {
-      Btn,
-      ServiceIcon,
-      ConnectionChooserList,
-      FileExplorerBar,
-      FileChooserList,
-      UrlInputList,
-      RightsList
-    },
     watch: {
-      'pipe.ename': function(val, old_val) {
+      'pipe': function(val, old_val) {
+        this.edit_pipe = _.cloneDeep(val)
+        this.updatePipe(val)
+      },
+      'edit_pipe.ename': function(val, old_val) {
         var ename = val
 
-        this.validateEname(val, (response, errors) => {
+        this.validateEname(ename, (response, errors) => {
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
@@ -153,31 +145,24 @@
     },
     data() {
       return {
-        mode: 'edit-pipe',
         ss_errors: {},
-        pipe: _.assign({}, defaultAttrs()),
-        original_pipe: _.assign({}, defaultAttrs())
+        edit_pipe: _.assign({}, defaultAttrs(), this.pipe)
       }
     },
     computed: {
-      has_eid() {
-        return _.get(this.pipe, 'eid') !== null
-      },
-      pipe_name() {
-        return _.get(this.original_pipe, 'name', '')
+      eid() {
+        return _.get(this, 'edit_pipe.eid', '')
       },
       our_title() {
         if (this.title.length > 0)
           return this.title
 
-        return this.mode == 'edit-pipe'
-          ? 'Edit "' + this.pipe_name + '" Pipe'
+        return this.mode == 'edit'
+          ? 'Edit "' + _.get(this.pipe, 'name') + '" Pipe'
           : 'New Pipe'
       },
       submit_label() {
-        return this.mode == 'edit-pipe'
-          ? 'Save changes'
-          : 'Create pipe'
+        return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
       },
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
@@ -186,10 +171,29 @@
         return 'username-my-alias'
       },
       ename_error() {
-        if (_.get(this.pipe, 'ename') === _.get(this.original_pipe, 'ename'))
+        if (this.mode == 'edit' && _.get(this.edit_pipe, 'ename') === _.get(this.pipe, 'ename'))
           return ''
 
         return _.get(this.ss_errors, 'ename.message', '')
+      },
+      has_client_errors() {
+        var errors = _.get(this.errors, 'errors', [])
+        return _.size(errors) > 0
+      },
+      has_errors() {
+        return this.has_client_errors || this.ename_error.length > 0
+      }
+    },
+    mounted() {
+      if (this.mode != 'edit')
+      {
+        var ename = _.get(this.edit_pipe, 'ename', '')
+
+        this.validateEname(ename, (response, errors) => {
+          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+            ? _.assign({}, errors)
+            : _.assign({})
+        })
       }
     },
     methods: {
@@ -197,16 +201,14 @@
         'getActiveUser'
       ]),
       setPipeAttributes(attrs) {
-        this.pipe = _.assign({}, defaultAttrs(), attrs)
+        this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
       },
       open(attrs) {
         this.reset(attrs)
-        this.mode = _.get(attrs, 'mode', this.has_eid ? 'edit-pipe' : 'create-pipe'),
-        this.$refs['dialog'].open()
-        return this
+        this.$emit('open')
       },
       close() {
-        this.$refs['dialog'].close()
+        this.$emit('close')
       },
       submit() {
         this.$validator.validateAll().then(success => {
@@ -214,7 +216,7 @@
           if (!success)
             return
 
-          var ename = _.get(this.pipe, 'ename', '')
+          var ename = _.get(this.edit_pipe, 'ename', '')
 
           this.validateEname(ename, (response, errors) => {
             this.ss_errors = ename.length > 0 && _.size(errors) > 0
@@ -222,20 +224,16 @@
               : _.assign({})
 
             if (this.ename_error.length == 0)
-              this.$nextTick(() => { this.$emit('submit', this.pipe, this) })
+              this.$nextTick(() => { this.$emit('submit', this.edit_pipe) })
           })
         })
       },
       reset(attrs) {
         this.ss_errors = {}
-        this.pipe = _.assign({}, defaultAttrs(), attrs)
-        this.original_pipe = _.assign({}, defaultAttrs(), attrs)
+        this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
       },
-      onHide() {
-        this.reset()
-      },
-      onRightsChanged(rights) {
-        this.pipe = _.assign({}, this.pipe, { rights })
+      updatePipe(attrs) {
+        this.edit_pipe = _.assign({}, this.edit_pipe, attrs)
       }
     }
   }

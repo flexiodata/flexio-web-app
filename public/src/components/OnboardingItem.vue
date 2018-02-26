@@ -29,29 +29,12 @@
           :sdk-options="sdkOptions"
           :buttons="['save', 'run']"
           :code="edit_item.code"
-          @save="showPipePropsModal"
+          @save="showSavePipeDialog"
         />
       </div>
     </div>
 
-    <!-- pipe props modal -->
-    <pipe-props-modal
-      title="Save Pipe"
-      ref="modal-pipe-props"
-      @submit="tryCreatePipe"
-      @hide="show_pipe_props_modal = false"
-      v-if="show_pipe_props_modal"
-    ></pipe-props-modal>
-
-    <!-- pipe deploy modal -->
-    <pipe-deploy-modal
-      ref="modal-pipe-deploy"
-      :is-onboarding="true"
-      @hide="show_pipe_deploy_modal = false"
-      v-if="show_pipe_deploy_modal"
-    ></pipe-deploy-modal>
-
-    <!-- storage props modal -->
+    <!-- connection dialog -->
     <connection-dialog
       custom-class="no-header no-footer"
       width="51rem"
@@ -62,6 +45,29 @@
       @submit="tryUpdateConnection"
       v-if="show_new_connection_dialog"
     />
+
+    <!-- pipe dialog -->
+    <pipe-dialog
+      custom-class="no-header no-footer"
+      width="36rem"
+      top="8vh"
+      title="Save Pipe"
+      :modal-append-to-body="false"
+      :visible.sync="show_save_pipe_dialog"
+      :show-close="false"
+      :pipe="pipe_attrs"
+      @submit="tryCreatePipe"
+      v-if="show_save_pipe_dialog"
+    />
+
+    <!-- pipe deploy modal -->
+    <pipe-deploy-modal
+      ref="modal-pipe-deploy"
+      :is-onboarding="true"
+      @hide="show_pipe_deploy_modal = false"
+      v-if="show_pipe_deploy_modal"
+    />
+
   </div>
 </template>
 
@@ -70,7 +76,7 @@
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ConnectionDialog from './ConnectionDialog.vue'
-  import PipePropsModal from './PipePropsModal.vue'
+  import PipeDialog from './PipeDialog.vue'
   import PipeDeployModal from './PipeDeployModal.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
@@ -95,7 +101,7 @@
     },
     components: {
       ConnectionDialog,
-      PipePropsModal,
+      PipeDialog,
       PipeDeployModal,
       OnboardingCodeEditor
     },
@@ -108,7 +114,7 @@
       return {
         active_step: 0,
         show_new_connection_dialog: false,
-        show_pipe_props_modal: false,
+        show_save_pipe_dialog: false,
         show_pipe_deploy_modal: false,
         connection_alias: 'home',
         pipe_alias: '',
@@ -151,6 +157,18 @@ If you have any questions, please send us a note using the chat button at the bo
 
         var arr = [].concat(this.edit_item.steps).concat([final_step])
         return _.compact(arr)
+      },
+      pipe_attrs() {
+        var attrs = {
+          name: _.get(this.edit_item, 'name', ''),
+          ename: _.get(this.edit_item, 'id', '')
+        }
+
+        // add username as the alias prefix
+        attrs.ename = this.username.trim() + ' ' + attrs.ename.trim()
+        attrs.ename = attrs.ename.toLowerCase().replace(/\s/g, '-')
+
+        return attrs
       }
     },
     methods: {
@@ -184,30 +202,16 @@ If you have any questions, please send us a note using the chat button at the bo
             this.showNewConnectionDialog()
             return
           case 'save':
-            this.showPipePropsModal()
+            this.showSavePipeDialog()
             return
         }
       },
       showNewConnectionDialog() {
         this.show_new_connection_dialog = true
-        this.$nextTick(() => { this.$refs['modal-storage-props'].open() })
         analytics.track('Clicked `Connect to Storage` button in Onboarding')
       },
-      showPipePropsModal() {
-        var attrs = {
-          name: _.get(this.edit_item, 'name', ''),
-          ename: _.get(this.edit_item, 'id', '')
-        }
-
-        // add username as the alias prefix
-        attrs.ename = this.username.trim() + ' ' + attrs.ename.trim()
-        attrs.ename = attrs.ename.toLowerCase().replace(/\s/g, '-')
-
-        this.show_pipe_props_modal = true
-        this.$nextTick(() => {
-          var modal = this.$refs['modal-pipe-props'].open()
-          modal.setPipeAttributes(attrs)
-        })
+      showSavePipeDialog() {
+        this.show_save_pipe_dialog = true
         analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
       showPipeDeployModal(item) {
