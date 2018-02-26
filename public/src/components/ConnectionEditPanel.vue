@@ -99,7 +99,7 @@
 
     <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
       <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
-      <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors">{{submit_label}}</el-button>
+      <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors || (is_oauth && !is_connected)">{{submit_label}}</el-button>
     </div>
   </div>
 </template>
@@ -107,6 +107,7 @@
 <script>
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
+  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import * as mtypes from '../constants/member-type'
   import * as atypes from '../constants/action-type'
   import * as ctypes from '../constants/connection-type'
@@ -231,6 +232,12 @@
       ctype() {
         return _.get(this, 'edit_connection.connection_type', '')
       },
+      cstatus() {
+        return _.get(this, 'edit_connection.connection_status', '')
+      },
+      is_connected() {
+        return this.cstatus == CONNECTION_STATUS_AVAILABLE
+      },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
       },
@@ -242,6 +249,18 @@
       },
       is_http() {
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
+      },
+      is_oauth() {
+        switch (this.ctype)
+        {
+          case ctypes.CONNECTION_TYPE_BOX:
+          case ctypes.CONNECTION_TYPE_DROPBOX:
+          case ctypes.CONNECTION_TYPE_GITHUB:
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
+          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
+            return true
+        }
+        return false
       },
       our_title() {
         if (this.title.length > 0)
