@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="w-100 mb3 mid-gray">
+  <div class="mid-gray">
+    <div class="w-100 mb3">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">{{our_title}}</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
@@ -97,9 +97,9 @@
       </div>
     </div>
 
-    <div class="pt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
+    <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
       <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
-      <el-button class="ttu b" type="primary" @click="submit">{{submit_label}}</el-button>
+      <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors">{{submit_label}}</el-button>
     </div>
   </div>
 </template>
@@ -265,6 +265,13 @@
           return ''
 
         return _.get(this.ss_errors, 'ename.message', '')
+      },
+      has_client_errors() {
+        var errors = _.get(this.errors, 'errors', [])
+        return _.size(errors) > 0
+      },
+      has_errors() {
+        return this.has_client_errors || this.ename_error.length > 0
       }
     },
     methods: {
