@@ -47,6 +47,6 @@ class Echo1 extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
         $streamwriter->write($msg);
 
-        echo $msg;
+       // echo $msg;
     }
 }
