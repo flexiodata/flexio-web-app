@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <!-- connection save dialog -->
+    <!-- connect to storage dialog -->
     <el-dialog
       custom-class="no-header no-footer"
       width="51rem"
@@ -42,7 +42,11 @@
       :modal-append-to-body="false"
       :visible.sync="show_connection_new_dialog"
     >
-      <connection-edit-panel @submit="tryUpdateConnection" />
+      <connection-edit-panel
+        @close="show_connection_new_dialog = false"
+        @submit="tryUpdateConnection"
+        v-if="show_connection_new_dialog"
+      />
     </el-dialog>
 
     <!-- pipe save dialog -->
@@ -58,6 +62,7 @@
         :pipe="pipe_attrs"
         @close="show_pipe_save_dialog = false"
         @submit="tryCreatePipe"
+        v-if="show_pipe_save_dialog"
       />
     </el-dialog>
 

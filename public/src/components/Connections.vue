@@ -52,7 +52,7 @@
         />
       </div>
 
-      <!-- connection save dialog -->
+      <!-- connection create dialog -->
       <el-dialog
         custom-class="no-header no-footer"
         width="51rem"
@@ -63,6 +63,7 @@
         <connection-edit-panel
           @close="show_connection_new_dialog = false"
           @submit="tryUpdateConnection"
+          v-if="show_connection_new_dialog"
         />
       </el-dialog>
     </div>
