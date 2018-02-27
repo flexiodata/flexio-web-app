@@ -63,6 +63,23 @@ class Base implements \Flexio\IFace\IJob
         $this->replaceParameterTokens($process);
     }
 
+
+    public function getParameterStream($process, string $varname)
+    {
+        if ($varname == 'stdin' || $varname == 'input')
+        {
+            return $process->getStdin();
+        }
+        else if ($varname == 'uniqid')
+        {
+            $stream = \Flexio\Base\Stream::create();
+            $stream->buffer = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
+            return $stream;
+        }
+
+        return null;
+    }
+
     public function replaceParameterTokens($process) : \Flexio\Jobs\Base
     {
         $info = [];
@@ -81,7 +98,6 @@ class Base implements \Flexio\IFace\IJob
             $info['variables'] = $process->getParams();
             $info['files'] = $process->getFiles();
         }
-
 
         $this->replaceParameterTokensRecurse($info, $process, $this->properties);
         return $this;
@@ -133,17 +149,14 @@ class Base implements \Flexio\IFace\IJob
                             $varname = $fullvarname;
                         }
 
-                        if ($varname == 'stdin' || $varname == 'input')
+
+                        $stream = $this->getParameterStream($process, $varname);
+
+                        if ($stream !== null)
                         {
-                            $stream = $process->getStdin();
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                                 $replacement .= $chunk;
-
-                        }
-                        else if ($varname == 'uniqid')
-                        {
-                            $replacement = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
                         }
                         else if ($varname == 'files')
                         {
