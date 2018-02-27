@@ -35,8 +35,8 @@
         v-if="show_see_it_work_button"
       ><span class="f6 ttu b">See It Work</span></a>
     </div>
-    <h4 class="mt0" v-if="title.length > 0">{{title}}</h4>
-    <div v-if="description.length > 0">
+    <h4 class="mt0" v-if="showTitle && title.length > 0">{{title}}</h4>
+    <div v-if="showDescription && description.length > 0">
       <pre><code class="db ph3">{{description}}</code></pre>
       <div class="mv3 bb b--black-10"></div>
     </div>
@@ -148,6 +148,14 @@
       'external-link': {
         type: String,
         default: 'https://www.flex.io'
+      },
+      'show-title': {
+        type: Boolean,
+        default: false
+      },
+      'show-description': {
+        type: Boolean,
+        default: false
       },
       'show-buttons': {
         type: Boolean,
@@ -322,7 +330,12 @@
       },
       copy() {
         if (window.analytics)
-          window.analytics.track('Copied Code Example', { label: window.location.pathname })
+        {
+          window.analytics.track('Copied Code Example', {
+            label: window.location.pathname,
+            title: this.title
+          })
+        }
       },
       run() {
         if (typeof this.run_fn == 'function')
@@ -330,7 +343,12 @@
           Flexio.setup(this.apiKey, this.sdkOptions)
 
           if (window.analytics)
-            window.analytics.track('Ran Code Example', { label: window.location.pathname })
+          {
+            window.analytics.track('Ran Code Example', {
+              label: window.location.pathname,
+              title: this.title
+            })
+          }
 
           this.is_loading = true
 
