@@ -40,10 +40,9 @@
       width="51rem"
       top="8vh"
       :modal-append-to-body="false"
-      :visible.sync="show_new_connection_dialog"
-      :show-close="false"
+      :visible.sync="show_connection_new_dialog"
       @submit="tryUpdateConnection"
-      v-if="show_new_connection_dialog"
+      v-if="show_connection_new_dialog"
     />
 
     <!-- pipe dialog -->
@@ -53,19 +52,22 @@
       top="8vh"
       title="Save Pipe"
       :modal-append-to-body="false"
-      :visible.sync="show_save_pipe_dialog"
-      :show-close="false"
+      :visible.sync="show_pipe_save_dialog"
       :pipe="pipe_attrs"
       @submit="tryCreatePipe"
-      v-if="show_save_pipe_dialog"
+      v-if="show_pipe_save_dialog"
     />
 
-    <!-- pipe deploy modal -->
-    <pipe-deploy-modal
-      ref="modal-pipe-deploy"
+    <!-- pipe deploy dialog -->
+    <pipe-deploy-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_deploy_dialog"
+      :pipe="pipe"
       :is-onboarding="true"
-      @hide="show_pipe_deploy_modal = false"
-      v-if="show_pipe_deploy_modal"
+      v-if="show_pipe_deploy_dialog"
     />
 
   </div>
@@ -77,7 +79,7 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ConnectionDialog from './ConnectionDialog.vue'
   import PipeDialog from './PipeDialog.vue'
-  import PipeDeployModal from './PipeDeployModal.vue'
+  import PipeDeployDialog from './PipeDeployDialog.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
@@ -102,7 +104,7 @@
     components: {
       ConnectionDialog,
       PipeDialog,
-      PipeDeployModal,
+      PipeDeployDialog,
       OnboardingCodeEditor
     },
     watch: {
@@ -113,10 +115,11 @@
     data() {
       return {
         active_step: 0,
-        show_new_connection_dialog: false,
-        show_save_pipe_dialog: false,
-        show_pipe_deploy_modal: false,
+        show_connection_new_dialog: false,
+        show_pipe_save_dialog: false,
+        show_pipe_deploy_dialog: false,
         connection_alias: 'home',
+        pipe: {},
         pipe_alias: '',
         pipe_name: ''
       }
@@ -207,16 +210,15 @@ If you have any questions, please send us a note using the chat button at the bo
         }
       },
       showNewConnectionDialog() {
-        this.show_new_connection_dialog = true
+        this.show_connection_new_dialog = true
         analytics.track('Clicked `Connect to Storage` button in Onboarding')
       },
       showSavePipeDialog() {
-        this.show_save_pipe_dialog = true
+        this.show_pipe_save_dialog = true
         analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
-      showPipeDeployModal(item) {
-        this.show_pipe_deploy_modal = true
-        this.$nextTick(() => { this.$refs['modal-pipe-deploy'].open(item) })
+      showPipeDeployDialog() {
+        this.show_pipe_deploy_dialog = true
       },
       tryUpdateConnection(attrs, modal) {
         var eid = attrs.eid
@@ -281,7 +283,8 @@ If you have any questions, please send us a note using the chat button at the bo
 
             this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
-            this.showPipeDeployModal(_.cloneDeep(pipe))
+            this.pipe = _.cloneDeep(pipe)
+            this.showPipeDeployDialog()
           }
            else
           {

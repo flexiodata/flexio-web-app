@@ -30,12 +30,11 @@
       style="max-width: 1152px"
       :filter="filter"
       :show-header="true"
-      @item-edit="openPipeEditModal"
       @item-duplicate="duplicatePipe"
       @item-share="openPipeShareModal"
       @item-embed="openPipeEmbedModal"
       @item-schedule="openPipeScheduleModal"
-      @item-deploy="openPipeDeployModal"
+      @item-deploy="openPipeDeployDialog"
       @item-delete="tryDeletePipe"
     ></pipe-list>
 
@@ -61,13 +60,17 @@
       v-if="show_pipe_schedule_modal"
     ></pipe-schedule-modal>
 
-    <!-- deploy modal -->
-    <pipe-deploy-modal
-      ref="modal-deploy-pipe"
-      :is-onboarding="false"
-      @hide="show_pipe_deploy_modal = false"
-      v-if="show_pipe_deploy_modal"
-    ></pipe-deploy-modal>
+    <!-- pipe deploy dialog -->
+    <pipe-deploy-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_deploy_dialog"
+      :pipe="active_pipe"
+      v-if="show_pipe_deploy_dialog"
+    />
+
   </div>
 </template>
 
@@ -80,7 +83,7 @@
   import PipeShareModal from './PipeShareModal.vue'
   import PipeEmbedModal from './PipeEmbedModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
-  import PipeDeployModal from './PipeDeployModal.vue'
+  import PipeDeployDialog from './PipeDeployDialog.vue'
   import Btn from './Btn.vue'
 
   export default {
@@ -90,16 +93,17 @@
       PipeShareModal,
       PipeEmbedModal,
       PipeScheduleModal,
-      PipeDeployModal,
+      PipeDeployDialog,
       Btn
     },
     data() {
       return {
         filter: '',
+        active_pipe: {},
         show_pipe_share_modal: false,
         show_pipe_embed_modal: false,
         show_pipe_schedule_modal: false,
-        show_pipe_deploy_modal: false,
+        show_pipe_deploy_dialog: false,
         show_connection_add_modal: false
       }
     },
@@ -129,9 +133,9 @@
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
       },
-      openPipeDeployModal(item) {
-        this.show_pipe_deploy_modal = true
-        this.$nextTick(() => { this.$refs['modal-deploy-pipe'].open(item) })
+      openPipeDeployDialog(item) {
+        this.active_pipe = item
+        this.show_pipe_deploy_dialog = true
       },
       duplicatePipe(item) {
         var attrs = {

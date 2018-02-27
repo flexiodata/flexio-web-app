@@ -1,26 +1,21 @@
 <template>
-  <ui-modal
-    size="large"
-    ref="dialog"
-    dismiss-on="close-button"
-    :remove-header="isOnboarding"
-  >
-    <div slot="header" class="w-100">
-      <span class="f4">Deploy '{{pipe_name}}'</span>
-    </div>
-
-    <div class="lh-copy cf">
-      <div v-if="isOnboarding">
-        <div class="fr">
-          <div class="ui-modal__close-button" @click="close"><button aria-label="Close" type="button" class="ui-close-button ui-close-button--size-normal ui-close-button--color-black"><div class="ui-close-button__icon"><span class="ui-icon material-icons"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.984 6.422L13.406 12l5.578 5.578-1.406 1.406L12 13.406l-5.578 5.578-1.406-1.406L10.594 12 5.016 6.422l1.406-1.406L12 10.594l5.578-5.578z"></path></svg></span></div> <span class="ui-close-button__focus-ring"></span> <div class="ui-ripple-ink"></div></button></div>
-        </div>
-
+  <el-dialog v-bind="$props">
+    <div class="w-100 mb4 black">
+      <div class="cf" v-if="isOnboarding">
+        <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="close"></i>
         <div class="tc">
           <div class="dib">
             <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success, your pipe has been saved!</h2>
           </div>
         </div>
       </div>
+      <div class="flex flex-row items-center" v-else>
+        <span class="flex-fill f4">Deploy '{{pipe_name}}'</span>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+      </div>
+    </div>
+
+    <div class="lh-copy black">
       <h3>Deploy as an API endpoint:</h3>
       <div class="mh3">
         <onboarding-code-editor
@@ -63,32 +58,31 @@
         :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
       ></help-items>
     </div>
-  </ui-modal>
+  </el-dialog>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { Dialog } from 'element-ui'
   import Flexio from 'flexio-sdk-js'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
   import HelpItems from './HelpItems.vue'
 
   export default {
+    extends: Dialog,
     props: {
       'is-onboarding': {
         type: Boolean,
-        default: true
+        default: false
+      },
+      'pipe': {
+        type: Object,
+        default: () => { return {} }
       }
     },
     components: {
       OnboardingCodeEditor,
       HelpItems
-    },
-    data() {
-      return {
-        pipe: {},
-        pipe_name: '',
-        pipe_identifier: ''
-      }
     },
     computed: {
       ...mapState([
@@ -101,6 +95,12 @@
           return ''
 
         return _.get(tokens, '[0].access_code', '')
+      },
+      pipe_name() {
+        return _.get(this.pipe, 'name', '')
+      },
+      pipe_identifier() {
+        return _.get(this.pipe, 'ename', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
         var code = "Flexio.setup('"+this.api_key+"')\n\n"
@@ -124,17 +124,8 @@
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       },
-      open(item) {
-        this.pipe = _.assign({}, item)
-        this.pipe_name = _.get(item, 'name', '')
-        this.pipe_identifier = _.get(item, 'ename', '') || _.get(item, 'eid', '')
-
-
-        this.$refs['dialog'].open()
-        return this
-      },
       close() {
-        this.$refs['dialog'].close()
+        this.$emit('update:visible', false)
       }
     }
   }
