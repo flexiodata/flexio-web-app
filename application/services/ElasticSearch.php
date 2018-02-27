@@ -79,7 +79,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -95,12 +95,12 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             foreach ($indices as $index_name => $index_info)
             {
                 // only show indices that aren't hidden
-                if (substr($index_name, 0, 1) === '.')
-                    continue;
+                //if (substr($index_name, 0, 1) === '.')
+                //    continue;
 
                 // TODO: include other information from the stats
                 $indexes[] = array('name' => $index_name,
-                                   'path' => $index_name,
+                                   'path' => '/' . $index_name,
                                    'size' => null,
                                    'modified' => null,
                                    'type' => 'FILE');
@@ -159,9 +159,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         // TODO: for now, set default type to 'rows'; should be based on path somehow
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-            return false;
+        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        //    return false;
 
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
@@ -176,7 +176,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
         while (true)
         {
-            $row = $callback();
+            $row = $callback($buffer_size);
             if ($row === false)
                 break;
 
@@ -209,9 +209,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         // create an index with the specified mapping
 
         // TODO: for now, only allow output to tables
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
-            return false;
+        //$content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        //    return false;
 
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
@@ -271,7 +271,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
             curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -379,7 +380,8 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $buf);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -441,7 +443,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth]); // disable authorization header for public test
             curl_setopt($ch, CURLOPT_HTTPGET, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);

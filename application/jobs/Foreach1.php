@@ -38,17 +38,13 @@ class Foreach1 extends \Flexio\Jobs\Base
         $job_definition = $this->getProperties();
         $this->task = $job_definition['params']['run'] ?? [];
 
+        $varname = 'item';
 
         // stdin/stdout
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
-        $this->processStream($instream, $outstream);
 
-        $process->setParams($this->env);
-    }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
-    {
         $mime_type = $instream->getMimeType();
         $streamreader = $instream->getReader();
 
@@ -56,7 +52,7 @@ class Foreach1 extends \Flexio\Jobs\Base
         {
             while (($row = $streamreader->readRow()) !== false)
             {
-                $this->doIteration($row);
+                $this->doIteration($row, $varname);
             }
         }
         else if ($mime_type == \Flexio\Base\ContentType::JSON)
@@ -69,23 +65,26 @@ class Foreach1 extends \Flexio\Jobs\Base
             {
                 foreach ($json as $item)
                 {
-                    $this->doIteration($item);
+                    $this->doIteration($item, $varname);
                 }
             }
             else
             {
-                $this->doIteration($json);
+                $this->doIteration($json, $varname);
             }
         }
         else
         {
             // nothing to iterate over -- use the input stream
-            $this->doIteration($instream);
+            $this->doIteration($instream, $varname);
         }
 
+
+        $process->setParams($this->env);
     }
 
-    private function doIteration($input)
+
+    private function doIteration($input, $varname)
     {
         $subprocess = \Flexio\Jobs\Process::create();
         $subprocess->setParams($this->env);
@@ -105,7 +104,7 @@ class Foreach1 extends \Flexio\Jobs\Base
                 $p = $subprocess->getParams();
                 foreach ((array)$input as $k => $v)
                 {
-                    $p['item.' . $k] = $v;
+                    $p[$varname . '.' . $k] = $v;
                 }
                 $subprocess->setParams($p);
 
@@ -114,6 +113,10 @@ class Foreach1 extends \Flexio\Jobs\Base
             }
             else
             {
+                $p = $subprocess->getParams();
+                $p[$varname] = (string)$input;
+                $subprocess->setParams($p);
+
                 $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
                 $writer->write((string)$input);
             }
