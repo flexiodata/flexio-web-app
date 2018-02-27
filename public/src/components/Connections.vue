@@ -27,7 +27,7 @@
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
-        :auto-select-item="true"
+        :selected-item.sync="connection"
         :items="connections"
         :item-options="{
           'item-cls': 'min-w5 pa3 pr2 darken-05',
@@ -60,7 +60,10 @@
         :modal-append-to-body="false"
         :visible.sync="show_connection_new_dialog"
       >
-        <connection-edit-panel @submit="tryUpdateConnection" />
+        <connection-edit-panel
+          @close="show_connection_new_dialog = false"
+          @submit="tryUpdateConnection"
+        />
       </el-dialog>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
@@ -119,15 +122,22 @@
     created() {
       this.tryFetchConnections()
     },
+    mounted() {
+      this.connection = _.first(this.connections)
+    },
     methods: {
       ...mapGetters([
         'getAllConnections'
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
-          this.$store.dispatch('fetchConnections')
+        {
+          this.$store.dispatch('fetchConnections').then(response => {
+            this.connection = _.first(this.connections)
+          })
+        }
       },
-      tryUpdateConnection(attrs, modal) {
+      tryUpdateConnection(attrs) {
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
@@ -161,22 +171,27 @@
         })
       },
       tryDeleteConnection(attrs) {
+        var idx = _.findIndex(this.connections, this.connection)
+
         this.$store.dispatch('deleteConnection', { attrs }).then(response => {
           if (response.ok)
-            this.$nextTick(() => { this.connection = this.$refs['list'].getSelectedItem() })
+          {
+            if (idx >= 0)
+            {
+              if (idx >= this.connections.length)
+                idx--
+
+              this.selectConnection(_.get(this.connections, '['+idx+']', {}))
+            }
+          }
         })
       },
       selectConnection(item) {
-        this.connection = false
-        this.$nextTick(() => {
-          this.connection = _.cloneDeep(item)
-          this.last_selected = _.cloneDeep(item)
-        })
+        this.connection = _.cloneDeep(item)
+        this.last_selected = _.cloneDeep(item)
       },
       cancelChanges(item) {
-        var tmp = this.last_selected
-        this.connection = false
-        this.$nextTick(() => { this.connection = _.cloneDeep(tmp) })
+        this.connection = _.cloneDeep(this.last_selected)
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)

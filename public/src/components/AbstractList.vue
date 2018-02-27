@@ -5,7 +5,7 @@
       :is="itemComponent"
       :key="key"
       :item="item"
-      :selected-item="selected_item"
+      :selected-item="selectedItem"
       v-bind="itemOptions"
       @activate="onItemActivate"
       @edit="onItemEdit"
@@ -39,61 +39,20 @@
         type: [Boolean, Object, Function], // true/false or object/function for use with _.find()
         default: false
       },
+      'selected-item': {
+        type: Object,
+        default: () => { return {} }
+      },
       'disabled': {
         type: Boolean,
         default: false
       }
     },
-    watch: {
-      items(val, old_val) {
-        if (!_.find(val, this.selected_item) && this.selected_idx >= 0)
-        {
-          if (this.selected_idx >= this.items.length)
-            this.selected_idx--
-
-          this.selected_item = _.get(val, '['+this.selected_idx+']', {})
-          this.syncIndex()
-        }
-      }
-    },
-    data() {
-      return {
-        selected_item: {},
-        selected_idx: -1
-      }
-    },
     components: {
       AbstractConnectionChooserItem
     },
-    mounted() {
-      if (this.autoSelectItem !== false)
-        this.tryAutoSelectItem()
-    },
     methods: {
-      getSelectedItem() {
-        return this.selected_item
-      },
-      syncIndex() {
-        this.selected_idx = _.findIndex(this.items, (item) => {
-          return _.isEqual(this.selected_item, item)
-        })
-      },
-      tryAutoSelectItem() {
-        if (this.items.length == 0)
-        {
-          setTimeout(() => { this.tryAutoSelectItem() }, 500)
-        }
-         else
-        {
-          if (this.autoSelectItem === true)
-            this.onItemActivate(_.first(this.items))
-             else
-            this.onItemActivate(_.find(this.items, this.autoSelectItem))
-        }
-      },
       onItemActivate(item) {
-        this.selected_item = item
-        this.syncIndex()
         this.$emit('item-activate', item)
       },
       onItemEdit(item) {
