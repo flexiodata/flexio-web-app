@@ -15,7 +15,7 @@
           <el-button
             class="ttu b"
             type="primary"
-            @click="openNewConnectionModal"
+            @click="show_connection_new_dialog = true"
           >New Connection</el-button>
         </div>
       </div>
@@ -35,7 +35,7 @@
           'show-dropdown': true,
           'dropdown-items': ['delete']
         }"
-        @item-activate="onConnectionActivate"
+        @item-activate="selectConnection"
         @item-delete="tryDeleteConnection"
         v-if="connections.length > 0"
       />
@@ -52,16 +52,16 @@
         />
       </div>
 
-      <connection-dialog
+      <!-- connection save dialog -->
+      <el-dialog
         custom-class="no-header no-footer"
         width="51rem"
         top="8vh"
         :modal-append-to-body="false"
-        :visible.sync="show_new_connection_modal"
-        :show-close="false"
-        @submit="tryUpdateConnection"
-        v-if="show_new_connection_modal"
-      />
+        :visible.sync="show_connection_new_dialog"
+      >
+        <connection-edit-panel @submit="tryUpdateConnection" />
+      </el-dialog>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
       <empty-item>
@@ -79,7 +79,6 @@
   import Spinner from 'vue-simple-spinner'
   import AbstractList from './AbstractList.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
-  import ConnectionDialog from './ConnectionDialog.vue'
   import EmptyItem from './EmptyItem.vue'
   import Btn from './Btn.vue'
 
@@ -88,7 +87,6 @@
       Spinner,
       AbstractList,
       ConnectionEditPanel,
-      ConnectionDialog,
       EmptyItem,
       Btn
     },
@@ -96,7 +94,7 @@
       return {
         connection: {},
         last_selected: {},
-        show_new_connection_modal: false
+        show_connection_new_dialog: false
       }
     },
     computed: {
@@ -125,9 +123,6 @@
       ...mapGetters([
         'getAllConnections'
       ]),
-      openNewConnectionModal() {
-        this.show_new_connection_modal = true
-      },
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
@@ -144,13 +139,8 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
-            if (modal)
-              modal.close()
-
             // try to connect to the connection
             this.$store.dispatch('testConnection', { eid, attrs })
-
-            this.connection = _.assign({}, _.get(response, 'body', {}))
 
             if (is_pending)
             {
@@ -159,6 +149,10 @@
               _.set(analytics_payload, 'connection_type', ctype)
               analytics.track('Created Connection', analytics_payload)
             }
+
+            this.show_connection_new_dialog = false
+
+            this.selectConnection(_.get(response, 'body', {}))
           }
            else
           {
@@ -172,17 +166,17 @@
             this.$nextTick(() => { this.connection = this.$refs['list'].getSelectedItem() })
         })
       },
-      onConnectionActivate(item) {
+      selectConnection(item) {
         this.connection = false
         this.$nextTick(() => {
-          this.connection = _.assign({}, item)
-          this.last_selected = _.assign({}, item)
+          this.connection = _.cloneDeep(item)
+          this.last_selected = _.cloneDeep(item)
         })
       },
       cancelChanges(item) {
         var tmp = this.last_selected
         this.connection = false
-        this.$nextTick(() => { this.connection = _.assign({}, tmp) })
+        this.$nextTick(() => { this.connection = _.cloneDeep(tmp) })
       },
       saveChanges(item) {
         this.tryUpdateConnection(item)

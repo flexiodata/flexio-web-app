@@ -203,10 +203,6 @@
       setPipeAttributes(attrs) {
         this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
       },
-      open(attrs) {
-        this.reset(attrs)
-        this.$emit('open')
-      },
       close() {
         this.$emit('close')
       },
@@ -224,7 +220,7 @@
               : _.assign({})
 
             if (this.ename_error.length == 0)
-              this.$nextTick(() => { this.$emit('submit', this.edit_pipe) })
+              this.$emit('submit', this.edit_pipe)
           })
         })
       },

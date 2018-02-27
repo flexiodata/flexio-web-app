@@ -29,46 +29,54 @@
           :sdk-options="sdkOptions"
           :buttons="['save', 'run']"
           :code="edit_item.code"
-          @save="showSavePipeDialog"
+          @save="showPipeSaveDialog"
         />
       </div>
     </div>
 
-    <!-- connection dialog -->
-    <connection-dialog
+    <!-- connection save dialog -->
+    <el-dialog
       custom-class="no-header no-footer"
       width="51rem"
       top="8vh"
       :modal-append-to-body="false"
       :visible.sync="show_connection_new_dialog"
-      @submit="tryUpdateConnection"
-      v-if="show_connection_new_dialog"
-    />
+    >
+      <connection-edit-panel @submit="tryUpdateConnection" />
+    </el-dialog>
 
-    <!-- pipe dialog -->
-    <pipe-dialog
+    <!-- pipe save dialog -->
+    <el-dialog
       custom-class="no-header no-footer"
       width="36rem"
       top="8vh"
-      title="Save Pipe"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_save_dialog"
-      :pipe="pipe_attrs"
-      @submit="tryCreatePipe"
-      v-if="show_pipe_save_dialog"
-    />
+    >
+      <pipe-edit-panel
+        title="Save Pipe"
+        :pipe="pipe_attrs"
+        @close="show_pipe_save_dialog = false"
+        @submit="tryCreatePipe"
+      />
+    </el-dialog>
 
     <!-- pipe deploy dialog -->
-    <pipe-deploy-dialog
+    <el-dialog
       custom-class="no-header no-footer"
       width="56rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       :visible.sync="show_pipe_deploy_dialog"
-      :pipe="pipe"
-      :is-onboarding="true"
-      v-if="show_pipe_deploy_dialog"
-    />
+    >
+      <pipe-deploy-panel
+        :pipe="pipe"
+        :is-onboarding="true"
+        @close="show_pipe_deploy_dialog = false"
+      />
+    </el-dialog>
 
   </div>
 </template>
@@ -77,9 +85,9 @@
   import marked from 'marked'
   import { mapGetters } from 'vuex'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ConnectionDialog from './ConnectionDialog.vue'
-  import PipeDialog from './PipeDialog.vue'
-  import PipeDeployDialog from './PipeDeployDialog.vue'
+  import ConnectionEditPanel from './ConnectionEditPanel.vue'
+  import PipeEditPanel from './PipeEditPanel.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
   import OnboardingCodeEditor from './OnboardingCodeEditor.vue'
 
   export default {
@@ -102,9 +110,9 @@
       }
     },
     components: {
-      ConnectionDialog,
-      PipeDialog,
-      PipeDeployDialog,
+      ConnectionEditPanel,
+      PipeEditPanel,
+      PipeDeployPanel,
       OnboardingCodeEditor
     },
     watch: {
@@ -164,7 +172,8 @@ If you have any questions, please send us a note using the chat button at the bo
       pipe_attrs() {
         var attrs = {
           name: _.get(this.edit_item, 'name', ''),
-          ename: _.get(this.edit_item, 'id', '')
+          ename: _.get(this.edit_item, 'id', ''),
+          description: ''
         }
 
         // add username as the alias prefix
@@ -205,7 +214,7 @@ If you have any questions, please send us a note using the chat button at the bo
             this.showNewConnectionDialog()
             return
           case 'save':
-            this.showSavePipeDialog()
+            this.showPipeSaveDialog()
             return
         }
       },
@@ -213,7 +222,7 @@ If you have any questions, please send us a note using the chat button at the bo
         this.show_connection_new_dialog = true
         analytics.track('Clicked `Connect to Storage` button in Onboarding')
       },
-      showSavePipeDialog() {
+      showPipeSaveDialog() {
         this.show_pipe_save_dialog = true
         analytics.track('Clicked `Save & Deploy` button in Onboarding')
       },
@@ -250,6 +259,8 @@ If you have any questions, please send us a note using the chat button at the bo
 
             this.connection_alias = _.get(connection, 'ename', '')
 
+            this.show_connection_new_dialog = false
+
             this.goStep(this.active_step + 1)
           }
            else
@@ -284,7 +295,9 @@ If you have any questions, please send us a note using the chat button at the bo
             this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
             this.pipe = _.cloneDeep(pipe)
-            this.showPipeDeployDialog()
+
+            this.$nextTick(() => { this.show_pipe_save_dialog = false })
+            this.show_pipe_deploy_dialog = true
           }
            else
           {

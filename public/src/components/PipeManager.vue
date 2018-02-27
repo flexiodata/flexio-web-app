@@ -61,15 +61,18 @@
     ></pipe-schedule-modal>
 
     <!-- pipe deploy dialog -->
-    <pipe-deploy-dialog
+    <el-dialog
       custom-class="no-header no-footer"
       width="56rem"
       top="8vh"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_deploy_dialog"
-      :pipe="active_pipe"
-      v-if="show_pipe_deploy_dialog"
-    />
+    >
+      <pipe-deploy-panel
+        :pipe="active_pipe"
+        @close="show_pipe_deploy_dialog = false"
+      />
+    </el-dialog>
 
   </div>
 </template>
@@ -83,7 +86,7 @@
   import PipeShareModal from './PipeShareModal.vue'
   import PipeEmbedModal from './PipeEmbedModal.vue'
   import PipeScheduleModal from './PipeScheduleModal.vue'
-  import PipeDeployDialog from './PipeDeployDialog.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
   import Btn from './Btn.vue'
 
   export default {
@@ -93,7 +96,7 @@
       PipeShareModal,
       PipeEmbedModal,
       PipeScheduleModal,
-      PipeDeployDialog,
+      PipeDeployPanel,
       Btn
     },
     data() {

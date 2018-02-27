@@ -1,6 +1,6 @@
 <template>
   <div class="mid-gray">
-    <div class="w-100 mb3">
+    <div class="w-100 mb4">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">{{our_title}}</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
@@ -79,12 +79,12 @@
           ></ui-textbox>
         </form>
 
-        <div class="mt3" v-if="is_http">
+        <div class="mt4" v-if="is_http">
           <connection-info-configure-panel
             :connection.sync="edit_connection"
           />
         </div>
-        <div class="mt3" v-else>
+        <div class="mt4" v-else>
           <div class="pv2 ph3 bg-light-gray br2 br--top mid-gray lh-copy fw6">Authentication</div>
           <div class="pa3 ba bt-0 b--light-gray br2 br--bottom">
             <connection-authentication-panel

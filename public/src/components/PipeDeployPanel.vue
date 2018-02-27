@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-bind="$props">
-    <div class="w-100 mb4 black">
+  <div class="mid-gray">
+    <div class="w-100 mb4">
       <div class="cf" v-if="isOnboarding">
         <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="close"></i>
         <div class="tc">
@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="lh-copy black">
+    <div class="lh-copy">
       <h3>Deploy as an API endpoint:</h3>
       <div class="mh3">
         <onboarding-code-editor
@@ -58,7 +58,7 @@
         :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
       ></help-items>
     </div>
-  </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -69,15 +69,14 @@
   import HelpItems from './HelpItems.vue'
 
   export default {
-    extends: Dialog,
     props: {
-      'is-onboarding': {
-        type: Boolean,
-        default: false
-      },
       'pipe': {
         type: Object,
         default: () => { return {} }
+      },
+      'is-onboarding': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -125,7 +124,7 @@
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       },
       close() {
-        this.$emit('update:visible', false)
+        this.$emit('close')
       }
     }
   }
