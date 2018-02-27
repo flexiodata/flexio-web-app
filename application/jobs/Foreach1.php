@@ -113,6 +113,10 @@ class Foreach1 extends \Flexio\Jobs\Base
             }
             else
             {
+                $p = $subprocess->getParams();
+                $p[$varname] = (string)$input;
+                $subprocess->setParams($p);
+
                 $stream->setMimeType(\Flexio\Base\ContentType::TEXT);
                 $writer->write((string)$input);
             }
