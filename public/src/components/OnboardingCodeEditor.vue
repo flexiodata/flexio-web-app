@@ -308,6 +308,9 @@
         if (!_.isNil(code_editor))
           code_editor.setValue(code)
       },
+      getEditCode() {
+        return this.edit_code
+      },
       getTaskJSON() {
         try {
           var fn = (Flexio, callback) => {
