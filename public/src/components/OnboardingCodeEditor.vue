@@ -333,7 +333,8 @@
         {
           window.analytics.track('Copied Code Example', {
             label: window.location.pathname,
-            title: this.title
+            title: this.title,
+            code: this.edit_code
           })
         }
       },
@@ -346,7 +347,8 @@
           {
             window.analytics.track('Ran Code Example', {
               label: window.location.pathname,
-              title: this.title
+              title: this.title,
+              code: this.edit_code
             })
           }
 
