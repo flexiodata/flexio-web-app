@@ -5,7 +5,7 @@
       <p class="mw7 lh-copy">Welcome to our interactive tutorial. Choose a topic from the drop-down menu to get started.<br>Then, follow the steps below to get a deployable pipe in just a few minutes.</p>
       <div class="mv3 f5 lh-copy">
         <span class="dib mr1">I want to</span>
-        <el-select v-model="active_item_id" placeholder="Select" style="width: 320px; font-size: 16px">
+        <el-select v-model="active_item_id" placeholder="Select" style="width: 320px">
           <el-option
             v-for="item in items"
             :key="item.id"
@@ -62,8 +62,8 @@
         return { baseUrl: 'https://' + window.location.host + '/api/v1' }
       },
       active_item() {
-        var step = _.find(this.items, { id: this.active_item_id })
-        return _.defaultTo(step, {})
+        var item = _.find(this.items, { id: this.active_item_id })
+        return _.defaultTo(item, {})
       }
     },
     mounted() {
