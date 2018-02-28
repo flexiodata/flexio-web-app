@@ -249,7 +249,7 @@
             createdAt: _.get(task, 'created') // Segment-friendly key value
           }
 
-          analytics.track('Created Step: Input', analytics_payload)
+          //analytics.track('Created Step: Input', analytics_payload)
         })
       },
       addOutput(connection) {
@@ -277,7 +277,7 @@
               createdAt: _.get(task, 'created') // Segment-friendly key value
             }
 
-            analytics.track('Created Step: Output', analytics_payload)
+            //analytics.track('Created Step: Output', analytics_payload)
           })
 
           return
@@ -315,7 +315,7 @@
             createdAt: _.get(task, 'created') // Segment-friendly key value
           }
 
-          analytics.track('Created Step: Output', analytics_payload)
+          //analytics.track('Created Step: Output', analytics_payload)
         })
       }
     }
