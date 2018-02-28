@@ -225,7 +225,7 @@ If you have any questions, please send us a note using the chat button at the bo
       },
       showNewConnectionDialog() {
         this.show_connection_new_dialog = true
-        analytics.track('Clicked `Connect to Storage` button in Onboarding')
+        analytics.track('Clicked `Create Connection` button in Onboarding')
       },
       showPipeSaveDialog() {
         this.show_pipe_save_dialog = true
