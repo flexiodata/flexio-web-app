@@ -59,6 +59,19 @@ EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "111333555\n";
         \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over json array with custom iterator name "moo"',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+    .echo("col1,col2,col3\nRow1Col1,Row1Col2,Row1Col3\nRow2Col1,Row2Col2,Row2Col3\nRow3Col1,Row3Col2,Row3Col3\n")
+    .convert('csv','table')
+    .foreach('moo : input', Flexio.pipe().dump('${moo.col2}'))
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "Row1Col2Row2Col2Row3Col2\n";
+        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over a table with custom iterator name "moo"',  $actual, $expected, $results);
     }
 }
 

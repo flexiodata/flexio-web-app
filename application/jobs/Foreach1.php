@@ -80,7 +80,7 @@ class Foreach1 extends \Flexio\Jobs\Base
         {
             while (($row = $streamreader->readRow()) !== false)
             {
-                $this->doIteration($row, $varname);
+                $this->doIteration($row);
             }
         }
         else if ($mime_type == \Flexio\Base\ContentType::JSON)
