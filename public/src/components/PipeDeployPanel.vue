@@ -104,6 +104,7 @@
       pipe_code() {
         var code = "Flexio.setup('"+this.api_key+"')\n\n"
         code += Flexio.pipe(this.pipe.task).toCode()
+        code += '\n  .run()'
         return code
       },
       example_href() {
