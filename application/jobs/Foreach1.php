@@ -26,23 +26,51 @@ namespace Flexio\Jobs;
 
 class Foreach1 extends \Flexio\Jobs\Base
 {
-    private $env = null;
-    private $task = null;
+    private $env;
+    private $task;
+    private $varname;
 
     public function run(\Flexio\IFace\IProcess $process)
     {
         parent::run($process);
 
-        $this->env = $process->getParams();
-
-        $job_definition = $this->getProperties();
-        $this->task = $job_definition['params']['run'] ?? [];
-
-        $varname = 'item';
-
-        // stdin/stdout
+        // default stdin/stdout
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
+
+
+        $this->env = $process->getParams();
+
+        $job_params = $this->getJobParameters();
+        $this->task = $job_params['run'] ?? [];
+        $this->varname = 'item';
+
+        if (isset($job_params['spec']))
+        {
+            $forspec = $job_params['spec'];
+
+            $parts = explode(':', $forspec);
+            foreach ($parts as &$part)
+            {
+                $part = trim($part);
+            }
+
+            if (count($parts) != 2)
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid forspec. The forspec must have two parts, separate by a colon");
+            }
+
+            $this->varname = $parts[0];
+
+            $instream = $this->getParameterStream($process, $parts[1]);
+        }
+
+
+        if (!$instream)
+        {
+            // if the input stream could not be found, what's the correct behavior? exception, or do nothing?
+            return;
+        }
 
 
         $mime_type = $instream->getMimeType();
@@ -65,18 +93,18 @@ class Foreach1 extends \Flexio\Jobs\Base
             {
                 foreach ($json as $item)
                 {
-                    $this->doIteration($item, $varname);
+                    $this->doIteration($item);
                 }
             }
             else
             {
-                $this->doIteration($json, $varname);
+                $this->doIteration($json);
             }
         }
         else
         {
             // nothing to iterate over -- use the input stream
-            $this->doIteration($instream, $varname);
+            $this->doIteration($instream);
         }
 
 
@@ -84,7 +112,7 @@ class Foreach1 extends \Flexio\Jobs\Base
     }
 
 
-    private function doIteration($input, $varname)
+    private function doIteration($input)
     {
         $subprocess = \Flexio\Jobs\Process::create();
         $subprocess->setParams($this->env);
@@ -104,7 +132,7 @@ class Foreach1 extends \Flexio\Jobs\Base
                 $p = $subprocess->getParams();
                 foreach ((array)$input as $k => $v)
                 {
-                    $p[$varname . '.' . $k] = $v;
+                    $p[$this->varname . '.' . $k] = $v;
                 }
                 $subprocess->setParams($p);
 
@@ -114,7 +142,7 @@ class Foreach1 extends \Flexio\Jobs\Base
             else
             {
                 $p = $subprocess->getParams();
-                $p[$varname] = (string)$input;
+                $p[$this->varname] = (string)$input;
                 $subprocess->setParams($p);
 
                 $stream->setMimeType(\Flexio\Base\ContentType::TEXT);

@@ -33,7 +33,32 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "111222333\n";
-        \Flexio\Tests\Check::assertString('A.1', 'SDK; check template functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'SDK; for loop receiving information from post stdin json',  $actual, $expected, $results);
+
+
+        // TEST: SDK template tests
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+    .echo([111,333,555])
+    .foreach(Flexio.pipe().dump('${item}'))
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "111333555\n";
+        \Flexio\Tests\Check::assertString('A.2', 'SDK; for loop iterating over json array with default iterator name "item"',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+    .echo([111,333,555])
+    .foreach('moo : input', Flexio.pipe().dump('${moo}'))
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "111333555\n";
+        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over json array with custom iterator name "moo"',  $actual, $expected, $results);
     }
 }
 
