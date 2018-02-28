@@ -70,7 +70,7 @@ steps:
   - #----------------------------------------#
 
     button:
-      label: Connect to storage
+      label: Create connection
       action: storage
 
     blurb: |
@@ -78,7 +78,7 @@ steps:
 
       To copy the files to cloud storage, we first need to set up a connection to an external account like Dropbox, Amazon S3, or Google Drive.
 
-      Click **Connect to Storage** below to set up your account. After connecting, we'll insert the path into the next snippet using the new connection alias.
+      Click **Create Connection** below to set up your account. After connecting, we'll insert the path into the next snippet using the new connection alias.
 
   - #----------------------------------------#
 
