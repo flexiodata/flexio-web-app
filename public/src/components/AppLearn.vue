@@ -1,18 +1,18 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
     <div class="ma4">
-      <div class="f3 f2-ns">Let's build a data feed!</div>
+      <div class="f3 f2-ns">Let's build a data feed</div>
       <p class="mw7 lh-copy">Welcome to our interactive tutorial. Choose a topic from the drop-down menu to get started.<br>Then, follow the steps below to get a deployable pipe in just a few minutes.</p>
       <div class="mv3 f5 lh-copy">
-        <span class="dib mr1 ml0">I want to</span>
-        <select class="pa1 pr4-ns ba b--black-10" v-model="active_item_id">
-          <option
-            :value="item.id"
-            v-for="(item, index) in items"
-          >
-            {{ item.want.replace('I want to ', '') }}
-          </option>
-        </select>
+        <span class="dib mr1">I want to</span>
+        <el-select v-model="active_item_id" placeholder="Select" style="width: 320px; font-size: 16px">
+          <el-option
+            v-for="item in items"
+            :key="item.id"
+            :label="item.want.replace('I want to ', '')"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </div>
       <onboarding-item
         :item="active_item"
