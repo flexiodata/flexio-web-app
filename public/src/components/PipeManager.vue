@@ -136,24 +136,12 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
-
-        var edit_code = Flexio.pipe(item.task).toCode()
-        analytics.track('Clicked `Schedule` button in Pipe List', {
-          label: window.location.pathname,
-          title: item.name,
-          code: edit_code
-        })
+        analytics.track('Clicked `Schedule` button in Pipe List', this.getAnalyticsPayload(item))
       },
       openPipeDeployDialog(item) {
         this.active_pipe = item
         this.show_pipe_deploy_dialog = true
-
-        var edit_code = Flexio.pipe(item.task).toCode()
-        analytics.track('Clicked `Deploy` button in Pipe List', {
-          label: window.location.pathname,
-          title: item.name,
-          code: edit_code
-        })
+        analytics.track('Clicked `Deploy` button in Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -229,6 +217,18 @@
             // TODO: add error handling
           }
         })
+      },
+      getAnalyticsPayload(pipe) {
+        var edit_code = Flexio.pipe(pipe.task).toCode()
+        var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+
+        _.assign(analytics_payload, {
+          label: window.location.pathname,
+          title: pipe.name,
+          code: edit_code
+        })
+
+        return analytics_payload
       }
     }
   }
