@@ -71,7 +71,7 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "Row1Col2Row2Col2Row3Col2\n";
-        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over json array with custom iterator name "moo"',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over a table with custom iterator name "moo"',  $actual, $expected, $results);
     }
 }
 
