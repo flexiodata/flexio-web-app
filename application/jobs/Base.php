@@ -172,7 +172,7 @@ class Base implements \Flexio\IFace\IJob
                 $ext = pathinfo($name, PATHINFO_EXTENSION);
                 $size = $file->getSize();
                 $content_type = $file->getMimeType();
-                $stream[$k] = [ 'name' => $name, 'ext' => $ext, 'size' => $size, 'content_type' => $content_type ]; 
+                $stream[$k] = [ 'name' => $name, 'extension' => $ext, 'size' => $size, 'content_type' => $content_type ]; 
             }
         }
         else if (isset($variables[$varname]))
