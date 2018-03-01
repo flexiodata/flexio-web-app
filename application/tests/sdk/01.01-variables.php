@@ -32,6 +32,28 @@ EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "aaa\n";
         \Flexio\Tests\Check::assertString('A.1', 'SDK; simple variable lookup in json object',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+.echo(["aaa","bbb"])
+.echo("${input[1]}")
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "bbb\n";
+        \Flexio\Tests\Check::assertString('A.2', 'SDK; simple indexed lookup in json array',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+.echo([ { "mulch": ["xxx","yyy"] }, { "munch": ["AAA","BBB"] }, { "moo": ["aaa","bbb"] } ])
+.echo("${input[2].moo[1]}")
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "bbb\n";
+        \Flexio\Tests\Check::assertString('A.2', 'SDK; advanced indexed/key lookup in json array of objects',  $actual, $expected, $results);
     }
 }
 
