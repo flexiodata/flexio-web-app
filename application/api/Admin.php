@@ -18,6 +18,107 @@ namespace Flexio\Api;
 
 class Admin
 {
+    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename)
+    {
+        // create the zip archive if needed and add the temporary file to the zip archive
+        $zip = new \ZipArchive();
+        $zip->open($arhivefilename, \ZipArchive::CREATE);
+        $zip->addFile($inputfilename, $zippedfilename);
+        $zip->close();
+    }
+
+    public static function echoZipDownload($zip_name)
+    {
+        header("Pragma: public");
+        header("Expires: 0");
+        header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+        header("Cache-Control: public");
+        header("Content-Description: File Transfer");
+        header("Content-type: application/octet-stream");
+        header("Content-Disposition: attachment; filename=\"".$zip_name."\"");
+        header("Content-Transfer-Encoding: binary");
+        header("Content-Length: ".filesize($zip_name));
+        ob_end_flush();
+        @readfile($zip_name);
+    }
+
+    public static function getExtract(\Flexio\Api\Request $request)
+    {
+        $params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $items = $params['items'] ?? false;
+
+        if (!is_string($items) || $items !== '*') // for now only allow all items to be selected
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+        // only allow users from flex.io to get this info
+        $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        if ($user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $items_selected = array(
+            'object' => 'select eid, eid_type, eid_status, ename, created, updated from tbl_object',
+            'association' => 'select source_eid, target_eid, association_type, created, updated from tbl_association',
+            'user' => 'select eid, user_name, email, description, full_name, first_name, last_name, created, updated from tbl_user',
+            'project' => 'select eid, name, description, created, updated from tbl_project',
+            'pipe' => 'select eid, name, description, task, input, output, schedule, schedule_status, created, updated from tbl_pipe',
+            'connection' => 'select eid, name, description, connection_type, connection_status, expires, created, updated from tbl_connection',
+            'process' => 'select eid, parent_eid, process_mode, process_hash, task, input, output, started_by, started, finished, process_info, process_status, cache_used, created, updated from tbl_process',
+            'comment' => 'select eid, comment, created, updated from tbl_comment',
+            'system' => 'select name, value, created, updated from tbl_system'
+        );
+
+        // create the zip archive
+        $filezip = \Flexio\Base\File::getTempFilename('zip');
+
+        $db = \Flexio\System\System::getModel()->getDatabase();
+        $db->beginTransaction(); // needed to make sure eid generation is safe
+        try
+        {
+            foreach ($items_selected as $name => $query)
+            {
+                // create a temporary file
+                $tmpfile = \Flexio\Base\File::getTempFilename('csv');
+                $outstream = fopen($tmpfile, 'w');
+
+                // dump the results to the temp file
+                $first = true;
+                $result = $db->query($query);
+                while ($result && ($row = $result->fetch()))
+                {
+                    if ($first === true)
+                    {
+                        $header = array_keys($row);
+                        fputcsv($outstream, $header);
+                    }
+
+                    fputcsv($outstream, $row);
+                    $first = false;
+                }
+                fclose($outstream);
+
+                // write the results of the temp file to the zip arhive
+                // and delete the temporary file
+                self::addToZipArchive($filezip, $name . '.csv', $tmpfile);
+                unlink($tmpfile);
+            }
+
+            $db->commit();
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        // send the zip archive and delete the temporary zip archive
+        self::echoZipDownload($filezip);
+        unlink($filezip);
+    }
+
     public static function getUserList(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
