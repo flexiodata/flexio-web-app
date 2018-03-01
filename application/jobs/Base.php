@@ -64,20 +64,107 @@ class Base implements \Flexio\IFace\IJob
     }
 
 
-    public function getParameterStream($process, string $varname)
+    public static function ensureStream($stream)
     {
+        if ($stream instanceof \Flexio\Base\Stream)
+            return $stream;
+
+        $res = \Flexio\Base\Stream::create();
+        $res->buffer = (string)$stream;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        return $res;
+    }
+
+    public function getParameterStream($process, string $varname, $info = null)
+    {
+        if ($info === null)
+        {
+            $info = [];
+            if (is_array($process))
+            {
+                $variables = $process;
+                $files = [];
+            }
+            else
+            {
+                $variables = $process->getParams();
+                $files = $process->getFiles();
+            }
+        }
+
+        $parts = [];
+        $dot = strpos($varname, '.');
+        if ($dot !== false)
+        {
+            if (isset($variables[$varname]))
+            {
+                return $variables[$varname];
+            }
+
+            $parts = explode('.', $varname);
+
+            $varname = array_shift($parts);
+        }
+
+
+
+        $stream = null;
+
         if ($varname == 'stdin' || $varname == 'input')
         {
-            return $process->getStdin();
+            $stream = $process->getStdin();
         }
         else if ($varname == 'uniqid')
         {
-            $stream = \Flexio\Base\Stream::create();
-            $stream->buffer = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
-            return $stream;
+            $stream = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
+        }
+        else if (isset($variables[$varname]))
+        {
+            $stream = $variables[$varname];
         }
 
-        return null;
+
+
+        if (!$stream)
+        {
+            return null;
+        }
+
+        if (count($parts) == 0)
+        {
+            return self::ensureStream($stream);
+        }
+
+
+        if (is_string($stream))
+        {
+            $data = @json_decode($stream);
+        }
+         else
+        {
+            $stream = self::ensureStream($stream);
+            $data = '';
+            $streamreader = $stream->getReader();
+            while (($chunk = $streamreader->read()) !== false)
+                $data .= $chunk;
+            $data = @json_decode($data,true); 
+        }
+
+
+        while (count($parts) > 0)
+        {
+            $name = array_shift($parts);
+            if (!isset($data[$name]))
+                return null;
+            $data = $data[$name];
+        }
+
+        if (is_null($data))
+            return null;
+
+        if (is_array($data) || is_object($data))
+            $data = json_encode($data);
+
+        return self::ensureStream($data);
     }
 
     public function replaceParameterTokens($process) : \Flexio\Jobs\Base
@@ -134,23 +221,10 @@ class Base implements \Flexio\IFace\IJob
                         $token_len = strlen($token);
                         $offset = $match[1];
 
-                        $fullvarname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
-                        $suffix = '';
-                        $replacement = '';
-
-                        $period = strpos($fullvarname, '.');
-                        if ($period !== false)
-                        {
-                            $suffix = substr($fullvarname, $period+1);
-                            $varname = substr($fullvarname, 0, $period);
-                        }
-                         else
-                        {
-                            $varname = $fullvarname;
-                        }
-
+                        $varname = substr($token, 2, -1);  // turn '${myvar}' into 'myvar'
 
                         $stream = $this->getParameterStream($process, $varname);
+                        $replacement = '';
 
                         if ($stream !== null)
                         {
@@ -170,49 +244,6 @@ class Base implements \Flexio\IFace\IJob
                                     if ($file instanceof \Flexio\Base\Stream)
                                         $replacement = $file->getName();
                                 }
-                            }
-                        }
-                        else
-                        {
-                            $var = $info['variables'][$fullvarname] ?? null;
-                            if ($var !== null)
-                            {
-                                $suffix = '';
-                            }
-                            else
-                            {
-                                $var = $info['variables'][$varname] ?? null;
-                            }
-
-                            if ($var !== null)
-                            {
-                                if ($var instanceof \Flexio\Base\Stream)
-                                {
-                                    $streamreader = $var->getReader();
-                                    while (($chunk = $streamreader->read()) !== false)
-                                        $replacement .= $chunk;
-                                }
-                                else
-                                {
-                                    if (is_array($var))
-                                    {
-                                        $replacement = json_encode($var);
-                                    }
-                                    else
-                                    {
-                                        $replacement = (string)$var;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (strlen($suffix) > 0)
-                        {
-                            $data = json_decode($replacement, true);
-                            $replacement = '';
-                            if (isset($data[$suffix]))
-                            {
-                                $replacement = (string)$data[$suffix];
                             }
                         }
 
