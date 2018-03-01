@@ -33,12 +33,14 @@ class Set extends \Flexio\Jobs\Base
         parent::run($process);
 
         // get the duration
-        $job_definition = $this->getProperties();
-        $var = $job_definition['params']['var'];
-        $value = $job_definition['params']['value'];
+        $job_params = $this->getJobParameters();
+        $var = $job_params['var'];
+        $value = $job_params['value'];
         
         if (isset($value['op']) && isset($value['params']))
         {
+            // right side of set is pipe code
+
             $pipecode = $value;
             $valstream = \Flexio\Base\Stream::create();
 
@@ -55,10 +57,28 @@ class Set extends \Flexio\Jobs\Base
         }
          else
         {
+            $is_json = false;
+            if (is_array($value) || is_object($value))
+            {
+                $value = json_encode($value);
+                $is_json = true;
+            }
+
+            $outstream = $process->getStdout();
+            $outstream->getWriter()->write($value);
+            
+            $param_stream = \Flexio\Base\Stream::create();
+            $param_stream->getWriter()->write($value);
+
+            if ($is_json)
+            {
+                $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+                $param_stream->setMimeType(\Flexio\Base\ContentType::JSON);
+            }
+
             $params = $process->getParams();
-            $params[$var] = $value;
+            $params[$var] = $param_stream;
             $process->setParams($params);
-            $process->getStdout()->getWriter()->write($value);
         }
     }
 }
