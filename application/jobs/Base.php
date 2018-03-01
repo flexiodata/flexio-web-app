@@ -91,6 +91,17 @@ class Base implements \Flexio\IFace\IJob
             }
         }
 
+
+        $dot = strpos($varname, '[');
+        if ($dot !== false)
+        {
+            // replace var[1] with var.1
+            $varname = preg_replace("/(\\[)(\\d+)(\\])/", '.$2', $varname);
+
+            // replace var['abc'] with var.abc;   var["abc"] with var.abc
+            $varname = preg_replace("/(\\[[\"'])([^\"']+)([\"']\\])/", '.$2', $varname);
+        }
+
         $parts = [];
         $dot = strpos($varname, '.');
         if ($dot !== false)
@@ -146,13 +157,17 @@ class Base implements \Flexio\IFace\IJob
             $streamreader = $stream->getReader();
             while (($chunk = $streamreader->read()) !== false)
                 $data .= $chunk;
-            $data = @json_decode($data,true); 
+            $data = @json_decode($data, true); 
         }
 
 
         while (count($parts) > 0)
         {
             $name = array_shift($parts);
+            if (is_string($name) && is_numeric($name))
+            {
+                $name = (int)$name;
+            }
             if (!isset($data[$name]))
                 return null;
             $data = $data[$name];
