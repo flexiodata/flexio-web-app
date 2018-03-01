@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import { CONNECTION_TYPE_HOME }  from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ServiceItem from './ServiceItem.vue'
 
@@ -39,20 +40,15 @@
         type: String,
         default: '' // '', 'storage', 'services' or by connection type
       },
-      'prefix-items': {
-        type: Array,
-        default: () => { return [] }
-      },
-      'suffix-items': {
-        type: Array,
-        default: () => { return [] }
+      'omit-items': {
+        type: [Array, Function]
       }
     },
     components: {
       ServiceItem
     },
     computed: {
-      services() {
+      filtered_services() {
         var services = connections
 
         if (this.listType == 'input')
@@ -67,7 +63,20 @@
            else if (_.size(this.filterItems) > 0)
           services = _.filter(services, { connection_type: this.filterItems })
 
-        return [].concat(this.prefixItems).concat(services).concat(this.suffixItems)
+        return services
+      },
+      services() {
+        if (typeof this.omitItems == 'function')
+          return _.reject(this.filtered_services, this.omitItems)
+
+        if (_.isArray(this.omitItems))
+        {
+          return _.reject(this.filtered_services, (item) => {
+            return _.includes(this.omitItems, _.get(item, 'connection_type', null))
+          })
+        }
+
+        return _.reject(this.filtered_services, { connection_type: CONNECTION_TYPE_HOME })
       }
     },
     methods: {

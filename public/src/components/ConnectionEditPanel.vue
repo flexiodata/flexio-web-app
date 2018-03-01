@@ -26,8 +26,7 @@
 
     <div>
       <service-list v-show="!has_connection"
-        filter-items="storage"
-        :prefix-items="prefix_services"
+        :omit-items="omitConnections"
         @item-activate="createPendingConnection"
       ></service-list>
       <div v-if="has_connection">
@@ -190,6 +189,9 @@
         type: Object,
         default: () => { return {} }
       },
+      'omit-connections': {
+        type: [Array, Function]
+      },
       'mode': {
         type: String,
         default: 'add'
@@ -221,8 +223,7 @@
     data() {
       return {
         ss_errors: {},
-        edit_connection: _.assign({}, defaultAttrs(), this.connection),
-        prefix_services: []//[connections.CONNECTION_INFO_CUSTOMAPI]
+        edit_connection: _.assign({}, defaultAttrs(), this.connection)
       }
     },
     computed: {

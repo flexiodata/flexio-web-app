@@ -257,27 +257,29 @@ const UPLOAD = {
 
 /* exports */
 
-// go out of alphabetical order here so the order is correct in the pipe add modal
+// TODO: what are we going to do with these?
 //export const CONNECTION_INFO_STDIN         = STDIN
-// export const CONNECTION_INFO_UPLOAD        = UPLOAD
 //export const CONNECTION_INFO_STDOUT        = STDOUT
+//export const CONNECTION_INFO_UPLOAD        = UPLOAD
 //export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
+//export const CONNECTION_INFO_FIREBASE      = FIREBASE
+//export const CONNECTION_INFO_HTTP          = HTTP
+//export const CONNECTION_INFO_MAILJET       = MAILJET
+//export const CONNECTION_INFO_RSS           = RSS
+//export const CONNECTION_INFO_SOCRATA       = SOCRATA
+//export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
+
+// go out of alphabetical order here so the order is correct in the pipe add modal
+export const CONNECTION_INFO_CUSTOMAPI     = CUSTOMAPI
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
-export const CONNECTION_INFO_CUSTOMAPI     = CUSTOMAPI
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
-//export const CONNECTION_INFO_FIREBASE      = FIREBASE
 export const CONNECTION_INFO_GITHUB        = GITHUB
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HOME          = HOME
-export const CONNECTION_INFO_HTTP          = HTTP
-//export const CONNECTION_INFO_MAILJET       = MAILJET
 export const CONNECTION_INFO_MYSQL         = MYSQL
 export const CONNECTION_INFO_POSTGRES      = POSTGRES
-export const CONNECTION_INFO_RSS           = RSS
 export const CONNECTION_INFO_SFTP          = SFTP
-//export const CONNECTION_INFO_SOCRATA       = SOCRATA
-//export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
