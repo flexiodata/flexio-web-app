@@ -69,7 +69,18 @@ class Base implements \Flexio\IFace\IJob
         if ($stream instanceof \Flexio\Base\Stream)
             return $stream;
 
-        $data = (string)$stream;
+        if (is_object($stream) || is_array($stream))
+        {
+            $data = json_encode($stream);
+            if ($content_type === null)
+            {
+                $content_type = \Flexio\Base\ContentType::JSON;
+            }
+        }
+         else
+        {
+            $data = (string)$stream;
+        }
 
         $res = \Flexio\Base\Stream::create();
         if ($content_type !== null)
@@ -151,6 +162,18 @@ class Base implements \Flexio\IFace\IJob
         else if ($varname == 'uniqid')
         {
             $stream = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
+        }
+        else if ($varname == 'files')
+        {
+            $stream = [];
+            foreach ($files as $k => $file)
+            {
+                $name = $file->getName();
+                $ext = pathinfo($name, PATHINFO_EXTENSION);
+                $size = $file->getSize();
+                $content_type = $file->getMimeType();
+                $stream[$k] = [ 'name' => $name, 'ext' => $ext, 'size' => $size, 'content_type' => $content_type ]; 
+            }
         }
         else if (isset($variables[$varname]))
         {
@@ -274,20 +297,6 @@ class Base implements \Flexio\IFace\IJob
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                                 $replacement .= $chunk;
-                        }
-                        else if ($varname == 'files')
-                        {
-                            $parts = explode('.', $suffix);
-
-                            if (count($parts) >= 1 && isset($info['files'][$part[0]]))
-                            {
-                                $file = $info['files'][$part[0]];
-                                if (($parts[1] ?? '') == 'name')
-                                {
-                                    if ($file instanceof \Flexio\Base\Stream)
-                                        $replacement = $file->getName();
-                                }
-                            }
                         }
 
                         // use true/false text for boolean value replacements in a string
