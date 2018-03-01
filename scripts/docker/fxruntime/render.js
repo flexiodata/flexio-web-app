@@ -9,6 +9,7 @@ const options = commandLineArgs([
    { name: 'fullPage', type: Boolean },
    { name: 'viewport.width', type: Number },
    { name: 'viewport.height', type: Number },
+   { name: 'scale', type: Number },
    { name: 'scrollbars' },
    { name: 'sleep' }
 ]);
@@ -66,12 +67,17 @@ const options = commandLineArgs([
     params.landscape = options.landscape
   }
 
+  if (options.hasOwnProperty('scale')) {
+    params.scale = options.scale
+  }
+
   if (options.hasOwnProperty('viewport.width') && options.hasOwnProperty('viewport.height')) {
     page.setViewport({width: options['viewport.width'], height: options['viewport.height']})
   }
 
 
   if (options.format == 'pdf') {
+    await page.emulateMedia('screen');
     await page.pdf(params)
   } else {
     await page.screenshot(params);
