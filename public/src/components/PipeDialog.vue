@@ -5,6 +5,7 @@
       :pipe="$attrs.pipe"
       :mode="$attrs.mode"
       @close="close"
+      @cancel="close"
       @submit="submit"
     />
   </el-dialog>

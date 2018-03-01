@@ -45,6 +45,7 @@
     >
       <connection-edit-panel
         @close="show_connection_new_dialog = false"
+        @cancel="show_connection_new_dialog = false"
         @submit="tryUpdateConnection"
         v-if="show_connection_new_dialog"
       />
@@ -62,6 +63,7 @@
         title="Save Pipe"
         :pipe="pipe_attrs"
         @close="show_pipe_save_dialog = false"
+        @cancel="show_pipe_save_dialog = false"
         @submit="tryCreatePipe"
         v-if="show_pipe_save_dialog"
       />

@@ -47,7 +47,7 @@
           :show-header="false"
           :show-steps="false"
           :connection="connection"
-          @close="cancelChanges"
+          @cancel="cancelChanges"
           @submit="tryUpdateConnection"
         />
       </div>
@@ -62,6 +62,7 @@
       >
         <connection-edit-panel
           @close="show_connection_new_dialog = false"
+          @cancel="show_connection_new_dialog = false"
           @submit="tryUpdateConnection"
           v-if="show_connection_new_dialog"
         />

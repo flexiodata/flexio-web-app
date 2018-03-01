@@ -11,7 +11,7 @@
       </div>
       <div class="flex flex-row items-center" v-else>
         <span class="flex-fill f4">Deploy '{{pipe_name}}'</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
     </div>
 
@@ -123,9 +123,6 @@
       ]),
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
-      },
-      close() {
-        this.$emit('close')
       }
     }
   }

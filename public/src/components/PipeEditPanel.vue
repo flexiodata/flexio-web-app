@@ -3,7 +3,7 @@
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">{{our_title}}</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
     </div>
 
@@ -59,7 +59,7 @@
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
-      <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu b" type="plain" @click="$emit('cancel')">Cancel</el-button>
       <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors">{{submit_label}}</el-button>
     </div>
   </div>
@@ -202,9 +202,6 @@
       ]),
       setPipeAttributes(attrs) {
         this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
-      },
-      close() {
-        this.$emit('close')
       },
       submit() {
         this.$validator.validateAll().then(success => {

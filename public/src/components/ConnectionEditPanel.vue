@@ -3,7 +3,7 @@
     <div class="w-100 mb4">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">{{our_title}}</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
       <div class="flex flex-row" :class="showHeader ? 'mt2 pt2 bt b--black-10' : ''" v-if="has_connection">
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4"></service-icon>
@@ -98,7 +98,7 @@
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
-      <el-button class="ttu b" type="plain" @click="close">Cancel</el-button>
+      <el-button class="ttu b" type="plain" @click="$emit('cancel')">Cancel</el-button>
       <el-button class="ttu b" type="primary" @click="submit" :disabled="mode == 'add' && (has_errors || (is_oauth && !is_connected))">{{submit_label}}</el-button>
     </div>
   </div>
@@ -299,13 +299,6 @@
       ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
-      },
-      open(attrs, mode) {
-        this.reset(attrs)
-        this.$emit('open')
-      },
-      close() {
-        this.$emit('close')
       },
       submit() {
         this.$validator.validateAll().then(success => {

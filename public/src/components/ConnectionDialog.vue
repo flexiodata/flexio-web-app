@@ -4,6 +4,7 @@
       title="New Connection"
       :show-steps="true"
       @close="close"
+      @cancel="close"
       @submit="submit"
     />
   </el-dialog>
