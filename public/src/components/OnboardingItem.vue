@@ -228,7 +228,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_connection_new_dialog = true
-        analytics.track('Clicked `Create Connection` button in Onboarding', {
+        analytics.track('Clicked `Create Connection` Button In Onboarding', {
           label: window.location.pathname,
           title: this.item.name,
           code: edit_code
@@ -238,7 +238,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_pipe_save_dialog = true
-        analytics.track('Clicked `Save & Deploy` button in Onboarding', {
+        analytics.track('Clicked `Save & Deploy` Button In Onboarding', {
           label: window.location.pathname,
           title: this.item.name,
           code: edit_code
@@ -269,7 +269,7 @@ If you have any questions, please send us a note using the chat button at the bo
               var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
               _.set(analytics_payload, 'eid', eid)
               _.set(analytics_payload, 'connection_type', ctype)
-              analytics.track('Created Connection in Onboarding', analytics_payload)
+              analytics.track('Created Connection In Onboarding', analytics_payload)
             }
 
             if (!_.isNil(modal))
@@ -305,7 +305,7 @@ If you have any questions, please send us a note using the chat button at the bo
               createdAt: _.get(pipe, 'created')
             })
 
-            analytics.track('Created Pipe in Onboarding', analytics_payload)
+            analytics.track('Created Pipe In Onboarding', analytics_payload)
 
             if (!_.isNil(modal))
               modal.close()
@@ -319,7 +319,7 @@ If you have any questions, please send us a note using the chat button at the bo
           }
            else
           {
-            analytics.track('Created Pipe in Onboarding (Error)')
+            analytics.track('Created Pipe In Onboarding (Error)')
           }
         })
       }

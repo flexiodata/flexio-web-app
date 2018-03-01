@@ -136,12 +136,12 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
-        analytics.track('Clicked `Schedule` button in Pipe List', this.getAnalyticsPayload(item))
+        analytics.track('Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       openPipeDeployDialog(item) {
         this.active_pipe = item
         this.show_pipe_deploy_dialog = true
-        analytics.track('Clicked `Deploy` button in Pipe List', this.getAnalyticsPayload(item))
+        analytics.track('Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -202,14 +202,15 @@
         this.$store.dispatch('deletePipe', { attrs })
       },
       trySchedulePipe(attrs, modal) {
-        var eid = attrs.eid
+        var eid = _.get(attrs, 'eid', '')
         attrs = _.pick(attrs, ['schedule', 'schedule_status'])
         this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok)
           {
             var frequency = _.get(response.body, 'schedule.frequency', '')
             var schedule_status = _.get(response.body, 'schedule_status', '')
-            analytics.track('Scheduled Pipe', { eid, frequency, schedule_status })
+            var analytics_payload = this.getAnalyticsPayload(attrs)
+            analytics.track('Scheduled Pipe', _.assign(analytics_payload, { frequency, schedule_status }))
             modal.close()
           }
            else
