@@ -102,6 +102,23 @@ EOD;
         $expected = "aaabbbcccdddeeefffggghhhiii\n";
         \Flexio\Tests\Check::assertString('A.4', 'SDK; for loop iterating over multi-dimensional array',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+    .set('my_multidimensional_array', [
+        { data: [ 'aaa', 'bbb', 'ccc' ] },
+        { data: [ 'ddd', 'eee', 'fff' ] },
+        { data: [ 'ggg', 'hhh', 'iii' ] }
+    ])
+    .foreach('row : my_multidimensional_array',
+        Flexio.pipe().foreach('value : row.data',
+            Flexio.pipe().dump('${value}')))
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "aaabbbcccdddeeefffggghhhiii\n";
+        \Flexio\Tests\Check::assertString('A.5', 'SDK; for loop iterating over multi-dimensional array of objects',  $actual, $expected, $results);
+
     }
 }
 

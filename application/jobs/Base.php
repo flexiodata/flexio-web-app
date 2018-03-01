@@ -74,7 +74,7 @@ class Base implements \Flexio\IFace\IJob
         $res = \Flexio\Base\Stream::create();
         if ($content_type !== null)
         {
-            $ret->setContentType($content_type);
+            $res->setMimeType($content_type);
         }
 
         /*
@@ -88,7 +88,7 @@ class Base implements \Flexio\IFace\IJob
                 $test = @json_encode($data);
                 if ($test !== false)
                 {
-                    $ret->setContentType($content_type);
+                    $ret->setMimeType($content_type);
                 }
             }
         }
