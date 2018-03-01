@@ -5,7 +5,7 @@
         <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="close"></i>
         <div class="tc">
           <div class="dib">
-            <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="material-icons v-mid dark-green mr2">check_circle</i> Success, your pipe has been saved!</h2>
+            <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="el-icon-success dark-green f3 mr2"></i> Success, your pipe has been saved!</h2>
           </div>
         </div>
       </div>
@@ -104,6 +104,7 @@
       pipe_code() {
         var code = "Flexio.setup('"+this.api_key+"')\n\n"
         code += Flexio.pipe(this.pipe.task).toCode()
+        code += '\n  .run()'
         return code
       },
       example_href() {
