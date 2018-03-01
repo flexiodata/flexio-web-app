@@ -72,6 +72,19 @@ EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "Row1Col2Row2Col2Row3Col2\n";
         \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over a table with custom iterator name "moo"',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
+Flexio.pipe()
+    .set('my_array', [111,333,555])
+    .foreach('moo : my_array', Flexio.pipe().dump('${moo}'))
+.run().then(response => console.log(response.text))
+EOD;
+        $actual = \Flexio\Tests\Util::execSDKJS($script);
+        $expected = "111333555\n";
+        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over json array with custom iterator name "moo"',  $actual, $expected, $results);
+
     }
 }
 
