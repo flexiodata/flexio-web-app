@@ -38,7 +38,6 @@ class Admin
         header("Content-Disposition: attachment; filename=\"".$zip_name."\"");
         header("Content-Transfer-Encoding: binary");
         header("Content-Length: ".filesize($zip_name));
-        ob_end_flush();
         @readfile($zip_name);
     }
 
