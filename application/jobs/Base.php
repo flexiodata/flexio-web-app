@@ -64,13 +64,37 @@ class Base implements \Flexio\IFace\IJob
     }
 
 
-    public static function ensureStream($stream)
+    public static function ensureStream($stream, $content_type = null)
     {
         if ($stream instanceof \Flexio\Base\Stream)
             return $stream;
 
+        $data = (string)$stream;
+
         $res = \Flexio\Base\Stream::create();
-        $res->buffer = (string)$stream;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        if ($content_type !== null)
+        {
+            $ret->setContentType($content_type);
+        }
+
+        /*
+         else
+        {
+            // no content type was passed; if it is JSON, set the content type to JSON
+            $test = trim($data);
+            $firstch = substr($test,0,1);
+            if ($firstch === '[' || $firstch === '{')
+            {
+                $test = @json_encode($data);
+                if ($test !== false)
+                {
+                    $ret->setContentType($content_type);
+                }
+            }
+        }
+        */
+
+        $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
         return $res;
     }
 
@@ -177,7 +201,11 @@ class Base implements \Flexio\IFace\IJob
             return null;
 
         if (is_array($data) || is_object($data))
+        {
             $data = json_encode($data);
+            return self::ensureStream($data, \Flexio\Base\ContentType::JSON);
+        }
+
 
         return self::ensureStream($data);
     }
