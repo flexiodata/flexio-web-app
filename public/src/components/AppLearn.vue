@@ -5,7 +5,12 @@
       <p class="mw7 lh-copy">Welcome to our interactive tutorial. Choose a topic from the drop-down menu to get started.<br>Then, follow the steps below to get a deployable pipe in just a few minutes.</p>
       <div class="mv3 f5 lh-copy">
         <span class="dib mr1">I want to</span>
-        <el-select v-model="active_item_id" placeholder="Select" style="width: 320px">
+        <el-select
+          placeholder="Select"
+          style="width: 320px"
+          @change="onOnboardingItemChange"
+          v-model="active_item_id"
+        >
           <el-option
             v-for="item in items"
             :key="item.id"
@@ -77,6 +82,14 @@
       ]),
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+      },
+      onOnboardingItemChange(id) {
+        var item = _.find(this.items, { id })
+
+        analytics.track('Switched Onboarding Item', {
+          label: window.location.pathname,
+          title: item.name
+        })
       }
     }
   }

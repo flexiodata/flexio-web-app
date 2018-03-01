@@ -73,6 +73,7 @@ class Admin
             if ($user !== false)
                 $user_info = $user->get();
 
+            $pipe_info = array();
             $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
             if ($pipe !== false)
                 $pipe_info = $pipe->get();

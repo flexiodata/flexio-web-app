@@ -25,6 +25,7 @@
         <onboarding-code-editor
           ref="code"
           cls="relative"
+          :title="item.name"
           :api-key="apiKey"
           :sdk-options="sdkOptions"
           :buttons="['save', 'run']"
@@ -224,12 +225,24 @@ If you have any questions, please send us a note using the chat button at the bo
         }
       },
       showNewConnectionDialog() {
+        var edit_code = this.$refs['code'].getEditCode()
+
         this.show_connection_new_dialog = true
-        analytics.track('Clicked `Connect to Storage` button in Onboarding')
+        analytics.track('Clicked `Create Connection` button in Onboarding', {
+          label: window.location.pathname,
+          title: this.item.name,
+          code: edit_code
+        })
       },
       showPipeSaveDialog() {
+        var edit_code = this.$refs['code'].getEditCode()
+
         this.show_pipe_save_dialog = true
-        analytics.track('Clicked `Save & Deploy` button in Onboarding')
+        analytics.track('Clicked `Save & Deploy` button in Onboarding', {
+          label: window.location.pathname,
+          title: this.item.name,
+          code: edit_code
+        })
       },
       showPipeDeployDialog() {
         this.show_pipe_deploy_dialog = true

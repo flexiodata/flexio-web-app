@@ -81,6 +81,7 @@
   import { ROUTE_PIPES } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
+  import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
   import PipeShareModal from './PipeShareModal.vue'
@@ -135,10 +136,12 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
+        analytics.track('Clicked `Schedule` button in Pipe List', this.getAnalyticsPayload(item))
       },
       openPipeDeployDialog(item) {
         this.active_pipe = item
         this.show_pipe_deploy_dialog = true
+        analytics.track('Clicked `Deploy` button in Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -214,6 +217,18 @@
             // TODO: add error handling
           }
         })
+      },
+      getAnalyticsPayload(pipe) {
+        var edit_code = Flexio.pipe(pipe.task).toCode()
+        var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+
+        _.assign(analytics_payload, {
+          label: window.location.pathname,
+          title: pipe.name,
+          code: edit_code
+        })
+
+        return analytics_payload
       }
     }
   }
