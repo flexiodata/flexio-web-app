@@ -126,7 +126,7 @@
       openAddModal() {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
-        analytics.track('Clicked New Connection Button')
+        analytics.track('Clicked `New Connection` Button')
       },
       openEditModal(item) {
         this.show_connection_props_modal = true
