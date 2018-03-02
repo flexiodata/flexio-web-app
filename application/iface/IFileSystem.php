@@ -18,7 +18,7 @@ namespace Flexio\IFace;
 
 interface IFileSystem
 {
-    const FLAG_RANDOM_ACCESS = 0x01; 
+    const FLAG_HAS_OPEN = 0x01; 
     
     public function getFlags() : int;
 
