@@ -279,7 +279,12 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         if (!$this->checkConnect())
             return false;
-
+        
+        if (isset($params['structure']))
+        {
+            $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
+        }
+        
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 

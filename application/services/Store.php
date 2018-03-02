@@ -237,6 +237,11 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback)
     {
+        if (isset($params['structure']))
+        {
+            $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
+        }
+    
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
 

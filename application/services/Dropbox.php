@@ -303,7 +303,6 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
 
-
         $path = $params['path'] ?? '';
 
         while (false !== strpos($path,'//'))
