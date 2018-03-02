@@ -144,7 +144,7 @@
 
           this.syntax_msg = ''
 
-          this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
             if (response.ok)
             {
               this.edit_code = this.orig_code
@@ -158,6 +158,7 @@
         catch(e)
         {
           this.syntax_msg = e.message
+          return null
         }
       }
     }

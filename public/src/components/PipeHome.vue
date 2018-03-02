@@ -64,6 +64,7 @@
       />
 
       <pipe-code-editor
+        ref="code"
         class="mv3 ph4 center"
         style="max-width: 1440px"
         :pipe-options="pipe_options"
@@ -468,6 +469,16 @@
           // make sure the active item is in the view
           setTimeout(() => { this.scrollToPromptTask() }, 1000)
           return
+        }
+         else if (this.$refs['code'].is_changed)
+        {
+          debugger
+
+          // TODO: this shouldn't be done imperatively
+          var xhr = this.$refs['code'].saveChanges()
+
+          if (!_.isNil(xhr))
+            xhr.then(response => { this.runPipe() })
         }
          else
         {
