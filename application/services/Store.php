@@ -30,7 +30,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFlags() : int
     {
-        return \Flexio\IFace\IFileSystem::FLAG_RANDOM_ACCESS;
+        return \Flexio\IFace\IFileSystem::FLAG_HAS_OPEN;
     }
 
     public function list(string $path = '', array $options = []) : array
