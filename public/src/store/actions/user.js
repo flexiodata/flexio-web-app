@@ -9,12 +9,13 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
   return api.fetchUser({ eid: 'me' }).then(response => {
     var user = response.body
 
-    // success callback
-    commit(types.FETCHED_USER, user)
+    if (_.get(user, 'eid', '').length > 0)
+    {
+      commit(types.FETCHED_USER, user)
+      dispatch('analyticsIdentify', { attrs: user })
+    }
+
     commit(types.FETCHING_USER, false)
-
-    dispatch('analyticsIdentify', { attrs: user })
-
     return response
   }, response => {
     // error callback
