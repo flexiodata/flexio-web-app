@@ -115,8 +115,17 @@ router.beforeEach((to, from, next) => {
   }
    else
   {
+    // we're already fetching the user; done
     if (store.state.user_fetching)
       return
+
+    // we're moving to the sign in page;
+    // we shouldn't fetch a user until they sign in
+    if (to.name == ROUTE_SIGNIN)
+    {
+      next()
+      return
+    }
 
     // this route does not require authentication; try to sign in just to make
     // sure we know who the active user is and move to the next route
