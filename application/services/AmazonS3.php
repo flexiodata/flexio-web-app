@@ -445,6 +445,11 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback) : bool
     {
+        if (isset($params['structure']))
+        {
+            $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
+        }
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 

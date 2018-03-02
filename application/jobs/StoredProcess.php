@@ -250,7 +250,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $process_params['finished'] = self::getProcessTimestamp();
         $process_params['cache_used'] = 'N';
         if ($this->isStopped() === false)
-            $process_params['process_status'] = $this->hasError() ? \Flexio\Jobs\Process::STATUS_FAILED : \Flexio\Jobs\Process::STATUS_COMPLETED;
+        {
+            $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_COMPLETED;
+            if ($this->hasError())
+            {
+                $process_info = array('error' => $this->getError());
+                $process_info_str = json_encode($process_info);
+
+                $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
+                $process_params['process_info'] = $process_info_str;
+            }
+        }
         $this->procobj->set($process_params);
 
         return $this;
