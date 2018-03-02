@@ -1,39 +1,37 @@
 <template>
-  <div class="overflow-y-auto">
-    <div class="mv4 pv3 ph4 center" style="max-width: 1440px">
+  <div>
 
-      <!-- code editor -->
-      <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
-        <code-editor
-          ref="code"
-          lang="javascript"
-          :val="edit_code"
-          :options="{ minHeight: 300 }"
-          @change="updateCode"
-        />
-      </div>
-
-      <!-- syntax error message and cancel/save buttons -->
-      <transition name="slide-fade">
-        <div class="flex flex-row items-start mt2" v-if="is_changed">
-          <div class="flex-fill mr4">
-            <transition name="slide-fade">
-              <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
-            </transition>
-          </div>
-          <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-          <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
-        </div>
-      </transition>
-
-      <!-- preview -->
-      <pipe-content
-        class="mt2 relative"
-        :stream-eid="last_stream_eid"
-        v-if="last_stream_eid.length > 0"
+    <!-- code editor -->
+    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
+      <code-editor
+        ref="code"
+        lang="javascript"
+        :val="edit_code"
+        :options="{ minHeight: 300 }"
+        @change="updateCode"
       />
-
     </div>
+
+    <!-- syntax error message and cancel/save buttons -->
+    <transition name="slide-fade">
+      <div class="flex flex-row items-start mt2" v-if="is_changed">
+        <div class="flex-fill mr4">
+          <transition name="slide-fade">
+            <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
+          </transition>
+        </div>
+        <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
+        <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
+      </div>
+    </transition>
+
+    <!-- preview -->
+    <pipe-content
+      class="mt2 relative"
+      :stream-eid="last_stream_eid"
+      v-if="last_stream_eid.length > 0"
+    />
+
   </div>
 </template>
 

@@ -12,7 +12,7 @@
     </div>
   </div>
 
-  <div class="flex flex-column items-stretch bg-nearer-white" v-else>
+  <div class="flex flex-column bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
       :pipe-options="pipe_options"
@@ -22,28 +22,55 @@
       @cancel-process="cancelProcess"
     />
 
-    <div class="flex flex-column justify-center h-100" v-if="is_process_running">
-      <spinner size="large" message="Running pipe..." />
+    <div class="flex-fill pv4 overflow-y-auto">
+      <div class="center" style="max-width: 1440px">
+        <ui-alert
+          class="mb3 mh4"
+          style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
+          type="success"
+          :dismissible="false"
+          @dismiss="show_success = false"
+          v-show="show_success">
+          {{success_message}}
+        </ui-alert>
+      </div>
+
+      <div class="center" style="max-width: 1440px">
+        <ui-alert
+          class="mb3 mh4"
+          style="width: auto; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.4)"
+          type="error"
+          @dismiss="show_error = false"
+          v-show="show_error">
+          {{error_message}}
+        </ui-alert>
+      </div>
+
+      <div class="flex flex-column justify-center h-100" v-if="is_process_running">
+        <spinner size="large" message="Running pipe..." />
+      </div>
+
+      <pipe-builder-list
+        class="flex-fill"
+        style="padding-bottom: 16rem"
+        :pipe-options="pipe_options"
+        v-bind="pipe_options"
+        @prompt-value-change="onPromptValueChange"
+        @go-prev-prompt="goPrevPrompt"
+        @go-next-prompt="goNextPrompt"
+        @run-once-with-values="runOnceWithPromptValues"
+        @save-values-and-run="savePromptValuesAndRun"
+        v-else-if="is_builder_view"
+      />
+
+      <pipe-code-editor
+        class="mv3 ph4 center"
+        style="max-width: 1440px"
+        :pipe-options="pipe_options"
+        v-bind="pipe_options"
+        v-else
+      />
     </div>
-
-    <pipe-builder-list
-      class="flex-fill"
-      style="padding-bottom: 16rem"
-      :pipe-options="pipe_options"
-      v-bind="pipe_options"
-      @prompt-value-change="onPromptValueChange"
-      @go-prev-prompt="goPrevPrompt"
-      @go-next-prompt="goNextPrompt"
-      @run-once-with-values="runOnceWithPromptValues"
-      @save-values-and-run="savePromptValuesAndRun"
-      v-else-if="is_builder_view"
-    />
-
-    <pipe-code-editor
-      :pipe-options="pipe_options"
-      v-bind="pipe_options"
-      v-else
-    />
 
     <ui-snackbar-container
       ref="snackbar-container"
@@ -69,7 +96,12 @@
   import { VARIABLE_REGEX } from '../constants/common'
   import { TASK_OP_COMMENT } from '../constants/task-op'
   import { TASK_INFO_COMMENT } from '../constants/task-info'
-  import { PROCESS_STATUS_RUNNING, PROCESS_MODE_BUILD } from '../constants/process'
+  import {
+    PROCESS_STATUS_RUNNING,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED,
+    PROCESS_MODE_BUILD
+  } from '../constants/process'
   import {
     PIPEHOME_VIEW_SDK_JS,
     PIPEHOME_VIEW_BUILDER,
@@ -93,13 +125,47 @@
       }
     },
     watch: {
+      is_process_running(val, old_val) {
+        if (val === false && old_val === true)
+          this.tryFetchProcessLog()
+      },
       active_process(val, old_val) {
         if (_.get(val, 'eid', '') != _.get(old_val, 'eid', ''))
           this.tryFetchProcessLog()
       },
-      is_process_running(val, old_val) {
-        if (val === false && old_val === true)
-          this.tryFetchProcessLog()
+      active_process_status: function(val, old_val) {
+        if (val == PROCESS_STATUS_RUNNING)
+        {
+          this.show_error = false
+          this.show_success = false
+
+          // scroll back to the top of the pipe list when the process starts
+          this.$scrollTo('#'+this.pipeEid, {
+            container: '#'+this.pipeEid,
+            duration: 400,
+            easing: 'ease-out'
+          })
+        }
+         else if (old_val == PROCESS_STATUS_RUNNING)
+        {
+          if (val == PROCESS_STATUS_COMPLETED)
+          {
+            setTimeout(() => { this.show_success = false }, 6000)
+
+            setTimeout(() => {
+              this.show_success = true
+              this.show_error = false
+            }, 1000)
+          }
+
+          if (val == PROCESS_STATUS_FAILED)
+          {
+            setTimeout(() => {
+              this.show_success = false
+              this.show_error = true
+            }, 1000)
+          }
+        }
       }
     },
     data() {
@@ -108,7 +174,11 @@
         pipe_view: PIPEHOME_VIEW_SDK_JS,
         prompt_tasks: [],
         active_prompt_idx: 0,
-        is_prompting: false
+        is_prompting: false,
+        show_success: false,
+        show_error: false,
+        success_message: 'The pipe was run successfully!',
+        error_message: 'An error occurred while running the pipe.'
       }
     },
     computed: {
@@ -184,8 +254,11 @@
       active_process() {
         return _.last(this.getActiveDocumentProcesses())
       },
+      active_process_status() {
+        return _.get(this.active_process, 'process_status', '')
+      },
       is_process_running() {
-        return _.get(this.active_process, 'process_status', '') == PROCESS_STATUS_RUNNING
+        return this.active_process_status == PROCESS_STATUS_RUNNING
       },
       is_builder_view()  {
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
