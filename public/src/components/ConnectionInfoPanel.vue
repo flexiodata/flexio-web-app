@@ -184,7 +184,7 @@
       KeypairItem
     },
     watch: {
-      '$data': function(val, old_val) {
+      'connection_info': function(val, old_val) {
         this.$emit('update:connection', this.getConnection())
       }
     },
@@ -203,6 +203,11 @@
         expires: '',
         headers: [],
         data: []
+      }
+    },
+    computed: {
+      connection_info() {
+        return _.pick(this.$data, ['method', 'url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
       }
     },
     mounted() {
@@ -229,7 +234,7 @@
         this.headers = [].concat(this.headers).concat(newKeypairItem())
       },
       getConnection() {
-        var connection_info = _.pick(this.$data, ['method', 'url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
+        var connection_info = _.cloneDeep(this.connection_info)
 
         var data = _.keyBy(this.$data.data, 'key')
         data = _.pickBy(data, (val, key) => { return key.length > 0 })
