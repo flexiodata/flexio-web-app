@@ -71,7 +71,20 @@
         v-else
       />
 
-
+      <div
+        class="mv3 ph4 center"
+        style="max-width: 1440px"
+        v-if="is_process_failed && is_superuser"
+      >
+        <div class="bg-white ba b--black-10">
+          <code-editor
+            class="h-100 overflow-y-auto"
+            lang="application/json"
+            :val="active_process_info_str"
+            :options="{ lineNumbers: false, readOnly: true }"
+          />
+        </div>
+      </div>
 
       <help-items class="mv3" />
     </div>
@@ -115,6 +128,7 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
+  import CodeEditor from './CodeEditor.vue'
   import HelpItems from './HelpItems.vue'
 
   export default {
@@ -123,6 +137,7 @@
       PipeHomeHeader,
       PipeCodeEditor,
       PipeBuilderList,
+      CodeEditor,
       HelpItems
     },
     provide() {
@@ -166,7 +181,7 @@
 
           if (val == PROCESS_STATUS_FAILED)
           {
-            this.error_message = _.get(this.active_process, 'process_info.error.message', '')
+            this.error_message = _.get(this.active_process_info, 'error.message', '')
 
             //this.message =
             setTimeout(() => {
@@ -209,6 +224,11 @@
           activePromptIdx: this.active_prompt_idx,
           activeProcess: this.active_process
         }
+      },
+      is_superuser() {
+        // limit to @flex.io users for now
+        var user_email = _.get(this.getActiveUser(), 'email', '')
+        return _.includes(user_email, '@flex.io')
       },
       is_fetched() {
         return _.get(this.pipe, 'is_fetched', false)
@@ -266,8 +286,17 @@
       active_process_status() {
         return _.get(this.active_process, 'process_status', '')
       },
+      active_process_info() {
+        return _.get(this.active_process, 'process_info', {})
+      },
+      active_process_info_str() {
+        return JSON.stringify(this.active_process_info, null, 2)
+      },
       is_process_running() {
         return this.active_process_status == PROCESS_STATUS_RUNNING
+      },
+      is_process_failed() {
+        return this.active_process_status == PROCESS_STATUS_FAILED
       },
       is_builder_view()  {
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
@@ -295,7 +324,8 @@
     methods: {
       ...mapGetters([
         'getAllConnections',
-        'getActiveDocumentProcesses'
+        'getActiveDocumentProcesses',
+        'getActiveUser'
       ]),
 
       setPipeView(view) {
