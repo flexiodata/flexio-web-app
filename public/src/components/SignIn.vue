@@ -12,6 +12,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import { ROUTE_SIGNUP, ROUTE_FORGOTPASSWORD } from '../constants/route'
   import SignInForm from './SignInForm.vue'
   import Redirect from './mixins/redirect'
@@ -22,6 +23,9 @@
       SignInForm
     },
     computed: {
+      ...mapState([
+        'active_user_eid'
+      ]),
       signup_route() {
         return {
           name: ROUTE_SIGNUP,
@@ -36,6 +40,9 @@
     },
     mounted() {
       analytics.track('Visited Sign In Page')
+
+      if (this.active_user_eid.length > 0)
+        this.redirect()
     },
     methods: {
       onSignUpClick() {
