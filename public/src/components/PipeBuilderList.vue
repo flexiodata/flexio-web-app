@@ -60,8 +60,6 @@
         @save-values-and-run="$emit('save-values-and-run')"
       ></pipe-builder-item>
     </div>
-
-    <help-items class="mv4"></help-items>
   </div>
 </template>
 
@@ -73,7 +71,6 @@
   } from '../constants/process'
   import Btn from './Btn.vue'
   import PipeBuilderItem from './PipeBuilderItem.vue'
-  import HelpItems from './HelpItems.vue'
 
   export default {
     props: {
@@ -103,8 +100,7 @@
     },
     components: {
       Btn,
-      PipeBuilderItem,
-      HelpItems
+      PipeBuilderItem
     },
     inject: ['pipeEid'],
     watch: {

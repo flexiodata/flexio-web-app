@@ -70,6 +70,8 @@
         v-bind="pipe_options"
         v-else
       />
+
+      <help-items class="mv3" />
     </div>
 
     <ui-snackbar-container
@@ -111,13 +113,15 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
+  import HelpItems from './HelpItems.vue'
 
   export default {
     components: {
       Spinner,
       PipeHomeHeader,
       PipeCodeEditor,
-      PipeBuilderList
+      PipeBuilderList,
+      HelpItems
     },
     provide() {
       return {
