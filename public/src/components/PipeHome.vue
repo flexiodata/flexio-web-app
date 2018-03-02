@@ -159,13 +159,6 @@
         {
           this.show_error = false
           this.show_success = false
-
-          // scroll back to the top of the pipe list when the process starts
-          this.$scrollTo('#'+this.pipeEid, {
-            container: '#'+this.pipeEid,
-            duration: 400,
-            easing: 'ease-out'
-          })
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
@@ -176,7 +169,7 @@
             setTimeout(() => {
               this.show_success = true
               this.show_error = false
-            }, 1000)
+            }, 200)
           }
 
           if (val == PROCESS_STATUS_FAILED)
@@ -187,7 +180,7 @@
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
-            }, 1000)
+            }, 200)
           }
         }
       }
