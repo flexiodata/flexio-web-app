@@ -164,6 +164,9 @@
 
           if (val == PROCESS_STATUS_FAILED)
           {
+            this.error_message = _.get(this.active_process, 'process_info.error.message', '')
+
+            //this.message =
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
