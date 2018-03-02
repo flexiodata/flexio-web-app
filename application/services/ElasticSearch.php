@@ -136,8 +136,9 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
     public function unlink(string $path) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        $params = array('path' => $path);
+        $this->deleteIndex($params);
+        return true;
     }
 
     public function open($path) : \Flexio\IFace\IStream
@@ -163,6 +164,13 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         //if ($content_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
         //    return false;
 
+        // delete the index if it's there
+        $this->deleteIndex($params);
+
+        // create the index
+        if ($this->createIndex($params) === false)
+            return false;
+
         // make sure the index and type are valid
         $index = $params['path'] ?? '';
         $type = self::getDefaultTypeName();
@@ -181,6 +189,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
                 break;
 
             $rows_to_write[] = $row;
+
             if (count($rows_to_write) <= $buffer_size)
                 continue;
 
@@ -204,6 +213,44 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
     // additional functions
     ////////////////////////////////////////////////////////////
 
+    public function deleteIndex(array $params) : bool
+    {
+        $index = $params['path'] ?? '';
+        $index = self::convertToValid($index);
+
+        try
+        {
+            // write the content
+            $url = $this->getHostUrlString() . '/' . urlencode($index);
+            $auth = $this->getBasicAuthString();
+            $content_type = 'application/json';
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Basic '. $auth, 'Content-Type: '. $content_type ]); // disable authorization header for public test
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: '. $content_type ]);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+
+            $result = json_decode($result,true);
+
+            if (!is_array($result))
+                return false;
+            if (isset($result['errors']) && $result['errors'] !== false)
+                return false;
+
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+    }
+
     public function createIndex(array $params) : bool
     {
         // create an index with the specified mapping
@@ -221,7 +268,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $type = self::convertToValid($type);
 
         // get the structure
-        $structure = $params['structure'];
+        $structure = $params['structure'] ?? false;
         if (!is_array($structure))
             return false;
 
@@ -266,7 +313,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             // write the content
             $url = $this->getHostUrlString() . '/' . urlencode($index);
             $auth = $this->getBasicAuthString();
-            $content_type = 'application/x-ndjson';
+            $content_type = 'application/json';
 
             $ch = curl_init();
 
@@ -284,7 +331,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
             if (!is_array($result))
                 return false;
-            if (!isset($result['errors']))
+            if (isset($result['errors']) && $result['errors'] !== false)
                 return false;
 
             return true;
@@ -293,7 +340,6 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         {
             return false;
         }
-
     }
 
     private static function getIndexTypeInfo(string $type) : array
@@ -375,7 +421,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
             // write the content
             $url = $this->getHostUrlString() . '/_bulk';
             $auth = $this->getBasicAuthString();
-            $content_type = 'application/x-ndjson';
+            $content_type = 'application/x-ndjson'; // use ndjson for bulk operations
 
             $ch = curl_init();
 
@@ -393,7 +439,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
             if (!is_array($result))
                 return false;
-            if (!isset($result['errors']))
+            if (isset($result['errors']) && $result['errors'] !== false)
                 return false;
 
             return true;
@@ -483,6 +529,7 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
 
     private function convertToValid(string $name) : string
     {
+        $name = ltrim($name,'/');
         return strtolower($name);
     }
 

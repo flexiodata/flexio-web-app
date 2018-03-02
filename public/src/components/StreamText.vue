@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center h-100" v-if="state.is_fetching && !state.has_fetched">
-    <spinner size="large" :message="state.loading_text"></spinner>
+    <spinner :message="state.loading_text" />
   </div>
   <code-editor
     class="h-100 overflow-y-auto"
@@ -8,14 +8,14 @@
     :val="state.text"
     :options="{ lineNumbers: false, readOnly: true }"
     v-else-if="isHtml"
-  ></code-editor>
+  />
   <code-editor
     class="h-100 overflow-y-auto"
     lang="application/json"
     :val="state.text"
     :options="{ lineNumbers: false, readOnly: true }"
     v-else-if="isJson"
-  ></code-editor>
+  />
   <pre v-else class="monospace ma0 pa2 h-100 overflow-auto" @scroll="onScroll">{{state.text}}</pre>
 </template>
 
