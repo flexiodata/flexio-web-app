@@ -164,7 +164,7 @@
         {
           if (val == PROCESS_STATUS_COMPLETED)
           {
-            setTimeout(() => { this.show_success = false }, 6000)
+            setTimeout(() => { this.show_success = false }, 4000)
 
             setTimeout(() => {
               this.show_success = true
