@@ -372,7 +372,11 @@ class Process implements \Flexio\IFace\IProcess
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
-            $this->setError($code, $message, $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError($code, $message, $module, $line, $type, $trace);
+                 else
+                $this->setError($code, $message);
         }
         catch (\Exception $e)
         {
@@ -381,7 +385,11 @@ class Process implements \Flexio\IFace\IProcess
             $line = $e->getLine();
             $trace = $debug ? $e->getTrace() : null;
             $type = 'system exception';
-            $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+                 else
+                $this->setError(\Flexio\Base\Error::GENERAL, '');
         }
         catch (\Error $e)
         {
@@ -390,7 +398,11 @@ class Process implements \Flexio\IFace\IProcess
             $line = $e->getLine();
             $trace = $debug ? $e->getTrace() : null;
             $type = 'system error';
-            $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+                 else
+                $this->setError(\Flexio\Base\Error::GENERAL, '');
         }
     }
 
