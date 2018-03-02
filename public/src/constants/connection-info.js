@@ -28,7 +28,7 @@ const CUSTOMAPI = {
   service_name: 'Custom API',
   service_description: '',
   connection_type: types.CONNECTION_TYPE_HTTP,
-  icon: require('../assets/icon/icon-link-128.png'),
+  icon: require('../assets/icon/icon-custom-api-128.png'),
   is_service: false,
   is_input: true,
   is_output: false,
