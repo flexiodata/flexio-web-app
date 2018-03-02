@@ -79,7 +79,7 @@
         </form>
 
         <div class="mt4" v-if="is_http">
-          <connection-info-configure-panel
+          <connection-info-panel
             :connection.sync="edit_connection"
           />
         </div>
@@ -115,7 +115,7 @@
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
-  import ConnectionInfoConfigurePanel from './ConnectionInfoConfigurePanel.vue'
+  import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
   import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
@@ -202,7 +202,7 @@
       ServiceList,
       ServiceIcon,
       ConnectionAuthenticationPanel,
-      ConnectionInfoConfigurePanel,
+      ConnectionInfoPanel,
       RightsList
     },
     watch: {

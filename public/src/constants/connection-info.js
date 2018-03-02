@@ -24,9 +24,9 @@ const BOX = {
   is_storage: true
 }
 
-const CUSTOMAPI = {
+const CUSTOM_API = {
   service_name: 'Custom API',
-  service_description: '',
+  service_description: 'Connect to any REST API',
   connection_type: types.CONNECTION_TYPE_HTTP,
   icon: require('../assets/icon/icon-custom-api-128.png'),
   is_service: false,
@@ -271,7 +271,7 @@ const UPLOAD = {
 //export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
 
 // go out of alphabetical order here so the order is correct in the pipe add modal
-export const CONNECTION_INFO_CUSTOMAPI     = CUSTOMAPI
+export const CONNECTION_INFO_CUSTOM_API    = CUSTOM_API
 export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
