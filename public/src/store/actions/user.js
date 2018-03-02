@@ -13,7 +13,7 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
     commit(types.FETCHED_USER, user)
     commit(types.FETCHING_USER, false)
 
-    //dispatch('fetchCurrentUserStatistics')
+    dispatch('analyticsIdentify', { attrs: user })
 
     return response
   }, response => {
@@ -23,23 +23,44 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
   })
 }
 
+export const analyticsIdentify = ({ commit }, { attrs }) => {
+  var analytics_payload = _.pick(attrs, ['first_name','last_name','email'])
+
+  // add Segment-friendly keys
+  _.assign(analytics_payload, {
+    firstName: _.get(attrs, 'first_name'),
+    lastName: _.get(attrs, 'last_name'),
+    username: _.get(attrs, 'user_name'),
+    createdAt: _.get(attrs, 'created')
+  })
+
+  // add current pathname as 'label' (for Google Analytics)
+  _.assign(analytics_payload, {
+    label: window.location.pathname
+  })
+
+  analytics.identify(_.get(attrs, 'eid'), analytics_payload)
+}
+
+/*
 export const fetchCurrentUserStatistics = ({ commit, state }) => {
   var user = _.get(state, 'objects.'+state.active_user_eid)
 
   return api.fetchUserStatistics({ eid: 'me' }).then(response => {
-    var stats_payload = _.pick(user, ['first_name','last_name','email'])
+    var analytics_payload = _.pick(user, ['first_name','last_name','email'])
 
     // add Segment-friendly keys
-    _.assign(stats_payload, {
+    _.assign(analytics_payload, {
       username: _.get(user, 'user_name'),
       createdAt: _.get(user, 'created')
     }, response.body)
 
     setTimeout(() => {
-      analytics.identify(_.get(user, 'eid'), stats_payload)
+      analytics.identify(_.get(user, 'eid'), analytics_payload)
     }, 500)
   })
 }
+*/
 
 // ----------------------------------------------------------------------- //
 
@@ -87,7 +108,7 @@ export const changePassword = ({ commit }, { eid, attrs }) => {
   })
 }
 
-export const signIn = ({ commit, dispatch }, { attrs }) => {
+export const signIn = ({ commit }, { attrs }) => {
   commit(types.SIGNING_IN, true)
 
   return api.login({ attrs }).then(response => {
@@ -98,7 +119,6 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNING_IN, false)
 
     //analytics.track('Signed In', _.omit(attrs, ['password']))
-    //dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
@@ -126,7 +146,7 @@ export const signOut = ({ commit }) => {
   })
 }
 
-export const signUp = ({ commit, dispatch }, { attrs }) => {
+export const signUp = ({ commit }, { attrs }) => {
   commit(types.SIGNING_UP, true)
 
   return api.signUp({ attrs }).then(response => {

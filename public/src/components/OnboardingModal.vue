@@ -150,10 +150,6 @@
         cfg['app.prompt.onboarding.shown'] = true
 
         this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
-
-        setTimeout(() => {
-          analytics.identify(this.active_user_eid, { closed_onboarding_modal: 1 })
-        }, 500)
       }
     }
   }

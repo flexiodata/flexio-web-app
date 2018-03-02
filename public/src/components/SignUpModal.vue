@@ -135,7 +135,7 @@
           if (window.analytics)
           {
             window.analytics.track('Signed In', this.getUserInfo(true))
-            setTimeout(function() { window.location = '/app' }, 300)
+            setTimeout(function() { window.location = '/app' }, 500)
           }
         }, 50)
       },
@@ -143,7 +143,7 @@
         setTimeout(() => {
           if (window.analytics)
             window.analytics.track('Signed Up', this.getUserInfo(true))
-            setTimeout(function() { window.location = '/app/learn' }, 300)
+            setTimeout(function() { window.location = '/app/learn' }, 500)
         }, 50)
       }
     }

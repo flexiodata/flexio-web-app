@@ -44,7 +44,6 @@ export const createPipe = ({ commit, dispatch }, { attrs }) => {
     // success callback
     var pipe = response.body
 
-    //dispatch('fetchCurrentUserStatistics')
     commit(types.CREATED_PIPE, { attrs, pipe })
 
     return response

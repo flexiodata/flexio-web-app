@@ -63,7 +63,7 @@ export default {
 
   // user
   fetchUser:                      function({ eid })                     { return UserResource[GET] ({ eid })                                                              },
-  fetchUserStatistics:            function({ eid })                     { return UserResource[GET] ({ eid, p1: 'statistics' })                                            },
+  // DEPRECATED: fetchUserStatistics:            function({ eid })                     { return UserResource[GET] ({ eid, p1: 'statistics' })                                            },
   createUser:                     function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
   updateUser:                     function({ eid, attrs })              { return UserResource[POS] ({ eid }, attrs)                                                       },
   signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },

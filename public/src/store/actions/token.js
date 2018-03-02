@@ -28,7 +28,6 @@ export const createUserToken = ({ commit, dispatch }, { eid, attrs }) => {
     commit(types.CREATED_TOKEN, { eid, attrs: response.body })
 
     analytics.track('Created API Key')
-    //dispatch('fetchCurrentUserStatistics')
 
     return response
   }, response => {
