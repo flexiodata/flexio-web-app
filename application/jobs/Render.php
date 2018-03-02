@@ -51,6 +51,11 @@ class Render extends \Flexio\Jobs\Base
         $scrollbars = $params['scrollbars'] ?? true;
         $scrollbars = toBoolean($scrollbars);
 
+        $scale = $params['scale'] ?? null;
+        $scale = (string)$scale;
+        if (!is_numeric($scale))
+            $scale = null;
+
         if ($format == 'pdf')
             $content_type = 'application/pdf';
         else if ($format == 'png')
@@ -91,6 +96,7 @@ class Render extends \Flexio\Jobs\Base
                "--url $url ".
                "--format $format ".
                "--paper $paper ".
+               (isset($scale) ? "--scale $scale ":"").
                ($landscape ? "--landscape ":"").
                ($full ? "--fullPage ":"").
                (isset($width) && isset($height) ? "--viewport.width $width --viewport.height $height ":"").

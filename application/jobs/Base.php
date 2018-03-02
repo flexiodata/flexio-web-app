@@ -64,13 +64,48 @@ class Base implements \Flexio\IFace\IJob
     }
 
 
-    public static function ensureStream($stream)
+    public static function ensureStream($stream, $content_type = null)
     {
         if ($stream instanceof \Flexio\Base\Stream)
             return $stream;
 
+        if (is_object($stream) || is_array($stream))
+        {
+            $data = json_encode($stream);
+            if ($content_type === null)
+            {
+                $content_type = \Flexio\Base\ContentType::JSON;
+            }
+        }
+         else
+        {
+            $data = (string)$stream;
+        }
+
         $res = \Flexio\Base\Stream::create();
-        $res->buffer = (string)$stream;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        if ($content_type !== null)
+        {
+            $res->setMimeType($content_type);
+        }
+
+        /*
+         else
+        {
+            // no content type was passed; if it is JSON, set the content type to JSON
+            $test = trim($data);
+            $firstch = substr($test,0,1);
+            if ($firstch === '[' || $firstch === '{')
+            {
+                $test = @json_encode($data);
+                if ($test !== false)
+                {
+                    $ret->setMimeType($content_type);
+                }
+            }
+        }
+        */
+
+        $res->buffer = $data;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
         return $res;
     }
 
@@ -128,6 +163,18 @@ class Base implements \Flexio\IFace\IJob
         {
             $stream = sha1(uniqid(\Flexio\Base\Util::generateRandomString(20), true));
         }
+        else if ($varname == 'files')
+        {
+            $stream = [];
+            foreach ($files as $k => $file)
+            {
+                $name = $file->getName();
+                $ext = pathinfo($name, PATHINFO_EXTENSION);
+                $size = $file->getSize();
+                $content_type = $file->getMimeType();
+                $stream[$k] = [ 'name' => $name, 'extension' => $ext, 'size' => $size, 'content_type' => $content_type ]; 
+            }
+        }
         else if (isset($variables[$varname]))
         {
             $stream = $variables[$varname];
@@ -177,7 +224,11 @@ class Base implements \Flexio\IFace\IJob
             return null;
 
         if (is_array($data) || is_object($data))
+        {
             $data = json_encode($data);
+            return self::ensureStream($data, \Flexio\Base\ContentType::JSON);
+        }
+
 
         return self::ensureStream($data);
     }
@@ -246,20 +297,6 @@ class Base implements \Flexio\IFace\IJob
                             $streamreader = $stream->getReader();
                             while (($chunk = $streamreader->read()) !== false)
                                 $replacement .= $chunk;
-                        }
-                        else if ($varname == 'files')
-                        {
-                            $parts = explode('.', $suffix);
-
-                            if (count($parts) >= 1 && isset($info['files'][$part[0]]))
-                            {
-                                $file = $info['files'][$part[0]];
-                                if (($parts[1] ?? '') == 'name')
-                                {
-                                    if ($file instanceof \Flexio\Base\Stream)
-                                        $replacement = $file->getName();
-                                }
-                            }
                         }
 
                         // use true/false text for boolean value replacements in a string

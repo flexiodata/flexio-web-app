@@ -984,14 +984,18 @@ class Util
             return;
         }
 
+        $size = 0;
+
         $parser = \Flexio\Base\MultipartParser::create();
-        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$post_streams) {
+        $parser->parse($php_stream_handle, $post_content_type, function ($type, $name, $data, $filename, $content_type) use (&$stream, &$streamwriter, &$process, &$form_params, &$size, &$post_streams) {
             if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_BEGIN)
             {
                 $stream = \Flexio\Base\Stream::create();
 
                 if ($content_type === false)
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
+                
+                $size = 0;
 
                 $stream_info = array();
                 $stream_info['name'] = $filename;
@@ -1006,13 +1010,14 @@ class Util
                 {
                     // write out the data
                     $streamwriter->write($data);
+                    $size += strlen($data);
                 }
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_FILE_END)
             {
                 $streamwriter = false;
+                $stream->setSize($size);
                 $process->addFile($name, $stream);
-
                 $stream = false;
             }
             else if ($type == \Flexio\Base\MultipartParser::TYPE_KEY_VALUE)

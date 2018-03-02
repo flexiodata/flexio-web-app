@@ -45,8 +45,16 @@ class Util
     // $content_type = in the case the $params is a string, specify its content type here
     // returns an array [ "code" => http code, "response" => response body ];
 
-    public static function callApi($method, $path, $token, $params, $content_type = null)
+    public static function callApi(array $call_params)
     {
+        $host = \Flexio\Tests\Util::getTestApiEndpoint();
+        $method = $call_params['method'] ?? 'GET';
+        $path = $call_params['path'] ?? '';
+        $token = $call_params['token'] ?? \Flexio\Tests\Util::getDefaultTestUserToken();
+        $params = $call_params['params'] ?? [];
+        $content_type = $call_params['content_type'] ?? null;
+        
+
         if (strlen($path) == 0)
         {
             throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
@@ -84,7 +92,7 @@ class Util
         }
 
 
-        curl_setopt($ch, CURLOPT_URL, "https://localhost" . $path);
+        curl_setopt($ch, CURLOPT_URL, "https://$host" . $path);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$token]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);

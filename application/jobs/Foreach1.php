@@ -88,6 +88,7 @@ class Foreach1 extends \Flexio\Jobs\Base
             $buf = '';
             while (($chunk = $streamreader->read(32768)) !== false)
                 $buf .= $chunk;
+
             $json = json_decode($buf);
             if (is_array($json))
             {
@@ -129,15 +130,17 @@ class Foreach1 extends \Flexio\Jobs\Base
 
             if (is_array($input) || is_object($input))
             {
+                $json = json_encode($input);
+
                 $p = $subprocess->getParams();
-                foreach ((array)$input as $k => $v)
-                {
-                    $p[$this->varname . '.' . $k] = $v;
-                }
+                $param_stream = \Flexio\Base\Stream::create();
+                $param_stream->setMimeType(\Flexio\Base\ContentType::JSON);
+                $param_stream->buffer = $json;
+                $p[$this->varname] = $param_stream;
                 $subprocess->setParams($p);
 
                 $stream->setMimeType(\Flexio\Base\ContentType::JSON);
-                $writer->write(json_encode($input));
+                $writer->write($json);
             }
             else
             {
