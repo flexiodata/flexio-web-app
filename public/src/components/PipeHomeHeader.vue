@@ -42,11 +42,12 @@
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
         <value-select
-            class="nt1 nb3 mr3"
-            :options="pipe_view_options"
-            @change="onViewChange"
-            v-model.trim="pipe_view"
-          />
+          class="nt1 nb3 mr3"
+          :options="pipe_view_options"
+          @change="onViewChange"
+          v-model.trim="pipe_view"
+          v-if="false"
+        />
         <btn
           btn-md
           btn-primary

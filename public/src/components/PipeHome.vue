@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
-    <spinner size="large" message="Loading pipe..."></spinner>
+    <spinner size="large" message="Loading pipe..." />
   </div>
 
   <div class="flex flex-column justify-center items-center" v-else-if="has_error">
@@ -22,6 +22,10 @@
       @cancel-process="cancelProcess"
     />
 
+    <div class="flex flex-column justify-center h-100" v-if="is_process_running">
+      <spinner size="large" message="Running pipe..." />
+    </div>
+
     <pipe-builder-list
       class="flex-fill"
       style="padding-bottom: 16rem"
@@ -32,7 +36,7 @@
       @go-next-prompt="goNextPrompt"
       @run-once-with-values="runOnceWithPromptValues"
       @save-values-and-run="savePromptValuesAndRun"
-      v-if="is_builder_view"
+      v-else-if="is_builder_view"
     />
 
     <pipe-code-editor
@@ -347,7 +351,7 @@
           // make sure the empty item is in the view
           setTimeout(() => { this.scrollToTask(eid) }, 1000)
         }
-         else if (this.has_prompt_tasks && !this.is_prompting)
+         else if (false /* don't prompt anymore (for now) */ && this.has_prompt_tasks && !this.is_prompting)
         {
           this.is_prompting = true
 
