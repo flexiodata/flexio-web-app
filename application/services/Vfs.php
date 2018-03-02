@@ -273,8 +273,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $service = $this->getService($connection_identifier);
 
         $arr = [ 'path' => $rpath ];
-        if (isset($path['size']))
-            $arr['size'] = $path['size'];
+        if (is_array($path))
+        {
+            unset($path['path']);
+            $arr = array_merge($arr, $path);
+        }
 
         return $service->write($arr, $callback);
     }
