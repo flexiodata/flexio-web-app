@@ -261,12 +261,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     public function write($path, callable $callback)
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
+        $pathstr = $path;
         if (is_array($path))
         {
-            $path = $path['path'] ?? '';
+            $pathstr = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
+        $arr = $this->splitPath($pathstr);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
 
