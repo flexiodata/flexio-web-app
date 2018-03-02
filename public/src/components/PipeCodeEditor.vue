@@ -29,13 +29,14 @@
     <pipe-content
       class="mt2 relative"
       :stream-eid="last_stream_eid"
-      v-if="last_stream_eid.length > 0"
+      v-if="last_stream_eid.length > 0 && !is_process_failed"
     />
 
   </div>
 </template>
 
 <script>
+  import { PROCESS_STATUS_FAILED } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
@@ -87,6 +88,12 @@
       },
       last_stream_eid() {
         return _.get(this.last_subprocess, 'output.stdout.eid', '')
+      },
+      active_process_status() {
+        return _.get(this.activeProcess, 'process_status', '')
+      },
+      is_process_failed() {
+        return this.active_process_status == PROCESS_STATUS_FAILED
       },
       save_code() {
         // TODO: we need to give this code editor quite a bit of love...
