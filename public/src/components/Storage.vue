@@ -126,7 +126,6 @@
       openAddModal() {
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
-        analytics.track('Clicked `New Connection` Button')
       },
       openEditModal(item) {
         this.show_connection_props_modal = true
@@ -155,10 +154,8 @@
 
             if (is_pending)
             {
-              var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
-              _.set(analytics_payload, 'eid', eid)
-              _.set(analytics_payload, 'connection_type', ctype)
-              analytics.track('Created Connection', analytics_payload)
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
+              this.$store.dispatch('analyticsTrack', 'Created Connection', analytics_payload)
             }
           }
            else
