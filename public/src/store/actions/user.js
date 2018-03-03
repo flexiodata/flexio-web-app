@@ -54,14 +54,14 @@ export const updateUser = ({ commit }, { eid, attrs }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const changePassword = ({ commit }, { eid, attrs }) => {
+export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
   commit(types.CHANGING_PASSWORD, { eid, attrs })
 
   return api.changePassword({ eid, attrs }).then(response => {
     // success callback
     commit(types.CHANGED_PASSWORD, { eid, attrs: response.body })
 
-    analytics.track('Changed Password')
+    dispatch('analyticsTrack', 'Changed Password')
 
     return response
   }, response => {

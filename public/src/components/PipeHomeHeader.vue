@@ -192,12 +192,12 @@
           if (response.ok)
           {
             input.endEdit()
-            analytics.track('Updated Pipe: Name', { eid, name })
+            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Name', { eid, name })
           }
            else
           {
             input.endEdit(false)
-            analytics.track('Updated Pipe: Name (Error)', { eid, name })
+            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Name (Error)', { eid, name })
           }
         })
       },
@@ -214,7 +214,7 @@
 
           if (ename.length > 0 && _.size(errors) > 0)
           {
-            analytics.track('Updated Pipe: Alias (Invalid)', { eid, ename })
+            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias (Invalid)', { eid, ename })
 
             // show error message
             this.show_alert_modal = true
@@ -226,12 +226,12 @@
               if (response.ok)
               {
                 input.endEdit()
-                analytics.track('Updated Pipe: Alias', { eid, ename })
+                this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias', { eid, ename })
               }
                else
               {
                 input.endEdit(false)
-                analytics.track('Updated Pipe: Alias (Error)', { eid, ename })
+                this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias (Error)', { eid, ename })
               }
             })
           }

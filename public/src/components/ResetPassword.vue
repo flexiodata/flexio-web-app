@@ -14,7 +14,7 @@
       ResetPasswordForm
     },
     mounted() {
-      analytics.track('Visited Reset Password Page')
+      this.$store.dispatch('analyticsTrack', 'Visited Reset Password Page')
     }
   }
 </script>

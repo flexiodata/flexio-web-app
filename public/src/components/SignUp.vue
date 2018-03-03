@@ -29,7 +29,7 @@
       }
     },
     mounted() {
-      analytics.track('Visited Sign Up Page', { label: window.location.pathname })
+      this.$store.dispatch('analyticsTrack', 'Visited Sign Up Page')
     },
     methods: {
       onSignInClick() {

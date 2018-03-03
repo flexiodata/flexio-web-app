@@ -498,7 +498,7 @@
               var task_count = _.size(task_types_arr)
               var process_eid = _.get(response.body, 'eid', '')
 
-              analytics.track('Ran Pipe: Start', { eid, process_eid, task_types, task_count })
+              //analytics.track('Ran Pipe: Start', { eid, process_eid, task_types, task_count })
               */
 
               this.$nextTick(() => { this.is_prompting = false })

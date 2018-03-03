@@ -154,7 +154,7 @@
               this.show_success = true
               this.show_error = false
 
-              analytics.track('Ran Pipe: Success', { eid, process_eid, task_ops, task_count, duration })
+              //analytics.track('Ran Pipe: Success', { eid, process_eid, task_ops, task_count, duration })
             }, 1000)
           }
 
@@ -173,7 +173,7 @@
 
               this.error_message = message
 
-              analytics.track('Ran Pipe: Error', { eid, process_eid, task_ops, task_count, duration, message, error_code })
+              //analytics.track('Ran Pipe: Error', { eid, process_eid, task_ops, task_count, duration, message, error_code })
             }, 1000)
           }
           */

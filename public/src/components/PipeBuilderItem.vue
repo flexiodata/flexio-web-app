@@ -699,7 +699,7 @@
         {
           var message = 'There is an error in the command syntax'
           this.showSyntaxError(message, 4000)
-          analytics.track('Updated Step: Command Syntax Error', { command, message })
+          //analytics.track('Updated Step: Command Syntax Error', { command, message })
           return
         }
 
@@ -722,19 +722,19 @@
               {
                 var message = res.message
                 this.showSyntaxError(message)
-                analytics.track('Updated Step: '+friendly_task_name+' (Error)', { command, code, message })
+                //analytics.track('Updated Step: '+friendly_task_name+' (Error)', { command, code, message })
               }
                else
               {
                 this.editTaskSingleton(edit_attrs)
-                analytics.track('Updated Step: '+friendly_task_name, { command, code })
+                //analytics.track('Updated Step: '+friendly_task_name, { command, code })
               }
             })
           }
            else
           {
             this.editTaskSingleton(edit_attrs)
-            analytics.track('Updated Step: '+friendly_task_name, { command, code })
+            //analytics.track('Updated Step: '+friendly_task_name, { command, code })
           }
 
           // we're done
@@ -798,7 +798,7 @@
         }
 
         this.editTaskSingleton(edit_attrs)
-        analytics.track('Updated Step: '+friendly_task_name, analytics_payload)
+        //analytics.track('Updated Step: '+friendly_task_name, analytics_payload)
       },
       showSyntaxError(msg, hide_timeout) {
         this.syntax_msg = msg
@@ -867,7 +867,7 @@
             createdAt: _.get(task, 'created') // Segment-friendly key value
           }
 
-          analytics.track('Created Step: Input (via Chooser List)', analytics_payload)
+          //analytics.track('Created Step: Input (via Chooser List)', analytics_payload)
         })
       },
       onChooseOutput(connection) {
@@ -920,7 +920,7 @@
             createdAt: _.get(task, 'created') // Segment-friendly key value
           }
 
-          analytics.track('Created Step: Output (via Chooser List)', analytics_payload)
+          //analytics.track('Created Step: Output (via Chooser List)', analytics_payload)
         })
       }
     }
