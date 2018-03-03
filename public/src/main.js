@@ -7,6 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   Icon,
+  MessageBox,
   Option,
   Select
 } from 'element-ui'
@@ -42,6 +43,11 @@ Vue.use(DropdownMenu)
 Vue.use(Icon)
 Vue.use(Option)
 Vue.use(Select)
+
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
 
 // setup for VueScrollTo (programmatic scrolling)
 

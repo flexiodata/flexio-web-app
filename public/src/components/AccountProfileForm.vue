@@ -41,38 +41,20 @@
         <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
       </div>
     </form>
-
-    <!-- username confirm modal -->
-    <confirm-modal
-      ref="modal-confirm"
-      title="Really change your username?"
-      submit-label="Change my username"
-      cancel-label="Cancel"
-      @confirm="onConfirmModalClose"
-      @hide="show_confirm_modal = false"
-      v-if="show_confirm_modal"
-    >
-      <div class="lh-copy">Changing your username can have unintended effects. Are you sure you want to change your username?</div>
-    </confirm-modal>
   </div>
 </template>
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import ConfirmModal from './ConfirmModal.vue'
 
   export default {
-    components: {
-      ConfirmModal
-    },
     data() {
       return {
         first_name: ' ',
         last_name: ' ',
         user_name: ' ',
         show_success: false,
-        show_error: false,
-        show_confirm_modal: false
+        show_error: false
       }
     },
     watch: {
@@ -129,12 +111,15 @@
         })
       },
       openConfirmModal() {
-        this.show_confirm_modal = true
-        this.$nextTick(() => { this.$refs['modal-confirm'].open() })
-      },
-      onConfirmModalClose(modal) {
-        this.saveChanges()
-        modal.close()
+        this.$confirm('Changing your username can have unintended effects. Are you sure you want to change your username?', 'Really change your username?', {
+          confirmButtonText: 'CHANGE MY USERNAME',
+          cancelButtonText: 'CANCEL',
+          type: 'warning'
+        }).then(() => {
+          this.saveChanges()
+        }).catch(() => {
+          // do nothing
+        })
       }
     }
   }
