@@ -6,10 +6,7 @@
     <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
       {{error_msg}}
     </ui-alert>
-    <form
-      novalidate
-      @submit.prevent="submit"
-    >
+    <form novalidate @submit.prevent="submit">
       <ui-textbox
         type="password"
         autocomplete="off"
@@ -25,8 +22,7 @@
         data-vv-name="old_password"
         data-vv-value-path="old_password"
         data-vv-rules="required"
-      >
-      </ui-textbox>
+      />
       <ui-textbox
         type="password"
         autocomplete="off"
@@ -42,8 +38,7 @@
         data-vv-name="new_password"
         data-vv-value-path="new_password"
         data-vv-rules="required"
-      >
-      </ui-textbox>
+      />
       <ui-textbox
         type="password"
         autocomplete="off"
@@ -59,8 +54,7 @@
         data-vv-name="new_password2"
         data-vv-value-path="new_password2"
         data-vv-rules="required|confirmed:new_password"
-      >
-      </ui-textbox>
+      />
       <div class="mt3">
         <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
       </div>

@@ -6,34 +6,28 @@
     <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
       There was a problem updating your profile.
     </ui-alert>
-    <form
-      novalidate
-      @submit.prevent="submit"
-    >
+    <form novalidate @submit.prevent="submit">
       <ui-textbox
         autocomplete="off"
         label="First Name"
         floating-label
         help=" "
         v-model="first_name"
-      >
-      </ui-textbox>
+      />
       <ui-textbox
         autocomplete="off"
         label="Last Name"
         floating-label
         help=" "
         v-model="last_name"
-      >
-      </ui-textbox>
+      />
       <ui-textbox
         autocomplete="off"
         label="Username"
         floating-label
         help=" "
         v-model="user_name"
-      >
-      </ui-textbox>
+      />
       <ui-textbox
         type="email"
         autocomplete="off"
@@ -42,8 +36,7 @@
         floating-label
         help=" "
         v-model="email"
-      >
-      </ui-textbox>
+      />
       <div class="mt3">
         <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
       </div>

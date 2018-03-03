@@ -12,8 +12,7 @@
         has-search
         v-model="timezone"
         :options="timezones"
-      >
-      </ui-select>
+      />
       <div class="mt3">
         <el-button type="primary" class="b ttu" @click="saveChanges">Save Changes</el-button>
       </div>
