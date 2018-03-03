@@ -19,7 +19,7 @@
           >
         </div>
         <div class="flex-none flex flex-row items-center">
-          <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal">New storage</btn>
+          <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>
         </div>
       </div>
     </div>

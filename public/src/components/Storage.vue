@@ -12,7 +12,7 @@
           <div class="f2">Storage</div>
         </div>
         <div class="flex-none flex flex-row items-center" v-if="false">
-          <btn btn-md btn-primary class="btn-add ttu b ba" @click="openAddModal">New Storage</btn>
+          <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>
         </div>
       </div>
     </div>

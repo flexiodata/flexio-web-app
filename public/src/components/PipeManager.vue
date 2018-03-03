@@ -19,7 +19,7 @@
           >
         </div>
         <div class="flex-none flex flex-row items-center">
-          <btn btn-md btn-primary class="btn-add ttu b ba" @click="tryCreatePipe()">New pipe</btn>
+          <el-button type="primary" class="ttu b" @click="tryCreatePipe">New pipe</el-button>
         </div>
       </div>
     </div>
