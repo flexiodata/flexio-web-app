@@ -29,7 +29,7 @@
       }
     },
     mounted() {
-      analytics.track('Visited Sign Up Page')
+      analytics.track('Visited Sign Up Page', { label: window.location.pathname })
     },
     methods: {
       onSignInClick() {
