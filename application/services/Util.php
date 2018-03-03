@@ -68,8 +68,6 @@ class TableToCsvCallbackAdaptor
         fwrite($this->fp, substr($contents, $length));
         return substr($contents, 0, $length);
     }
-
-
 }
 
 class Util
@@ -78,17 +76,4 @@ class Util
     {
         return new TableToCsvCallbackAdaptor($structure, $table_data_callback);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
