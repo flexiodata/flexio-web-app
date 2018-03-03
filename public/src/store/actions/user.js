@@ -12,7 +12,7 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
     if (_.get(user, 'eid', '').length > 0)
     {
       commit(types.FETCHED_USER, user)
-      dispatch('analyticsIdentify', { attrs: user })
+      dispatch('analyticsIdentify', user)
     }
 
     commit(types.FETCHING_USER, false)
@@ -23,45 +23,6 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
     return response
   })
 }
-
-export const analyticsIdentify = ({ commit }, { attrs }) => {
-  var analytics_payload = _.pick(attrs, ['first_name','last_name','email'])
-
-  // add Segment-friendly keys
-  _.assign(analytics_payload, {
-    firstName: _.get(attrs, 'first_name'),
-    lastName: _.get(attrs, 'last_name'),
-    username: _.get(attrs, 'user_name'),
-    createdAt: _.get(attrs, 'created')
-  })
-
-  // add current pathname as 'label' (for Google Analytics)
-  _.assign(analytics_payload, {
-    label: window.location.pathname
-  })
-
-  analytics.identify(_.get(attrs, 'eid'), analytics_payload)
-}
-
-/*
-export const fetchCurrentUserStatistics = ({ commit, state }) => {
-  var user = _.get(state, 'objects.'+state.active_user_eid)
-
-  return api.fetchUserStatistics({ eid: 'me' }).then(response => {
-    var analytics_payload = _.pick(user, ['first_name','last_name','email'])
-
-    // add Segment-friendly keys
-    _.assign(analytics_payload, {
-      username: _.get(user, 'user_name'),
-      createdAt: _.get(user, 'created')
-    }, response.body)
-
-    setTimeout(() => {
-      analytics.identify(_.get(user, 'eid'), analytics_payload)
-    }, 500)
-  })
-}
-*/
 
 // ----------------------------------------------------------------------- //
 
@@ -164,3 +125,38 @@ export const signUp = ({ commit }, { attrs }) => {
     return response
   })
 }
+
+export const analyticsIdentify = ({}, attrs) => {
+  var analytics_payload = _.pick(attrs, ['first_name', 'last_name', 'email'])
+
+  // add Segment-friendly keys
+  _.assign(analytics_payload, {
+    firstName: _.get(attrs, 'first_name'),
+    lastName: _.get(attrs, 'last_name'),
+    username: _.get(attrs, 'user_name'),
+    createdAt: _.get(attrs, 'created')
+  })
+
+  // add current pathname as 'label' (for Google Analytics)
+  _.set(analytics_payload, 'label', window.location.pathname)
+
+  analytics.identify(_.get(attrs, 'eid'), analytics_payload)
+}
+
+export const analyticsTrack = ({}, event_name, attrs) => {
+  var analytics_payload = _.assign({}, attrs)
+
+  // add Segment-friendly keys
+  _.assign(analytics_payload, {
+    firstName: _.get(attrs, 'first_name', null),
+    lastName: _.get(attrs, 'last_name', null),
+    username: _.get(attrs, 'user_name', null),
+    createdAt: _.get(attrs, 'created', null)
+  })
+
+  // add current pathname as 'label' (for Google Analytics)
+  _.set(analytics_payload, 'label', window.location.pathname)
+
+  analytics.track(event_name, analytics_payload)
+}
+
