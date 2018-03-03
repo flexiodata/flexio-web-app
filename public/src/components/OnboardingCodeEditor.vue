@@ -334,8 +334,7 @@
       copy() {
         if (window.analytics)
         {
-          window.analytics.track('Copied Code Example', {
-            label: window.location.pathname,
+          this.$store.dispatch('analyticsTrack', 'Copied Code Example', {
             title: this.title,
             code: this.edit_code
           })
@@ -348,8 +347,7 @@
 
           if (window.analytics)
           {
-            window.analytics.track('Ran Code Example', {
-              label: window.location.pathname,
+            this.$store.dispatch('analyticsTrack', 'Ran Code Example', {
               title: this.title,
               code: this.edit_code
             })

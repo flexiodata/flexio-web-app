@@ -152,10 +152,8 @@
 
             if (is_pending)
             {
-              var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
-              _.set(analytics_payload, 'eid', eid)
-              _.set(analytics_payload, 'connection_type', ctype)
-              analytics.track('Created Connection', analytics_payload)
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
+              this.$store.dispatch('analyticsTrack', 'Created Connection', analytics_payload)
             }
 
             this.show_connection_new_dialog = false
@@ -164,7 +162,7 @@
           }
            else
           {
-            // TODO: add error handling
+            this.$store.dispatch('analyticsTrack', 'Created Connection (Error)')
           }
         })
       },

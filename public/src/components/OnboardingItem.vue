@@ -230,8 +230,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_connection_new_dialog = true
-        analytics.track('Clicked `Create Connection` Button In Onboarding', {
-          label: window.location.pathname,
+        this.$store.dispatch('analyticsTrack', 'Clicked `Create Connection` Button In Onboarding', {
           title: this.item.name,
           code: edit_code
         })
@@ -240,8 +239,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_pipe_save_dialog = true
-        analytics.track('Clicked `Save & Deploy` Button In Onboarding', {
-          label: window.location.pathname,
+        this.$store.dispatch('analyticsTrack', 'Clicked `Save & Deploy` Button In Onboarding', {
           title: this.item.name,
           code: edit_code
         })
@@ -249,7 +247,7 @@ If you have any questions, please send us a note using the chat button at the bo
       showPipeDeployDialog() {
         this.show_pipe_deploy_dialog = true
       },
-      tryUpdateConnection(attrs, modal) {
+      tryUpdateConnection(attrs) {
         var eid = attrs.eid
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
@@ -268,14 +266,9 @@ If you have any questions, please send us a note using the chat button at the bo
 
             if (is_pending)
             {
-              var analytics_payload = _.pick(attrs, ['name', 'ename', 'description'])
-              _.set(analytics_payload, 'eid', eid)
-              _.set(analytics_payload, 'connection_type', ctype)
-              analytics.track('Created Connection In Onboarding', analytics_payload)
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
+              this.$store.dispatch('analyticsTrack', 'Created Connection In Onboarding', analytics_payload)
             }
-
-            if (!_.isNil(modal))
-              modal.close()
 
             this.connection_alias = _.get(connection, 'ename', '')
 
@@ -285,11 +278,11 @@ If you have any questions, please send us a note using the chat button at the bo
           }
            else
           {
-            // TODO: add error handling
+              this.$store.dispatch('analyticsTrack', 'Created Connection In Onboarding (Error)')
           }
         })
       },
-      tryCreatePipe(attrs, modal) {
+      tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
           attrs = { name: 'Untitled Pipe' }
 
@@ -300,17 +293,9 @@ If you have any questions, please send us a note using the chat button at the bo
           if (response.ok)
           {
             var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
 
-            // add Segment-friendly keys
-            _.assign(analytics_payload, {
-              createdAt: _.get(pipe, 'created')
-            })
-
-            analytics.track('Created Pipe In Onboarding', analytics_payload)
-
-            if (!_.isNil(modal))
-              modal.close()
+            this.$store.dispatch('analyticsTrack', 'Created Pipe In Onboarding', analytics_payload)
 
             this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
@@ -321,7 +306,7 @@ If you have any questions, please send us a note using the chat button at the bo
           }
            else
           {
-            analytics.track('Created Pipe In Onboarding (Error)')
+            this.$store.dispatch('analyticsTrack', 'Created Pipe In Onboarding (Error)')
           }
         })
       }

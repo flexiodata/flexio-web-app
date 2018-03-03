@@ -32,7 +32,7 @@
       }
     },
     mounted() {
-      analytics.track('Visited Forgot Password Page')
+      this.$store.dispatch('analyticsTrack', 'Visited Forgot Password Page')
     },
     methods: {
       onSignUpClick() {
