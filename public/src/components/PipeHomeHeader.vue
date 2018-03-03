@@ -1,6 +1,6 @@
 <template>
   <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
-    <div class="flex flex-row bg-white pa1 pl3-ns pr2-ns items-center" style="min-height: 54px">
+    <div class="flex flex-row bg-white pa1 ph3-ns items-center" style="min-height: 54px">
       <router-link
         to="/pipes"
         class="flex flex-row items-center link mid-gray hover-black"
@@ -49,7 +49,7 @@
           v-if="false"
         />
         <el-button
-          size="medium"
+          size="small"
           type="primary"
           class="ttu b"
           @click="cancelProcess"
@@ -58,7 +58,7 @@
           Cancel
         </el-button>
         <el-button
-          size="medium"
+          size="small"
           type="primary"
           class="ttu b"
           :disabled="tasks.length == 0"
@@ -68,7 +68,7 @@
           Run
         </el-button>
         </div>
-        <div class="dn db-ns flex-none ml2">
+        <div class="dn db-ns flex-none ml3">
           <div v-if="user_fetching"></div>
           <user-dropdown v-else-if="logged_in"></user-dropdown>
           <div v-else>
