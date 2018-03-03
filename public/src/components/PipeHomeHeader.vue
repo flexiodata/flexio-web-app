@@ -48,25 +48,25 @@
           v-model.trim="pipe_view"
           v-if="false"
         />
-        <btn
-          btn-md
-          btn-primary
+        <el-button
+          size="medium"
+          type="primary"
           class="ttu b"
           @click="cancelProcess"
           v-if="isPrompting || isProcessRunning"
-        >Cancel</btn>
-        <div
-          class="hint--bottom-left"
-          :aria-label="run_button_tooltip"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          size="medium"
+          type="primary"
+          class="ttu b"
+          :disabled="tasks.length == 0"
+          @click="runPipe"
           v-else
         >
-          <btn
-            btn-md
-            btn-primary
-            class="ttu b"
-            :disabled="tasks.length == 0"
-            @click="runPipe"
-          >Run</btn>
+          Run
+        </el-button>
         </div>
         <div class="dn db-ns flex-none ml2">
           <div v-if="user_fetching"></div>
@@ -98,7 +98,6 @@
   import { mapState, mapGetters } from 'vuex'
   import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
-  import Btn from './Btn.vue'
   import InlineEditText from './InlineEditText.vue'
   import ValueSelect from './ValueSelect.vue'
   import UserDropdown from './UserDropdown.vue'
@@ -135,7 +134,6 @@
     },
     mixins: [Validation],
     components: {
-      Btn,
       InlineEditText,
       ValueSelect,
       UserDropdown,
@@ -168,9 +166,6 @@
       },
       pipe_ename() {
         return _.get(this.pipe, 'ename', '')
-      },
-      run_button_tooltip() {
-        return ''
       },
       ename_error() {
         return _.get(this.ss_errors, 'ename.message', '')

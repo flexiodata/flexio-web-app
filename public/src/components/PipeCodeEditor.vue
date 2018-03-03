@@ -20,8 +20,8 @@
             <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
           </transition>
         </div>
-        <btn btn-sm class="b ttu blue mr2" @click="cancelEdit">Cancel</btn>
-        <btn btn-sm class="b ttu white bg-blue" @click="saveChanges">Save Changes</btn>
+        <el-button size="mini" type="plain" class="b ttu" @click="cancelEdit">Cancel</el-button>
+        <el-button size="mini" type="primary" class="b ttu" @click="saveChanges">Save Changes</el-button>
       </div>
     </transition>
 
@@ -38,7 +38,6 @@
 <script>
   import { PROCESS_STATUS_FAILED } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
-  import Btn from './Btn.vue'
   import CodeEditor from './CodeEditor.vue'
   import PipeContent from './PipeContent.vue'
 
@@ -60,7 +59,6 @@
       }
     },
     components: {
-      Btn,
       CodeEditor,
       PipeContent
     },
@@ -144,7 +142,7 @@
 
           this.syntax_msg = ''
 
-          this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
             if (response.ok)
             {
               this.edit_code = this.orig_code
@@ -158,6 +156,7 @@
         catch(e)
         {
           this.syntax_msg = e.message
+          return null
         }
       }
     }

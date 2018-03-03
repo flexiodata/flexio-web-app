@@ -372,7 +372,11 @@ class Process implements \Flexio\IFace\IProcess
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
-            $this->setError($code, $message, $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError($code, $message, $module, $line, $type, $trace);
+                 else
+                $this->setError($code, $message);
         }
         catch (\Exception $e)
         {
@@ -380,8 +384,13 @@ class Process implements \Flexio\IFace\IProcess
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
             $trace = $debug ? $e->getTrace() : null;
+            $message = $e->getMessage();
             $type = 'system exception';
-            $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
+                 else
+                $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
         catch (\Error $e)
         {
@@ -389,8 +398,13 @@ class Process implements \Flexio\IFace\IProcess
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
             $trace = $debug ? $e->getTrace() : null;
+            $message = $e->getMessage();
             $type = 'system error';
-            $this->setError(\Flexio\Base\Error::GENERAL, '', $module, $line, $type, $trace);
+
+            if ($debug)
+                $this->setError(\Flexio\Base\Error::GENERAL, $message, $module, $line, $type, $trace);
+                 else
+                $this->setError(\Flexio\Base\Error::GENERAL); // don't patch through sensitive info in non-debug
         }
     }
 

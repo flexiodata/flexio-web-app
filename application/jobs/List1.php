@@ -41,7 +41,7 @@ class List1 extends \Flexio\Jobs\Base
 
         $parts = \Flexio\Base\File::splitPath($path);
         $lastpart = array_pop($parts);
-        
+
         if (is_null($lastpart))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'");
 

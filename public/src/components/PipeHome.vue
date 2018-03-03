@@ -64,6 +64,7 @@
       />
 
       <pipe-code-editor
+        ref="code"
         class="mv3 ph4 center"
         style="max-width: 1440px"
         :pipe-options="pipe_options"
@@ -159,24 +160,17 @@
         {
           this.show_error = false
           this.show_success = false
-
-          // scroll back to the top of the pipe list when the process starts
-          this.$scrollTo('#'+this.pipeEid, {
-            container: '#'+this.pipeEid,
-            duration: 400,
-            easing: 'ease-out'
-          })
         }
          else if (old_val == PROCESS_STATUS_RUNNING)
         {
           if (val == PROCESS_STATUS_COMPLETED)
           {
-            setTimeout(() => { this.show_success = false }, 6000)
+            setTimeout(() => { this.show_success = false }, 4000)
 
             setTimeout(() => {
               this.show_success = true
               this.show_error = false
-            }, 1000)
+            }, 200)
           }
 
           if (val == PROCESS_STATUS_FAILED)
@@ -187,7 +181,7 @@
             setTimeout(() => {
               this.show_success = false
               this.show_error = true
-            }, 1000)
+            }, 200)
           }
         }
       }
@@ -475,6 +469,16 @@
           // make sure the active item is in the view
           setTimeout(() => { this.scrollToPromptTask() }, 1000)
           return
+        }
+         else if (this.$refs['code'].is_changed)
+        {
+          debugger
+
+          // TODO: this shouldn't be done imperatively
+          var xhr = this.$refs['code'].saveChanges()
+
+          if (!_.isNil(xhr))
+            xhr.then(response => { this.runPipe() })
         }
          else
         {
