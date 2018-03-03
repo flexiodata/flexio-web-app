@@ -136,12 +136,12 @@
       openPipeScheduleModal(item) {
         this.show_pipe_schedule_modal = true
         this.$nextTick(() => { this.$refs['modal-schedule-pipe'].open(item) })
-        analytics.track('Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
+        this.$store.dispatch('analyticsTrack', 'Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       openPipeDeployDialog(item) {
         this.active_pipe = item
         this.show_pipe_deploy_dialog = true
-        analytics.track('Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
+        this.$store.dispatch('analyticsTrack', 'Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -163,14 +163,8 @@
           if (response.ok)
           {
             var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
-
-            // add Segment-friendly keys
-            _.assign(analytics_payload, {
-              createdAt: _.get(pipe, 'created')
-            })
-
-            analytics.track('Created Pipe: New', analytics_payload)
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
+            this.$store.dispatch('analyticsTrack', 'Created Pipe: New', analytics_payload)
 
             if (!_.isNil(modal))
               modal.close()
@@ -179,7 +173,7 @@
           }
            else
           {
-            analytics.track('Created Pipe: New (Error)')
+            this.$store.dispatch('analyticsTrack', 'Created Pipe: New (Error)')
           }
         })
       },
@@ -210,7 +204,13 @@
             var frequency = _.get(response.body, 'schedule.frequency', '')
             var schedule_status = _.get(response.body, 'schedule_status', '')
             var analytics_payload = this.getAnalyticsPayload(attrs)
-            analytics.track('Scheduled Pipe', _.assign(analytics_payload, { frequency, schedule_status }))
+
+            _.assign(analytics_payload, {
+              frequency,
+              schedule_status
+            })
+
+            this.$store.dispatch('analyticsTrack', 'Scheduled Pipe', analytics_payload)
             modal.close()
           }
            else
@@ -224,7 +224,6 @@
         var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
 
         _.assign(analytics_payload, {
-          label: window.location.pathname,
           title: pipe.name,
           code: edit_code
         })
