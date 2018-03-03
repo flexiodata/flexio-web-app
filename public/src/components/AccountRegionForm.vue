@@ -14,12 +14,9 @@
         :options="timezones"
       >
       </ui-select>
-      <btn
-        btn-md
-        btn-primary
-        class="b ttu mt3"
-        @click="saveChanges"
-      >Save Changes</btn>
+      <div class="mt3">
+        <el-button type="primary" class="b ttu" @click="saveChanges">Save Changes</el-button>
+      </div>
     </form>
   </div>
 </template>
@@ -27,12 +24,8 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { TIMEZONE_UTC, timezones } from '../constants/timezone'
-  import Btn from './Btn.vue'
 
   export default {
-    components: {
-      Btn
-    },
     data() {
       return {
         timezone: '',

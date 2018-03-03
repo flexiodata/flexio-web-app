@@ -44,12 +44,9 @@
         v-model="email"
       >
       </ui-textbox>
-      <btn
-        btn-md
-        btn-primary
-        class="b ttu mt3"
-        @click="trySaveChanges"
-      >Save Changes</btn>
+      <div class="mt3">
+        <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
+      </div>
     </form>
 
     <!-- username confirm modal -->
@@ -69,12 +66,10 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import Btn from './Btn.vue'
   import ConfirmModal from './ConfirmModal.vue'
 
   export default {
     components: {
-      Btn,
       ConfirmModal
     },
     data() {

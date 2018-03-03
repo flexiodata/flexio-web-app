@@ -61,12 +61,9 @@
         data-vv-rules="required|confirmed:new_password"
       >
       </ui-textbox>
-      <btn
-        btn-md
-        btn-primary
-        class="b ttu mt3"
-        @click="trySaveChanges"
-      >Save Changes</btn>
+      <div class="mt3">
+        <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
+      </div>
     </form>
   </div>
 </template>
@@ -74,12 +71,8 @@
 <script>
   import api from '../api'
   import { mapState } from 'vuex'
-  import Btn from './Btn.vue'
 
   export default {
-    components: {
-      Btn
-    },
     watch: {
       new_password: function(val, old_val) {
         if (val.length > 0)

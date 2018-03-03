@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="pb2 bb b--black-10" v-if="showCreateButton">
-        <btn btn-md btn-primary class="ttu b" @click="createApiKey">Create API Key</btn>
+      <el-button type="primary" size="mini" class="ttu b" @click="createApiKey">Create API Key</el-button>
     </div>
     <empty-item class="mv3" v-if="tokens.length == 0">
       <span slot="text">No API keys to show</span>
@@ -17,15 +17,15 @@
         :class="showOnlyOne ? 'f5 min-w5 mr3 bg-black-05' : ''"
       ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
       <div class="pv2 tr">
-        <btn
-          btn-md
-          btn-primary
+        <el-button
+          type="primary"
+          size="mini"
           class="hint--top"
           aria-label="Copy to Clipboard"
           :data-clipboard-text="token.access_code"
         >
           <span class="ttu b">Copy</span>
-        </btn>
+        </el-button>
       </div>
       <div class="pv2 ph3 tr" v-if="!showOnlyOne">
         <span
@@ -43,7 +43,6 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import EmptyItem from './EmptyItem.vue'
-  import Btn from './Btn.vue'
 
   export default {
     props: {
@@ -57,8 +56,7 @@
       }
     },
     components: {
-      EmptyItem,
-      Btn
+      EmptyItem
     },
     computed: {
       ...mapState([
