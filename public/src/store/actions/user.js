@@ -131,14 +131,17 @@ export const analyticsIdentify = ({}, attrs) => {
 
   // add Segment-friendly keys
   _.assign(analytics_payload, {
-    firstName: _.get(attrs, 'first_name'),
-    lastName: _.get(attrs, 'last_name'),
-    username: _.get(attrs, 'user_name'),
-    createdAt: _.get(attrs, 'created')
+    firstName: _.get(attrs, 'first_name', null),
+    lastName: _.get(attrs, 'last_name', null),
+    username: _.get(attrs, 'user_name', null),
+    createdAt: _.get(attrs, 'created', null)
   })
 
   // add current pathname as 'label' (for Google Analytics)
   _.set(analytics_payload, 'label', window.location.pathname)
+
+  // remove null values
+  analytics_payload = _.omitBy(analytics_payload, _.isNil)
 
   analytics.identify(_.get(attrs, 'eid'), analytics_payload)
 }
@@ -156,6 +159,9 @@ export const analyticsTrack = ({}, event_name, attrs) => {
 
   // add current pathname as 'label' (for Google Analytics)
   _.set(analytics_payload, 'label', window.location.pathname)
+
+  // remove null values
+  analytics_payload = _.omitBy(analytics_payload, _.isNil)
 
   analytics.track(event_name, analytics_payload)
 }
