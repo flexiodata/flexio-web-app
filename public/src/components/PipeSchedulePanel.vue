@@ -154,12 +154,17 @@
       }
     },
     data() {
+      var edit_pipe = _.cloneDeep(this.pipe)
+
+      if (_.isNil(_.get(edit_pipe, 'schedule')))
+        _.assign(edit_pipe, defaultAttrs())
+
       return {
         day_options: day_options,
         month_options: month_options,
         timezone_options: timezones,
         frequency_options: frequency_options,
-        edit_pipe: _.assign({}, defaultAttrs())
+        edit_pipe: edit_pipe
       }
     },
     computed: {
@@ -181,13 +186,6 @@
       }
     },
     methods: {
-      open(attrs) {
-        this.reset(attrs)
-        this.$refs['dialog'].open()
-      },
-      close() {
-        this.$refs['dialog'].close()
-      },
       submit() {
         this.$emit('submit', this.edit_pipe)
       },
@@ -240,9 +238,6 @@
 
         times = _.reject(times, (t, tindex) => { return tindex == index })
         this.edit_pipe.schedule.times = [].concat(times)
-      },
-      onHide() {
-        this.$emit('hide', this)
       }
     }
   }
