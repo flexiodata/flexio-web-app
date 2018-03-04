@@ -3,12 +3,20 @@
     <app-navbar class="flex-none" v-if="show_intercom_button && show_navbar"></app-navbar>
     <router-view class="flex-fill"></router-view>
 
-    <!-- onboarding modal -->
-    <onboarding-modal
-      ref="modal-onboarding"
-      @hide="show_onboarding_modal = false"
-      v-if="config_show_onboarding && show_onboarding_modal"
-    ></onboarding-modal>
+    <!-- onboarding dialog -->
+    <div v-show="config_show_onboarding">
+      <el-dialog
+        custom-class="no-header no-footer"
+        width="56rem"
+        top="8vh"
+        :modal-append-to-body="false"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        :visible.sync="show_onboarding_modal"
+      >
+        <onboarding-panel @close="onOnboardingClose" />
+      </el-dialog>
+    </div>
 
     <button
       id="open-intercom-inbox"
@@ -27,23 +35,18 @@
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
-    ROUTE_PIPES
+    ROUTE_PIPES,
+    ROUTE_HOME_LEARN
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import AppNavbar from './AppNavbar.vue'
-  import OnboardingModal from './OnboardingModal.vue'
+  import OnboardingPanel from './OnboardingPanel.vue'
 
   export default {
     name: 'app',
     components: {
       AppNavbar,
-      OnboardingModal
-    },
-    watch: {
-      config_show_onboarding(val, old_val) {
-        if (val === true)
-          this.$nextTick(() => { this.$refs['modal-onboarding'].open() })
-      }
+      OnboardingPanel
     },
     data() {
       return {
@@ -84,6 +87,7 @@
         if (this.active_user_eid.length == 0)
           return false
 
+        // allow onboarding modal to be shown programmatically
         var params = _.get(this.$route, 'query', {})
         if (params['app.prompt.onboarding.shown'] === 'true')
           return true
@@ -98,7 +102,15 @@
     methods: {
       ...mapGetters([
         'getActiveUser'
-      ])
+      ]),
+      onOnboardingClose() {
+        this.show_onboarding_modal = false
+
+        setTimeout(() => {
+          if (this.$route.name != ROUTE_HOME_LEARN)
+            this.$router.push({ name: ROUTE_HOME_LEARN })
+        }, 10)
+      }
     }
   }
 </script>
