@@ -401,7 +401,7 @@ class Check
         }
 
         $test_result->passed = false;
-        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . 'to be a subset of ' . self::stringify($actual);
+        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . ' to be a subset of ' . self::stringify($actual);
     }
 
     public static function arrayKeysEqual($item1, $item2)
