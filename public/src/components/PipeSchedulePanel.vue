@@ -11,7 +11,7 @@
       <toggle-button
         :checked="is_scheduled"
         @click="toggleScheduled"
-      ></toggle-button>
+      />
       <span
         class="f5 pl2 pointer"
         @click.stop="toggleScheduled"
@@ -23,7 +23,7 @@
           label="Frequency"
           :options="frequency_options"
           v-model="edit_pipe.schedule.frequency"
-        ></value-select>
+        />
       </div>
       <div class="flex-fill">
         <ui-select
@@ -31,7 +31,7 @@
           has-search
           :options="timezone_options"
           v-model="edit_pipe.schedule.timezone"
-        ></ui-select>
+        />
       </div>
     </div>
     <div class="mb4" v-if="is_weekly">
@@ -41,7 +41,7 @@
         multiple
         :options="day_options"
         v-model="edit_pipe.schedule.days"
-      ></value-select>
+      />
     </div>
     <div class="mb4" v-if="is_monthly">
       <value-select
@@ -50,24 +50,17 @@
         multiple
         :options="month_options"
         v-model="edit_pipe.schedule.days"
-      ></value-select>
+      />
     </div>
     <div v-if="show_times">
-      <div class="f8 mb3 css-input-label">Run at the following times</div>
+      <div class="f8 mb3" style="color: rgba(0, 0, 0, 0.54)">Run at the following times</div>
       <time-chooser-list
         class="w-60 mb2"
         :times="edit_pipe.schedule.times"
         @item-change="updateTime"
         @item-delete="deleteTime"
-      ></time-chooser-list>
-      <btn
-        btn-sm
-        btn-outline
-        class="ttu b b--black-30 black-60"
-        @click="addTime"
-      >
-        Add time
-      </btn>
+      />
+      <el-button size="mini" class="ttu b" @click="addTime">Add time</el-button>
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -81,7 +74,6 @@
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { timezones } from '../constants/timezone'
   import * as schedule from '../constants/schedule'
-  import Btn from './Btn.vue'
   import ToggleButton from './ToggleButton.vue'
   import ValueSelect from './ValueSelect.vue'
   import TimeChooserList from './TimeChooserList.vue'
@@ -142,7 +134,6 @@
       }
     },
     components: {
-      Btn,
       ToggleButton,
       ValueSelect,
       TimeChooserList
