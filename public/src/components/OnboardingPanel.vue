@@ -5,7 +5,7 @@
         <div class="flex-fill tc">
           <span class="f3 b">Welcome to Flex.io, {{first_name}}!</span>
         </div>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="close"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
     </div>
 
@@ -57,7 +57,7 @@
         />
       </div>
       <div class="mt4 mb3 tc">
-        <el-button type="primary" size="large" class="b ttu" @click="close">Now build your own data feed</el-button>
+        <el-button type="primary" size="large" class="b ttu" @click="$emit('close')">Now build your own data feed</el-button>
       </div>
     </div>
   </div>
@@ -122,23 +122,11 @@
         'getAllPipes',
         'getAllTokens'
       ]),
-      close() {
-        this.updateUserConfig()
-        this.$emit('close',)
-      },
       tryFetchTokens() {
         this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
       },
       tryFetchPipes() {
         this.$store.dispatch('fetchPipes')
-      },
-      updateUserConfig() {
-        var cfg = _.get(this.getActiveUser(), 'config', {})
-        if (_.isArray(cfg))
-          cfg = {}
-        cfg['app.prompt.onboarding.shown'] = true
-
-        this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
       }
     }
   }

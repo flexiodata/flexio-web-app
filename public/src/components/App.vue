@@ -103,12 +103,22 @@
       ...mapGetters([
         'getActiveUser'
       ]),
+      updateOnboardingConfig() {
+        var cfg = _.get(this.getActiveUser(), 'config', {})
+        if (_.isArray(cfg))
+          cfg = {}
+        cfg['app.prompt.onboarding.shown'] = true
+
+        this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
+      },
       onOnboardingClose() {
         this.show_onboarding_modal = false
 
         setTimeout(() => {
           if (this.$route.name != ROUTE_HOME_LEARN)
             this.$router.push({ name: ROUTE_HOME_LEARN })
+
+          this.updateOnboardingConfig()
         }, 10)
       }
     }
