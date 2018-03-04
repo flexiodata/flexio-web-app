@@ -64,6 +64,8 @@ config.plugins = (config.plugins || []).concat([
     name: 'vendor',
     minChunks: Infinity
   }),
+  new webpack.NormalModuleReplacementPlugin(/element-ui[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]zh-CN/, 'element-ui/lib/locale/lang/en'),
+  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // TODO: find out if there's a no-locale moment.js NPM repo
   new WebpackMd5Hash(), // use standard md5 hash when using [chunkfile]
   new webpack.optimize.UglifyJsPlugin({
     //sourceMap: true,
@@ -71,7 +73,6 @@ config.plugins = (config.plugins || []).concat([
       warnings: false
     }
   }),
-  new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // TODO: find out if there's a no-locale moment.js NPM repo
   new webpack.LoaderOptionsPlugin({
     minimize: true
   }),
