@@ -4,7 +4,7 @@
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding dialog -->
-    <div v-show="config_show_onboarding">
+    <div v-if="config_show_onboarding">
       <el-dialog
         custom-class="no-header no-footer"
         width="56rem"
