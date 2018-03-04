@@ -11,6 +11,8 @@ import {
   Option,
   Select
 } from 'element-ui'
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
 import VeeValidate from 'vee-validate'
 import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
@@ -34,6 +36,8 @@ Vue.use(VeeValidate)
 Vue.use(KeenUi)
 
 // setup for Element UI
+
+locale.use(lang)
 
 Vue.use(Button)
 Vue.use(Dialog)
