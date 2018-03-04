@@ -69,9 +69,9 @@ class Convert extends \Flexio\Jobs\Base
     private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // if a job format is specified, get the mime type from the job definition
-        $job_definition = $this->getProperties();
-        $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($job_definition);
-        $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($job_definition);
+        $job_params = $this->getJobParameters();
+        $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($job_params);
+        $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($job_params);
 
         // default to convert to table
         if ($output_content_type_from_definition === false)
@@ -131,7 +131,7 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromTableInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
     {
-        $job_definition = $this->getProperties();
+        $job_params = $this->getJobParameters();
 
         $outstream->setMimeType($output_mime_type);
 
@@ -163,10 +163,10 @@ class Convert extends \Flexio\Jobs\Base
         }
          else
         {
-            $delimiter = $job_definition['params']['output']['delimiter'] ?? self::DELIMITER_COMMA;
-            $header = toBoolean($job_definition['params']['output']['header'] ?? true);
-            $qualifier = $job_definition['params']['output']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
-            $encoding = $job_definition['params']['output']['encoding'] ?? 'UTF-8';  // by default, use UTF-8 output
+            $delimiter = $job_params['output']['delimiter'] ?? self::DELIMITER_COMMA;
+            $header = toBoolean($job_params['output']['header'] ?? true);
+            $qualifier = $job_params['output']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
+            $encoding = $job_params['output']['encoding'] ?? 'UTF-8';  // by default, use UTF-8 output
 
             switch ($delimiter)
             {
@@ -385,15 +385,15 @@ class Convert extends \Flexio\Jobs\Base
     private function createOutputFromCsvInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
     {
         // parameters
-        $job_definition = $this->getProperties();
+        $job_params = $this->getJobParameters();
         $streamwriter = null;
 
-        $delimiter = $job_definition['params']['input']['delimiter'] ?? self::DELIMITER_COMMA;
+        $delimiter = $job_params['input']['delimiter'] ?? self::DELIMITER_COMMA;
         $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::JSON ? true : false);
 
-        $header = toBoolean($job_definition['params']['input']['header'] ?? true);
-        $qualifier = $job_definition['params']['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
-        $encoding = $job_definition['params']['input']['encoding'] ?? '';
+        $header = toBoolean($job_params['input']['header'] ?? true);
+        $qualifier = $job_params['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
+        $encoding = $job_params['input']['encoding'] ?? '';
 
         if (strtolower($encoding) == 'ascii')
             $encoding = 'ISO-8859-1'; // use this as it is a superset of ASCII
@@ -673,12 +673,11 @@ class Convert extends \Flexio\Jobs\Base
     private function createOutputFromFixedLengthInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // parameters
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
-        $start_offset = $params['start_offset'] ?? 0;
-        $row_width = $params['row_width'] ?? 100;
-        $line_delimiter = $params['line_delimiter'] ?? false;
-        $columns = $params['columns'] ?? [];
+        $job_params = $this->getJobParameters();
+        $start_offset = $job_params['start_offset'] ?? 0;
+        $row_width = $job_params['row_width'] ?? 100;
+        $line_delimiter = $job_params['line_delimiter'] ?? false;
+        $columns = $job_params['columns'] ?? [];
 
         if ($row_width == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -1122,11 +1121,11 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition(array $job_definition)
+    private static function getInputMimeTypeFromDefinition(array $job_params)
     {
-        if (!isset($job_definition['params']['input']['format']))
+        if (!isset($job_params['input']['format']))
             return false;
-        $format = $job_definition['params']['input']['format'];
+        $format = $job_params['input']['format'];
 
         if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'delimited_text' /* compatibility */)
             return \Flexio\Base\ContentType::CSV;
@@ -1144,11 +1143,11 @@ class Convert extends \Flexio\Jobs\Base
             return false;
     }
 
-    private static function getOutputMimeTypeFromDefinition(array $job_definition)
+    private static function getOutputMimeTypeFromDefinition(array $job_params)
     {
-        if (!isset($job_definition['params']['output']['format']))
+        if (!isset($job_params['output']['format']))
             return false;
-        $format = $job_definition['params']['output']['format'];
+        $format = $job_params['output']['format'];
 
         if ($format == self::FORMAT_DELIMITED_TEXT)
             return \Flexio\Base\ContentType::CSV;

@@ -261,15 +261,14 @@ class Transform extends \Flexio\Jobs\Base
         // object that can be used for performing the transformation
 
         // properties
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
+        $job_params = $this->getJobParameters();
 
-        $operations = $params['operations'] ?? [];
+        $operations = $job_params['operations'] ?? [];
         if (count($operations) == 0)
             return array(); // no operations
 
         // determine the list of columns to perform replace on
-        $specified_column_names = $params['columns'];
+        $specified_column_names = $job_params['columns'];
         $columns = $instream->getStructure()->enum($specified_column_names);
         if (count($columns) == 0)
             return array(); // no columns to perform operation on; not a failure, but fall through to no operation
@@ -344,10 +343,9 @@ class Transform extends \Flexio\Jobs\Base
         // object that can be used for performing the transformation
 
         // properties
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
+        $job_params = $this->getJobParameters();
 
-        $operations = $params['operations'] ?? [];
+        $operations = $job_params['operations'] ?? [];
         if (count($operations) == 0)
             return array(); // no operations
 
@@ -468,8 +466,8 @@ class Transform extends \Flexio\Jobs\Base
             if (!isset($operation['delimiter']))
                 return false;
 
-            $field = (int)$params['substring']['field'];
-            $delimiter = \Flexio\Base\ExprUtil::quote(''.$params['substring']['delimiter']);
+            $field = (int)$operation['field'];
+            $delimiter = \Flexio\Base\ExprUtil::quote(''.$operation['delimiter']);
             return "strpart(($expr),$delimiter,$field)";
         }
 

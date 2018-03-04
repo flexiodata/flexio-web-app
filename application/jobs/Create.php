@@ -34,15 +34,13 @@ class Create extends \Flexio\Jobs\Base
         parent::run($process);
 
         // create job adds new streams; don't clear existing streams
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'] ?? [];
-
+        $job_params = $this->getJobParameters();
 
         // TODO: factor
 
-        if (isset($params['path']))
+        if (isset($job_params['path']))
         {
-            $columns = $params['columns'] ?? [];
+            $columns = $job_params['columns'] ?? [];
 
             $vfs = new \Flexio\Services\Vfs();
             $vfs->setProcess($process);
@@ -53,15 +51,15 @@ class Create extends \Flexio\Jobs\Base
                 $create_params['structure'] = $columns;
             }
 
-            if (!$vfs->createFile($params['path'], $create_params))
+            if (!$vfs->createFile($job_params['path'], $create_params))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
          else
         {
             $outstream = $process->getStdout();
-            $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+            $content_type = $job_params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
-            if (isset($params['columns']) && is_array($params['columns']) && count($params['columns']))
+            if (isset($job_params['columns']) && is_array($job_params['columns']) && count($job_params['columns']))
                 $content_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
 
             switch ($content_type)
@@ -84,15 +82,15 @@ class Create extends \Flexio\Jobs\Base
 
     private function createFile(\Flexio\IFace\IStream &$outstream)
     {
-        $job_definition = $this->getProperties();
-        $name = $job_definition['params']['name'] ?? _('New File');
-        $content_type = ($job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::STREAM);
+        $job_params = $this->getJobParameters();
+        $name = $job_params['name'] ?? _('New File');
+        $content_type = ($job_params['content_type'] ?? \Flexio\Base\ContentType::STREAM);
 
         // get the content and decode it
         $content = '';
-        if (isset($job_definition['params']['content']))
+        if (isset($job_params['content']))
         {
-            $content = $job_definition['params']['content'];
+            $content = $job_params['content'];
             if (!is_string($content))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -115,10 +113,10 @@ class Create extends \Flexio\Jobs\Base
 
     private function createTable(\Flexio\IFace\IStream &$outstream)
     {
-        $job_definition = $this->getProperties();
-        $name = $job_definition['params']['name'] ?? _('New Table');
-        $content_type = $job_definition['params']['content_type'] ?? \Flexio\Base\ContentType::FLEXIO_TABLE;
-        $structure = $job_definition['params']['columns'] ?? '[]';
+        $job_params = $this->getJobParameters();
+        $name = $job_params['name'] ?? _('New Table');
+        $content_type = $job_params['content_type'] ?? \Flexio\Base\ContentType::FLEXIO_TABLE;
+        $structure = $job_params['columns'] ?? '[]';
         $outstream_properties = array(
             'name' => $name,
             'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
@@ -128,9 +126,9 @@ class Create extends \Flexio\Jobs\Base
         $outstream->set($outstream_properties);
         $streamwriter = $outstream->getWriter();
 
-        if (isset($job_definition['params']['content']))
+        if (isset($job_params['content']))
         {
-            $rows = $job_definition['params']['content'];
+            $rows = $job_params['content'];
             if (!is_array($rows))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

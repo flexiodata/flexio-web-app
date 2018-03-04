@@ -401,7 +401,7 @@ class Check
         }
 
         $test_result->passed = false;
-        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . 'to be a subset of ' . self::stringify($actual);
+        $test_result->message = $test_result->message = 'Expected ' . self::stringify($expected) . ' to be a subset of ' . self::stringify($actual);
     }
 
     public static function arrayKeysEqual($item1, $item2)
@@ -481,8 +481,17 @@ class Check
         $is_value1 = !is_array($item1) && !is_object($item1);
         $is_value2 = !is_array($item2) && !is_object($item2);
 
-        if ($is_value1 === true && $is_value2 === true && $item1 !== $item2)
+        if ($is_value1 === true && $is_value2 === true)
+        {
+            if ($item1 === $item2)
+                return true;
+            if ((is_int($item1) || is_float($item1)) && (is_int($item2) || is_float($item2)))
+            {
+                if (\Flexio\Tests\Util::dblcompare((float)$item1, (float)$item2) == 0)
+                    return true;
+            }
             return false;
+        }
         if ($is_value1 === false && $is_value2 === true)
             return false;
         if ($is_value1 === true && $is_value2 === false)

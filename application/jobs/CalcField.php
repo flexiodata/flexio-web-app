@@ -58,12 +58,12 @@ class CalcField extends \Flexio\Jobs\Base
     private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // get the job properties
-        $job_definition = $this->getProperties();
-        $name = $job_definition['params']['name'];
-        $type = $job_definition['params']['type'] ?? 'character';
-        $width = $job_definition['params']['width'] ?? null;
-        $scale = $job_definition['params']['decimals'] ?? null;
-        $expression = $job_definition['params']['expression'] ?? null;
+        $job_params = $this->getJobParameters();
+        $name = $job_params['name'];
+        $type = $job_params['type'] ?? 'character';
+        $width = $job_params['width'] ?? null;
+        $scale = $job_params['decimals'] ?? null;
+        $expression = $job_params['expression'] ?? null;
 
         if (isset($width) && !is_integer($width))
             $width = (int)$width;
