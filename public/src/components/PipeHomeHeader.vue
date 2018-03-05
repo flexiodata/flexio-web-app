@@ -3,40 +3,36 @@
     <div class="flex flex-row bg-white pa1 ph3-ns items-center" style="min-height: 54px">
       <router-link
         to="/pipes"
-        class="flex flex-row items-center link mid-gray hover-black"
+        class="flex flex-row items-center link mid-gray hover-black hint--bottom-right" aria-label="Back to pipe list"
       >
-        <div class="hint--bottom-right" aria-label="Back to pipe list">
-          <i class="material-icons md-24">home</i>
-        </div>
+        <i class="material-icons md-24">home</i>
       </router-link>
-      <i class="material-icons md-24 black-20 rotate-270">arrow_drop_down</i>
-      <div class="flex-fill mr2">
-        <div class="flex flex-column flex-row-l items-center-l">
+      <i class="material-icons md-24 black-20 rotate-270">expand_more</i>
+      <div class="flex-fill flex flex-column flex-row-l items-center-l mr2">
+        <inline-edit-text
+          class="dib f3 lh-title v-mid dark-gray mr3-l"
+          input-key="name"
+          tooltip-cls="hint--bottom"
+          :val="pipe_name"
+          :show-edit-button="false"
+          @save="editPipeName"
+        />
+        <div class="flex flex-row items-center">
           <inline-edit-text
-            class="dib f3 lh-title v-mid dark-gray mr3-l"
-            input-key="name"
+            class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
+            placeholder="Add an alias"
+            input-key="ename"
             tooltip-cls="hint--bottom"
-            :val="pipe_name"
+            :val="pipe_ename"
             :show-edit-button="false"
-            @save="editPipeName">
-          </inline-edit-text>
-          <div class="flex flex-row items-center">
-            <inline-edit-text
-              class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
-              placeholder="Add an alias"
-              input-key="ename"
-              tooltip-cls="hint--bottom"
-              :val="pipe_ename"
-              :show-edit-button="false"
-              @save="editPipeAlias">
-            </inline-edit-text>
-            <div
-              class="hint--bottom hint--large cursor-default"
-              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we automatically set your username as the prefix (e.g., username-foo)."
-              v-if="pipe_ename.length == 0"
-            >
-              <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
-            </div>
+            @save="editPipeAlias"
+          />
+          <div
+            class="hint--bottom hint--large cursor-default"
+            aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we automatically set your username as the prefix (e.g., username-foo)."
+            v-if="pipe_ename.length == 0"
+          >
+            <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
           </div>
         </div>
       </div>
@@ -48,49 +44,31 @@
           v-model.trim="pipe_view"
           v-if="false"
         />
-        <el-button
-          size="small"
-          type="primary"
-          class="ttu b"
-          @click="cancelProcess"
-          v-if="isPrompting || isProcessRunning"
-        >
-          Cancel
-        </el-button>
-        <el-button
-          size="small"
-          type="primary"
-          class="ttu b"
-          :disabled="tasks.length == 0"
-          @click="runPipe"
-          v-else
-        >
-          Run
-        </el-button>
-        </div>
-        <div class="dn db-ns flex-none ml3">
-          <div v-if="user_fetching"></div>
-          <user-dropdown v-else-if="logged_in"></user-dropdown>
-          <div v-else>
-            <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
-            <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
-              <span class="di dn-ns">Sign up</span>
-              <span class="dn di-ns">Sign up for free</span>
-            </router-link>
-          </div>
+        <el-button size="small" type="primary" class="ttu b" @click="cancelProcess" v-if="isPrompting || isProcessRunning">Cancel</el-button>
+        <el-button size="small" type="primary" class="ttu b" :disabled="tasks.length == 0" @click="runPipe" v-else>Run</el-button>
+      </div>
+      <div class="dn db-ns flex-none ml3">
+        <div v-if="user_fetching"></div>
+        <user-dropdown v-else-if="logged_in"></user-dropdown>
+        <div v-else>
+          <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
+          <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
+            <span class="di dn-ns">Sign up</span>
+            <span class="dn di-ns">Sign up for free</span>
+          </router-link>
         </div>
       </div>
-
-      <!-- alert modal -->
-      <alert-modal
-        ref="modal-alert"
-        title="Error"
-        @hide="show_alert_modal = false"
-        v-if="show_alert_modal"
-      >
-        <div class="lh-copy">{{ename_error}}</div>
-      </alert-modal>
     </div>
+
+    <!-- alert modal -->
+    <alert-modal
+      ref="modal-alert"
+      title="Error"
+      @hide="show_alert_modal = false"
+      v-if="show_alert_modal"
+    >
+      <div class="lh-copy">{{ename_error}}</div>
+    </alert-modal>
   </nav>
 </template>
 
