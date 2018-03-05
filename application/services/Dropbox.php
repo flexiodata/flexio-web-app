@@ -376,7 +376,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             // error occurred
             $msg = $result['error_summary'] ?? '';
-            return false;  // error occurred; TODO: throw exception?
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         return true;
