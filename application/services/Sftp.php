@@ -269,10 +269,13 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $fp = fopen("sftpcapture://", "wb");
 
         $path = $params['path'] ?? '';
-        $this->connection->get($this->getFullPath($path), $fp);
+        $res = $this->connection->get($this->getFullPath($path), $fp);
 
         fclose($fp);
         stream_wrapper_unregister('sftpcapture');
+
+        if ($res === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
     }
 
     public function write(array $params, callable $callback)
@@ -287,6 +290,10 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+
+        // if the target path is a folder, throw an exception
+        if ($this->isDirectory($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
