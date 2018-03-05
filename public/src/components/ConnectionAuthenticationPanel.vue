@@ -54,7 +54,7 @@
           autocomplete="off"
           label="Region"
           floating-label
-          :options="region_options"
+          :options="aws_region_options"
           v-model.trim="info.region"
           v-if="showInput('region')"
         />
@@ -128,7 +128,7 @@
   import Btn from './Btn.vue'
   import OauthPopup from './mixins/oauth-popup'
 
-  const region_options = [
+  const aws_region_options = [
     { val: 'us-east-2',      label: 'US East (Ohio)'            },
     { val: 'us-east-1',      label: 'US East (N. Virginia)'     },
     { val: 'us-west-1',      label: 'US West (N. California)'   },
@@ -245,8 +245,8 @@
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
       },
-      region_options() {
-        return region_options
+      aws_region_options() {
+        return aws_region_options
       },
       is_oauth() {
         switch (this.ctype)
