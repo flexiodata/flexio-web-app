@@ -130,8 +130,11 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $page = null;
         while (true)
         {
+            // TODO: just return some of the data now
             $rows = $this->fetchData($path, $page);
-
+            $callback(json_encode($rows));
+            break;
+/*
             if ($rows === false)
                 break;
             if (count($rows) === 0)
@@ -143,6 +146,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
 
             usleep($this->request_throttle*1000);
+*/
         }
 
         return true;
