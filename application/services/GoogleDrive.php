@@ -249,7 +249,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
         $fileinfo = $this->internalGetFileInfo($path);
         if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
-            return false; // bad filename / fileid
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
         $fileid = $fileinfo['id'];
         $filetype = $fileinfo['content_type'];
 
