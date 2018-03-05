@@ -25,12 +25,13 @@
         {{error_msg}}
       </ui-alert>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="flex flex-column w-50-ns center mt1 mb3">
+      <div class="flex flex-column w-50-ns center mv3">
         <ui-textbox
           autocomplete="off"
           spellcheck="false"
           label="AWS Access Key"
           floating-label
+          help=" "
           v-model.trim="info.aws_key"
           v-if="showInput('aws_key')"
         />
@@ -39,6 +40,7 @@
           spellcheck="false"
           label="AWS Secret Key"
           floating-label
+          help=" "
           v-model.trim="info.aws_secret"
           v-if="showInput('aws_secret')"
         />
@@ -47,6 +49,7 @@
           spellcheck="false"
           label="Bucket"
           floating-label
+          help=" "
           v-model.trim="info.bucket"
           v-if="showInput('bucket')"
         />
@@ -54,6 +57,7 @@
           autocomplete="off"
           label="Region"
           floating-label
+          help=" "
           :options="region_options"
           v-model.trim="info.region"
           v-if="showInput('region')"
@@ -63,6 +67,7 @@
           spellcheck="false"
           label="Token"
           floating-label
+          help=" "
           v-model.trim="info.token"
           v-if="showInput('token')"
         />
@@ -70,6 +75,7 @@
           autocomplete="off"
           spellcheck="false"
           floating-label
+          help=" "
           :label="host_label"
           v-model.trim="info.host"
           v-if="showInput('host')"
@@ -79,6 +85,7 @@
           spellcheck="false"
           label="Port"
           floating-label
+          help=" "
           v-model.trim.number="info.port"
           v-if="showInput('port')"
         />
@@ -86,6 +93,7 @@
           autocomplete="off"
           spellcheck="false"
           floating-label
+          help=" "
           :label="username_label"
           v-model.trim="info.username"
           v-if="showInput('username')"
@@ -96,6 +104,7 @@
           autocomplete="off"
           :label="password_label"
           floating-label
+          help=" "
           v-model.trim="info.password"
           v-if="showInput('password')"
         />
@@ -104,6 +113,7 @@
           spellcheck="false"
           :label="database_label"
           floating-label
+          help=" "
           v-model.trim="info.database"
           v-if="showInput('database') && !is_sftp && !is_elasticsearch"
         />
