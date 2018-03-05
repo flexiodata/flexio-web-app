@@ -207,6 +207,9 @@
         case ctypes.CONNECTION_TYPE_PIPELINEDEALS:
           attrs = _.pick(attrs, ['token'])
           break
+        case ctypes.CONNECTION_TYPE_TWILIO:
+          attrs = _.pick(attrs, ['username', 'password'])
+          break
       }
 
       return {
@@ -251,7 +254,6 @@
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-          case ctypes.CONNECTION_TYPE_TWILIO:
             return true
         }
         return false
@@ -267,7 +269,6 @@
           case ctypes.CONNECTION_TYPE_GITHUB:       return base_url+'?service=github&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
-          case ctypes.CONNECTION_TYPE_TWILIO:       return base_url+'?service=twilio&eid='+eid
         }
 
         return ''

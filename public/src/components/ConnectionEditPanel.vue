@@ -257,7 +257,6 @@
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-          case ctypes.CONNECTION_TYPE_TWILIO:
             return true
         }
         return false
