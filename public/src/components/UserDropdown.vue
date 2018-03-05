@@ -2,7 +2,7 @@
   <el-dropdown trigger="click" @command="onCommand">
     <span class="el-dropdown-link pointer dim-less">
       <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
-      <i class="material-icons v-mid silver nl1 md-18">arrow_drop_down</i>
+      <i class="material-icons v-mid black-30 nl1 md-18">expand_more</i>
     </span>
     <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
       <div class="mv2" style="padding: 0 20px">
