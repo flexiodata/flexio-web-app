@@ -276,6 +276,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $dropbox_args = json_encode(array('path' => $path));
 
+        $http_response_code = false;
+        $error_payload = '';
+
         // download the file
         $ch = curl_init();
 
@@ -285,14 +288,42 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
-            $length = strlen($data);
-            $callback($data);
-            return $length;
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$error_payload) {
+            if ($http_response_code === false)
+            {
+                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+            if ($http_response_code >= 400)
+            {
+                if (strlen($error_payload) < 65536)
+                    $error_payload .= $data;
+                return strlen($data);
+            }
+             else
+            {
+                $length = strlen($data);
+                $callback($data);
+                return $length;
+            }
         });
 
         $result = curl_exec($ch);
         curl_close($ch);
+
+
+
+        if (strlen($error_payload) > 0)
+        {
+            $result = @json_decode($error_payload, true);
+            if (isset($result['error']))
+            {
+                $error_summary = $result['error_summary'] ?? '';
+                if (substr($error_summary, 0, 14) == 'path/not_found')
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                     else
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+        }
     }
 
 
@@ -376,7 +407,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             // error occurred
             $msg = $result['error_summary'] ?? '';
-            return false;  // error occurred; TODO: throw exception?
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         return true;

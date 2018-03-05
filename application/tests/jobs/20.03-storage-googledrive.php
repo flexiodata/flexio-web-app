@@ -127,7 +127,7 @@ class Test
 
         // BEGIN TEST
         $name = 'test_folder';
-        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name);
+        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name . '/file.txt');
         $has_error_after_first_attempt = $process_create->hasError();
         $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name);
         $has_error_after_second_attempt = $process_create->hasError();

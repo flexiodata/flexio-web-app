@@ -104,6 +104,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // add a trailing slash if necessary
         if (strlen($path) > 0 && substr($path, -1) != '/')
             $path .= '/';
+        $single_file = false;
 
         $arr = array();
         $maxkey = '';
@@ -125,6 +126,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
             catch (\Aws\Exception\AwsException $e)
             {
+
                 $message = $e->getAwsErrorMessage();
                 if (strlen($message) == 0)
                     $message = "An error occurred while attempting to access the requested resource";
@@ -163,13 +165,22 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
 
 
-
             $is_truncated = $result->get('IsTruncated');
+
+            if (count($arr) == 0 && !$is_truncated && substr($path, -1) == '/')
+            {
+                // no results for the folder, try listing a single file
+                $single_file = true;
+                $path = rtrim($path, '/');
+                continue;
+            }
+
             if (!$is_truncated || is_null($key))
                 break;
 
             $marker = $maxkey;
         }
+
 
         $pathlen = strlen($path);
         foreach ($arr as &$a)
@@ -177,15 +188,25 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $a['path'] = '/' . $a['name'];
 
             if (substr($a['name'], -1) == '/')
-                $a['name']= substr($a['name'], 0, strlen($a['name'])-1);
-            if ($pathlen > 0 && substr($a['name'], 0, $pathlen) == $path)
+                $a['name'] = substr($a['name'], 0, strlen($a['name'])-1);
+
+            if ($single_file)
             {
-                $a['name'] = substr($a['name'], $pathlen);
-                if ($a['name'] === false) $a['name'] = '';
+                $a['name'] = rtrim($a['name'],'/');
+                $sl = strpos($a['name'], '/');
+                if ($sl !== false)
+                    $a['name'] = substr($a['name'], $sl+1);
+            }
+             else
+            {
+                if ($pathlen > 0 && substr($a['name'], 0, $pathlen) == $path)
+                {
+                    $a['name'] = substr($a['name'], $pathlen);
+                    if ($a['name'] === false) $a['name'] = '';
+                }
             }
         }
         unset($a);
-
 
 
         $objects = array();
@@ -452,6 +473,27 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+
+
+        
+        $dest_is_folder = false;
+        try
+        {
+            $info = $this->getFileInfo($path);
+            if (isset($info['type']) && $info['type'] == 'DIR')
+                $dest_is_folder = true;
+        }
+        catch (\Exception $e)
+        {
+        }
+        if ($dest_is_folder)
+        {
+            // destination path is a folder
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+
+
 
         $path = $this->getS3KeyFromPath($path);
 

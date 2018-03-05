@@ -55,10 +55,20 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
         $folder = $path;
 
-        $folderid = $this->getFileId($folder);
-        if (!$folderid)
-            return array();
+        $fileinfo = $this->internalGetFileInfo($path);
+        if (!isset($fileinfo['id']) || !isset($fileinfo['content_type']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        if ($fileinfo['content_type'] != 'application/vnd.google-apps.folder')
+        {
+            $arr = $this->getFileInfo($path);
+            $arr['path'] = $path;
+            return [ $arr ];
+        }
+
+        $folderid = $fileinfo['id'];
+
+        
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$folderid'+in+parents+and+trashed=false");
@@ -142,7 +152,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
     {
         if (is_null($path) || $path == '' || $path == '/')
         {
-            return [ 'id' => 'root', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER ];
+            return [ 'id' => 'root', 'content_type' => 'application/vnd.google-apps.folder' ];
         }
 
 
@@ -249,7 +259,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
         $fileinfo = $this->internalGetFileInfo($path);
         if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
-            return false; // bad filename / fileid
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
         $fileid = $fileinfo['id'];
         $filetype = $fileinfo['content_type'];
 
@@ -404,7 +415,16 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             $fullpath .= '/';
         $fullpath .= $filename;
 
-        $fileid = $this->getFileId($fullpath);
+
+        $info = $this->internalGetFileInfo($fullpath);
+        if (($info['content_type'] ?? '') == 'application/vnd.google-apps.folder')
+        {
+            // destination path is a folder
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+        $fileid = $info['id'] ?? null;
+
 
         // if the file doesn't already exist, create the file (otherwise overwrite it)
         if (!$fileid)
