@@ -276,6 +276,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $dropbox_args = json_encode(array('path' => $path));
 
+        $http_response_code = false;
+        $response = '';
+
         // download the file
         $ch = curl_init();
 
@@ -285,7 +288,18 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$response) {
+            if ($http_response_code === false)
+            {
+                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+
+            if ($http_response_code !== false && $http_response_code >= 400)
+            {
+                $response .= $data;
+                return strlen($data);
+            }
+
             $length = strlen($data);
             $callback($data);
             return $length;
@@ -293,6 +307,21 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $result = curl_exec($ch);
         curl_close($ch);
+
+
+
+        if (strlen($response) > 0)
+        {
+            $result = @json_decode($response, true);
+            if (isset($result['error']))
+            {
+                $error_summary = $result['error_summary'] ?? '';
+                if (substr($error_summary, 0, 14) == 'path/not_found')
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                     else
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            }
+        }
     }
 
 
