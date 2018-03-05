@@ -4,7 +4,7 @@
       <img :src="user_profile_src" class="dib v-mid ba b--black-10 db br-100"/>
       <i class="material-icons v-mid silver nl1 md-18">arrow_drop_down</i>
     </span>
-    <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+    <el-dropdown-menu style="min-width: 12rem" slot="dropdown">
       <div class="mv2" style="padding: 0 20px">
         <h5 class="ma0">{{full_name}}</h5>
         <div class="mt1 silver f8">{{email}}</div>
