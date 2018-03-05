@@ -109,7 +109,8 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // make sure we can save the copied pipe to any specified parent
-        if ($project_identifier!== false)
+        $project = false;
+        if ($project_identifier !== false)
         {
             $project = \Flexio\Object\Project::load($project_identifier);
             if ($project === false)
