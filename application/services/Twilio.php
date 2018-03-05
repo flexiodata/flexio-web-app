@@ -70,7 +70,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $objects[] = array(
                 'name' => $d['name'],
-                'path' => $d['path'],
+                'path' => '/' . $d['path'],
                 'size' => null,
                 'modified' => null,
                 'type' => 'FILE'
@@ -118,10 +118,11 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-
         if (!$this->authenticated())
             return false;
+
+        $path = $params['path'] ?? '';
+        $path = self::cleanPath($path);
 
         // TODO: only read the buffer amount
         // TODO: limit the request rate
@@ -130,6 +131,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         while (true)
         {
             $rows = $this->fetchData($path, $page);
+
             if ($rows === false)
                 break;
             if (count($rows) === 0)
@@ -176,7 +178,6 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function fetchData(string $path, int &$page = null)
     {
-        $path = self::cleanPath($path);
         if (!isset($page))
             $page = 1;
 
@@ -192,8 +193,8 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $password = $this->password;
         $apiauth = "$username:$password";
         $request = str_replace('{username}', $username, $location);
-        $request .= "&Page=$page";
-        $request .= "?PageSize=$this->pagesize";
+        //$request .= "?PageSize=$this->pagesize";
+        //$request .= "&Page=$page";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request);
@@ -320,8 +321,8 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "calls",
-            "name": "Calls",
-            "location" : "https://api.twilio.com/2010-04-01/Accounts/{key}/Calls.json",
+            "name": "calls",
+            "location" : "https://api.twilio.com/2010-04-01/Accounts/{username}/Calls.json",
             "content_root": "$.calls",
             "output" : [
                 { "name" : "sid",              "type" : "character", "width" : 50, "scale" : 0 },
@@ -383,8 +384,8 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "messages",
-            "name": "Messages",
-            "location" : "https://api.twilio.com/2010-04-01/Accounts/{key}/Messages.json",
+            "name": "messages",
+            "location" : "https://api.twilio.com/2010-04-01/Accounts/{username}/Messages.json",
             "content_root": "$.messages",
             "output" : [
                 { "name" : "sid",           "type" : "character", "width" : 50, "scale" : 0 },
@@ -438,6 +439,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private static function cleanPath($path)
     {
         $path = trim(strtolower($path));
+        $path = trim($path, '/');
         return $path;
     }
 }
