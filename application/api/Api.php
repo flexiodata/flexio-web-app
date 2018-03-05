@@ -256,12 +256,6 @@ class Api
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
-            // trash
-            case 'POS /trash'                          : return '\Flexio\Api\Trash::add';
-            case 'GET /trash'                          : return '\Flexio\Api\Trash::listall';
-            case 'DEL /trash'                          : return '\Flexio\Api\Trash::empty';
-            case 'POS /restore'                        : return '\Flexio\Api\Trash::restore';
-
             // connections
             case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
             case 'GET /connections'                    : return '\Flexio\Api\Connection::listall';
