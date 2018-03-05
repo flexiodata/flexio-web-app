@@ -162,6 +162,19 @@
       ValueSelect,
       Btn
     },
+    watch: {
+      'info.token'()      { this.$emit('change', { connection_info: this.info }) },
+      'info.host'()       { this.$emit('change', { connection_info: this.info }) },
+      'info.port'()       { this.$emit('change', { connection_info: this.info }) },
+      'info.username'()   { this.$emit('change', { connection_info: this.info }) },
+      'info.password'()   { this.$emit('change', { connection_info: this.info }) },
+      'info.database'()   { this.$emit('change', { connection_info: this.info }) },
+
+      'info.aws_key'()    { this.$emit('change', { connection_info: this.info }) },
+      'info.aws_secret'() { this.$emit('change', { connection_info: this.info }) },
+      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) },
+      'info.region'()     { this.$emit('change', { connection_info: this.info }) }
+    },
     data() {
       var c = this.connection
 
@@ -202,19 +215,6 @@
         region_options
       }
     },
-    watch: {
-      'info.token'()      { this.$emit('change', { connection_info: this.info }) },
-      'info.host'()       { this.$emit('change', { connection_info: this.info }) },
-      'info.port'()       { this.$emit('change', { connection_info: this.info }) },
-      'info.username'()   { this.$emit('change', { connection_info: this.info }) },
-      'info.password'()   { this.$emit('change', { connection_info: this.info }) },
-      'info.database'()   { this.$emit('change', { connection_info: this.info }) },
-
-      'info.aws_key'()    { this.$emit('change', { connection_info: this.info }) },
-      'info.aws_secret'() { this.$emit('change', { connection_info: this.info }) },
-      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) },
-      'info.region'()     { this.$emit('change', { connection_info: this.info }) }
-    },
     computed: {
       eid() {
         return _.get(this, 'connection.eid', '')
@@ -251,6 +251,7 @@
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
+          case ctypes.CONNECTION_TYPE_TWILIO:
             return true
         }
         return false
@@ -266,6 +267,7 @@
           case ctypes.CONNECTION_TYPE_GITHUB:       return base_url+'?service=github&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
+          case ctypes.CONNECTION_TYPE_TWILIO:       return base_url+'?service=twilio&eid='+eid
         }
 
         return ''

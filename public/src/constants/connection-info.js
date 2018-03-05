@@ -244,6 +244,17 @@ const STDOUT = {
   is_storage: false
 }
 
+const TWILIO = {
+  service_name: 'Twilio',
+  service_description: 'Programmatically make and receive phone calls and send and receive text messages',
+  connection_type: types.CONNECTION_TYPE_TWILIO,
+  icon: require('../assets/icon/icon-twilio-128.png'),
+  is_service: true,
+  is_input: true,
+  is_output: true,
+  is_storage: true
+}
+
 const UPLOAD = {
   service_name: 'File Upload',
   service_description: 'Upload files from your computer',
@@ -283,3 +294,4 @@ export const CONNECTION_INFO_HOME          = HOME
 export const CONNECTION_INFO_MYSQL         = MYSQL
 export const CONNECTION_INFO_POSTGRES      = POSTGRES
 export const CONNECTION_INFO_SFTP          = SFTP
+export const CONNECTION_INFO_TWILIO        = TWILIO

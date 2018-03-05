@@ -79,9 +79,7 @@
         </form>
 
         <div class="mt4" v-if="is_http">
-          <connection-info-panel
-            :connection.sync="edit_connection"
-          />
+          <connection-info-panel :connection.sync="edit_connection" />
         </div>
         <div class="mt4" v-else>
           <div class="pv2 ph3 bg-light-gray br2 br--top mid-gray lh-copy fw6">Authentication</div>
@@ -90,7 +88,7 @@
               :connection="edit_connection"
               :mode="mode"
               @change="updateConnection"
-            ></connection-authentication-panel>
+            />
           </div>
         </div>
       </div>
@@ -259,6 +257,7 @@
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
+          case ctypes.CONNECTION_TYPE_TWILIO:
             return true
         }
         return false
