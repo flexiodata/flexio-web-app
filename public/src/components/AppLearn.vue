@@ -7,7 +7,8 @@
         <span class="dib mr1">I want to</span>
         <el-select
           placeholder="Select"
-          style="width: 320px"
+          class="f5"
+          style="width: 340px"
           @change="onOnboardingItemChange"
           v-model="active_item_id"
         >

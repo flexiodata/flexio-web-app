@@ -3,9 +3,6 @@
     :class="cls"
     :style="itemStyle"
     @click="onClick"
-    @mouseenter="onMouseEnter"
-    @mouseover="onMouseOver"
-    @mouseleave="onMouseLeave"
   >
     <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
       <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
@@ -23,30 +20,18 @@
         </div>
       </div>
       <div class="ml2" v-if="showDropdown && !is_home">
-        <a
-          ref="dropdown-trigger"
-          tabindex="0"
-          class="dib pointer pa1 light-silver hover-black"
-          :class="is_hover || is_dropdown_open ? '' : 'invisible'"
-          @click.stop
-        ><i class="material-icons v-mid">more_vert</i></a>
-
-        <ui-popover
-          trigger="dropdown-trigger"
-          ref="dropdown"
-          dropdown-position="bottom right"
-          @open="is_dropdown_open = true"
-          @close="is_dropdown_open = false"
-          v-if="is_hover || is_dropdown_open"
-        >
-          <ui-menu
-            contain-focus
-            has-icons
-            :options="dropdown_items"
-            @select="onDropdownItemClick"
-            @close="$refs.dropdown.close()"
-          ></ui-menu>
-        </ui-popover>
+        <el-dropdown trigger="click" @command="onCommand">
+          <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
+            <i class="material-icons v-mid">expand_more</i>
+          </span>
+          <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+            <!--
+            <el-dropdown-item class="flex flex-row items-center ph2" command="edit"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
+            <div class="mv2 bt b--black-10"></div>
+            -->
+            <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
   </article>
@@ -147,35 +132,15 @@
           return 'min-w5 pa3 bb b--black-05 darken-05 ' + sel_cls
            else
           return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
-      },
-      dropdown_items() {
-        var items = [{
-          id: 'edit',
-          label: 'Edit',
-          icon: 'edit'
-        },{
-          id: 'delete',
-          label: 'Delete',
-          icon: 'delete'
-        }]
-
-        return _.filter(items, (item) => {
-          return _.includes(this.dropdownItems, item.id)
-        })
       }
     },
     methods: {
-      onMouseEnter() {
-        this.is_hover = true
-      },
-      onMouseLeave() {
-        this.is_hover = false
-      },
-      onMouseOver() {
-        this.is_hover = true
-      },
-      onDropdownItemClick(menu_item) {
-        this.$emit(menu_item.id, this.item)
+      onCommand(cmd) {
+        switch (cmd)
+        {
+          case 'edit':      return this.$emit('edit', this.item)
+          case 'delete':    return this.$emit('delete', this.item)
+        }
       },
       onClick: _.debounce(function() {
         this.$emit('activate', this.item)

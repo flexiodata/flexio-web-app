@@ -67,12 +67,6 @@
       v-if="show_pipe_props_modal"
     ></pipe-props-modal>
 
-    <pipe-schedule-modal
-      ref="modal-pipe-schedule"
-      @hide="show_pipe_schedule_modal = false"
-      v-if="show_pipe_schedule_modal"
-    ></pipe-schedule-modal>
-
     <pipe-share-modal
       ref="modal-pipe-share"
       @hide="show_pipe_share_modal = false"
@@ -145,7 +139,6 @@
   import ProjectDeleteModal from './ProjectDeleteModal.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
   import PipeDialog from './PipeDialog.vue'
-  import PipeScheduleModal from './PipeScheduleModal.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
   import MemberAddModal from './MemberAddModal.vue'
@@ -183,7 +176,6 @@
       ProjectDeleteModal,
       StoragePropsModal,
       PipeDialog,
-      PipeScheduleModal,
       PipeShareModal,
       EmailSupportModal,
       MemberAddModal,

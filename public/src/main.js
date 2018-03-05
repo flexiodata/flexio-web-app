@@ -7,9 +7,13 @@ import {
   DropdownItem,
   DropdownMenu,
   Icon,
+  Input,
+  MessageBox,
   Option,
   Select
 } from 'element-ui'
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
 import VeeValidate from 'vee-validate'
 import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
@@ -34,14 +38,22 @@ Vue.use(KeenUi)
 
 // setup for Element UI
 
+locale.use(lang)
+
 Vue.use(Button)
 Vue.use(Dialog)
 Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Icon)
+Vue.use(Input)
 Vue.use(Option)
 Vue.use(Select)
+
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
 
 // setup for VueScrollTo (programmatic scrolling)
 

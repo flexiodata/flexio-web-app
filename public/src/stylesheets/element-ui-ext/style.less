@@ -22,18 +22,28 @@
   }
 }
 
-.el-button.fw6 {
-  font-weight: 600;
+.el-button--large, .el-button--large.is-round {
+  padding: 15px 25px;
 }
 
-.el-button.b {
-  font-weight: bold;
+.el-button--large {
+  font-size: 16px;
+  border-radius: 5px;
 }
 
-[class*=" el-icon-"].fw6, [class^=el-icon-].fw6 {
-  font-weight: 600
+.el-input.f5,
+.el-select.f5 {
+  .el-input__inner {
+   font-size: 1rem;
+  }
 }
 
-[class*=" el-icon-"].b, [class^=el-icon-].b {
-  font-weight: bold
+.el-button {
+  .b   { font-weight: bold; }
+  .fw6 { font-weight: 600;  }
+}
+
+[class*=" el-icon-"], [class^=el-icon-] {
+  .b   { font-weight: bold; }
+  .fw6 { font-weight: 600;  }
 }

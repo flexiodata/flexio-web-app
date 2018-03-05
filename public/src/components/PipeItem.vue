@@ -3,9 +3,6 @@
     class="css-list-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
     :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
-    @mouseenter="onMouseEnter"
-    @mouseover="onMouseOver"
-    @mouseleave="onMouseLeave"
   >
     <div class="flex flex-row items-center">
       <div class="flex-none mr2">
@@ -40,30 +37,20 @@
           ></toggle-button>
         </div>
       </div>
-      <div class="flex-none ml2 nt3 nr3 nb3">
-        <a
-          class="f5 b dib pointer pa3 black-60 hover-black popover-trigger"
-          ref="dropdown-trigger"
-          tabindex="0"
-          @click.stop
-        ><i class="material-icons v-mid b">expand_more</i></a>
-
-        <ui-popover
-          trigger="dropdown-trigger"
-          ref="dropdown"
-          dropdown-position="bottom right"
-          @open="is_dropdown_open = true"
-          @close="is_dropdown_open = false"
-          v-if="is_hover || is_dropdown_open"
-        >
-          <ui-menu
-            contain-focus
-            has-icons
-            :options="menu_items"
-            @select="onDropdownItemClick"
-            @close="$refs.dropdown.close()"
-          ></ui-menu>
-        </ui-popover>
+      <div class="flex-none pl2 nt3 nr3 nb3" @click.stop>
+        <el-dropdown trigger="click" @command="onCommand">
+          <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
+            <i class="material-icons v-mid">expand_more</i>
+          </span>
+          <el-dropdown-menu style="min-width: 10rem; margin-left: -12px; margin-top: -8px" slot="dropdown">
+            <el-dropdown-item class="flex flex-row items-center ph2" command="open"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="duplicate"><i class="material-icons mr3">content_copy</i> Duplicate</el-dropdown-item>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="schedule"><i class="material-icons mr3">date_range</i> Schedule</el-dropdown-item>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="deploy"><i class="material-icons mr3">archive</i> Deploy</el-dropdown-item>
+            <div class="mv2 bt b--black-10"></div>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </div>
     </div>
   </article>
@@ -101,12 +88,6 @@
       ServiceIcon,
       ToggleButton,
       TaskSummaryList
-    },
-    data() {
-      return {
-        is_hover: false,
-        is_dropdown_open: false
-      }
     },
     computed: {
       input_type() {
@@ -146,47 +127,6 @@
       },
       pipe_route() {
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
-      },
-      menu_items() {
-        if (_.isArray(this.menuItems))
-          return this.menuItems
-
-        return [{
-          id: 'open',
-          label: 'Open',
-          icon: 'file_upload'
-        }/*,{
-          id: 'edit',
-          label: 'Edit',
-          icon: 'edit'
-        }*/,{
-          id: 'duplicate',
-          label: 'Duplicate',
-          icon: 'content_copy'
-        }/*,{
-          id: 'share',
-          label: 'Share',
-          icon: 'person_add'
-        },{
-          id: 'embed',
-          label: 'Embed',
-          icon: 'share'
-        }*/,{
-          id: 'schedule',
-          label: 'Schedule',
-          icon: 'date_range'
-        },{
-          id: 'deploy',
-          label: 'Deploy',
-          icon: 'archive'
-        },{
-          type: 'divider'
-        },{
-          id: 'delete',
-          //label: 'Move to Trash',
-          label: 'Delete',
-          icon: 'delete'
-        }]
       }
     },
     methods: {
@@ -207,12 +147,8 @@
 
         this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
       },
-      onDropdownItemClick(menu_item) {
-        // custom menu passed to us; fire back the event
-        if (_.isArray(this.menuItems))
-          return this.$emit('dropdown-item-click', menu_item, this.item)
-
-        switch (menu_item.id)
+      onCommand(cmd) {
+        switch (cmd)
         {
           case 'open':      return this.openPipe()
           case 'edit':      return this.$emit('edit', this.item)
@@ -224,15 +160,6 @@
           case 'delete':    return this.$emit('delete', this.item)
           case 'trash':     return this.trashPipe()
         }
-      },
-      onMouseEnter() {
-        this.is_hover = true
-      },
-      onMouseLeave() {
-        this.is_hover = false
-      },
-      onMouseOver() {
-        this.is_hover = true
       },
       toggleScheduled() {
         var attrs = {
