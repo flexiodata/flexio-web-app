@@ -83,7 +83,6 @@ class Test
             'eid_type' => \Model::TYPE_PROJECT,
             'name' => '',
             'description' => '',
-            'display_icon' => '',
             'eid_status' => \Model::STATUS_AVAILABLE
         );
         \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in project creation, make sure essential fields are created',  $actual, $expected, $results);
@@ -147,17 +146,5 @@ class Test
             'description' => 'Test project description'
         );
         \Flexio\Tests\Check::assertInArray('C.4', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'display_icon' => 'Test project display icon'
-        );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
-        $expected = array(
-            'display_icon' => 'Test project display icon'
-        );
-        \Flexio\Tests\Check::assertInArray('C.5', '\Model::create(); in project creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

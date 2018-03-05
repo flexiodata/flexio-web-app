@@ -30,7 +30,6 @@ class Project extends ModelBase
                 'eid'            => $eid,
                 'name'           => $params['name'] ?? '',
                 'description'    => $params['description'] ?? '',
-                'display_icon'   => $params['display_icon'] ?? '',
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );
@@ -75,8 +74,7 @@ class Project extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'name'          => array('type' => 'string', 'required' => false),
-                'description'   => array('type' => 'string', 'required' => false),
-                'display_icon'  => array('type' => 'string', 'required' => false)
+                'description'   => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -122,7 +120,6 @@ class Project extends ModelBase
                                         tob.ename as ename,
                                         tpr.name as name,
                                         tpr.description as description,
-                                        tpr.display_icon as display_icon,
                                         tob.eid_status as eid_status,
                                         tob.created as created,
                                         tob.updated as updated
@@ -144,7 +141,6 @@ class Project extends ModelBase
                      'ename'        => $row['ename'],
                      'name'         => $row['name'],
                      'description'  => $row['description'],
-                     'display_icon' => $row['display_icon'],
                      'eid_status'   => $row['eid_status'],
                      'created'      => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'      => \Flexio\Base\Util::formatDate($row['updated']));
