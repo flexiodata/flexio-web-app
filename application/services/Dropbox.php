@@ -277,7 +277,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $dropbox_args = json_encode(array('path' => $path));
 
         $http_response_code = false;
-        $response = '';
+        $error_payload = '';
 
         // download the file
         $ch = curl_init();
@@ -288,21 +288,23 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: "));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$response) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$error_payload) {
             if ($http_response_code === false)
             {
                 $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             }
-
-            if ($http_response_code !== false && $http_response_code >= 400)
+            if ($http_response_code >= 400)
             {
-                $response .= $data;
+                if (strlen($error_payload) < 65536)
+                    $error_payload .= $data;
                 return strlen($data);
             }
-
-            $length = strlen($data);
-            $callback($data);
-            return $length;
+             else
+            {
+                $length = strlen($data);
+                $callback($data);
+                return $length;
+            }
         });
 
         $result = curl_exec($ch);
@@ -310,9 +312,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
 
 
-        if (strlen($response) > 0)
+        if (strlen($error_payload) > 0)
         {
-            $result = @json_decode($response, true);
+            $result = @json_decode($error_payload, true);
             if (isset($result['error']))
             {
                 $error_summary = $result['error_summary'] ?? '';
