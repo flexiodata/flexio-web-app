@@ -214,8 +214,7 @@
 
       return {
         error_msg: '',
-        info: attrs,
-        region_options
+        info: attrs
       }
     },
     computed: {
@@ -245,6 +244,9 @@
       },
       service_name() {
         return _.result(this, 'cinfo.service_name', '')
+      },
+      region_options() {
+        return region_options
       },
       is_oauth() {
         switch (this.ctype)
