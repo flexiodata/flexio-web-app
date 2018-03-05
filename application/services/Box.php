@@ -249,7 +249,9 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $fileid = $this->getFileId($path);
 
-        // download the file
+        $http_response_code = false;
+        $error_payload = '';
+
         $ch = curl_init();
 
         $filename = rawurlencode($path);
@@ -259,14 +261,33 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback) {
-            $length = strlen($data);
-            $callback($data);
-            return $length;
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$callback, &$http_response_code, &$error_payload) {
+            if ($http_response_code === false)
+            {
+                $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+            if ($http_response_code >= 400)
+            {
+                if (strlen($error_payload) < 65536)
+                    $error_payload .= $data;
+                return strlen($data);
+            }
+             else
+            {
+                $length = strlen($data);
+                $callback($data);
+                return $length;
+            }
         });
 
         $result = curl_exec($ch);
         curl_close($ch);
+
+        if ($http_response_code >= 400 || $result !== true)
+        {
+            $error_object = @json_decode($error_payload, true);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
     }
 
 
