@@ -340,6 +340,15 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
+
+        $info = $this->internalGetFileInfo($path);
+        if (($info['content_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
+        {
+            // destination path is a folder
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+
         $folder = trim($path,'/');
         while (false !== strpos($folder,'//'))
             $folder = str_replace('//','/',$folder);
