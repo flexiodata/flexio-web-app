@@ -84,7 +84,6 @@ class Test
             'eid_type' => \Model::TYPE_PIPE,
             'name' => '',
             'description'  => '',
-            'display_icon' => '',
             'input' => '{}',
             'output' => '{}',
             'task' => '{}',
@@ -133,18 +132,6 @@ class Test
             'description' => 'Test pipe description'
         );
         \Flexio\Tests\Check::assertInArray('C.3', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'display_icon' => 'Test pipe display icon data'
-        );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
-        $expected = array(
-            'display_icon' => 'Test pipe display icon data'
-        );
-        \Flexio\Tests\Check::assertInArray('C.4', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
