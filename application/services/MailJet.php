@@ -375,7 +375,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "contacts",
-            "name": "Contacts",
+            "name": "contacts",
             "location": "https://api.mailjet.com/v3/REST/contact",
             "content_root": "$.Data",
             "output": [
@@ -401,7 +401,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "contactslist",
-            "name": "Contacts List",
+            "name": "contacts-list",
             "location": "https://api.mailjet.com/v3/REST/contactslist",
             "content_root": "$.Data",
             "output": [
@@ -420,7 +420,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "sender",
-            "name": "Senders",
+            "name": "senders",
             "location": "https://api.mailjet.com/v3/REST/sender",
             "content_root": "$.Data",
             "output": [
@@ -442,7 +442,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "campaign",
-            "name": "Campaigns",
+            "name": "campaigns",
             "location": "https://api.mailjet.com/v3/REST/campaign",
             "content_root": "$.Data",
             "output": [

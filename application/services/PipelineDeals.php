@@ -315,7 +315,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $definitions[] = '
         {
             "path": "companies",
-            "name": "Companies",
+            "name": "companies",
             "location": "https://api.pipelinedeals.com/api/v3/companies.json?api_key={key}",
             "content_root": "$.entries",
             "output": [
@@ -380,7 +380,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $definitions[] = '
         {
             "path": "people",
-            "name": "People",
+            "name": "people",
             "location": "https://api.pipelinedeals.com/api/v3/people.json?api_key={key}",
             "content_root": "$.entries",
             "output": [
@@ -489,7 +489,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $definitions[] = '
         {
             "path": "deals",
-            "name": "Deals",
+            "name": "deals",
             "location": "https://api.pipelinedeals.com/api/v3/deals.json?api_key={key}",
             "content_root": "$.entries",
             "output": [
@@ -571,7 +571,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $definitions[] = '
         {
             "path": "tasks",
-            "name": "Tasks",
+            "name": "tasks",
             "location": "https://api.pipelinedeals.com/api/v3/calendar_entries.json?api_key={key}",
             "content_root": "$.entries",
             "output": [
@@ -644,7 +644,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         $definitions[] = '
         {
             "path": "activities",
-            "name": "Activities",
+            "name": "activities",
             "location": "https://api.pipelinedeals.com/api/v3/notes.json?api_key={key}",
             "content_root": "$.entries",
             "output": [

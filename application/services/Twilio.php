@@ -321,7 +321,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "calls",
-            "name": "Calls",
+            "name": "calls",
             "location" : "https://api.twilio.com/2010-04-01/Accounts/{username}/Calls.json",
             "content_root": "$.calls",
             "output" : [
@@ -384,7 +384,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $definitions[] = '
         {
             "path": "messages",
-            "name": "Messages",
+            "name": "messages",
             "location" : "https://api.twilio.com/2010-04-01/Accounts/{username}/Messages.json",
             "content_root": "$.messages",
             "output" : [
