@@ -474,6 +474,27 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
+
+        
+        $dest_is_folder = false;
+        try
+        {
+            $info = $this->getFileInfo($path);
+            if (isset($info['type']) && $info['type'] == 'DIR')
+                $dest_is_folder = true;
+        }
+        catch (\Exception $e)
+        {
+        }
+        if ($dest_is_folder)
+        {
+            // destination path is a folder
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+
+
+
         $path = $this->getS3KeyFromPath($path);
 
         if (!$this->authenticated())
