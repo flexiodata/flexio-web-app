@@ -31,18 +31,19 @@
   border-radius: 5px;
 }
 
-.el-button.fw6 {
-  font-weight: 600;
+.el-input.f5,
+.el-select.f5 {
+  .el-input__inner {
+   font-size: 1rem;
+  }
 }
 
-.el-button.b {
-  font-weight: bold;
+.el-button {
+  .b   { font-weight: bold; }
+  .fw6 { font-weight: 600;  }
 }
 
-[class*=" el-icon-"].fw6, [class^=el-icon-].fw6 {
-  font-weight: 600
-}
-
-[class*=" el-icon-"].b, [class^=el-icon-].b {
-  font-weight: bold
+[class*=" el-icon-"], [class^=el-icon-] {
+  .b   { font-weight: bold; }
+  .fw6 { font-weight: 600;  }
 }

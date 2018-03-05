@@ -11,7 +11,7 @@
         <div class="flex-fill flex flex-row items-center">
           <div class="f2 dn db-ns mr3">Storage</div>
           <el-input
-            class="w-100 mw5 mr3 f6"
+            class="w-100 mw5 mr3"
             placeholder="Filter items..."
             @keydown.esc.native="filter = ''"
             v-model="filter"
