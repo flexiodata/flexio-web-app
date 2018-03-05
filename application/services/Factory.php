@@ -209,8 +209,8 @@ class Factory
 
             case self::TYPE_TWILIO:
                     $auth_params = array(
-                        'key' => $connection_info['username'] ?? '',
-                        'access_token' => $connection_info['access_token'] ?? ''
+                        'username' => $connection_info['username'] ?? '',
+                        'password' => $connection_info['password'] ?? ''
                     );
                     $service = \Flexio\Services\Twilio::create($auth_params);
                 break;

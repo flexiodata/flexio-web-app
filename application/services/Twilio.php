@@ -19,8 +19,8 @@ namespace Flexio\Services;
 class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $authenticated = false;
-    private $key = '';
-    private $access_token = '';
+    private $username = '';
+    private $password = '';
     private $pagesize = 200; // rows to request per request; 200 is maximum allowed per request
     private $request_throttle = 250; // milliseconds to wait between requests; pipeline deals allows up to 5 requests per second
 
@@ -28,17 +28,17 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'key'   => array('type' => 'string', 'required' => true),
-                'access_token' => array('type' => 'string', 'required' => true)
+                'username' => array('type' => 'string', 'required' => true),
+                'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $key = $validated_params['key'];
-        $access_token = $validated_params['access_token'];
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
 
         $service = new self;
-        if ($service->initialize($key, $access_token) === false)
+        if ($service->initialize($username, $password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
         return $service;
@@ -188,10 +188,10 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $location = $definition['location'];
         $content_root = $definition['content_root'];
 
-        $key = $this->key;
-        $access_token = $this->access_token;
-        $apiauth = "$key:$access_token";
-        $request = str_replace('{key}', $key, $location);
+        $username = $this->username;
+        $password = $this->password;
+        $apiauth = "$username:$password";
+        $request = str_replace('{username}', $username, $location);
         $request .= "&Page=$page";
         $request .= "?PageSize=$this->pagesize";
 
@@ -278,21 +278,21 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function connect() : bool
     {
-        $key = $this->key;
-        $access_token = $this->access_token;
+        $username = $this->username;
+        $password = $this->password;
 
-        if ($this->initialize($key, $access_token) === false)
+        if ($this->initialize($username, $password) === false)
             return false;
 
         return false;
     }
 
-    private function initialize(string $key, string $access_token) : bool
+    private function initialize(string $username, string $password) : bool
     {
         // TODO: test api key
 
-        $this->key = $key;
-        $this->access_token = $access_token;
+        $this->username = $username;
+        $this->password = $password;
         $this->authenticated = true;
         return true;
     }
