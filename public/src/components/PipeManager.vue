@@ -10,13 +10,12 @@
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2 dn db-ns mr3">Pipes</div>
-          <input
-            type="text"
-            class="input-reset ba b--black-10 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-100 mw5 mr3 f6"
+          <el-input
+            class="w-100 mw5 mr3 f6"
             placeholder="Filter items..."
-            @keydown.esc="filter = ''"
+            @keydown.esc.native="filter = ''"
             v-model="filter"
-          >
+          />
         </div>
         <div class="flex-none flex flex-row items-center">
           <el-button type="primary" class="ttu b" @click="tryCreatePipe">New pipe</el-button>

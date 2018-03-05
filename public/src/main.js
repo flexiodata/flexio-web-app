@@ -7,6 +7,7 @@ import {
   DropdownItem,
   DropdownMenu,
   Icon,
+  Input,
   MessageBox,
   Option,
   Select
@@ -45,6 +46,7 @@ Vue.use(Dropdown)
 Vue.use(DropdownItem)
 Vue.use(DropdownMenu)
 Vue.use(Icon)
+Vue.use(Input)
 Vue.use(Option)
 Vue.use(Select)
 
