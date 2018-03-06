@@ -1,17 +1,14 @@
 <template>
   <div class="cursor-default">
     <router-link
-      v-if="show_breadcrumbs"
       to="/home"
       class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-10 bl mid-gray hover-black"
-    ><i class="material-icons">home</i>
-    </router-link>
-    <i v-if="show_breadcrumbs" class="material-icons md-24 black-20 rotate-270">arrow_drop_down</i>
-    <div
       v-if="show_breadcrumbs"
-      class="dib mid-gray truncate"
-    >{{document_name}}
-    </div>
+    >
+      <i class="material-icons">home</i>
+    </router-link>
+    <i class="material-icons md-24 black-20 rotate-270" v-if="show_breadcrumbs">expand_more</i>
+    <div class="dib mid-gray truncate" v-if="show_breadcrumbs">{{document_name}}</div>
   </div>
 </template>
 
