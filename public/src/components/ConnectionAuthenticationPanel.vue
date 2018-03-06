@@ -32,7 +32,7 @@
           label="AWS Access Key"
           floating-label
           help=" "
-          v-model.trim="info.aws_key"
+          v-model.trim="aws_key"
           v-if="showInput('aws_key')"
         />
         <ui-textbox
@@ -41,7 +41,7 @@
           label="AWS Secret Key"
           floating-label
           help=" "
-          v-model.trim="info.aws_secret"
+          v-model.trim="aws_secret"
           v-if="showInput('aws_secret')"
         />
         <ui-textbox
@@ -50,7 +50,7 @@
           label="Bucket"
           floating-label
           help=" "
-          v-model.trim="info.bucket"
+          v-model.trim="bucket"
           v-if="showInput('bucket')"
         />
         <value-select
@@ -59,7 +59,7 @@
           floating-label
           help=" "
           :options="region_options"
-          v-model.trim="info.region"
+          v-model.trim="region"
           v-if="showInput('region')"
         />
         <ui-textbox
@@ -68,7 +68,7 @@
           label="Token"
           floating-label
           help=" "
-          v-model.trim="info.token"
+          v-model.trim="token"
           v-if="showInput('token')"
         />
         <ui-textbox
@@ -77,7 +77,7 @@
           floating-label
           help=" "
           :label="host_label"
-          v-model.trim="info.host"
+          v-model.trim="host"
           v-if="showInput('host')"
         />
         <ui-textbox
@@ -86,7 +86,7 @@
           label="Port"
           floating-label
           help=" "
-          v-model.trim.number="info.port"
+          v-model.trim.number="port"
           v-if="showInput('port')"
         />
         <ui-textbox
@@ -95,7 +95,7 @@
           floating-label
           help=" "
           :label="username_label"
-          v-model.trim="info.username"
+          v-model.trim="username"
           v-if="showInput('username')"
         />
         <ui-textbox
@@ -105,7 +105,7 @@
           :label="password_label"
           floating-label
           help=" "
-          v-model.trim="info.password"
+          v-model.trim="password"
           v-if="showInput('password')"
         />
         <ui-textbox
@@ -114,7 +114,7 @@
           :label="database_label"
           floating-label
           help=" "
-          v-model.trim="info.database"
+          v-model.trim="database"
           v-if="showInput('database') && !is_sftp && !is_elasticsearch"
         />
         <div class="mt3">
@@ -173,59 +173,39 @@
       Btn
     },
     watch: {
-      'info.token'()      { this.$emit('change', { connection_info: this.info }) },
-      'info.host'()       { this.$emit('change', { connection_info: this.info }) },
-      'info.port'()       { this.$emit('change', { connection_info: this.info }) },
-      'info.username'()   { this.$emit('change', { connection_info: this.info }) },
-      'info.password'()   { this.$emit('change', { connection_info: this.info }) },
-      'info.database'()   { this.$emit('change', { connection_info: this.info }) },
+      connection() { this.reset() },
 
-      'info.aws_key'()    { this.$emit('change', { connection_info: this.info }) },
-      'info.aws_secret'() { this.$emit('change', { connection_info: this.info }) },
-      'info.bucket'()     { this.$emit('change', { connection_info: this.info }) },
-      'info.region'()     { this.$emit('change', { connection_info: this.info }) }
+      token()      { this.emitChange() },
+      host()       { this.emitChange() },
+      port()       { this.emitChange() },
+      username()   { this.emitChange() },
+      password()   { this.emitChange() },
+      database()   { this.emitChange() },
+
+      aws_key()    { this.emitChange() },
+      aws_secret() { this.emitChange() },
+      bucket()     { this.emitChange() },
+      region()     { this.emitChange() }
     },
     data() {
-      var c = this.connection
-
-      var attrs = {
-        token: _.get(c, 'connection_info.token', ''),
-        host: _.get(c, 'connection_info.host', ''),
-        port: this.mode == 'edit' ? _.get(c, 'connection_info.port', '') : this.getDefaultPort(),
-        username: _.get(c, 'connection_info.username', ''),
-        password: _.get(c, 'connection_info.password', ''),
-        database: _.get(c, 'connection_info.database', ''),
-
-        // aws
-        aws_key: _.get(c, 'connection_info.aws_key', ''),
-        aws_secret: _.get(c, 'connection_info.aws_secret', ''),
-        bucket: _.get(c, 'connection_info.bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'connection_info.region', '') : this.getDefaultRegion()
-      }
-
-      switch (this.getConnectionType())
-      {
-        default:
-          attrs = _.pick(attrs, ['host', 'port', 'username', 'password', 'database'])
-          break;
-        case ctypes.CONNECTION_TYPE_AMAZONS3:
-          attrs = _.pick(attrs, ['aws_key', 'aws_secret', 'bucket', 'region'])
-          break
-        case ctypes.CONNECTION_TYPE_FIREBASE:
-          attrs = _.pick(attrs, ['host', 'username', 'password'])
-          break
-        case ctypes.CONNECTION_TYPE_PIPELINEDEALS:
-          attrs = _.pick(attrs, ['token'])
-          break
-        case ctypes.CONNECTION_TYPE_TWILIO:
-          attrs = _.pick(attrs, ['username', 'password'])
-          break
-      }
+      var c = _.get(this.connection, 'connection_info', {})
 
       return {
         error_msg: '',
-        info: attrs,
-        region_options
+        region_options,
+
+        token: _.get(c, 'token', ''),
+        host: _.get(c, 'host', ''),
+        port: this.mode == 'edit' ? _.get(c, 'port', '') : this.getDefaultPort(),
+        username: _.get(c, 'username', ''),
+        password: _.get(c, 'password', ''),
+        database: _.get(c, 'database', ''),
+
+        // aws
+        aws_key: _.get(c, 'aws_key', ''),
+        aws_secret: _.get(c, 'aws_secret', ''),
+        bucket: _.get(c, 'bucket', ''),
+        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion()
       }
     },
     computed: {
@@ -233,10 +213,28 @@
         return _.get(this, 'connection.eid', '')
       },
       ctype() {
-        return this.getConnectionType()
+        return _.get(this, 'connection.connection_type', '')
       },
       cstatus() {
         return _.get(this, 'connection.connection_status', '')
+      },
+      connection_info() {
+        return _.pick(this.$data, this.key_values)
+      },
+      key_values() {
+        switch (this.getConnectionType())
+        {
+          default:
+            return ['host', 'port', 'username', 'password', 'database']
+          case ctypes.CONNECTION_TYPE_AMAZONS3:
+            return ['aws_key', 'aws_secret', 'bucket', 'region']
+          case ctypes.CONNECTION_TYPE_FIREBASE:
+            return ['host', 'username', 'password']
+          case ctypes.CONNECTION_TYPE_PIPELINEDEALS:
+            return ['token']
+          case ctypes.CONNECTION_TYPE_TWILIO:
+            return ['username', 'password']
+        }
       },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
@@ -300,6 +298,14 @@
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
+      reset() {
+        _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
+          this[key] = val
+        })
+      },
+      emitChange() {
+        this.$emit('change', { connection_info: this.connection_info })
+      },
       getConnectionType() {
         return _.get(this, 'connection.connection_type', '')
       },
@@ -318,16 +324,16 @@
         return ''
       },
       showInput(key) {
-        return _.has(this.info, key)
+        return _.includes(this.key_values, key)
       },
       onDisconnectClick() {
-        this.tryDisconnect(_.assign({}, this.connection, this.info))
+        this.tryDisconnect(_.assign({}, this.connection, { connection_info: this.connection_info }))
       },
       onConnectClick() {
-        this.tryOauthConnect(this.info)
+        this.tryOauthConnect()
       },
       onTestClick() {
-        this.tryTest(_.assign({}, this.connection, this.info))
+        this.tryTest(_.assign({}, this.connection, { connection_info: this.connection_info }))
       },
       tryDisconnect(attrs) {
         var eid = attrs.eid

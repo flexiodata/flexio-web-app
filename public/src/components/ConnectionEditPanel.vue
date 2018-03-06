@@ -82,7 +82,9 @@
           <connection-info-panel :connection.sync="edit_connection" />
         </div>
         <div class="mt4" v-else>
-          <div class="pv2 ph3 bg-light-gray br2 br--top mid-gray lh-copy fw6">Authentication</div>
+          <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy fw6">
+            <i class="material-icons mr1">lock</i> Authentication
+          </div>
           <div class="pa3 ba bt-0 b--light-gray br2 br--bottom">
             <connection-authentication-panel
               :connection="edit_connection"
