@@ -302,7 +302,7 @@
         // we use a method here since we can't use computed values in the data()
         switch (this.getConnectionType())
         {
-          case ctypes.CONNECTION_TYPE_ELASTICSEARCH: return '9200'
+          case ctypes.CONNECTION_TYPE_ELASTICSEARCH: return '443'
           case ctypes.CONNECTION_TYPE_MYSQL:         return '3306'
           case ctypes.CONNECTION_TYPE_POSTGRES:      return '5432'
           case ctypes.CONNECTION_TYPE_SFTP:          return '22'
