@@ -50,6 +50,7 @@
         <spinner size="large" message="Running pipe..." />
       </div>
 
+      <!--
       <pipe-builder-list
         class="flex-fill"
         style="padding-bottom: 16rem"
@@ -62,6 +63,7 @@
         @save-values-and-run="savePromptValuesAndRun"
         v-else-if="is_builder_view"
       />
+      -->
 
       <pipe-code-editor
         ref="code"
@@ -128,7 +130,7 @@
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
-  import PipeBuilderList from './PipeBuilderList.vue'
+  //import PipeBuilderList from './PipeBuilderList.vue'
   import CodeEditor from './CodeEditor.vue'
   import HelpItems from './HelpItems.vue'
 
@@ -137,7 +139,7 @@
       Spinner,
       PipeHomeHeader,
       PipeCodeEditor,
-      PipeBuilderList,
+      //PipeBuilderList,
       CodeEditor,
       HelpItems
     },
