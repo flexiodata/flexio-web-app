@@ -76,7 +76,7 @@
           spellcheck="false"
           floating-label
           help=" "
-          :label="host_label"
+          label="Host"
           v-model.trim="host"
           v-if="showInput('host')"
         />
@@ -94,7 +94,7 @@
           spellcheck="false"
           floating-label
           help=" "
-          :label="username_label"
+          label="Username"
           v-model.trim="username"
           v-if="showInput('username')"
         />
@@ -102,7 +102,7 @@
           type="password"
           spellcheck="false"
           autocomplete="off"
-          :label="password_label"
+          label="Password"
           floating-label
           help=" "
           v-model.trim="password"
@@ -111,7 +111,7 @@
         <ui-textbox
           autocomplete="off"
           spellcheck="false"
-          :label="database_label"
+          label="Database"
           floating-label
           help=" "
           v-model.trim="database"
@@ -135,7 +135,6 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ValueSelect from './ValueSelect.vue'
-  import Btn from './Btn.vue'
   import OauthPopup from './mixins/oauth-popup'
 
   const region_options = [
@@ -169,8 +168,7 @@
     },
     mixins: [OauthPopup],
     components: {
-      ValueSelect,
-      Btn
+      ValueSelect
     },
     watch: {
       connection() { this.reset() },
@@ -280,18 +278,6 @@
         }
 
         return ''
-      },
-      host_label() {
-        return 'Host'
-      },
-      username_label() {
-        return 'Username'
-      },
-      password_label() {
-        return 'Password'
-      },
-      database_label() {
-        return 'Database'
       }
     },
     methods: {
