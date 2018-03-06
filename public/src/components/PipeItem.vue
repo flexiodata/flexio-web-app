@@ -65,7 +65,6 @@
   import util from '../utils'
   import ServiceIcon from './ServiceIcon.vue'
   import ToggleButton from './ToggleButton.vue'
-  import TaskSummaryList from './TaskSummaryList.vue'
 
   export default {
     props: {
@@ -86,8 +85,7 @@
     },
     components: {
       ServiceIcon,
-      ToggleButton,
-      TaskSummaryList
+      ToggleButton
     },
     computed: {
       input_type() {
