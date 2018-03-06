@@ -143,7 +143,7 @@
                 this.show_success = true
                 this.show_error = false
                 this.resetForm()
-                setTimeout(() => { this.show_success = false }, 3000)
+                setTimeout(() => { this.show_success = false }, 4000)
               }
                else
               {

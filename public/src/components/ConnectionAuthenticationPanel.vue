@@ -18,7 +18,7 @@
       </div>
     </div>
     <div v-else>
-      <ui-alert type="success" :dismissible="false" v-show="is_connected && error_msg.length == 0">
+      <ui-alert type="success" :dismissible="false" v-show="is_tested && is_connected && error_msg.length == 0">
         You've successfully connected to {{service_name}}!
       </ui-alert>
       <ui-alert type="error" :dismissible="true" @dismiss="error_msg = ''" v-show="error_msg.length > 0">
@@ -137,6 +137,23 @@
   import ValueSelect from './ValueSelect.vue'
   import OauthPopup from './mixins/oauth-popup'
 
+  const defaultConnectionInfo = () => {
+    return {
+      token: '',
+      host: '',
+      port: '',
+      username: '',
+      password: '',
+      database: '',
+
+      // aws
+      aws_key: '',
+      aws_secret: '',
+      bucket: '',
+      region: ''
+    }
+  }
+
   const region_options = [
     { val: 'us-east-2',      label: 'US East (Ohio)'            },
     { val: 'us-east-1',      label: 'US East (N. Virginia)'     },
@@ -187,9 +204,11 @@
     },
     data() {
       var c = _.get(this.connection, 'connection_info', {})
+      c = _.assign({}, defaultConnectionInfo(), c)
 
       return {
         error_msg: '',
+        is_tested: false,
         region_options,
 
         token: _.get(c, 'token', ''),
@@ -363,6 +382,9 @@
 
         // update the connection
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          this.is_tested = true
+          setTimeout(() => { this.is_tested = false }, 4000)
+
           if (response.ok)
           {
             // test the connection

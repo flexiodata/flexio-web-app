@@ -64,7 +64,7 @@
           if (response.ok)
           {
             this.show_success = true
-            setTimeout(() => { this.show_success = false }, 3000)
+            setTimeout(() => { this.show_success = false }, 4000)
           }
            else
           {
