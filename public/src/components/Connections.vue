@@ -36,6 +36,13 @@
         v-if="connections.length > 0"
       />
       <div class="flex-fill overflow-y-auto" v-if="connection">
+        <ui-alert @dismiss="show_success = false" type="success" :dismissible="false" v-show="show_success">
+          The connection was updated successfully.
+        </ui-alert>
+        <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
+          There was a problem updating the connection.
+        </ui-alert>
+
         <connection-edit-panel
           class="pa3 pa4-l"
           style="max-width: 60rem"
@@ -95,6 +102,8 @@
       return {
         connection: {},
         last_selected: {},
+        show_success: false,
+        show_error: false,
         show_connection_new_dialog: false
       }
     },
@@ -147,6 +156,9 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            this.show_success = true
+            setTimeout(() => { this.show_success = false }, 4000)
+
             // try to connect to the connection
             this.$store.dispatch('testConnection', { eid, attrs })
 
@@ -162,6 +174,7 @@
           }
            else
           {
+            this.show_error = true
             this.$store.dispatch('analyticsTrack', 'Created Connection (Error)')
           }
         })
