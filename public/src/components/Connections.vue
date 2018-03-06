@@ -180,19 +180,29 @@
         })
       },
       tryDeleteConnection(attrs) {
-        var idx = _.findIndex(this.connections, this.connection)
+        var name = _.get(attrs, 'name', 'Connection')
 
-        this.$store.dispatch('deleteConnection', { attrs }).then(response => {
-          if (response.ok)
-          {
-            if (idx >= 0)
+        this.$confirm('Are you sure you want to delete the connection named "'+name+'"?', 'Really delete connection?', {
+          confirmButtonText: 'DELETE CONNECTION',
+          cancelButtonText: 'CANCEL',
+          type: 'warning'
+        }).then(() => {
+          var idx = _.findIndex(this.connections, this.connection)
+
+          this.$store.dispatch('deleteConnection', { attrs }).then(response => {
+            if (response.ok)
             {
-              if (idx >= this.connections.length)
-                idx--
+              if (idx >= 0)
+              {
+                if (idx >= this.connections.length)
+                  idx--
 
-              this.selectConnection(_.get(this.connections, '['+idx+']', {}))
+                this.selectConnection(_.get(this.connections, '['+idx+']', {}))
+              }
             }
-          }
+          })
+        }).catch(() => {
+          // do nothing
         })
       },
       selectConnection(item) {
