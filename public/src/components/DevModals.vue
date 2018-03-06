@@ -42,18 +42,6 @@
       <div class="lh-copy">Doing this might be a bad idea. Are you sure you want to continue?</div>
     </confirm-modal>
 
-    <project-props-modal
-      ref="modal-project-props"
-      @hide="show_project_props_modal = false"
-      v-if="show_project_props_modal"
-    ></project-props-modal>
-
-    <project-delete-modal
-      ref="modal-project-delete"
-      @hide="show_project_delete_modal = false"
-      v-if="show_project_delete_modal"
-    ></project-delete-modal>
-
     <storage-props-modal
       ref="modal-connection-props"
       @hide="show_connection_props_modal = false"
@@ -135,8 +123,6 @@
   import Btn from './Btn.vue'
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
-  import ProjectPropsModal from './ProjectPropsModal.vue'
-  import ProjectDeleteModal from './ProjectDeleteModal.vue'
   import StoragePropsModal from './StoragePropsModal.vue'
   import PipeDialog from './PipeDialog.vue'
   import PipeShareModal from './PipeShareModal.vue'
@@ -172,8 +158,6 @@
       Btn,
       AlertModal,
       ConfirmModal,
-      ProjectPropsModal,
-      ProjectDeleteModal,
       StoragePropsModal,
       PipeDialog,
       PipeShareModal,
