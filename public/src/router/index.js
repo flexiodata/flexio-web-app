@@ -2,11 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import account from './account'
-import copypipe from './copypipe'
 import dev from './dev'
-//import embed from './embed'
 import home from './home'
 import pipes from './pipes'
+//import copypipe from './copypipe'
+//import embed from './embed'
 
 import {
   ROUTE_HOME,
@@ -35,11 +35,11 @@ const basepath_redirect = {
 const routes = [
   basepath_redirect,
   account,
-  copypipe,
   dev,
-  embed,
   home,
   pipes,
+  //copypipe,
+  //embed,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },
