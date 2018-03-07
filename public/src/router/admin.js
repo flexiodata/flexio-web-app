@@ -3,11 +3,9 @@ import * as types from '../store/mutation-types'
 import { ROUTE_DEV } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
-import DevParser from '../components/DevParser.vue'
-import DevCode from '../components/DevCode.vue'
 import AdminTests from '../components/AdminTests.vue'
-import DevModals from '../components/DevModals.vue'
-import DevPlayground from '../components/DevPlayground.vue'
+import AdminCode from '../components/AdminCode.vue'
+import AdminModals from '../components/AdminModals.vue'
 
 export default {
   path: '/admin',
@@ -33,28 +31,16 @@ export default {
       component: AdminTests
     },
     {
-      // DevParser will be rendered inside AdminHome's <router-view>
-      // /admin/parser is matched
-      path: 'parser',
-      component: DevParser
-    },
-    {
-      // DevCode will be rendered inside AdminHome's <router-view>
+      // AdminCode will be rendered inside AdminHome's <router-view>
       // /admin/code is matched
       path: 'code',
-      component: DevCode
+      component: AdminCode
     },
     {
-      // DevModals will be rendered inside AdminHome's <router-view>
+      // AdminModals will be rendered inside AdminHome's <router-view>
       // /admin/modals is matched
       path: 'modals',
-      component: DevModals
-    },
-    {
-      // DevPlayground will be rendered inside AdminHome's <router-view>
-      // /admin/playground is matched
-      path: 'playground',
-      component: DevPlayground
+      component: AdminModals
     }
   ]
 }
