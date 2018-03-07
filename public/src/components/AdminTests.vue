@@ -2,39 +2,36 @@
   <div class="flex flex-column">
     <!-- control bar -->
     <div class="flex flex-row items-center pa3 relative">
-      <input
-        type="text"
-        class="input-reset ba b--black-20 focus-b--transparent focus-outline focus-ow1 focus-o--blue pa2 w-90 w-50-m w-20-l min-w5-ns f6 mr2"
+      <el-input
+        class="w-100 mw5 mr3"
         placeholder="Filter tests..."
         :disabled="is_running"
-        @keydown.esc="filter = ''"
+        @keydown.esc.native="filter = ''"
         v-model="filter"
-      >
-      <btn
-        btn-md
-        btn-primary
-        class="ba"
+      />
+      <el-button
+        type="primary"
+        class="ttu b"
         @click="runTests"
         v-if="!is_running"
       >
-        <span class="ttu b">Run Tests</span>
-      </btn>
-      <btn
-        btn-md
-        btn-danger
-        class="ba"
+        Run Tests
+      </el-button>
+      <el-button
+        type="danger"
+        class="ttu b"
         :disabled="is_canceled"
         @click="cancelTests"
         v-if="is_running"
       >
-        <span class="ttu b" v-if="is_canceled">Canceling...</span>
-        <span class="ttu b" v-else>Cancel</span>
-      </btn>
+        <span v-if="is_canceled">Canceling...</span>
+        <span v-else>Cancel</span>
+      </el-button>
       <toggle-button
         class="ml3 mr1"
         :checked="show_errors_only"
         @click="toggleErrorsOnly"
-      ></toggle-button>
+      />
       <span class="f5 fw6 pointer black-60" @click.stop="toggleErrorsOnly">Only show errors</span>
       <div class="flex-fill">&nbsp;</div>
       <div class="f5 b pv1 ph3 br b--black-20 yellow">Ajax Errors: {{ajax_fail_cnt}}</div>
@@ -54,7 +51,6 @@
 
 <script>
   import api from '../api'
-  import Btn from './Btn.vue'
   import ToggleButton from './ToggleButton.vue'
   import AdminTestItem from './AdminTestItem.vue'
   import CommonFilter from './mixins/common-filter'
@@ -63,7 +59,6 @@
   export default {
     mixins: [CommonFilter, GetResponseText],
     components: {
-      Btn,
       ToggleButton,
       AdminTestItem
     },
