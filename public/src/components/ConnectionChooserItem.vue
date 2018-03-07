@@ -82,11 +82,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  .css-valign {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-</style>

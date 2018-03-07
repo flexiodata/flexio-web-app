@@ -177,12 +177,6 @@
 </script>
 
 <style lang="less">
-  .css-valign {
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   .css-connection-ghost:not(.css-disabled) {
     &:hover,
     &:focus,
