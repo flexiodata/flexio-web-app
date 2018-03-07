@@ -195,12 +195,6 @@ class Model
         return $result;
     }
 
-    public function getInfo(string $eid) // TODO: add return type
-    {
-        // function for returning all the basic object info
-        return $this->getObjectBase($eid);
-    }
-
     public function setStatus(string $eid, string $status) : bool
     {
         // note: it's possible to set the status through the \Model::set()

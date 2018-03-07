@@ -118,14 +118,13 @@ class Search extends ModelBase
 
             foreach ($initial_input_eids as $eid)
             {
-                $eid_info = $this->getModel()->getInfo($eid);
-                if ($eid_info['eid_type'] === \Model::TYPE_UNDEFINED)
+                $eid_type = $this->getModel()->getType($eid);
+                if ($eid_type === \Model::TYPE_UNDEFINED)
                     continue;
 
                 $input_item = array(
-                    'eid' => $eid_info['eid'],
-                    'eid_type' => $eid_info['eid_type'],
-                    'eid_status' => $eid_info['eid_status']
+                    'eid' => $eid,
+                    'eid_type' => $eid_type
                 );
 
                 $input_eids[] = $input_item;
