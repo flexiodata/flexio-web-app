@@ -42,12 +42,6 @@
       <div class="lh-copy">Doing this might be a bad idea. Are you sure you want to continue?</div>
     </confirm-modal>
 
-    <storage-props-modal
-      ref="modal-connection-props"
-      @hide="show_connection_props_modal = false"
-      v-if="show_connection_props_modal"
-    ></storage-props-modal>
-
     <pipe-props-modal
       ref="modal-pipe-props"
       project-eid="test-project"
@@ -123,7 +117,6 @@
   import Btn from './Btn.vue'
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
-  import StoragePropsModal from './StoragePropsModal.vue'
   import PipeDialog from './PipeDialog.vue'
   import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
@@ -158,7 +151,6 @@
       Btn,
       AlertModal,
       ConfirmModal,
-      StoragePropsModal,
       PipeDialog,
       PipeShareModal,
       EmailSupportModal,

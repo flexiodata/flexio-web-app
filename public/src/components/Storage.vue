@@ -51,14 +51,6 @@
         <span slot="text">No storage items to show</span>
       </empty-item>
     </div>
-
-    <!-- props modal (used for both add and edit) -->
-    <storage-props-modal
-      ref="modal-connection-props"
-      @submit="tryUpdateConnection"
-      @hide="show_connection_props_modal = false"
-      v-if="show_connection_props_modal"
-    ></storage-props-modal>
   </div>
 </template>
 
@@ -67,7 +59,6 @@
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import StoragePropsModal from './StoragePropsModal.vue'
   import AbstractList from './AbstractList.vue'
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
@@ -84,7 +75,6 @@
     mixins: [ConnectionInfoMixin],
     components: {
       Spinner,
-      StoragePropsModal,
       AbstractList,
       FileChooser,
       EmptyItem,

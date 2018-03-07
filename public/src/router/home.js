@@ -20,7 +20,7 @@ import PipeManager from '../components/PipeManager.vue'
 import MemberManager from '../components/MemberManager.vue'
 import Connections from '../components/Connections.vue'
 import Storage from '../components/Storage.vue'
-import StorageManager from '../components/StorageManager.vue'
+//import StorageManager from '../components/StorageManager.vue'
 //import TrashManager from '../components/TrashManager.vue'
 
 export default {
