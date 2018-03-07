@@ -24,15 +24,6 @@
       <el-button type="primary" class="ttu b" @click="openFlexioSignUpModal">Flexio Sign Up Modal</el-button>
     </div>
 
-    <alert-modal
-      ref="modal-alert"
-      title="Error"
-      @hide="show_alert_modal = false"
-      v-if="show_alert_modal"
-    >
-      <div class="lh-copy">There was an error with something you entered. Please fix the error to continue.</div>
-    </alert-modal>
-
     <ui-modal
       ref="modal-tall"
       @hide="show_tall_modal = false"
@@ -80,7 +71,6 @@
 
 <script>
   import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
-  import AlertModal from './AlertModal.vue'
   import FlexioModal from './FlexioModal.vue'
   import SignUpModal from './SignUpModal.vue'
 
@@ -108,7 +98,6 @@
 
   export default {
     components: {
-      AlertModal,
       FlexioModal,
       SignUpModal
     },
