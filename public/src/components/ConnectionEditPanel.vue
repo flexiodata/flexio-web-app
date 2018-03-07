@@ -116,7 +116,6 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
-  import RightsList from './RightsList.vue'
   import Validation from './mixins/validation'
 
   const defaultRights = () => {
@@ -202,8 +201,7 @@
       ServiceList,
       ServiceIcon,
       ConnectionAuthenticationPanel,
-      ConnectionInfoPanel,
-      RightsList
+      ConnectionInfoPanel
     },
     watch: {
       'connection': function(val, old_val) {

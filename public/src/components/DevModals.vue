@@ -49,23 +49,11 @@
       v-if="show_pipe_props_modal"
     ></pipe-props-modal>
 
-    <pipe-share-modal
-      ref="modal-pipe-share"
-      @hide="show_pipe_share_modal = false"
-      v-if="show_pipe_share_modal"
-    ></pipe-share-modal>
-
     <email-support-modal
       ref="modal-email-support"
       @hide="show_email_support_modal = false"
       v-if="show_email_support_modal"
     ></email-support-modal>
-
-    <member-add-modal
-      ref="modal-member-add"
-      @hide="show_member_add_modal = false"
-      v-if="show_member_add_modal"
-    ></member-add-modal>
 
     <ui-modal
       ref="modal-tall"
@@ -118,9 +106,7 @@
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import PipeDialog from './PipeDialog.vue'
-  import PipeShareModal from './PipeShareModal.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
-  import MemberAddModal from './MemberAddModal.vue'
   import FlexioModal from './FlexioModal.vue'
   import SignUpModal from './SignUpModal.vue'
 
@@ -152,9 +138,7 @@
       AlertModal,
       ConfirmModal,
       PipeDialog,
-      PipeShareModal,
       EmailSupportModal,
-      MemberAddModal,
       FlexioModal,
       SignUpModal
     },
