@@ -105,7 +105,6 @@
   import Btn from './Btn.vue'
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
-  import PipeDialog from './PipeDialog.vue'
   import EmailSupportModal from './EmailSupportModal.vue'
   import FlexioModal from './FlexioModal.vue'
   import SignUpModal from './SignUpModal.vue'
@@ -137,7 +136,6 @@
       Btn,
       AlertModal,
       ConfirmModal,
-      PipeDialog,
       EmailSupportModal,
       FlexioModal,
       SignUpModal
