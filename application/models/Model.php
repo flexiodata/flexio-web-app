@@ -976,20 +976,6 @@ class Model
         }
     }
 
-    private static function getDatabaseConfig() : array
-    {
-        global $g_config;
-
-        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
-                          'directory_port'     => $g_config->directory_database_port,
-                          'directory_username' => $g_config->directory_database_username,
-                          'directory_password' => $g_config->directory_database_password,
-                          'directory_dbname'   => $g_config->directory_database_dbname
-                          );
-
-        return $dbconfig;
-    }
-
     private function loadModel(string $type) // TODO: add return type
     {
         switch ($type)
@@ -1130,6 +1116,20 @@ class Model
         {
             return false;
         }
+    }
+
+    private static function getDatabaseConfig() : array
+    {
+        global $g_config;
+
+        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
+                          'directory_port'     => $g_config->directory_database_port,
+                          'directory_username' => $g_config->directory_database_username,
+                          'directory_password' => $g_config->directory_database_password,
+                          'directory_dbname'   => $g_config->directory_database_dbname
+                          );
+
+        return $dbconfig;
     }
 
     private static function buildEidString(array $eid_arr) : string
