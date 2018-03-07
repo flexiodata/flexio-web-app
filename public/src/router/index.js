@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 import account from './account'
 import copypipe from './copypipe'
 import dev from './dev'
-import embed from './embed'
+//import embed from './embed'
 import home from './home'
 import pipes from './pipes'
 
