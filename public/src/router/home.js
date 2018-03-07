@@ -21,7 +21,7 @@ import MemberManager from '../components/MemberManager.vue'
 import Connections from '../components/Connections.vue'
 import Storage from '../components/Storage.vue'
 import StorageManager from '../components/StorageManager.vue'
-import TrashManager from '../components/TrashManager.vue'
+//import TrashManager from '../components/TrashManager.vue'
 
 export default {
   path: '/home',
@@ -69,11 +69,11 @@ export default {
       path: '/storage',
       name: ROUTE_HOME_STORAGE,
       component: Storage
-    },
+    }/*,
     {
       path: '/trash',
       name: ROUTE_HOME_TRASH,
       component: TrashManager
-    }
+    }*/
   ]
 }
