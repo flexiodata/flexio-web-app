@@ -264,11 +264,6 @@ class Model
         return $result;
     }
 
-    public function search(string $path) // TODO: add return type
-    {
-        return $this->search->exec($path);
-    }
-
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
     {
         // note: similar to a set operation; make sure the parameters

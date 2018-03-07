@@ -35,7 +35,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,
@@ -55,7 +55,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,
@@ -78,7 +78,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_owns, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_owns, $eid4);
         $path = "$eid1->($edge_owns)->$eid2->$edge_has_member->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,

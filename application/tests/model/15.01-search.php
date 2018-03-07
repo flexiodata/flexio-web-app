@@ -27,7 +27,7 @@ class Test
         try
         {
             $path = null;
-            $result = \Flexio\Tests\Util::getModel()->search($path);
+            $result = \Flexio\Tests\Util::getModel()->search->exec($path);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -42,7 +42,7 @@ class Test
         try
         {
             $path = true;
-            $result = \Flexio\Tests\Util::getModel()->search($path);
+            $result = \Flexio\Tests\Util::getModel()->search->exec($path);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -54,14 +54,14 @@ class Test
 
         // BEGIN TEST
         $path = "";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.3', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $path = "->";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.4', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
@@ -69,7 +69,7 @@ class Test
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid->";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.5', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
@@ -77,7 +77,7 @@ class Test
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "->$eid";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.6', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
@@ -88,7 +88,7 @@ class Test
 
         // BEGIN TEST
         $path = "abc";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -97,7 +97,7 @@ class Test
         // BEGIN TEST
         $edge_owns = \Model::EDGE_OWNS;
         $path = "$edge_owns";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -106,7 +106,7 @@ class Test
         // BEGIN TEST
         $edge_owns = \Model::EDGE_OWNS;
         $path = "($edge_owns)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );

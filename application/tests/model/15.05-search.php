@@ -27,7 +27,7 @@ class Test
         );
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "$eid,$eid";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid
@@ -39,7 +39,7 @@ class Test
         );
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid
@@ -51,7 +51,7 @@ class Test
         );
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         $path = "($eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid,$eid)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid

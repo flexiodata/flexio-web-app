@@ -30,7 +30,7 @@ class Test
         $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid2);
         $path = "$eid1->$edge_has_member";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid2
@@ -51,7 +51,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->$edge_has_member";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid2,
@@ -74,7 +74,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid3
@@ -95,7 +95,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->($eid3,$eid4)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,
@@ -118,7 +118,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->($eid4,$eid5)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid4
@@ -140,7 +140,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->()->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -161,7 +161,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->$edge_owns->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -182,7 +182,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid4);
         $path = "$eid1->($edge_owns,$edge_has_member)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid2,
@@ -209,7 +209,7 @@ class Test
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_owns, $eid3);
         \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_owns, $eid4);
         $path = "$eid1->($edge_owns,$edge_has_member)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
             $eid2,
