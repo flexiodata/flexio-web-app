@@ -22,7 +22,6 @@ class Model
     const TYPE_UNDEFINED      = '';
     const TYPE_OBJECT         = 'OBJ';
     const TYPE_USER           = 'USR';
-    const TYPE_PROJECT        = 'PRJ';
     const TYPE_PIPE           = 'PIP';
     const TYPE_STREAM         = 'STR';
     const TYPE_CONNECTION     = 'CTN';
@@ -1005,7 +1004,6 @@ class Model
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
 
             case \Model::TYPE_USER           : return $this->user;
-            case \Model::TYPE_PROJECT        : return $this->project;
             case \Model::TYPE_PIPE           : return $this->pipe;
             case \Model::TYPE_STREAM         : return $this->stream;
             case \Model::TYPE_CONNECTION     : return $this->connection;
@@ -1043,7 +1041,6 @@ class Model
 
             case \Model::TYPE_OBJECT:
             case \Model::TYPE_USER:
-            case \Model::TYPE_PROJECT:
             case \Model::TYPE_PIPE:
             case \Model::TYPE_STREAM:
             case \Model::TYPE_CONNECTION:

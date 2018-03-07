@@ -167,10 +167,8 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $creator = \Flexio\Object\User::create();
-        $project = \Flexio\Object\Project::create();
         $object->setOwner($creator->getEid());
         $object->setCreatedBy($creator->getEid());
-        $project->addConnection($object);
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('

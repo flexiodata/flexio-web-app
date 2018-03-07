@@ -20,7 +20,6 @@ class Message
 {
     const TYPE_EMAIL_WELCOME             = 'email_welcome';
     const TYPE_EMAIL_RESET_PASSWORD      = 'email_reset_password';
-    const TYPE_EMAIL_SHARE_PROJECT       = 'email_share_project';
     const TYPE_EMAIL_SHARE_PIPE          = 'email_share_pipe';
 
     protected $messge_type;
@@ -40,7 +39,6 @@ class Message
 
             case self::TYPE_EMAIL_WELCOME:
             case self::TYPE_EMAIL_RESET_PASSWORD:
-            case self::TYPE_EMAIL_SHARE_PROJECT:
             case self::TYPE_EMAIL_SHARE_PIPE:
                 break;
         }
@@ -64,9 +62,6 @@ class Message
 
             case self::TYPE_EMAIL_RESET_PASSWORD:
                 return self::createResetPasswordEmail($this->message_params);
-
-            case self::TYPE_EMAIL_SHARE_PROJECT:
-                return self::createShareProjectEmail($this->message_params);
 
             case self::TYPE_EMAIL_SHARE_PIPE:
                 return self::createSharePipeEmail($this->message_params);
@@ -134,58 +129,6 @@ class Message
             'from' => 'Flex.io <no-reply@flex.io>',
             'to' => $to,
             'subject' => 'Flex.io password reset',
-            'msg_text' => $msg_text,
-            'msg_html' => $msg_html
-        ));
-        return $email->send();
-    }
-
-    private static function createShareProjectEmail(array $params) : bool
-    {
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'email'       => array('type' => 'string', 'required' => true),
-                'from_name'   => array('type' => 'string', 'required' => true),
-                'from_email'  => array('type' => 'string', 'required' => true),
-                'object_name' => array('type' => 'string', 'required' => true),
-                'object_eid'  => array('type' => 'string', 'required' => true),
-                'verify_code' => array('type' => 'string', 'required' => false),
-                'message'     => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            return false;
-
-        $validated_params = $validator->getParams();
-        $to = $validated_params['email'];
-        $from_name = $validated_params['from_name'];
-        $from_email = $validated_params['from_email'];
-        $object_name = $validated_params['object_name'];
-        $object_eid = $validated_params['object_eid'];
-        $message = $validated_params['message'] ?? '';
-        $verify_code_str = isset($validated_params['verify_code']) ? '&verify_code='.$validated_params['verify_code'] : '';
-        $share_link = self::getBaseUrl() . '/a/shareauth?ref=share_email&email='.urlencode($to).'&object_eid='. $object_eid . $verify_code_str;
-
-        // get text template from the application res directory
-        $msg_text = self::getTextEmail('project-share', [
-            'name' => $from_name,
-            'from_email' => $from_email,
-            'message' => (strlen($message) == 0) ? '' : "\n$message\n",
-            'object_name' => $object_name,
-            'share_link' => $share_link
-        ]);
-
-        // get html template from the application res directory
-        $msg_html = self::getHtmlEmail('project-share', [
-            'name' => $from_name,
-            'from_email' => $from_email,
-            'message' => (strlen($message) == 0) ? '' : "$message<br>",
-            'object_name' => $object_name,
-            'share_link' => $share_link
-        ]);
-
-        $email = \Flexio\Services\Email::create(array(
-            'from' => "$from_name via Flex.io <no-reply@flex.io>",
-            'to' => $to,
-            'subject' => "${from_name} wants to share \"${object_name}\" with you",
             'msg_text' => $msg_text,
             'msg_html' => $msg_html
         ));

@@ -44,9 +44,6 @@ class Store
             case \Model::TYPE_PROCESS:
                 return \Flexio\Object\Process::load($identifier);
 
-            case \Model::TYPE_PROJECT:
-                return \Flexio\Object\Project::load($identifier);
-
             case \Model::TYPE_STREAM:
                 return \Flexio\Object\Stream::load($identifier);
 

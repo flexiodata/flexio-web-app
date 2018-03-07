@@ -97,18 +97,11 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.5', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, null);
-        $object = \Flexio\Object\Store::load($eid);
-        $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.6', 'Store::load(); make sure object is created',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_STREAM, null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.7', 'Store::load(); make sure object is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.6', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
@@ -118,6 +111,6 @@ class Test
         $object = \Flexio\Object\Store::load($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.8', 'Store::load(); make sure object is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.7', 'Store::load(); make sure object is created',  $actual, $expected, $results);
     }
 }

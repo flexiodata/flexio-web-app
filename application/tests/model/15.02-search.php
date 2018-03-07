@@ -35,8 +35,8 @@ class Test
         $eid = \Flexio\Base\Eid::generate();
         $edge_owns = \Model::EDGE_OWNS;
         $edge_following = \Model::EDGE_FOLLOWING;
-        $type_project = \Model::TYPE_PROJECT;
-        $path = "$eid->($edge_owns,$edge_following)->($type_project)";
+        $type_pipe = \Model::TYPE_PIPE;
+        $path = "$eid->($edge_owns,$edge_following)->($type_pipe)";
         $result = \Flexio\Tests\Util::getModel()->search($path);
         $actual = $result;
         $expected = array(

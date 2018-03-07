@@ -186,13 +186,6 @@ class User extends \Flexio\Object\Base
         return $res;
     }
 
-    public function getProjectList() : array
-    {
-        $filter = array('eid_type' => array(\Model::TYPE_PROJECT), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $objects = $this->getObjectList($filter);
-        return $objects;
-    }
-
     public function getPipeList() : array
     {
         $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));

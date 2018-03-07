@@ -25,7 +25,6 @@ class Connection
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'parent_eid'        => array('type' => 'identifier', 'required' => false),
                 'eid_status'        => array('type' => 'string',  'required' => false),
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
@@ -37,19 +36,6 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $project_identifier = isset($validated_params['parent_eid']) ? $validated_params['parent_eid'] : false;
-
-        // check rights
-        $project = false;
-        if ($project_identifier !== false)
-        {
-            $project = \Flexio\Object\Project::load($project_identifier);
-            if ($project === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        }
 
         // create the object
         $connection = \Flexio\Object\Connection::create($validated_params);
@@ -66,10 +52,6 @@ class Connection
                 \Flexio\Object\Right::TYPE_DELETE
             )
         );
-
-        // if a parent project is specified, add the object as a member of the project
-        if ($project !== false)
-            $project->addConnection($connection);
 
         // get the connection properties
         $properties = self::maskProperties($connection->get());

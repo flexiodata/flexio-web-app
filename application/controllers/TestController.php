@@ -31,7 +31,6 @@ class TestController extends \Flexio\System\FxControllerAction
         $constants = array();
         $constants['EID_TYPE_OBJECT']     = \Model::TYPE_OBJECT;
         $constants['EID_TYPE_USER']       = \Model::TYPE_USER;
-        $constants['EID_TYPE_PROJECT']    = \Model::TYPE_PROJECT;
         $constants['EID_TYPE_PIPE']       = \Model::TYPE_PIPE;
         $constants['EID_TYPE_STREAM']     = \Model::TYPE_STREAM;
         $constants['EID_TYPE_CONNECTION'] = \Model::TYPE_CONNECTION;

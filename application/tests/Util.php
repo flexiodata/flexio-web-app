@@ -53,7 +53,7 @@ class Util
         $token = $call_params['token'] ?? \Flexio\Tests\Util::getDefaultTestUserToken();
         $params = $call_params['params'] ?? [];
         $content_type = $call_params['content_type'] ?? null;
-        
+
 
         if (strlen($path) == 0)
         {
@@ -167,35 +167,6 @@ EOD;
         return $token_info['access_code'];
     }
 
-    public static function getDefaultTestProject()
-    {
-        // returns the eid of a default test project; creates the project if the
-        // project doesn't exist
-        $project_name = 'Test Project';
-
-        // see if the project exists (look for a project named the same that's owned by
-        // the default test user)
-        $user_eid = self::getDefaultTestUser();
-
-        $search_path = "$user_eid->(".\Model::EDGE_OWNS.")->(".\Model::TYPE_PROJECT.")";
-        $projects = \Flexio\Tests\Util::getModel()->search($search_path);
-
-        if ($projects !== false)
-        {
-            foreach ($projects as $project_eid)
-            {
-                $object = \Flexio\Tests\Util::getModel()->get($project_eid);
-                if ($object['name'] === $project_name)
-                    return $project_eid;
-            }
-        }
-
-        // we couldn't find a default test project for the default test user;
-        // create a default project for the specified user
-        $project_eid = \Flexio\Tests\Util::createProject($user_eid, $project_name);
-        return $project_eid;
-    }
-
     public static function createUser($username, $email, $password)
     {
         $verify_code = \Flexio\Base\Util::generateHandle();
@@ -210,30 +181,13 @@ EOD;
         return $user->getEid();
     }
 
-    public static function createProject($user_eid, $name = null, $description = null)
-    {
-        $properties['name'] = $name ?? 'Test Project';
-        $properties['description'] = $description ?? 'Test project with test data.';
-
-        $project = \Flexio\Object\Project::create($properties);
-        $project->setOwner($user_eid);
-        $project->setCreatedBy($user_eid);
-
-        return $project->getEid();
-    }
-
-    public static function createPipe($user_eid, $project_eid, $pipe_name)
+    public static function createPipe($user_eid, $pipe_name)
     {
         $properties['name'] = $pipe_name;
 
         $pipe = \Flexio\Object\Pipe::create($properties);
         $pipe->setOwner($user_eid);
         $pipe->setCreatedBy($user_eid);
-
-        // if a parent project is specified, add the object as a member of the project
-        $project = \Flexio\Object\Project::load($project_eid);
-        if ($project !== false)
-            $project->addPipe($pipe);
 
         return $pipe->getEid();
     }

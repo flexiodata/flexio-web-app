@@ -174,17 +174,17 @@ class AController extends \Flexio\System\FxControllerAction
         if (isset($params['verify_code']))
             $verify_code = $params['verify_code'];
         if (isset($params['object_eid']))
-            $project_eid = $params['object_eid'];
+            $object_eid = $params['object_eid'];
 
-        $project_url = isset($project_eid) ? "/app/project/$project_eid" : '/app/home';
+        $url = isset($object_eid) ? "/app/pipes/$object_eid" : '/app/home';
 
         if (\Flexio\System\System::isLoggedIn() && isset($email) && $email === \Flexio\System\System::getCurrentUserName())
         {
             // CASE 1: user is logged in, and user is the same as the one
-            // with the link; try to access the shared project (TODO:
+            // with the link; try to access the shared pipe (TODO:
             // need to add encryption to incoming URL to avoid email
             // spoofing)
-            $redirect = $project_url;
+            $redirect = $url;
             $this->_redirect($redirect);
             return;
         }
@@ -232,9 +232,7 @@ class AController extends \Flexio\System\FxControllerAction
                         return;
                     }
 
-                    // TODO: remove the beta invite code when it's no longer necessary
-                    $beta_invite_code = 'invite_code=e0miwu7qkv89h3rlrnst25e3jdxbbrpn';
-                    $redirect = "/app/signup?$beta_invite_code&ref=share_auth&email=".urlencode($email)."&user_eid=$target_user_eid&verify_code=$target_user_verified_code&redirect=".urlencode($project_url);
+                    $redirect = "/app/signup?ref=share_auth&email=".urlencode($email)."&user_eid=$target_user_eid&verify_code=$target_user_verified_code&redirect=".urlencode($url);
                     $this->_redirect($redirect);
                     return;
                 }
@@ -242,7 +240,7 @@ class AController extends \Flexio\System\FxControllerAction
                 {
                     // CASE 4: user isn't logged in and they have an account
                     // that's also verified; take them to the sign in page
-                    $redirect = '/app/signin?ref=share_auth&redirect='.urlencode($project_url);
+                    $redirect = '/app/signin?ref=share_auth&redirect='.urlencode($url);
                     $this->_redirect($redirect);
                     return;
                 }

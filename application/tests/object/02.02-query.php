@@ -26,10 +26,10 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "eid" : null,
@@ -40,7 +40,7 @@ class Test
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
             "eid" => $eid,
-            "name" => "Sample Project"
+            "name" => "Sample Pipe"
         );
         \Flexio\Tests\Check::assertArray('A.1', 'Query::exec(); only requested properties should be returned, even if more are available',  $actual, $expected, $results);
 
@@ -50,10 +50,10 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "eid" : null,
@@ -66,7 +66,7 @@ class Test
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
             "eid" => $eid,
-            "name" => "Sample Project",
+            "name" => "Sample Pipe",
             "property1" => null,
             "property2" => "abc"
         );
@@ -74,10 +74,10 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "eid" : null,
@@ -94,10 +94,10 @@ class Test
 /*
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "eid" : null,
@@ -116,10 +116,10 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "eid" : null,
@@ -145,30 +145,30 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "description" : "Sample Description",
-            "name" : "Sample Project"
+            "name" : "Sample Pipe"
         }
         ';
         $query = json_decode($query);
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
             'description' => 'Sample Description',
-            'name' => 'Sample Project'
+            'name' => 'Sample Pipe'
         );
         \Flexio\Tests\Check::assertArray('C.1', 'Query::exec(); return properties in requested order',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "property2" : null,
@@ -181,7 +181,7 @@ class Test
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
             "property2" => null,
-            "name" => "Sample Project",
+            "name" => "Sample Pipe",
             "property1" => "abc",
             "eid" => $eid
         );
@@ -193,10 +193,10 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "object_eid=eid" : null,
@@ -207,16 +207,16 @@ class Test
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
             "object_eid" => $eid,
-            "object_name" => "Sample Project"
+            "object_name" => "Sample Pipe"
         );
         \Flexio\Tests\Check::assertArray('D.1', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "object_name=name" : null,
@@ -226,17 +226,17 @@ class Test
         $query = json_decode($query);
         $actual = \Flexio\Object\Query::exec($eid, $query);
         $expected = array(
-            "object_name" => "Sample Project",
+            "object_name" => "Sample Pipe",
             "object_eid" => $eid
         );
         \Flexio\Tests\Check::assertArray('D.2', 'Query::exec(); return properties with specified name',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
-            'name' => 'Sample Project',
+            'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROJECT, $info);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $query = '
         {
             "object_eid=eid" : null,

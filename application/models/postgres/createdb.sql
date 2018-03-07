@@ -125,25 +125,6 @@ CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
 
 
 --
--- Table structure for table tbl_project
---
-
-DROP TABLE IF EXISTS tbl_project;
-CREATE TABLE tbl_project (
-  id serial,
-  eid varchar(12) NOT NULL default '',
-  name text default '',
-  description text default '',
-  display_icon text default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE (eid)
-);
-
-
-
---
 -- Table structure for table tbl_pipe
 --
 
