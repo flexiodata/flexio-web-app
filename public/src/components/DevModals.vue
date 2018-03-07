@@ -42,19 +42,6 @@
       <div class="lh-copy">Doing this might be a bad idea. Are you sure you want to continue?</div>
     </confirm-modal>
 
-    <pipe-props-modal
-      ref="modal-pipe-props"
-      project-eid="test-project"
-      @hide="show_pipe_props_modal = false"
-      v-if="show_pipe_props_modal"
-    ></pipe-props-modal>
-
-    <email-support-modal
-      ref="modal-email-support"
-      @hide="show_email_support_modal = false"
-      v-if="show_email_support_modal"
-    ></email-support-modal>
-
     <ui-modal
       ref="modal-tall"
       @hide="show_tall_modal = false"
@@ -105,7 +92,6 @@
   import Btn from './Btn.vue'
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
-  import EmailSupportModal from './EmailSupportModal.vue'
   import FlexioModal from './FlexioModal.vue'
   import SignUpModal from './SignUpModal.vue'
 
@@ -136,7 +122,6 @@
       Btn,
       AlertModal,
       ConfirmModal,
-      EmailSupportModal,
       FlexioModal,
       SignUpModal
     },
