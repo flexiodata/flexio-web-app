@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import account from './account'
-import dev from './dev'
+import admin from './admin'
 import home from './home'
 import pipes from './pipes'
 //import copypipe from './copypipe'
@@ -35,7 +35,7 @@ const basepath_redirect = {
 const routes = [
   basepath_redirect,
   account,
-  dev,
+  admin,
   home,
   pipes,
   //copypipe,
