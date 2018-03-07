@@ -33,15 +33,6 @@
       <div class="lh-copy">There was an error with something you entered. Please fix the error to continue.</div>
     </alert-modal>
 
-    <confirm-modal
-      ref="modal-confirm"
-      title="Confirm?"
-      @hide="show_confirm_modal = false"
-      v-if="show_confirm_modal"
-    >
-      <div class="lh-copy">Doing this might be a bad idea. Are you sure you want to continue?</div>
-    </confirm-modal>
-
     <ui-modal
       ref="modal-tall"
       @hide="show_tall_modal = false"
@@ -90,7 +81,6 @@
 <script>
   import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
   import AlertModal from './AlertModal.vue'
-  import ConfirmModal from './ConfirmModal.vue'
   import FlexioModal from './FlexioModal.vue'
   import SignUpModal from './SignUpModal.vue'
 
@@ -119,7 +109,6 @@
   export default {
     components: {
       AlertModal,
-      ConfirmModal,
       FlexioModal,
       SignUpModal
     },
