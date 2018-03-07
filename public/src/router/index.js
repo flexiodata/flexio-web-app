@@ -14,10 +14,10 @@ import {
   ROUTE_RESETPASSWORD
 } from '../constants/route'
 
-import SignIn from '../components/SignIn.vue'
-import SignUp from '../components/SignUp.vue'
-import ForgotPassword from '../components/ForgotPassword.vue'
-import ResetPassword from '../components/ResetPassword.vue'
+import SignInPage from '../components/SignInPage.vue'
+import SignUpPage from '../components/SignUpPage.vue'
+import ForgotPasswordPage from '../components/ForgotPasswordPage.vue'
+import ResetPasswordPage from '../components/ResetPasswordPage.vue'
 import PageNotFound from '../components/PageNotFound.vue'
 
 // use VueRouter for handling browser history
@@ -36,11 +36,11 @@ const routes = [
   admin,
   home,
   pipes,
-  { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
-  { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
-  { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },
-  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD,  component: ResetPassword  },
-  { path: "*",                                           component: PageNotFound   }
+  { path: '/signin',         name: ROUTE_SIGNIN,         component: SignInPage         },
+  { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUpPage         },
+  { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPasswordPage },
+  { path: '/resetpassword',  name: ROUTE_RESETPASSWORD,  component: ResetPasswordPage  },
+  { path: "*",                                           component: PageNotFound       }
 ]
 
 export default new VueRouter({
