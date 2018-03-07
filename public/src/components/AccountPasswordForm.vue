@@ -56,7 +56,7 @@
         data-vv-rules="required|confirmed:new_password"
       />
       <div class="mt3">
-        <el-button type="primary" class="b ttu" @click="trySaveChanges">Save Changes</el-button>
+        <el-button type="primary" class="ttu b" @click="trySaveChanges">Save Changes</el-button>
       </div>
     </form>
   </div>

@@ -58,8 +58,8 @@
     <transition name="slide-fade">
       <div class="flex flex-row items-start mt2" v-show="show_buttons">
         <div class="flex-fill"></div>
-        <btn btn-sm class="b ttu blue mr2" @click="endEdit(false)">Cancel</btn>
-        <btn btn-sm class="b ttu white bg-blue" @click="save">Save Changes</btn>
+        <btn btn-sm class="ttu b blue mr2" @click="endEdit(false)">Cancel</btn>
+        <btn btn-sm class="ttu b white bg-blue" @click="save">Save Changes</btn>
       </div>
     </transition>
   </div>

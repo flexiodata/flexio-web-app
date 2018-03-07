@@ -33,7 +33,7 @@
         <button type="button" class="f8 fw6 black-60 link underline-hover dib" @click="$emit('forgot-password-click')">Forgot your password?</button>
       </div>
       <div class="mv3">
-        <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignIn" class="b ttu w-100">
+        <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignIn" class="ttu b w-100">
           <span v-if="is_submitting">Signing in...</span>
           <span v-else>Sign in</span>
         </btn>

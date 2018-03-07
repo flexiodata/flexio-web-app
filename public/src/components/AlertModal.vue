@@ -25,7 +25,7 @@
       },
       'ok-cls': {
         type: String,
-        default: 'b ttu blue'
+        default: 'ttu b blue'
       },
       'ok-label': {
         type: String,

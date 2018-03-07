@@ -12,7 +12,7 @@
             <div v-html="getStepCopy(step)"></div>
             <button
               type="button"
-              class="link dib blue underline-hover db ttu fw6 pa0 mt4"
+              class="link dib blue underline-hover ttu fw6 pa0 mt4"
               @click.stop="doStepAction(step.button.action, index)"
               v-if="step.button"
             >

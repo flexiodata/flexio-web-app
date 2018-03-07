@@ -15,7 +15,7 @@
         <div class="flex flex-row items-center mt4">
           <div class="flex-fill"></div>
           <button type="button" class="border-box no-select ttu ph3 pv2a br1 silver bg-white ba b--black-10 darken-10 no-underline db tc mr2" @click="$emit('close-click')">Close</button>
-          <a href="/app/dashboard" class="border-box no-select b ttu ph4 pv2a br1 white bg-blue ba b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
+          <a href="/app/dashboard" class="border-box no-select ttu b ph4 pv2a br1 white bg-blue ba b--blue darken-10 no-underline db tc" target="_blank" rel="noopener noreferrer">Open my dashboard</a>
         </div>
       </div>
     </div>

@@ -81,7 +81,7 @@
         <btn
           btn-lg
           btn-primary
-          class="b ttu w-100"
+          class="ttu b w-100"
           :disabled="is_submitting || has_errors"
           @click="trySignUp"
         >

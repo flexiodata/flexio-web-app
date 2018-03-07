@@ -1,27 +1,27 @@
 <template>
   <div class="pa4 overflow-y-auto">
-    <div class="flex flex-row flex-wrap mw8 center">
+    <div class="mw8 center">
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Common Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openAlertModal">Alert Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openConfirmModal">Confirm Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEmailSupportModal">Email Support Modal</btn></div>
+      <el-button type="primary" class="ttu b" @click="openAlertModal">Alert Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openConfirmModal">Confirm Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openEmailSupportModal">Email Support Modal</el-button>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Project Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewProjectPropsModal">New Project Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditProjectPropsModal">Edit Project Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openDeleteProjectPropsModal">Delete Project Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openMemberAddModal">Member Add Modal</btn></div>
+      <el-button type="primary" class="ttu b" @click="openNewProjectPropsModal">New Project Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openEditProjectPropsModal">Edit Project Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openDeleteProjectPropsModal">Delete Project Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openMemberAddModal">Member Add Modal</el-button>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Connection Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewConnectionModal">New Connection Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditConnectionModal">Edit Connection Modal</btn></div>
+      <el-button type="primary" class="ttu b" @click="openNewConnectionModal">New Connection Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openEditConnectionModal">Edit Connection Modal</el-button>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Pipe Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openNewPipeDialog">New Pipe Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openEditPipeDialog">Edit Pipe Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeScheduleModal">Pipe Schedule Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openPipeShareModal">Pipe Share Modal</btn></div>
+      <el-button type="primary" class="ttu b" @click="openNewPipeDialog">New Pipe Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openEditPipeDialog">Edit Pipe Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openPipeScheduleModal">Pipe Schedule Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openPipeShareModal">Pipe Share Modal</el-button>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Other Modals</div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openTallModal">Tall Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openFlexioModal">Flexio Modal</btn></div>
-      <div class="pr3 w-20"><btn btn-md btn-block btn-primary class="ttu b v-mid h-100" @click="openFlexioSignUpModal">Flexio Sign Up Modal</btn></div>
+      <el-button type="primary" class="ttu b" @click="openTallModal">Tall Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openFlexioModal">Flexio Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="openFlexioSignUpModal">Flexio Sign Up Modal</el-button>
     </div>
 
     <alert-modal
@@ -62,8 +62,8 @@
       <p>Lobortis luctus nisl ut ipsum, aliquam sed orci rhoncus et vestibulum habitant, enim elit sem mi. Ante cursus wisi turpis, purus lacinia orci cursus, diam ac pharetra. Scelerisque non fringilla non adipiscing, vel elit ante massa auctor quam, ante eros vitae justo varius curabitur donec. Tellus consequat nunc sollicitudin vestibulum, nunc tortor proin integer orci pede, risus vitae, dictumst nibh aenean donec malesuada a pellentesque, cum suspendisse semper suspendisse mauris aliquam sed. Adipiscing non eget elit enim arcu, sed ut massa non vitae, leo aenean maecenas at recusandae nulla fringilla, ad iaculis justo in suspendisse, quis tellus nulla. Adipiscing magna cursus, in morbi feugiat vitae eu, faucibus amet, ut pellentesque ultrices et aliquam mauris, vel pariatur dolor placerat consequat. Justo suscipit dis vitae lectus, class ante non mauris fringilla tristique.</p>
 
       <div slot="footer" class="flex flex-row items-end">
-        <btn btn-md class="b ttu blue mr2" @click="show_tall_modal = false">Cancel</btn>
-        <btn btn-md class="b ttu blue" @click="show_tall_modal = false">Ok</btn>
+        <el-button type="plain" class="ttu b" @click="show_tall_modal = false">Cancel</el-button>
+        <el-button type="primary" class="ttu b" @click="show_tall_modal = false">Ok</el-button>
       </div>
     </ui-modal>
 
@@ -89,7 +89,6 @@
 
 <script>
   import { CONNECTION_TYPE_MYSQL } from '../constants/connection-type'
-  import Btn from './Btn.vue'
   import AlertModal from './AlertModal.vue'
   import ConfirmModal from './ConfirmModal.vue'
   import FlexioModal from './FlexioModal.vue'
@@ -119,7 +118,6 @@
 
   export default {
     components: {
-      Btn,
       AlertModal,
       ConfirmModal,
       FlexioModal,

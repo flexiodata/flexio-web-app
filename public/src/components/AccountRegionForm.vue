@@ -14,7 +14,7 @@
         :options="timezones"
       />
       <div class="mt3">
-        <el-button type="primary" class="b ttu" @click="saveChanges">Save Changes</el-button>
+        <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
       </div>
     </form>
   </div>

@@ -26,11 +26,11 @@
       },
       'cancel-cls': {
         type: String,
-        default: 'b ttu blue mr2'
+        default: 'ttu b blue mr2'
       },
       'submit-cls': {
         type: String,
-        default: 'b ttu blue'
+        default: 'ttu b blue'
       },
       'cancel-label': {
         type: String,
