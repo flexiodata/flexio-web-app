@@ -43,11 +43,11 @@
       <div class="f5 b pv1 ph3">Total: {{total_cnt}}</div>
     </div>
     <div class="flex-fill flex flex-column overflow-auto">
-      <dev-test-item
+      <admin-test-item
         v-for="(test, index) in filtered_tests"
         :item="test"
         :index="index"
-      ></dev-test-item>
+      />
     </div>
   </div>
 </template>
@@ -56,7 +56,7 @@
   import api from '../api'
   import Btn from './Btn.vue'
   import ToggleButton from './ToggleButton.vue'
-  import DevTestItem from './DevTestItem.vue'
+  import AdminTestItem from './AdminTestItem.vue'
   import CommonFilter from './mixins/common-filter'
   import GetResponseText from './mixins/get-response-text'
 
@@ -65,7 +65,7 @@
     components: {
       Btn,
       ToggleButton,
-      DevTestItem
+      AdminTestItem
     },
     data() {
       return {
