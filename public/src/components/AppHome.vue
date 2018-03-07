@@ -21,12 +21,7 @@
       route: '/learn',
       name: 'Build & Learn',
       icon: 'school'
-    }/*,
-    {
-      route: '/docs',
-      name: 'Docs',
-      icon: 'help'
-    }*/,
+    },
     {
       route: '/pipes',
       name: 'Pipes',
@@ -41,12 +36,7 @@
       route: '/storage',
       name: 'Storage',
       icon: 'layers'
-    }/*,
-    {
-      route: '/trash',
-      name: 'Trash',
-      icon: 'delete'
-    }*/
+    }
   ]
 
   export default {

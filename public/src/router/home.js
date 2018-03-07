@@ -16,12 +16,9 @@ import AppHome from '../components/AppHome.vue'
 import AppDashboard from '../components/AppDashboard.vue'
 import AppLearn from '../components/AppLearn.vue'
 import AppDocs from '../components/AppDocs.vue'
-import PipeManager from '../components/PipeManager.vue'
-import Connections from '../components/Connections.vue'
-import Storage from '../components/Storage.vue'
-//import MemberManager from '../components/MemberManager.vue'
-//import StorageManager from '../components/StorageManager.vue'
-//import TrashManager from '../components/TrashManager.vue'
+import AppPipes from '../components/AppPipes.vue'
+import AppConnections from '../components/AppConnections.vue'
+import AppStorage from '../components/AppStorage.vue'
 
 export default {
   path: '/home',
@@ -53,27 +50,17 @@ export default {
     {
       path: '/pipes',
       name: ROUTE_HOME_PIPES,
-      component: PipeManager
-    }/*,
-    {
-      path: '/members',
-      name: ROUTE_HOME_MEMBERS,
-      component: MemberManager
-    }*/,
+      component: AppPipes
+    },
     {
       path: '/connections',
       name: ROUTE_HOME_CONNECTIONS,
-      component: Connections
+      component: AppConnections
     },
     {
       path: '/storage',
       name: ROUTE_HOME_STORAGE,
-      component: Storage
-    }/*,
-    {
-      path: '/trash',
-      name: ROUTE_HOME_TRASH,
-      component: TrashManager
-    }*/
+      component: AppStorage
+    }
   ]
 }

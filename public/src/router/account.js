@@ -1,10 +1,10 @@
 import store from '../store'
 import { ROUTE_ACCOUNT } from '../constants/route'
-import Account from '../components/Account.vue'
+import AccountHome from '../components/AccountHome.vue'
 
 export default {
   path: '/account',
   name: ROUTE_ACCOUNT,
-  component: Account,
+  component: AccountHome,
   meta: { requiresAuth: true }
 }
