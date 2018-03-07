@@ -17,23 +17,28 @@
           :show-edit-button="false"
           @save="editPipeName"
         />
-        <div class="flex flex-row items-center">
-          <inline-edit-text
-            class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
-            placeholder="Add an alias"
-            input-key="ename"
-            tooltip-cls="hint--bottom"
-            :val="pipe_ename"
-            :show-edit-button="false"
-            @save="editPipeAlias"
-          />
-          <div
-            class="hint--bottom hint--large cursor-default"
-            aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we automatically set your username as the prefix (e.g., username-foo)."
-            v-if="pipe_ename.length == 0"
-          >
-            <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
+        <div>
+          <div class="flex flex-row items-center">
+            <inline-edit-text
+              class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
+              placeholder="Add an alias"
+              input-key="ename"
+              tooltip-cls="hint--bottom"
+              :val="pipe_ename"
+              :show-edit-button="false"
+              @change="onAliasChange"
+              @cancel="cancelEditPipeAlias"
+              @save="editPipeAlias"
+            />
+            <div
+              class="hint--bottom hint--large cursor-default"
+              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we automatically set your username as the prefix (e.g., username-foo)."
+              v-if="pipe_ename.length == 0"
+            >
+              <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
+            </div>
           </div>
+          <div class="dark-red f7" v-if="ename_error.length > 0">{{ename_error}}</div>
         </div>
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
@@ -59,16 +64,6 @@
         </div>
       </div>
     </div>
-
-    <!-- alert modal -->
-    <alert-modal
-      ref="modal-alert"
-      title="Error"
-      @hide="show_alert_modal = false"
-      v-if="show_alert_modal"
-    >
-      <div class="lh-copy">{{ename_error}}</div>
-    </alert-modal>
   </nav>
 </template>
 
@@ -79,7 +74,6 @@
   import InlineEditText from './InlineEditText.vue'
   import ValueSelect from './ValueSelect.vue'
   import UserDropdown from './UserDropdown.vue'
-  import AlertModal from './AlertModal.vue'
   import Validation from './mixins/validation'
 
   const pipe_view_options = [
@@ -114,8 +108,7 @@
     components: {
       InlineEditText,
       ValueSelect,
-      UserDropdown,
-      AlertModal
+      UserDropdown
     },
     inject: ['pipeEid'],
     watch: {
@@ -125,8 +118,6 @@
     },
     data() {
       return {
-        show_copy_pipe_modal: false,
-        show_alert_modal: false,
         pipe_view_options,
         pipe_view: this.pipeView,
         ss_errors: {}
@@ -193,10 +184,6 @@
           if (ename.length > 0 && _.size(errors) > 0)
           {
             this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias (Invalid)', { eid, ename })
-
-            // show error message
-            this.show_alert_modal = true
-            this.$nextTick(() => { this.$refs['modal-alert'].open() })
           }
            else
           {
@@ -215,8 +202,10 @@
           }
         })
       },
+      cancelEditPipeAlias() {
+        this.ss_errors = _.assign({})
+      },
       runPipe() {
-        //this.setPipeView(PIPEHOME_VIEW_BUILDER)
         this.$emit('run-pipe')
       },
       cancelProcess() {
@@ -224,6 +213,19 @@
       },
       onViewChange(val) {
         this.$emit('pipe-view-change', val)
+      },
+      onAliasChange(ename) {
+        if (ename == this.pipe_ename)
+        {
+          this.ss_errors = _.omit(this.ss_errors, ['ename'])
+          return
+        }
+
+        this.validateEname(ename, (response, errors) => {
+          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+            ? _.assign({}, errors)
+            : _.assign({})
+        })
       }
     }
   }

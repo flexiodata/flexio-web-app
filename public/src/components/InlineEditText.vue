@@ -140,6 +140,9 @@
       val: function(val, old_val) {
         this.before_edit_val = val
         this.edit_val = val
+      },
+      edit_val: function(val, old_val) {
+        this.$emit('change', val, old_val)
       }
     },
     data() {
@@ -207,6 +210,8 @@
           setTimeout(() => { this.is_editing = false }, 450)
            else
           this.is_editing = false
+
+        this.$emit('cancel')
       },
       onEnterKeydown(evt) {
         if (!this.isMarkdown && !this.isMultiline)
