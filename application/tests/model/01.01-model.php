@@ -31,44 +31,39 @@ class Test
         \Flexio\Tests\Check::assertString('B.1', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::TYPE_OBJECT;
-        $expected = 'OBJ';
-        \Flexio\Tests\Check::assertString('B.2', 'Model type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::TYPE_USER;
         $expected = 'USR';
-        \Flexio\Tests\Check::assertString('B.3', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.2', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_PIPE;
         $expected = 'PIP';
-        \Flexio\Tests\Check::assertString('B.4', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.3', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_STREAM;
         $expected = 'STR';
-        \Flexio\Tests\Check::assertString('B.5', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.4', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_CONNECTION;
         $expected = 'CTN';
-        \Flexio\Tests\Check::assertString('B.6', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.5', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_COMMENT;
         $expected = 'CMT';
-        \Flexio\Tests\Check::assertString('B.7', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.6', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_PROCESS;
         $expected = 'PRC';
-        \Flexio\Tests\Check::assertString('B.8', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.7', 'Model type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::TYPE_TOKEN;
         $expected = 'ATH';
-        \Flexio\Tests\Check::assertString('B.9', 'Model type constant',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.8', 'Model type constant',  $actual, $expected, $results);
 
 
 

@@ -20,7 +20,6 @@ require_once 'ModelBase.php';
 class Model
 {
     const TYPE_UNDEFINED      = '';
-    const TYPE_OBJECT         = 'OBJ';
     const TYPE_USER           = 'USR';
     const TYPE_PIPE           = 'PIP';
     const TYPE_STREAM         = 'STR';
@@ -124,9 +123,6 @@ class Model
         if ($type === \Model::TYPE_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->createObjectBase($type, $params);
-
         return $this->loadModel($type)->create($params);
     }
 
@@ -138,9 +134,6 @@ class Model
         $type = $this->getType($eid);
         if ($type === \Model::TYPE_UNDEFINED)
             return false;
-
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->deleteObjectBase($eid);
 
         return $this->loadModel($type)->delete($eid);
     }
@@ -157,9 +150,6 @@ class Model
         if ($type === \Model::TYPE_UNDEFINED)
             return false;
 
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->setObjectBase($eid, $params);
-
         return $this->loadModel($type)->set($eid, $params);
     }
 
@@ -175,9 +165,6 @@ class Model
             if ($type === \Model::TYPE_UNDEFINED)
                 return false;
         }
-
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->getObjectBase($eid);
 
         return $this->loadModel($type)->get($eid);
     }
@@ -1020,7 +1007,6 @@ class Model
             case \Model::TYPE_UNDEFINED:
                 return false;
 
-            case \Model::TYPE_OBJECT:
             case \Model::TYPE_USER:
             case \Model::TYPE_PIPE:
             case \Model::TYPE_STREAM:

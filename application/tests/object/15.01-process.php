@@ -51,11 +51,11 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'Process::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, null);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
         $object = \Flexio\Object\Process::load($eid);
         $actual = $object;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Process::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', 'Process::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROCESS, null);
@@ -148,7 +148,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Process::create();
-        $object = $object->set(array('eid_type'=>\Model::TYPE_OBJECT));
+        $object = $object->set(array('eid_type'=>\Model::TYPE_PIPE));
         $actual =  $object->getType();
         $expected = \Model::TYPE_PROCESS;
         \Flexio\Tests\Check::assertString('D.5', 'Process::set(); don\'t allow the type to be changed',  $actual, $expected, $results);

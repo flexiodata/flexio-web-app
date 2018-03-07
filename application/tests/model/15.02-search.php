@@ -46,7 +46,7 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $eid2 = \Flexio\Base\Eid::generate();
         $path = "$eid2";
         $result = \Flexio\Tests\Util::getModel()->search->exec($path);
