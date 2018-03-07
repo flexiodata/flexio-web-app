@@ -38,7 +38,7 @@
         <div class="f5 b pv2 ph3 br b--black-10 yellow">Ajax Errors: {{ajax_fail_cnt}}</div>
         <div class="f5 b pv2 ph3 br b--black-10 dark-green">Passed: {{pass_cnt}}</div>
         <div class="f5 b pv2 ph3 br b--black-10 dark-red">Failed: {{fail_cnt}}</div>
-        <div class="f5 b pv2 ph3">Total: {{total_cnt}}</div>
+        <div class="f5 b pv2 pl3">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill flex flex-column overflow-auto">
