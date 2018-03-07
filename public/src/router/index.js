@@ -5,8 +5,6 @@ import account from './account'
 import admin from './admin'
 import home from './home'
 import pipes from './pipes'
-//import copypipe from './copypipe'
-//import embed from './embed'
 
 import {
   ROUTE_HOME,
@@ -38,8 +36,6 @@ const routes = [
   admin,
   home,
   pipes,
-  //copypipe,
-  //embed,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignIn         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUp         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPassword },
