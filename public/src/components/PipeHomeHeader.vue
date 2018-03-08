@@ -42,13 +42,6 @@
         </div>
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
-        <value-select
-          class="nt1 nb3 mr3"
-          :options="pipe_view_options"
-          @change="onViewChange"
-          v-model.trim="pipe_view"
-          v-if="false"
-        />
         <el-button size="small" type="primary" class="ttu b" @click="cancelProcess" v-if="isPrompting || isProcessRunning">Cancel</el-button>
         <el-button size="small" type="primary" class="ttu b" :disabled="tasks.length == 0" @click="runPipe" v-else>Run</el-button>
       </div>
@@ -72,7 +65,6 @@
   import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
   import InlineEditText from './InlineEditText.vue'
-  import ValueSelect from './ValueSelect.vue'
   import UserDropdown from './UserDropdown.vue'
   import Validation from './mixins/validation'
 
@@ -107,7 +99,6 @@
     mixins: [Validation],
     components: {
       InlineEditText,
-      ValueSelect,
       UserDropdown
     },
     inject: ['pipeEid'],
@@ -210,9 +201,6 @@
       },
       cancelProcess() {
         this.$emit('cancel-process')
-      },
-      onViewChange(val) {
-        this.$emit('pipe-view-change', val)
       },
       onAliasChange(ename) {
         if (ename == this.pipe_ename)
