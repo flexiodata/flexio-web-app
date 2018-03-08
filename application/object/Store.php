@@ -29,9 +29,6 @@ class Store
             default:
                 return false; // unknown eid type
 
-            case \Model::TYPE_OBJECT:
-                return \Flexio\Object\Object1::load($identifier);
-
             case \Model::TYPE_COMMENT:
                 return \Flexio\Object\Comment::load($identifier);
 
@@ -43,9 +40,6 @@ class Store
 
             case \Model::TYPE_PROCESS:
                 return \Flexio\Object\Process::load($identifier);
-
-            case \Model::TYPE_PROJECT:
-                return \Flexio\Object\Project::load($identifier);
 
             case \Model::TYPE_STREAM:
                 return \Flexio\Object\Stream::load($identifier);

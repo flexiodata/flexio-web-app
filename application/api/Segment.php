@@ -27,7 +27,6 @@ class Segment
     const TYPE_SIGNED_OUT         = 'action.signed-out';
     const TYPE_PASSWORD_CHANGED   = 'action.password.changed';
     const TYPE_APIKEY_CREATED     = 'action.apikey.created';
-    const TYPE_PROJECT_CREATED    = 'action.project.created';
     const TYPE_CONNECTION_CREATED = 'action.connection.created';
     const TYPE_PIPE_CREATED       = 'action.pipe.created';
     const TYPE_PIPE_SCHEDULED     = 'action.pipe.scheduled';
@@ -181,7 +180,6 @@ class Segment
             case self::TYPE_SIGNED_OUT:
             case self::TYPE_PASSWORD_CHANGED:
             case self::TYPE_APIKEY_CREATED:
-            case self::TYPE_PROJECT_CREATED:
             case self::TYPE_CONNECTION_CREATED:
             case self::TYPE_PIPE_CREATED:
             case self::TYPE_PIPE_SCHEDULED:
@@ -204,7 +202,6 @@ class Segment
             case self::TYPE_SIGNED_OUT:         return 'Signed Out';
             case self::TYPE_PASSWORD_CHANGED:   return 'Changed Password';
             case self::TYPE_APIKEY_CREATED:     return 'Created API Key';
-            case self::TYPE_PROJECT_CREATED:    return 'Created Project';
             case self::TYPE_CONNECTION_CREATED: return 'Created Connection';
             case self::TYPE_PIPE_CREATED:       return 'Created Pipe';
             case self::TYPE_PIPE_SCHEDULED:     return 'Scheduled Pipe';

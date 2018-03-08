@@ -35,7 +35,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid_type = \Model::TYPE_PROJECT;  // try something besides \Model::TYPE_UNDEFINED
+        $eid_type = \Model::TYPE_STREAM;  // try something besides \Model::TYPE_UNDEFINED
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
             'eid_type' => $eid_type,

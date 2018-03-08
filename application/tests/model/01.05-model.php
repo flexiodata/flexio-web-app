@@ -103,49 +103,39 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.7', '\Model::isValidType(); return false for the undefined type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_OBJECT);
+        $actual = \Model::isValidType(\Model::TYPE_USER);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.8', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_USER);
+        $actual = \Model::isValidType(\Model::TYPE_PIPE);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.9', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_PROJECT);
+        $actual = \Model::isValidType(\Model::TYPE_STREAM);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.10', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_PIPE);
+        $actual = \Model::isValidType(\Model::TYPE_CONNECTION);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.11', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_STREAM);
+        $actual = \Model::isValidType(\Model::TYPE_COMMENT);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.12', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_CONNECTION);
+        $actual = \Model::isValidType(\Model::TYPE_PROCESS);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.13', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_COMMENT);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.14', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidType(\Model::TYPE_PROCESS);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.15', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::isValidType(\Model::TYPE_TOKEN);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.16', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.14', '\Model::isValidType(); return true for valid types',  $actual, $expected, $results);
 
 
 

@@ -25,7 +25,7 @@ class Test
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -35,9 +35,9 @@ class Test
         $eid = \Flexio\Base\Eid::generate();
         $edge_owns = \Model::EDGE_OWNS;
         $edge_following = \Model::EDGE_FOLLOWING;
-        $type_project = \Model::TYPE_PROJECT;
-        $path = "$eid->($edge_owns,$edge_following)->($type_project)";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $type_pipe = \Model::TYPE_PIPE;
+        $path = "$eid->($edge_owns,$edge_following)->($type_pipe)";
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );
@@ -46,10 +46,10 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, $info);
+        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
         $eid2 = \Flexio\Base\Eid::generate();
         $path = "$eid2";
-        $result = \Flexio\Tests\Util::getModel()->search($path);
+        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
         $actual = $result;
         $expected = array(
         );

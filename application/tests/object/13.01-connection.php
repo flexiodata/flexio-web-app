@@ -51,11 +51,11 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'Connection::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_OBJECT, null);
+        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
         $object = \Flexio\Object\Connection::load($eid);
         $actual = $object;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Connection::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', 'Connection::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, null);
@@ -148,7 +148,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
-        $object = $object->set(array('eid_type'=>\Model::TYPE_OBJECT));
+        $object = $object->set(array('eid_type'=>\Model::TYPE_PIPE));
         $actual =  $object->getType();
         $expected = \Model::TYPE_CONNECTION;
         \Flexio\Tests\Check::assertString('D.5', 'Connection::set(); don\'t allow the type to be changed',  $actual, $expected, $results);
@@ -167,10 +167,8 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Connection::create();
         $creator = \Flexio\Object\User::create();
-        $project = \Flexio\Object\Project::create();
         $object->setOwner($creator->getEid());
         $object->setCreatedBy($creator->getEid());
-        $project->addConnection($object);
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('

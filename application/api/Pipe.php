@@ -26,7 +26,6 @@ class Pipe
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'copy_eid'        => array('type' => 'identifier', 'required' => false),
-                'parent_eid'      => array('type' => 'identifier', 'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
@@ -38,25 +37,12 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
-        $project_identifier = isset($validated_params['parent_eid']) ? $validated_params['parent_eid'] : false;
 
         // if the copy_eid parameter is set, then copy the pipe,
         // using the original parameters; this simply allows us to reuse
         // the create api call, even though the two functions are distinct
         if (isset($validated_params['copy_eid']))
             return self::copy($request);
-
-        // check rights
-        $project = false;
-        if ($project_identifier !== false)
-        {
-            $project = \Flexio\Object\Project::load($project_identifier);
-            if ($project === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        }
 
         // create the object
         $pipe_properties = $validated_params;
@@ -76,10 +62,6 @@ class Pipe
             )
         );
 
-        // if a parent project is specified, add the object as a member of the project
-        if ($project !== false)
-            $project->addPipe($pipe);
-
         // get the pipe properties
         return self::get_internal($pipe);
     }
@@ -91,14 +73,12 @@ class Pipe
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'copy_eid'    => array('type' => 'identifier', 'required' => true),
-                'parent_eid'  => array('type' => 'identifier', 'required' => false)
+                'copy_eid'    => array('type' => 'identifier', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $original_pipe_identifier = $validated_params['copy_eid'];
-        $project_identifier = $validated_params['parent_eid'] ?? false;
 
         // make sure we can read the pipe
         $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
@@ -107,18 +87,6 @@ class Pipe
 
         if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // make sure we can save the copied pipe to any specified parent
-        $project = false;
-        if ($project_identifier !== false)
-        {
-            $project = \Flexio\Object\Project::load($project_identifier);
-            if ($project === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-            if ($project->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-        }
 
         // create a new pipe; copy the logic, but not the status, scheduling, etc
         $original_pipe_properties = $original_pipe->get();
@@ -142,10 +110,6 @@ class Pipe
                 \Flexio\Object\Right::TYPE_EXECUTE
             )
         );
-
-        // if a parent project is specified, add the object as a member of the project
-        if ($project !== false)
-            $project->addPipe($new_pipe);
 
         return self::get_internal($new_pipe);
     }

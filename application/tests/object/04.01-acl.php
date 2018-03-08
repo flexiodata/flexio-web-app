@@ -66,7 +66,7 @@ class Test
         [
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights);
         $actual = $object->getRights();
         $expected = array();
@@ -78,7 +78,7 @@ class Test
             {"access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights);
         $actual = $object->getRights();
         $expected = json_decode('
@@ -95,7 +95,7 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights);
         $actual = $object->getRights();
         $expected = json_decode('
@@ -118,7 +118,7 @@ class Test
             {"access_type": "a", "access_code": "b", "actions": ["object.read"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights1);
         $object->setRights($rights2);
         $actual = $object->getRights();
@@ -142,7 +142,7 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights1);
         $object->setRights($rights2);
         $actual = $object->getRights();
@@ -166,7 +166,7 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights1);
         $object->setRights($rights2);
         $actual = $object->getRights();
@@ -190,7 +190,7 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights1);
         $object->setRights($rights2);
         $actual = $object->getRights();
@@ -216,7 +216,7 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object = \Flexio\Object\Object1::create(array());
+        $object = \Flexio\Object\Pipe::create(array());
         $object->setRights($rights1);
         $object->setRights($rights2);
         $actual = $object->getRights();
@@ -243,8 +243,8 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object1 = \Flexio\Object\Object1::create(array());
-        $object2 = \Flexio\Object\Object1::create(array());
+        $object1 = \Flexio\Object\Pipe::create(array());
+        $object2 = \Flexio\Object\Pipe::create(array());
         $object1->setRights($rights1);
         $object2->setRights($rights2);
         $actual = $object1->getRights();
@@ -269,8 +269,8 @@ class Test
             {"access_type": "c", "access_code": "d", "actions": ["object.write"]}
         ]
         ',true);
-        $object1 = \Flexio\Object\Object1::create(array());
-        $object2 = \Flexio\Object\Object1::create(array());
+        $object1 = \Flexio\Object\Pipe::create(array());
+        $object2 = \Flexio\Object\Pipe::create(array());
         $object1->setRights($rights1);
         $object2->setRights($rights2);
         $actual = $object2->getRights();

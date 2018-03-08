@@ -20,9 +20,7 @@ require_once 'ModelBase.php';
 class Model
 {
     const TYPE_UNDEFINED      = '';
-    const TYPE_OBJECT         = 'OBJ';
     const TYPE_USER           = 'USR';
-    const TYPE_PROJECT        = 'PRJ';
     const TYPE_PIPE           = 'PIP';
     const TYPE_STREAM         = 'STR';
     const TYPE_CONNECTION     = 'CTN';
@@ -125,9 +123,6 @@ class Model
         if ($type === \Model::TYPE_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->createObjectBase($type, $params);
-
         return $this->loadModel($type)->create($params);
     }
 
@@ -139,9 +134,6 @@ class Model
         $type = $this->getType($eid);
         if ($type === \Model::TYPE_UNDEFINED)
             return false;
-
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->deleteObjectBase($eid);
 
         return $this->loadModel($type)->delete($eid);
     }
@@ -158,9 +150,6 @@ class Model
         if ($type === \Model::TYPE_UNDEFINED)
             return false;
 
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->setObjectBase($eid, $params);
-
         return $this->loadModel($type)->set($eid, $params);
     }
 
@@ -176,9 +165,6 @@ class Model
             if ($type === \Model::TYPE_UNDEFINED)
                 return false;
         }
-
-        if ($type === \Model::TYPE_OBJECT)
-            return $this->getObjectBase($eid);
 
         return $this->loadModel($type)->get($eid);
     }
@@ -263,11 +249,6 @@ class Model
             return \Model::STATUS_UNDEFINED;
 
         return $result;
-    }
-
-    public function search(string $path) // TODO: add return type
-    {
-        return $this->search->exec($path);
     }
 
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
@@ -958,20 +939,6 @@ class Model
         }
     }
 
-    public static function getDatabaseConfig() : array
-    {
-        global $g_config;
-
-        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
-                          'directory_port'     => $g_config->directory_database_port,
-                          'directory_username' => $g_config->directory_database_username,
-                          'directory_password' => $g_config->directory_database_password,
-                          'directory_dbname'   => $g_config->directory_database_dbname
-                          );
-
-        return $dbconfig;
-    }
-
     public function setTimezone(string $tz) : bool
     {
         if (strlen($tz) <= 1)
@@ -1005,7 +972,6 @@ class Model
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
 
             case \Model::TYPE_USER           : return $this->user;
-            case \Model::TYPE_PROJECT        : return $this->project;
             case \Model::TYPE_PIPE           : return $this->pipe;
             case \Model::TYPE_STREAM         : return $this->stream;
             case \Model::TYPE_CONNECTION     : return $this->connection;
@@ -1041,9 +1007,7 @@ class Model
             case \Model::TYPE_UNDEFINED:
                 return false;
 
-            case \Model::TYPE_OBJECT:
             case \Model::TYPE_USER:
-            case \Model::TYPE_PROJECT:
             case \Model::TYPE_PIPE:
             case \Model::TYPE_STREAM:
             case \Model::TYPE_CONNECTION:
@@ -1138,6 +1102,20 @@ class Model
         {
             return false;
         }
+    }
+
+    private static function getDatabaseConfig() : array
+    {
+        global $g_config;
+
+        $dbconfig = array('directory_host'     => $g_config->directory_database_host,
+                          'directory_port'     => $g_config->directory_database_port,
+                          'directory_username' => $g_config->directory_database_username,
+                          'directory_password' => $g_config->directory_database_password,
+                          'directory_dbname'   => $g_config->directory_database_dbname
+                          );
+
+        return $dbconfig;
     }
 
     private static function buildEidString(array $eid_arr) : string

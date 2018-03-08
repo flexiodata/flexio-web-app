@@ -133,7 +133,7 @@ class User
                 $message->send();
             }
 
-            // if appropriate, create a default project
+            // if appropriate, create examples
             if ($create_examples === true)
                 self::createExampleObjects($user_eid);
 
@@ -179,7 +179,7 @@ class User
         // POSSIBILITY 4: user exists, but the user isn't yet verified and either the
         // verification code doesn't exist or the verification code that's been provided
         // doesn't match; the user could be trying to create an account after having a
-        // project shared with them and having not verified; or a user could be trying
+        // object shared with them and having not verified; or a user could be trying
         // to create an account when they hadn't yet completed the verification process
         // previously; in either case, we need to create a new verification code and let
         // the user verify
@@ -563,34 +563,12 @@ class User
         return self::createExampleObjects($requesting_user_eid);
     }
 
-    public static function createExampleObjects(string $user_eid, array $project_params = null) : array
+    public static function createExampleObjects(string $user_eid) : array
     {
         // create sample pipes; ensure user creation even if sample fails
         $results = array();
         try
         {
-            // if project params are specified, create a project and add the pipes to
-            // the project; otherwise, just create the pipes
-            $project_eid = null;
-            if (isset($project_params))
-            {
-                $project = \Flexio\Object\Project::create($project_params);
-                $project->setCreatedBy($user_eid);
-                $project->setOwner($user_eid);
-
-                $project->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
-                    array(
-                        \Flexio\Object\Right::TYPE_READ_RIGHTS,
-                        \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
-                        \Flexio\Object\Right::TYPE_READ,
-                        \Flexio\Object\Right::TYPE_WRITE,
-                        \Flexio\Object\Right::TYPE_DELETE
-                    )
-                );
-
-                $project_eid = $project->getEid();
-            }
-
             $objects = self::getExampleObjects();
             foreach ($objects as $o)
             {
@@ -600,11 +578,11 @@ class User
                 switch ($o['eid_type'])
                 {
                     case \Model::TYPE_CONNECTION:
-                        $object_eid = self::createConnectionFromFile($user_eid, $o['path'], $project_eid);
+                        $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
                         break;
 
                     case \Model::TYPE_PIPE:
-                        $object_eid = self::createPipeFromFile($user_eid, $o['path'], $project_eid);
+                        $object_eid = self::createPipeFromFile($user_eid, $o['path']);
                         break;
                 }
 
@@ -623,7 +601,7 @@ class User
         return $results;
     }
 
-    public static function createConnectionFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
+    public static function createConnectionFromFile(string $user_eid, string $file_name) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $buf = \Flexio\Base\File::read($file_name);
@@ -638,7 +616,7 @@ class User
         $ename = $definition['ename'];
         $ename = self::findUniqueEname($username, $ename, 'connection');
 
-        // STEP 3: create the object, and if specified, add it to the project
+        // STEP 3: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Connection';
         $call_params['ename'] = $ename;
         $call_params['description'] = $definition['description'] ?? '';
@@ -664,18 +642,10 @@ class User
             )
         );
 
-        // if a parent project is specified, add the object as a member of the project
-        if (isset($project_eid))
-        {
-            $project = \Flexio\Object\Project::load($project_eid);
-            if ($project !== false)
-                $project->addConnection($connection);
-        }
-
         return $connection->getEid();
     }
 
-    public static function createPipeFromFile(string $user_eid, string $file_name, string $project_eid = null) : string
+    public static function createPipeFromFile(string $user_eid, string $file_name) : string
     {
         // STEP 1: read the pipe file and convert it to JSON
         $buf = \Flexio\Base\File::read($file_name);
@@ -690,7 +660,7 @@ class User
         $ename = $definition['ename'];
         $ename = self::findUniqueEname($username, $ename, 'pipe');
 
-        // STEP 3: create the object, and if specified, add it to the project
+        // STEP 3: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Pipe';
         $call_params['ename'] = $ename;
         $call_params['description'] = $definition['description'] ?? '';
@@ -711,14 +681,6 @@ class User
                 \Flexio\Object\Right::TYPE_EXECUTE
             )
         );
-
-        // if a parent project is specified, add the object as a member of the project
-        if (isset($project_eid))
-        {
-            $project = \Flexio\Object\Project::load($project_eid);
-            if ($project !== false)
-                $project->addPipe($pipe);
-        }
 
         return $pipe->getEid();
     }

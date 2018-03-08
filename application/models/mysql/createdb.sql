@@ -142,25 +142,6 @@ CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
 
 
 --
--- Table structure for table tbl_project
---
-
-DROP TABLE IF EXISTS tbl_project;
-CREATE TABLE tbl_project (
-  id int UNSIGNED NOT NULL auto_increment,
-  eid char(12) NOT NULL default '',
-  name text default '',
-  description text default '',
-  display_icon text default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
-  PRIMARY KEY (id),
-  UNIQUE KEY (eid)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-
---
 -- Table structure for table tbl_pipe
 --
 
@@ -174,7 +155,6 @@ CREATE TABLE tbl_pipe (
   eid char(12) NOT NULL default '',
   name text default '',
   description text default '',
-  display_icon text default '',
   task text default '',
   input text default '',
   output text default '',
@@ -200,7 +180,6 @@ CREATE TABLE tbl_connection (
   eid char(12) NOT NULL default '',
   name text default '',
   description text default '',
-  display_icon text default '',
   connection_type char(40) NOT NULL default '',
   connection_status char(1) NOT NULL default 'U',
   connection_info text default '',
