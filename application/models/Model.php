@@ -552,13 +552,10 @@ class Model
         }
 
         $eid = $this->generateUniqueEid();
-        $timestamp = \Flexio\System\System::getTimestamp();
         $process_arr = array(
             'eid'           => $eid,
             'eid_type'      => $type,
-            'ename'         => $ename,
-            'created'       => $timestamp,
-            'updated'       => $timestamp
+            'ename'         => $ename
         );
 
         if ($this->getDatabase()->insert('tbl_object', $process_arr) === false)
@@ -584,13 +581,6 @@ class Model
 
         $db = $this->getDatabase();
 
-        // set the updated timestamp so it'll stay in sync with whatever
-        // object is being edited
-        $timestamp = \Flexio\System\System::getTimestamp();
-        $process_arr = array(
-            'updated'       => $timestamp
-        );
-
         // if an identifier is specified, make sure that is a is a valid and unique
         // identifier, with the exception that it can also be zero-length so that it
         // can be reset; note: also make sure ename is not in the form of a valid eid
@@ -612,10 +602,10 @@ class Model
             if ($existing_ename !== false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-            $process_arr['ename'] = $ename;
+            $process_arr = array('ename' => $ename);
+            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
         }
 
-        $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
         return true; // established object exists, which is enough for returning true
     }
 
