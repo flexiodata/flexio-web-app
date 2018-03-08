@@ -354,8 +354,7 @@ class Model
 
             $sql = "select ".
                    "        target_eid as eid, ".
-                   "        tobtar.eid_type as eid_type, ".
-                   "        tobtar.eid_status as eid_status ".
+                   "        tobtar.eid_type as eid_type ".
                    "    from tbl_association tas ".
                    "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
                    "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
@@ -415,18 +414,11 @@ class Model
                     $type_filter = $filter['eid_type'];
                     $filter_condition .= " and tobtar.eid_type in (".self::buildTypeString($type_filter).")";
                 }
-
-                if (isset($filter['eid_status']))
-                {
-                    $status_filter = $filter['eid_status'];
-                    $filter_condition .= " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
-                }
             }
 
             $sql = "select ".
                    "        target_eid as eid, ".
-                   "        tobtar.eid_type as eid_type, ".
-                   "        tobtar.eid_status as eid_status ".
+                   "        tobtar.eid_type as eid_type ".
                    "    from tbl_association tas ".
                    "    inner join tbl_object tobsrc on tas.source_eid = tobsrc.eid ".
                    "    inner join tbl_object tobtar on tas.target_eid = tobtar.eid ".
@@ -484,12 +476,6 @@ class Model
                     $type_filter = $filter['eid_type'];
                     $filter_condition .= " and tobtar.eid_type in (".self::buildTypeString($type_filter).")";
                 }
-
-                if (isset($filter['eid_status']))
-                {
-                    $status_filter = $filter['eid_status'];
-                    $filter_condition .= " and tobtar.eid_status in (".self::buildStatusString($status_filter).")";
-                }
             }
 
             $sql = "select count(*) from tbl_association tas ".
@@ -542,16 +528,6 @@ class Model
         if (!\Model::isValidType($type))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // if the status parameter is set, make sure the status is set
-        // to a valid value
-        $status = \Model::STATUS_AVAILABLE;  // default status of available
-        if (isset($params['eid_status']))
-        {
-            $status = $params['eid_status'];
-            if (!\Model::isValidStatus($status))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-
         // if a non-zero-length identifier is set, make sure that is a is
         // a valid and unique identifier; note: also make sure ename is not in
         // the form of a valid eid to make sure that it doesn't overlap with any
@@ -580,7 +556,6 @@ class Model
         $process_arr = array(
             'eid'           => $eid,
             'eid_type'      => $type,
-            'eid_status'    => $status,
             'ename'         => $ename,
             'created'       => $timestamp,
             'updated'       => $timestamp
@@ -590,42 +565,6 @@ class Model
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
         return $eid;
-    }
-
-    public function deleteObjectBase(string $eid) : bool
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other delete functions that also include transactions
-        // that ensure that all the delete operations function as one unit
-
-        // behavior for delete is to return true if the object is
-        // deleted and to return false otherwise, so if we can't find the object,
-        // return false
-
-        // if eid is invalid, the object doesn't exist, so behave as if it doesn't exist
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $db = $this->getDatabase();
-
-        // if an item is deleted, don't allow it to be redeleted (i.e., act
-        // as if it's already been deleted and therefore can't be found;
-        // preserve the old updated date as well)
-        $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
-        if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
-            return false;
-
-        // note: when deleting an object, make sure to reset the ename so that the
-        // identifier can be reused
-        $timestamp = \Flexio\System\System::getTimestamp();
-        $process_arr = array(
-            'ename'         => '',
-            'eid_status'    => \Model::STATUS_DELETED,
-            'updated'       => $timestamp
-        );
-
-        $updated = $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
-        return $updated;
     }
 
     public function setObjectBase(string $eid, array $params) : bool
@@ -645,36 +584,12 @@ class Model
 
         $db = $this->getDatabase();
 
-        // if an item is deleted, don't allow it to be edited
-        $existing_status = $db->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
-        if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
-            return false;
-
         // set the updated timestamp so it'll stay in sync with whatever
         // object is being edited
         $timestamp = \Flexio\System\System::getTimestamp();
         $process_arr = array(
             'updated'       => $timestamp
         );
-
-        // if the status parameter is set, make sure the status is set
-        // to a valid value
-        if (isset($params['eid_status']))
-        {
-            $status = $params['eid_status'];
-            if (!\Model::isValidStatus($status))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // if the status is being set to delete, we're deleting the object, so
-            // make sure to reset the ename so that the identifier can be reused
-            if ($status === \Model::STATUS_DELETED)
-            {
-                unset($params['ename']); // don't allow a new value to be set
-                $process_arr['ename'] = ''; // reset whatever is there already
-            }
-
-            $process_arr['eid_status'] = $status;
-        }
 
         // if an identifier is specified, make sure that is a is a valid and unique
         // identifier, with the exception that it can also be zero-length so that it
@@ -702,47 +617,6 @@ class Model
 
         $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
         return true; // established object exists, which is enough for returning true
-    }
-
-    public function getObjectBase(string $eid) // TODO: add return type
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other functions that also include transactions
-        // that ensure that all the set operations function as one unit
-
-        // behavior for get is to return the object info if the eid exists
-        // and false if the eid doesn't exist
-
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $row = false;
-        try
-        {
-            $row = $this->getDatabase()->fetchRow("select tob.eid as eid,
-                                                        tob.eid_type as eid_type,
-                                                        tob.ename as ename,
-                                                        tob.eid_status as eid_status,
-                                                        tob.created as created,
-                                                        tob.updated as updated
-                                                from tbl_object tob
-                                                where tob.eid = ?
-                                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'             => $row['eid'],
-                     'eid_type'        => $row['eid_type'],
-                     'ename'           => $row['ename'],
-                     'eid_status'      => $row['eid_status'],
-                     'created'         => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
     public function setDbVersionNumber(string $version) : bool

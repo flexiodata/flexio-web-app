@@ -10,7 +10,6 @@ CREATE TABLE tbl_object (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_type varchar(3) NOT NULL default '',
-  eid_status varchar(1) NOT NULL default '',
   ename varchar(80) NOT NULL default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
@@ -49,6 +48,7 @@ DROP TABLE IF EXISTS tbl_user;
 CREATE TABLE tbl_user (
     id serial,
     eid varchar(12) NOT NULL,
+    eid_status varchar(1) NOT NULL default '',
     user_name varchar(80) NOT NULL default '',
     email varchar(255) default '',
     description text default '',
@@ -87,6 +87,7 @@ DROP TABLE IF EXISTS tbl_token;
 CREATE TABLE tbl_token (
     id serial,
     eid varchar(12) NOT NULL,
+    eid_status varchar(1) NOT NULL default '',
     user_eid varchar(12) NOT NULL,
     access_code varchar(255) NOT NULL default '',
     secret_code varchar(255) NOT NULL default '',
@@ -109,6 +110,7 @@ DROP TABLE IF EXISTS tbl_acl;
 CREATE TABLE tbl_acl (
   id serial,
   eid varchar(12) NOT NULL,
+  eid_status varchar(1) NOT NULL default '',
   object_eid varchar(12) NOT NULL default '',
   access_type varchar(3) NOT NULL default '',
   access_code varchar(255) NOT NULL default '',
@@ -136,6 +138,7 @@ DROP TABLE IF EXISTS tbl_pipe;
 CREATE TABLE tbl_pipe (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   name text default '',
   description text default '',
   task json,
@@ -161,6 +164,7 @@ DROP TABLE IF EXISTS tbl_connection;
 CREATE TABLE tbl_connection (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   name text default '',
   description text default '',
   connection_type varchar(40) NOT NULL default '',
@@ -183,6 +187,7 @@ DROP TABLE IF EXISTS tbl_process;
 CREATE TABLE tbl_process (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   parent_eid varchar(12) NOT NULL default '',
   process_mode varchar(1) NOT NULL default '',
   process_hash varchar(40) NOT NULL default '',
@@ -216,6 +221,7 @@ DROP TABLE IF EXISTS tbl_processlog;
 CREATE TABLE tbl_processlog (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   process_eid varchar(12) NOT NULL default '',
   task_op text default '',
   task_version int NOT NULL default 0,
@@ -245,6 +251,7 @@ DROP TABLE IF EXISTS tbl_stream;
 CREATE TABLE tbl_stream (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   parent_eid varchar(12) NOT NULL default '',
   stream_type varchar(3) NOT NULL default '',
   name text default '',
@@ -276,6 +283,7 @@ DROP TABLE IF EXISTS tbl_comment;
 CREATE TABLE tbl_comment (
   id serial,
   eid varchar(12) NOT NULL default '',
+  eid_status varchar(1) NOT NULL default '',
   comment text default '',
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
@@ -293,6 +301,7 @@ DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
   id serial,
   eid varchar(12) NOT NULL default '',           -- the eid of the action
+  eid_status varchar(1) NOT NULL default '',
   invoked_from varchar(3) NOT NULL default '',   -- where the action was invoked from; (e.g. api, email, the scheduler)
   invoked_by varchar(12) NOT NULL default '',    -- eid of the user that invoked the action
   action_type text default '',                   -- the name of action being peformed

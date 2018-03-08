@@ -28,6 +28,7 @@ class Right extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
+                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'object_eid'    => $params['object_eid'] ?? '',
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
@@ -52,20 +53,7 @@ class Right extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -75,10 +63,11 @@ class Right extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'object_eid' => array('type' => 'string',  'required' => false),
-                'access_type' => array('type' => 'string',  'required' => false),
-                'access_code' => array('type' => 'string',  'required' => false),
-                'actions' => array('type' => 'string',  'required' => false)
+                'eid_status'  => array('type' => 'string', 'required' => false),
+                'object_eid'  => array('type' => 'string', 'required' => false),
+                'access_type' => array('type' => 'string', 'required' => false),
+                'access_code' => array('type' => 'string', 'required' => false),
+                'actions'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -89,6 +78,14 @@ class Right extends ModelBase
         $db->beginTransaction();
         try
         {
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -121,11 +118,11 @@ class Right extends ModelBase
         {
             $row = $db->fetchRow("select tob.eid as eid,
                                          tob.eid_type as eid_type,
+                                         tac.eid_status as eid_status,
                                          tac.object_eid as object_eid,
                                          tac.access_type as access_type,
                                          tac.access_code as access_code,
                                          tac.actions as actions,
-                                         tob.eid_status as eid_status,
                                          tob.created as created,
                                          tob.updated as updated
                                 from tbl_object tob
@@ -143,11 +140,11 @@ class Right extends ModelBase
 
         return array('eid'         => $row['eid'],
                      'eid_type'    => $row['eid_type'],
+                     'eid_status'  => $row['eid_status'],
                      'object_eid'  => $row['object_eid'],
                      'access_type' => $row['access_type'],
                      'access_code' => $row['access_code'],
                      'actions'     => $row['actions'],
-                     'eid_status'  => $row['eid_status'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -177,7 +174,7 @@ class Right extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_acl', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
@@ -193,7 +190,7 @@ class Right extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_acl where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 
@@ -206,11 +203,11 @@ class Right extends ModelBase
         $db = $this->getDatabase();
         $rows = $db->fetchAll("select tob.eid as eid,
                                       tob.eid_type as eid_type,
+                                      tac.eid_status as eid_status,
                                       tac.object_eid as object_eid,
                                       tac.access_type as access_type,
                                       tac.access_code as access_code,
                                       tac.actions as actions,
-                                      tob.eid_status as eid_status,
                                       tob.created as created,
                                       tob.updated as updated
                               from tbl_object tob
@@ -226,11 +223,11 @@ class Right extends ModelBase
         {
             $output[] = array('eid'         => $row['eid'],
                               'eid_type'    => $row['eid_type'],
+                              'eid_status'  => $row['eid_status'],
                               'object_eid'  => $row['object_eid'],
                               'access_type' => $row['access_type'],
                               'access_code' => $row['access_code'],
                               'actions'     => $row['actions'],
-                              'eid_status'  => $row['eid_status'],
                               'created'     => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
         }

@@ -208,6 +208,12 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $filter);
         $objects = array_merge($objects_owned, $objects_followed);
 
+        // TODO: eid_status is no longer available in the assoc_range filter because it was
+        // moved to individual tables; get a list of the status codes and filter manually
+        $allowed_eid_status = false;
+        if (isset($filter['eid_status']) && is_array($filter['eid_status']))
+            $allowed_eid_status = array_flip($filter['eid_status']);
+
         $res = array();
         foreach ($objects as $object_info)
         {
@@ -216,6 +222,13 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
             if ($object === false)
                 continue;
+
+            if ($allowed_eid_status !== false)
+            {
+                $object_eid_status = $object->getStatus();
+                if (!array_key_exists($object_eid_status, $allowed_eid_status))
+                    continue;
+            }
 
             $res[] = $object;
         }

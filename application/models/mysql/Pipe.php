@@ -28,6 +28,7 @@ class Pipe extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'             => $eid,
+                'eid_status'      => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'name'            => $params['name'] ?? '',
                 'description'     => $params['description'] ?? '',
                 'input'           => $params['input'] ?? '{}',
@@ -59,20 +60,7 @@ class Pipe extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -82,6 +70,7 @@ class Pipe extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'      => array('type' => 'string',  'required' => false),
                 'name'            => array('type' => 'string',  'required' => false),
                 'description'     => array('type' => 'string',  'required' => false),
                 'input'           => array('type' => 'string',  'required' => false),
@@ -99,6 +88,14 @@ class Pipe extends ModelBase
         $db->beginTransaction();
         try
         {
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -137,18 +134,18 @@ class Pipe extends ModelBase
         try
         {
             $row = $db->fetchRow("select tob.eid as eid,
-                                        tob.eid_type as eid_type,
-                                        tob.ename as ename,
-                                        tpi.name as name,
-                                        tpi.description as description,
-                                        tpi.input as input,
-                                        tpi.output as output,
-                                        tpi.task as task,
-                                        tpi.schedule as schedule,
-                                        tpi.schedule_status as schedule_status,
-                                        tob.eid_status as eid_status,
-                                        tob.created as created,
-                                        tob.updated as updated
+                                         tob.eid_type as eid_type,
+                                         tpi.eid_status as eid_status,
+                                         tob.ename as ename,
+                                         tpi.name as name,
+                                         tpi.description as description,
+                                         tpi.input as input,
+                                         tpi.output as output,
+                                         tpi.task as task,
+                                         tpi.schedule as schedule,
+                                         tpi.schedule_status as schedule_status,
+                                         tob.created as created,
+                                         tob.updated as updated
                                 from tbl_object tob
                                 inner join tbl_pipe tpi on tob.eid = tpi.eid
                                 where tob.eid = ?
@@ -164,6 +161,7 @@ class Pipe extends ModelBase
 
         return array('eid'             => $row['eid'],
                      'eid_type'        => $row['eid_type'],
+                     'eid_status'      => $row['eid_status'],
                      'ename'           => $row['ename'],
                      'name'            => $row['name'],
                      'description'     => $row['description'],
@@ -172,7 +170,6 @@ class Pipe extends ModelBase
                      'task'            => $row['task'],
                      'schedule'        => $row['schedule'],
                      'schedule_status' => $row['schedule_status'],
-                     'eid_status'      => $row['eid_status'],
                      'created'         => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }

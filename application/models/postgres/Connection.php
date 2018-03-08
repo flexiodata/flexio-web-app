@@ -45,6 +45,7 @@ class Connection extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'               => $eid,
+                'eid_status'        => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'name'              => $params['name'] ?? '',
                 'description'       => $params['description'] ?? '',
                 'connection_type'   => $params['connection_type'] ?? '',
@@ -74,20 +75,7 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -97,6 +85,7 @@ class Connection extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'        => array('type' => 'string',  'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
@@ -134,6 +123,14 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -165,17 +162,17 @@ class Connection extends ModelBase
         try
         {
             $row = $db->fetchRow("select tob.eid as eid,
-                                        tob.eid_type as eid_type,
-                                        tob.ename as ename,
-                                        tco.name as name,
-                                        tco.description as description,
-                                        tco.connection_type as connection_type,
-                                        tco.connection_status as connection_status,
-                                        tco.connection_info as connection_info,
-                                        tco.expires as expires,
-                                        tob.eid_status as eid_status,
-                                        tob.created as created,
-                                        tob.updated as updated
+                                         tob.eid_type as eid_type,
+                                         tco.eid_status as eid_status,
+                                         tob.ename as ename,
+                                         tco.name as name,
+                                         tco.description as description,
+                                         tco.connection_type as connection_type,
+                                         tco.connection_status as connection_status,
+                                         tco.connection_info as connection_info,
+                                         tco.expires as expires,
+                                         tob.created as created,
+                                         tob.updated as updated
                                 from tbl_object tob
                                 inner join tbl_connection tco on tob.eid = tco.eid
                                 where tob.eid = ?
@@ -193,6 +190,7 @@ class Connection extends ModelBase
 
         return array('eid'               => $row['eid'],
                      'eid_type'          => $row['eid_type'],
+                     'eid_status'        => $row['eid_status'],
                      'ename'             => $row['ename'],
                      'name'              => $row['name'],
                      'description'       => $row['description'],
@@ -200,7 +198,6 @@ class Connection extends ModelBase
                      'connection_status' => $row['connection_status'],
                      'connection_info'   => $row['connection_info'],
                      'expires'           => $row['expires'],
-                     'eid_status'        => $row['eid_status'],
                      'created'           => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'           => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -230,7 +227,7 @@ class Connection extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
@@ -246,7 +243,7 @@ class Connection extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_connection where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 

@@ -55,6 +55,7 @@ class User extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                    => $eid,
+                'eid_status'             => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'user_name'              => $params['user_name'] ?? '',
                 'full_name'              => $params['full_name'] ?? '',
                 'first_name'             => $params['first_name'] ?? '',
@@ -94,20 +95,7 @@ class User extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -134,6 +122,7 @@ class User extends ModelBase
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'             => array('type' => 'string', 'required' => false),
                 'user_name'              => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
                 'first_name'             => array('type' => 'string',  'required' => false),
@@ -166,6 +155,14 @@ class User extends ModelBase
             // TODO: make sure we're not changing the user name or email to
             // another one that already exists
 
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -197,29 +194,29 @@ class User extends ModelBase
         try
         {
             $row = $db->fetchRow("select tob.eid as eid,
-                                        tob.eid_type as eid_type,
-                                        tob.ename as ename,
-                                        tus.user_name as user_name,
-                                        tus.full_name as full_name,
-                                        tus.first_name as first_name,
-                                        tus.last_name as last_name,
-                                        tus.email as email,
-                                        tus.phone as phone,
-                                        tus.location_city as location_city,
-                                        tus.location_state as location_state,
-                                        tus.location_country as location_country,
-                                        tus.company_name as company_name,
-                                        tus.company_url as company_url,
-                                        tus.locale_language as locale_language,
-                                        tus.locale_decimal as locale_decimal,
-                                        tus.locale_thousands as locale_thousands,
-                                        tus.locale_dateformat as locale_dateformat,
-                                        tus.timezone as timezone,
-                                        tus.verify_code as verify_code,
-                                        tus.config as config,
-                                        tob.eid_status as eid_status,
-                                        tob.created as created,
-                                        tob.updated as updated
+                                         tob.eid_type as eid_type,
+                                         tus.eid_status as eid_status,
+                                         tob.ename as ename,
+                                         tus.user_name as user_name,
+                                         tus.full_name as full_name,
+                                         tus.first_name as first_name,
+                                         tus.last_name as last_name,
+                                         tus.email as email,
+                                         tus.phone as phone,
+                                         tus.location_city as location_city,
+                                         tus.location_state as location_state,
+                                         tus.location_country as location_country,
+                                         tus.company_name as company_name,
+                                         tus.company_url as company_url,
+                                         tus.locale_language as locale_language,
+                                         tus.locale_decimal as locale_decimal,
+                                         tus.locale_thousands as locale_thousands,
+                                         tus.locale_dateformat as locale_dateformat,
+                                         tus.timezone as timezone,
+                                         tus.verify_code as verify_code,
+                                         tus.config as config,
+                                         tob.created as created,
+                                         tob.updated as updated
                                 from tbl_object tob
                                 inner join tbl_user tus on tob.eid = tus.eid
                                 where tob.eid = ?
@@ -235,6 +232,7 @@ class User extends ModelBase
 
         return array('eid'                    => $row['eid'],
                      'eid_type'               => $row['eid_type'],
+                     'eid_status'             => $row['eid_status'],
                      'ename'                  => $row['ename'],
                      'user_name'              => $row['user_name'],
                      'full_name'              => $row['full_name'],
@@ -255,7 +253,6 @@ class User extends ModelBase
                      'timezone'               => $row['timezone'],
                      'verify_code'            => $row['verify_code'],
                      'config'                 => $row['config'],
-                     'eid_status'             => $row['eid_status'],
                      'created'                => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -285,7 +282,7 @@ class User extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_user', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
@@ -301,7 +298,7 @@ class User extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_user where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 

@@ -184,9 +184,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function getProcessList() : array
     {
         $result = array();
-
-        $assoc_filter = array('eid_status' => array(\Model::STATUS_AVAILABLE));
-        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_PROCESS, $assoc_filter);
+        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_PROCESS);
 
         foreach ($res as $item)
         {

@@ -38,6 +38,7 @@ class Stream extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'                  => $eid,
+                'eid_status'           => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'parent_eid'           => $params['parent_eid'] ?? '',
                 'stream_type'          => $params['stream_type'] ?? '',
                 'name'                 => $params['name'] ?? '',
@@ -70,22 +71,7 @@ class Stream extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            $db->delete('tbl_stream', 'eid = ' . $db->quote($eid));
-
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -95,6 +81,7 @@ class Stream extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'           => array('type' => 'string',  'required' => false),
                 'parent_eid'           => array('type' => 'eid',     'required' => false),
                 'stream_type'          => array('type' => 'string',  'required' => false),
                 'name'                 => array('type' => 'string',  'required' => false),
@@ -117,6 +104,14 @@ class Stream extends ModelBase
         $db->beginTransaction();
         try
         {
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -148,22 +143,22 @@ class Stream extends ModelBase
         try
         {
             $row = $db->fetchRow("select tob.eid as eid,
-                                        tob.eid_type as eid_type,
-                                        tst.parent_eid as parent_eid,
-                                        tst.stream_type as stream_type,
-                                        tst.name as name,
-                                        tst.path as path,
-                                        tst.size as size,
-                                        tst.hash as hash,
-                                        tst.mime_type as mime_type,
-                                        tst.structure as structure,
-                                        tst.file_created as file_created,
-                                        tst.file_modified as file_modified,
-                                        tst.connection_eid as connection_eid,
-                                        tst.expires as expires,
-                                        tob.eid_status as eid_status,
-                                        tob.created as created,
-                                        tob.updated as updated
+                                         tob.eid_type as eid_type,
+                                         tst.eid_status as eid_status,
+                                         tst.parent_eid as parent_eid,
+                                         tst.stream_type as stream_type,
+                                         tst.name as name,
+                                         tst.path as path,
+                                         tst.size as size,
+                                         tst.hash as hash,
+                                         tst.mime_type as mime_type,
+                                         tst.structure as structure,
+                                         tst.file_created as file_created,
+                                         tst.file_modified as file_modified,
+                                         tst.connection_eid as connection_eid,
+                                         tst.expires as expires,
+                                         tob.created as created,
+                                         tob.updated as updated
                                 from tbl_object tob
                                 inner join tbl_stream tst on tob.eid = tst.eid
                                 where tob.eid = ?
@@ -221,7 +216,7 @@ class Stream extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_stream', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
@@ -237,7 +232,7 @@ class Stream extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_stream where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 
@@ -280,6 +275,7 @@ class Stream extends ModelBase
 
             $rows = $db->fetchAll("select tob.eid as eid,
                                           tob.eid_type as eid_type,
+                                          tst.eid_status as eid_status,
                                           tst.parent_eid as parent_eid,
                                           tst.stream_type as stream_type,
                                           tst.name as name,
@@ -292,7 +288,6 @@ class Stream extends ModelBase
                                           tst.file_modified as file_modified,
                                           tst.connection_eid as connection_eid,
                                           tst.expires as expires,
-                                          tob.eid_status as eid_status,
                                           tob.created as created,
                                           tob.updated as updated
                                 from tbl_object tob
@@ -313,6 +308,7 @@ class Stream extends ModelBase
         {
             $output[] =  array('eid'                  => $row['eid'],
                                'eid_type'             => $row['eid_type'],
+                               'eid_status'           => $row['eid_status'],
                                'parent_eid'           => $row['parent_eid'],
                                'stream_type'          => $row['stream_type'],
                                'name'                 => $row['name'],
@@ -325,7 +321,6 @@ class Stream extends ModelBase
                                'file_modified'        => $row['file_modified'],
                                'connection_eid'       => $row['connection_eid'],
                                'expires'              => $row['expires'],
-                               'eid_status'           => $row['eid_status'],
                                'created'              => \Flexio\Base\Util::formatDate($row['created']),
                                'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
         }

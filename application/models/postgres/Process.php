@@ -27,6 +27,7 @@ class Process extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
+                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
                 'parent_eid'     => $params['parent_eid'] ?? '',
                 'process_mode'   => $params['process_mode'] ?? '',
                 'process_hash'   => $params['process_hash'] ?? '',
@@ -59,20 +60,7 @@ class Process extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        $db = $this->getDatabase();
-        $db->beginTransaction();
-        try
-        {
-            // delete the object
-            $result = $this->getModel()->deleteObjectBase($eid);
-            $db->commit();
-            return $result;
-        }
-        catch (\Exception $e)
-        {
-            $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
     public function set(string $eid, array $params) : bool
@@ -82,6 +70,7 @@ class Process extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string',  'required' => false),
                 'parent_eid'     => array('type' => 'string',  'required' => false),
                 'process_mode'   => array('type' => 'string',  'required' => false),
                 'process_hash'   => array('type' => 'string',  'required' => false),
@@ -105,6 +94,14 @@ class Process extends ModelBase
         $db->beginTransaction();
         try
         {
+            // if an item is deleted, don't allow it to be edited
+            $existing_status = $this->getStatus();
+            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            {
+                $db->commit();
+                return false;
+            }
+
             // set the base object properties
             $result = $this->getModel()->setObjectBase($eid, $params);
             if ($result === false)
@@ -136,6 +133,7 @@ class Process extends ModelBase
         try
         {
             $row = $db->fetchRow("select tpr.eid as eid,
+                                         tpr.eid_status as eid_status,
                                          tpr.parent_eid as parent_eid,
                                          tpr.process_mode as process_mode,
                                          tpr.impl_revision as impl_revision,
@@ -148,11 +146,9 @@ class Process extends ModelBase
                                          tpr.process_info as process_info,
                                          tpr.process_status as process_status,
                                          tpr.cache_used as cache_used,
-                                         tob.eid_status as eid_status,
                                          tpr.created as created,
                                          tpr.updated as updated
                                   from tbl_process tpr
-                                  inner join tbl_object tob on tpr.eid = tob.eid
                                   where tpr.eid = ?
                                  ", $eid);
          }
