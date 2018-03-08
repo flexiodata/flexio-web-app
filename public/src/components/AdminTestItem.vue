@@ -1,9 +1,9 @@
 <template>
-  <article class="pa3 ma3" :class="cls">
+  <article class="pa2 ma2 ba b--black-05" :class="cls">
     <div class="flex flex-row items-center">
-      <span class="mid-gray mr2" @click="toggleDetails">
+      <span class="black-30 mr2" @click="toggleDetails">
         <i
-          class="material-icons db v-mid b pointer"
+          class="material-icons db v-mid pointer"
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
@@ -16,30 +16,30 @@
       <div class="f3 pl3 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
       <div class="f3 pl3 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
     </div>
-    <div class="pt3 pl3 f6" v-if="is_xhr_ok===false">
+    <div class="pt2 pl2 f6" v-if="is_xhr_ok===false">
       <pre class="ma0">{{item.error_text}}</pre>
     </div>
-    <div class="pt3" v-if="item.details" v-show="!show_details">
+    <div class="pt2" v-if="item.details" v-show="!show_details">
       <table class="w-100 css-test-table">
-        <tr :class="!detail.passed ? 'bg-black-10' : ''" v-for="(detail, index) in item.details">
+        <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
-            <div class="flex flex-row mv1 mr3 max-h4" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="pa1 f6 monospace overflow-auto ba b--black-20 bg-white-60">
+            <div class="flex flex-row mr3 max-h4" style="margin: 2px 0" v-if="!detail.passed && detail.message && detail.message.length > 0">
+              <div class="pa1 f6 monospace overflow-auto ba b--black-40 bg-white-60">
                 {{detail.message}}
               </div>
             </div>
           </td>
-          <td class="v-top f6 tr">
+          <td class="v-top f7 tr">
             <div class="dib">
-              <div class="flex flex-row items-center br1 nowrap ttu white bg-dark-green" style="padding: 1px 4px 1px 2px" v-if="detail.passed">
-                <i class="material-icons f6">check</i>
-                <span class="b f5 monospace">Passed</span>
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-green" style="padding: 1px 4px 1px 2px" v-if="detail.passed">
+                <i class="material-icons f7" style="margin-right: 2px">check</i>
+                <span class="f6 monospace">Passed</span>
               </div>
-              <div class="flex flex-row items-center br1 nowrap ttu white bg-dark-red" style="padding: 1px 4px 1px 2px" v-if="!detail.passed">
-                <i class="material-icons f6">close</i>
-                <span class="b f5 monospace">Failed</span>
+              <div class="flex flex-row items-center nowrap ttu white bg-dark-red" style="padding: 1px 4px 1px 2px" v-if="!detail.passed">
+                <i class="material-icons f7" style="margin-right: 2px">close</i>
+                <span class="f6 monospace">Failed</span>
               </div>
             </div>
           </td>
@@ -105,8 +105,11 @@
     background-color: rgba(255,255,0,0.1)
   }
   .css-test-table {
+    tr:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
     td {
-      padding: 1px 4px;
+      padding: 1px 1px 1px 3px;
     }
   }
 </style>
