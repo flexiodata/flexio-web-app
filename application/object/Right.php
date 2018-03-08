@@ -57,6 +57,40 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
     }
 
+    public static function load(string $identifier)
+    {
+        $object = new static();
+        $model = $object->getModel();
+
+        // assume the identifier is an eid, and try to find out the type
+        $eid = $identifier;
+        $local_eid_type = $model->getType($identifier);
+
+        if ($local_eid_type !== $object->getType())
+        {
+            // the input isn't an eid, so it must be an identifier; try
+            // to find the eid from the identifier; if we can't find it,
+            // we're done
+            $eid = $model->getEidFromEname($identifier);
+            if ($eid === false)
+                return false;
+        }
+
+        $object->setEid($eid);
+        $object->clearCache();
+
+        // TODO: for now, don't allow objects that have been deleted
+        // to be loaded; in general, we may want to move this to the
+        // api layer, but previously, it's been in the model layer,
+        // and we need to make sure the behavior is the same after the
+        // model constraint is removed, and object loading is a good
+        // location for this constraint
+        if ($object->getStatus() === \Model::STATUS_DELETED)
+            return false;
+
+        return $object;
+    }
+
     public static function create(array $properties = null) : \Flexio\Object\Right
     {
         // actions are stored as a json string, so this needs to be encoded
@@ -105,6 +139,26 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function getType() : string
     {
         return \Model::TYPE_RIGHT;
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Base
+    {
+        $this->clearCache();
+        $right_model = $this->getModel()->right;
+        $result = $right_model->setStatus($this->getEid(), $status);
+        return $this;
+    }
+
+    public function getStatus() : string
+    {
+        if ($this->eid_status !== false)
+            return $this->eid_status;
+
+        $right_model = $this->getModel()->right;
+        $status = $right_model->getStatus($this->getEid());
+        $this->eid_status = $status;
+
+        return $status;
     }
 
     private function isCached() : bool

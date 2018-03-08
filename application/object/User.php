@@ -36,6 +36,40 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
+    public static function load(string $identifier)
+    {
+        $object = new static();
+        $model = $object->getModel();
+
+        // assume the identifier is an eid, and try to find out the type
+        $eid = $identifier;
+        $local_eid_type = $model->getType($identifier);
+
+        if ($local_eid_type !== $object->getType())
+        {
+            // the input isn't an eid, so it must be an identifier; try
+            // to find the eid from the identifier; if we can't find it,
+            // we're done
+            $eid = $model->getEidFromEname($identifier);
+            if ($eid === false)
+                return false;
+        }
+
+        $object->setEid($eid);
+        $object->clearCache();
+
+        // TODO: for now, don't allow objects that have been deleted
+        // to be loaded; in general, we may want to move this to the
+        // api layer, but previously, it's been in the model layer,
+        // and we need to make sure the behavior is the same after the
+        // model constraint is removed, and object loading is a good
+        // location for this constraint
+        if ($object->getStatus() === \Model::STATUS_DELETED)
+            return false;
+
+        return $object;
+    }
+
     public static function create(array $properties = null) : \Flexio\Object\User
     {
         // config is stored as a json string, so it needs to be encoded
@@ -68,44 +102,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $object;
     }
 
-    public static function load(string $identifier)
-    {
-        // note: \User::load() differs from other load implementations
-        // in that a user can be loaded either by a unique eid, by
-        // the user name, or the user email, all of which are unique
-        // for a user
-
-        $object = new static();
-        $model = $object->getModel();
-
-        // assume the identifier is an eid, and try to find out the type
-        $eid = $identifier;
-        $local_eid_type = $model->getType($identifier);
-
-        if ($local_eid_type !== $object->getType())
-        {
-            // the input isn't an eid, so it must be an identifier; try
-            // to find the eid from the identifier; if we can't find it,
-            // we're done
-            $eid = $model->user->getEidFromIdentifier($identifier);
-            if ($eid === false)
-                return false;
-        }
-
-        // TODO: for now, don't allow objects that have been deleted
-        // to be loaded; in general, we may want to move this to the
-        // api layer, but previously, it's been in the model layer,
-        // and we need to make sure the behavior is the same after the
-        // model constraint is removed, and object loading is a good
-        // location for this constraint
-        if ($model->getStatus($eid) === \Model::STATUS_DELETED)
-            return false;
-
-        $object->setEid($eid);
-        $object->clearCache();
-        return $object;
-    }
-
     public function delete() : \Flexio\Object\User
     {
         $this->clearCache();
@@ -131,6 +127,26 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function getType() : string
     {
         return \Model::TYPE_USER;
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Base
+    {
+        $this->clearCache();
+        $user_model = $this->getModel()->user;
+        $result = $user_model->setStatus($this->getEid(), $status);
+        return $this;
+    }
+
+    public function getStatus() : string
+    {
+        if ($this->eid_status !== false)
+            return $this->eid_status;
+
+        $user_model = $this->getModel()->user;
+        $status = $user_model->getStatus($this->getEid());
+        $this->eid_status = $status;
+
+        return $status;
     }
 
     public function get() : array
