@@ -5,7 +5,7 @@
         <router-link to="/pipes" class="flex flex-row items-center link mid-gray hover-black">
           <i class="material-icons md-24 hint--bottom-right" aria-label="Back to pipe list">home</i>
         </router-link>
-        <i class="material-icons md-24 black-20 rotate-270" v-if="!pipeOptions.fetchError">expand_more</i>
+        <i class="material-icons md-24 black-20 rotate-270" v-if="is_signed_in && !pipeOptions.fetchError">expand_more</i>
         <inline-edit-text
           class="dib lh-title f6 fw6 f4-ns fw4-ns mid-gray hover-black mr3-l"
           input-key="name"
@@ -13,9 +13,9 @@
           :val="pipe_name"
           :show-edit-button="false"
           @save="editPipeName"
-          v-if="!pipeOptions.fetchError"
+          v-if="is_signed_in && !pipeOptions.fetchError"
         />
-        <div v-if="!pipeOptions.fetchError">
+        <div v-if="is_signed_in && !pipeOptions.fetchError">
           <div class="flex flex-row items-center">
             <inline-edit-text
               class="dib f7 silver pv1 ph2 mr1 bg-black-05"
@@ -39,13 +39,13 @@
           <div class="dark-red f7" v-if="ename_error.length > 0">{{ename_error}}</div>
         </div>
       </div>
-      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns" v-if="!pipeOptions.fetchError">
+      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns" v-if="is_signed_in && !pipeOptions.fetchError">
         <el-button size="small" type="primary" class="ttu b" @click="cancelProcess" v-if="isPrompting || isProcessRunning">Cancel</el-button>
         <el-button size="small" type="primary" class="ttu b" :disabled="tasks.length == 0" @click="runPipe" v-else>Run</el-button>
       </div>
       <div class="dn db-ns flex-none ml3">
         <div v-if="user_fetching"></div>
-        <user-dropdown v-else-if="logged_in"></user-dropdown>
+        <user-dropdown v-else-if="is_signed_in"></user-dropdown>
         <div v-else>
           <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
           <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">
@@ -131,7 +131,7 @@
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
       },
-      logged_in() {
+      is_signed_in() {
         return this.user_eid.length > 0
       }
     },

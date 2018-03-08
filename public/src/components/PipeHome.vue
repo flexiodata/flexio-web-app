@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="flex-fill pv4 overflow-y-auto" v-else>
+    <div class="flex-fill pv4 overflow-y-auto" v-else-if="is_signed_in">
       <div class="center" style="max-width: 1440px">
         <ui-alert
           class="mb3 mh4"
@@ -714,8 +714,8 @@
 
       signOutAndRedirect() {
         this.$store.dispatch('signOut').then(response => {
-          if (response.ok)
-            this.$router.push(this.signin_route)
+          //if (response.ok)
+            //this.$router.push(this.signin_route)
         })
       }
     }
