@@ -142,8 +142,8 @@ class Stream extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tst.eid as eid,
+                                         '".\Model::TYPE_STREAM."' as eid_type,
                                          tst.eid_status as eid_status,
                                          tst.parent_eid as parent_eid,
                                          tst.stream_type as stream_type,
@@ -157,11 +157,10 @@ class Stream extends ModelBase
                                          tst.file_modified as file_modified,
                                          tst.connection_eid as connection_eid,
                                          tst.expires as expires,
-                                         tob.created as created,
-                                         tob.updated as updated
-                                from tbl_object tob
-                                inner join tbl_stream tst on tob.eid = tst.eid
-                                where tob.eid = ?
+                                         tst.created as created,
+                                         tst.updated as updated
+                                from tbl_stream tst
+                                where tst.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -273,8 +272,8 @@ class Stream extends ModelBase
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
             }
 
-            $rows = $db->fetchAll("select tob.eid as eid,
-                                          tob.eid_type as eid_type,
+            $rows = $db->fetchAll("select tst.eid as eid,
+                                          '".\Model::TYPE_STREAM."' as eid_type,
                                           tst.eid_status as eid_status,
                                           tst.parent_eid as parent_eid,
                                           tst.stream_type as stream_type,
@@ -288,10 +287,9 @@ class Stream extends ModelBase
                                           tst.file_modified as file_modified,
                                           tst.connection_eid as connection_eid,
                                           tst.expires as expires,
-                                          tob.created as created,
-                                          tob.updated as updated
-                                from tbl_object tob
-                                inner join tbl_stream tst on tob.eid = tst.eid
+                                          tst.created as created,
+                                          tst.updated as updated
+                                from tbl_stream tst
                                 where $where
                                 ", $where_arr);
         }

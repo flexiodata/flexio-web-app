@@ -133,8 +133,8 @@ class Pipe extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tpi.eid as eid,
+                                         '".\Model::TYPE_PIPE."' as eid_type,
                                          tpi.eid_status as eid_status,
                                          tob.ename as ename,
                                          tpi.name as name,
@@ -144,8 +144,8 @@ class Pipe extends ModelBase
                                          tpi.task as task,
                                          tpi.schedule as schedule,
                                          tpi.schedule_status as schedule_status,
-                                         tob.created as created,
-                                         tob.updated as updated
+                                         tpi.created as created,
+                                         tpi.updated as updated
                                 from tbl_object tob
                                 inner join tbl_pipe tpi on tob.eid = tpi.eid
                                 where tob.eid = ?
@@ -199,7 +199,7 @@ class Pipe extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_pipe', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
@@ -215,7 +215,7 @@ class Pipe extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_pipe where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 

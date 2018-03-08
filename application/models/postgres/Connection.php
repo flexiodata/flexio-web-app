@@ -161,8 +161,8 @@ class Connection extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tco.eid as eid,
+                                         '".\Model::TYPE_CONNECTION."' as eid_type,
                                          tco.eid_status as eid_status,
                                          tob.ename as ename,
                                          tco.name as name,
@@ -171,8 +171,8 @@ class Connection extends ModelBase
                                          tco.connection_status as connection_status,
                                          tco.connection_info as connection_info,
                                          tco.expires as expires,
-                                         tob.created as created,
-                                         tob.updated as updated
+                                         tco.created as created,
+                                         tco.updated as updated
                                 from tbl_object tob
                                 inner join tbl_connection tco on tob.eid = tco.eid
                                 where tob.eid = ?

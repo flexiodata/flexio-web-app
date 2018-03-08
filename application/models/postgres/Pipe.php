@@ -133,8 +133,8 @@ class Pipe extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tpi.eid as eid,
+                                         '".\Model::TYPE_PIPE."' as eid_type,
                                          tpi.eid_status as eid_status,
                                          tob.ename as ename,
                                          tpi.name as name,
@@ -144,8 +144,8 @@ class Pipe extends ModelBase
                                          tpi.task as task,
                                          tpi.schedule as schedule,
                                          tpi.schedule_status as schedule_status,
-                                         tob.created as created,
-                                         tob.updated as updated
+                                         tpi.created as created,
+                                         tpi.updated as updated
                                 from tbl_object tob
                                 inner join tbl_pipe tpi on tob.eid = tpi.eid
                                 where tob.eid = ?

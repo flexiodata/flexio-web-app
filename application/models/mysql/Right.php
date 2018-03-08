@@ -116,18 +116,17 @@ class Right extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tac.eid as eid,
+                                         '".\Model::TYPE_RIGHT."' as eid_type,
                                          tac.eid_status as eid_status,
                                          tac.object_eid as object_eid,
                                          tac.access_type as access_type,
                                          tac.access_code as access_code,
                                          tac.actions as actions,
-                                         tob.created as created,
-                                         tob.updated as updated
-                                from tbl_object tob
-                                inner join tbl_acl tac on tob.eid = tac.eid
-                                where tob.eid = ?
+                                         tac.created as created,
+                                         tac.updated as updated
+                                from tbl_acl tac
+                                where tac.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -201,17 +200,16 @@ class Right extends ModelBase
     {
         // get the all available authentication information for the object_eid
         $db = $this->getDatabase();
-        $rows = $db->fetchAll("select tob.eid as eid,
-                                      tob.eid_type as eid_type,
+        $rows = $db->fetchAll("select tac.eid as eid,
+                                      '".\Model::TYPE_RIGHT."' as eid_type,
                                       tac.eid_status as eid_status,
                                       tac.object_eid as object_eid,
                                       tac.access_type as access_type,
                                       tac.access_code as access_code,
                                       tac.actions as actions,
-                                      tob.created as created,
-                                      tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_acl tac on tob.eid = tac.eid
+                                      tac.created as created,
+                                      tac.updated as updated
+                              from tbl_acl tac
                               where tac.object_eid = ?
                              ", $object_eid);
 

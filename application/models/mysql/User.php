@@ -193,8 +193,8 @@ class User extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tus.eid as eid,
+                                         '".\Model::TYPE_USER."' as eid_type,
                                          tus.eid_status as eid_status,
                                          tob.ename as ename,
                                          tus.user_name as user_name,
@@ -215,8 +215,8 @@ class User extends ModelBase
                                          tus.timezone as timezone,
                                          tus.verify_code as verify_code,
                                          tus.config as config,
-                                         tob.created as created,
-                                         tob.updated as updated
+                                         tus.created as created,
+                                         tus.updated as updated
                                 from tbl_object tob
                                 inner join tbl_user tus on tob.eid = tus.eid
                                 where tob.eid = ?

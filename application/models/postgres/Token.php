@@ -63,17 +63,16 @@ class Token extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                         tob.eid_type as eid_type,
+            $row = $db->fetchRow("select tau.eid as eid,
+                                         '".\Model::TYPE_TOKEN."' as eid_type,
                                          tau.eid_status as eid_status,
                                          tau.user_eid as user_eid,
                                          tau.access_code as access_code,
                                          tau.secret_code as secret_code,
-                                         tob.created as created,
-                                         tob.updated as updated
-                                from tbl_object tob
-                                inner join tbl_token tau on tob.eid = tau.eid
-                                where tob.eid = ?
+                                         tau.created as created,
+                                         tau.updated as updated
+                                from tbl_token tau
+                                where tau.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -145,16 +144,15 @@ class Token extends ModelBase
     {
         // get the authentication information from the access code
         $db = $this->getDatabase();
-        $row = $db->fetchRow("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
+        $row = $db->fetchRow("select tau.eid as eid,
+                                     '".\Model::TYPE_TOKEN."' as eid_type,
                                      tau.eid_status as eid_status,
                                      tau.user_eid as user_eid,
                                      tau.access_code as access_code,
                                      tau.secret_code as secret_code,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_token tau on tob.eid = tau.eid
+                                     tau.created as created,
+                                     tau.updated as updated
+                              from tbl_token tau
                               where tau.access_code = ?
                              ", $code);
 
@@ -174,18 +172,17 @@ class Token extends ModelBase
     {
         // get the all available authentication information for the user_eid
         $db = $this->getDatabase();
-        $rows = $db->fetchAll("select tob.eid as eid,
-                                     tob.eid_type as eid_type,
-                                     tau.eid_status as eid_status,
-                                     tau.user_eid as user_eid,
-                                     tau.access_code as access_code,
-                                     tau.secret_code as secret_code,
-                                     tob.created as created,
-                                     tob.updated as updated
-                              from tbl_object tob
-                              inner join tbl_token tau on tob.eid = tau.eid
+        $rows = $db->fetchAll("select tau.eid as eid,
+                                      '".\Model::TYPE_TOKEN."' as eid_type,
+                                      tau.eid_status as eid_status,
+                                      tau.user_eid as user_eid,
+                                      tau.access_code as access_code,
+                                      tau.secret_code as secret_code,
+                                      tau.created as created,
+                                      tau.updated as updated
+                              from tbl_token tau
                               where tau.user_eid = ?
-                              order by tob.created
+                              order by tau.created
                              ", $user_eid);
 
         if (!$rows)

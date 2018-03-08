@@ -110,15 +110,14 @@ class Comment extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $row = $db->fetchRow("select tob.eid as eid,
-                                        tob.eid_type as eid_type,
-                                        tco.eid_status as eid_status,
-                                        tco.comment as comment,
-                                        tob.created as created,
-                                        tob.updated as updated
-                                from tbl_object tob
-                                inner join tbl_comment tco on tob.eid = tco.eid
-                                where tob.eid = ?
+            $row = $db->fetchRow("select tco.eid as eid,
+                                         '".\Model::TYPE_COMMENT."' as eid_type,
+                                         tco.eid_status as eid_status,
+                                         tco.comment as comment,
+                                         tco.created as created,
+                                         tco.updated as updated
+                                from tbl_comment tco
+                                where tco.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
