@@ -51,7 +51,7 @@ try
     // STEP 1: drop the unused object columns
     $sql = <<<EOT
         alter table tbl_object
-            drop column eid_stats,
+            drop column eid_status,
             drop column created,
             drop column updated;
 EOT;
