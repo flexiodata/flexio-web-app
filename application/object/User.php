@@ -25,7 +25,15 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_USER);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\User
@@ -118,6 +126,11 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $user_model = $this->getModel()->user;
         $user_model->set($this->getEid(), $properties);
         return $this;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_USER;
     }
 
     public function get() : array

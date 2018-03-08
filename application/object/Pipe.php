@@ -20,7 +20,15 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
-        $this->setType(\Model::TYPE_PIPE);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Pipe
@@ -165,6 +173,11 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_PIPE;
     }
 
     private function isCached() : bool

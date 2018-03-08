@@ -20,7 +20,6 @@ class Base
 {
     private $model;
     private $eid;
-    private $eid_type;
 
     // properties for derived classes
     protected $eid_status;
@@ -28,16 +27,6 @@ class Base
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_UNDEFINED);
-    }
-
-    public function __toString()
-    {
-        $object = array(
-            'eid' => $this->getEid(),
-            'eid_type' => $this->getType()
-        );
-        return json_encode($object);
     }
 
     public static function load(string $identifier)
@@ -86,21 +75,6 @@ class Base
     public function getEid() : string
     {
         return $this->eid;
-    }
-
-    public function setType(string $eid_type) : \Flexio\Object\Base
-    {
-        // only allow the eid_type to be set once
-        if (!is_null($this->eid_type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        $this->eid_type = $eid_type;
-        return $this;
-    }
-
-    public function getType() : string
-    {
-        return $this->eid_type;
     }
 
     public function setStatus(string $status) : \Flexio\Object\Base

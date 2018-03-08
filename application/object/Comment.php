@@ -20,7 +20,15 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
-        $this->setType(\Model::TYPE_COMMENT);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Comment
@@ -58,6 +66,11 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_COMMENT;
     }
 
     private function isCached() : bool

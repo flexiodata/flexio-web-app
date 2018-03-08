@@ -24,7 +24,15 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_STREAM);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public function getImpl() { return $this; }
@@ -127,6 +135,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_STREAM;
     }
 
     public function setName(string $name) : \Flexio\Object\Stream
