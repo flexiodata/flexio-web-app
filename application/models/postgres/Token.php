@@ -28,7 +28,7 @@ class Token extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
-                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
+                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'user_eid'      => $params['user_eid'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
                 'created'       => $timestamp,

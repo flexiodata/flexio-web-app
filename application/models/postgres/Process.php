@@ -27,7 +27,7 @@ class Process extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
-                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
+                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'parent_eid'     => $params['parent_eid'] ?? '',
                 'process_mode'   => $params['process_mode'] ?? '',
                 'process_hash'   => $params['process_hash'] ?? '',
@@ -95,7 +95,7 @@ class Process extends ModelBase
         try
         {
             // if an item is deleted, don't allow it to be edited
-            $existing_status = $this->getStatus();
+            $existing_status = $this->getStatus($eid);
             if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             {
                 $db->commit();

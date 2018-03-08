@@ -28,7 +28,7 @@ class Right extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'           => $eid,
-                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_UNDEFINED,
+                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'object_eid'    => $params['object_eid'] ?? '',
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
@@ -79,7 +79,7 @@ class Right extends ModelBase
         try
         {
             // if an item is deleted, don't allow it to be edited
-            $existing_status = $this->getStatus();
+            $existing_status = $this->getStatus($eid);
             if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
             {
                 $db->commit();
