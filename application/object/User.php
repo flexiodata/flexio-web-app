@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class User extends \Flexio\Object\Base
+class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     const MEMBER_UNDEFINED = '';
     const MEMBER_OWNER     = 'owner';
@@ -51,8 +51,8 @@ class User extends \Flexio\Object\Base
         }
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $user_model = $object->getModel()->user;
+        $local_eid = $user_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
@@ -96,6 +96,14 @@ class User extends \Flexio\Object\Base
         $object->setEid($eid);
         $object->clearCache();
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\User
+    {
+        $this->clearCache();
+        $user_model = $this->getModel()->user;
+        $user_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\User

@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Base implements \Flexio\IFace\IObject
+class Base
 {
     private $model;
     private $eid;
@@ -38,20 +38,6 @@ class Base implements \Flexio\IFace\IObject
             'eid_type' => $this->getType()
         );
         return json_encode($object);
-    }
-
-    public static function create(array $properties = null)
-    {
-        $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
-
-        $object->setEid($local_eid);
-        $object->clearCache();
-
-        // TODO: for now, don't allow any rights by default; change?
-
-        return $object;
     }
 
     public static function load(string $identifier)
@@ -85,34 +71,6 @@ class Base implements \Flexio\IFace\IObject
         $object->setEid($eid);
         $object->clearCache();
         return $object;
-    }
-
-    public function delete() : \Flexio\Object\Base
-    {
-        $this->clearCache();
-        $this->getModel()->delete($this->getEid());
-        return $this;
-    }
-
-    public function set(array $properties)
-    {
-        $this->clearCache();
-
-        if (isset($properties['eid_status']))
-        {
-            $status = $properties['eid_status'];
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
-        }
-
-        return $this;
-    }
-
-    public function get() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties;
     }
 
     public function setEid(string $eid) : \Flexio\Object\Base

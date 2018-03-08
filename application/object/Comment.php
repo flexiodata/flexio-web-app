@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Comment extends \Flexio\Object\Base
+class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
@@ -26,12 +26,20 @@ class Comment extends \Flexio\Object\Base
     public static function create(array $properties = null) : \Flexio\Object\Comment
     {
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $comment_model = $object->getModel()->comment;
+        $local_eid = $comment_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Comment
+    {
+        $this->clearCache();
+        $comment_model = $this->getModel()->comment;
+        $comment_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Comment

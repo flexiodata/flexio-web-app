@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Connection extends \Flexio\Object\Base
+class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
 /*
     // TODO: create migration script to remove this from the registry
@@ -37,13 +37,21 @@ class Connection extends \Flexio\Object\Base
             $properties['connection_info'] = json_encode($properties['connection_info']);
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $connection_model = $object->getModel()->connection;
+        $local_eid = $connection_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
 
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Connection
+    {
+        $this->clearCache();
+        $connection_model = $this->getModel()->connection;
+        $connection_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Connection

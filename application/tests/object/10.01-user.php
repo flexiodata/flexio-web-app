@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel();
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -51,7 +55,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'User::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object;
         $expected = false;
@@ -61,7 +65,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
+        $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = 'Flexio\Object\User';
         $expected = get_class($object);
@@ -71,7 +75,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
+        $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_USER;
@@ -81,7 +85,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties);
+        $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

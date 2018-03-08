@@ -24,7 +24,7 @@ class Action
     public static function create(array $properties = null) : \Flexio\Object\Action
     {
         $object = new static();
-        $action_model = $this->getModel()->action;
+        $action_model = $object->getModel()->action;
         $local_eid = $action_model->create($properties);
 
         $object->setEid($local_eid);

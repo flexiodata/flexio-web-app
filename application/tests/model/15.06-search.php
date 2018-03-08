@@ -20,6 +20,12 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $search_model = \Flexio\Tests\Util::getModel()->search;
+        $pipe_model = \Flexio\Tests\Util::getModel()->pipe;
+        $base_model = \Flexio\Tests\Util::getModel();
+
+
         // TEST: search tests for multi-level eid/association combinations
 
         // BEGIN TEST
@@ -27,15 +33,15 @@ class Test
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
         $edge_owns = \Model::EDGE_OWNS;
-        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid3 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid4 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid2);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_has_member, $eid3);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_has_member, $eid4);
+        $eid1 = $pipe_model->create($info);
+        $eid2 = $pipe_model->create($info);
+        $eid3 = $pipe_model->create($info);
+        $eid4 = $pipe_model->create($info);
+        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
+        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
+        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member";
-        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
+        $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,
@@ -47,15 +53,15 @@ class Test
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
         $edge_owns = \Model::EDGE_OWNS;
-        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid3 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid4 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid2);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_has_member, $eid3);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_has_member, $eid4);
+        $eid1 = $pipe_model->create($info);
+        $eid2 = $pipe_model->create($info);
+        $eid3 = $pipe_model->create($info);
+        $eid4 = $pipe_model->create($info);
+        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
+        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
+        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
         $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
+        $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,
@@ -67,18 +73,18 @@ class Test
         );
         $edge_has_member = \Model::EDGE_HAS_MEMBER;
         $edge_owns = \Model::EDGE_OWNS;
-        $eid1 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid2 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid3 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        $eid4 = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_has_member, $eid2);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_has_member, $eid3);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_has_member, $eid4);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid1, $edge_owns, $eid2);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid2, $edge_owns, $eid3);
-        \Flexio\Tests\Util::getModel()->assoc_add($eid3, $edge_owns, $eid4);
+        $eid1 = $pipe_model->create($info);
+        $eid2 = $pipe_model->create($info);
+        $eid3 = $pipe_model->create($info);
+        $eid4 = $pipe_model->create($info);
+        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
+        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
+        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
+        $base_model->assoc_add($eid1, $edge_owns, $eid2);
+        $base_model->assoc_add($eid2, $edge_owns, $eid3);
+        $base_model->assoc_add($eid3, $edge_owns, $eid4);
         $path = "$eid1->($edge_owns)->$eid2->$edge_has_member->$eid3";
-        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
+        $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
             $eid3,

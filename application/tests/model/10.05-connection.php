@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->connection;
+
+
         // TEST: when creating a connection, reject invalid parameters
 
         // BEGIN TEST
@@ -29,7 +33,7 @@ class Test
             'eid' => $input_eid,
             'name' => $handle
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
+        $eid = $model->create($info);
         $actual = $eid !== $input_eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in connection creation, don\'t allow the eid to be set',  $actual, $expected, $results);
@@ -41,8 +45,8 @@ class Test
             'eid_type' => $eid_type,
             'name' => $handle
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $info = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_CONNECTION;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in connection creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
@@ -52,8 +56,8 @@ class Test
         $info = array(
             'comment' => $handle
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $info = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $info = $model->get($eid);
         $actual = isset($info['comment']);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in connection creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
@@ -67,8 +71,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $info = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in connection creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
@@ -77,8 +81,8 @@ class Test
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_CONNECTION,
@@ -100,8 +104,8 @@ class Test
         $info = array(
             'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
@@ -112,8 +116,8 @@ class Test
         $info = array(
             'name' => 'Test Connection'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'name' => 'Test Connection'
         );
@@ -124,8 +128,8 @@ class Test
         $info = array(
             'description' => 'Test connection description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'description' => 'Test connection description'
         );
@@ -136,8 +140,8 @@ class Test
         $info = array(
             'connection_status' => \Model::CONNECTION_STATUS_AVAILABLE
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'connection_status' => \Model::CONNECTION_STATUS_AVAILABLE
         );
@@ -148,8 +152,8 @@ class Test
         $info = array(
             'connection_type' => 'ct'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'connection_type' => 'ct'
         );
@@ -160,8 +164,8 @@ class Test
         $info = array(
             'connection_info' => 'ci'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
-        $actual = \Flexio\Tests\Util::getModel()->get($eid);
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
         $expected = array(
             'connection_info' => 'ci'
         );

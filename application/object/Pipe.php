@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Pipe extends \Flexio\Object\Base
+class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
@@ -47,13 +47,21 @@ class Pipe extends \Flexio\Object\Base
         }
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $pipe_model = $object->getModel()->pipe;
+        $local_eid = $pipe_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
 
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Pipe
+    {
+        $this->clearCache();
+        $pipe_model = $this->getModel()->pipe;
+        $pipe_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Pipe
