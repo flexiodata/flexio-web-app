@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Right extends \Flexio\Object\Base
+class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     const TYPE_UNDEFINED        = '';                 // undefined
     const TYPE_READ             = 'object.read';      // ability to read the properties of an object
@@ -28,7 +28,15 @@ class Right extends \Flexio\Object\Base
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_RIGHT);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function isValidType(string $action) : bool
@@ -56,12 +64,20 @@ class Right extends \Flexio\Object\Base
             $properties['actions'] = json_encode($properties['actions']);
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $right_model = $object->getModel()->right;
+        $local_eid = $right_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Right
+    {
+        $this->clearCache();
+        $right_model = $this->getModel()->right;
+        $right_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Right
@@ -84,6 +100,11 @@ class Right extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_RIGHT;
     }
 
     private function isCached() : bool

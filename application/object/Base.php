@@ -16,11 +16,10 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Base implements \Flexio\IFace\IObject
+class Base
 {
     private $model;
     private $eid;
-    private $eid_type;
 
     // properties for derived classes
     protected $eid_status;
@@ -28,30 +27,6 @@ class Base implements \Flexio\IFace\IObject
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_UNDEFINED);
-    }
-
-    public function __toString()
-    {
-        $object = array(
-            'eid' => $this->getEid(),
-            'eid_type' => $this->getType()
-        );
-        return json_encode($object);
-    }
-
-    public static function create(array $properties = null)
-    {
-        $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
-
-        $object->setEid($local_eid);
-        $object->clearCache();
-
-        // TODO: for now, don't allow any rights by default; change?
-
-        return $object;
     }
 
     public static function load(string $identifier)
@@ -87,34 +62,6 @@ class Base implements \Flexio\IFace\IObject
         return $object;
     }
 
-    public function delete() : \Flexio\Object\Base
-    {
-        $this->clearCache();
-        $this->getModel()->delete($this->getEid());
-        return $this;
-    }
-
-    public function set(array $properties)
-    {
-        $this->clearCache();
-
-        if (isset($properties['eid_status']))
-        {
-            $status = $properties['eid_status'];
-            $result = $this->getModel()->setStatus($this->getEid(), $status);
-        }
-
-        return $this;
-    }
-
-    public function get() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties;
-    }
-
     public function setEid(string $eid) : \Flexio\Object\Base
     {
         // only allow the eid to be set once
@@ -128,21 +75,6 @@ class Base implements \Flexio\IFace\IObject
     public function getEid() : string
     {
         return $this->eid;
-    }
-
-    public function setType(string $eid_type) : \Flexio\Object\Base
-    {
-        // only allow the eid_type to be set once
-        if (!is_null($this->eid_type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        $this->eid_type = $eid_type;
-        return $this;
-    }
-
-    public function getType() : string
-    {
-        return $this->eid_type;
     }
 
     public function setStatus(string $status) : \Flexio\Object\Base

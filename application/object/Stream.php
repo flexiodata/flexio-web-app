@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
+class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
 {
     // TODO: add tests for these constants
     const TYPE_DIRECTORY = 'SD';
@@ -24,7 +24,15 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_STREAM);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public function getImpl() { return $this; }
@@ -54,8 +62,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
             $properties['path'] = \Flexio\Base\Util::generateHandle();
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $stream_model = $object->getModel()->stream;
+        $local_eid = $stream_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
@@ -77,12 +85,13 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
         return $object;
     }
 
-
-    public function delete() : \Flexio\Object\Base
+    public function delete() : \Flexio\Object\Stream
     {
-        return parent::delete();
+        $this->clearCache();
+        $stream_model = $this->getModel()->stream;
+        $stream_model->delete($this->getEid());
+        return $this;
     }
-
 
     // copies a streams properties to $dest, overwriting $dest's properties
     public function copyFrom(\Flexio\IFace\IStream $source)
@@ -126,6 +135,11 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_STREAM;
     }
 
     public function setName(string $name) : \Flexio\Object\Stream
@@ -294,7 +308,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
     {
         if ($this->isCached() === false)
             $this->populateCache();
-        
+
         //return \Flexio\Object\StreamWriter::create($this, true);
         $storagefs = $this->getStorageFs();
 
@@ -337,7 +351,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IStream
     {
         if ($this->isCached() === false)
             $this->populateCache();
-        
+
         //return \Flexio\Object\StreamWriter::create($this, true);
         $storagefs = $this->getStorageFs();
 

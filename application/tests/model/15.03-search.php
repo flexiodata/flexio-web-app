@@ -20,14 +20,18 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $search_model = \Flexio\Tests\Util::getModel()->search;
+        $pipe_model = \Flexio\Tests\Util::getModel()->pipe;
+
         // TEST: search tests when results for single eid
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $pipe_model->create($info);
         $path = "$eid";
-        $result = \Flexio\Tests\Util::getModel()->search->exec($path);
+        $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
             $eid

@@ -118,57 +118,6 @@ class Model
         return $obj;
     }
 
-    public function create(string $type, array $params = null) : string
-    {
-        if ($type === \Model::TYPE_UNDEFINED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        return $this->loadModel($type)->create($params);
-    }
-
-    public function delete(string $eid) : bool
-    {
-        // behavior for delete is to return true if the object is
-        // deleted or can't be found
-
-        $type = $this->getType($eid);
-        if ($type === \Model::TYPE_UNDEFINED)
-            return false;
-
-        return $this->loadModel($type)->delete($eid);
-    }
-
-    public function set(string $eid, array $params) : bool
-    {
-        // behavior for set is to return true if the eid exists
-        // and there aren't any invalid parameters that are
-        // attempting to be set (so true if parameters that are
-        // being set are the same values already there, as long
-        // as the eid exists)
-
-        $type = $this->getType($eid);
-        if ($type === \Model::TYPE_UNDEFINED)
-            return false;
-
-        return $this->loadModel($type)->set($eid, $params);
-    }
-
-    public function get(string $eid, string $type = \Model::TYPE_UNDEFINED) // TODO: add return type
-    {
-        // behavior for get is to return false for eids that
-        // don't exist; so don't do any error reporting if
-        // we can't get the model
-
-        if ($type === \Model::TYPE_UNDEFINED)
-        {
-            $type = $this->getType($eid);
-            if ($type === \Model::TYPE_UNDEFINED)
-                return false;
-        }
-
-        return $this->loadModel($type)->get($eid);
-    }
-
     public function getType(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -193,12 +142,6 @@ class Model
             return \Model::TYPE_UNDEFINED;
 
         return $result;
-    }
-
-    public function getInfo(string $eid) // TODO: add return type
-    {
-        // function for returning all the basic object info
-        return $this->getObjectBase($eid);
     }
 
     public function setStatus(string $eid, string $status) : bool
@@ -963,25 +906,6 @@ class Model
         }
     }
 
-    private function loadModel(string $type) // TODO: add return type
-    {
-        switch ($type)
-        {
-            default:
-            case \Model::TYPE_UNDEFINED:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
-
-            case \Model::TYPE_USER           : return $this->user;
-            case \Model::TYPE_PIPE           : return $this->pipe;
-            case \Model::TYPE_STREAM         : return $this->stream;
-            case \Model::TYPE_CONNECTION     : return $this->connection;
-            case \Model::TYPE_COMMENT        : return $this->comment;
-            case \Model::TYPE_PROCESS        : return $this->process;
-            case \Model::TYPE_TOKEN          : return $this->token;
-            case \Model::TYPE_RIGHT          : return $this->right;
-        }
-    }
-
     private function generateUniqueEid() : string
     {
         // generate an eid that doesn't already exists in tbl_object
@@ -1016,6 +940,25 @@ class Model
             case \Model::TYPE_TOKEN:
             case \Model::TYPE_RIGHT:
                 return true;
+        }
+    }
+
+    public static function getModelName(string $type) : string
+    {
+        switch ($type)
+        {
+            default:
+            case \Model::TYPE_UNDEFINED:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
+
+            case \Model::TYPE_USER           : return 'user';
+            case \Model::TYPE_PIPE           : return 'pipe';
+            case \Model::TYPE_STREAM         : return 'stream';
+            case \Model::TYPE_CONNECTION     : return 'connection';
+            case \Model::TYPE_COMMENT        : return 'comment';
+            case \Model::TYPE_PROCESS        : return 'process';
+            case \Model::TYPE_TOKEN          : return 'token';
+            case \Model::TYPE_RIGHT          : return 'right';
         }
     }
 

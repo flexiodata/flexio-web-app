@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->registry;
+
+
         // TEST: multiple registry entry creation
 
         // BEGIN TEST
@@ -30,8 +34,8 @@ class Test
             $object_eid = '';
             $name = \Flexio\Base\Util::generateHandle();
             $value = $i;
-            \Flexio\Tests\Util::getModel()->registry->setNumber($object_eid, $name, $value); // expires in 4 seconds
-            if (\Flexio\Tests\Util::getModel()->registry->entryExists($object_eid, $name))
+            $model->setNumber($object_eid, $name, $value); // expires in 4 seconds
+            if ($model->entryExists($object_eid, $name))
                 $entries[] = $name;
         }
         $read_successes = 0;
@@ -40,7 +44,7 @@ class Test
         {
             $object_eid = '';
             $name = $i;
-            $read_value = \Flexio\Tests\Util::getModel()->registry->getNumber($object_eid, $name);
+            $read_value = $model->getNumber($object_eid, $name);
             if ($read_value === $entry_idx)
                 $read_successes++;
             $entry_idx++;

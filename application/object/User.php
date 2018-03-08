@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class User extends \Flexio\Object\Base
+class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     const MEMBER_UNDEFINED = '';
     const MEMBER_OWNER     = 'owner';
@@ -25,7 +25,15 @@ class User extends \Flexio\Object\Base
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_USER);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\User
@@ -51,8 +59,8 @@ class User extends \Flexio\Object\Base
         }
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $user_model = $object->getModel()->user;
+        $local_eid = $user_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
@@ -98,6 +106,14 @@ class User extends \Flexio\Object\Base
         return $object;
     }
 
+    public function delete() : \Flexio\Object\User
+    {
+        $this->clearCache();
+        $user_model = $this->getModel()->user;
+        $user_model->delete($this->getEid());
+        return $this;
+    }
+
     public function set(array $properties) : \Flexio\Object\User
     {
         // TODO: add properties check
@@ -110,6 +126,11 @@ class User extends \Flexio\Object\Base
         $user_model = $this->getModel()->user;
         $user_model->set($this->getEid(), $properties);
         return $this;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_USER;
     }
 
     public function get() : array

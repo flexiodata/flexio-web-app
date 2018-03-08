@@ -20,12 +20,16 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->pipe;
+
+
         // TEST: \Model::create(); pipe creation with no parameters
 
         // BEGIN TEST
         $info = array(
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);

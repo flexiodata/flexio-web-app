@@ -72,10 +72,24 @@ class Query
         // get the properties for the object; match against any specified
         // conditions and return the specified fields; if the eid_type is
         // specified, save time by specifying the model
+
+        $eid_type = '';
+        $model = self::getModel();
+
         if (isset($query->eid_type) && !is_null($query->eid_type))
-           $object = self::getModel()->get($eid, $query->eid_type);
-            else
-           $object = self::getModel()->get($eid);
+            $eid_type = $query->eid_type;
+             else
+            $eid_type = $model->getType($eid);
+
+        if ($eid_type === \Model::TYPE_UNDEFINED)
+        {
+            $object = false; // equivalent to what Model::get() returns if an object isn't found
+        }
+         else
+        {
+            $model_str = $model::getModelName($eid_type);
+            $object = $model->$model_str->get($eid);
+        }
 
         foreach($query as $property_name => $property_value)
         {

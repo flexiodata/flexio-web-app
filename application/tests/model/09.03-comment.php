@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->comment;
+
+
         // TEST: \Model::create(); multiple unique comment creation
 
         // BEGIN TEST
@@ -32,7 +36,7 @@ class Test
             $info = array(
                 'comment' => "Test comment $i"
             );
-            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, $info);
+            $eid = $model->create($info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_comment_creation++;

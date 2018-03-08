@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel();
+
+
         // TEST: store object loading
 
         // BEGIN TEST
@@ -37,21 +41,21 @@ class Test
         \Flexio\Tests\Check::assertString('A.1', 'Store::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('A.2', 'Store::load(); return the an object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_PIPE;
         \Flexio\Tests\Check::assertString('A.3', 'Store::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual = $eid;
         $expected = $object->getEid();
@@ -62,35 +66,35 @@ class Test
         // TEST: store object loading of different types
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_COMMENT, null);
+        $eid = $model->comment->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, null);
+        $eid = $model->connection->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.2', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.3', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PROCESS, null);
+        $eid = $model->process->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.4', 'Store::load(); make sure object is created',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_STREAM, null);
+        $eid = $model->stream->create(null);
         $object = \Flexio\Object\Store::load($eid);
         $actual =  \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;
@@ -100,7 +104,7 @@ class Test
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
         $properties = array('user_name' => $username, 'email' => $email);
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_USER, $properties); // user creation requires user_name and email
+        $eid = $model->user->create($properties); // user creation requires user_name and email
         $object = \Flexio\Object\Store::load($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;

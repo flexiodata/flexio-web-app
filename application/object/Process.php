@@ -16,11 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Process extends \Flexio\Object\Base
+class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
     public function __construct()
     {
-        $this->setType(\Model::TYPE_PROCESS);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Process
@@ -41,13 +49,21 @@ class Process extends \Flexio\Object\Base
             $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $process_model = $object->getModel()->process;
+        $local_eid = $process_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
 
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Process
+    {
+        $this->clearCache();
+        $process_model = $this->getModel()->process;
+        $process_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Process
@@ -77,6 +93,11 @@ class Process extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_PROCESS;
     }
 
     public function pause() : \Flexio\Object\Process

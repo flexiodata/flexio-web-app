@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Connection extends \Flexio\Object\Base
+class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
 /*
     // TODO: create migration script to remove this from the registry
@@ -27,7 +27,15 @@ class Connection extends \Flexio\Object\Base
 
     public function __construct()
     {
-        $this->setType(\Model::TYPE_CONNECTION);
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Connection
@@ -37,13 +45,21 @@ class Connection extends \Flexio\Object\Base
             $properties['connection_info'] = json_encode($properties['connection_info']);
 
         $object = new static();
-        $model = $object->getModel();
-        $local_eid = $model->create($object->getType(), $properties);
+        $connection_model = $object->getModel()->connection;
+        $local_eid = $connection_model->create($properties);
 
         $object->setEid($local_eid);
         $object->clearCache();
 
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Connection
+    {
+        $this->clearCache();
+        $connection_model = $this->getModel()->connection;
+        $connection_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Connection
@@ -69,6 +85,11 @@ class Connection extends \Flexio\Object\Base
             $this->populateCache();
 
         return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_CONNECTION;
     }
 
     public function connect() : \Flexio\Object\Connection

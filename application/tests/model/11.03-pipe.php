@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->pipe;
+
+
         // TEST: \Model::create(); multiple unique pipe creation
 
         // BEGIN TEST
@@ -33,7 +37,7 @@ class Test
                 'name' => "Test $i",
                 'description' => "Test $i description"
             );
-            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+            $eid = $model->create($info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_pipe_creation++;

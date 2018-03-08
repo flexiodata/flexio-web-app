@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel();
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -51,28 +55,28 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'Stream::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Stream::load($eid);
         $actual = $object;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.2', 'tream::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_STREAM, null);
+        $eid = $model->stream->create(null);
         $object = \Flexio\Object\Stream::load($eid);
         $actual = 'Flexio\Object\Stream';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('B.3', 'Stream::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_STREAM, null);
+        $eid = $model->stream->create(null);
         $object = \Flexio\Object\Stream::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_STREAM;
         \Flexio\Tests\Check::assertString('B.4', 'Stream::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_STREAM, null);
+        $eid = $model->stream->create(null);
         $object = \Flexio\Object\Stream::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->connection;
+
+
         // TEST: \Model::create(); multiple unique connection creation
 
         // BEGIN TEST
@@ -33,7 +37,7 @@ class Test
                 'name' => $handle,
                 'description' => "Test connection $i"
             );
-            $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, $info);
+            $eid = $model->create($info);
             $created_eids[$eid] = 1;
             if (!\Flexio\Base\Eid::isValid($eid))
                 $failed_connection_creation++;

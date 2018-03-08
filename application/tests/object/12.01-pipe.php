@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel();
+
+
         // TEST: object creation
 
         // BEGIN TEST
@@ -51,28 +55,28 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', 'Pipe::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_CONNECTION, null);
+        $eid = $model->connection->create(null);
         $object = \Flexio\Object\Pipe::load($eid);
         $actual = $object;
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.2', 'Pipe::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Pipe::load($eid);
         $actual = 'Flexio\Object\Pipe';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('B.3', 'Pipe::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Pipe::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_PIPE;
         \Flexio\Tests\Check::assertString('B.4', 'Pipe::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, null);
+        $eid = $model->pipe->create(null);
         $object = \Flexio\Object\Pipe::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

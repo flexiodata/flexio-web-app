@@ -20,6 +20,10 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel();
+
+
         // TODO: handle commented out tests
 
         // TEST: Query::exec(); valid query with properties that are a subset of those available
@@ -29,7 +33,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "eid" : null,
@@ -53,7 +57,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "eid" : null,
@@ -77,7 +81,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "eid" : null,
@@ -97,7 +101,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "eid" : null,
@@ -119,7 +123,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "eid" : null,
@@ -148,7 +152,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "description" : "Sample Description",
@@ -168,7 +172,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "property2" : null,
@@ -196,7 +200,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "object_eid=eid" : null,
@@ -216,7 +220,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "object_name=name" : null,
@@ -236,7 +240,7 @@ class Test
             'name' => 'Sample Pipe',
             'description' => 'Sample Description'
         );
-        $eid = \Flexio\Tests\Util::getModel()->create(\Model::TYPE_PIPE, $info);
+        $eid = $model->pipe->create($info);
         $query = '
         {
             "object_eid=eid" : null,
