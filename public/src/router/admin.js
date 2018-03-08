@@ -13,7 +13,7 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /admin/parser
+      // redirect to /admin/dashboard
       path: '',
       name: ROUTE_DEV,
       redirect: 'dashboard'

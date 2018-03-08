@@ -3,15 +3,6 @@
     <spinner size="large" message="Loading pipe..." />
   </div>
 
-  <div class="flex flex-column justify-center items-center" v-else-if="has_error">
-    <div class="f3 mid-gray">{{error_msg}}</div>
-    <div class="mt3" v-if="!is_signed_in">
-      <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
-        Sign in
-      </router-link>
-    </div>
-  </div>
-
   <div class="flex flex-column bg-nearer-white" v-else>
     <pipe-home-header
       class="flex-none"
@@ -22,7 +13,16 @@
       @cancel-process="cancelProcess"
     />
 
-    <div class="flex-fill pv4 overflow-y-auto">
+    <div class="flex-fill flex flex-column justify-center items-center" v-if="has_error">
+      <div class="f3 mid-gray">{{error_msg}}</div>
+      <div class="mt3" v-if="!is_signed_in">
+        <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
+          Sign in
+        </router-link>
+      </div>
+    </div>
+
+    <div class="flex-fill pv4 overflow-y-auto" v-else>
       <div class="center" style="max-width: 1440px">
         <ui-alert
           class="mb3 mh4"
@@ -474,8 +474,6 @@
         }
          else if (this.$refs['code'].is_changed)
         {
-          debugger
-
           // TODO: this shouldn't be done imperatively
           var xhr = this.$refs['code'].saveChanges()
 
@@ -540,7 +538,7 @@
              else
             {
               // we weren't able to load the pipe; redirect to the sign in page
-              this.$router.push(this.signin_route)
+              //this.$router.push(this.signin_route)
             }
           })
         }

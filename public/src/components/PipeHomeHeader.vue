@@ -1,16 +1,16 @@
 <template>
   <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
-    <div class="flex flex-row bg-white pa1 ph3-ns items-center" style="min-height: 54px">
-      <router-link
-        to="/pipes"
-        class="flex flex-row items-center link mid-gray hover-black hint--bottom-right" aria-label="Back to pipe list"
-      >
-        <i class="material-icons md-24">home</i>
-      </router-link>
-      <i class="material-icons md-24 black-20 rotate-270">expand_more</i>
-      <div class="flex-fill flex flex-column flex-row-l items-center-l mr2">
+    <div class="flex flex-row items-center bg-white pa1 ph3-ns" style="min-height: 54px">
+      <div class="flex-fill flex flex-row items-center">
+        <router-link
+          to="/pipes"
+          class="flex flex-row items-center link mid-gray hover-black" aria-label="Back to pipe list"
+        >
+          <i class="material-icons md-24">home</i>
+        </router-link>
+        <i class="material-icons md-24 black-20 rotate-270">expand_more</i>
         <inline-edit-text
-          class="dib f3 lh-title v-mid dark-gray mr3-l"
+          class="dib lh-title f6 fw6 f4-ns fw4-ns mid-gray hover-black mr3-l"
           input-key="name"
           tooltip-cls="hint--bottom"
           :val="pipe_name"
@@ -20,7 +20,7 @@
         <div>
           <div class="flex flex-row items-center">
             <inline-edit-text
-              class="dib f7 v-mid silver pv1 ph2 mr1 bg-black-05"
+              class="dib f7 silver pv1 ph2 mr1 bg-black-05"
               placeholder="Add an alias"
               input-key="ename"
               tooltip-cls="hint--bottom"
