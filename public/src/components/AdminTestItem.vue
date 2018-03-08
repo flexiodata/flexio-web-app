@@ -1,5 +1,5 @@
 <template>
-  <article class="pa3 mv2 mh3" :class="cls">
+  <article class="pa3 ma3" :class="cls">
     <div class="flex flex-row items-center">
       <span class="mid-gray mr2" @click="toggleDetails">
         <i
@@ -81,7 +81,8 @@
         return {
           'css-test-error': this.is_xhr_ok === false,
           'css-test-success': this.is_passed === true,
-          'css-test-failure': this.is_passed === false
+          'css-test-failure': this.is_passed === false,
+          'bg-nearer-white': true
         }
       }
     },

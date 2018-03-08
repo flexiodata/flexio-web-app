@@ -44,7 +44,7 @@
         <div class="f5 b pv2 pl3">Total: {{total_cnt}}</div>
       </div>
     </div>
-    <div class="flex-fill flex flex-column overflow-auto">
+    <div class="flex-fill overflow-auto">
       <admin-test-item
         v-for="(test, index) in filtered_tests"
         :item="test"
