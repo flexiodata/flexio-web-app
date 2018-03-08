@@ -197,6 +197,7 @@
         is_prompting: false,
         show_success: false,
         show_error: false,
+        fetch_error: false,
         success_message: 'The pipe was run successfully!',
         error_message: 'An error occurred while running the pipe.'
       }
@@ -218,7 +219,8 @@
           isPrompting: this.is_prompting,
           isProcessRunning: this.is_process_running,
           activePromptIdx: this.active_prompt_idx,
-          activeProcess: this.active_process
+          activeProcess: this.active_process,
+          fetchError: this.fetch_error
         }
       },
       is_superuser() {
@@ -539,6 +541,7 @@
             {
               // we weren't able to load the pipe; redirect to the sign in page
               //this.$router.push(this.signin_route)
+              this.fetch_error = true
             }
           })
         }

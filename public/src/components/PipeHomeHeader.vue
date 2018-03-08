@@ -2,13 +2,10 @@
   <nav class="z-1" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
     <div class="flex flex-row items-center bg-white pa1 ph3-ns" style="min-height: 54px">
       <div class="flex-fill flex flex-row items-center">
-        <router-link
-          to="/pipes"
-          class="flex flex-row items-center link mid-gray hover-black" aria-label="Back to pipe list"
-        >
-          <i class="material-icons md-24">home</i>
+        <router-link to="/pipes" class="flex flex-row items-center link mid-gray hover-black">
+          <i class="material-icons md-24 hint--bottom-right" aria-label="Back to pipe list">home</i>
         </router-link>
-        <i class="material-icons md-24 black-20 rotate-270">expand_more</i>
+        <i class="material-icons md-24 black-20 rotate-270" v-if="!pipeOptions.fetchError">expand_more</i>
         <inline-edit-text
           class="dib lh-title f6 fw6 f4-ns fw4-ns mid-gray hover-black mr3-l"
           input-key="name"
@@ -16,8 +13,9 @@
           :val="pipe_name"
           :show-edit-button="false"
           @save="editPipeName"
+          v-if="!pipeOptions.fetchError"
         />
-        <div>
+        <div v-if="!pipeOptions.fetchError">
           <div class="flex flex-row items-center">
             <inline-edit-text
               class="dib f7 silver pv1 ph2 mr1 bg-black-05"
@@ -41,7 +39,7 @@
           <div class="dark-red f7" v-if="ename_error.length > 0">{{ename_error}}</div>
         </div>
       </div>
-      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns">
+      <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns" v-if="!pipeOptions.fetchError">
         <el-button size="small" type="primary" class="ttu b" @click="cancelProcess" v-if="isPrompting || isProcessRunning">Cancel</el-button>
         <el-button size="small" type="primary" class="ttu b" :disabled="tasks.length == 0" @click="runPipe" v-else>Run</el-button>
       </div>
