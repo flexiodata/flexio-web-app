@@ -5,6 +5,7 @@
       <div class="flex flex-row items-center">
         <el-input
           class="w-100 mw5 mr3"
+          size="medium"
           placeholder="Filter tests..."
           :disabled="is_running"
           @keydown.esc.native="filter = ''"
@@ -12,6 +13,7 @@
         />
         <el-button
           type="primary"
+          size="medium"
           class="ttu b"
           @click="runTests"
           v-if="!is_running"
@@ -20,6 +22,7 @@
         </el-button>
         <el-button
           type="danger"
+          size="medium"
           class="ttu b"
           :disabled="is_canceled"
           @click="cancelTests"
