@@ -15,10 +15,8 @@
 
     <div class="flex-fill flex flex-column justify-center items-center" v-if="has_error">
       <div class="f3 mid-gray">{{error_msg}}</div>
-      <div class="mt3" v-if="!is_signed_in">
-        <router-link :to="signin_route" class="link no-underline dib ttu b br1 white bg-blue darken-10 ph4 pv2a">
-          Sign in
-        </router-link>
+      <div class="mt3">
+        <el-button type="primary" size="large" class="ttu b" @click="signOutAndRedirect">Sign in as another user</el-button>
       </div>
     </div>
 
@@ -712,6 +710,13 @@
             duration: 7500
           }, options))
         }, 50)
+      },
+
+      signOutAndRedirect() {
+        this.$store.dispatch('signOut').then(response => {
+          if (response.ok)
+            this.$router.push(this.signin_route)
+        })
       }
     }
   }
