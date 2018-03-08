@@ -22,7 +22,6 @@ class Test
     {
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
-        $base_model = \Flexio\Tests\Util::getModel();
 
 
         // TEST: delete tests with non-eid input
@@ -76,9 +75,9 @@ class Test
             'comment' => $handle
         );
         $eid = $model->create($info);
-        $status_before_deletion = $base_model->getStatus($eid);
+        $status_before_deletion = $model->getStatus($eid);
         $delete_result = $model->delete($eid);
-        $status_after_deletion = $base_model->getStatus($eid);
+        $status_after_deletion = $model->getStatus($eid);
         $actual = $delete_result === true && $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.2', '\Model::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
@@ -89,10 +88,10 @@ class Test
             'comment' => $handle
         );
         $eid = $model->create($info);
-        $status_before_deletion = $base_model->getStatus($eid);
+        $status_before_deletion = $model->getStatus($eid);
         $first_deletion = $model->delete($eid);
         $second_deletion = $model->delete($eid);
-        $status_after_deletion = $base_model->getStatus($eid);
+        $status_after_deletion = $model->getStatus($eid);
         $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.3', '\Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);

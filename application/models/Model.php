@@ -144,56 +144,6 @@ class Model
         return $result;
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        // note: it's possible to set the status through the \Model::set()
-        // function on the model, but this provides a lightweight alternative
-        // that isn't restricted (right now, changes through \Model::set() are
-        // only applied for items that aren't deleted)
-
-        // make sure the status is set to a valid value
-        if (!\Model::isValidStatus($status))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // make sure the object exists
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-        if ($this->getType($eid) === \Model::TYPE_UNDEFINED)
-            return false;
-
-        $db = $this->getDatabase();
-        try
-        {
-            // set the updated timestamp so it'll stay in sync with whatever
-            // object is being edited
-            $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid_status'    => $status,
-                'updated'       => $timestamp
-            );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
-
-        return true; // established object exists, which is enough for returning true
-    }
-
-    public function getStatus(string $eid) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return \Model::STATUS_UNDEFINED;
-
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
-        if ($result === false)
-            return \Model::STATUS_UNDEFINED;
-
-        return $result;
-    }
-
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
     {
         // note: similar to a set operation; make sure the parameters
