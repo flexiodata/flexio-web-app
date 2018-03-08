@@ -53,11 +53,38 @@ class Vfs
         // grab path, including preceding slash
         $path = substr($path,11);
 
+        $is_data = false;
+        $counter = 0;
+
         $vfs = new \Flexio\Services\Vfs();
-        $vfs->read($path, function($data) {
-            echo $data;
+        $vfs->read($path, function($data) use (&$is_data, &$counter) {
+            if ($counter == 0)
+            {
+                if (is_array($data))
+                {
+                    $is_data = true;
+                    header('Content-Type: application/json', true, 500);
+                    echo '[';
+                }
+            }
+
+            if (is_array($data))
+            {
+                if ($counter > 0)
+                    echo ',';
+                echo json_encode($data);
+            }
+             else
+            {
+                echo $data;
+            }
+
+            ++$counter;
         });
 
+        if ($is_data)
+            echo ']';
+        
         exit(0);        
     }
 

@@ -95,7 +95,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'path' => $row['table_name'],
                 'size' => null,
                 'modified' => null,
-                'type' => 'FILE'
+                'type' => 'TABLE'
             );
         }
 
@@ -140,9 +140,14 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
-        // TODO: implement
         $path = $params['path'] ?? '';
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = trim($path, '/');
+        
+        $iter = $this->queryAll($path);
+
+        while (($row = $iter->fetchRow($iter)) !== false) {
+            $callback($row);
+        }
     }
 
     public function write(array $params, callable $callback)
@@ -553,6 +558,8 @@ class MysqlIteratorAll
     public function fetchRow()
     {
         $row = $this->result->fetch_assoc();
+        if ($row === null)
+            return false;
         unset($row['xdrowid']);
         return $row;
     }
