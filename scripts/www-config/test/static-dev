@@ -96,6 +96,8 @@ server {
         rewrite ^/use-cases/add-dynamic-content-to-gatsby-site /docs/tutorials/add-dynamic-content-static-website-jekyll-hugo-hexo permanent;
         rewrite ^/use-cases/add-dynamic-content-to-hugo-site /docs/tutorials/add-dynamic-content-static-website-jekyll-hugo-hexo permanent;
         rewrite ^/use-cases/add-dynamic-content-to-jekyll-site /docs/tutorials/add-dynamic-content-static-website-jekyll-hugo-hexo permanent;
+        rewrite ^/use-cases/bulk-load-csv-files-into-elasticsearch /docs/tutorials/bulk-load-csv-files-elasticsearch-indices permanent;
+        rewrite ^/use-cases/load-database-tables-into-elasticsearch /docs/tutorials/bulk-load-csv-files-elasticsearch-indices permanent;
 
         # docs redirects
         rewrite ^/docs/getting-started /docs/quick-start permanent;
