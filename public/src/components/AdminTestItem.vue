@@ -26,7 +26,7 @@
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
             <div class="flex flex-row mr3 max-h4" style="margin: 2px 0" v-if="!detail.passed && detail.message && detail.message.length > 0">
-              <div class="pa1 f6 monospace overflow-auto ba b--black-40 bg-white-60">
+              <div class="f6 monospace overflow-auto ba b--black-40 bg-white-60" style="padding: 2px 3px">
                 {{detail.message}}
               </div>
             </div>
@@ -109,7 +109,7 @@
       background-color: rgba(0,0,0,0.1);
     }
     td {
-      padding: 1px 1px 1px 3px;
+      padding: 0 0 0 3px;
     }
   }
 </style>
