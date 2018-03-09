@@ -110,17 +110,20 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        try
-        {
-            $arr = $this->list($path);
-            if (count($arr) == 1)
-                return $arr[0];
-        }
-        catch (\Exception $e)
-        {
-        }
+        $path = trim($path, '/');
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        $structure = $this->describeTable($path);
+        if ($structure === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
+        return [
+            'name' => $path,
+            'path' => $path,
+            'size' => null,
+            'modified' => null,
+            'type' => 'TABLE',
+            'structure' => $structure
+        ];
     }
 
     public function exists(string $path) : bool
@@ -330,7 +333,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return false;
         }
 
-        return $structure;
+        return count($structure) == 0 ? false : $structure;
     }
 
     public function getTableRowCount(string $table) : int

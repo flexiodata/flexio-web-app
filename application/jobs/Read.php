@@ -44,10 +44,14 @@ class Read extends \Flexio\Jobs\Base
         $info = $vfs->getFileInfo($path);
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
         if (isset($info['structure']))
+        {
+            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $properties['structure'] = $info['structure'];
+        }
+
 
         $outstream->set($properties);
-        
+
         $streamwriter = $outstream->getWriter();
 
         $files = $vfs->read($path, function($data) use (&$streamwriter) {
