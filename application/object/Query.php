@@ -147,12 +147,13 @@ class Query
                     // STEP 3a: the input name exists as a property on the object;
                     // treat it as an eid and get the object properties
 
-                    // if the object doesn't match the criteria, we're done
+                    // set the object properties if we can load it
                     $value = self::get($object[$property_input_name], $property_value);
-                    if (!isset($value))
-                        return null;
+                    if (isset($value))
+                        $result[$property_output_name] = $value;
+                         else
+                        $result[$property_output_name] = $property_value;
 
-                    $result[$property_output_name] = $value;
                     continue;
                 }
                 else
