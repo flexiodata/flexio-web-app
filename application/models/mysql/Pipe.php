@@ -36,8 +36,8 @@ class Pipe extends ModelBase
                 'task'            => $params['task'] ?? '{}',
                 'schedule'        => $params['schedule'] ?? '',
                 'schedule_status' => $params['schedule_status'] ?? \Model::PIPE_STATUS_INACTIVE,
-                'owned_by'        => $params['owned_by'],
-                'created_by'      => $params['created_by'],
+                'owned_by'        => $params['owned_by'] ?? '',
+                'created_by'      => $params['created_by'] ?? '',
                 'created'         => $timestamp,
                 'updated'         => $timestamp
             );

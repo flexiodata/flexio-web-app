@@ -33,8 +33,8 @@ class Right extends ModelBase
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
                 'actions'       => $params['actions'] ?? '',
-                'owned_by'      => $params['owned_by'],
-                'created_by'    => $params['created_by'],
+                'owned_by'      => $params['owned_by'] ?? '',
+                'created_by'    => $params['created_by'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );

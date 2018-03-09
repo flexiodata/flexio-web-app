@@ -52,8 +52,8 @@ class Connection extends ModelBase
                 'connection_status' => $params['connection_status'] ?? \Model::CONNECTION_STATUS_UNAVAILABLE,
                 'connection_info'   => $params['connection_info'] ?? '',
                 'expires'           => $params['expires'] ?? null,
-                'owned_by'          => $params['owned_by'],
-                'created_by'        => $params['created_by'],
+                'owned_by'          => $params['owned_by'] ?? '',
+                'created_by'        => $params['created_by'] ?? '',
                 'created'           => $timestamp,
                 'updated'           => $timestamp
             );

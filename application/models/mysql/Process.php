@@ -41,8 +41,8 @@ class Process extends ModelBase
                 'process_info'   => $params['process_info'] ?? '{}',
                 'process_status' => $params['process_status'] ?? '',
                 'cache_used'     => $params['cache_used'] ?? '',
-                'owned_by'       => $params['owned_by'],
-                'created_by'     => $params['created_by'],
+                'owned_by'       => $params['owned_by'] ?? '',
+                'created_by'     => $params['created_by'] ?? '',
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );

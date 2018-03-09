@@ -75,8 +75,8 @@ class User extends ModelBase
                 'password'               => $params['password'] ?? '',
                 'verify_code'            => $params['verify_code'] ?? '',
                 'config'                 => $params['config'] ?? '{}',
-                'owned_by'               => $params['owned_by'],
-                'created_by'             => $params['created_by'],
+                'owned_by'               => $params['owned_by'] ?? '',
+                'created_by'             => $params['created_by'] ?? '',
                 'created'                => $timestamp,
                 'updated'                => $timestamp
             );

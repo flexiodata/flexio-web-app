@@ -51,8 +51,8 @@ class Stream extends ModelBase
                 'file_modified'        => $params['file_modified'] ?? null,
                 'connection_eid'       => $params['connection_eid'] ?? '',
                 'expires'              => $params['expires'] ?? null,
-                'owned_by'             => $params['owned_by'],
-                'created_by'           => $params['created_by'],
+                'owned_by'             => $params['owned_by'] ?? '',
+                'created_by'           => $params['created_by'] ?? '',
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );

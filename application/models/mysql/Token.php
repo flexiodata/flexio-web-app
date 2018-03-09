@@ -31,8 +31,8 @@ class Token extends ModelBase
                 'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'user_eid'      => $params['user_eid'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
-                'owned_by'      => $params['owned_by'],
-                'created_by'    => $params['created_by'],
+                'owned_by'      => $params['owned_by'] ?? '',
+                'created_by'    => $params['created_by'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );

@@ -30,8 +30,8 @@ class Comment extends ModelBase
                 'eid'           => $eid,
                 'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'comment'       => $params['comment'] ?? '',
-                'owned_by'      => $params['owned_by'],
-                'created_by'    => $params['created_by'],
+                'owned_by'      => $params['owned_by'] ?? '',
+                'created_by'    => $params['created_by'] ?? '',
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
