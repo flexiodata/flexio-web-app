@@ -71,12 +71,19 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $fullpath .= '/';
             $fullpath .= $entry['name'];
 
+            if ($entry['stream_type'] == 'SD')
+                $type = 'DIR';
+            else if ($entry['mime_type'] == 'application/vnd.flexio.table')
+                $type = 'TABLE';
+            else
+                $type = 'FILE';
+        
             $files[] = array('id'=> $entry['eid'] ?? null,
                              'name' => $entry['name'],
                              'path' => $fullpath,
                              'size' => $entry['size'] ?? '',
                              'modified' => $entry['updated'] ?? '',
-                             'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE'));
+                             'type' => $type);
         }
 
         return $files;
@@ -101,11 +108,18 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $entry = $stream->get();
 
+        if ($entry['stream_type'] == 'SD')
+            $type = 'DIR';
+        else if ($entry['mime_type'] == 'application/vnd.flexio.table')
+            $type = 'TABLE';
+        else
+            $type = 'FILE';
+            
         return array('id' => $entry['id'] ?? null,
                      'name' => $entry['name'],
                      'size' => $entry['size'] ?? '',
                      'modified' => $entry['updated'] ?? '',
-                     'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE'));
+                     'type' => $type);
     }
 
     public function exists(string $path) : bool
