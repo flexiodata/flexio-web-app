@@ -31,6 +31,31 @@ class Read extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
+        $outstream = $process->getStdout();
+        $job_params = $this->getJobParameters();
+        $path = $job_params['path'] ?? null;
+
+        if (is_null($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+
+        $vfs = new \Flexio\Services\Vfs();
+        $vfs->setProcess($process);
+
+        $info = $vfs->getFileInfo($path);
+        $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
+        if (isset($info['structure']))
+            $properties['structure'] = $info['structure'];
+
+        $outstream->set($properties);
+        
+        $streamwriter = $outstream->getWriter();
+
+        $files = $vfs->read($path, function($data) use (&$streamwriter) {
+            $streamwriter->write($data);
+        });
+
+
+        /*
         // process buffer
         $outstream = $process->getStdout();
         $job_definition = $this->getProperties();
@@ -85,5 +110,6 @@ class Read extends \Flexio\Jobs\Base
                 $streamwriter->write($data);
             });
         }
+        */
     }
 }

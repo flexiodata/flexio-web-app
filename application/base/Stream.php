@@ -115,7 +115,7 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
          else
         {
             if (!is_string($data))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Could not create temporary storage stream');
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
             
             $curlen = strlen($this->stream->buffer);
             $datalen = strlen($data);
