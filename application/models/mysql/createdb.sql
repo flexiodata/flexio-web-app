@@ -28,9 +28,7 @@ CREATE TABLE tbl_object (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_type char(3) NOT NULL default '',
-  ename varchar(40) NOT NULL default '',
-  created timestamp NULL default NULL,
-  updated timestamp NULL default NULL,
+  ename varchar(40) NOT NULL default ''
   PRIMARY KEY (id),
   UNIQUE KEY (eid),
   UNIQUE KEY (ename)
