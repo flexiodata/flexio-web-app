@@ -114,6 +114,9 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         }
          else
         {
+            if (!is_string($this->stream->buffer))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Could not create temporary storage stream');
+            
             $curlen = strlen($this->stream->buffer);
             $datalen = strlen($data);
             if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
