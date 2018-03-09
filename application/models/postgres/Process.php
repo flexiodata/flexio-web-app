@@ -228,7 +228,7 @@ class Process extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return \Model::STATUS_UNDEFINED;
 
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_object where eid = ?", $eid);
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_process where eid = ?", $eid);
         if ($result === false)
             return \Model::STATUS_UNDEFINED;
 
