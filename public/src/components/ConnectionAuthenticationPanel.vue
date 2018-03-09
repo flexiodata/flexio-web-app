@@ -115,7 +115,16 @@
           floating-label
           help=" "
           v-model.trim="database"
-          v-if="showInput('database') && !is_sftp && !is_elasticsearch"
+          v-if="showInput('database')"
+        />
+        <ui-textbox
+          autocomplete="off"
+          spellcheck="false"
+          label="Base Path"
+          floating-label
+          help=" "
+          v-model.trim="base_path"
+          v-if="showInput('base_path')"
         />
         <div class="mt3">
           <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
@@ -145,6 +154,7 @@
       username: '',
       password: '',
       database: '',
+      base_path: '',
 
       // aws
       aws_key: '',
@@ -196,6 +206,7 @@
       username()   { this.emitChange() },
       password()   { this.emitChange() },
       database()   { this.emitChange() },
+      base_path()  { this.emitChange() },
 
       aws_key()    { this.emitChange() },
       aws_secret() { this.emitChange() },
@@ -217,6 +228,7 @@
         username: _.get(c, 'username', ''),
         password: _.get(c, 'password', ''),
         database: _.get(c, 'database', ''),
+        base_path: _.get(c, 'base_path', ''),
 
         // aws
         aws_key: _.get(c, 'aws_key', ''),
@@ -243,6 +255,10 @@
         {
           default:
             return ['host', 'port', 'username', 'password', 'database']
+          case ctypes.CONNECTION_TYPE_SFTP:
+            return ['host', 'port', 'username', 'password', 'base_path']
+          case ctypes.CONNECTION_TYPE_ELASTICSEARCH:
+            return ['host', 'port', 'username', 'password']
           case ctypes.CONNECTION_TYPE_AMAZONS3:
             return ['aws_key', 'aws_secret', 'bucket', 'region']
           case ctypes.CONNECTION_TYPE_FIREBASE:
@@ -255,15 +271,6 @@
       },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
-      },
-      is_s3() {
-        return this.ctype == ctypes.CONNECTION_TYPE_AMAZONS3
-      },
-      is_sftp() {
-        return this.ctype == ctypes.CONNECTION_TYPE_SFTP
-      },
-      is_elasticsearch() {
-        return this.ctype == ctypes.CONNECTION_TYPE_ELASTICSEARCH
       },
       cls() {
         return this.is_connected ? 'b--dark-green' : 'b--blue'
