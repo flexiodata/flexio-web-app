@@ -64,6 +64,9 @@ server {
         # rewrite /examples to /templates
         rewrite ^/examples(.*)$ /templates$1 permanent;
 
+        # general redirects
+        rewrite ^/beta-sign-up / permanent;
+
         # blog author redirects
         rewrite ^/blog/author/kenflex-io/?$ /blog/authors/ken-kaczmarek permanent;
         rewrite ^/blog/author/nateflex-io/?$ /blog/authors/nate-williams permanent;
@@ -98,6 +101,9 @@ server {
         rewrite ^/use-cases/add-dynamic-content-to-jekyll-site /docs/tutorials/add-dynamic-content-static-website-jekyll-hugo-hexo permanent;
         rewrite ^/use-cases/bulk-load-csv-files-into-elasticsearch /docs/tutorials/bulk-load-csv-files-elasticsearch-indices permanent;
         rewrite ^/use-cases/load-database-tables-into-elasticsearch /docs/tutorials/bulk-load-csv-files-elasticsearch-indices permanent;
+
+        # template => example redirects
+        rewrite ^/templates/embed-a-live-d3-chart-github-pages https://flexiodata.github.io/examples/demo-webpage-word-cloud-generator permanent;
 
         # docs redirects
         rewrite ^/docs/getting-started /docs/quick-start permanent;
