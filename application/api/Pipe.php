@@ -46,10 +46,9 @@ class Pipe
 
         // create the object
         $pipe_properties = $validated_params;
+        $pipe_properties['owned_by'] = $requesting_user_eid;
+        $pipe_properties['created_by'] = $requesting_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
-
-        $pipe->setCreatedBy($requesting_user_eid);
-        $pipe->setOwner($requesting_user_eid);
 
         $pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
@@ -95,10 +94,9 @@ class Pipe
         $new_pipe_properties['name'] = $original_pipe_properties['name'] . ' copy';
         $new_pipe_properties['description'] = $original_pipe_properties['description'];
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
-
+        $new_pipe_properties['owned_by'] = $requesting_user_eid;
+        $new_pipe_properties['created_by'] = $requesting_user_eid;
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
-        $new_pipe->setCreatedBy($requesting_user_eid);
-        $new_pipe->setOwner($requesting_user_eid);
 
         $new_pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
@@ -314,21 +312,15 @@ class Pipe
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create a new process
-        $process_properties = array();
+        $pipe_properties = $pipe->get();
+        $process_properties = array(
+            'task' => $pipe_properties['task'],
+            'owned_by' => $pipe_properties['owned_by'],
+            'created_by' => $requesting_user_eid
+        );
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setOwner($pipe->getOwner());
-
-        if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
-            $process->setCreatedBy($pipe->getOwner());
-            else
-            $process->setCreatedBy($requesting_user_eid);
-
         $process->setRights($pipe->getRights());
         $pipe->addProcess($process);
-
-        $pipe_properties = $pipe->get();
-        $process_properties['task'] = $pipe_properties['task'];
-        $process->set($process_properties);
 
         // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::create($process);

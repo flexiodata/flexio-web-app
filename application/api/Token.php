@@ -42,8 +42,9 @@ class Token
 
         // create the token object
         $token_properties = array();
-        $token_properties['user_eid'] = $user->getEid(); // TODO: use setOwner() like other objects?
-
+        $token_properties['user_eid'] = $user->getEid();
+        $token_properties['owned_by'] = $user->getEid();
+        $token_properties['created_by'] = $requesting_user_eid;
         $token = \Flexio\Object\Token::create($token_properties);
         return $token->get();
     }

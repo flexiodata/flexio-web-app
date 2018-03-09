@@ -38,10 +38,10 @@ class Connection
         $validated_params = $validator->getParams();
 
         // create the object
-        $connection = \Flexio\Object\Connection::create($validated_params);
-
-        $connection->setCreatedBy($requesting_user_eid);
-        $connection->setOwner($requesting_user_eid);
+        $connection_properties = $validated_params;
+        $connection_properties['owned_by'] = $requesting_user_eid;
+        $connection_properties['created_by'] = $requesting_user_eid;
+        $connection = \Flexio\Object\Connection::create($connection_properties);
 
         $connection->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(

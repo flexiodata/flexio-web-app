@@ -286,12 +286,14 @@ class Cron
         if ($pipe_properties === false)
             return false;
 
-        $process_properties = [ 'task' => $pipe_properties['task'] ];
+        $process_properties = array(
+            'task' => $pipe_properties['task'],
+            'owned_by' => $pipe_properties['owned_by'],
+            'created_by' => $pipe_properties['created_by'] // scheduled processes are created by the owner
+        );
 
         // STEP 2: create the process
         $process = \Flexio\Object\Process::create($process_properties);
-        $process->setOwner($pipe->getOwner());
-        $process->setCreatedBy($pipe->getOwner()); // scheduled processes are created by the owner
         $process->setRights($pipe->getRights());
 
         // STEP 3: run the process

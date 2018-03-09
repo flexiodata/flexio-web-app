@@ -46,32 +46,15 @@ class Base
 
     public function setOwner(string $user_eid) : \Flexio\Object\Base
     {
-        // TODO: remove previous owner, if any
-
-        // TODO: do we want to do more checking? have to be careful because
-        // system and public users don't follow normal eid convention
-
-        $object_eid = $this->getEid();
-        $this->getModel()->assoc_add($user_eid, \Model::EDGE_OWNS, $object_eid);
-        $this->getModel()->assoc_add($object_eid, \Model::EDGE_OWNED_BY, $user_eid);
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
         return $this;
     }
 
-    public function getOwner() // TODO: add return type
+    public function getOwner() : string
     {
-        $object_eid = $this->getEid();
-        $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_OWNED_BY);
-
-        // TODO: for now, return false; there are some objects (legacy?) that
-        // don't have owners and when checking the owner for rights, we need
-        // a graceful way of not granting access rather than throwing an exception
-        if (count($result) === 0)
-            return false;
-
-        //if (count($result) === 0)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        return $result[0]['eid'];
+        $properties = $this->get();
+        return $properties['owned_by'] ?? '';
     }
 
     public function getFollowers() : array
@@ -106,23 +89,6 @@ class Base
         $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
         $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
         return $this;
-    }
-
-    public function getCreatedBy() // TODO: add return result
-    {
-        // TODO: deprecated; move this information over to an action log
-
-        $object_eid = $this->getEid();
-        $result = $this->getModel()->assoc_range($object_eid, \Model::EDGE_CREATED_BY);
-
-        // TODO: see comment for similar logic in getOwner() above
-        if (count($result) === 0)
-            return false;
-
-        //if (count($result) === 0)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        return $result[0]['eid'];
     }
 
     public function allows(string $access_code, string $action) : bool

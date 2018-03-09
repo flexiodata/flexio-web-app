@@ -59,12 +59,11 @@ class Trigger
         // STEP 4: trigger the appropriate process with the email as an input
         $process = false;
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($pipe !== false && $pipe->getOwner() !== false)
+        if ($pipe !== false)
         {
             $pipe_properties = $pipe->get();
             unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
-            $process->setOwner($pipe->getOwner()); // processes run with pipe owner privileges
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address

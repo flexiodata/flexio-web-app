@@ -106,8 +106,14 @@ class User
             // create the user
             $user = \Flexio\Object\User::create($new_user_info);
             $user_eid = $user->getEid();
-            $user->setCreatedBy($user_eid);
-            $user->setOwner($user_eid);
+
+            // owner and created have to be set after creation because a user is
+            // created by themselves on signup, but the user eid isn't yet known
+            $additional_user_properties = array(
+                'owned_by' => $user_eid,
+                'created_by' => $user_eid
+            );
+            $user->set($additional_user_properties);
 
             $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
                 array(
@@ -628,9 +634,9 @@ class User
         if (isset($definition['expires']))
             $call_params['expires'] = $definition['expires'];
 
+        $call_params['owned_by'] = $user_eid;
+        $call_params['created_by'] = $user_eid;
         $connection = \Flexio\Object\Connection::create($call_params);
-        $connection->setOwner($user_eid);
-        $connection->setCreatedBy($user_eid);
 
         $connection->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
@@ -668,9 +674,9 @@ class User
         if (isset($definition['task']))
             $call_params['task'] = $definition['task'];
 
+        $call_params['owned_by'] = $user_eid;
+        $call_params['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($call_params);
-        $pipe->setOwner($user_eid);
-        $pipe->setCreatedBy($user_eid);
 
         $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,

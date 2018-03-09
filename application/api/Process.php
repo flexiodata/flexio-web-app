@@ -89,31 +89,20 @@ class Process
             // the pipe, so we should have both read/write access to the pipe;
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+            // if the process is created from a pipe, it runs with pipe owner privileges
+            // and inherits the rights from the pipe
+            $validated_params['owned_by'] = $pipe->getOwner();
+            $validated_params['created_by'] = $requesting_user_eid;
         }
 
         // STEP 1: create a new process job with the default task
         $process = \Flexio\Object\Process::create($validated_params);
 
+        // if the process is created from a pipe, it runs with pipe owner privileges
+        // and inherits the rights from the pipe
         if ($pipe !== false)
-        {
-            // if the process is created from a pipe, it runs with pipe owner privileges
-            // and inherits the rights from the pipe
-            $process->setOwner($pipe->getOwner());
-
-            if ($requesting_user_eid === \Flexio\Object\User::MEMBER_PUBLIC)
-                $process->setCreatedBy($pipe->getOwner());
-                else
-                $process->setCreatedBy($requesting_user_eid);
-
             $process->setRights($pipe->getRights());
-        }
-         else
-        {
-            // if the process is created independent of a pipe, it runs with requesting
-            // user privileges
-            $process->setOwner($requesting_user_eid);
-            $process->setCreatedBy($requesting_user_eid);
-        }
 
         // STEP 2: if a parent eid is specified, associate the process with the
         // parent; if a task is specified, override the task of the parent (to
