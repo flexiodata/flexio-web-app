@@ -212,7 +212,7 @@ class Process extends ModelBase
                 'eid_status'    => $status,
                 'updated'       => $timestamp
             );
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
         catch (\Exception $e)
