@@ -75,6 +75,8 @@ class User extends ModelBase
                 'password'               => $params['password'] ?? '',
                 'verify_code'            => $params['verify_code'] ?? '',
                 'config'                 => $params['config'] ?? '{}',
+                'owned_by'               => $params['owned_by'],
+                'created_by'             => $params['created_by'],
                 'created'                => $timestamp,
                 'updated'                => $timestamp
             );
@@ -122,7 +124,7 @@ class User extends ModelBase
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'             => array('type' => 'string', 'required' => false),
+                'eid_status'             => array('type' => 'string',  'required' => false),
                 'user_name'              => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
                 'first_name'             => array('type' => 'string',  'required' => false),
@@ -142,6 +144,7 @@ class User extends ModelBase
                 'password'               => array('type' => 'string',  'required' => false),
                 'verify_code'            => array('type' => 'string',  'required' => false),
                 'config'                 => array('type' => 'string',  'required' => false)
+                // don't allow user owner to change for now after creation
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -215,6 +218,8 @@ class User extends ModelBase
                                          tus.timezone as timezone,
                                          tus.verify_code as verify_code,
                                          tus.config as config,
+                                         tus.owned_by as owned_by,
+                                         tus.created_by as created_by,
                                          tus.created as created,
                                          tus.updated as updated
                                 from tbl_object tob
@@ -253,6 +258,8 @@ class User extends ModelBase
                      'timezone'               => $row['timezone'],
                      'verify_code'            => $row['verify_code'],
                      'config'                 => $row['config'],
+                     'owned_by'               => $row['owned_by'],
+                     'created_by'             => $row['created_by'],
                      'created'                => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }

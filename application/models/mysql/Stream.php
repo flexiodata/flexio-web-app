@@ -51,6 +51,8 @@ class Stream extends ModelBase
                 'file_modified'        => $params['file_modified'] ?? null,
                 'connection_eid'       => $params['connection_eid'] ?? '',
                 'expires'              => $params['expires'] ?? null,
+                'owned_by'             => $params['owned_by'],
+                'created_by'           => $params['created_by'],
                 'created'              => $timestamp,
                 'updated'              => $timestamp
             );
@@ -93,7 +95,8 @@ class Stream extends ModelBase
                 'file_created'         => array('type' => 'string',  'required' => false),
                 'file_modified'        => array('type' => 'string',  'required' => false),
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
-                'expires'              => array('type' => 'any',     'required' => false)    // TODO: workaround null problem; any = allow nulls
+                'expires'              => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
+                'owned_by'             => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -157,6 +160,8 @@ class Stream extends ModelBase
                                          tst.file_modified as file_modified,
                                          tst.connection_eid as connection_eid,
                                          tst.expires as expires,
+                                         tst.owned_by as owned_by,
+                                         tst.created_by as created_by,
                                          tst.created as created,
                                          tst.updated as updated
                                 from tbl_stream tst
@@ -186,6 +191,8 @@ class Stream extends ModelBase
                      'file_modified'        => $row['file_modified'],
                      'connection_eid'       => $row['connection_eid'],
                      'expires'              => $row['expires'],
+                     'owned_by'             => $row['owned_by'],
+                     'created_by'           => $row['created_by'],
                      'created'              => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -287,6 +294,8 @@ class Stream extends ModelBase
                                           tst.file_modified as file_modified,
                                           tst.connection_eid as connection_eid,
                                           tst.expires as expires,
+                                          tst.owned_by as owned_by,
+                                          tst.created_by as created_by,
                                           tst.created as created,
                                           tst.updated as updated
                                 from tbl_stream tst
@@ -319,6 +328,8 @@ class Stream extends ModelBase
                                'file_modified'        => $row['file_modified'],
                                'connection_eid'       => $row['connection_eid'],
                                'expires'              => $row['expires'],
+                               'owned_by'             => $row['owned_by'],
+                               'created_by'           => $row['created_by'],
                                'created'              => \Flexio\Base\Util::formatDate($row['created']),
                                'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
         }

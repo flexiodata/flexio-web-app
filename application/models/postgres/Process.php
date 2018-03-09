@@ -41,6 +41,8 @@ class Process extends ModelBase
                 'process_info'   => $params['process_info'] ?? '{}',
                 'process_status' => $params['process_status'] ?? '',
                 'cache_used'     => $params['cache_used'] ?? '',
+                'owned_by'       => $params['owned_by'],
+                'created_by'     => $params['created_by'],
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );
@@ -83,7 +85,8 @@ class Process extends ModelBase
                 'finished'       => array('type' => 'string',  'required' => false),
                 'process_info'   => array('type' => 'string',  'required' => false),
                 'process_status' => array('type' => 'string',  'required' => false),
-                'cache_used'     => array('type' => 'string',  'required' => false)
+                'cache_used'     => array('type' => 'string',  'required' => false),
+                'owned_by'       => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -146,6 +149,8 @@ class Process extends ModelBase
                                          tpr.process_info as process_info,
                                          tpr.process_status as process_status,
                                          tpr.cache_used as cache_used,
+                                         tpr.owned_by as owned_by,
+                                         tpr.created_by as created_by,
                                          tpr.created as created,
                                          tpr.updated as updated
                                   from tbl_process tpr
@@ -175,6 +180,8 @@ class Process extends ModelBase
                      'process_info'     => $row['process_info'],
                      'process_status'   => $row['process_status'],
                      'cache_used'       => $row['cache_used'],
+                     'owned_by'         => $row['owned_by'],
+                     'created_by'       => $row['created_by'],
                      'created'          => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -369,30 +376,27 @@ class Process extends ModelBase
 
     public function getUserProcessStats(string $user_eid = null) : array
     {
-        // returns the number of times a process was created per user and per pipe for
-        // each day, along with the average and total times for those processes
+        // returns the number of processes per pipe per day for a particular owner,
+        // along with the average and total times for those processes
 
         $db = $this->getDatabase();
         try
         {
-            // get processes created by a user; if the user is specified, look just for those users
-            $filter_condition = "tas.association_type = 'CRB'";
             if (isset($user_eid))
             {
                 $quser_eid = $db->quote($user_eid);
-                $filter_condition .= " and tas.target_eid = $quser_eid";
+                $filter_condition .= " and tpr.owned_by = $quser_eid";
             }
 
-            $sql = "select tas.target_eid as target_eid, ".
-            "           tpr.parent_eid as parent_eid, ".
-            "           tpr.created::DATE as created, ".
-            "           avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
-            "           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
-            "           count(*) as total_count ".
+            $sql = "select tpr.owned_by as owned_by, ".
+            "              tpr.parent_eid as parent_eid, ".  // parent_eid is the pipe
+            "              tpr.created::DATE as created, ".
+            "              avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
+            "              sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
+            "              count(*) as total_count ".
             "       from tbl_process tpr ".
-            "       inner join tbl_association tas on tpr.eid = tas.source_eid ".
             "       where $filter_condition ".
-            "       group by tas.target_eid, tpr.parent_eid, tpr.created::DATE ".
+            "       group by tpr.owned_by, tpr.parent_eid, tpr.created::DATE ".
             "       order by created, parent_eid ";
             $rows = $db->fetchAll($sql);
          }
@@ -410,7 +414,7 @@ class Process extends ModelBase
             if (\Flexio\Base\Eid::isValid($row['parent_eid']))
                 $parent_eid = $row['parent_eid'];
 
-            $output[] = array('user_eid'     => $row['target_eid'], // target for the 'created by' association
+            $output[] = array('user_eid'     => $row['owned_by'],
                               'pipe_eid'     => $parent_eid,        // pipe eid if it exists; if anonymous process, then 'anonymous'
                               'created'      => $row['created'],
                               'total_count'  => $row['total_count'],
@@ -429,15 +433,14 @@ class Process extends ModelBase
         $db = $this->getDatabase();
         try
         {
-            $rows = $db->fetchAll("select tas.target_eid as target_eid,
+            $rows = $db->fetchAll("select tpr.parent_eid as parent_eid,
                                           tpr.created::DATE as created,
                                           avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
                                           sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
                                           count(*) as total_count
                                    from tbl_process tpr
-                                   inner join tbl_association tas on tpr.eid = tas.source_eid
-                                   where tas.association_type = 'PRO'
-                                   group by tas.target_eid, tpr.created::DATE
+                                   where tpr.parent_eid != ''
+                                   group by tpr.target_eid, tpr.created::DATE
                                    order by created, target_eid
                                  ");
          }

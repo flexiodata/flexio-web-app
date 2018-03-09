@@ -36,6 +36,8 @@ class Pipe extends ModelBase
                 'task'            => $params['task'] ?? '{}',
                 'schedule'        => $params['schedule'] ?? '',
                 'schedule_status' => $params['schedule_status'] ?? \Model::PIPE_STATUS_INACTIVE,
+                'owned_by'        => $params['owned_by'],
+                'created_by'      => $params['created_by'],
                 'created'         => $timestamp,
                 'updated'         => $timestamp
             );
@@ -77,7 +79,8 @@ class Pipe extends ModelBase
                 'output'          => array('type' => 'string',  'required' => false),
                 'task'            => array('type' => 'string',  'required' => false),
                 'schedule'        => array('type' => 'string',  'required' => false),
-                'schedule_status' => array('type' => 'string',  'required' => false)
+                'schedule_status' => array('type' => 'string',  'required' => false),
+                'owned_by'        => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -144,6 +147,8 @@ class Pipe extends ModelBase
                                          tpi.task as task,
                                          tpi.schedule as schedule,
                                          tpi.schedule_status as schedule_status,
+                                         tpi.owned_by as owned_by,
+                                         tpi.created_by as created_by,
                                          tpi.created as created,
                                          tpi.updated as updated
                                 from tbl_object tob
@@ -170,6 +175,8 @@ class Pipe extends ModelBase
                      'task'            => $row['task'],
                      'schedule'        => $row['schedule'],
                      'schedule_status' => $row['schedule_status'],
+                     'owned_by'        => $row['owned_by'],
+                     'created_by'      => $row['created_by'],
                      'created'         => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }

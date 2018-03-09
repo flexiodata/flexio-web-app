@@ -41,6 +41,8 @@ class Process extends ModelBase
                 'process_info'   => $params['process_info'] ?? '{}',
                 'process_status' => $params['process_status'] ?? '',
                 'cache_used'     => $params['cache_used'] ?? '',
+                'owned_by'       => $params['owned_by'],
+                'created_by'     => $params['created_by'],
                 'created'        => $timestamp,
                 'updated'        => $timestamp
             );
@@ -83,7 +85,8 @@ class Process extends ModelBase
                 'finished'       => array('type' => 'string',  'required' => false),
                 'process_info'   => array('type' => 'string',  'required' => false),
                 'process_status' => array('type' => 'string',  'required' => false),
-                'cache_used'     => array('type' => 'string',  'required' => false)
+                'cache_used'     => array('type' => 'string',  'required' => false),
+                'owned_by'       => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -146,6 +149,8 @@ class Process extends ModelBase
                                          tpr.process_info as process_info,
                                          tpr.process_status as process_status,
                                          tpr.cache_used as cache_used,
+                                         tpr.owned_by as owned_by,
+                                         tpr.created_by as created_by,
                                          tpr.created as created,
                                          tpr.updated as updated
                                   from tbl_process tpr
@@ -175,6 +180,8 @@ class Process extends ModelBase
                      'process_info'     => $row['process_info'],
                      'process_status'   => $row['process_status'],
                      'cache_used'       => $row['cache_used'],
+                     'owned_by'         => $row['owned_by'],
+                     'created_by'       => $row['created_by'],
                      'created'          => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }

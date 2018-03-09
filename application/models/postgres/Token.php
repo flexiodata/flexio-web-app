@@ -31,6 +31,8 @@ class Token extends ModelBase
                 'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'user_eid'      => $params['user_eid'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
+                'owned_by'      => $params['owned_by'],
+                'created_by'    => $params['created_by'],
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
@@ -69,6 +71,8 @@ class Token extends ModelBase
                                          tau.user_eid as user_eid,
                                          tau.access_code as access_code,
                                          tau.secret_code as secret_code,
+                                         tau.owned_by as owned_by,
+                                         tau.created_by as created_by,
                                          tau.created as created,
                                          tau.updated as updated
                                 from tbl_token tau
@@ -88,6 +92,8 @@ class Token extends ModelBase
                      'eid_status'  => $row['eid_status'],
                      'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
+                     'owned_by'    => $row['owned_by'],
+                     'created_by'  => $row['created_by'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -150,6 +156,8 @@ class Token extends ModelBase
                                      tau.user_eid as user_eid,
                                      tau.access_code as access_code,
                                      tau.secret_code as secret_code,
+                                     tau.owned_by as owned_by,
+                                     tau.created_by as created_by,
                                      tau.created as created,
                                      tau.updated as updated
                               from tbl_token tau
@@ -164,6 +172,8 @@ class Token extends ModelBase
                      'eid_status'  => $row['eid_status'],
                      'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
+                     'owned_by'    => $row['owned_by'],
+                     'created_by'  => $row['created_by'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -178,6 +188,8 @@ class Token extends ModelBase
                                       tau.user_eid as user_eid,
                                       tau.access_code as access_code,
                                       tau.secret_code as secret_code,
+                                      tau.owned_by as owned_by,
+                                      tau.created_by as created_by,
                                       tau.created as created,
                                       tau.updated as updated
                               from tbl_token tau
@@ -196,6 +208,8 @@ class Token extends ModelBase
                               'eid_status'  => $row['eid_status'],
                               'user_eid'    => $row['user_eid'],
                               'access_code' => $row['access_code'],
+                              'owned_by'    => $row['owned_by'],
+                              'created_by'  => $row['created_by'],
                               'created'     => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
         }

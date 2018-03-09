@@ -33,6 +33,8 @@ class Right extends ModelBase
                 'access_type'   => $params['access_type'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
                 'actions'       => $params['actions'] ?? '',
+                'owned_by'      => $params['owned_by'],
+                'created_by'    => $params['created_by'],
                 'created'       => $timestamp,
                 'updated'       => $timestamp
             );
@@ -67,7 +69,8 @@ class Right extends ModelBase
                 'object_eid'  => array('type' => 'string', 'required' => false),
                 'access_type' => array('type' => 'string', 'required' => false),
                 'access_code' => array('type' => 'string', 'required' => false),
-                'actions'     => array('type' => 'string', 'required' => false)
+                'actions'     => array('type' => 'string', 'required' => false),
+                'owned_by'    => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -123,6 +126,8 @@ class Right extends ModelBase
                                          tac.access_type as access_type,
                                          tac.access_code as access_code,
                                          tac.actions as actions,
+                                         tac.owned_by as owned_by,
+                                         tac.created_by as created_by,
                                          tac.created as created,
                                          tac.updated as updated
                                 from tbl_acl tac
@@ -144,6 +149,8 @@ class Right extends ModelBase
                      'access_type' => $row['access_type'],
                      'access_code' => $row['access_code'],
                      'actions'     => $row['actions'],
+                     'owned_by'    => $row['owned_by'],
+                     'created_by'  => $row['created_by'],
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
@@ -207,6 +214,8 @@ class Right extends ModelBase
                                       tac.access_type as access_type,
                                       tac.access_code as access_code,
                                       tac.actions as actions,
+                                      tac.owned_by as owned_by,
+                                      tac.created_by as created_by,
                                       tac.created as created,
                                       tac.updated as updated
                               from tbl_acl tac
@@ -227,6 +236,8 @@ class Right extends ModelBase
                               'access_type' => $row['access_type'],
                               'access_code' => $row['access_code'],
                               'actions'     => $row['actions'],
+                              'owned_by'    => $row['owned_by'],
+                              'created_by'  => $row['created_by'],
                               'created'     => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
         }
