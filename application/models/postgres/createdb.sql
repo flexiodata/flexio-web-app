@@ -67,6 +67,8 @@ CREATE TABLE tbl_user (
     password varchar(80) NOT NULL default '',
     verify_code varchar(40) NOT NULL default '',
     config json,
+    owned_by varchar(12) NOT NULL,
+    created_by varchar(12) NOT NULL,
     created timestamp NULL default NULL,
     updated timestamp NULL default NULL,
     PRIMARY KEY (id),
@@ -74,6 +76,8 @@ CREATE TABLE tbl_user (
     UNIQUE (user_name),
     UNIQUE (email)
 );
+
+CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 
 
 
@@ -89,6 +93,8 @@ CREATE TABLE tbl_token (
     user_eid varchar(12) NOT NULL,
     access_code varchar(255) NOT NULL default '',
     secret_code varchar(255) NOT NULL default '',
+    owned_by varchar(12) NOT NULL,
+    created_by varchar(12) NOT NULL,
     created timestamp NULL default NULL,
     updated timestamp NULL default NULL,
     PRIMARY KEY (id),
@@ -97,6 +103,7 @@ CREATE TABLE tbl_token (
 );
 
 CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
+CREATE INDEX idx_token_owned_by ON tbl_token (owned_by);
 
 
 
@@ -113,6 +120,8 @@ CREATE TABLE tbl_acl (
   access_type varchar(3) NOT NULL default '',
   access_code varchar(255) NOT NULL default '',
   actions json,
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -121,6 +130,7 @@ CREATE TABLE tbl_acl (
 
 CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
 CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
+CREATE INDEX idx_acl_owned_by ON tbl_acl (owned_by);
 
 
 
@@ -144,6 +154,8 @@ CREATE TABLE tbl_pipe (
   output json,
   schedule text default '',
   schedule_status varchar(1) NOT NULL default 'I',
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -151,6 +163,7 @@ CREATE TABLE tbl_pipe (
 );
 
 CREATE INDEX idx_pipe_schedule_status ON tbl_pipe (schedule_status);
+CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
 
 
 
@@ -169,11 +182,15 @@ CREATE TABLE tbl_connection (
   connection_status varchar(1) NOT NULL default 'U',
   connection_info text default '',
   expires timestamp NULL default NULL,
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE (eid)
 );
+
+CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 
 
 
@@ -199,6 +216,8 @@ CREATE TABLE tbl_process (
   process_info json,
   process_status varchar(1) NOT NULL default '',
   cache_used varchar(1) NOT NULL default '',
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -208,6 +227,7 @@ CREATE TABLE tbl_process (
 CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
 CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
+CREATE INDEX idx_process_owned_by ON tbl_process (owned_by);
 
 
 
@@ -230,6 +250,8 @@ CREATE TABLE tbl_processlog (
   finished timestamp NULL default NULL,
   log_type varchar(1) NOT NULL default '',
   message text default '',
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -238,6 +260,7 @@ CREATE TABLE tbl_processlog (
 
 CREATE INDEX idx_processlog_eid ON tbl_processlog (eid);
 CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
+CREATE INDEX idx_processlog_owned_by ON tbl_processlog (owned_by);
 
 
 
@@ -262,6 +285,8 @@ CREATE TABLE tbl_stream (
   file_modified timestamp NULL default NULL,
   connection_eid varchar(12) NOT NULL default '',
   expires timestamp NULL default NULL,
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -270,6 +295,7 @@ CREATE TABLE tbl_stream (
 
 CREATE INDEX idx_stream_parent_eid ON tbl_stream (parent_eid);
 CREATE INDEX idx_stream_connection_eid ON tbl_stream (connection_eid);
+CREATE INDEX idx_stream_owned_by ON tbl_stream (owned_by);
 
 
 
@@ -283,11 +309,15 @@ CREATE TABLE tbl_comment (
   eid varchar(12) NOT NULL default '',
   eid_status varchar(1) NOT NULL default '',
   comment text default '',
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE (eid)
 );
+
+CREATE INDEX idx_comment_owned_by ON tbl_comment (owned_by);
 
 
 
@@ -309,6 +339,8 @@ CREATE TABLE tbl_action (
   result_info json,                              -- extra info about the result in case of failure
   started timestamp NULL default NULL,           -- when the action was invoked
   finished timestamp NULL default NULL,          -- when the action finished
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
@@ -317,6 +349,7 @@ CREATE TABLE tbl_action (
 
 CREATE INDEX idx_action_invoked_by ON tbl_action (invoked_by);
 CREATE INDEX idx_action_action_target ON tbl_action (action_target);
+CREATE INDEX idx_action_owned_by ON tbl_action (owned_by);
 
 
 
