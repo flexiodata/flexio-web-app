@@ -10,7 +10,7 @@ CREATE TABLE tbl_object (
   id serial,
   eid varchar(12) NOT NULL default '',
   eid_type varchar(3) NOT NULL default '',
-  ename varchar(80) NOT NULL default ''
+  ename varchar(80) NOT NULL default '',
   PRIMARY KEY (id),
   UNIQUE (eid)
 );
