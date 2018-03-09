@@ -54,7 +54,8 @@ class Base
     public function getOwner() : string
     {
         $properties = $this->get();
-        return $properties['owned_by'] ?? '';
+        $owner = $properties['owned_by']['eid'] ?? '';
+        return $owner;
     }
 
     public function getFollowers() : array
