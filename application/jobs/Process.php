@@ -62,6 +62,7 @@ class Process implements \Flexio\IFace\IProcess
         'email'     => '\Flexio\Jobs\Email',
         'request'   => '\Flexio\Jobs\Request',
         'filter'    => '\Flexio\Jobs\Filter',
+        'for'       => '\Flexio\Jobs\Foreach1',
         'foreach'   => '\Flexio\Jobs\Foreach1',
         'read'      => '\Flexio\Jobs\Read',
         'replace'   => '\Flexio\Jobs\Replace',
