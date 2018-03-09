@@ -49,40 +49,41 @@ if (is_null($db))
 try
 {
     // STEP 1: add the owned_by and created_by columns to the various tables
-    $db->exec("alter table tbl_user add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_token add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_acl add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_pipe add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_connection add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_process add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_processlog add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_stream add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_comment add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-    $db->exec("alter table tbl_action add column owned_by varchar(12) NOT NULL, created_by varchar(12) NOT NULL");
-
+/*
+    $db->exec("alter table tbl_user add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_token add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_acl add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_pipe add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_connection add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_process add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_processlog add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_stream add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_comment add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+    $db->exec("alter table tbl_action add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
+*/
     // STEP 2: copy the owned_by information from the association table to the various tables
-    $db->exec("update tbl_user as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_token as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_acl as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_pipe as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_connection as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_process as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_processlog as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_stream as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_comment as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
-    $db->exec("update tbl_action as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_OWNED_BY ."'");
+    $db->exec("update tbl_user as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_token as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_acl as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_pipe as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_connection as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_process as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_processlog as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_stream as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_comment as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_action as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
 
     // STEP 3: copy the created_by information from the association table to the various tables
-    $db->exec("update tbl_user as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_token as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_acl as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_pipe as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_connection as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_process as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_processlog as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_stream as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_comment as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
-    $db->exec("update tbl_action as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::TYPE_CREATED_BY ."'");
+    $db->exec("update tbl_user as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_token as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_acl as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_pipe as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_connection as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_process as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_processlog as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_stream as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_comment as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_action as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
 
     // STEP 4: add the indexes to the various tables
     $db->exec("create index idx_user_owned_by ON tbl_user (owned_by)");
