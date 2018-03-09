@@ -79,10 +79,16 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         if (!$this->authenticated())
             return array();
-
+        
         // get the tables in the database
+
+        $path = trim($path, '/');
+
         $qdbname = "'" . $this->db->real_escape_string($this->database) . "'";
-        $sql = "select table_name from information_schema.tables where table_schema=$qdbname;";
+        $qtblname =  "'" . $this->db->real_escape_string($path) . "'";
+        $sql = "select table_name from information_schema.tables where table_schema=$qdbname";
+        if (strlen($path) > 0)
+            $sql .= " and table_name=$qtblname";
         $result = $this->db->query($sql);
 
         $fields = array();
@@ -104,7 +110,20 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $path = trim($path, '/');
+
+        $structure = $this->describeTable($path);
+        if ($structure === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
+        return [
+            'name' => $path,
+            'path' => $path,
+            'size' => null,
+            'modified' => null,
+            'type' => 'TABLE',
+            'structure' => $structure
+        ];
     }
 
     public function exists(string $path) : bool
@@ -314,7 +333,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return false;
         }
 
-        return $structure;
+        return count($structure) == 0 ? false : $structure;
     }
 
     public function getTableRowCount(string $table) : int
