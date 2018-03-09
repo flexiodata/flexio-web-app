@@ -137,6 +137,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+    
         $postdata = json_encode([
             "path" => $path
         ]);
