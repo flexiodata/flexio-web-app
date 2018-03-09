@@ -63,37 +63,37 @@ CREATE TABLE tbl_association (
 
 DROP TABLE IF EXISTS tbl_user;
 CREATE TABLE tbl_user (
-    id int UNSIGNED NOT NULL auto_increment,
-    eid char(12) NOT NULL,
-    eid_status char(1) NOT NULL default '',
-    user_name char(80) NOT NULL default '',
-    email varchar(255) default '',
-    description text default '',
-    full_name text default '',
-    first_name text default '',
-    last_name text default '',
-    phone text default '',
-    location_city text default '',
-    location_state text default '',
-    location_country text default '',
-    company_name text default '',
-    company_url text default '',
-    locale_language char(30) NOT NULL default 'en_US',
-    locale_decimal char(1) NOT NULL default '.',
-    locale_thousands char(1) NOT NULL default ',',
-    locale_dateformat char(30) NOT NULL default 'm/d/Y',
-    timezone char(30) NOT NULL default 'UTC',
-    password char(80) NOT NULL default '',
-    verify_code char(40) NOT NULL default '',
-    config text default '',
-    owned_by char(12) NOT NULL,
-    created_by char(12) NOT NULL,
-    created timestamp NULL default NULL,
-    updated timestamp NULL default NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY (eid),
-    UNIQUE KEY (user_name),
-    UNIQUE KEY (email)
+  id int UNSIGNED NOT NULL auto_increment,
+  eid char(12) NOT NULL,
+  eid_status char(1) NOT NULL default '',
+  user_name char(80) NOT NULL default '',
+  email varchar(255) default '',
+  description text default '',
+  full_name text default '',
+  first_name text default '',
+  last_name text default '',
+  phone text default '',
+  location_city text default '',
+  location_state text default '',
+  location_country text default '',
+  company_name text default '',
+  company_url text default '',
+  locale_language char(30) NOT NULL default 'en_US',
+  locale_decimal char(1) NOT NULL default '.',
+  locale_thousands char(1) NOT NULL default ',',
+  locale_dateformat char(30) NOT NULL default 'm/d/Y',
+  timezone char(30) NOT NULL default 'UTC',
+  password char(80) NOT NULL default '',
+  verify_code char(40) NOT NULL default '',
+  config text default '',
+  owned_by char(12) NOT NULL,
+  created_by char(12) NOT NULL,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY (eid),
+  UNIQUE KEY (user_name),
+  UNIQUE KEY (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
@@ -106,19 +106,19 @@ CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 
 DROP TABLE IF EXISTS tbl_token;
 CREATE TABLE tbl_token (
-    id int UNSIGNED NOT NULL auto_increment,
-    eid char(12) NOT NULL,
-    eid_status char(1) NOT NULL default '',
-    user_eid char(12) NOT NULL,
-    access_code varchar(255) NOT NULL default '',
-    secret_code varchar(255) NOT NULL default '',
-    owned_by char(12) NOT NULL,
-    created_by char(12) NOT NULL,
-    created timestamp NULL default NULL,
-    updated timestamp NULL default NULL,
-    PRIMARY KEY (id),
-    UNIQUE (eid),
-    UNIQUE (access_code)
+  id int UNSIGNED NOT NULL auto_increment,
+  eid char(12) NOT NULL,
+  eid_status char(1) NOT NULL default '',
+  user_eid char(12) NOT NULL,
+  access_code varchar(255) NOT NULL default '',
+  secret_code varchar(255) NOT NULL default '',
+  owned_by char(12) NOT NULL,
+  created_by char(12) NOT NULL,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid),
+  UNIQUE (access_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
@@ -419,3 +419,5 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+

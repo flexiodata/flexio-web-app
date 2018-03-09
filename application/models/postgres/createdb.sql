@@ -44,37 +44,37 @@ CREATE TABLE tbl_association (
 
 DROP TABLE IF EXISTS tbl_user;
 CREATE TABLE tbl_user (
-    id serial,
-    eid varchar(12) NOT NULL,
-    eid_status varchar(1) NOT NULL default '',
-    user_name varchar(80) NOT NULL default '',
-    email varchar(255) default '',
-    description text default '',
-    full_name text default '',
-    first_name text default '',
-    last_name text default '',
-    phone text default '',
-    location_city text default '',
-    location_state text default '',
-    location_country text default '',
-    company_name text default '',
-    company_url text default '',
-    locale_language varchar(30) NOT NULL default 'en_US',
-    locale_decimal varchar(1) NOT NULL default '.',
-    locale_thousands varchar(1) NOT NULL default ',',
-    locale_dateformat varchar(30) NOT NULL default 'm/d/Y',
-    timezone varchar(30) NOT NULL default 'UTC',
-    password varchar(80) NOT NULL default '',
-    verify_code varchar(40) NOT NULL default '',
-    config json,
-    owned_by varchar(12) NOT NULL,
-    created_by varchar(12) NOT NULL,
-    created timestamp NULL default NULL,
-    updated timestamp NULL default NULL,
-    PRIMARY KEY (id),
-    UNIQUE (eid),
-    UNIQUE (user_name),
-    UNIQUE (email)
+  id serial,
+  eid varchar(12) NOT NULL,
+  eid_status varchar(1) NOT NULL default '',
+  user_name varchar(80) NOT NULL default '',
+  email varchar(255) default '',
+  description text default '',
+  full_name text default '',
+  first_name text default '',
+  last_name text default '',
+  phone text default '',
+  location_city text default '',
+  location_state text default '',
+  location_country text default '',
+  company_name text default '',
+  company_url text default '',
+  locale_language varchar(30) NOT NULL default 'en_US',
+  locale_decimal varchar(1) NOT NULL default '.',
+  locale_thousands varchar(1) NOT NULL default ',',
+  locale_dateformat varchar(30) NOT NULL default 'm/d/Y',
+  timezone varchar(30) NOT NULL default 'UTC',
+  password varchar(80) NOT NULL default '',
+  verify_code varchar(40) NOT NULL default '',
+  config json,
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid),
+  UNIQUE (user_name),
+  UNIQUE (email)
 );
 
 CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
@@ -87,19 +87,19 @@ CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
 
 DROP TABLE IF EXISTS tbl_token;
 CREATE TABLE tbl_token (
-    id serial,
-    eid varchar(12) NOT NULL,
-    eid_status varchar(1) NOT NULL default '',
-    user_eid varchar(12) NOT NULL,
-    access_code varchar(255) NOT NULL default '',
-    secret_code varchar(255) NOT NULL default '',
-    owned_by varchar(12) NOT NULL,
-    created_by varchar(12) NOT NULL,
-    created timestamp NULL default NULL,
-    updated timestamp NULL default NULL,
-    PRIMARY KEY (id),
-    UNIQUE (eid),
-    UNIQUE (access_code)
+  id serial,
+  eid varchar(12) NOT NULL,
+  eid_status varchar(1) NOT NULL default '',
+  user_eid varchar(12) NOT NULL,
+  access_code varchar(255) NOT NULL default '',
+  secret_code varchar(255) NOT NULL default '',
+  owned_by varchar(12) NOT NULL,
+  created_by varchar(12) NOT NULL,
+  created timestamp NULL default NULL,
+  updated timestamp NULL default NULL,
+  PRIMARY KEY (id),
+  UNIQUE (eid),
+  UNIQUE (access_code)
 );
 
 CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
@@ -388,3 +388,5 @@ CREATE TABLE tbl_system (
   PRIMARY KEY (id),
   UNIQUE (name)
 );
+
+
