@@ -143,8 +143,9 @@ class User extends ModelBase
                 'timezone'               => array('type' => 'string',  'required' => false),
                 'password'               => array('type' => 'string',  'required' => false),
                 'verify_code'            => array('type' => 'string',  'required' => false),
-                'config'                 => array('type' => 'string',  'required' => false)
-                // don't allow user owner to change for now after creation
+                'config'                 => array('type' => 'string',  'required' => false),
+                'owned_by'               => array('type' => 'string',  'required' => false),
+                'created_by'             => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

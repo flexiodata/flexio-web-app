@@ -86,7 +86,8 @@ class Process extends ModelBase
                 'process_info'   => array('type' => 'string',  'required' => false),
                 'process_status' => array('type' => 'string',  'required' => false),
                 'cache_used'     => array('type' => 'string',  'required' => false),
-                'owned_by'       => array('type' => 'string',  'required' => false)
+                'owned_by'       => array('type' => 'string',  'required' => false),
+                'created_by'     => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

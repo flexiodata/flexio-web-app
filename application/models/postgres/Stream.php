@@ -96,7 +96,8 @@ class Stream extends ModelBase
                 'file_modified'        => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
                 'connection_eid'       => array('type' => 'eid',     'required' => false),
                 'expires'              => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
-                'owned_by'             => array('type' => 'string',  'required' => false)
+                'owned_by'             => array('type' => 'string',  'required' => false),
+                'created_by'           => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

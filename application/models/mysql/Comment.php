@@ -64,7 +64,8 @@ class Comment extends ModelBase
         if (($validator->check($params, array(
                 'eid_status' => array('type' => 'string', 'required' => false),
                 'comment'    => array('type' => 'string', 'required' => false),
-                'owned_by'   => array('type' => 'string',  'required' => false)
+                'owned_by'   => array('type' => 'string', 'required' => false),
+                'created_by' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
