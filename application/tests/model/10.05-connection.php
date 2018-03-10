@@ -184,15 +184,17 @@ class Test
         \Flexio\Tests\Check::assertInArray('C.8', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $random_eid1 = \Flexio\Base\Eid::generate();
+        $random_eid2 = \Flexio\Base\Eid::generate();
         $info = array(
-            'owned_by' => 'xyzxyzxyzxyz',
-            'created_by' => 'zyxzyxzyxzyx'
+            'owned_by' => $random_eid1,
+            'created_by' => $random_eid2
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'owned_by' => 'xyzxyzxyzxyz',
-            'created_by' => 'zyxzyxzyxzyx'
+            'owned_by' => $random_eid1,
+            'created_by' => $random_eid2
         );
         \Flexio\Tests\Check::assertInArray('C.8', '\Model::create(); in connection creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
