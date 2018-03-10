@@ -92,7 +92,7 @@ class Test
         $first_deletion = $model->delete($eid);
         $second_deletion = $model->delete($eid);
         $status_after_deletion = $model->getStatus($eid);
-        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === false;
+        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === true;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.3', '\Model::delete(); multiple deletion should succeed',  $actual, $expected, $results);
     }
