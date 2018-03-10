@@ -78,6 +78,9 @@ class Right extends ModelBase
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
+        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
