@@ -146,38 +146,7 @@ class Comment extends ModelBase
 
     public function setStatus(string $eid, string $status) : bool
     {
-        // note: it's possible to set the status through the \Model::set()
-        // function on the model, but this provides a lightweight alternative
-        // that isn't restricted (right now, changes through \Model::set() are
-        // only applied for items that aren't deleted)
-
-        // make sure the status is set to a valid value
-        if (!\Model::isValidStatus($status))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // basic check to avoid needless work
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $db = $this->getDatabase();
-        try
-        {
-            // set the updated timestamp so it'll stay in sync with whatever
-            // object is being edited
-            $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid_status'    => $status,
-                'updated'       => $timestamp
-            );
-            $db->update('tbl_comment', $process_arr, 'eid = ' . $db->quote($eid));
-            return true;
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
-
-        return true; // established object exists, which is enough for returning true
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getOwner(string $eid) : string
