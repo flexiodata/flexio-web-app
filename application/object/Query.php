@@ -152,7 +152,7 @@ class Query
                     if (isset($value))
                         $result[$property_output_name] = $value;
                          else
-                        $result[$property_output_name] = $property_value;
+                        $result[$property_output_name] = json_decode(json_encode($property_value),true);
 
                     continue;
                 }
