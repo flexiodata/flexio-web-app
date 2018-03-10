@@ -36,8 +36,96 @@ class Test
 
 
 
+        // TEST: when creating a pipe, make sure it has the essential fields
+        // and make sure these are set when specified in the input
+
+        // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $info = $model->get($eid);
+        $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in process creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'eid' => $eid,
+            'eid_type' => \Model::TYPE_PROCESS,
+            'eid_status' => \Model::STATUS_AVAILABLE,
+            'parent_eid' => '',
+            'process_mode' => '',
+            'impl_revision' => '',
+            'input' => '{}',
+            'output' => '{}',
+            'task' => '{}',
+            'started_by' => '',
+            'started' => null,
+            'finished' => null,
+            'duration' => null,
+            'process_info' => '{}',
+            'process_status' => '',
+            'cache_used' => '',
+            'owned_by' => '',
+            'created_by' => ''
+        );
+        \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in process creation, make sure essential fields are created',  $actual, $expected, $results);
+
+
+
         // TEST: \Model::create(); process creation with basic parameters
 
         // TODO: add tests
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => ''
+        );
+        \Flexio\Tests\Check::assertInArray('C.11', '\Model::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $info = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+
+
+        // TEST: \Model::set(); make settable properties are set
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $info = array(
+            'eid_status' => \Model::STATUS_TRASH,
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx',
+        );
+        $result = $model->set($eid, $info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'eid_status' => \Model::STATUS_TRASH,
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx',
+        );
+        \Flexio\Tests\Check::assertInArray('E.1', '\Model::set(); make sure properties are updated',  $actual, $expected, $results);
     }
 }

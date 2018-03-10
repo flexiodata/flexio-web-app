@@ -137,6 +137,7 @@ class Process extends ModelBase
         try
         {
             $row = $db->fetchRow("select tpr.eid as eid,
+                                         '".\Model::TYPE_PROCESS."' as eid_type,
                                          tpr.eid_status as eid_status,
                                          tpr.parent_eid as parent_eid,
                                          tpr.process_mode as process_mode,
@@ -167,6 +168,7 @@ class Process extends ModelBase
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         return array('eid'              => $row['eid'],
+                     'eid_type'         => $row['eid_type'],
                      'eid_status'       => $row['eid_status'] ?? \Model::STATUS_UNDEFINED,
                      'parent_eid'       => $row['parent_eid'],
                      'process_mode'     => $row['process_mode'],

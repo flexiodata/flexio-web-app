@@ -86,6 +86,7 @@ class Test
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_PIPE,
+            'eid_status' => \Model::STATUS_AVAILABLE,
             'name' => '',
             'description'  => '',
             'input' => '{}',
@@ -93,7 +94,8 @@ class Test
             'task' => '{}',
             'schedule' => '',
             'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
-            'eid_status' => \Model::STATUS_AVAILABLE
+            'owned_by' => '',
+            'created_by' => ''
         );
         \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
 
@@ -216,5 +218,28 @@ class Test
             'code' => \Flexio\Base\Error::CREATE_FAILED
         );
         \Flexio\Tests\Check::assertInArray('C.10', '\Model::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => ''
+        );
+        \Flexio\Tests\Check::assertInArray('C.11', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $info = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        \Flexio\Tests\Check::assertInArray('C.12', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

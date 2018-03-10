@@ -174,5 +174,27 @@ class Test
             'comment' => 'Test comment'
         );
         \Flexio\Tests\Check::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+
+
+
+        // TEST: \Model::set(); make settable properties are set
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $info = array(
+            'eid_status' => \Model::STATUS_TRASH,
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx',
+        );
+        $result = $model->set($eid, $info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'eid_status' => \Model::STATUS_TRASH,
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx',
+        );
+        \Flexio\Tests\Check::assertInArray('E.1', '\Model::set(); make sure properties are updated',  $actual, $expected, $results);
     }
 }

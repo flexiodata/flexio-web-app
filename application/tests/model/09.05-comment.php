@@ -86,8 +86,10 @@ class Test
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_COMMENT,
+            'eid_status' => \Model::STATUS_AVAILABLE,
             'comment' => '',
-            'eid_status' => \Model::STATUS_AVAILABLE
+            'owned_by' => '',
+            'created_by' => ''
         );
         \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
 
@@ -118,5 +120,28 @@ class Test
             'comment' => 'Test comment'
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $info = array(
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => ''
+        );
+        \Flexio\Tests\Check::assertInArray('C.3', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $info = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        \Flexio\Tests\Check::assertInArray('C.4', '\Model::create(); in comment creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

@@ -117,6 +117,7 @@ class Test
         $expected = array(
             'eid' => $eid,
             'eid_type' => \Model::TYPE_USER,
+            'eid_status' => \Model::STATUS_AVAILABLE,
             'user_name' => $handle1,
             'verify_code' => '',
             'first_name' => '',
@@ -129,7 +130,8 @@ class Test
             'locale_thousands' => ',',
             'locale_dateformat' => 'm/d/Y',
             'timezone' => 'UTC',
-            'eid_status' => \Model::STATUS_AVAILABLE
+            'owned_by' => '',
+            'created_by' => ''
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
 
@@ -336,5 +338,37 @@ class Test
             'timezone' => 'CDT'
         );
         \Flexio\Tests\Check::assertInArray('D.13', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'user_name' => $handle1,
+            'email' => $handle2
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => '',
+            'created_by' => ''
+        );
+        \Flexio\Tests\Check::assertInArray('D.14', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'user_name' => $handle1,
+            'email' => $handle2,
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'owned_by' => 'xyzxyzxyzxyz',
+            'created_by' => 'zyxzyxzyxzyx'
+        );
+        \Flexio\Tests\Check::assertInArray('D.14', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
     }
 }
