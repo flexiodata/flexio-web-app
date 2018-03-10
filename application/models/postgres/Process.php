@@ -100,7 +100,7 @@ class Process extends ModelBase
         {
             // if an item is deleted, don't allow it to be edited
             $existing_status = $this->getStatus($eid);
-            if ($existing_status === false || $existing_status == \Model::STATUS_DELETED)
+            if ($existing_status === \Model::STATUS_UNDEFINED || $existing_status == \Model::STATUS_DELETED)
             {
                 $db->commit();
                 return false;
