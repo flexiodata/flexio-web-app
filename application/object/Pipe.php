@@ -212,7 +212,20 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_PIPE;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Pipe
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $pipe_model = $this->getModel()->pipe;
+        return $pipe_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Pipe
     {
         $this->clearCache();
         $pipe_model = $this->getModel()->pipe;

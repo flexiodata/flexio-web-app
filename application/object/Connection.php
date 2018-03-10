@@ -126,7 +126,20 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_CONNECTION;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Connection
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $connection_model = $this->getModel()->connection;
+        return $connection_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Connection
     {
         $this->clearCache();
         $connection_model = $this->getModel()->connection;

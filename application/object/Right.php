@@ -141,7 +141,20 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_RIGHT;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Right
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $right_model = $this->getModel()->right;
+        return $right_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Right
     {
         $this->clearCache();
         $right_model = $this->getModel()->right;

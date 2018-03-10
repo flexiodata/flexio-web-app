@@ -134,6 +134,20 @@ class Token extends ModelBase
         return true; // established object exists, which is enough for returning true
     }
 
+    public function getOwner(string $eid) : string
+    {
+        // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
+
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return '';
+
+        $result = $this->getDatabase()->fetchOne("select owned_by from tbl_token where eid = ?", $eid);
+        if ($result === false)
+            return '';
+
+        return $result;
+    }
+
     public function getStatus(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))

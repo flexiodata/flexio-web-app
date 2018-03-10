@@ -134,7 +134,20 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_PROCESS;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Process
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $process_model = $this->getModel()->process;
+        return $process_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Process
     {
         $this->clearCache();
         $process_model = $this->getModel()->process;

@@ -176,7 +176,20 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return \Model::TYPE_STREAM;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Stream
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $stream_model = $this->getModel()->stream;
+        return $stream_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Stream
     {
         $this->clearCache();
         $stream_model = $this->getModel()->stream;

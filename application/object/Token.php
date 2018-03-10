@@ -115,7 +115,20 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_TOKEN;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Stream
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $token_model = $this->getModel()->token;
+        return $token_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Token
     {
         $this->clearCache();
         $token_model = $this->getModel()->token;

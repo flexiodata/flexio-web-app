@@ -129,6 +129,19 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_USER;
     }
 
+    public function setOwner(string $user_eid) : \Flexio\Object\User
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $user_model = $this->getModel()->user;
+        return $user_model->getOwner($this->getEid());
+    }
+
     public function setStatus(string $status) : \Flexio\Object\Base
     {
         $this->clearCache();

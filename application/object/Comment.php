@@ -107,7 +107,20 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_COMMENT;
     }
 
-    public function setStatus(string $status) : \Flexio\Object\Base
+    public function setOwner(string $user_eid) : \Flexio\Object\Comment
+    {
+        $properties = array('owned_by' => $user_eid);
+        $this->set($properties);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        $comment_model = $this->getModel()->comment;
+        return $comment_model->getOwner($this->getEid());
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Comment
     {
         $this->clearCache();
         $comment_model = $this->getModel()->comment;

@@ -44,20 +44,6 @@ class Base
         return $this->eid;
     }
 
-    public function setOwner(string $user_eid) : \Flexio\Object\Base
-    {
-        $properties = array('owned_by' => $user_eid);
-        $this->set($properties);
-        return $this;
-    }
-
-    public function getOwner() : string
-    {
-        $properties = $this->get();
-        $owner = $properties['owned_by']['eid'] ?? '';
-        return $owner;
-    }
-
     public function getFollowers() : array
     {
         // get the objects owned/followed by the user
