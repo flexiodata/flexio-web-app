@@ -159,9 +159,9 @@ class User extends ModelBase
             // TODO: make sure we're not changing the user name or email to
             // another one that already exists
 
-            // if an item is deleted, don't allow it to be edited
+            // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
-            if ($existing_status === \Model::STATUS_UNDEFINED || $existing_status == \Model::STATUS_DELETED)
+            if ($existing_status === \Model::STATUS_UNDEFINED)
             {
                 $db->commit();
                 return false;
