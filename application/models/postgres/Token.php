@@ -56,7 +56,6 @@ class Token extends ModelBase
         return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
-
     public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
