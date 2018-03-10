@@ -56,6 +56,60 @@ class Token extends ModelBase
         return $this->setStatus($eid, \Model::STATUS_DELETED);
     }
 
+    public function set(string $eid, array $params) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'   => array('type' => 'string', 'required' => false),
+                'user_eid'     => array('type' => 'string', 'required' => false),
+                'access_code'  => array('type' => 'string', 'required' => false),
+                'owned_by'     => array('type' => 'string', 'required' => false),
+                'created_by'   => array('type' => 'string', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+        $process_arr['updated'] = \Flexio\System\System::getTimestamp();
+
+        if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $db = $this->getDatabase();
+        $db->beginTransaction();
+        try
+        {
+            // if the item doesn't exist, return false; TODO: throw exception instead?
+            $existing_status = $this->getStatus($eid);
+            if ($existing_status === \Model::STATUS_UNDEFINED)
+            {
+                $db->commit();
+                return false;
+            }
+
+            // set the base object properties
+            $result = $this->getModel()->setObjectBase($eid, $params);
+            if ($result === false)
+            {
+                // object doesn't exist or is deleted
+                $db->commit();
+                return false;
+            }
+
+            // set the properties
+            $db->update('tbl_token', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
+            return true;
+        }
+        catch (\Exception $e)
+        {
+            $db->rollback();
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
