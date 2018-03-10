@@ -410,7 +410,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $query = '
         {
             "eid" : null,
-            "eid_type" : null,
+            "eid_type" : "'.\Model::TYPE_CONNECTION.'",
             "eid_status" : null,
             "ename" : null,
             "name" : null,
@@ -419,7 +419,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "connection_status" : null,
             "connection_info" : null,
             "expires" : null,
-            "owned_by='.\Model::EDGE_OWNED_BY.'" : {
+            "owned_by" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
                 "user_name" : null,

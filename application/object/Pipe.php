@@ -266,7 +266,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "ename" : null,
             "name" : null,
             "description" : null,
-            "owned_by='.\Model::EDGE_OWNED_BY.'" : {
+            "owned_by" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_USER.'",
                 "user_name" : null,
