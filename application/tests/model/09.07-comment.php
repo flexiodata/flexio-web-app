@@ -75,9 +75,9 @@ class Test
         $eid = $model->create($info);
         $delete_result = $model->delete($eid);
         $set_result = $model->set($eid, $info);
-        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === false;
+        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::set(); return false and don\'t throw an exception when trying to set parameters on an object that\'s been deleted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
 
 
 
@@ -153,7 +153,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.2', '\Model::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Model::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
 
