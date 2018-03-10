@@ -89,10 +89,20 @@ class Process
             // the pipe, so we should have both read/write access to the pipe;
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        }
 
+        if ($pipe !== false)
+        {
             // if the process is created from a pipe, it runs with pipe owner privileges
             // and inherits the rights from the pipe
             $validated_params['owned_by'] = $pipe->getOwner();
+            $validated_params['created_by'] = $requesting_user_eid;
+        }
+        else
+        {
+            // if the process is created independent of a pipe, it runs with requesting
+            // user privileges
+            $validated_params['owned_by'] = $requesting_user_eid;
             $validated_params['created_by'] = $requesting_user_eid;
         }
 
