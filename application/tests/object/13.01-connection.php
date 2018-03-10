@@ -263,5 +263,17 @@ class Test
         $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_TRASH);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.5', 'Connection::setStatus(); make sure the status is set',  $actual, $expected, $results);
+
+
+
+        // TEST: object owner change
+
+        // BEGIN TEST
+        $random_eid = \Flexio\Base\Eid::generate();
+        $object = \Flexio\Object\Connection::create();
+        $object = $object->setOwner($random_eid);
+        $actual = $object->getOwner();
+        $expected = $random_eid;
+        \Flexio\Tests\Check::assertString('G.1', 'Connection::setOwner(); make sure the owner is set',  $actual, $expected, $results);
     }
 }

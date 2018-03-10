@@ -266,8 +266,15 @@ class Test
         \Flexio\Tests\Check::assertBoolean('F.5', 'Pipe::setStatus(); make sure the status is set',  $actual, $expected, $results);
 
 
-        // TEST: object task step addition
 
-        // TODO: add basic tests for setting/getting the tasks
+        // TEST: object owner change
+
+        // BEGIN TEST
+        $random_eid = \Flexio\Base\Eid::generate();
+        $object = \Flexio\Object\Pipe::create();
+        $object = $object->setOwner($random_eid);
+        $actual = $object->getOwner();
+        $expected = $random_eid;
+        \Flexio\Tests\Check::assertString('G.1', 'Pipe::setOwner(); make sure the owner is set',  $actual, $expected, $results);
     }
 }
