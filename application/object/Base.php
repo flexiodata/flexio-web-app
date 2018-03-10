@@ -63,21 +63,6 @@ class Base
         return $res;
     }
 
-    public function setCreatedBy(string $user_eid) : \Flexio\Object\Base
-    {
-        // TODO: deprecated; move this information over to an action log
-
-        // TODO: remove previous created by, if any
-
-        // TODO: do we want to do more checking? have to be careful because
-        // system and public users don't follow normal eid convention
-
-        $object_eid = $this->getEid();
-        $this->getModel()->assoc_add($user_eid, \Model::EDGE_CREATED, $object_eid);
-        $this->getModel()->assoc_add($object_eid, \Model::EDGE_CREATED_BY, $user_eid);
-        return $this;
-    }
-
     public function allows(string $access_code, string $action) : bool
     {
         // note: like the status, read the rights fresh everytime to make

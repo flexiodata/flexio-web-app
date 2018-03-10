@@ -185,7 +185,6 @@ class Test
         $object = \Flexio\Object\Pipe::create();
         $creator = \Flexio\Object\User::create();
         $object->setOwner($creator->getEid());
-        $object->setCreatedBy($creator->getEid());
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('

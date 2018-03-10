@@ -186,7 +186,6 @@ class Test
         $creator = \Flexio\Object\User::create();
         $pipe = \Flexio\Object\Pipe::create();
         $object->setOwner($creator->getEid());
-        $object->setCreatedBy($creator->getEid());
         $pipe->addProcess($object);
         $properties = $object->get();
         $actual =  $properties;

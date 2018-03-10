@@ -184,11 +184,9 @@ EOD;
     public static function createPipe($user_eid, $pipe_name)
     {
         $properties['name'] = $pipe_name;
-
+        $properties['owned_by'] = $user_eid;
+        $properties['created_by'] = $user_eid;
         $pipe = \Flexio\Object\Pipe::create($properties);
-        $pipe->setOwner($user_eid);
-        $pipe->setCreatedBy($user_eid);
-
         return $pipe->getEid();
     }
 
