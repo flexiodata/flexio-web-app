@@ -44,6 +44,19 @@ class Test
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.4', 'Stream::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Stream::create();
+        $actual = $object->getOwner();
+        $expected = '';
+        \Flexio\Tests\Check::assertString('A.5', 'Stream::create(); objects are created with no owner by default',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $object1 = \Flexio\Object\User::create();
+        $object2 = \Flexio\Object\Stream::create(array('owned_by' => $object1->getEid()));
+        $actual = $object2->getOwner();
+        $expected = $object1->getEid();
+        \Flexio\Tests\Check::assertString('A.6', 'Stream::create(); make sure the owner can be set properly',  $actual, $expected, $results);
+
 
 
         // TEST: object loading

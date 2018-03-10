@@ -44,6 +44,19 @@ class Test
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.4', 'Comment::create(); make sure a valid eid is set when an object is created',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $object = \Flexio\Object\Comment::create();
+        $actual = $object->getOwner();
+        $expected = '';
+        \Flexio\Tests\Check::assertString('A.5', 'Comment::create(); objects are created with no owner by default',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $object1 = \Flexio\Object\User::create();
+        $object2 = \Flexio\Object\Comment::create(array('owned_by' => $object1->getEid()));
+        $actual = $object2->getOwner();
+        $expected = $object1->getEid();
+        \Flexio\Tests\Check::assertString('A.6', 'Comment::create(); make sure the owner can be set properly',  $actual, $expected, $results);
+
 
 
         // TEST: object loading
