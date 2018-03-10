@@ -217,7 +217,7 @@ EOD;
             "op": "execute",
             "params": {
                 "lang": "python",
-                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
+                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/hello-world.py"
             }
         }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
@@ -230,7 +230,7 @@ EOD;
             "op": "execute",
             "params": {
                 "lang": "python",
-                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py",
+                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/hello-world.py",
                 "integrity": "sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
             }
         }',true);
@@ -254,7 +254,7 @@ EOD;
             "params": {
                 "lang": "python",
                 "code": "'.base64_encode($script).'",
-                "path": "https://raw.githubusercontent.com/flexiodata/examples/master/functions/hello-world.py"
+                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/hello-world.py"
             }
         }',true);
         $process = \Flexio\Jobs\Process::create()->execute($task);
