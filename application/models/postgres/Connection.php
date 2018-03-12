@@ -174,7 +174,10 @@ class Connection extends ModelBase
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
+            {
+                $db->rollback();
                 return false;
+            }
 
             if (isset($params['ename']) && $params['ename'] !== '')
             {

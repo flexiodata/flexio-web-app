@@ -133,12 +133,16 @@ class Pipe extends ModelBase
         }
 
         $db = $this->getDatabase();
+        $db->beginTransaction();
         try
         {
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
+            {
+                $db->rollback();
                 return false;
+            }
 
             if (isset($params['ename']) && $params['ename'] !== '')
             {
@@ -168,10 +172,12 @@ class Pipe extends ModelBase
 
             // set the properties
             $db->update('tbl_pipe', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
+            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
