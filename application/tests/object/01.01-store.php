@@ -30,7 +30,7 @@ class Test
         $actual = '';
         try
         {
-            $object = \Flexio\Object\Store::load(false);
+            $object = \Flexio\Object\Store::load('');
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Flexio\Base\Exception $e)
