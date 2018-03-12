@@ -83,8 +83,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
@@ -122,8 +120,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -163,8 +159,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -182,8 +176,6 @@ class Connection
 
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the connections
         $result = array();
@@ -227,8 +219,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -262,8 +252,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -293,8 +281,6 @@ class Connection
 
         // load the object
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)

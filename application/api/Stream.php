@@ -34,8 +34,6 @@ class Stream
 
         // check the rights on the object
         $stream = \Flexio\Object\Stream::load($stream_identifier);
-        if ($stream === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -69,8 +67,6 @@ class Stream
         $encode = $validated_params['encode'] ?? null;
 
         $stream = \Flexio\Object\Stream::load($stream_identifier);
-        if ($stream === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)

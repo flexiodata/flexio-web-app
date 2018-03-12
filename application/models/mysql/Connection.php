@@ -36,16 +36,42 @@ class Connection extends ModelBase
             }
         }
 
+        // if an identifier is non-zero-length identifier is specified, make sure
+        // it's valid; make sure it's not an eid to disambiguate lookups that rely
+        // on both an eid and an ename identifier
+        if (isset($params['ename']) && $params['ename'] !== '')
+        {
+            $ename = $params['ename'];
+            if (!is_string($ename))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Eid::isValid($ename) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
+            if (isset($params['ename']) && $params['ename'] !== '')
+            {
+                // if an identifier is specified, make sure that it's unique within an owner
+                $ownedby = $params['owned_by'] ?? '';
+                $qownedby = $db->quote($ownedby);
+                $qename = $db->quote($ename);
+                $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
+                if ($existing_item !== false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            }
+
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'               => $eid,
                 'eid_status'        => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
+                'ename'             => $params['ename'] ?? '',
                 'name'              => $params['name'] ?? '',
                 'description'       => $params['description'] ?? '',
                 'connection_type'   => $params['connection_type'] ?? '',
@@ -88,6 +114,7 @@ class Connection extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'        => array('type' => 'string',  'required' => false),
+                'ename'             => array('type' => 'string',  'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
@@ -126,35 +153,53 @@ class Connection extends ModelBase
             }
         }
 
+        // if an identifier is non-zero-length identifier is specified, make sure
+        // it's valid; make sure it's not an eid to disambiguate lookups that rely
+        // on both an eid and an ename identifier
+        if (isset($params['ename']) && $params['ename'] !== '')
+        {
+            $ename = $process_arr['ename'];
+            if (!is_string($ename))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Eid::isValid($ename) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->commit();
                 return false;
-            }
 
-            // set the base object properties
-            $result = $this->getModel()->setObjectBase($eid, $params);
-            if ($result === false)
+            if (isset($params['ename']) && $params['ename'] !== '')
             {
-                // object doesn't exist or is deleted
-                $db->commit();
-                return false;
+                // if an identifier is specified, make sure that it's unique within an owner
+                $qeid = $db->quote($eid);
+                $owner_to_check = $process_arr['owned_by'] ?? false;
+                if ($owner_to_check === false) // owner isn't specified; find out what it is
+                    $owner_to_check = $db->fetchOne("select owned_by from tbl_connection where eid = ?", $eid);
+
+                if ($owner_to_check !== false)
+                {
+                    // we found an owner; see if the ename exists for the owner
+                    $qownedby = $db->quote($owner_to_check);
+                    $qename = $db->quote($ename);
+                    $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
+                    if ($existing_item !== false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                }
             }
 
             // set the properties
             $db->update('tbl_connection', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
@@ -171,7 +216,7 @@ class Connection extends ModelBase
             $row = $db->fetchRow("select tco.eid as eid,
                                          '".\Model::TYPE_CONNECTION."' as eid_type,
                                          tco.eid_status as eid_status,
-                                         tob.ename as ename,
+                                         tco.ename as ename,
                                          tco.name as name,
                                          tco.description as description,
                                          tco.connection_type as connection_type,
@@ -182,9 +227,8 @@ class Connection extends ModelBase
                                          tco.created_by as created_by,
                                          tco.created as created,
                                          tco.updated as updated
-                                from tbl_object tob
-                                inner join tbl_connection tco on tob.eid = tco.eid
-                                where tob.eid = ?
+                                from tbl_connection tco
+                                where tco.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)

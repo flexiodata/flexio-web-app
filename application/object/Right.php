@@ -57,27 +57,14 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
     }
 
-    public static function load(string $identifier)
+    public static function load(string $eid) : \Flexio\Object\Right
     {
         $object = new static();
-        $model = $object->getModel();
+        $right_model = $object->getModel()->right;
 
-        // assume the identifier is an eid, and try to find out the type
-        $eid = $identifier;
-        $local_eid_type = $model->getType($identifier);
-
-        if ($local_eid_type !== $object->getType())
-        {
-            // the input isn't an eid, so it must be an identifier; try
-            // to find the eid from the identifier; if we can't find it,
-            // we're done
-            $eid = $model->getEidFromEname($identifier);
-            if ($eid === false)
-                return false;
-        }
-
-        $object->setEid($eid);
-        $object->clearCache();
+        $status = $right_model->getStatus($eid);
+        if ($status === \Model::STATUS_UNDEFINED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: for now, don't allow objects that have been deleted
         // to be loaded; in general, we may want to move this to the
@@ -85,9 +72,11 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // and we need to make sure the behavior is the same after the
         // model constraint is removed, and object loading is a good
         // location for this constraint
-        if ($object->getStatus() === \Model::STATUS_DELETED)
-            return false;
+        if ($status == \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
+        $object->setEid($eid);
+        $object->clearCache();
         return $object;
     }
 
@@ -234,24 +223,22 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties['actions'] = json_decode($properties['actions'],true);
 
         // populate the user info if possible
-        $user = \Flexio\Object\User::load($properties['access_code']);
-        if ($user !== false)
+        try
         {
+            $user = \Flexio\Object\User::load($properties['access_code']);
             $user_info = $user->get();
-
-            if ($user_info !== false)
-            {
-                $info['eid'] = $user_info['eid'];
-                $info['eid_type'] = $user_info['eid_type'];
-                $info['eid_status'] = $user_info['eid_status'];
-                $info['user_name'] = $user_info['user_name'];
-                $info['first_name'] = $user_info['first_name'];
-                $info['last_name'] = $user_info['last_name'];
-                $info['email'] = $user_info['email'];
-                $info['email_hash'] = $user_info['email_hash'];
-
-                $properties['user'] = $info;
-            }
+            $info['eid'] = $user_info['eid'];
+            $info['eid_type'] = $user_info['eid_type'];
+            $info['eid_status'] = $user_info['eid_status'];
+            $info['user_name'] = $user_info['user_name'];
+            $info['first_name'] = $user_info['first_name'];
+            $info['last_name'] = $user_info['last_name'];
+            $info['email'] = $user_info['email'];
+            $info['email_hash'] = $user_info['email_hash'];
+            $properties['user'] = $info;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
         }
 
         // return the properties

@@ -34,9 +34,6 @@ class Token
 
         // load the object and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -65,15 +62,11 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false) // use write, since it's like changing a user property
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($token_identifier);
-        if ($token !== false)
-            $token->delete();
+        $token->delete();
 
         $result = array();
         $result['eid'] = $token->getEid();
@@ -98,17 +91,11 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $token = \Flexio\Object\Token::load($token_identifier);
-        if ($token === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         // get the properties
+        $token = \Flexio\Object\Token::load($token_identifier);
         $properties = $token->get();
         return $properties;
     }
@@ -129,9 +116,6 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

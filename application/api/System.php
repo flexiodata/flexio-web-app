@@ -60,17 +60,19 @@ class System
 
         // return "about" info
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-        $user = \Flexio\Object\User::load($current_user_eid);
-        if ($user === false)
+
+        try
+        {
+            $user = \Flexio\Object\User::load($current_user_eid);
+            return $user->get();
+        }
+        catch (\Flexio\Base\Exception $e)
         {
             $properties = array();
             $properties['eid'] = '';
             $properties['eid_type'] = \Model::TYPE_USER;
             return $properties;
         }
-
-        // return the user info
-        return $user->get();
     }
 
     public static function logout(\Flexio\Api\Request $request) : array
@@ -188,8 +190,7 @@ class System
                                 break;
                         }
                     }
-                    else if (\Flexio\Object\User::load($value) !== false ||
-                             \Flexio\Object\Store::load($value) !== false)
+                    else if (self::identifierExists($value) !== false)
                     {
                         // identifier already exists
                         $valid = false;
@@ -223,7 +224,7 @@ class System
                         $valid = false;
                         $message = _('This email address must be formatted correctly.');
                     }
-                    else if (\Flexio\Object\User::load($value) !== false)
+                    else if (\Flexio\Object\User::getEidFromEmail($value) !== false)
                     {
                         // identifier already exists
                         $valid = false;
@@ -306,6 +307,15 @@ class System
         $result['message'] = $message;
 
         return $result;
+    }
+
+    private static function identifierExists($identifier) : bool
+    {
+        if (\Flexio\Object\User::getEidFromUsername($identifier) !== false)
+            return true;
+
+        // TODO: add checks for ename for pipe and connection
+        return false;
     }
 
     private static function validateTask(array $task, array &$errors) : bool

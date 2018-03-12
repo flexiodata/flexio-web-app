@@ -31,17 +31,13 @@ class Statistics
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
         $stats = \Flexio\System\System::getModel()->process->getUserProcessStats($requesting_user_eid);
 
         $result = array();
         foreach ($stats as $s)
         {
             $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-            if ($pipe !== false)
-                $pipe_info = $pipe->get();
+            $pipe_info = $pipe->get();
 
             $item = array();
 

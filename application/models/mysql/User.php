@@ -38,7 +38,6 @@ class User extends ModelBase
             $params['password'] = \Model::encodePassword($params['password']);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // make sure the user doesn't already exist, based on
@@ -85,12 +84,10 @@ class User extends ModelBase
             if ($db->insert('tbl_user', $process_arr) === false)
                 throw new \Exception();
 
-            $db->commit();
             return $eid;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
@@ -156,7 +153,6 @@ class User extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // TODO: make sure we're not changing the user name or email to
@@ -165,28 +161,14 @@ class User extends ModelBase
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->commit();
                 return false;
-            }
-
-            // set the base object properties
-            $result = $this->getModel()->setObjectBase($eid, $params);
-            if ($result === false)
-            {
-                // object doesn't exist or is deleted
-                $db->commit();
-                return false;
-            }
 
             // set the properties
             $db->update('tbl_user', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
@@ -203,7 +185,6 @@ class User extends ModelBase
             $row = $db->fetchRow("select tus.eid as eid,
                                          '".\Model::TYPE_USER."' as eid_type,
                                          tus.eid_status as eid_status,
-                                         tob.ename as ename,
                                          tus.user_name as user_name,
                                          tus.full_name as full_name,
                                          tus.first_name as first_name,
@@ -226,9 +207,8 @@ class User extends ModelBase
                                          tus.created_by as created_by,
                                          tus.created as created,
                                          tus.updated as updated
-                                from tbl_object tob
-                                inner join tbl_user tus on tob.eid = tus.eid
-                                where tob.eid = ?
+                                from tbl_user tus
+                                where tus.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -242,7 +222,6 @@ class User extends ModelBase
         return array('eid'                    => $row['eid'],
                      'eid_type'               => $row['eid_type'],
                      'eid_status'             => $row['eid_status'],
-                     'ename'                  => $row['ename'],
                      'user_name'              => $row['user_name'],
                      'full_name'              => $row['full_name'],
                      'first_name'             => $row['first_name'],

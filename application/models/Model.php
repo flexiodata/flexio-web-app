@@ -130,20 +130,6 @@ class Model
         return $result;
     }
 
-    public function getTypeByIdentifier(string $identifier) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
-            return \Model::TYPE_UNDEFINED;
-
-        $db = $this->getDatabase();
-        $qidentifier = $db->quote($identifier);
-        $result = $db->fetchOne("select eid_type from tbl_object where eid = $qidentifier or ename = $qidentifier");
-        if ($result === false)
-            return \Model::TYPE_UNDEFINED;
-
-        return $result;
-    }
-
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
     {
         // note: similar to a set operation; make sure the parameters
@@ -494,119 +480,31 @@ class Model
         }
     }
 
-    public function getEidFromEname(string $identifier) // TODO: add return type
+    public function createObjectBase(string $type) : string
     {
-        // gets the eid from either the ename; TODO: this is very similar
-        // to the way we get the eid from the username or the email in
-        // the user model; should consolidate these notions
-
-        // if the identifier isn't valid, there's no corresponding eid
-        if (\Flexio\Base\Identifier::isValid($identifier) === false)
-            return false;
-
-        // look for the eid
-        $db = $this->getDatabase();
-        $qidentifier = $db->quote($identifier);
-        $eid = $db->fetchOne("select eid from tbl_object where ename = $qidentifier");
-        if ($eid === false)
-            return false;
-
-        return $eid;
-    }
-
-    public function createObjectBase(string $type, array $params = null) : string
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other create functions that also include transactions
-        // that ensure that all the create operations function as one unit
-        // as well as ensure that the eid is unique
-
-        // behavior is to make sure valid parameters are supplied and an object is
-        // created, and to throw an exception otherwise
-
         // make sure we have a valid type
         if (!\Model::isValidType($type))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // if a non-zero-length identifier is set, make sure that is a is
-        // a valid and unique identifier; note: also make sure ename is not in
-        // the form of a valid eid to make sure that it doesn't overlap with any
-        // possible eid at present or in the future; otherwise it would be possible
-        // for an name to be created that could be masked in the lookup by an eid;
-        // rather than check in the database for matches between the two values,
-        // simply don't let names be eids
-        $ename = $params['ename'] ?? '';
-        if (strlen($ename) > 0)
-        {
-            if (\Flexio\Base\Identifier::isValid($ename) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // make sure that the ename is unique
-            $db = $this->getDatabase();
-            $qename = $db->quote($ename);
-            $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
-            if ($existing_ename !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-
-        $eid = $this->generateUniqueEid();
+        // $eid = $this->generateUniqueEid();
+        $eid = \Flexio\Base\Eid::generate(); // simply generate an eid; if it isn't unique, the insert will fail because of the unique condition
         $process_arr = array(
             'eid'           => $eid,
-            'eid_type'      => $type,
-            'ename'         => $ename
+            'eid_type'      => $type
         );
 
-        if ($this->getDatabase()->insert('tbl_object', $process_arr) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        return $eid;
-    }
-
-    public function setObjectBase(string $eid, array $params) : bool
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other set functions that also include transactions
-        // that ensure that all the set operations function as one unit
-
-        // behavior is to return true if an object that isn't deleted is set with
-        // valid parameters, to return false if the object can't be found (paralleling delete)
-        // or is deleted, and to throw an Exception if the parameters that are attempting to
-        // be set are invalid
-
-        // if the eid isn't valid, the object doesn't exist
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $db = $this->getDatabase();
-
-        // if an identifier is specified, make sure that is a is a valid and unique
-        // identifier, with the exception that it can also be zero-length so that it
-        // can be reset; note: also make sure ename is not in the form of a valid eid
-        // to make sure that it doesn't overlap with any possible eid at present or
-        // in the future; otherwise it would be possible for an name to be created
-        // that could be masked in the lookup by an eid; rather than check in the
-        // database for matches between the two values, simply don't let names be eids
-        if (isset($params['ename']))
+        try
         {
-            $ename = $params['ename'];
-            if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // make sure that the ename is unique
-            $qename = $db->quote($ename);
-            $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
-            if ($existing_ename !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-            $process_arr = array('ename' => $ename);
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
+            $result = $this->getDatabase()->insert('tbl_object', $process_arr);
+            if ($result === false)
+                throw new \Exception;
+        }
+        catch (\Exception $e)
+        {
+            \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
-        return true; // established object exists, which is enough for returning true
+        return $eid;
     }
 
     public function setDbVersionNumber(string $version) : bool

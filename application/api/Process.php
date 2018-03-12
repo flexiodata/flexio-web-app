@@ -78,8 +78,6 @@ class Process
         if ($pipe_identifier !== false)
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-            if ($pipe === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // make sure to set the parent_eid to the eid since this is what objects
             // downstream are expecting
@@ -158,8 +156,6 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
@@ -191,8 +187,6 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -225,8 +219,6 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -253,9 +245,6 @@ class Process
         $wait_for_change = $validated_params['wait'];
         self::waitforchangewhilerunning($process->getEid(), $wait_for_change);
         $process = \Flexio\Object\Process::load($process->getEid());
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $process_info = $process->get();
 
         if ($process_info_only === true)
@@ -277,8 +266,6 @@ class Process
 
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the processes
         $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
@@ -329,8 +316,6 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -356,8 +341,6 @@ class Process
 
         // load the process object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the process object
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
@@ -424,8 +407,6 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
@@ -457,7 +438,15 @@ class Process
         if ($time_to_wait_for_change > $maximum_wait)
             $time_to_wait_for_change = $maximum_wait;
 
-        $process = \Flexio\Object\Process::load($eid);
+        $process = false;
+        try
+        {
+            $process = \Flexio\Object\Process::load($eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
         if ($process === false)
             return;
 

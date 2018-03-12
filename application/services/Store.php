@@ -77,7 +77,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $type = 'TABLE';
             else
                 $type = 'FILE';
-        
+
             $files[] = array('id'=> $entry['eid'] ?? null,
                              'name' => $entry['name'],
                              'path' => $fullpath,
@@ -114,7 +114,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $type = 'TABLE';
         else
             $type = 'FILE';
-            
+
         return array('id' => $entry['id'] ?? null,
                      'name' => $entry['name'],
                      'size' => $entry['size'] ?? '',
@@ -255,7 +255,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
-    
+
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
 
@@ -348,9 +348,15 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private function getStreamFromPath(string $path, bool $create_dir_structure = false) // : ?\Flexio\Object\Stream
     {
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-        $user = \Flexio\Object\User::load($current_user_eid);
-        if ($user === false)
-            return $user;
+        $user = false;
+        try
+        {
+            $user = \Flexio\Object\User::load($current_user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            return null;
+        }
 
         $stream = $user->getStoreRoot();
         if (!$stream)

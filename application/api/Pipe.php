@@ -81,9 +81,6 @@ class Pipe
 
         // make sure we can read the pipe
         $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
-        if ($original_pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -128,8 +125,6 @@ class Pipe
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
@@ -167,8 +162,6 @@ class Pipe
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -196,8 +189,6 @@ class Pipe
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -214,8 +205,6 @@ class Pipe
 
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
         $result = array();
@@ -254,8 +243,6 @@ class Pipe
 
         // load the object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -304,8 +291,6 @@ class Pipe
 
         // load the pipe object
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the pipe object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)

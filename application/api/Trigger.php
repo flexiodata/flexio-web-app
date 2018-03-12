@@ -58,9 +58,10 @@ class Trigger
 
         // STEP 4: trigger the appropriate process with the email as an input
         $process = false;
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($pipe !== false)
+        try
         {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+
             $pipe_properties = $pipe->get();
             unset($pipe_properties['ename']);
             $process = \Flexio\Object\Process::create($pipe_properties);
@@ -90,6 +91,9 @@ class Trigger
             $engine = \Flexio\Jobs\StoredProcess::create($process);
             $engine->setParams($process_email_params);
             $engine->run(false); // handleEmail should be run in background from email processing script
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
         }
 
         // STEP 5: delete the temporary file

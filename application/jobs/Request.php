@@ -56,18 +56,21 @@ class Request extends \Flexio\Jobs\Base
         if ($connection_identifier !== false)
         {
             $connection = \Flexio\Object\Connection::load($connection_identifier);
-            if ($connection === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
          else
         {
             // the url can also be a connection identifier
-            
-            $connection = \Flexio\Object\Connection::load($url);
-            if ($connection !== false)
+
+            try
+            {
+                $connection = \Flexio\Object\Connection::load($url);
                 $url = ''; // connection found
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
         }
-        
+
         if ($connection)
         {
             // TODO: rights

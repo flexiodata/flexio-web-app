@@ -174,26 +174,28 @@ class System
             $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
             if ($token_info)
             {
-                $user = \Flexio\Object\User::load($token_info['user_eid']);
-                if ($user !== false)
+                try
                 {
+                    $user = \Flexio\Object\User::load($token_info['user_eid']);
                     $user_info = $user->get();
-                    if ($user_info)
-                    {
-                        // set user info
-                        $g_store->user_first_name = $user_info['first_name'];
-                        $g_store->user_last_name = $user_info['last_name'];
-                        $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-                        $g_store->user_email = $user_info['email'];
-                        $g_store->user_eid = $user_info['eid'];
-                        $g_store->lang = $user_info['locale_language'];
-                        $g_store->thousands_separator = $user_info['locale_thousands'];
-                        $g_store->decimal_separator = $user_info['locale_decimal'];
-                        $g_store->date_format = $user_info['locale_dateformat'];
-                        $g_store->timezone = $user_info['timezone'];
 
-                        return true;
-                    }
+                    // set user info
+                    $g_store->user_first_name = $user_info['first_name'];
+                    $g_store->user_last_name = $user_info['last_name'];
+                    $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+                    $g_store->user_email = $user_info['email'];
+                    $g_store->user_eid = $user_info['eid'];
+                    $g_store->lang = $user_info['locale_language'];
+                    $g_store->thousands_separator = $user_info['locale_thousands'];
+                    $g_store->decimal_separator = $user_info['locale_decimal'];
+                    $g_store->date_format = $user_info['locale_dateformat'];
+                    $g_store->timezone = $user_info['timezone'];
+
+                    return true;
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                    // fall through
                 }
             }
         }
@@ -219,26 +221,28 @@ class System
                 $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
                 if ($token_info)
                 {
-                    $user = \Flexio\Object\User::load($token_info['user_eid']);
-                    if ($user !== false)
+                    try
                     {
+                        $user = \Flexio\Object\User::load($token_info['user_eid']);
                         $user_info = $user->get();
-                        if ($user_info)
-                        {
-                            // set user info
-                            $g_store->user_first_name = $user_info['first_name'];
-                            $g_store->user_last_name = $user_info['last_name'];
-                            $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-                            $g_store->user_email = $user_info['email'];
-                            $g_store->user_eid = $user_info['eid'];
-                            $g_store->lang = $user_info['locale_language'];
-                            $g_store->thousands_separator = $user_info['locale_thousands'];
-                            $g_store->decimal_separator = $user_info['locale_decimal'];
-                            $g_store->date_format = $user_info['locale_dateformat'];
-                            $g_store->timezone = $user_info['timezone'];
 
-                            return true;
-                        }
+                        // set user info
+                        $g_store->user_first_name = $user_info['first_name'];
+                        $g_store->user_last_name = $user_info['last_name'];
+                        $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
+                        $g_store->user_email = $user_info['email'];
+                        $g_store->user_eid = $user_info['eid'];
+                        $g_store->lang = $user_info['locale_language'];
+                        $g_store->thousands_separator = $user_info['locale_thousands'];
+                        $g_store->decimal_separator = $user_info['locale_decimal'];
+                        $g_store->date_format = $user_info['locale_dateformat'];
+                        $g_store->timezone = $user_info['timezone'];
+
+                        return true;
+                    }
+                    catch (\Flexio\Base\Exception $e)
+                    {
+                        // fall through
                     }
                 }
             }

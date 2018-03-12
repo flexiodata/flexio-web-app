@@ -36,27 +36,36 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function load(string $identifier)
+
+    public function getEidFromIdentifier(string $identifier) // TODO: add return type
     {
         $object = new static();
-        $model = $object->getModel();
+        $user_model = $object->getModel()->user;
+        return $user_model->getEidFromIdentifier($identifier);
+    }
 
-        // assume the identifier is an eid, and try to find out the type
-        $eid = $identifier;
-        $local_eid_type = $model->getType($identifier);
+    public function getEidFromUsername(string $identifier) // TODO: add return type
+    {
+        $object = new static();
+        $user_model = $object->getModel()->user;
+        return $user_model->getEidFromUsername($identifier);
+    }
 
-        if ($local_eid_type !== $object->getType())
-        {
-            // the input isn't an eid, so it must be an identifier; try
-            // to find the eid from the identifier; if we can't find it,
-            // we're done
-            $eid = $model->getEidFromEname($identifier);
-            if ($eid === false)
-                return false;
-        }
+    public function getEidFromEmail(string $identifier) // TODO: add return type
+    {
+        $object = new static();
+        $user_model = $object->getModel()->user;
+        return $user_model->getEidFromEmail($identifier);
+    }
 
-        $object->setEid($eid);
-        $object->clearCache();
+    public static function load(string $eid) : \Flexio\Object\User
+    {
+        $object = new static();
+        $user_model = $object->getModel()->user;
+
+        $status = $user_model->getStatus($eid);
+        if ($status === \Model::STATUS_UNDEFINED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: for now, don't allow objects that have been deleted
         // to be loaded; in general, we may want to move this to the
@@ -64,9 +73,11 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // and we need to make sure the behavior is the same after the
         // model constraint is removed, and object loading is a good
         // location for this constraint
-        if ($object->getStatus() === \Model::STATUS_DELETED)
-            return false;
+        if ($status == \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
+        $object->setEid($eid);
+        $object->clearCache();
         return $object;
     }
 
@@ -182,9 +193,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $store_root_eid = $items[0]['eid'];
             $stream = \Flexio\Object\Stream::load($store_root_eid);
 
-            if ($stream === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
             // the following line makes sure that tbl_stream record actually exists
             // and will throw an exception if it doesn't
             $stream->get();
@@ -233,8 +241,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $object_eid = $object_info['eid'];
             $object_eid_type = $object_info['eid_type'];
             $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
-            if ($object === false)
-                continue;
 
             if ($allowed_eid_status !== false)
             {
@@ -300,8 +306,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         {
             $token_eid = $token_info['eid'];
             $token = \Flexio\Object\Token::load($token_eid);
-            if ($token === false)
-                continue;
 
             // only show tokens that are available; note: token list will return
             // all tokens, including ones that have been deleted, so this check

@@ -33,24 +33,40 @@ class Test
             $object = \Flexio\Object\Store::load(false);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Error $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', 'Store::load(); return false if an object fails to load',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Store::load(); throw exception if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->pipe->create(null);
-        $object = \Flexio\Object\Store::load($eid);
-        $actual = 'Flexio\Object\Pipe';
-        $expected = get_class($object);
+        $actual = '';
+        try
+        {
+            $eid = $model->pipe->create(null);
+            $object = \Flexio\Object\Store::load($eid);
+            $actual = get_class($object);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = 'Flexio\Object\Pipe';
         \Flexio\Tests\Check::assertString('A.2', 'Store::load(); return the an object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->pipe->create(null);
-        $object = \Flexio\Object\Store::load($eid);
-        $actual = $object->getType();
+        $actual = '';
+        try
+        {
+            $eid = $model->pipe->create(null);
+            $object = \Flexio\Object\Store::load($eid);
+            $actual = $object->getType();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
         $expected = \Model::TYPE_PIPE;
         \Flexio\Tests\Check::assertString('A.3', 'Store::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
