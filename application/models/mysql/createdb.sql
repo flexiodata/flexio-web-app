@@ -18,9 +18,6 @@ SET character_set_client = utf8;
 
 --
 -- Table structure for table tbl_object
--- note: in the postgres implementation, the index on ename is
--- a unique, conditional index; here, we use a simple index and
--- uniqueness is enforced by the model implementation
 --
 
 DROP TABLE IF EXISTS tbl_object;
@@ -28,13 +25,9 @@ CREATE TABLE tbl_object (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_type char(3) NOT NULL default '',
-  ename varchar(40) NOT NULL default '',
   PRIMARY KEY (id),
-  UNIQUE KEY (eid),
-  UNIQUE KEY (ename)
+  UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE INDEX idx_ename ON tbl_object (ename);
 
 
 
@@ -165,6 +158,7 @@ CREATE TABLE tbl_pipe (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
+  ename text default '',
   name text default '',
   description text default '',
   task text default '',
@@ -182,6 +176,7 @@ CREATE TABLE tbl_pipe (
 
 CREATE INDEX idx_pipe_schedule_status ON tbl_pipe (schedule_status);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
+CREATE INDEX idx_pipe_ename ON tbl_pipe (ename);
 
 
 
@@ -194,6 +189,7 @@ CREATE TABLE tbl_connection (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL default '',
   eid_status char(1) NOT NULL default '',
+  ename text default '',
   name text default '',
   description text default '',
   connection_type char(40) NOT NULL default '',
@@ -209,6 +205,7 @@ CREATE TABLE tbl_connection (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
+CREATE INDEX idx_connection_ename ON tbl_connection (ename);
 
 
 
