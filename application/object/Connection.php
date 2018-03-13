@@ -38,6 +38,13 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
+    public static function getEidFromName(string $owner, string $ename)
+    {
+        $object = new static();
+        $connection_model = $object->getModel()->connection;
+        return $connection_model->getEidFromName($owner, $ename);
+    }
+
     public static function load(string $eid) : \Flexio\Object\Connection
     {
         $object = new static();

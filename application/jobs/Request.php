@@ -55,6 +55,11 @@ class Request extends \Flexio\Jobs\Base
 
         if ($connection_identifier !== false)
         {
+            if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+            {
+                $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $connection_identifier);
+                $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+            }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
         }
          else
@@ -63,11 +68,17 @@ class Request extends \Flexio\Jobs\Base
 
             try
             {
+                if (\Flexio\Base\Eid::isValid($url) === false)
+                {
+                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $url);
+                    $url = $eid_from_identifier !== false ? $eid_from_identifier : '';
+                }
+
                 $connection = \Flexio\Object\Connection::load($url);
-                $url = ''; // connection found
             }
             catch (\Flexio\Base\Exception $e)
             {
+                $url = ''; // connection found
             }
         }
 

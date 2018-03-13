@@ -235,6 +235,25 @@ class Pipe extends ModelBase
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
+    public function getEidFromName(string $owner, string $ename) // TODO: add return type
+    {
+        // eids must correspond to a valid owner and ename (although these fields can
+        // be empty strings, only allow lookups for specifically named, owned pipes)
+        if (!\Flexio\Base\Eid::isValid($owner))
+            return false;
+        if (strlen($ename) === 0)
+            return false;
+
+        $db = $this->getDatabase();
+        $qowner = $db->quote($owner);
+        $qename = $db->quote($ename);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and ename = $qename");
+        if ($result === false)
+            return false;
+
+        return $result;
+    }
+
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result

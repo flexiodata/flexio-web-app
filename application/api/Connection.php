@@ -82,6 +82,11 @@ class Connection
         $connection_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object
@@ -119,6 +124,11 @@ class Connection
         $connection_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object
@@ -158,6 +168,11 @@ class Connection
         $connection_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object
@@ -218,6 +233,11 @@ class Connection
         $path = $validated_params['q'] ?? '';
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object
@@ -251,6 +271,11 @@ class Connection
         $connection_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object
@@ -280,6 +305,11 @@ class Connection
         $connection_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the object

@@ -31,6 +31,13 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
+    public static function getEidFromName(string $owner, string $ename)
+    {
+        $object = new static();
+        $pipe_model = $object->getModel()->pipe;
+        return $pipe_model->getEidFromName($owner, $ename);
+    }
+
     public static function load(string $eid) : \Flexio\Object\Pipe
     {
         $object = new static();

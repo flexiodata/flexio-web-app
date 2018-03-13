@@ -77,6 +77,11 @@ class Process
         $pipe = false;
         if ($pipe_identifier !== false)
         {
+            if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+            {
+                $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+                $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+            }
             $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
 
             // make sure to set the parent_eid to the eid since this is what objects
