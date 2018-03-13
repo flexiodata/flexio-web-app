@@ -6,7 +6,7 @@
   </div>
   <div class="flex flex-column" v-else>
     <!-- control bar -->
-    <div class="pa3 ph4-l relative bg-white bb b--black-05">
+    <div class="flex-none pa3 ph4-l relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Connections</div>
@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row h-100" v-if="connections.length > 0">
+    <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <abstract-list
         ref="list"
         class="br b--black-05 overflow-y-auto"
