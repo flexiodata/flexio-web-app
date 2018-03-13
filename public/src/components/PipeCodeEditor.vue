@@ -124,18 +124,17 @@
       },
       saveChanges() {
         try {
-          var fn = (Flexio, callback) => {
-            return eval(this.save_code)
-          }
+          // create a function to create the JS SDK code to call
+          var fn = (Flexio, callback) => { return eval(this.save_code) }
 
           // get access to pipe object
           var pipe = fn.call(this, Flexio)
 
-          // get compiled pipe JSON
-          var pipe_json = pipe.getJSON()
+          if (!Flexio.util.isPipeObject(pipe))
+            throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
 
-          // pull out task from pipe JSON
-          var task = _.get(pipe_json, 'task', { op: 'sequence', params: {} })
+          // get the pipe task JSON
+          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
 
           var eid = this.pipeEid
           var attrs = { task }
