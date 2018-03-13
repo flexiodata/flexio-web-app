@@ -85,7 +85,12 @@ if ($max_ver <= $current_version)
 }
 
 
-echo "Would you like to proceed with the database upgrade? Type 'yes' to continue: ";
+
+echo "This will update the following database:\n\n";
+echo "         Host: " . $params['host'] . "\n";
+echo "     Database: " . $params['dbname'] . "\n\n";
+
+echo "Would you like to proceed? Type 'yes' to continue: ";
 $handle = fopen ("php://stdin","r");
 $line = fgets($handle);
 if (trim($line) != 'yes') {
@@ -93,6 +98,8 @@ if (trim($line) != 'yes') {
     exit(0);
 }
 fclose($handle);
+echo "\n";
+
 
 
 // TODO: log message
