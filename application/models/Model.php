@@ -118,6 +118,101 @@ class Model
         return $obj;
     }
 
+    public static function getModelName(string $type) : string
+    {
+        switch ($type)
+        {
+            default:
+            case \Model::TYPE_UNDEFINED:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
+
+            case \Model::TYPE_USER           : return 'user';
+            case \Model::TYPE_PIPE           : return 'pipe';
+            case \Model::TYPE_STREAM         : return 'stream';
+            case \Model::TYPE_CONNECTION     : return 'connection';
+            case \Model::TYPE_COMMENT        : return 'comment';
+            case \Model::TYPE_PROCESS        : return 'process';
+            case \Model::TYPE_TOKEN          : return 'token';
+            case \Model::TYPE_RIGHT          : return 'right';
+        }
+    }
+
+    public static function isValidType(string $type) : bool
+    {
+        switch ($type)
+        {
+            default:
+                return false;
+
+            case \Model::TYPE_UNDEFINED:
+                return false;
+
+            case \Model::TYPE_USER:
+            case \Model::TYPE_PIPE:
+            case \Model::TYPE_STREAM:
+            case \Model::TYPE_CONNECTION:
+            case \Model::TYPE_COMMENT:
+            case \Model::TYPE_PROCESS:
+            case \Model::TYPE_TOKEN:
+            case \Model::TYPE_RIGHT:
+                return true;
+        }
+    }
+
+    public static function isValidEdge(string $edge) : bool
+    {
+        switch ($edge)
+        {
+            default:
+                return false;
+
+            case \Model::EDGE_UNDEFINED:
+                return false;
+
+            case \Model::EDGE_CREATED:
+            case \Model::EDGE_CREATED_BY:
+            case \Model::EDGE_OWNS:
+            case \Model::EDGE_OWNED_BY:
+            case \Model::EDGE_INVITED:
+            case \Model::EDGE_INVITED_BY:
+            case \Model::EDGE_SHARED_WITH:
+            case \Model::EDGE_SHARED_FROM:
+            case \Model::EDGE_FOLLOWING:
+            case \Model::EDGE_FOLLOWED_BY:
+            case \Model::EDGE_MEMBER_OF:
+            case \Model::EDGE_HAS_MEMBER:
+            case \Model::EDGE_LINKED_TO:
+            case \Model::EDGE_LINKED_FROM:
+            case \Model::EDGE_COPIED_TO:
+            case \Model::EDGE_COPIED_FROM:
+            case \Model::EDGE_COMMENT_ON:
+            case \Model::EDGE_HAS_COMMENT:
+            case \Model::EDGE_PROCESS_OF:
+            case \Model::EDGE_HAS_PROCESS:
+            case \Model::EDGE_STORE_FOR:
+            case \Model::EDGE_HAS_STORE:
+                return true;
+        }
+    }
+
+    public static function isValidStatus(string $status) : bool
+    {
+        switch ($status)
+        {
+            default:
+                return false;
+
+            case \Model::STATUS_UNDEFINED:
+                return false;
+
+            case \Model::STATUS_PENDING:
+            case \Model::STATUS_AVAILABLE:
+            case \Model::STATUS_TRASH:
+            case \Model::STATUS_DELETED:
+                return true;
+        }
+    }
+
     public function getType(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -128,6 +223,33 @@ class Model
             return \Model::TYPE_UNDEFINED;
 
         return $result;
+    }
+
+    public function createObjectBase(string $type) : string
+    {
+        // make sure we have a valid type
+        if (!\Model::isValidType($type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // $eid = $this->generateUniqueEid();
+        $eid = \Flexio\Base\Eid::generate(); // simply generate an eid; if it isn't unique, the insert will fail because of the unique condition
+        $process_arr = array(
+            'eid'           => $eid,
+            'eid_type'      => $type
+        );
+
+        try
+        {
+            $result = $this->getDatabase()->insert('tbl_object', $process_arr);
+            if ($result === false)
+                throw new \Exception;
+        }
+        catch (\Exception $e)
+        {
+            \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+        return $eid;
     }
 
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
@@ -480,33 +602,6 @@ class Model
         }
     }
 
-    public function createObjectBase(string $type) : string
-    {
-        // make sure we have a valid type
-        if (!\Model::isValidType($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // $eid = $this->generateUniqueEid();
-        $eid = \Flexio\Base\Eid::generate(); // simply generate an eid; if it isn't unique, the insert will fail because of the unique condition
-        $process_arr = array(
-            'eid'           => $eid,
-            'eid_type'      => $type
-        );
-
-        try
-        {
-            $result = $this->getDatabase()->insert('tbl_object', $process_arr);
-            if ($result === false)
-                throw new \Exception;
-        }
-        catch (\Exception $e)
-        {
-            \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-        }
-
-        return $eid;
-    }
-
     public function setDbVersionNumber(string $version) : bool
     {
         if (strlen($version) == 0)
@@ -631,101 +726,6 @@ class Model
             return $eid;
 
         return $this->generateUniqueEid();
-    }
-
-    public static function isValidType(string $type) : bool
-    {
-        switch ($type)
-        {
-            default:
-                return false;
-
-            case \Model::TYPE_UNDEFINED:
-                return false;
-
-            case \Model::TYPE_USER:
-            case \Model::TYPE_PIPE:
-            case \Model::TYPE_STREAM:
-            case \Model::TYPE_CONNECTION:
-            case \Model::TYPE_COMMENT:
-            case \Model::TYPE_PROCESS:
-            case \Model::TYPE_TOKEN:
-            case \Model::TYPE_RIGHT:
-                return true;
-        }
-    }
-
-    public static function getModelName(string $type) : string
-    {
-        switch ($type)
-        {
-            default:
-            case \Model::TYPE_UNDEFINED:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
-
-            case \Model::TYPE_USER           : return 'user';
-            case \Model::TYPE_PIPE           : return 'pipe';
-            case \Model::TYPE_STREAM         : return 'stream';
-            case \Model::TYPE_CONNECTION     : return 'connection';
-            case \Model::TYPE_COMMENT        : return 'comment';
-            case \Model::TYPE_PROCESS        : return 'process';
-            case \Model::TYPE_TOKEN          : return 'token';
-            case \Model::TYPE_RIGHT          : return 'right';
-        }
-    }
-
-    public static function isValidEdge(string $edge) : bool
-    {
-        switch ($edge)
-        {
-            default:
-                return false;
-
-            case \Model::EDGE_UNDEFINED:
-                return false;
-
-            case \Model::EDGE_CREATED:
-            case \Model::EDGE_CREATED_BY:
-            case \Model::EDGE_OWNS:
-            case \Model::EDGE_OWNED_BY:
-            case \Model::EDGE_INVITED:
-            case \Model::EDGE_INVITED_BY:
-            case \Model::EDGE_SHARED_WITH:
-            case \Model::EDGE_SHARED_FROM:
-            case \Model::EDGE_FOLLOWING:
-            case \Model::EDGE_FOLLOWED_BY:
-            case \Model::EDGE_MEMBER_OF:
-            case \Model::EDGE_HAS_MEMBER:
-            case \Model::EDGE_LINKED_TO:
-            case \Model::EDGE_LINKED_FROM:
-            case \Model::EDGE_COPIED_TO:
-            case \Model::EDGE_COPIED_FROM:
-            case \Model::EDGE_COMMENT_ON:
-            case \Model::EDGE_HAS_COMMENT:
-            case \Model::EDGE_PROCESS_OF:
-            case \Model::EDGE_HAS_PROCESS:
-            case \Model::EDGE_STORE_FOR:
-            case \Model::EDGE_HAS_STORE:
-                return true;
-        }
-    }
-
-    public static function isValidStatus(string $status) : bool
-    {
-        switch ($status)
-        {
-            default:
-                return false;
-
-            case \Model::STATUS_UNDEFINED:
-                return false;
-
-            case \Model::STATUS_PENDING:
-            case \Model::STATUS_AVAILABLE:
-            case \Model::STATUS_TRASH:
-            case \Model::STATUS_DELETED:
-                return true;
-        }
     }
 
     private static function getDatabaseConfig() : array
