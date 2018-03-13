@@ -115,11 +115,16 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         else
             $type = 'FILE';
 
-        return array('id' => $entry['id'] ?? null,
-                     'name' => $entry['name'],
-                     'size' => $entry['size'] ?? '',
-                     'modified' => $entry['updated'] ?? '',
-                     'type' => $type);
+        $ret = [ 'id' => $entry['id'] ?? null,
+                 'name' => $entry['name'],
+                 'size' => $entry['size'] ?? '',
+                 'modified' => $entry['updated'] ?? '',
+                 'type' => $type ];
+
+        if ($type == 'TABLE')
+            $ret['structure'] = $entry['structure'];
+
+        return $ret;
     }
 
     public function exists(string $path) : bool
