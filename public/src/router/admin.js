@@ -4,6 +4,7 @@ import { ROUTE_DEV } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import AdminTests from '../components/AdminTests.vue'
+import AdminCodeTranslator from '../components/AdminCodeTranslator.vue'
 import AdminCode from '../components/AdminCode.vue'
 import AdminModals from '../components/AdminModals.vue'
 
@@ -29,6 +30,12 @@ export default {
       // /admin/tests is matched
       path: 'tests',
       component: AdminTests
+    },
+    {
+      // AdminCodeTranslator will be rendered inside AdminHome's <router-view>
+      // /admin/translator is matched
+      path: 'translator',
+      component: AdminCodeTranslator
     },
     {
       // AdminCode will be rendered inside AdminHome's <router-view>
