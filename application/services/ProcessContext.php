@@ -126,7 +126,15 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $stream = $this->open($path);
+
+        return [
+            'name' => $path,
+            'path' => $path,
+            'size' => $stream->getSize(),
+            'modified' => null,
+            'type' => 'FILE'
+        ];
     }
 
     public function exists(string $path) : bool
@@ -171,7 +179,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         $file = $parts[1] ?? '';
 
         if ($file == '')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $val = null;
 
@@ -179,7 +187,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params[$file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
             $val = $params[$file];
         }
@@ -187,7 +195,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params['query.' . $file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
             $val = $params['query.' . $file];
         }
@@ -195,7 +203,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params['form.' . $file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
             $val = $params['form.' . $file];
         }
@@ -203,13 +211,13 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getFiles();
             if (!isset($params[$file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
             $val = $params[$file];
         }
         else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         }
 
         if ($val instanceof \Flexio\Base\Stream)
