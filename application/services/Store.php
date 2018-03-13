@@ -244,9 +244,20 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$stream)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
-        $reader = $stream->getReader();
-        while (($buf = $reader->read(16384)) !== false)
-            $callback($buf);
+
+        $entry = $stream->get();
+        if ($entry['mime_type'] == 'application/vnd.flexio.table')
+        {
+            $reader = $stream->getReader();
+            while (($row = $reader->readRow()) !== false)
+                $callback($row);
+        }
+         else
+        {
+            $reader = $stream->getReader();
+            while (($buf = $reader->read(16384)) !== false)
+                $callback($buf);
+        }
     }
 
     public function write(array $params, callable $callback)
