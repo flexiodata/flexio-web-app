@@ -733,7 +733,7 @@ class Model
         return '{SSHA}' . self::hashPasswordSHA1($password);
     }
 
-    public static function hashPasswordSHA1(string $password) : string
+    private static function hashPasswordSHA1(string $password) : string
     {
         return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
     }
