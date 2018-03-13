@@ -728,37 +728,6 @@ class Model
         }
     }
 
-    public static function encodePassword(string $password) : string
-    {
-        return '{SSHA}' . self::hashPasswordSHA1($password);
-    }
-
-    private static function hashPasswordSHA1(string $password) : string
-    {
-        return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
-    }
-
-    public static function checkPasswordHash(string $hashpw, string $password) : bool
-    {
-        if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
-            return true;
-
-        $hashpw = trim($hashpw);
-
-        // empty or short hashed password entries are invalid
-        if (strlen($hashpw) < 32)
-            return false;
-
-        if (strtoupper(substr($hashpw, 0, 6)) == '{SSHA}')
-        {
-            return (strtoupper(substr($hashpw, 6)) == strtoupper(self::hashPasswordSHA1($password))) ? true : false;
-        }
-         else
-        {
-            return false;
-        }
-    }
-
     private static function getDatabaseConfig() : array
     {
         global $g_config;

