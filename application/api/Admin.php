@@ -67,13 +67,13 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $items_selected = array(
-            'object' => 'select eid, eid_type, eid_status, ename, created, updated from tbl_object',
+            'object' => 'select eid, eid_type from tbl_object',
             'association' => 'select source_eid, target_eid, association_type, created, updated from tbl_association',
-            'user' => 'select eid, user_name, email, description, full_name, first_name, last_name, created, updated from tbl_user',
-            'pipe' => 'select eid, name, description, task, input, output, schedule, schedule_status, created, updated from tbl_pipe',
-            'connection' => 'select eid, name, description, connection_type, connection_status, expires, created, updated from tbl_connection',
-            'process' => 'select eid, parent_eid, process_mode, process_hash, task, input, output, started_by, started, finished, process_info, process_status, cache_used, created, updated from tbl_process',
-            'comment' => 'select eid, comment, created, updated from tbl_comment',
+            'user' => 'select eid, eid_status, user_name, email, description, full_name, first_name, last_name, owned_by, created_by, created, updated from tbl_user',
+            'pipe' => 'select eid, eid_status, ename, name, description, task, input, output, schedule, schedule_status, owned_by, created_by, created, updated from tbl_pipe',
+            'connection' => 'select eid, eid_status, ename, name, description, connection_type, connection_status, expires, owned_by, created_by, created, updated from tbl_connection',
+            'process' => 'select eid, eid_status, parent_eid, process_mode, process_hash, task, input, output, started_by, started, finished, process_info, process_status, cache_used, owned_by, created_by, created, updated from tbl_process',
+            'comment' => 'select eid, eid_status, comment, owned_by, created_by, created, updated from tbl_comment',
             'system' => 'select name, value, created, updated from tbl_system'
         );
 
