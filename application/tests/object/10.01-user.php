@@ -217,7 +217,6 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
-            "ename" : null,
             "user_name" : null,
             "first_name" : null,
             "last_name" : null,

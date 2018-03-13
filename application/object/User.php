@@ -521,7 +521,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "eid" : null,
             "eid_type" : "'.\Model::TYPE_USER.'",
             "eid_status" : null,
-            "ename" : null,
             "user_name" : null,
             "first_name" : null,
             "last_name" : null,
