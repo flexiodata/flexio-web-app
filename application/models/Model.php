@@ -118,25 +118,6 @@ class Model
         return $obj;
     }
 
-    public static function getModelName(string $type) : string
-    {
-        switch ($type)
-        {
-            default:
-            case \Model::TYPE_UNDEFINED:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
-
-            case \Model::TYPE_USER           : return 'user';
-            case \Model::TYPE_PIPE           : return 'pipe';
-            case \Model::TYPE_STREAM         : return 'stream';
-            case \Model::TYPE_CONNECTION     : return 'connection';
-            case \Model::TYPE_COMMENT        : return 'comment';
-            case \Model::TYPE_PROCESS        : return 'process';
-            case \Model::TYPE_TOKEN          : return 'token';
-            case \Model::TYPE_RIGHT          : return 'right';
-        }
-    }
-
     public static function isValidType(string $type) : bool
     {
         switch ($type)
