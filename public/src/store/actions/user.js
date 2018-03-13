@@ -146,8 +146,9 @@ export const analyticsIdentify = ({}, attrs) => {
   analytics.identify(_.get(attrs, 'eid'), analytics_payload)
 }
 
-export const analyticsTrack = ({}, event_name, attrs) => {
-  var analytics_payload = _.assign({}, attrs)
+export const analyticsTrack = ({}, attrs) => {
+  var event_name = _.get(attrs, 'event_name', 'Event')
+  var analytics_payload = _.assign({}, _.omit(attrs, ['event_name']))
 
   // add Segment-friendly keys
   _.assign(analytics_payload, {
