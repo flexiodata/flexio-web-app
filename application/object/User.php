@@ -238,18 +238,25 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $res = array();
         foreach ($objects as $object_info)
         {
-            $object_eid = $object_info['eid'];
-            $object_eid_type = $object_info['eid_type'];
-            $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
-
-            if ($allowed_eid_status !== false)
+            try
             {
-                $object_eid_status = $object->getStatus();
-                if (!array_key_exists($object_eid_status, $allowed_eid_status))
-                    continue;
-            }
+                $object_eid = $object_info['eid'];
+                $object_eid_type = $object_info['eid_type'];
+                $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
 
-            $res[] = $object;
+                if ($allowed_eid_status !== false)
+                {
+                    $object_eid_status = $object->getStatus();
+                    if (!array_key_exists($object_eid_status, $allowed_eid_status))
+                        continue;
+                }
+
+                $res[] = $object;
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                continue;
+            }
         }
 
         return $res;
