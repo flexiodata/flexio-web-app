@@ -20,7 +20,6 @@ class Process extends ModelBase
     public function create(array $params = null) : string
     {
         $db = $this->getDatabase();
-        $db->beginTransaction(); // needed to make sure eid generation is safe
         try
         {
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
@@ -50,12 +49,10 @@ class Process extends ModelBase
             if ($db->insert('tbl_process', $process_arr) === false)
                 throw new \Exception();
 
-            $db->commit();
             return $eid;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
@@ -98,34 +95,19 @@ class Process extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->commit();
                 return false;
-            }
-
-            // set the base object properties
-            $result = $this->getModel()->setObjectBase($eid, $params);
-            if ($result === false)
-            {
-                // object doesn't exist
-                $db->commit();
-                return false;
-            }
 
             // set the properties
             $db->update('tbl_process', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
@@ -192,11 +174,6 @@ class Process extends ModelBase
                      'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -209,6 +186,11 @@ class Process extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

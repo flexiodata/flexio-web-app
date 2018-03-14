@@ -54,9 +54,6 @@ class Base
         {
             $user_eid = $user_info['eid'];
             $user = \Flexio\Object\User::load($user_eid);
-            if ($user === false)
-                continue;
-
             $res[] = $user;
         }
 
@@ -211,9 +208,6 @@ class Base
         {
             $right_eid = $r['eid'];
             $right_object = \Flexio\Object\Right::load($right_eid);
-            if ($right_object === false)
-                continue;
-
             $result[] = $right_object->get();
         }
 
@@ -231,7 +225,15 @@ class Base
         {
             // see if the rights already exists
             $right_eid = $r['eid'] ?? '';
-            $right = \Flexio\Object\Right::load($right_eid);
+            $right = false;
+
+            try
+            {
+                $right = \Flexio\Object\Right::load($right_eid);
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
 
             // if a right eid is specified and the object eid is the same
             // as the current object, then update the right on the current

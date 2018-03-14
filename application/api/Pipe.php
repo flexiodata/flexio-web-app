@@ -79,11 +79,15 @@ class Pipe
         $validated_params = $validator->getParams();
         $original_pipe_identifier = $validated_params['copy_eid'];
 
-        // make sure we can read the pipe
+        // load the pipe
+        if (\Flexio\Base\Eid::isValid($original_pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $original_pipe_identifier);
+            $original_pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
-        if ($original_pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
+        // make sure we can read the pipe
         if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -127,9 +131,12 @@ class Pipe
         $pipe_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
@@ -166,9 +173,12 @@ class Pipe
         $pipe_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -195,9 +205,12 @@ class Pipe
         $pipe_identifier = $validated_params['eid'];
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -214,8 +227,6 @@ class Pipe
 
         // load the object
         $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
         $result = array();
@@ -253,9 +264,12 @@ class Pipe
         $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : null;
 
         // load the object
+        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -302,10 +316,13 @@ class Pipe
         $validated_params = $validator->getParams();
         $pipe_identifier = $validated_params['eid'];
 
-        // load the pipe object
+        // load the object
+        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
+            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
-        if ($pipe === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the pipe object
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)

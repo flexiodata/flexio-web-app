@@ -38,27 +38,21 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-    public static function load(string $identifier)
+    public static function getEidFromName(string $owner, string $ename)
     {
         $object = new static();
-        $model = $object->getModel();
+        $connection_model = $object->getModel()->connection;
+        return $connection_model->getEidFromName($owner, $ename);
+    }
 
-        // assume the identifier is an eid, and try to find out the type
-        $eid = $identifier;
-        $local_eid_type = $model->getType($identifier);
+    public static function load(string $eid) : \Flexio\Object\Connection
+    {
+        $object = new static();
+        $connection_model = $object->getModel()->connection;
 
-        if ($local_eid_type !== $object->getType())
-        {
-            // the input isn't an eid, so it must be an identifier; try
-            // to find the eid from the identifier; if we can't find it,
-            // we're done
-            $eid = $model->getEidFromEname($identifier);
-            if ($eid === false)
-                return false;
-        }
-
-        $object->setEid($eid);
-        $object->clearCache();
+        $status = $connection_model->getStatus($eid);
+        if ($status === \Model::STATUS_UNDEFINED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // TODO: for now, don't allow objects that have been deleted
         // to be loaded; in general, we may want to move this to the
@@ -66,9 +60,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // and we need to make sure the behavior is the same after the
         // model constraint is removed, and object loading is a good
         // location for this constraint
-        if ($object->getStatus() === \Model::STATUS_DELETED)
-            return false;
+        if ($status == \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
+        $object->setEid($eid);
+        $object->clearCache();
         return $object;
     }
 

@@ -87,7 +87,7 @@ class Query
         }
          else
         {
-            $model_str = $model::getModelName($eid_type);
+            $model_str = self::getModelNameFromType($eid_type);
             $object = $model->$model_str->get($eid);
         }
 
@@ -210,5 +210,24 @@ class Query
     private static function getModel() : \Model
     {
         return \Flexio\System\System::getModel();
+    }
+
+    private static function getModelNameFromType(string $type) : string
+    {
+        switch ($type)
+        {
+            default:
+            case \Model::TYPE_UNDEFINED:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
+
+            case \Model::TYPE_USER           : return 'user';
+            case \Model::TYPE_PIPE           : return 'pipe';
+            case \Model::TYPE_STREAM         : return 'stream';
+            case \Model::TYPE_CONNECTION     : return 'connection';
+            case \Model::TYPE_COMMENT        : return 'comment';
+            case \Model::TYPE_PROCESS        : return 'process';
+            case \Model::TYPE_TOKEN          : return 'token';
+            case \Model::TYPE_RIGHT          : return 'right';
+        }
     }
 }

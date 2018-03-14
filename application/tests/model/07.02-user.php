@@ -34,7 +34,7 @@ class Test
             );
             $eid = $model->create($info);
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $message = $e->getMessage();
             $actual = json_decode($message,true);
@@ -54,7 +54,7 @@ class Test
             );
             $eid = $model->create($info);
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $message = $e->getMessage();
             $actual = json_decode($message,true);
@@ -74,7 +74,7 @@ class Test
             );
             $eid = $model->create($info);
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $message = $e->getMessage();
             $actual = json_decode($message,true);
@@ -117,7 +117,7 @@ class Test
             $eid_first_time_creation = $model->create($info1);
             $eid_second_time_creation = $model->create($info2);
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $message = $e->getMessage();
             $actual = json_decode($message,true);
@@ -144,7 +144,7 @@ class Test
             $eid_first_time_creation = $model->create($info1);
             $eid_second_time_creation = $model->create($info2);
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $message = $e->getMessage();
             $actual = json_decode($message,true);

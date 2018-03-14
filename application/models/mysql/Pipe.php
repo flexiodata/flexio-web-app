@@ -19,16 +19,42 @@ class Pipe extends ModelBase
 {
     public function create(array $params = null) : string
     {
+        // if an identifier is non-zero-length identifier is specified, make sure
+        // it's valid; make sure it's not an eid to disambiguate lookups that rely
+        // on both an eid and an ename identifier
+        if (isset($params['ename']) && $params['ename'] !== '')
+        {
+            $ename = $params['ename'];
+            if (!is_string($ename))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Eid::isValid($ename) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
+            if (isset($params['ename']) && $params['ename'] !== '')
+            {
+                // if an identifier is specified, make sure that it's unique within an owner
+                $ownedby = $params['owned_by'] ?? '';
+                $qownedby = $db->quote($ownedby);
+                $qename = $db->quote($ename);
+                $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and ename = $qename");
+                if ($existing_item !== false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            }
+
             // create the object base
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'             => $eid,
                 'eid_status'      => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
+                'ename'           => $params['ename'] ?? '',
                 'name'            => $params['name'] ?? '',
                 'description'     => $params['description'] ?? '',
                 'input'           => $params['input'] ?? '{}',
@@ -73,6 +99,7 @@ class Pipe extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'      => array('type' => 'string',  'required' => false),
+                'ename'           => array('type' => 'string',  'required' => false),
                 'name'            => array('type' => 'string',  'required' => false),
                 'description'     => array('type' => 'string',  'required' => false),
                 'input'           => array('type' => 'string',  'required' => false),
@@ -91,6 +118,20 @@ class Pipe extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        // if an identifier is non-zero-length identifier is specified, make sure
+        // it's valid; make sure it's not an eid to disambiguate lookups that rely
+        // on both an eid and an ename identifier
+        if (isset($params['ename']) && $params['ename'] !== '')
+        {
+            $ename = $process_arr['ename'];
+            if (!is_string($ename))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Identifier::isValid($ename) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            if (\Flexio\Base\Eid::isValid($ename) === true)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        }
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
@@ -99,17 +140,27 @@ class Pipe extends ModelBase
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
             {
-                $db->commit();
+                $db->rollback();
                 return false;
             }
 
-            // set the base object properties
-            $result = $this->getModel()->setObjectBase($eid, $params);
-            if ($result === false)
+            if (isset($params['ename']) && $params['ename'] !== '')
             {
-                // object doesn't exist or is deleted
-                $db->commit();
-                return false;
+                // if an identifier is specified, make sure that it's unique within an owner
+                $qeid = $db->quote($eid);
+                $owner_to_check = $process_arr['owned_by'] ?? false;
+                if ($owner_to_check === false) // owner isn't specified; find out what it is
+                    $owner_to_check = $db->fetchOne("select owned_by from tbl_pipe where eid = ?", $eid);
+
+                if ($owner_to_check !== false)
+                {
+                    // we found an owner; see if the ename exists for the owner
+                    $qownedby = $db->quote($owner_to_check);
+                    $qename = $db->quote($ename);
+                    $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and ename = $qename");
+                    if ($existing_item !== false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                }
             }
 
             // make sure the schedule status is an 'A' or an 'I'
@@ -143,7 +194,7 @@ class Pipe extends ModelBase
             $row = $db->fetchRow("select tpi.eid as eid,
                                          '".\Model::TYPE_PIPE."' as eid_type,
                                          tpi.eid_status as eid_status,
-                                         tob.ename as ename,
+                                         tpi.ename as ename,
                                          tpi.name as name,
                                          tpi.description as description,
                                          tpi.input as input,
@@ -155,9 +206,8 @@ class Pipe extends ModelBase
                                          tpi.created_by as created_by,
                                          tpi.created as created,
                                          tpi.updated as updated
-                                from tbl_object tob
-                                inner join tbl_pipe tpi on tob.eid = tpi.eid
-                                where tob.eid = ?
+                                from tbl_pipe tpi
+                                where tpi.eid = ?
                                 ", $eid);
         }
         catch (\Exception $e)
@@ -183,6 +233,25 @@ class Pipe extends ModelBase
                      'created_by'      => $row['created_by'],
                      'created'         => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
+    }
+
+    public function getEidFromName(string $owner, string $ename) // TODO: add return type
+    {
+        // eids must correspond to a valid owner and ename (although these fields can
+        // be empty strings, only allow lookups for specifically named, owned pipes)
+        if (!\Flexio\Base\Eid::isValid($owner))
+            return false;
+        if (strlen($ename) === 0)
+            return false;
+
+        $db = $this->getDatabase();
+        $qowner = $db->quote($owner);
+        $qename = $db->quote($ename);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_pipe where owned_by = $qowner and ename = $qename");
+        if ($result === false)
+            return false;
+
+        return $result;
     }
 
     public function setStatus(string $eid, string $status) : bool

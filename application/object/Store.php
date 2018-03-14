@@ -18,37 +18,37 @@ namespace Flexio\Object;
 
 class Store
 {
-    public static function load(string $identifier, string $eid_type = null)
+    public static function load(string $eid, string $eid_type = null)
     {
         $model = \Flexio\System\System::getModel();
         if (!isset($eid_type))
-            $eid_type = $model->getTypeByIdentifier($identifier);
+            $eid_type = $model->getType($eid);
 
         switch ($eid_type)
         {
             default:
-                return false; // unknown eid type
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             case \Model::TYPE_COMMENT:
-                return \Flexio\Object\Comment::load($identifier);
+                return \Flexio\Object\Comment::load($eid);
 
             case \Model::TYPE_CONNECTION:
-                return \Flexio\Object\Connection::load($identifier);
+                return \Flexio\Object\Connection::load($eid);
 
             case \Model::TYPE_PIPE:
-                return \Flexio\Object\Pipe::load($identifier);
+                return \Flexio\Object\Pipe::load($eid);
 
             case \Model::TYPE_PROCESS:
-                return \Flexio\Object\Process::load($identifier);
+                return \Flexio\Object\Process::load($eid);
 
             case \Model::TYPE_STREAM:
-                return \Flexio\Object\Stream::load($identifier);
+                return \Flexio\Object\Stream::load($eid);
 
             case \Model::TYPE_USER:
-                return \Flexio\Object\User::load($identifier);
+                return \Flexio\Object\User::load($eid);
 
             case \Model::TYPE_TOKEN:
-                return \Flexio\Object\Token::load($identifier);
+                return \Flexio\Object\Token::load($eid);
         }
     }
 }

@@ -55,19 +55,33 @@ class Request extends \Flexio\Jobs\Base
 
         if ($connection_identifier !== false)
         {
+            if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+            {
+                $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $connection_identifier);
+                $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+            }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
-            if ($connection === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
          else
         {
             // the url can also be a connection identifier
-            
-            $connection = \Flexio\Object\Connection::load($url);
-            if ($connection !== false)
+
+            try
+            {
+                if (\Flexio\Base\Eid::isValid($url) === false)
+                {
+                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $url);
+                    $url = $eid_from_identifier !== false ? $eid_from_identifier : '';
+                }
+
+                $connection = \Flexio\Object\Connection::load($url);
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
                 $url = ''; // connection found
+            }
         }
-        
+
         if ($connection)
         {
             // TODO: rights

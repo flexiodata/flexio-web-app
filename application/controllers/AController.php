@@ -78,8 +78,13 @@ class AController extends \Flexio\System\FxControllerAction
         $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         $eid = $params['eid'] ?? false;
-        $connection = \Flexio\Object\Connection::load($eid);
-        if ($connection === false)
+
+        $connection = false;
+        try
+        {
+            $connection = \Flexio\Object\Connection::load($eid);
+        }
+        catch (\Flexio\Base\Exception $e)
         {
             die('The specified connection is unavailable');
         }
@@ -116,16 +121,22 @@ class AController extends \Flexio\System\FxControllerAction
         // if the state is set, get the eid and load the connection; otherwise
         // try to get the eid from the raw params
         $connection = false;
-        if (isset($auth_params['state']))
+        try
         {
-            $state = json_decode(base64_decode($auth_params['state']),true);
-            $eid = $state['eid'] ?? false;
-            $connection = \Flexio\Object\Connection::load($eid);
+            if (isset($auth_params['state']))
+            {
+                $state = json_decode(base64_decode($auth_params['state']),true);
+                $eid = $state['eid'] ?? false;
+                $connection = \Flexio\Object\Connection::load($eid);
+            }
+            else
+            {
+                $eid = $params['eid'] ?? false;
+                $connection = \Flexio\Object\Connection::load($eid);
+            }
         }
-        else
+        catch (\Flexio\Base\Exception $e)
         {
-            $eid = $params['eid'] ?? false;
-            $connection = \Flexio\Object\Connection::load($eid);
         }
 
         if (isset($params['error']))
@@ -201,10 +212,17 @@ class AController extends \Flexio\System\FxControllerAction
 
             // get the user we're sharing with
             $target_user_info = false;
+            $target_user = false;
 
-            $target_user = \Flexio\Object\User::load($email);
-            if ($target_user !== false)
+            try
+            {
+                $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+                $target_user = \Flexio\Object\User::load($user_eid);
                 $target_user_info = $target_user->get();
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
 
             if ($target_user_info === false)
             {

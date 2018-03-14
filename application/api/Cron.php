@@ -277,14 +277,17 @@ class Cron
         // TODO: check permissions based on the owner of the pipe
 
         // STEP 1: load the pipe
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($pipe === false)
+        $pipe = false;
+        $pipe_properties = false;
+        try
+        {
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            $pipe_properties = $pipe->get();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             return false;
-
-        $pipe_eid = $pipe->getEid();
-        $pipe_properties = $pipe->get();
-        if ($pipe_properties === false)
-            return false;
+        }
 
         $process_properties = array(
             'task' => $pipe_properties['task'],

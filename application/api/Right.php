@@ -52,9 +52,6 @@ class Right
 
             // make sure we're allowed to modify the rights
             $object = \Flexio\Object\Store::load($object_eid);
-            if ($object === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
             if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -73,7 +70,15 @@ class Right
              else
             {
                 // see if the access code is a valid user; if not, invite the user
-                $user = \Flexio\Object\User::load($access_code);
+                $user = false;
+                try
+                {
+                    $user = \Flexio\Object\User::load($access_code);
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                }
+
                 if ($user === false)
                 {
                     // create a user
@@ -154,16 +159,10 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
-        if ($right === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -189,16 +188,10 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
-        if ($right === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -231,16 +224,10 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
-        if ($right === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -272,14 +259,11 @@ class Right
 
         // get the rights for the user
         $user = \Flexio\Object\User::load($user_eid);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $rights = $user->getRightsList($filter);
         return $rights;
     }
 
-    private static function createUser(string $identifier, string $requesting_user_eid)
+    private static function createUser(string $identifier, string $requesting_user_eid) : \Flexio\Object\User
     {
         // user doesn't exist; create a user
         $user_email = $identifier;
@@ -314,17 +298,20 @@ class Right
 
     private static function sendInviteEmail(string $invited_user_eid, string $requesting_user_eid, string $object_eid, string $message) : bool
     {
-        $invited_user = \Flexio\Object\User::load($invited_user_eid);
-        if ($invited_user === false)
-            return false;
+        $invited_user = false;
+        $requesting_user = false;
+        $object = false;
 
-        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($requesting_user === false)
+        try
+        {
+            $invited_user = \Flexio\Object\User::load($invited_user_eid);
+            $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+            $object = \Flexio\Object\Store::load($object_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             return false;
-
-        $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            return false;
+        }
 
         $invited_user_info = $invited_user->get();
         $to_email = $invited_user_info['email'];
@@ -361,13 +348,8 @@ class Right
         return true;
     }
 
-    private static function syncFollowersWithRights(string $object_eid) : bool
+    private static function syncFollowersWithRights(\Flexio\IFace\Object $object) : bool
     {
-        // load the object
-        $object = \Flexio\Object\Store::load($object_eid);
-        if ($object === false)
-            return false;
-
         // get the object followers
         $follower_eids = array();
         $followers = $object->getFollowers();

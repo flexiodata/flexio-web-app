@@ -61,18 +61,35 @@ class Test
 
         // TEST: object loading
 
-        // BEGIN TEST
-        $object = \Flexio\Object\Comment::load('');
-        $actual = $object;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.1', 'Comment::load(); return false if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->pipe->create(null);
-        $object = \Flexio\Object\Comment::load($eid);
-        $actual = $object;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Comment::load(); return false if an object fails to load',  $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $object = \Flexio\Object\Comment::load('');
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.1', 'Comment::load(); throw exception if an object fails to load',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = '';
+        try
+        {
+            $eid = $model->pipe->create(null);; // make sure eid of other types can't be loaded
+            $object = \Flexio\Object\Comment::load($eid);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('B.2', 'Comment::load(); throw exception if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = $model->comment->create(null);
@@ -244,7 +261,7 @@ class Test
             $status2 = $object->setStatus('.')->getStatus();
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }

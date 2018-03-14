@@ -58,7 +58,6 @@ class Action extends ModelBase
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         $db = $this->getDatabase();
-        $db->beginTransaction();
         try
         {
             // see if the action exists; return false otherwise; this check is to
@@ -68,19 +67,14 @@ class Action extends ModelBase
                                   where tac.eid = ?
                                  ", $eid);
             if (!$row)
-            {
-                $db->commit();
                 return false;
-            }
 
             // set the properties
             $db->update('tbl_action', $process_arr, 'eid = ' . $db->quote($eid));
-            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }

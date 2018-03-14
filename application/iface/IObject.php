@@ -19,7 +19,7 @@ namespace Flexio\IFace;
 interface IObject
 {
     public static function create(array $properties = null);
-    public static function load(string $identifier);
+    public static function load(string $eid);
 
     public function delete();
     public function set(array $properties);

@@ -74,8 +74,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
             // load the object
             $user = \Flexio\Object\User::load($current_user_eid);
-            if ($user === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // get the connections
             $connections = $user->getConnectionList();
@@ -391,9 +389,12 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
 
         // load the connection
+        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $connection_identifier);
+            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+        }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
-        if ($connection === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the connection
         if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)

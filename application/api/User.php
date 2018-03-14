@@ -88,8 +88,15 @@ class User
         unset($validated_params['require_verification']);
 
         // try to find the user
-        $user = \Flexio\Object\User::load($email);
-
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
 
         // POSSIBILITY 1: user doesn't exist; create the user
         if ($user === false)
@@ -257,8 +264,6 @@ class User
 
         // load the user
         $user = \Flexio\Object\User::load($user_identifier);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights, but only if the object isn't pending;
         // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
@@ -293,8 +298,6 @@ class User
 
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -317,16 +320,18 @@ class User
 
         // returns the information for the currently logged-in user or an empty eid
         // if the user isn't logged in
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user === false)
+        try
+        {
+            $user = \Flexio\Object\User::load($requesting_user_eid);
+            return $user->get();
+        }
+        catch (\Flexio\Base\Exception $e)
         {
             $properties = array();
             $properties['eid'] = '';
             $properties['eid_type'] = \Model::TYPE_USER;
             return $properties;
         }
-
-        return $user->get();
     }
 
     public static function changepassword(\Flexio\Api\Request $request) : array
@@ -353,8 +358,6 @@ class User
 
         // load the object
         $user = \Flexio\Object\User::load($user_identifier);
-        if ($user === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -386,9 +389,16 @@ class User
         $email = $validated_params['email'];
         $code = $validated_params['verify_code'];
 
-        $user = \Flexio\Object\User::load($email);
-        if ($user === false)
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+        }
 
         if ($user->getStatus() != \Model::STATUS_PENDING)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('This user is already activated'));
@@ -418,9 +428,16 @@ class User
         $validated_params = $validator->getParams();
         $email = $validated_params['email'];
 
-        $user = \Flexio\Object\User::load($email);
-        if ($user === false)
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+        }
 
         // TODO: if the verify code is a set, but blank, should we regenerate
         // the verification code?
@@ -454,9 +471,16 @@ class User
         $email = $validated_params['email'];
         $verify_code = \Flexio\Base\Util::generateHandle();
 
-        $user = \Flexio\Object\User::load($email);
-        if ($user === false)
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+        }
 
         if ($user->set(array('verify_code' => $verify_code)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
@@ -493,9 +517,16 @@ class User
         if (\Flexio\Base\Util::isValidPassword($password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $user = \Flexio\Object\User::load($email);
-        if ($user === false)
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+        }
 
         if ($user->getVerifyCode() !== $code)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
@@ -581,21 +612,26 @@ class User
                 if (!isset($o['eid_type']))
                     continue;
 
+                $new_object = false;
                 switch ($o['eid_type'])
                 {
                     case \Model::TYPE_CONNECTION:
                         $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
+                        $new_object = \Flexio\Oject\Connection::load($object_eid);
                         break;
 
                     case \Model::TYPE_PIPE:
                         $object_eid = self::createPipeFromFile($user_eid, $o['path']);
+                        $new_object = \Flexio\Oject\Pipe::load($object_eid);
                         break;
                 }
 
-                $object = \Flexio\Object\Store::load($object_eid);
                 if ($object !== false)
                     $results[] = $object->get();
             }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
         }
         catch (\Exception $e)
         {
@@ -615,16 +651,9 @@ class User
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // STEP 2: fine a unique ename
-        $user = \Flexio\Object\User::load($user_eid);
-        $user_info = $user->get();
-        $username = $user_info['user_name'];
-        $ename = $definition['ename'];
-        $ename = self::findUniqueEname($username, $ename, 'connection');
-
-        // STEP 3: create the object
+        // STEP 2: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Connection';
-        $call_params['ename'] = $ename;
+        $call_params['ename'] = $definition['ename'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
 
         if (isset($definition['connection_type']))
@@ -659,16 +688,9 @@ class User
         if ($definition === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // STEP 2: fine a unique ename
-        $user = \Flexio\Object\User::load($user_eid);
-        $user_info = $user->get();
-        $username = $user_info['user_name'];
-        $ename = $definition['ename'];
-        $ename = self::findUniqueEname($username, $ename, 'pipe');
-
-        // STEP 3: create the object
+        // STEP 2: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Pipe';
-        $call_params['ename'] = $ename;
+        $call_params['ename'] = $definition['ename'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
         $call_params['task'] = array();
         if (isset($definition['task']))
@@ -689,43 +711,6 @@ class User
         );
 
         return $pipe->getEid();
-    }
-
-    private static function findUniqueEname(string $username, string $ename, string $prefix = '') : string
-    {
-        // start of with an ename made up of the username and a general ename
-        $ename = $username . '-' . $ename;
-
-        // see if the ename we have is valid
-        if (\Flexio\Base\Identifier::isValid($ename) === false)
-            $ename = '';
-
-        $object = \Flexio\Object\Store::load($ename); // see if the ename exists; if it does or no ename exists, we need to generate a unique ename
-        if ($object !== false || strlen($ename) === 0)
-        {
-            // reset the ename in case our efforts to find a suitable name fail
-            $enamebase = $ename;
-            $ename = '';
-
-            // cycle through 10 random ename possibilies; after that, don't try anymore
-            for ($i = 0; $i < 10; ++$i)
-            {
-                $random_ename = '';
-                if (strlen($enamebase) === 0)
-                    $random_ename = $prefix . '-' . \Flexio\Base\Util::generateRandomString(8); // long suffix
-                     else
-                    $random_ename = $enamebase . '-' . \Flexio\Base\Util::generateRandomString(4); // short suffix
-
-                $object = \Flexio\Object\Store::load($random_ename);
-                if ($object === false)
-                {
-                    $ename = $random_ename;
-                    break;
-                }
-            }
-        }
-
-        return $ename;
     }
 
     private static function getExampleObjects() : array

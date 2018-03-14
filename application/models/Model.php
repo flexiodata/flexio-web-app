@@ -118,6 +118,82 @@ class Model
         return $obj;
     }
 
+    public static function isValidType(string $type) : bool
+    {
+        switch ($type)
+        {
+            default:
+                return false;
+
+            case \Model::TYPE_UNDEFINED:
+                return false;
+
+            case \Model::TYPE_USER:
+            case \Model::TYPE_PIPE:
+            case \Model::TYPE_STREAM:
+            case \Model::TYPE_CONNECTION:
+            case \Model::TYPE_COMMENT:
+            case \Model::TYPE_PROCESS:
+            case \Model::TYPE_TOKEN:
+            case \Model::TYPE_RIGHT:
+                return true;
+        }
+    }
+
+    public static function isValidEdge(string $edge) : bool
+    {
+        switch ($edge)
+        {
+            default:
+                return false;
+
+            case \Model::EDGE_UNDEFINED:
+                return false;
+
+            case \Model::EDGE_CREATED:
+            case \Model::EDGE_CREATED_BY:
+            case \Model::EDGE_OWNS:
+            case \Model::EDGE_OWNED_BY:
+            case \Model::EDGE_INVITED:
+            case \Model::EDGE_INVITED_BY:
+            case \Model::EDGE_SHARED_WITH:
+            case \Model::EDGE_SHARED_FROM:
+            case \Model::EDGE_FOLLOWING:
+            case \Model::EDGE_FOLLOWED_BY:
+            case \Model::EDGE_MEMBER_OF:
+            case \Model::EDGE_HAS_MEMBER:
+            case \Model::EDGE_LINKED_TO:
+            case \Model::EDGE_LINKED_FROM:
+            case \Model::EDGE_COPIED_TO:
+            case \Model::EDGE_COPIED_FROM:
+            case \Model::EDGE_COMMENT_ON:
+            case \Model::EDGE_HAS_COMMENT:
+            case \Model::EDGE_PROCESS_OF:
+            case \Model::EDGE_HAS_PROCESS:
+            case \Model::EDGE_STORE_FOR:
+            case \Model::EDGE_HAS_STORE:
+                return true;
+        }
+    }
+
+    public static function isValidStatus(string $status) : bool
+    {
+        switch ($status)
+        {
+            default:
+                return false;
+
+            case \Model::STATUS_UNDEFINED:
+                return false;
+
+            case \Model::STATUS_PENDING:
+            case \Model::STATUS_AVAILABLE:
+            case \Model::STATUS_TRASH:
+            case \Model::STATUS_DELETED:
+                return true;
+        }
+    }
+
     public function getType(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -130,18 +206,31 @@ class Model
         return $result;
     }
 
-    public function getTypeByIdentifier(string $identifier) : string
+    public function createObjectBase(string $type) : string
     {
-        if (!\Flexio\Base\Eid::isValid($identifier) && !\Flexio\Base\Identifier::isValid($identifier))
-            return \Model::TYPE_UNDEFINED;
+        // make sure we have a valid type
+        if (!\Model::isValidType($type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $db = $this->getDatabase();
-        $qidentifier = $db->quote($identifier);
-        $result = $db->fetchOne("select eid_type from tbl_object where eid = $qidentifier or ename = $qidentifier");
-        if ($result === false)
-            return \Model::TYPE_UNDEFINED;
+        // $eid = $this->generateUniqueEid();
+        $eid = \Flexio\Base\Eid::generate(); // simply generate an eid; if it isn't unique, the insert will fail because of the unique condition
+        $process_arr = array(
+            'eid'           => $eid,
+            'eid_type'      => $type
+        );
 
-        return $result;
+        try
+        {
+            $result = $this->getDatabase()->insert('tbl_object', $process_arr);
+            if ($result === false)
+                throw new \Exception;
+        }
+        catch (\Exception $e)
+        {
+            \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+        return $eid;
     }
 
     public function assoc_add(string $source_eid, string $type, string $target_eid) : bool
@@ -494,121 +583,6 @@ class Model
         }
     }
 
-    public function getEidFromEname(string $identifier) // TODO: add return type
-    {
-        // gets the eid from either the ename; TODO: this is very similar
-        // to the way we get the eid from the username or the email in
-        // the user model; should consolidate these notions
-
-        // if the identifier isn't valid, there's no corresponding eid
-        if (\Flexio\Base\Identifier::isValid($identifier) === false)
-            return false;
-
-        // look for the eid
-        $db = $this->getDatabase();
-        $qidentifier = $db->quote($identifier);
-        $eid = $db->fetchOne("select eid from tbl_object where ename = $qidentifier");
-        if ($eid === false)
-            return false;
-
-        return $eid;
-    }
-
-    public function createObjectBase(string $type, array $params = null) : string
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other create functions that also include transactions
-        // that ensure that all the create operations function as one unit
-        // as well as ensure that the eid is unique
-
-        // behavior is to make sure valid parameters are supplied and an object is
-        // created, and to throw an exception otherwise
-
-        // make sure we have a valid type
-        if (!\Model::isValidType($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // if a non-zero-length identifier is set, make sure that is a is
-        // a valid and unique identifier; note: also make sure ename is not in
-        // the form of a valid eid to make sure that it doesn't overlap with any
-        // possible eid at present or in the future; otherwise it would be possible
-        // for an name to be created that could be masked in the lookup by an eid;
-        // rather than check in the database for matches between the two values,
-        // simply don't let names be eids
-        $ename = $params['ename'] ?? '';
-        if (strlen($ename) > 0)
-        {
-            if (\Flexio\Base\Identifier::isValid($ename) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // make sure that the ename is unique
-            $db = $this->getDatabase();
-            $qename = $db->quote($ename);
-            $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
-            if ($existing_ename !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-
-        $eid = $this->generateUniqueEid();
-        $process_arr = array(
-            'eid'           => $eid,
-            'eid_type'      => $type,
-            'ename'         => $ename
-        );
-
-        if ($this->getDatabase()->insert('tbl_object', $process_arr) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        return $eid;
-    }
-
-    public function setObjectBase(string $eid, array $params) : bool
-    {
-        // note: this function shouldn't be used directly; it's meant to
-        // be used in other set functions that also include transactions
-        // that ensure that all the set operations function as one unit
-
-        // behavior is to return true if an object that isn't deleted is set with
-        // valid parameters, to return false if the object can't be found (paralleling delete)
-        // or is deleted, and to throw an Exception if the parameters that are attempting to
-        // be set are invalid
-
-        // if the eid isn't valid, the object doesn't exist
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false;
-
-        $db = $this->getDatabase();
-
-        // if an identifier is specified, make sure that is a is a valid and unique
-        // identifier, with the exception that it can also be zero-length so that it
-        // can be reset; note: also make sure ename is not in the form of a valid eid
-        // to make sure that it doesn't overlap with any possible eid at present or
-        // in the future; otherwise it would be possible for an name to be created
-        // that could be masked in the lookup by an eid; rather than check in the
-        // database for matches between the two values, simply don't let names be eids
-        if (isset($params['ename']))
-        {
-            $ename = $params['ename'];
-            if ($ename !== '' && \Flexio\Base\Identifier::isValid($ename) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            // make sure that the ename is unique
-            $qename = $db->quote($ename);
-            $existing_ename = $db->fetchOne("select eid from tbl_object where ename = ?", $qename);
-            if ($existing_ename !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-            $process_arr = array('ename' => $ename);
-            $db->update('tbl_object', $process_arr, 'eid = ' . $db->quote($eid));
-        }
-
-        return true; // established object exists, which is enough for returning true
-    }
-
     public function setDbVersionNumber(string $version) : bool
     {
         if (strlen($version) == 0)
@@ -733,132 +707,6 @@ class Model
             return $eid;
 
         return $this->generateUniqueEid();
-    }
-
-    public static function isValidType(string $type) : bool
-    {
-        switch ($type)
-        {
-            default:
-                return false;
-
-            case \Model::TYPE_UNDEFINED:
-                return false;
-
-            case \Model::TYPE_USER:
-            case \Model::TYPE_PIPE:
-            case \Model::TYPE_STREAM:
-            case \Model::TYPE_CONNECTION:
-            case \Model::TYPE_COMMENT:
-            case \Model::TYPE_PROCESS:
-            case \Model::TYPE_TOKEN:
-            case \Model::TYPE_RIGHT:
-                return true;
-        }
-    }
-
-    public static function getModelName(string $type) : string
-    {
-        switch ($type)
-        {
-            default:
-            case \Model::TYPE_UNDEFINED:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_MODEL);
-
-            case \Model::TYPE_USER           : return 'user';
-            case \Model::TYPE_PIPE           : return 'pipe';
-            case \Model::TYPE_STREAM         : return 'stream';
-            case \Model::TYPE_CONNECTION     : return 'connection';
-            case \Model::TYPE_COMMENT        : return 'comment';
-            case \Model::TYPE_PROCESS        : return 'process';
-            case \Model::TYPE_TOKEN          : return 'token';
-            case \Model::TYPE_RIGHT          : return 'right';
-        }
-    }
-
-    public static function isValidEdge(string $edge) : bool
-    {
-        switch ($edge)
-        {
-            default:
-                return false;
-
-            case \Model::EDGE_UNDEFINED:
-                return false;
-
-            case \Model::EDGE_CREATED:
-            case \Model::EDGE_CREATED_BY:
-            case \Model::EDGE_OWNS:
-            case \Model::EDGE_OWNED_BY:
-            case \Model::EDGE_INVITED:
-            case \Model::EDGE_INVITED_BY:
-            case \Model::EDGE_SHARED_WITH:
-            case \Model::EDGE_SHARED_FROM:
-            case \Model::EDGE_FOLLOWING:
-            case \Model::EDGE_FOLLOWED_BY:
-            case \Model::EDGE_MEMBER_OF:
-            case \Model::EDGE_HAS_MEMBER:
-            case \Model::EDGE_LINKED_TO:
-            case \Model::EDGE_LINKED_FROM:
-            case \Model::EDGE_COPIED_TO:
-            case \Model::EDGE_COPIED_FROM:
-            case \Model::EDGE_COMMENT_ON:
-            case \Model::EDGE_HAS_COMMENT:
-            case \Model::EDGE_PROCESS_OF:
-            case \Model::EDGE_HAS_PROCESS:
-            case \Model::EDGE_STORE_FOR:
-            case \Model::EDGE_HAS_STORE:
-                return true;
-        }
-    }
-
-    public static function isValidStatus(string $status) : bool
-    {
-        switch ($status)
-        {
-            default:
-                return false;
-
-            case \Model::STATUS_UNDEFINED:
-                return false;
-
-            case \Model::STATUS_PENDING:
-            case \Model::STATUS_AVAILABLE:
-            case \Model::STATUS_TRASH:
-            case \Model::STATUS_DELETED:
-                return true;
-        }
-    }
-
-    public static function encodePassword(string $password) : string
-    {
-        return '{SSHA}' . self::hashPasswordSHA1($password);
-    }
-
-    public static function hashPasswordSHA1(string $password) : string
-    {
-        return sha1('wecRucaceuhZucrea9UzARujUph5cf8Z' . $password);
-    }
-
-    public static function checkPasswordHash(string $hashpw, string $password) : bool
-    {
-        if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
-            return true;
-
-        $hashpw = trim($hashpw);
-
-        // empty or short hashed password entries are invalid
-        if (strlen($hashpw) < 32)
-            return false;
-
-        if (strtoupper(substr($hashpw, 0, 6)) == '{SSHA}')
-        {
-            return (strtoupper(substr($hashpw, 6)) == strtoupper(self::hashPasswordSHA1($password))) ? true : false;
-        }
-         else
-        {
-            return false;
-        }
     }
 
     private static function getDatabaseConfig() : array

@@ -54,7 +54,7 @@ class Test
         {
             $result = \Flexio\Tests\Util::getModel()->setTimezone('');
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -67,7 +67,7 @@ class Test
         {
             $result = \Flexio\Tests\Util::getModel()->setTimezone('\\');
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -84,7 +84,7 @@ class Test
         {
             $result = \Flexio\Tests\Util::getModel()->setTimezone('UTC');
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }

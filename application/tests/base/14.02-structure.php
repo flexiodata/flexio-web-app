@@ -158,7 +158,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -177,7 +177,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -211,7 +211,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -231,7 +231,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -286,7 +286,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -305,7 +305,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -384,7 +384,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -403,7 +403,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -422,7 +422,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -599,7 +599,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -618,7 +618,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -637,7 +637,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -926,7 +926,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -964,7 +964,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -1253,7 +1253,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -1272,7 +1272,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
@@ -1291,7 +1291,7 @@ class Test
             \Flexio\Base\Structure::create($column_info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Exception $e)
+        catch (\Flexio\Base\Exception $e)
         {
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
