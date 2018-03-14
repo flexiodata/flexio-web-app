@@ -280,14 +280,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "last_name" : null,
                 "email_hash" : null
             },
-            "followed_by='.\Model::EDGE_FOLLOWED_BY.'" : [{
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            }],
             "task" : null,
             "schedule" : null,
             "schedule_status" : null,

@@ -219,8 +219,6 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
-            "followed_by" : [
-            ],
             "task" : {
             },
             "schedule" : null,

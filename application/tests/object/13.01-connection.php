@@ -223,8 +223,6 @@ class Test
                 "last_name" : null,
                 "email_hash" : null
             },
-            "followed_by" : [
-            ],
             "created" : null,
             "updated" : null
         }
