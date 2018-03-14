@@ -43,22 +43,6 @@ class Base
         return $this->eid;
     }
 
-    public function getFollowers() : array
-    {
-        // get the objects owned/followed by the user
-        $users_folllowing = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_FOLLOWED_BY);
-
-        $res = array();
-        foreach ($users_folllowing as $user_info)
-        {
-            $user_eid = $user_info['eid'];
-            $user = \Flexio\Object\User::load($user_eid);
-            $res[] = $user;
-        }
-
-        return $res;
-    }
-
     public function allows(string $access_code, string $action) : bool
     {
         // note: like the status, read the rights fresh everytime to make

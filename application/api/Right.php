@@ -376,11 +376,12 @@ class Right
     private static function syncFollowersWithRights(\Flexio\IFace\Object $object) : bool
     {
         // get the object followers
+        $followers = $this->getModel()->assoc_range($object->getEid(), \Model::EDGE_FOLLOWED_BY);
+
         $follower_eids = array();
-        $followers = $object->getFollowers();
         foreach ($followers as $f)
         {
-            $follower_eids[$f->getEid()] = true;
+            $follower_eids[$f] = true;
         }
 
         // get the non-owner users that have access to the object
