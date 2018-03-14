@@ -112,66 +112,72 @@ class Process extends ModelBase
         }
     }
 
-    public function get(string $eid) // TODO: add return type
+    public function list(array $filter) : array
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $row = false;
         $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        if (isset($filter['parent_eid']))
+            $filter_expr .= (' and parent_eid = ' . $db->quote($filter['parent_eid']));
+
+        $rows = array();
         try
         {
-            $row = $db->fetchRow("select tpr.eid as eid,
-                                         '".\Model::TYPE_PROCESS."' as eid_type,
-                                         tpr.eid_status as eid_status,
-                                         tpr.parent_eid as parent_eid,
-                                         tpr.process_mode as process_mode,
-                                         tpr.impl_revision as impl_revision,
-                                         tpr.task as task,
-                                         tpr.input as input,
-                                         tpr.output as output,
-                                         tpr.started_by as started_by,
-                                         tpr.started as started,
-                                         tpr.finished as finished,
-                                         tpr.process_info as process_info,
-                                         tpr.process_status as process_status,
-                                         tpr.cache_used as cache_used,
-                                         tpr.owned_by as owned_by,
-                                         tpr.created_by as created_by,
-                                         tpr.created as created,
-                                         tpr.updated as updated
-                                  from tbl_process tpr
-                                  where tpr.eid = ?
-                                 ", $eid);
+            $query = "select * from tbl_process where $filter_expr";
+            $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
          {
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
-        if (!$row)
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'              => $row['eid'],
+                              'eid_type'         => \Model::TYPE_PROCESS,
+                              'eid_status'       => $row['eid_status'],
+                              'parent_eid'       => $row['parent_eid'],
+                              'process_mode'     => $row['process_mode'],
+                              'impl_revision'    => $row['impl_revision'],
+                              'task'             => $row['task'],
+                              'input'            => $row['input'],
+                              'output'           => $row['output'],
+                              'started_by'       => $row['started_by'],
+                              'started'          => $row['started'],
+                              'finished'         => $row['finished'],
+                              'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
+                              'process_info'     => $row['process_info'],
+                              'process_status'   => $row['process_status'],
+                              'cache_used'       => $row['cache_used'],
+                              'owned_by'         => $row['owned_by'],
+                              'created_by'       => $row['created_by'],
+                              'created'          => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
+    public function get(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        return array('eid'              => $row['eid'],
-                     'eid_type'         => $row['eid_type'],
-                     'eid_status'       => $row['eid_status'] ?? \Model::STATUS_UNDEFINED,
-                     'parent_eid'       => $row['parent_eid'],
-                     'process_mode'     => $row['process_mode'],
-                     'impl_revision'    => $row['impl_revision'],
-                     'task'             => $row['task'],
-                     'input'            => $row['input'],
-                     'output'           => $row['output'],
-                     'started_by'       => $row['started_by'],
-                     'started'          => $row['started'],
-                     'finished'         => $row['finished'],
-                     'duration'         => \Flexio\Base\Util::formatDateDiff($row['started'], $row['finished']),
-                     'process_info'     => $row['process_info'],
-                     'process_status'   => $row['process_status'],
-                     'cache_used'       => $row['cache_used'],
-                     'owned_by'         => $row['owned_by'],
-                     'created_by'       => $row['created_by'],
-                     'created'          => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
+
+        return $rows[0];
     }
 
     public function setStatus(string $eid, string $status) : bool

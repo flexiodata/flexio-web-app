@@ -173,78 +173,80 @@ class User extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        if (isset($filter['user_name']))
+            $filter_expr .= (' and user_name = ' . $db->quote($filter['user_name']));
+        if (isset($filter['email']))
+            $filter_expr .= (' and email = ' . $db->quote($filter['email']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_user where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'                    => $row['eid'],
+                              'eid_type'               => \Model::TYPE_USER,
+                              'eid_status'             => $row['eid_status'],
+                              'user_name'              => $row['user_name'],
+                              'full_name'              => $row['full_name'],
+                              'first_name'             => $row['first_name'],
+                              'last_name'              => $row['last_name'],
+                              'email'                  => $row['email'],
+                              'email_hash'             => md5(strtolower(trim($row['email']))),
+                              'phone'                  => $row['phone'],
+                              'location_city'          => $row['location_city'],
+                              'location_state'         => $row['location_state'],
+                              'location_country'       => $row['location_country'],
+                              'company_name'           => $row['company_name'],
+                              'company_url'            => $row['company_url'],
+                              'locale_language'        => $row['locale_language'],
+                              'locale_decimal'         => $row['locale_decimal'],
+                              'locale_thousands'       => $row['locale_thousands'],
+                              'locale_dateformat'      => $row['locale_dateformat'],
+                              'timezone'               => $row['timezone'],
+                              'verify_code'            => $row['verify_code'],
+                              'config'                 => $row['config'],
+                              'owned_by'               => $row['owned_by'],
+                              'created_by'             => $row['created_by'],
+                              'created'                => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tus.eid as eid,
-                                         '".\Model::TYPE_USER."' as eid_type,
-                                         tus.eid_status as eid_status,
-                                         tus.user_name as user_name,
-                                         tus.full_name as full_name,
-                                         tus.first_name as first_name,
-                                         tus.last_name as last_name,
-                                         tus.email as email,
-                                         tus.phone as phone,
-                                         tus.location_city as location_city,
-                                         tus.location_state as location_state,
-                                         tus.location_country as location_country,
-                                         tus.company_name as company_name,
-                                         tus.company_url as company_url,
-                                         tus.locale_language as locale_language,
-                                         tus.locale_decimal as locale_decimal,
-                                         tus.locale_thousands as locale_thousands,
-                                         tus.locale_dateformat as locale_dateformat,
-                                         tus.timezone as timezone,
-                                         tus.verify_code as verify_code,
-                                         tus.config as config,
-                                         tus.owned_by as owned_by,
-                                         tus.created_by as created_by,
-                                         tus.created as created,
-                                         tus.updated as updated
-                                from tbl_user tus
-                                where tus.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'                    => $row['eid'],
-                     'eid_type'               => $row['eid_type'],
-                     'eid_status'             => $row['eid_status'],
-                     'user_name'              => $row['user_name'],
-                     'full_name'              => $row['full_name'],
-                     'first_name'             => $row['first_name'],
-                     'last_name'              => $row['last_name'],
-                     'email'                  => $row['email'],
-                     'email_hash'             => md5(strtolower(trim($row['email']))),
-                     'phone'                  => $row['phone'],
-                     'location_city'          => $row['location_city'],
-                     'location_state'         => $row['location_state'],
-                     'location_country'       => $row['location_country'],
-                     'company_name'           => $row['company_name'],
-                     'company_url'            => $row['company_url'],
-                     'locale_language'        => $row['locale_language'],
-                     'locale_decimal'         => $row['locale_decimal'],
-                     'locale_thousands'       => $row['locale_thousands'],
-                     'locale_dateformat'      => $row['locale_dateformat'],
-                     'timezone'               => $row['timezone'],
-                     'verify_code'            => $row['verify_code'],
-                     'config'                 => $row['config'],
-                     'owned_by'               => $row['owned_by'],
-                     'created_by'             => $row['created_by'],
-                     'created'                => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'                => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function getOwner(string $eid) : string

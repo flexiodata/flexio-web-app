@@ -92,46 +92,63 @@ class Token extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        if (isset($filter['user_eid']))
+            $filter_expr .= (' and user_eid = ' . $db->quote($filter['user_eid']));
+        if (isset($filter['access_code']))
+            $filter_expr .= (' and access_code = ' . $db->quote($filter['access_code']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_token where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'         => $row['eid'],
+                              'eid_type'    => \Model::TYPE_TOKEN,
+                              'eid_status'  => $row['eid_status'],
+                              'user_eid'    => $row['user_eid'],
+                              'access_code' => $row['access_code'],
+                              'owned_by'    => $row['owned_by'],
+                              'created_by'  => $row['created_by'],
+                              'created'     => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tau.eid as eid,
-                                         '".\Model::TYPE_TOKEN."' as eid_type,
-                                         tau.eid_status as eid_status,
-                                         tau.user_eid as user_eid,
-                                         tau.access_code as access_code,
-                                         tau.secret_code as secret_code,
-                                         tau.owned_by as owned_by,
-                                         tau.created_by as created_by,
-                                         tau.created as created,
-                                         tau.updated as updated
-                                from tbl_token tau
-                                where tau.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'         => $row['eid'],
-                     'eid_type'    => $row['eid_type'],
-                     'eid_status'  => $row['eid_status'],
-                     'user_eid'    => $row['user_eid'],
-                     'access_code' => $row['access_code'],
-                     'owned_by'    => $row['owned_by'],
-                     'created_by'  => $row['created_by'],
-                     'created'     => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function setStatus(string $eid, string $status) : bool
@@ -170,7 +187,6 @@ class Token extends ModelBase
         // get the authentication information from the access code
         $db = $this->getDatabase();
         $row = $db->fetchRow("select tau.eid as eid,
-                                     '".\Model::TYPE_TOKEN."' as eid_type,
                                      tau.eid_status as eid_status,
                                      tau.user_eid as user_eid,
                                      tau.access_code as access_code,
@@ -187,7 +203,7 @@ class Token extends ModelBase
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
         return array('eid'         => $row['eid'],
-                     'eid_type'    => $row['eid_type'],
+                     'eid_type'    => \Model::TYPE_TOKEN,
                      'eid_status'  => $row['eid_status'],
                      'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
@@ -202,7 +218,6 @@ class Token extends ModelBase
         // get the all available authentication information for the user_eid
         $db = $this->getDatabase();
         $rows = $db->fetchAll("select tau.eid as eid,
-                                      '".\Model::TYPE_TOKEN."' as eid_type,
                                       tau.eid_status as eid_status,
                                       tau.user_eid as user_eid,
                                       tau.access_code as access_code,
@@ -223,7 +238,7 @@ class Token extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'         => $row['eid'],
-                              'eid_type'    => $row['eid_type'],
+                              'eid_type'    => \Model::TYPE_TOKEN,
                               'eid_status'  => $row['eid_status'],
                               'user_eid'    => $row['user_eid'],
                               'access_code' => $row['access_code'],

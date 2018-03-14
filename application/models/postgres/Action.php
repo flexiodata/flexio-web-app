@@ -100,51 +100,60 @@ class Action extends ModelBase
         }
     }
 
-    public function get(string $eid) // TODO: add return type
+    public function list(array $filter) : array
     {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $row = false;
         $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+
+        $rows = array();
         try
         {
-            $row = $db->fetchRow("select tac.eid as eid,
-                                         tac.invoked_from as invoked_from,
-                                         tac.invoked_by as invoked_by,
-                                         tac.action_type as action_type,
-                                         tac.action_info as action_info,
-                                         tac.action_target as action_target,
-                                         tac.result_type as result_type,
-                                         tac.result_info as result_info,
-                                         tac.started as started,
-                                         tac.finished as finished,
-                                         tac.created as created,
-                                         tac.updated as updated
-                                  from tbl_action tac
-                                  where tac.eid = ?
-                                 ", $eid);
+            $query = "select * from tbl_action where $filter_expr";
+            $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
          {
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
-        if (!$row)
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'           => $row['eid'],
+                              'invoked_from'  => $row['invoked_from'],
+                              'invoked_by'    => $row['invoked_by'],
+                              'action_type'   => $row['action_type'],
+                              'action_info'   => $row['action_info'],
+                              'action_target' => $row['action_target'],
+                              'result_type'   => $row['result_type'],
+                              'result_info'   => $row['result_info'],
+                              'started'       => $row['started'],
+                              'finished'      => $row['finished'],
+                              'created'       => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
+    public function get(string $eid) // TODO: add return type
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        return array('eid'           => $row['eid'],
-                     'invoked_from'  => $row['invoked_from'],
-                     'invoked_by'    => $row['invoked_by'],
-                     'action_type'   => $row['action_type'],
-                     'action_info'   => $row['action_info'],
-                     'action_target' => $row['action_target'],
-                     'result_type'   => $row['result_type'],
-                     'result_info'   => $row['result_info'],
-                     'started'       => $row['started'],
-                     'finished'      => $row['finished'],
-                     'created'       => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
+
+        return $rows[0];
     }
 
     private function generateActionEid() : string

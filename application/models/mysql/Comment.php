@@ -90,43 +90,58 @@ class Comment extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_comment where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'        => $row['eid'],
+                              'eid_type'   => \Model::TYPE_COMMENT,
+                              'eid_status' => $row['eid_status'],
+                              'comment'    => $row['comment'],
+                              'owned_by'   => $row['owned_by'],
+                              'created_by' => $row['created_by'],
+                              'created'    => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'    => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tco.eid as eid,
-                                         '".\Model::TYPE_COMMENT."' as eid_type,
-                                         tco.eid_status as eid_status,
-                                         tco.comment as comment,
-                                         tco.owned_by as owned_by,
-                                         tco.created_by as created_by,
-                                         tco.created as created,
-                                         tco.updated as updated
-                                from tbl_comment tco
-                                where tco.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'        => $row['eid'],
-                     'eid_type'   => $row['eid_type'],
-                     'eid_status' => $row['eid_status'],
-                     'comment'    => $row['comment'],
-                     'owned_by'   => $row['owned_by'],
-                     'created_by' => $row['created_by'],
-                     'created'    => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'    => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function setStatus(string $eid, string $status) : bool

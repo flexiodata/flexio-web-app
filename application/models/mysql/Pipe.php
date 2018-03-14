@@ -182,57 +182,65 @@ class Pipe extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_pipe where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'             => $row['eid'],
+                              'eid_type'        => \Model::TYPE_PIPE,
+                              'eid_status'      => $row['eid_status'],
+                              'ename'           => $row['ename'],
+                              'name'            => $row['name'],
+                              'description'     => $row['description'],
+                              'input'           => $row['input'],
+                              'output'          => $row['output'],
+                              'task'            => $row['task'],
+                              'schedule'        => $row['schedule'],
+                              'schedule_status' => $row['schedule_status'],
+                              'owned_by'        => $row['owned_by'],
+                              'created_by'      => $row['created_by'],
+                              'created'         => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tpi.eid as eid,
-                                         '".\Model::TYPE_PIPE."' as eid_type,
-                                         tpi.eid_status as eid_status,
-                                         tpi.ename as ename,
-                                         tpi.name as name,
-                                         tpi.description as description,
-                                         tpi.input as input,
-                                         tpi.output as output,
-                                         tpi.task as task,
-                                         tpi.schedule as schedule,
-                                         tpi.schedule_status as schedule_status,
-                                         tpi.owned_by as owned_by,
-                                         tpi.created_by as created_by,
-                                         tpi.created as created,
-                                         tpi.updated as updated
-                                from tbl_pipe tpi
-                                where tpi.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'             => $row['eid'],
-                     'eid_type'        => $row['eid_type'],
-                     'eid_status'      => $row['eid_status'],
-                     'ename'           => $row['ename'],
-                     'name'            => $row['name'],
-                     'description'     => $row['description'],
-                     'input'           => $row['input'],
-                     'output'          => $row['output'],
-                     'task'            => $row['task'],
-                     'schedule'        => $row['schedule'],
-                     'schedule_status' => $row['schedule_status'],
-                     'owned_by'        => $row['owned_by'],
-                     'created_by'      => $row['created_by'],
-                     'created'         => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'         => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function getEidFromName(string $owner, string $ename) // TODO: add return type

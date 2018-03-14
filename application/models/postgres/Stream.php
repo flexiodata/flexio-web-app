@@ -122,65 +122,69 @@ class Stream extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_stream where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'                  => $row['eid'],
+                              'eid_type'             => \Model::TYPE_STREAM,
+                              'parent_eid'           => $row['parent_eid'],
+                              'stream_type'          => $row['stream_type'],
+                              'name'                 => $row['name'],
+                              'path'                 => $row['path'],
+                              'size'                 => $row['size'],
+                              'hash'                 => $row['hash'],
+                              'mime_type'            => $row['mime_type'],
+                              'structure'            => $row['structure'],
+                              'file_created'         => $row['file_created'],
+                              'file_modified'        => $row['file_modified'],
+                              'connection_eid'       => $row['connection_eid'],
+                              'expires'              => $row['expires'],
+                              'eid_status'           => $row['eid_status'],
+                              'owned_by'             => $row['owned_by'],
+                              'created_by'           => $row['created_by'],
+                              'created'              => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tst.eid as eid,
-                                         '".\Model::TYPE_STREAM."' as eid_type,
-                                         tst.eid_status as eid_status,
-                                         tst.parent_eid as parent_eid,
-                                         tst.stream_type as stream_type,
-                                         tst.name as name,
-                                         tst.path as path,
-                                         tst.size as size,
-                                         tst.hash as hash,
-                                         tst.mime_type as mime_type,
-                                         tst.structure as structure,
-                                         tst.file_created as file_created,
-                                         tst.file_modified as file_modified,
-                                         tst.connection_eid as connection_eid,
-                                         tst.expires as expires,
-                                         tst.owned_by as owned_by,
-                                         tst.created_by as created_by,
-                                         tst.created as created,
-                                         tst.updated as updated
-                                from tbl_stream tst
-                                where tst.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'                  => $row['eid'],
-                     'eid_type'             => $row['eid_type'],
-                     'parent_eid'           => $row['parent_eid'],
-                     'stream_type'          => $row['stream_type'],
-                     'name'                 => $row['name'],
-                     'path'                 => $row['path'],
-                     'size'                 => $row['size'],
-                     'hash'                 => $row['hash'],
-                     'mime_type'            => $row['mime_type'],
-                     'structure'            => $row['structure'],
-                     'file_created'         => $row['file_created'],
-                     'file_modified'        => $row['file_modified'],
-                     'connection_eid'       => $row['connection_eid'],
-                     'expires'              => $row['expires'],
-                     'eid_status'           => $row['eid_status'],
-                     'owned_by'             => $row['owned_by'],
-                     'created_by'           => $row['created_by'],
-                     'created'              => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function getOwner(string $eid) : string
@@ -249,7 +253,6 @@ class Stream extends ModelBase
             }
 
             $rows = $db->fetchAll("select tst.eid as eid,
-                                          '".\Model::TYPE_STREAM."' as eid_type,
                                           tst.eid_status as eid_status,
                                           tst.parent_eid as parent_eid,
                                           tst.stream_type as stream_type,
@@ -283,7 +286,7 @@ class Stream extends ModelBase
         foreach ($rows as $row)
         {
             $output[] =  array('eid'                  => $row['eid'],
-                               'eid_type'             => $row['eid_type'],
+                               'eid_type'             => \Model::TYPE_STREAM,
                                'eid_status'           => $row['eid_status'],
                                'parent_eid'           => $row['parent_eid'],
                                'stream_type'          => $row['stream_type'],

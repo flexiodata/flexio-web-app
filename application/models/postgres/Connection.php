@@ -210,57 +210,68 @@ class Connection extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        if (isset($filter['ename']))
+            $filter_expr .= (' and ename = ' . $db->quote($filter['ename']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_connection where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $row['connection_info'] = \Flexio\Base\Util::decrypt($row['connection_info'], $GLOBALS['g_store']->connection_enckey);
+
+            $output[] = array('eid'               => $row['eid'],
+                              'eid_type'          => \Model::TYPE_CONNECTION,
+                              'eid_status'        => $row['eid_status'],
+                              'ename'             => $row['ename'],
+                              'name'              => $row['name'],
+                              'description'       => $row['description'],
+                              'connection_type'   => $row['connection_type'],
+                              'connection_status' => $row['connection_status'],
+                              'connection_info'   => $row['connection_info'],
+                              'expires'           => $row['expires'],
+                              'owned_by'          => $row['owned_by'],
+                              'created_by'        => $row['created_by'],
+                              'created'           => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'           => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tco.eid as eid,
-                                         '".\Model::TYPE_CONNECTION."' as eid_type,
-                                         tco.eid_status as eid_status,
-                                         tco.ename as ename,
-                                         tco.name as name,
-                                         tco.description as description,
-                                         tco.connection_type as connection_type,
-                                         tco.connection_status as connection_status,
-                                         tco.connection_info as connection_info,
-                                         tco.expires as expires,
-                                         tco.owned_by as owned_by,
-                                         tco.created_by as created_by,
-                                         tco.created as created,
-                                         tco.updated as updated
-                                from tbl_connection tco
-                                where tco.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        $row['connection_info'] = \Flexio\Base\Util::decrypt($row['connection_info'], $GLOBALS['g_store']->connection_enckey);
-
-        return array('eid'               => $row['eid'],
-                     'eid_type'          => $row['eid_type'],
-                     'eid_status'        => $row['eid_status'],
-                     'ename'             => $row['ename'],
-                     'name'              => $row['name'],
-                     'description'       => $row['description'],
-                     'connection_type'   => $row['connection_type'],
-                     'connection_status' => $row['connection_status'],
-                     'connection_info'   => $row['connection_info'],
-                     'expires'           => $row['expires'],
-                     'owned_by'          => $row['owned_by'],
-                     'created_by'        => $row['created_by'],
-                     'created'           => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'           => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function getEidFromName(string $owner, string $ename) // TODO: add return type

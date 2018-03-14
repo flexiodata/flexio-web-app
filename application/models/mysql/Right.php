@@ -96,49 +96,63 @@ class Right extends ModelBase
         }
     }
 
+    public function list(array $filter) : array
+    {
+        $db = $this->getDatabase();
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter['eid']))
+            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        if (isset($filter['object_eid']))
+            $filter_expr .= (' and object_eid = ' . $db->quote($filter['object_eid']));
+
+        $rows = array();
+        try
+        {
+            $query = "select * from tbl_acl where $filter_expr";
+            $rows = $db->fetchAll($query);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        if (!$rows)
+            return array();
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $output[] = array('eid'         => $row['eid'],
+                              'eid_type'    => \Model::TYPE_RIGHT,
+                              'eid_status'  => $row['eid_status'],
+                              'object_eid'  => $row['object_eid'],
+                              'access_type' => $row['access_type'],
+                              'access_code' => $row['access_code'],
+                              'actions'     => $row['actions'],
+                              'owned_by'    => $row['owned_by'],
+                              'created_by'  => $row['created_by'],
+                              'created'     => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
+        }
+
+        return $output;
+    }
+
     public function get(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $row = $db->fetchRow("select tac.eid as eid,
-                                         '".\Model::TYPE_RIGHT."' as eid_type,
-                                         tac.eid_status as eid_status,
-                                         tac.object_eid as object_eid,
-                                         tac.access_type as access_type,
-                                         tac.access_code as access_code,
-                                         tac.actions as actions,
-                                         tac.owned_by as owned_by,
-                                         tac.created_by as created_by,
-                                         tac.created as created,
-                                         tac.updated as updated
-                                from tbl_acl tac
-                                where tac.eid = ?
-                                ", $eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
+        $filter = array('eid' => $eid);
+        $rows = $this->list($filter);
+        if (count($rows) === 0)
+            return false;
 
-        if (!$row)
-            return false; // don't flag an error, but acknowledge that object doesn't exist
-
-        return array('eid'         => $row['eid'],
-                     'eid_type'    => $row['eid_type'],
-                     'eid_status'  => $row['eid_status'],
-                     'object_eid'  => $row['object_eid'],
-                     'access_type' => $row['access_type'],
-                     'access_code' => $row['access_code'],
-                     'actions'     => $row['actions'],
-                     'owned_by'    => $row['owned_by'],
-                     'created_by'  => $row['created_by'],
-                     'created'     => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
+        return $rows[0];
     }
 
     public function setStatus(string $eid, string $status) : bool
@@ -177,7 +191,6 @@ class Right extends ModelBase
         // get the all available authentication information for the object_eid
         $db = $this->getDatabase();
         $rows = $db->fetchAll("select tac.eid as eid,
-                                      '".\Model::TYPE_RIGHT."' as eid_type,
                                       tac.eid_status as eid_status,
                                       tac.object_eid as object_eid,
                                       tac.access_type as access_type,
@@ -198,7 +211,7 @@ class Right extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'         => $row['eid'],
-                              'eid_type'    => $row['eid_type'],
+                              'eid_type'    => \Model::TYPE_RIGHT,
                               'eid_status'  => $row['eid_status'],
                               'object_eid'  => $row['object_eid'],
                               'access_type' => $row['access_type'],
