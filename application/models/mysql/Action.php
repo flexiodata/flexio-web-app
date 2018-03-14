@@ -87,6 +87,8 @@ class Action extends ModelBase
         $filter_expr = 'true';
         if (isset($filter['eid']))
             $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['eid_status']))
+            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
 
         $rows = array();
         try

@@ -130,6 +130,8 @@ class Stream extends ModelBase
         $filter_expr = 'true';
         if (isset($filter['eid']))
             $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
+        if (isset($filter['eid_status']))
+            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
         if (isset($filter['owned_by']))
             $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
 
