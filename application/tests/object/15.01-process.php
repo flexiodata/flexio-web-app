@@ -202,7 +202,7 @@ class Test
         $creator = \Flexio\Object\User::create();
         $pipe = \Flexio\Object\Pipe::create();
         $object->setOwner($creator->getEid());
-        $pipe->addProcess($object);
+        $pipe->set(array('parent_eid' => $object->getEid()));
         $properties = $object->get();
         $actual =  $properties;
         $expected = json_decode('

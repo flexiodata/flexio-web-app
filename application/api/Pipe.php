@@ -331,13 +331,13 @@ class Pipe
         // create a new process
         $pipe_properties = $pipe->get();
         $process_properties = array(
+            'parent_eid' => $pipe_properties['eid'],
             'task' => $pipe_properties['task'],
             'owned_by' => $pipe_properties['owned_by'],
             'created_by' => $requesting_user_eid
         );
         $process = \Flexio\Object\Process::create($process_properties);
         $process->setRights($pipe->getRights());
-        $pipe->addProcess($process);
 
         // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::create($process);

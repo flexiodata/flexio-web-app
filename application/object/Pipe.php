@@ -187,13 +187,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $local_properties['schedule'];
     }
 
-    public function addProcess(\Flexio\Object\Process $process) : \Flexio\Object\Pipe
-    {
-        $result = $this->getModel()->assoc_add($this->getEid(), \Model::EDGE_HAS_PROCESS, $process->getEid());
-        $this->getModel()->assoc_add($process->getEid(), \Model::EDGE_PROCESS_OF, $this->getEid());
-        return $this;
-    }
-
     public function getProcessList() : array
     {
         $result = array();

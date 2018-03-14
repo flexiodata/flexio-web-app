@@ -123,14 +123,13 @@ class Process
         // pipe variables); if a task isn't specified, use the parent's task
         if ($pipe !== false)
         {
-            if (!isset($validated_params['task']))
-            {
-                $parent_properties = array();
-                $parent_properties['task'] = $pipe->getTask();
-                $process->set($parent_properties);
-            }
+            $parent_properties = array();
+            $parent_properties['parent_eid'] = $pipe->getEid();
 
-            $pipe->addProcess($process);
+            if (!isset($validated_params['task']))
+                $parent_properties['task'] = $pipe->getTask();
+
+            $process->set($parent_properties);
         }
 
         // note: removed debug setting
