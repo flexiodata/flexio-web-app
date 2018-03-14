@@ -181,12 +181,11 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->eid_status !== false)
-            return $this->eid_status;
+        if ($this->properties !== false && isset($this->properties['eid_status']))
+            return $this->properties['eid_status'];
 
         $user_model = $this->getModel()->user;
         $status = $user_model->getStatus($this->getEid());
-        $this->eid_status = $status;
 
         return $status;
     }
@@ -518,17 +517,13 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private function clearCache() : bool
     {
-        $this->eid_status = false;
         $this->properties = false;
         return true;
     }
 
     private function populateCache() : bool
     {
-        // get the properties
-        $local_properties = $this->getProperties();
-        $this->properties = $local_properties;
-        $this->eid_status = $local_properties['eid_status'];
+        $this->properties = $this->getProperties();
         return true;
     }
 

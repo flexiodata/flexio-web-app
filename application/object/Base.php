@@ -22,7 +22,6 @@ class Base
     private $eid;
 
     // properties for derived classes
-    protected $eid_status;
     protected $properties;
 
     public function __construct()
@@ -280,16 +279,13 @@ class Base
 
     private function clearCache() : bool
     {
-        $this->eid_status = false;
         $this->properties = false;
         return true;
     }
 
     private function populateCache() : bool
     {
-        $local_properties = $this->getProperties();
-        $this->properties = $local_properties;
-        $this->eid_status = $local_properties['eid_status'];
+        $this->properties = $this->getProperties();
         return true;
     }
 

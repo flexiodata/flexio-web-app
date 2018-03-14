@@ -55,7 +55,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $local_properties = self::formatProperties($i);
             $o->properties = $local_properties;
             $o->setEid($local_properties['eid']);
-            $o->eid_status = $local_properties['eid_status'];
             $objects[] = $o;
         }
 
@@ -177,12 +176,11 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->eid_status !== false)
-            return $this->eid_status;
+        if ($this->properties !== false && isset($this->properties['eid_status']))
+            return $this->properties['eid_status'];
 
         $process_model = $this->getModel()->process;
         $status = $process_model->getStatus($this->getEid());
-        $this->eid_status = $status;
 
         return $status;
     }
@@ -308,19 +306,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private function clearCache() : bool
     {
-        $this->eid_status = false;
         $this->properties = false;
         return true;
     }
 
     private function populateCache() : bool
     {
-        // get the properties
         $process_model = $this->getModel()->process;
         $local_properties = $process_model->get($this->getEid());
-        $local_properties = self::formatProperties($local_properties);
-        $this->properties = $local_properties;
-        $this->eid_status = $local_properties['eid_status'];
+        $this->properties = self::formatProperties($local_properties);
         return true;
     }
 
