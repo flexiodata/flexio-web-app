@@ -165,7 +165,7 @@
             if (is_pending)
             {
               var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
-              this.$store.dispatch('analyticsTrack', 'Created Connection', analytics_payload)
+              this.$store.track('Created Connection', analytics_payload)
             }
 
             this.show_connection_new_dialog = false
@@ -175,7 +175,7 @@
            else
           {
             this.show_error = true
-            this.$store.dispatch('analyticsTrack', 'Created Connection (Error)')
+            this.$store.track('Created Connection (Error)')
           }
         })
       },

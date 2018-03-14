@@ -61,7 +61,7 @@ export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
     // success callback
     commit(types.CHANGED_PASSWORD, { eid, attrs: response.body })
 
-    dispatch('analyticsTrack', 'Changed Password')
+    dispatch('analyticsTrack', { event_name: 'Changed Password' })
 
     return response
   }, response => {

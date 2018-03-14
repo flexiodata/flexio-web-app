@@ -29,7 +29,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('analyticsTrack', 'Visited Sign Up Page')
+      this.$store.track('Visited Sign Up Page')
     },
     methods: {
       onSignInClick() {

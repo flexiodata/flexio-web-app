@@ -27,7 +27,7 @@ export const createUserToken = ({ commit, dispatch }, { eid, attrs }) => {
     // success callback
     commit(types.CREATED_TOKEN, { eid, attrs: response.body })
 
-    dispatch('analyticsTrack', 'Created API Key')
+    dispatch('analyticsTrack', { event_name: 'Created API Key' })
 
     return response
   }, response => {

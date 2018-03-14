@@ -150,12 +150,12 @@
           if (response.ok)
           {
             input.endEdit()
-            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Name', { eid, name })
+            this.$store.track('Updated Pipe: Name', { eid, name })
           }
            else
           {
             input.endEdit(false)
-            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Name (Error)', { eid, name })
+            this.$store.track('Updated Pipe: Name (Error)', { eid, name })
           }
         })
       },
@@ -172,7 +172,7 @@
 
           if (ename.length > 0 && _.size(errors) > 0)
           {
-            this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias (Invalid)', { eid, ename })
+            this.$store.track('Updated Pipe: Alias (Invalid)', { eid, ename })
           }
            else
           {
@@ -180,12 +180,12 @@
               if (response.ok)
               {
                 input.endEdit()
-                this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias', { eid, ename })
+                this.$store.track('Updated Pipe: Alias', { eid, ename })
               }
                else
               {
                 input.endEdit(false)
-                this.$store.dispatch('analyticsTrack', 'Updated Pipe: Alias (Error)', { eid, ename })
+                this.$store.track('Updated Pipe: Alias (Error)', { eid, ename })
               }
             })
           }

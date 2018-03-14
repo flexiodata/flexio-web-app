@@ -39,7 +39,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('analyticsTrack', 'Visited Sign In Page')
+      this.$store.track('Visited Sign In Page')
 
       if (this.active_user_eid.length > 0)
         this.redirect()
