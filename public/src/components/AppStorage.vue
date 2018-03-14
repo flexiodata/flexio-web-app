@@ -145,7 +145,7 @@
             if (is_pending)
             {
               var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
-              this.$store.dispatch('analyticsTrack', 'Created Connection', analytics_payload)
+              this.$store.track('Created Connection', analytics_payload)
             }
           }
            else

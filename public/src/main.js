@@ -91,6 +91,13 @@ Vue.directive('select-all', {
   }
 })
 
+// add helper `track` method to global store object
+
+store.track = function(event_name, attrs) {
+  attrs = _.assign({}, attrs, { event_name })
+  store.dispatch('analyticsTrack', attrs)
+}
+
 // global route guards
 
 router.afterEach((to, from) => {

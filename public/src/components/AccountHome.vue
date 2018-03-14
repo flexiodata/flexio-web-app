@@ -57,7 +57,7 @@
       }
     },
     mounted() {
-      this.$store.dispatch('analyticsTrack', 'Visited Account Page')
+      this.$store.track('Visited Account Page')
 
       var hash = window.location.hash
       var tab_id = hash.substring(1)

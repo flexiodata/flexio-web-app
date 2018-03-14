@@ -112,12 +112,12 @@
       openPipeScheduleDialog(item) {
         this.active_pipe = item
         this.show_pipe_schedule_dialog = true
-        this.$store.dispatch('analyticsTrack', 'Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
+        this.$store.track('Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       openPipeDeployDialog(item) {
         this.active_pipe = item
         this.show_pipe_deploy_dialog = true
-        this.$store.dispatch('analyticsTrack', 'Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
+        this.$store.track('Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -140,13 +140,13 @@
           {
             var pipe = response.body
             var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
-            this.$store.dispatch('analyticsTrack', 'Created Pipe: New', analytics_payload)
+            this.$store.track('Created Pipe: New', analytics_payload)
 
             this.openPipe(response.body.eid)
           }
            else
           {
-            this.$store.dispatch('analyticsTrack', 'Created Pipe: New (Error)')
+            this.$store.track('Created Pipe: New (Error)')
           }
         })
       },
@@ -168,7 +168,7 @@
               schedule_status
             })
 
-            this.$store.dispatch('analyticsTrack', 'Scheduled Pipe', analytics_payload)
+            this.$store.track('Scheduled Pipe', analytics_payload)
 
             this.show_pipe_schedule_dialog = false
           }

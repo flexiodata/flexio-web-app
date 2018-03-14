@@ -230,7 +230,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_connection_new_dialog = true
-        this.$store.dispatch('analyticsTrack', 'Clicked `Create Connection` Button In Onboarding', {
+        this.$store.track('Clicked `Create Connection` Button In Onboarding', {
           title: this.item.name,
           code: edit_code
         })
@@ -239,7 +239,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var edit_code = this.$refs['code'].getEditCode()
 
         this.show_pipe_save_dialog = true
-        this.$store.dispatch('analyticsTrack', 'Clicked `Save & Deploy` Button In Onboarding', {
+        this.$store.track('Clicked `Save & Deploy` Button In Onboarding', {
           title: this.item.name,
           code: edit_code
         })
@@ -267,7 +267,7 @@ If you have any questions, please send us a note using the chat button at the bo
             if (is_pending)
             {
               var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
-              this.$store.dispatch('analyticsTrack', 'Created Connection In Onboarding', analytics_payload)
+              this.$store.track('Created Connection In Onboarding', analytics_payload)
             }
 
             this.connection_alias = _.get(connection, 'ename', '')
@@ -278,7 +278,7 @@ If you have any questions, please send us a note using the chat button at the bo
           }
            else
           {
-              this.$store.dispatch('analyticsTrack', 'Created Connection In Onboarding (Error)')
+              this.$store.track('Created Connection In Onboarding (Error)')
           }
         })
       },
@@ -295,7 +295,7 @@ If you have any questions, please send us a note using the chat button at the bo
             var pipe = response.body
             var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
 
-            this.$store.dispatch('analyticsTrack', 'Created Pipe In Onboarding', analytics_payload)
+            this.$store.track('Created Pipe In Onboarding', analytics_payload)
 
             this.pipe_name = _.get(pipe, 'name', '')
             this.pipe_alias = _.get(pipe, 'ename', '')
@@ -306,7 +306,7 @@ If you have any questions, please send us a note using the chat button at the bo
           }
            else
           {
-            this.$store.dispatch('analyticsTrack', 'Created Pipe In Onboarding (Error)')
+            this.$store.track('Created Pipe In Onboarding (Error)')
           }
         })
       }

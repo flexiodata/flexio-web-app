@@ -87,7 +87,7 @@
       onOnboardingItemChange(id) {
         var item = _.find(this.items, { id })
 
-        this.$store.dispatch('analyticsTrack', 'Switched Onboarding Item', {
+        this.$store.track('Switched Onboarding Item', {
           title: item.name
         })
       }
