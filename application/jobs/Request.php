@@ -61,6 +61,8 @@ class Request extends \Flexio\Jobs\Base
                 $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
             }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
+            if ($connection->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
          else
         {
@@ -75,6 +77,8 @@ class Request extends \Flexio\Jobs\Base
                 }
 
                 $connection = \Flexio\Object\Connection::load($url);
+                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             }
             catch (\Flexio\Base\Exception $e)
             {

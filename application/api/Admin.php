@@ -63,6 +63,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -132,6 +134,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -161,6 +165,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -173,7 +179,8 @@ class Admin
             try
             {
                 $user = \Flexio\Object\User::load($s['user_eid']);
-                $user_info = $user->get();
+                if ($user->getStatus() !== \Model::STATUS_DELETED)
+                    $user_info = $user->get();
             }
             catch (\Flexio\Base\Exception $e)
             {
@@ -183,7 +190,8 @@ class Admin
             try
             {
                 $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                $pipe_info = $pipe->get();
+                if ($user->getStatus() !== \Model::STATUS_DELETED)
+                    $pipe_info = $pipe->get();
             }
             catch (\Flexio\Base\Exception $e)
             {
@@ -221,6 +229,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -233,7 +243,8 @@ class Admin
             try
             {
                 $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                $pipe_info = $pipe->get();
+                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
+                    $pipe_info = $pipe->get();
             }
             catch (\Flexio\Base\Exception $e)
             {
@@ -265,6 +276,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -278,6 +291,8 @@ class Admin
 
         // only allow users from flex.io to get this info
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

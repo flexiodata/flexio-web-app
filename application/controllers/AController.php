@@ -83,6 +83,8 @@ class AController extends \Flexio\System\FxControllerAction
         try
         {
             $connection = \Flexio\Object\Connection::load($eid);
+            if ($connection->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -128,11 +130,15 @@ class AController extends \Flexio\System\FxControllerAction
                 $state = json_decode(base64_decode($auth_params['state']),true);
                 $eid = $state['eid'] ?? false;
                 $connection = \Flexio\Object\Connection::load($eid);
+                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             }
             else
             {
                 $eid = $params['eid'] ?? false;
                 $connection = \Flexio\Object\Connection::load($eid);
+                if ($connection->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             }
         }
         catch (\Flexio\Base\Exception $e)
@@ -218,6 +224,8 @@ class AController extends \Flexio\System\FxControllerAction
             {
                 $user_eid = \Flexio\Object\User::getEidFromEmail($email);
                 $target_user = \Flexio\Object\User::load($user_eid);
+                if ($target_user->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
                 $target_user_info = $target_user->get();
             }
             catch (\Flexio\Base\Exception $e)

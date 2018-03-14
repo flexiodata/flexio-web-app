@@ -34,6 +34,8 @@ class Token
 
         // load the object and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -62,10 +64,14 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false) // use write, since it's like changing a user property
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token = \Flexio\Object\Token::load($token_identifier);
+        if ($token->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $token->delete();
 
         $result = array();
@@ -91,11 +97,15 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
         $token = \Flexio\Object\Token::load($token_identifier);
+        if ($token->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $properties = $token->get();
         return $properties;
     }
@@ -116,6 +126,8 @@ class Token
 
         // load the user and check the rights; note: user rights govern user tokens
         $user = \Flexio\Object\User::load($user_identifier);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

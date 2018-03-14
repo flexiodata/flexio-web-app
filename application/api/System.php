@@ -64,6 +64,8 @@ class System
         try
         {
             $user = \Flexio\Object\User::load($current_user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             return $user->get();
         }
         catch (\Flexio\Base\Exception $e)

@@ -31,12 +31,18 @@ class Statistics
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
         $stats = \Flexio\System\System::getModel()->process->getUserProcessStats($requesting_user_eid);
 
         $result = array();
         foreach ($stats as $s)
         {
             $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
+            if ($pipe->getStatus() === \Model::STATUS_DELETED)
+                continue;
+
             $pipe_info = $pipe->get();
 
             $item = array();

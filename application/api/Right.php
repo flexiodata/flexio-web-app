@@ -52,6 +52,8 @@ class Right
 
             // make sure we're allowed to modify the rights
             $object = \Flexio\Object\Store::load($object_eid);
+            if ($object->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -74,6 +76,8 @@ class Right
                 try
                 {
                     $user = \Flexio\Object\User::load($access_code);
+                    if ($user->getStatus() === \Model::STATUS_DELETED)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
                 }
                 catch (\Flexio\Base\Exception $e)
                 {
@@ -159,10 +163,14 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
+        if ($right->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
+        if ($object->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -188,10 +196,14 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
+        if ($right->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
+        if ($object->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -224,10 +236,14 @@ class Right
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
+        if ($right->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $right_info = $right->get();
         $object_eid = $right_info['object_eid'];
 
         $object = \Flexio\Object\Store::load($object_eid);
+        if ($object->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -259,6 +275,8 @@ class Right
 
         // get the rights for the user
         $user = \Flexio\Object\User::load($user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         $rights = $user->getRightsList($filter);
         return $rights;
     }
@@ -307,6 +325,13 @@ class Right
             $invited_user = \Flexio\Object\User::load($invited_user_eid);
             $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
             $object = \Flexio\Object\Store::load($object_eid);
+
+            if ($invited_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            if ($object->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {

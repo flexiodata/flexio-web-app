@@ -61,6 +61,8 @@ class Trigger
         try
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+            if ($pipe->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             $pipe_properties = $pipe->get();
             unset($pipe_properties['ename']);

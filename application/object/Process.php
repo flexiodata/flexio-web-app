@@ -70,15 +70,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if ($status === \Model::STATUS_UNDEFINED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // TODO: for now, don't allow objects that have been deleted
-        // to be loaded; in general, we may want to move this to the
-        // api layer, but previously, it's been in the model layer,
-        // and we need to make sure the behavior is the same after the
-        // model constraint is removed, and object loading is a good
-        // location for this constraint
-        if ($status == \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
         $object->setEid($eid);
         $object->clearCache();
         return $object;

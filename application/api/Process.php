@@ -90,6 +90,8 @@ class Process
 
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
+            if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
@@ -162,6 +164,8 @@ class Process
         $process = \Flexio\Object\Process::load($process_identifier);
 
         // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -193,6 +197,8 @@ class Process
         $process = \Flexio\Object\Process::load($process_identifier);
 
         // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -225,6 +231,8 @@ class Process
         $process = \Flexio\Object\Process::load($process_identifier);
 
         // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -249,6 +257,9 @@ class Process
         $wait_for_change = $validated_params['wait'];
         self::waitforchangewhilerunning($process->getEid(), $wait_for_change);
         $process = \Flexio\Object\Process::load($process->getEid());
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
         $process_info = $process->get();
 
         if ($process_info_only === true)
@@ -270,6 +281,8 @@ class Process
 
         // make sure we have an active user
         $user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the processes
         $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
@@ -322,6 +335,8 @@ class Process
         $process = \Flexio\Object\Process::load($process_identifier);
 
         // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -347,6 +362,8 @@ class Process
         $process = \Flexio\Object\Process::load($process_identifier);
 
         // check the rights on the process object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -411,6 +428,8 @@ class Process
 
         // load the object
         $process = \Flexio\Object\Process::load($process_identifier);
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         // if ($process->allows($requesting_user_eid, \Flexio\Object\Rights::ACTION_WRITE) === false)
@@ -446,6 +465,8 @@ class Process
         try
         {
             $process = \Flexio\Object\Process::load($eid);
+            if ($process->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {

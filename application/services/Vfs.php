@@ -74,6 +74,8 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
             // load the object
             $user = \Flexio\Object\User::load($current_user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // get the connections
             $connections = $user->getConnectionList();
@@ -397,6 +399,8 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the connection
+        if ($connection->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

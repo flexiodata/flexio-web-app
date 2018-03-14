@@ -264,6 +264,8 @@ class User
 
         // load the user
         $user = \Flexio\Object\User::load($user_identifier);
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights, but only if the object isn't pending;
         // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
@@ -300,6 +302,8 @@ class User
         $user = \Flexio\Object\User::load($user_identifier);
 
         // check the rights on the object
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -323,6 +327,8 @@ class User
         try
         {
             $user = \Flexio\Object\User::load($requesting_user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             return $user->get();
         }
         catch (\Flexio\Base\Exception $e)
@@ -360,6 +366,8 @@ class User
         $user = \Flexio\Object\User::load($user_identifier);
 
         // check the rights on the object
+        if ($user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -394,6 +402,8 @@ class User
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -433,6 +443,8 @@ class User
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -476,6 +488,8 @@ class User
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -522,6 +536,8 @@ class User
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }
         catch (\Flexio\Base\Exception $e)
         {
