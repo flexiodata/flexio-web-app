@@ -21,6 +21,23 @@ class Action
     private $eid;
     protected $properties;
 
+    public static function list(array $filter) : array
+    {
+        // make sure we have a filter some kind
+        foreach ($filter as $key => $value)
+        {
+            if (isset($filter['eid'])) break;
+            if (isset($filter['owned_by'])) break;
+
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        // TODO: load object info here; pass on model info for now
+        $object = new static();
+        $action_model = $object->getModel()->action;
+        return $action_model->list($filter);
+    }
+
     public static function create(array $properties = null) : \Flexio\Object\Action
     {
         $object = new static();

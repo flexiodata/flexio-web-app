@@ -36,26 +36,44 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
-
-    public function getEidFromIdentifier(string $identifier) // TODO: add return type
+    public static function getEidFromIdentifier(string $identifier) // TODO: add return type
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromIdentifier($identifier);
     }
 
-    public function getEidFromUsername(string $identifier) // TODO: add return type
+    public static function getEidFromUsername(string $identifier) // TODO: add return type
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromUsername($identifier);
     }
 
-    public function getEidFromEmail(string $identifier) // TODO: add return type
+    public static function getEidFromEmail(string $identifier) // TODO: add return type
     {
         $object = new static();
         $user_model = $object->getModel()->user;
         return $user_model->getEidFromEmail($identifier);
+    }
+
+    public static function list(array $filter) : array
+    {
+        // make sure we have a filter some kind
+        foreach ($filter as $key => $value)
+        {
+            if (isset($filter['eid'])) break;
+            if (isset($filter['owned_by'])) break;
+            if (isset($filter['user_name'])) break;
+            if (isset($filter['email'])) break;
+
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        // TODO: load object info here; pass on model info for now
+        $object = new static();
+        $user_model = $object->getModel()->user;
+        return $user_model->list($filter);
     }
 
     public static function load(string $eid) : \Flexio\Object\User

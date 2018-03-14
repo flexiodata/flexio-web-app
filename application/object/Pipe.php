@@ -38,6 +38,23 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $pipe_model->getEidFromName($owner, $ename);
     }
 
+    public static function list(array $filter) : array
+    {
+        // make sure we have a filter some kind
+        foreach ($filter as $key => $value)
+        {
+            if (isset($filter['eid'])) break;
+            if (isset($filter['owned_by'])) break;
+
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        // TODO: load object info here; pass on model info for now
+        $object = new static();
+        $pipe_model = $object->getModel()->pipe;
+        return $pipe_model->list($filter);
+    }
+
     public static function load(string $eid) : \Flexio\Object\Pipe
     {
         $object = new static();

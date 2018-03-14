@@ -33,14 +33,20 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        $owned_by = $filter['owned_by'] ?? '';
-        $parent_eid = $filter['parent_eid'] ?? '';
+        // make sure we have a filter some kind
+        foreach ($filter as $key => $value)
+        {
+            if (isset($filter['eid'])) break;
+            if (isset($filter['owned_by'])) break;
+            if (isset($filter['parent_eid'])) break;
 
-        if (strlen($owned_by) === 0 && strlen($parent_eid) === 0 ?? '')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
 
+        // TODO: load object info here; pass on model info for now
+        $object = new static();
         $process_model = $object->getModel()->process;
-        return $process->list($filter);
+        return $process_model->list($filter);
     }
 
     public static function load(string $eid) : \Flexio\Object\Process
