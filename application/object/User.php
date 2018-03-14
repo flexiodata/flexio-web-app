@@ -59,7 +59,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter some kind
+        // make sure we have a filter on one of the indexed fields
         foreach ($filter as $key => $value)
         {
             if (isset($filter['eid'])) break;
@@ -290,13 +290,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     public function getConnectionList() : array
     {
         $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $objects = $this->getObjectList($filter);
-        return $objects;
-    }
-
-    public function getProcessList() : array
-    {
-        $filter = array('eid_type' => array(\Model::TYPE_PROCESS), 'eid_status' => array(\Model::STATUS_AVAILABLE));
         $objects = $this->getObjectList($filter);
         return $objects;
     }

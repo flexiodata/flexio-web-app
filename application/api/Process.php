@@ -268,12 +268,12 @@ class Process
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // load the object
+        // make sure we have an active user
         $user = \Flexio\Object\User::load($requesting_user_eid);
 
         // get the processes
-        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $processes = $user->getProcessList($filter);
+        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $processes = \Flexio\Object\Process::list($filter);
 
         $result = array();
         foreach ($processes as $p)

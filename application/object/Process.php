@@ -33,7 +33,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter some kind
+        // make sure we have a filter on some type of indexed field
         foreach ($filter as $key => $value)
         {
             if (isset($filter['eid'])) break;
@@ -46,7 +46,20 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // TODO: load object info here; pass on model info for now
         $object = new static();
         $process_model = $object->getModel()->process;
-        return $process_model->list($filter);
+        $items = $process_model->list($filter);
+
+        $objects = array();
+        foreach ($items as $i)
+        {
+            $o = new static();
+            $local_properties = self::formatProperties($i);
+            $o->properties = $local_properties;
+            $o->setEid($local_properties['eid']);
+            $o->eid_status = $local_properties['eid_status'];
+            $objects[] = $o;
+        }
+
+        return $objects;
     }
 
     public static function load(string $eid) : \Flexio\Object\Process
@@ -303,20 +316,23 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : bool
     {
         // get the properties
-        $local_properties = $this->getProperties();
+        $process_model = $this->getModel()->process;
+        $local_properties = $process_model->get($this->getEid());
+        $local_properties = self::formatProperties($local_properties);
         $this->properties = $local_properties;
         $this->eid_status = $local_properties['eid_status'];
         return true;
     }
 
-    private function getProperties() : array
+    private static function formatProperties(array $properties) : array
     {
+/*
         $query = '
         {
             "eid" : null,
-            "eid_type" : "'.\Model::TYPE_PROCESS.'",
+            "eid_type" : "'.\Model::TYPE_PROCS.'",
             "eid_status" : null,
-            "parent='.\Model::EDGE_PROCESS_OF.'" : {
+            "parent'.\Model::EDGE_PROCESS_OF.'" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PIPE.'",
                 "name" : null,
@@ -343,35 +359,59 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "updated" : null
         }
         ';
-
-        // get the primary process info
-        $query = json_decode($query);
-        $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
+*/
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "eid" => null,
+                "eid_type" => null,
+                "eid_status" =>  null,
+                "parent" => null,
+                "owned_by" => null,
+                "process_mode" => null,
+                "task" => null,
+                "started_by" => null,
+                "started" => null,
+                "finished" => null,
+                "duration" => null,
+                "process_info" => null,
+                "process_status" => null,
+                "cache_used" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
+        if (!isset($mapped_properties))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // expand the parent and owner info
+        $pipe_info = array();
+        $mapped_properties['parent'] = (object)array(); // placholder
+
+        $owner_info = array();
+        $mapped_properties['owned_by'] = (object)array(); // placholder
+
         // unpack the primary process task json
-        if (isset($properties['task']))
+        if (isset($mapped_properties['task']))
         {
-            $task = @json_decode($properties['task'],true);
+            $task = @json_decode($mapped_properties['task'],true);
             if ($task !== false)
             {
-                $properties['task'] = $task;
-                $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+                $mapped_properties['task'] = $task;
+                $mapped_properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($mapped_properties['task']);
             }
         }
 
         // unpack the primary process process info json
-        if (isset($properties['process_info']))
+        if (isset($mapped_properties['process_info']))
         {
-            $process_info = @json_decode($properties['process_info'],true);
+            $process_info = @json_decode($mapped_properties['process_info'],true);
             if ($process_info !== false)
-                $properties['process_info'] = $process_info;
+                $mapped_properties['process_info'] = $process_info;
         }
 
-        return $properties;
+        return $mapped_properties;
     }
 }
 

@@ -40,7 +40,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter some kind
+        // make sure we have a filter on one of the indexed fields
         foreach ($filter as $key => $value)
         {
             if (isset($filter['eid'])) break;
@@ -185,21 +185,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             return false;
 
         return $local_properties['schedule'];
-    }
-
-    public function getProcessList() : array
-    {
-        $result = array();
-        $res = $this->getModel()->assoc_range($this->getEid(), \Model::EDGE_HAS_PROCESS);
-
-        foreach ($res as $item)
-        {
-            $object_eid = $item['eid'];
-            $object = \Flexio\Object\Process::load($object_eid);
-            $result[] = $object;
-        }
-
-        return $result;
     }
 
     public function get() : array

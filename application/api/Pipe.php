@@ -275,9 +275,11 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        $filter = array('owned_by' => $requesting_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $pipe->getEid());
+        $processes = \Flexio\Object\Process::list($filter);
+
         // get the processes that are accessible
         $processes_accessible = array();
-        $processes = $pipe->getProcessList();
         foreach ($processes as $p)
         {
             // a pipe can be run by different users; make sure the given user can only see

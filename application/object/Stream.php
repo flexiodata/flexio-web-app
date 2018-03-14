@@ -39,7 +39,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter some kind
+        // make sure we have a filter on one of the indexed fields
         foreach ($filter as $key => $value)
         {
             if (isset($filter['eid'])) break;
