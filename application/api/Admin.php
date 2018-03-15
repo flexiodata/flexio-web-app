@@ -175,12 +175,39 @@ class Admin
         $result = array();
         foreach ($stats as $s)
         {
+            $item = array();
+
+            $item['user'] = array();
+            $item['user']['eid'] = '';
+            $item['user']['eid_type'] = '';
+            $item['user']['user_name'] = '';
+            $item['user']['first_name'] = '';
+            $item['user']['last_name'] = '';
+
+            $item['pipe'] = array();
+            $item['pipe']['eid'] = '';
+            $item['pipe']['eid_type'] = '';
+            $item['pipe']['name'] = 'Anonymous';
+            $item['pipe']['description'] = 'Anonymous Process';
+
+            $item['process_created'] = $s['created'];
+            $item['total_count'] = $s['total_count'];
+            $item['total_time'] = $s['total_time'];
+            $item['average_time'] = $s['average_time'];
+
             $user_info = array();
             try
             {
                 $user = \Flexio\Object\User::load($s['user_eid']);
                 if ($user->getStatus() !== \Model::STATUS_DELETED)
+                {
                     $user_info = $user->get();
+                    $item['user']['eid'] = $user_info['eid'];
+                    $item['user']['eid_type'] = $user_info['eid_type'];
+                    $item['user']['user_name'] = $user_info['user_name'];
+                    $item['user']['first_name'] = $user_info['first_name'];
+                    $item['user']['last_name'] = $user_info['last_name'];
+                }
             }
             catch (\Flexio\Base\Exception $e)
             {
@@ -190,31 +217,25 @@ class Admin
             try
             {
                 $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                if ($user->getStatus() !== \Model::STATUS_DELETED)
+                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
+                {
                     $pipe_info = $pipe->get();
+                    $item['pipe'] = array();
+                    $item['pipe']['eid'] = $pipe_info['eid'];
+                    $item['pipe']['eid_type'] = $pipe_info['eid_type'];
+                    $item['pipe']['name'] = $pipe_info['name'];
+                    $item['pipe']['description'] = $pipe_info['description'];
+                }
+                else
+                {
+                }
             }
             catch (\Flexio\Base\Exception $e)
             {
+
+//var_dump($item);
+//die;
             }
-
-            $item = array();
-            $item['user'] = array();
-            $item['user']['eid'] = $user_info['eid'] ?? '';
-            $item['user']['eid_type'] = $user_info['eid_type'] ?? '';
-            $item['user']['user_name'] = $user_info['user_name'] ?? '';
-            $item['user']['first_name'] = $user_info['first_name'] ?? '';
-            $item['user']['last_name'] = $user_info['last_name'] ?? '';
-
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = $pipe_info['eid'] ?? '';
-            $item['pipe']['eid_type'] = $pipe_info['eid_type'] ?? '';
-            $item['pipe']['name'] = $pipe_info['name'] ?? 'Anonymous';
-            $item['pipe']['description'] = $pipe_info['description'] ?? 'Anonymous Process';
-
-            $item['process_created'] = $s['created'];
-            $item['total_count'] = $s['total_count'];
-            $item['total_time'] = $s['total_time'];
-            $item['average_time'] = $s['average_time'];
 
             $result[] = $item;
         }
@@ -239,29 +260,36 @@ class Admin
         $result = array();
         foreach ($stats as $s)
         {
-            $pipe_info = array();
-            try
-            {
-                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
-                    $pipe_info = $pipe->get();
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
             $item = array();
             $item['pipe'] = array();
-            $item['pipe']['eid'] = $pipe_info['eid'] ?? '';
-            $item['pipe']['eid_type'] = $pipe_info['eid_type'] ?? '';
-            $item['pipe']['name'] = $pipe_info['name'] ?? '';
-            $item['pipe']['ename'] = $pipe_info['ename'] ?? '';
-            $item['pipe']['description'] = $pipe_info['description'] ?? '';
-            $item['pipe']['owned_by'] = $pipe_info['owned_by']['eid'] ?? '';
+            $item['pipe']['eid'] = '';
+            $item['pipe']['eid_type'] = '';
+            $item['pipe']['name'] = '';
+            $item['pipe']['ename'] = '';
+            $item['pipe']['description'] = '';
+            $item['pipe']['owned_by'] = '';
             $item['process_created'] = $s['created'];
             $item['total_count'] = $s['total_count'];
             $item['total_time'] = $s['total_time'];
             $item['average_time'] = $s['average_time'];
+
+            try
+            {
+                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
+                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
+                {
+                    $pipe_info = $pipe->get();
+                    $item['pipe']['eid'] = $pipe_info['eid'];
+                    $item['pipe']['eid_type'] = $pipe_info['eid_type'];
+                    $item['pipe']['name'] = $pipe_info['name'];
+                    $item['pipe']['ename'] = $pipe_info['ename'];
+                    $item['pipe']['description'] = $pipe_info['description'];
+                    $item['pipe']['owned_by'] = $pipe_info['owned_by']['eid'];
+                }
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
 
             $result[] = $item;
         }
