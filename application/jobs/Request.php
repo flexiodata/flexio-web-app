@@ -33,8 +33,7 @@ class Request extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
+        $params = $this->getJobParameters();
 
         $current_user_eid = \Flexio\System\System::getCurrentUserEid();
 
@@ -66,6 +65,7 @@ class Request extends \Flexio\Jobs\Base
         }
          else
         {
+            /*
             // the url can also be a connection identifier
 
             try
@@ -84,6 +84,7 @@ class Request extends \Flexio\Jobs\Base
             {
                 $url = ''; // connection found
             }
+            */
         }
 
         if ($connection)
