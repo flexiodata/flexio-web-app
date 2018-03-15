@@ -172,72 +172,16 @@ class System
         {
             case 'identifier':
             case 'username':
-            case 'ename':
-                {
-                    if (\Flexio\Base\Identifier::isValid($value) === false)
-                    {
-                        // invalid identifier
-                        $valid = false;
-
-                        switch ($type)
-                        {
-                            case 'identifier':
-                                $message = _('An identifier must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
-                                break;
-                            case 'username':
-                                $message = _('A username must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
-                                break;
-                            case 'ename':
-                                $message = _('An alias must be lowercase, start with a letter, and contain between 3 and 39 alphanumeric/underscore/hyphen characters');
-                                break;
-                        }
-                    }
-                    else if (self::identifierExists($value) !== false)
-                    {
-                        // identifier already exists
-                        $valid = false;
-
-                        switch ($type)
-                        {
-                            case 'identifier':
-                                $message = _('This identifier is already taken.');
-                                break;
-                            case 'username':
-                                $message = _('This username is already taken.');
-                                break;
-                            case 'ename':
-                                $message = _('This alias is already taken.');
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        $valid = true;
-                        $message = '';
-                    }
-                }
+                $valid = self::validateIdentifier($type, $value, $message);
                 break;
 
             case 'email':
-                {
-                    if (\Flexio\Services\Email::isValid($value) === false)
-                    {
-                        // invalid identifier
-                        $valid = false;
-                        $message = _('This email address must be formatted correctly.');
-                    }
-                    else if (\Flexio\Object\User::getEidFromEmail($value) !== false)
-                    {
-                        // identifier already exists
-                        $valid = false;
-                        $message = _('This email address is already taken.');
-                    }
-                    else
-                    {
-                        $valid = true;
-                        $message = '';
-                    }
-                }
+                $valid = self::validateEmail($type, $value, $message);
+                break;
+
+            case 'ename':
+                $user = $requesting_user_eid ?? '';
+                $valid = self::validateEname($type, $user, $value, $message);
                 break;
 
             case 'password':
@@ -311,13 +255,97 @@ class System
         return $result;
     }
 
-    private static function identifierExists($identifier) : bool
+    private static function validateIdentifier(string $type, string $value, string &$message = '') : bool
     {
-        if (\Flexio\Object\User::getEidFromUsername($identifier) !== false)
-            return true;
+        // check for valid identifier
+        if (\Flexio\Base\Identifier::isValid($value) === false)
+        {
+            switch ($type)
+            {
+                case 'identifier':
+                    $message = _('An identifier must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+                    break;
+                case 'username':
+                    $message = _('A username must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+                    break;
+            }
 
-        // TODO: add checks for ename for pipe and connection
-        return false;
+            return false;
+        }
+
+        // check if identifier already exists
+        if (\Flexio\Object\User::getEidFromUsername($value) !== false)
+        {
+            switch ($type)
+            {
+                case 'identifier':
+                    $message = _('This identifier is already taken.');
+                    break;
+                case 'username':
+                    $message = _('This username is already taken.');
+                    break;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function validateEmail(string $type, string $value, string &$message = '') : bool
+    {
+        // check for valid email
+        if (\Flexio\Services\Email::isValid($value) === false)
+        {
+            $message = _('This email address must be formatted correctly.');
+            return false;
+        }
+
+        // check if email already exists
+        if (\Flexio\Object\User::getEidFromEmail($value) !== false)
+        {
+            $message = _('This email address is already taken.');
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function validateEname(string $type, string $user_eid, string $value, string &$message = '') : bool
+    {
+        try
+        {
+            if (\Flexio\Base\Identifier::isValid($value) === false)
+            {
+                // invalid identifier
+                $valid = false;
+                $message = _('An alias must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+            }
+
+            // enames can only be specific for a valid user; if the user doesn't load
+            // an exception will be thrown
+            $user = \Flexio\Object\User::load($user_eid);
+
+            if (\Flexio\Object\Pipe::getEidFromName($user->getEid(), $value) !== false)
+            {
+                // identifier already exists
+                $valid = false;
+                $message = _('This alias is already taken.');
+            }
+            if (\Flexio\Object\Connection::getEidFromName($user->getEid(), $value) !== false)
+            {
+                // identifier already exists
+                $valid = false;
+                $message = _('This alias is already taken.');
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // can't validate against the user (e.g. user doesn't exist)
+            return false;
+        }
+
+        return true;
     }
 
     private static function validateTask(array $task, array &$errors) : bool
