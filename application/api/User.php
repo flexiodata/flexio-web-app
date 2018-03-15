@@ -92,7 +92,8 @@ class User
         try
         {
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            $user = \Flexio\Object\User::load($user_eid);
+            if ($user_eid !== false)
+                $user = \Flexio\Object\User::load($user_eid);
         }
         catch (\Flexio\Base\Exception $e)
         {
