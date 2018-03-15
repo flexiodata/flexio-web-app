@@ -184,8 +184,8 @@ If you have any questions, please send us a note using the chat button at the bo
           description: ''
         }
 
-        // add username as the alias prefix
-        attrs.ename = this.username.trim() + ' ' + attrs.ename.trim()
+        // clean up alias
+        attrs.ename = attrs.ename.trim()
         attrs.ename = attrs.ename.toLowerCase().replace(/\s/g, '-')
 
         return attrs

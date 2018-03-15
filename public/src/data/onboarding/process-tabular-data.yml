@@ -5,7 +5,7 @@ want: I want to process tabular data
 
 code: >
   Flexio.pipe()
-    .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
+    .read('/flexio-public-s3/contact-list-1.csv')
 
 steps:
   - #----------------------------------------#
@@ -41,7 +41,7 @@ steps:
 
       ```
       Flexio.pipe()
-        .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
+        .read('/flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
       ```
 
@@ -60,7 +60,7 @@ steps:
 
       ```
       Flexio.pipe()
-        .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
+        .read('/flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
       ```
@@ -93,7 +93,7 @@ steps:
 
       ```
       Flexio.pipe()
-        .read('/{{username}}-flexio-public-s3/contact-list-1.csv')
+        .read('/flexio-public-s3/contact-list-1.csv')
         .convert('csv', 'table')
         .select('firstname', 'lastname', 'city')
         .write('/{{connection_alias}}/flexio-${process.time.unix}/contact-list-1.csv')

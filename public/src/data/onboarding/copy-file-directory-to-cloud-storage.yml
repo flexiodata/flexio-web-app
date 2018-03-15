@@ -5,7 +5,7 @@ want: I want to copy a file directory to cloud storage
 
 code: >
   Flexio.pipe()
-    .list('/{{username}}-flexio-public-s3')
+    .list('/flexio-public-s3')
 
 steps:
   - #----------------------------------------#
@@ -40,7 +40,7 @@ steps:
 
       ```
       Flexio.pipe()
-        .list('/{{username}}-flexio-public-s3')
+        .list('/flexio-public-s3')
         .filter('size <= 50000')
       ```
 
@@ -72,11 +72,11 @@ steps:
 
       ```
       Flexio.pipe()
-        .list('/{{username}}-flexio-public-s3')
+        .list('/flexio-public-s3')
         .filter('size <= 50000')
         .foreach(
           Flexio.pipe()
-            .read('/{{username}}-flexio-public-s3/${item.name}')
+            .read('/flexio-public-s3/${item.name}')
             .write('/{{connection_alias}}/flexio-${process.time.unix}/${item.name}')
         )
         .echo('Finished!')

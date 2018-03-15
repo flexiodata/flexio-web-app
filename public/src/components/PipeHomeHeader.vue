@@ -30,7 +30,7 @@
             />
             <div
               class="hint--bottom hint--large cursor-default"
-              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we automatically set your username as the prefix (e.g., username-foo)."
+              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
               v-if="pipe_ename.length == 0"
             >
               <i class="material-icons blue v-mid" style="font-size: 21px">info</i>

@@ -34,14 +34,13 @@
               spellcheck="false"
               label="Alias"
               help=" "
-              :placeholder="alias_placeholder"
               :error="ename_error"
               :invalid="ename_error.length > 0"
               v-model="edit_pipe.ename"
             />
             <div
               class="hint--bottom-left hint--large cursor-default"
-              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API. Aliases are unique across the app, so we recommend prefixing your alias with your username (e.g., username-foo)."
+              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
             >
               <i class="material-icons blue md-24">info</i>
             </div>
@@ -167,9 +166,6 @@
       },
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
-      },
-      alias_placeholder() {
-        return 'username-my-alias'
       },
       ename_error() {
         if (this.mode == 'edit' && _.get(this.edit_pipe, 'ename') === _.get(this.pipe, 'ename'))
