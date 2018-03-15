@@ -231,6 +231,8 @@ class Stream implements \Flexio\IFace\IStream
 
     public function isTable() : bool
     {
+        if (($this->properties['mime_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_TABLE)
+            return true;
         return count($this->properties['structure']) > 0 ? true : false;
     }
 
