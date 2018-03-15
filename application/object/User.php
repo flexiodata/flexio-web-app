@@ -155,6 +155,14 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
+    public function get() : array
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties;
+    }
+
     public function getType() : string
     {
         return \Model::TYPE_USER;
@@ -189,14 +197,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $this->populateCache();
 
         return $this->properties['eid_status'];
-    }
-
-    public function get() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties;
     }
 
     public function getStoreRoot() : \Flexio\Object\Stream
