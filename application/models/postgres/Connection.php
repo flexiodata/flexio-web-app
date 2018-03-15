@@ -103,7 +103,9 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        return $this->setStatus($eid, \Model::STATUS_DELETED);
+        // set the status to deleted and clear out any existing ename
+        $params = array('eid_status' => \Model::STATUS_DELETED, 'ename' => '');
+        return $this->set($eid, $params);
     }
 
     public function set(string $eid, array $params) : bool
