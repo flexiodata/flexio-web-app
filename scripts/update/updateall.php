@@ -21,6 +21,8 @@ $config = @file_get_contents(__DIR__ . '/../../config/config.json');
 $config = json_decode($config, true);
 
 
+
+
 $params = array('host' => $config['directory_database_host'],
                 'port' => 5432,
                 'username' => $config['directory_database_username'],
@@ -106,8 +108,12 @@ echo "\n";
 // logMessage("Starting");
 
 $php = \Flexio\System\System::getBinaryPath('php');
-$prog_args = $argv;
-array_shift($prog_args);
+
+
+
+
+
+$prog_args = [ $params['host'], $params['username'], $params['password'], $params['dbname'] ];
 
 foreach ($updates as $uv => $uf)
 {
