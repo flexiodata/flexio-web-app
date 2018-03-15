@@ -42,8 +42,6 @@ class List1 extends \Flexio\Jobs\Base
         $parts = \Flexio\Base\File::splitPath($path);
         $lastpart = array_pop($parts);
 
-        if (is_null($lastpart))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'");
 
         foreach ($parts as $part)
         {
@@ -55,12 +53,16 @@ class List1 extends \Flexio\Jobs\Base
         }
 
         $wildcard = null;
-        if (strpos($lastpart, '*') !== false)
-            $wildcard = $lastpart;
-             else
-            $parts[] = $lastpart;
+        if ($lastpart !== null)
+        {
+            if (strpos($lastpart, '*') !== false)
+                $wildcard = $lastpart;
+                else
+                $parts[] = $lastpart;
+        }
 
         $path = '/' . implode('/', $parts);
+
 
         $streamwriter = $outstream->getWriter();
 
