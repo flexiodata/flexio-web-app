@@ -65,26 +65,27 @@ class Request extends \Flexio\Jobs\Base
         }
          else
         {
-            /*
-            // the url can also be a connection identifier
-
             try
             {
-                if (\Flexio\Base\Eid::isValid($url) === false)
+                $eid_from_identifier = $url;
+                if (\Flexio\Base\Eid::isValid($eid_from_identifier) === false)
                 {
-                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $url);
-                    $url = $eid_from_identifier !== false ? $eid_from_identifier : '';
+                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $eid_from_identifier);
+                    if ($eid_from_identifier === false)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
                 }
 
-                $connection = \Flexio\Object\Connection::load($url);
+                $connection = \Flexio\Object\Connection::load($eid_from_identifier);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+                $url = ''; // use connection info instead
             }
             catch (\Flexio\Base\Exception $e)
             {
-                $url = ''; // connection found
+                // connection not found
             }
-            */
+
         }
 
         if ($connection)
