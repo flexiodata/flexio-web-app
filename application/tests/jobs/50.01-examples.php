@@ -29,7 +29,7 @@ class Test
                 "op": "request",
                 "description": "Read CSV file from GitHub url",
                 "params": {
-                    "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/examples\/master\/contact-refinement\/contacts-ltd1.csv"
+                    "url": "https:\/\/raw.githubusercontent.com\/flexiodata\/data\/master\/contact-samples\/contacts-ltd1.csv"
                 }
             },
             {
