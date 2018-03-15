@@ -152,6 +152,19 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
+    public function get() : array
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties;
+    }
+
+    public function getType() : string
+    {
+        return \Model::TYPE_PIPE;
+    }
+
     public function setTask(array $task) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
@@ -189,19 +202,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $local_properties['schedule'];
     }
 
-    public function get() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties;
-    }
-
-    public function getType() : string
-    {
-        return \Model::TYPE_PIPE;
-    }
-
     public function setOwner(string $user_eid) : \Flexio\Object\Pipe
     {
         $properties = array('owned_by' => $user_eid);
@@ -211,8 +211,10 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        $pipe_model = $this->getModel()->pipe;
-        return $pipe_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Pipe

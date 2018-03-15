@@ -155,6 +155,14 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
+    public function get() : array
+    {
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties;
+    }
+
     public function getType() : string
     {
         return \Model::TYPE_USER;
@@ -169,8 +177,10 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        $user_model = $this->getModel()->user;
-        return $user_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Base
@@ -187,14 +197,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $this->populateCache();
 
         return $this->properties['eid_status'];
-    }
-
-    public function get() : array
-    {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties;
     }
 
     public function getStoreRoot() : \Flexio\Object\Stream
@@ -504,6 +506,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "locale_dateformat" => null,
                 "timezone" => null,
                 "config" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -512,6 +515,12 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the config
         $config = $mapped_properties['config'] ?? '{}';
