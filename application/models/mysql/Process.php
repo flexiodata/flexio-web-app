@@ -234,6 +234,7 @@ class Process extends ModelBase
                 $timestamp = \Flexio\System\System::getTimestamp();
                 $process_arr = array(
                     'eid'          => $eid,
+                    'eid_status'   => \Model::STATUS_AVAILABLE, // only allow active items now
                     'process_eid'  => $process_eid,
                     'task_op'      => $params['task_op'] ?? '',
                     'task_version' => $params['task_version'] ?? 0,
@@ -306,6 +307,7 @@ class Process extends ModelBase
         try
         {
             $rows = $db->fetchAll("select tpl.eid as eid,
+                                          tpl.eid_status as eid_status,
                                           tpl.process_eid as process_eid,
                                           tpl.task_op as task_op,
                                           tpl.task_version as task_version,
@@ -335,6 +337,7 @@ class Process extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'              => $row['eid'],
+                              'eid'              => $row['eid_status'],
                               'process_eid'      => $row['process_eid'],
                               'task_op'          => $row['task_op'],
                               'task_version'     => $row['task_version'],

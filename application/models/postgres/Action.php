@@ -27,6 +27,7 @@ class Action extends ModelBase
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
+                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
                 'invoked_from'   => $params['invoked_from'] ?? '',
                 'invoked_by'     => $params['invoked_by'] ?? '',
                 'action_type'    => $params['action_type'] ?? '',
@@ -60,6 +61,7 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string',  'required' => false),
                 'invoked_from'   => array('type' => 'string',  'required' => false),
                 'invoked_by'     => array('type' => 'string',  'required' => false),
                 'action_type'    => array('type' => 'string',  'required' => false),
@@ -129,6 +131,7 @@ class Action extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'           => $row['eid'],
+                              'eid_status'    => $row['eid_status'],
                               'invoked_from'  => $row['invoked_from'],
                               'invoked_by'    => $row['invoked_by'],
                               'action_type'   => $row['action_type'],
