@@ -18,13 +18,6 @@ namespace Flexio\Object;
 
 class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
-/*
-    // TODO: create migration script to remove this from the registry
-    const PROCESS_DATASTORE_1 = 'process.datastore.1';
-    $registry_model = \Flexio\System\System::getModel()->registry;
-    $connection_eid = $registry_model->getString('', self::PROCESS_DATASTORE_1);
-*/
-
     public function __construct()
     {
     }
