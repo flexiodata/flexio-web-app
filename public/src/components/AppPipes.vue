@@ -151,7 +151,18 @@
         })
       },
       tryDeletePipe(attrs) {
-        this.$store.dispatch('deletePipe', { attrs })
+        var name = _.get(attrs, 'name', 'Pipe')
+
+        this.$confirm('Are you sure you want to delete the pipe named "'+name+'"?', 'Really delete pipe?', {
+          confirmButtonText: 'DELETE PIPE',
+          cancelButtonText: 'CANCEL',
+          type: 'warning'
+        }).then(() => {
+          this.$store.dispatch('deletePipe', { attrs })
+        }).catch(() => {
+          // do nothing
+        })
+
       },
       trySchedulePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
