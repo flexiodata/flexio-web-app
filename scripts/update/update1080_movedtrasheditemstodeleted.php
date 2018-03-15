@@ -48,17 +48,17 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: change the status of trashed items over to deleted
-    $db->exec("update tbl_user set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_token set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_acl set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_pipe set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_connection set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_process set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_processlog set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_stream set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_comment set eid_status = 'D' where eid_status = 'T'");
-    $db->exec("update tbl_action set eid_status = 'D' where eid_status = 'T'");
+    // STEP 1: move trashed and invalid statuses (except empty) over to deleted
+    $db->exec("update tbl_user set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_token set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_acl set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_pipe set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_connection set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_process set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_processlog set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_stream set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_comment set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
+    $db->exec("update tbl_action set eid_status = 'D' where eid_status != 'P' and eid_status != 'A' and eid_status != 'D' and eid_status != ''");
 }
 catch(\Exception $e)
 {
