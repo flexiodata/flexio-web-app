@@ -136,7 +136,8 @@ class System
             if (($validator->check($p, array(
                     'key' => array('type' => 'string', 'required' => true),
                     'value' => array('type' => 'string', 'required' => true),
-                    'type' => array('type' => 'string', 'required' => true)
+                    'type' => array('type' => 'string', 'required' => true),
+                    'eid_type' => array('type' => 'string', 'required' => false)
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
@@ -145,14 +146,20 @@ class System
         $result = array();
         foreach ($params as $p)
         {
-            $result[] = self::validateObject($p['key'], $p['value'], $p['type'], $requesting_user_eid);
+            $result[] = self::validateObject($p, $requesting_user_eid);
         }
 
         return $result;
     }
 
-    private static function validateObject(string $key, string $value, string $type, string $requesting_user_eid = null) : array
+    private static function validateObject(array $params, string $requesting_user_eid = null) : array
     {
+
+        $key = $params['key'];
+        $value = $params['value'];
+        $type = $params['type'];
+        $eid_type = $params['eid_type'] ?? \Model::TYPE_UNDEFINED;
+
         // make sure the user is logged in for certain kinds of validation checks
         if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
         {
@@ -181,7 +188,7 @@ class System
 
             case 'ename':
                 $user = $requesting_user_eid ?? '';
-                $valid = self::validateEname($type, $user, $value, $message);
+                $valid = self::validateEname($type, $eid_type, $user, $value, $message);
                 break;
 
             case 'password':
@@ -311,7 +318,7 @@ class System
         return true;
     }
 
-    private static function validateEname(string $type, string $user_eid, string $value, string &$message = '') : bool
+    private static function validateEname(string $type, string $eid_type, string $user_eid, string $value, string &$message = '') : bool
     {
         try
         {
@@ -326,18 +333,22 @@ class System
             // an exception will be thrown
             $user = \Flexio\Object\User::load($user_eid);
 
-            if (\Flexio\Object\Pipe::getEidFromName($user->getEid(), $value) !== false)
+            if (($eid_type == \Model::TYPE_PIPE || $eid_type == \Model::TYPE_UNDEFINED) &&
+                \Flexio\Object\Pipe::getEidFromName($user->getEid(), $value) !== false)
             {
                 // identifier already exists
                 $valid = false;
                 $message = _('This alias is already taken.');
             }
-            if (\Flexio\Object\Connection::getEidFromName($user->getEid(), $value) !== false)
+
+            if (($eid_type == \Model::TYPE_CONNECTION || $eid_type == \Model::TYPE_UNDEFINED) &&
+                \Flexio\Object\Connection::getEidFromName($user->getEid(), $value) !== false)
             {
                 // identifier already exists
                 $valid = false;
                 $message = _('This alias is already taken.');
             }
+
         }
         catch (\Flexio\Base\Exception $e)
         {
