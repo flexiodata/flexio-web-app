@@ -643,8 +643,8 @@ class User
                         break;
                 }
 
-                if ($object !== false)
-                    $results[] = $object->get();
+                if ($new_object !== false)
+                    $results[] = $new_object->get();
             }
         }
         catch (\Flexio\Base\Exception $e)
