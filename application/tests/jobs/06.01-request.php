@@ -28,7 +28,7 @@ class Test
             "op": "request",
             "params": {
                 "method": "get",
-                "url": "https://raw.githubusercontent.com/flexiodata/functions/master/hello-world.py"
+                "url": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
             }
         }
         ',true);

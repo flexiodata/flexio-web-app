@@ -26,7 +26,7 @@ class Test
         $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<EOD
 Flexio.pipe()
     .python(
-    'https://raw.githubusercontent.com/flexiodata/functions/master/hello-world.py', // code path
+    'https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py', // code path
     'sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36' // optional integrity check
     )
     .run(function(err, response) {
