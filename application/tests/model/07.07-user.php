@@ -209,14 +209,14 @@ class Test
         );
         $eid = $model->create($info);
         $info = array(
-            'eid_status' => \Model::STATUS_TRASH,
+            'eid_status' => \Model::STATUS_PENDING,
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'eid_status' => \Model::STATUS_TRASH,
+            'eid_status' => \Model::STATUS_PENDING,
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );

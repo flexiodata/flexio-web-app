@@ -426,13 +426,8 @@ class Test
         \Flexio\Tests\Check::assertBoolean('C.9', '\Model::isValidStatus(); return true for a valid status',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidStatus(\Model::STATUS_TRASH);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.10', '\Model::isValidStatus(); return true for a valid status',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::isValidStatus(\Model::STATUS_DELETED);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.11', '\Model::isValidStatus(); return true for a valid status',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.10', '\Model::isValidStatus(); return true for a valid status',  $actual, $expected, $results);
     }
 }

@@ -235,7 +235,7 @@ class Test
 
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
-        $object = $object->setStatus(\Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_PENDING);
         $actual =  'Flexio\Object\Stream';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('F.1', 'Stream::setStatus(); return the object',  $actual, $expected, $results);
@@ -243,14 +243,14 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
         $eid1 = $object->getEid();
-        $eid2 = $object->setStatus(\Model::STATUS_TRASH)->getEid();
+        $eid2 = $object->setStatus(\Model::STATUS_PENDING)->getEid();
         $actual =  \Flexio\Base\Eid::isValid($eid1) && $eid1 === $eid2;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.2', 'Stream::setStatus(); setting status of an object shouldn\'t change its eid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
-        $object = $object->setStatus(\Model::STATUS_TRASH);
+        $object = $object->setStatus(\Model::STATUS_PENDING);
         $actual =  $object->getType();
         $expected = \Model::TYPE_STREAM;
         \Flexio\Tests\Check::assertString('F.3', 'Stream::setStatus(); setting status of an object shouldn\'t change its type',  $actual, $expected, $results);
@@ -260,7 +260,7 @@ class Test
         try
         {
             $object = \Flexio\Object\Stream::create();
-            $status1 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
+            $status1 = $object->setStatus(\Model::STATUS_PENDING)->getStatus();
             $status2 = $object->setStatus('.')->getStatus();
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
@@ -274,8 +274,8 @@ class Test
         // BEGIN TEST
         $object = \Flexio\Object\Stream::create();
         $status1 = $object->setStatus(\Model::STATUS_PENDING)->getStatus();
-        $status2 = $object->setStatus(\Model::STATUS_TRASH)->getStatus();
-        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_TRASH);
+        $status2 = $object->setStatus(\Model::STATUS_DELETED)->getStatus();
+        $actual =  ($status1 === \Model::STATUS_PENDING && $status2 === \Model::STATUS_DELETED);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('F.5', 'Stream::setStatus(); make sure the status is set',  $actual, $expected, $results);
 

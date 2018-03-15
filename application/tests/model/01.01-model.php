@@ -210,11 +210,6 @@ class Test
         \Flexio\Tests\Check::assertString('D.3', 'Model status constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::STATUS_TRASH;
-        $expected = 'T';
-        \Flexio\Tests\Check::assertString('D.4', 'Model status constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::STATUS_DELETED;
         $expected = 'D';
         \Flexio\Tests\Check::assertString('D.5', 'Model status constant',  $actual, $expected, $results);

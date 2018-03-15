@@ -56,7 +56,6 @@ class Model
     const STATUS_UNDEFINED = '';
     const STATUS_PENDING   = 'P';
     const STATUS_AVAILABLE = 'A';
-    const STATUS_TRASH     = 'T';
     const STATUS_DELETED   = 'D';
 
     const ACCESS_CODE_TYPE_UNDEFINED = '';
@@ -188,7 +187,6 @@ class Model
 
             case \Model::STATUS_PENDING:
             case \Model::STATUS_AVAILABLE:
-            case \Model::STATUS_TRASH:
             case \Model::STATUS_DELETED:
                 return true;
         }
