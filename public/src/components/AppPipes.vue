@@ -162,7 +162,6 @@
         }).catch(() => {
           // do nothing
         })
-
       },
       trySchedulePipe(attrs) {
         var eid = _.get(attrs, 'eid', '')
