@@ -42,7 +42,12 @@ class Http implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $ret = [ 'name' => $path,
+                 'size' => null,
+                 'modified' => null,
+                 'type' => 'FILE' ];
+
+        return $ret;
     }
 
     public function exists(string $path) : bool
