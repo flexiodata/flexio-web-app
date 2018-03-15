@@ -211,18 +211,14 @@ class Test
             "ename" : null,
             "name" : null,
             "description" : null,
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : null,
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
             "task" : {
             },
             "schedule" : null,
             "schedule_status" : null,
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null
+            },
             "created" : null,
             "updated" : null
         }

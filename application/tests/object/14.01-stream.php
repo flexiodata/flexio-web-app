@@ -219,6 +219,10 @@ class Test
             "file_modified" : null,
             "connection_eid" :  null,
             "expires" : null,
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null
+            },
             "created" : null,
             "updated" : null
         }

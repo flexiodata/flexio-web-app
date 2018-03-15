@@ -212,17 +212,7 @@ class Test
             "eid_status" : null,
             "parent" : {
                 "eid" : null,
-                "eid_type" : null,
-                "name" : null,
-                "description" : null
-            },
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : null,
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
+                "eid_type" : null
             },
             "process_mode": null,
             "task" : [
@@ -235,6 +225,10 @@ class Test
             },
             "process_status" : null,
             "cache_used" : null,
+            "owned_by" : {
+                "eid" : null,
+                "eid_type" : null
+            },
             "created" : null,
             "updated" : null
         }

@@ -214,11 +214,7 @@ class Test
             ],
             "owned_by" : {
                 "eid" : null,
-                "eid_type" : null,
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
+                "eid_type" : null
             },
             "created" : null,
             "updated" : null
