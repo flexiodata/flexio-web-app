@@ -232,9 +232,6 @@ class Admin
             }
             catch (\Flexio\Base\Exception $e)
             {
-
-//var_dump($item);
-//die;
             }
 
             $result[] = $item;
