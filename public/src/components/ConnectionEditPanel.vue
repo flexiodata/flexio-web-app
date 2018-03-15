@@ -105,6 +105,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import * as mtypes from '../constants/member-type'
@@ -211,7 +212,7 @@
       'edit_connection.ename': function(val, old_val) {
         var ename = val
 
-        this.validateEname(val, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_CONNECTION, val, (response, errors) => {
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
@@ -307,7 +308,7 @@
 
           var ename = _.get(this.edit_connection, 'ename', '')
 
-          this.validateEname(ename, (response, errors) => {
+          this.validateEname(OBJECT_TYPE_CONNECTION, ename, (response, errors) => {
             this.ss_errors = ename.length > 0 && _.size(errors) > 0
               ? _.assign({}, errors)
               : _.assign({})

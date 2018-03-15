@@ -14,9 +14,9 @@ export default {
         // error callback
       })
     }, 300),
-    validateEname: function(ename, callback) {
-      var validate_attrs = [{ key: 'ename', value: ename, type: 'ename' }]
-      return this.validate(validate_attrs, callback)
+    validateEname: function(eid_type, ename, callback) {
+      var validate_attrs = [{ eid_type, key: 'ename', value: ename, type: 'ename' }]
+      return this.validate(_.omitBy(validate_attrs, _.isEmpty), callback)
     }
   }
 }

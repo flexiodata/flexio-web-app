@@ -69,6 +69,7 @@
   import { mapGetters } from 'vuex'
   import * as mt from '../constants/member-type'
   import * as at from '../constants/action-type'
+  import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import Validation from './mixins/validation'
 
   const defaultRights = () => {
@@ -136,7 +137,7 @@
       'edit_pipe.ename': function(val, old_val) {
         var ename = val
 
-        this.validateEname(ename, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
@@ -189,7 +190,7 @@
       {
         var ename = _.get(this.edit_pipe, 'ename', '')
 
-        this.validateEname(ename, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
@@ -211,7 +212,7 @@
 
           var ename = _.get(this.edit_pipe, 'ename', '')
 
-          this.validateEname(ename, (response, errors) => {
+          this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
             this.ss_errors = ename.length > 0 && _.size(errors) > 0
               ? _.assign({}, errors)
               : _.assign({})

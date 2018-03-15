@@ -60,6 +60,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
   import InlineEditText from './InlineEditText.vue'
@@ -163,7 +164,7 @@
         var eid = this.pipeEid
         var ename = _.get(attrs, 'ename', '')
 
-        this.validateEname(ename, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
           var errors = _.omitBy(errors, (e) => { return _.get(e, 'valid') })
 
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
@@ -207,7 +208,7 @@
           return
         }
 
-        this.validateEname(ename, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
           this.ss_errors = ename.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
