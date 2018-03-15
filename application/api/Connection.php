@@ -203,10 +203,12 @@ class Connection
         // get the connections
         $result = array();
 
-        $connections = $user->getConnectionList();
+        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $connections = \Flexio\Object\Connection::list($filter);
+
         foreach ($connections as $c)
         {
-            if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            if ($c->allows($user->getEid(), \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
             $properties = self::maskProperties($c->get());

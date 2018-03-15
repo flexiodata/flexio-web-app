@@ -78,7 +78,8 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             // get the connections
-            $connections = $user->getConnectionList();
+            $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+            $connections = \Flexio\Object\Connection::list($filter);
 
             // add an entry for home folder (local) storage
             $results[] = array(

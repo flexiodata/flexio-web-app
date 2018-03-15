@@ -43,7 +43,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // TODO: load object info here; pass on model info for now
         $object = new static();
         $process_model = $object->getModel()->process;
         $items = $process_model->list($filter);
@@ -367,10 +366,10 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!isset($mapped_properties))
+        if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // expand the parent and owner info
+        // TODO: expand the parent and owner info
         $pipe_info = array();
         $mapped_properties['parent'] = (object)array(); // placholder
 

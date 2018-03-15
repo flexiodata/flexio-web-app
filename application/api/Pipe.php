@@ -241,10 +241,12 @@ class Pipe
         // get the pipes
         $result = array();
 
-        $pipes = $user->getPipeList();
+        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $pipes = \Flexio\Object\Pipe::list($filter);
+
         foreach ($pipes as $p)
         {
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            if ($p->allows($user->getEid(), \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
             $result[] = self::get_internal($p);

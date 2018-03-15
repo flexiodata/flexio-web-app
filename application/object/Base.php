@@ -253,50 +253,6 @@ class Base
         return \Flexio\System\System::getModel();
     }
 
-    private function isCached() : bool
-    {
-        if ($this->properties === false)
-            return false;
-
-        return true;
-    }
-
-    private function clearCache() : bool
-    {
-        $this->properties = false;
-        return true;
-    }
-
-    private function populateCache() : bool
-    {
-        $this->properties = $this->getProperties();
-        return true;
-    }
-
-    private function getProperties() : array
-    {
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : null,
-            "eid_status" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-
-        // execute the query
-        $query = json_decode($query);
-        $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
-
-        // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // return the properties
-        return $properties;
-    }
-
     private function getRightsInfo() : array
     {
         $result = array();

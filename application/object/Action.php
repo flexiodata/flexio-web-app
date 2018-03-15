@@ -32,10 +32,21 @@ class Action
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // TODO: load object info here; pass on model info for now
         $object = new static();
         $action_model = $object->getModel()->action;
-        return $action_model->list($filter);
+        $items = $action_model->list($filter);
+
+        $objects = array();
+        foreach ($items as $i)
+        {
+            $o = new static();
+            $local_properties = self::formatProperties($i);
+            $o->properties = $local_properties;
+            $o->setEid($local_properties['eid']);
+            $objects[] = $o;
+        }
+
+        return $objects;
     }
 
     public static function create(array $properties = null) : \Flexio\Object\Action
@@ -103,20 +114,22 @@ class Action
 
     private function populateCache() : bool
     {
-        $this->properties = $this->getProperties();
+        $action_model = $this->getModel()->action;
+        $local_properties = $action_model->get($this->getEid());
+        $this->properties = self::formatProperties($local_properties);
         return true;
     }
 
-    private function getProperties() : array
+    private static function formatProperties(array $properties) : array
     {
         $action_model = $this->getModel()->action;
-        $properties = $action_model->get($this->getEid());
+        $mapped_properties = $action_model->get($properties['eid']);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
+        if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // return the properties
-        return $properties;
+        return $mapped_properties;
     }
 }

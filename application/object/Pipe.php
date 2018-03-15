@@ -49,10 +49,21 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // TODO: load object info here; pass on model info for now
         $object = new static();
         $pipe_model = $object->getModel()->pipe;
-        return $pipe_model->list($filter);
+        $items = $pipe_model->list($filter);
+
+        $objects = array();
+        foreach ($items as $i)
+        {
+            $o = new static();
+            $local_properties = self::formatProperties($i);
+            $o->properties = $local_properties;
+            $o->setEid($local_properties['eid']);
+            $objects[] = $o;
+        }
+
+        return $objects;
     }
 
     public static function load(string $eid) : \Flexio\Object\Pipe
@@ -239,12 +250,15 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private function populateCache() : bool
     {
-        $this->properties = $this->getProperties();
+        $pipe_model = $this->getModel()->pipe;
+        $local_properties = $pipe_model->get($this->getEid());
+        $this->properties = self::formatProperties($local_properties);
         return true;
     }
 
-    private function getProperties() : array
+    private static function formatProperties(array $properties) : array
     {
+/*
         $query = '
         {
             "eid" : null,
@@ -268,34 +282,51 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "updated" : null
         }
         ';
+*/
 
-        // execute the query
-        $query = json_decode($query);
-        $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "eid" => null,
+                "eid_type" => null,
+                "eid_status" => null,
+                "ename" => null,
+                "name" => null,
+                "description" => null,
+                "owned_by" => null,
+                "task" => null,
+                "schedule" => null,
+                "schedule_status" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
+        if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // TODO: expand the owner info
+        $owner_info = array();
+        $mapped_properties['owned_by'] = (object)array(); // placholder
+
         // unpack the task json
-        $task = @json_decode($properties['task'],true);
+        $task = @json_decode($mapped_properties['task'],true);
         if ($task === false)
         {
-            $properties['task'] = array();
+            $mapped_properties['task'] = array();
         }
          else
         {
-            $properties['task'] = $task;
-            $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
+            $mapped_properties['task'] = $task;
+            $mapped_properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($mapped_properties['task']);
         }
 
         // unpack the schedule json
-        $schedule = @json_decode($properties['schedule'],true);
+        $schedule = @json_decode($mapped_properties['schedule'],true);
         if ($schedule !== false)
-            $properties['schedule'] = $schedule;
+            $mapped_properties['schedule'] = $schedule;
 
-        // return the properties
-        return $properties;
+        return $mapped_properties;
     }
 
     // schedule info

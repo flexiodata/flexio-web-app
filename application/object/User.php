@@ -70,10 +70,21 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // TODO: load object info here; pass on model info for now
         $object = new static();
         $user_model = $object->getModel()->user;
-        return $user_model->list($filter);
+        $items = $user_model->list($filter);
+
+        $objects = array();
+        foreach ($items as $i)
+        {
+            $o = new static();
+            $local_properties = self::formatProperties($i);
+            $o->properties = $local_properties;
+            $o->setEid($local_properties['eid']);
+            $objects[] = $o;
+        }
+
+        return $objects;
     }
 
     public static function load(string $eid) : \Flexio\Object\User
@@ -221,86 +232,10 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stream;
     }
 
-    public function getObjectList(array $filter = null) : array
-    {
-        // filter can be contain combinations of the following:
-        //$filter = array(
-        //    'target_eids' => array(/* index array of eids */),
-        //    'eid_type' => array(/* index array of eid types */),
-        //    'eid_status' => array(/* index array of eid statuses */)
-        //);
-
-        // get the objects owned/followed by the user
-        $user_eid = $this->getEid();
-
-        $objects_owned = $this->getModel()->assoc_range($user_eid, \Model::EDGE_OWNS, $filter);
-        $objects_followed = $this->getModel()->assoc_range($user_eid, \Model::EDGE_FOLLOWING, $filter);
-        $objects = array_merge($objects_owned, $objects_followed);
-
-        // TODO: eid_status is no longer available in the assoc_range filter because it was
-        // moved to individual tables; get a list of the status codes and filter manually
-        $allowed_eid_status = false;
-        if (isset($filter['eid_status']) && is_array($filter['eid_status']))
-            $allowed_eid_status = array_flip($filter['eid_status']);
-
-        $res = array();
-        foreach ($objects as $object_info)
-        {
-            try
-            {
-                $object_eid = $object_info['eid'];
-                $object_eid_type = $object_info['eid_type'];
-                $object = \Flexio\Object\Store::load($object_eid, $object_eid_type);
-
-                if ($allowed_eid_status !== false)
-                {
-                    $object_eid_status = $object->getStatus();
-                    if (!array_key_exists($object_eid_status, $allowed_eid_status))
-                        continue;
-                }
-
-                $res[] = $object;
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-                continue;
-            }
-        }
-
-        return $res;
-    }
-
-    public function getPipeList() : array
-    {
-        $filter = array('eid_type' => array(\Model::TYPE_PIPE), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $objects = $this->getObjectList($filter);
-        return $objects;
-    }
-
-    public function getConnectionList() : array
-    {
-        $filter = array('eid_type' => array(\Model::TYPE_CONNECTION), 'eid_status' => array(\Model::STATUS_AVAILABLE));
-        $objects = $this->getObjectList($filter);
-        return $objects;
-    }
-
     public function getRightsList(array $filter = null) : array
     {
-        // get the objects for the user
-        $objects = $this->getObjectList($filter);
-
-        // return the rights for the objects
-        $res = array();
-        foreach ($objects as $o)
-        {
-            $rights = $o->getRights();
-            foreach ($rights as $r)
-            {
-                $res[] = $r;
-            }
-        }
-
-        return $res;
+        // TODO: old implementation is deprecated
+        return array();
     }
 
     public function getTokenList() : array
@@ -514,12 +449,15 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private function populateCache() : bool
     {
-        $this->properties = $this->getProperties();
+        $user_model = $this->getModel()->user;
+        $local_properties = $user_model->get($this->getEid());
+        $this->properties = self::formatProperties($local_properties);
         return true;
     }
 
-    private function getProperties() : array
+    private static function formatProperties(array $properties) : array
     {
+/*
         $query = '
         {
             "eid" : null,
@@ -546,21 +484,45 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "updated" : null
         }
         ';
-
-        $query = json_decode($query);
-        $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
+*/
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "eid" => null,
+                "eid_type" => null,
+                "eid_status" => null,
+                "user_name" => null,
+                "first_name" => null,
+                "last_name" => null,
+                "email" => null,
+                "email_hash" => null,
+                "phone" => null,
+                "location_city" => null,
+                "location_state" => null,
+                "location_country" => null,
+                "company_name" => null,
+                "company_url" => null,
+                "locale_language" => null,
+                "locale_decimal" => null,
+                "locale_thousands" => null,
+                "locale_dateformat" => null,
+                "timezone" => null,
+                "config" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
+        if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the config
-        $config = $properties['config'] ?? '{}';
-        $config = @json_decode($config, true);
-        if (!is_array($config))
-            $config = new Object;
-        $properties['config'] = $config;
+        $config = $mapped_properties['config'] ?? '{}';
+            $config = @json_decode($config, true);
+            if (!is_array($config))
+                $config = new Object;
+            $mapped_properties['config'] = $config;
 
-        return $properties;
+        return $mapped_properties;
     }
 }
