@@ -621,8 +621,7 @@ class User
     {
         // create sample pipes; ensure user creation even if sample fails
         $results = array();
-        try
-        {
+
             $objects = self::getExampleObjects();
             foreach ($objects as $o)
             {
@@ -634,28 +633,19 @@ class User
                 {
                     case \Model::TYPE_CONNECTION:
                         $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
-                        $new_object = \Flexio\Oject\Connection::load($object_eid);
+                        $new_object = \Flexio\Object\Connection::load($object_eid);
                         break;
 
                     case \Model::TYPE_PIPE:
                         $object_eid = self::createPipeFromFile($user_eid, $o['path']);
-                        $new_object = \Flexio\Oject\Pipe::load($object_eid);
+                        $new_object = \Flexio\Object\Pipe::load($object_eid);
                         break;
                 }
 
                 if ($new_object !== false)
                     $results[] = $new_object->get();
             }
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-        }
-        catch (\Exception $e)
-        {
-        }
-        catch (\Error $e)
-        {
-        }
+
 
         return $results;
     }
