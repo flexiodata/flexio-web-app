@@ -480,9 +480,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // TODO: expand the owner info
-        $owner_info = array();
-        $mapped_properties['owned_by'] = (object)array(); // placholder
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the connection info json
         $connection_info = @json_decode($mapped_properties['connection_info'],true);

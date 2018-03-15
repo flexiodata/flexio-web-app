@@ -350,7 +350,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid_type" => null,
                 "eid_status" =>  null,
                 "parent" => null,
-                "owned_by" => null,
                 "process_mode" => null,
                 "task" => null,
                 "started_by" => null,
@@ -360,6 +359,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "process_info" => null,
                 "process_status" => null,
                 "cache_used" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -369,12 +369,15 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // TODO: expand the parent and owner info
-        $pipe_info = array();
-        $mapped_properties['parent'] = (object)array(); // placholder
-
-        $owner_info = array();
-        $mapped_properties['owned_by'] = (object)array(); // placholder
+        // expand the parent and owner info
+        $mapped_properties['parent'] = array(
+            'eid' => $properties['parent_eid'],
+            'eid_type' => \Model::TYPE_PIPE
+        );
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the primary process task json
         if (isset($mapped_properties['task']))

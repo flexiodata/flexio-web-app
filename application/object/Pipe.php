@@ -292,10 +292,10 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "ename" => null,
                 "name" => null,
                 "description" => null,
-                "owned_by" => null,
                 "task" => null,
                 "schedule" => null,
                 "schedule_status" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -305,9 +305,11 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // TODO: expand the owner info
-        $owner_info = array();
-        $mapped_properties['owned_by'] = (object)array(); // placholder
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the task json
         $task = @json_decode($mapped_properties['task'],true);

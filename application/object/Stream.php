@@ -530,6 +530,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
                 "file_modified" => null,
                 "connection_eid" => null,
                 "expires" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -538,6 +539,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the structure json
         $structure = @json_decode($mapped_properties['structure'],true);

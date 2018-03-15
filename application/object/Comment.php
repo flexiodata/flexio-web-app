@@ -216,10 +216,13 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // TODO: expand the replies and owner info
-        $owner_info = array();
         $mapped_properties['replies'] = (object)array(); // placholder
-        $owner_info = array();
-        $mapped_properties['owned_by'] = (object)array(); // placholder
+
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         return $mapped_properties;
 
