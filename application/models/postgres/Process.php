@@ -361,6 +361,7 @@ class Process extends ModelBase
         $db = $this->getDatabase();
         try
         {
+            $filter_condition = "true";
             if (isset($user_eid))
             {
                 $quser_eid = $db->quote($user_eid);
