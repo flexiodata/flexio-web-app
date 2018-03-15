@@ -1,6 +1,6 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
-    TODO: Admin dashboard needs to be redone
+    <div class="pa3">TODO: Admin dashboard needs to be redone</div>
     <!--
     <div class="ma4 bg-white css-dashboard-box">
       <stats-pipes-run title="Pipes Run (Last 30 days)" :is-admin="true"></stats-pipes-run>
