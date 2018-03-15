@@ -484,6 +484,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $owner_info = array();
         $mapped_properties['owned_by'] = (object)array(); // placholder
 
+        // unpack the connection info json
+        $connection_info = @json_decode($mapped_properties['connection_info'],true);
+        if ($connection_info !== false)
+            $mapped_properties['connection_info'] = $connection_info;
+
         return $mapped_properties;
     }
 }
