@@ -192,8 +192,12 @@ class Connection extends ModelBase
                     // we found an owner; see if the ename exists for the owner
                     $qownedby = $db->quote($owner_to_check);
                     $qename = $db->quote($ename);
-                    $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
-                    if ($existing_item !== false)
+                    $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
+
+                    // don't allow an ename to be set if it's already used for another eid
+                    // (but if the ename is passed for the same eid, it's ok, because it's
+                    // just setting it to what it already is)
+                    if ($existing_eid !== false && $existing_eid !== $eid)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
                 }
             }
