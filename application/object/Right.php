@@ -68,10 +68,21 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // TODO: load object info here; pass on model info for now
         $object = new static();
         $right_model = $object->getModel()->right;
-        return $right_model->list($filter);
+        $items = $right_model->list($filter);
+
+        $objects = array();
+        foreach ($items as $i)
+        {
+            $o = new static();
+            $local_properties = self::formatProperties($i);
+            $o->properties = $local_properties;
+            $o->setEid($local_properties['eid']);
+            $objects[] = $o;
+        }
+
+        return $objects;
     }
 
     public static function load(string $eid) : \Flexio\Object\Right
@@ -190,12 +201,15 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private function populateCache() : bool
     {
-        $this->properties = $this->getProperties();
+        $right_model = $this->getModel()->right;
+        $local_properties = $right_model->get($this->getEid());
+        $this->properties = self::formatProperties($local_properties);
         return true;
     }
 
-    private function getProperties() : array
+    private static function formatProperties(array $properties) : array
     {
+/*
         $query = '
         {
             "eid" : null,
@@ -214,17 +228,29 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "updated" : null
         }
         ';
+*/
 
-        // execute the query
-        $query = json_decode($query);
-        $properties = \Flexio\Object\Query::exec($this->getEid(), $query);
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "eid" => null,
+                "eid_type" => null,
+                "eid_status" => null,
+                "access_code" => null,
+                "access_type" => null,
+                "actions" => null,
+                "user" => null,
+                "object_eid" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
 
         // sanity check: if the data record is missing, then eid will be null
-        if (!$properties || ($properties['eid'] ?? null) === null)
+        if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         // unpack the actions object
-        $properties['actions'] = json_decode($properties['actions'],true);
+        $mapped_properties['actions'] = json_decode($mapped_properties['actions'],true);
 
         // populate the user info if possible
         try
@@ -239,13 +265,12 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $info['last_name'] = $user_info['last_name'];
             $info['email'] = $user_info['email'];
             $info['email_hash'] = $user_info['email_hash'];
-            $properties['user'] = $info;
+            $mapped_properties['user'] = $info;
         }
         catch (\Flexio\Base\Exception $e)
         {
         }
 
-        // return the properties
-        return $properties;
+        return $mapped_properties;
     }
 }
