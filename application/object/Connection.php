@@ -164,13 +164,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->properties !== false && isset($this->properties['eid_status']))
-            return $this->properties['eid_status'];
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        $connection_model = $this->getModel()->connection;
-        $status = $connection_model->getStatus($this->getEid());
-
-        return $status;
+        return $this->properties['eid_status'];
     }
 
     public function connect() : \Flexio\Object\Connection

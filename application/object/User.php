@@ -183,13 +183,10 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->properties !== false && isset($this->properties['eid_status']))
-            return $this->properties['eid_status'];
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        $user_model = $this->getModel()->user;
-        $status = $user_model->getStatus($this->getEid());
-
-        return $status;
+        return $this->properties['eid_status'];
     }
 
     public function get() : array

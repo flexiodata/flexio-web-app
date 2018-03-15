@@ -144,13 +144,10 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->properties !== false && isset($this->properties['eid_status']))
-            return $this->properties['eid_status'];
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        $token_model = $this->getModel()->token;
-        $status = $token_model->getStatus($this->getEid());
-
-        return $status;
+        return $this->properties['eid_status'];
     }
 
     private function isCached() : bool

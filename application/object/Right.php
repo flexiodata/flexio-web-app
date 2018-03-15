@@ -172,13 +172,10 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getStatus() : string
     {
-        if ($this->properties !== false && isset($this->properties['eid_status']))
-            return $this->properties['eid_status'];
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        $right_model = $this->getModel()->right;
-        $status = $right_model->getStatus($this->getEid());
-
-        return $status;
+        return $this->properties['eid_status'];
     }
 
     private function isCached() : bool

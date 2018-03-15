@@ -207,13 +207,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function getStatus() : string
     {
-        if ($this->properties !== false && isset($this->properties['eid_status']))
-            return $this->properties['eid_status'];
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-        $stream_model = $this->getModel()->stream;
-        $status = $stream_model->getStatus($this->getEid());
-
-        return $status;
+        return $this->properties['eid_status'];
     }
 
     public function setName(string $name) : \Flexio\Object\Stream
