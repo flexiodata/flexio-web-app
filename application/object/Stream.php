@@ -193,8 +193,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function getOwner() : string
     {
-        $stream_model = $this->getModel()->stream;
-        return $stream_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Stream

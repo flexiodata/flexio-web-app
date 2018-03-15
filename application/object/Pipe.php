@@ -211,8 +211,10 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        $pipe_model = $this->getModel()->pipe;
-        return $pipe_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Pipe

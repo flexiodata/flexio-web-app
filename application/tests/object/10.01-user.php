@@ -235,6 +235,10 @@ class Test
             "timezone" : null,
             "config" : {
             },
+            "owned_by" : {
+                "eid": null,
+                "eid_type": null
+            },
             "created" : null,
             "updated" : null
         }
