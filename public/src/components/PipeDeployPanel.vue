@@ -2,7 +2,7 @@
   <div class="mid-gray">
     <div class="w-100 mb4">
       <div class="cf" v-if="isOnboarding">
-        <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="close"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="$emit('close')"></i>
         <div class="tc">
           <div class="dib">
             <h2 class="flex flex-row items-center f3 mt0 mb3"><i class="el-icon-success dark-green f3 mr2"></i> Success, your pipe has been saved!</h2>
