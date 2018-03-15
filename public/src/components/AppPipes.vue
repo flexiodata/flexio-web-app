@@ -18,7 +18,7 @@
           />
         </div>
         <div class="flex-none flex flex-row items-center">
-          <el-button type="primary" class="ttu b" @click="tryCreatePipe">New pipe</el-button>
+          <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
         </div>
       </div>
     </div>
@@ -188,6 +188,9 @@
         })
 
         return analytics_payload
+      },
+      onNewPipeClick() {
+        this.tryCreatePipe()
       }
     }
   }
