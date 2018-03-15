@@ -761,6 +761,9 @@ class StorageFs
                 $fieldsql .= ',';
             $fieldsql .= self::getFieldString($fieldinfo);
         }
+
+        if ($fieldsql === '')
+            return 'empty_column_0 text';
         return $fieldsql;
     }
 
