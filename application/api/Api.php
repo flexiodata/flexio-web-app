@@ -298,7 +298,6 @@ class Api
             case 'GET /admin/list/users'               : return '\Flexio\Api\Admin::getUserList';
             case 'GET /admin/statistics/users'         : return '\Flexio\Api\Admin::getUserProcessStats';
             case 'GET /admin/statistics/pipes'         : return '\Flexio\Api\Admin::getPipeProcessStats';
-            case 'GET /admin/statistics/tasks'         : return '\Flexio\Api\Admin::getProcessTaskStats';
             case 'GET /admin/configuration'            : return '\Flexio\Api\Admin::getConfiguration';
             case 'GET /admin/resetconfig'              : return '\Flexio\Api\User::resetConfig';    // resets the user configuration
             case 'GET /admin/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
