@@ -71,12 +71,13 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $object = new static();
         $connection_model = $object->getModel()->connection;
 
-        $status = $connection_model->getStatus($eid);
-        if ($status === \Model::STATUS_UNDEFINED)
+        $properties = $connection_model->get($eid);
+        if ($properties === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $object->setEid($eid);
         $object->clearCache();
+        $object->properties = self::formatProperties($properties);
         return $object;
     }
 

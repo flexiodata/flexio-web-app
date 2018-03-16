@@ -64,12 +64,13 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $object = new static();
         $token_model = $object->getModel()->token;
 
-        $status = $token_model->getStatus($eid);
-        if ($status === \Model::STATUS_UNDEFINED)
+        $properties = $token_model->get($eid);
+        if ($properties === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $object->setEid($eid);
         $object->clearCache();
+        $object->properties = self::formatProperties($properties);
         return $object;
     }
 
