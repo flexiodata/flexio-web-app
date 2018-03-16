@@ -482,6 +482,13 @@
         }
          else
         {
+          var edit_code = this.$refs['code'].getEditCode()
+
+          this.$store.track('Ran Pipe', {
+            title: _.get(this.pipe, 'name', ''),
+            code: edit_code
+          })
+
           var attrs = _.assign({
             parent_eid: this.eid,
             process_mode: PROCESS_MODE_BUILD,
@@ -491,16 +498,6 @@
           this.$store.dispatch('createProcess', { attrs }).then(response => {
             if (response.ok)
             {
-              /*
-              var eid = this.eid
-              var task_types_arr = _.map(this.tasks, (t) => { return _.get(t, 'op', '') })
-              var task_types = task_types_arr.join(', ')
-              var task_count = _.size(task_types_arr)
-              var process_eid = _.get(response.body, 'eid', '')
-
-              //analytics.track('Ran Pipe: Start', { eid, process_eid, task_types, task_count })
-              */
-
               this.$nextTick(() => { this.is_prompting = false })
             }
           })

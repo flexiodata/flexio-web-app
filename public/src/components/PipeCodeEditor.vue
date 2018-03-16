@@ -108,6 +108,9 @@
         this.edit_code = code
         this.syntax_msg = ''
       },
+      getEditCode() {
+        return this.edit_code
+      },
       cancelEdit() {
         // reset the edit json
         this.edit_code = this.orig_code
