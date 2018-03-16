@@ -316,7 +316,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "eid" : null,
             "eid_type" : "'.\Model::TYPE_PROCS.'",
             "eid_status" : null,
-            "parent'.\Model::EDGE_PROCESS_OF.'" : {
+            "parent" : {
                 "eid" : null,
                 "eid_type" : "'.\Model::TYPE_PIPE.'",
                 "name" : null,

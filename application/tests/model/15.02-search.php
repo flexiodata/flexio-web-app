@@ -38,10 +38,10 @@ class Test
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
-        $edge_owns = \Model::EDGE_OWNS;
-        $edge_following = \Model::EDGE_FOLLOWING;
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
+        $edge_linked_to = \Model::EDGE_LINKED_TO;
         $type_pipe = \Model::TYPE_PIPE;
-        $path = "$eid->($edge_owns,$edge_following)->($type_pipe)";
+        $path = "$eid->($edge_copied_to,$edge_linked_to)->($type_pipe)";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(

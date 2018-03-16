@@ -30,26 +30,18 @@ class Model
     const TYPE_RIGHT          = 'ACL';
 
     const EDGE_UNDEFINED     = '';     // undefind edge
-    const EDGE_CREATED       = 'CRT';  // user A created object B
-    const EDGE_CREATED_BY    = 'CRB';  // object A was created by user B
-    const EDGE_OWNS          = 'OWN';  // user A owns object B
-    const EDGE_OWNED_BY      = 'OWB';  // object A is owned by user B
     const EDGE_INVITED       = 'INV';  // user A invited user B
     const EDGE_INVITED_BY    = 'INB';  // user A was invited by user B
     const EDGE_SHARED_WITH   = 'SHW';  // user A shared with user B
     const EDGE_SHARED_FROM   = 'SHF';  // user A was shared something from user B
     const EDGE_FOLLOWING     = 'FLW';  // user A is following object B
     const EDGE_FOLLOWED_BY   = 'FLB';  // object A is followed by user B
-    const EDGE_MEMBER_OF     = 'MBO';  // object A is a member of object B
-    const EDGE_HAS_MEMBER    = 'HMB';  // object A has member object B
     const EDGE_LINKED_TO     = 'LKT';  // object A links to object B
     const EDGE_LINKED_FROM   = 'LKF';  // object A links from object B
     const EDGE_COPIED_TO     = 'CPT';  // object A copied to object B
     const EDGE_COPIED_FROM   = 'CPF';  // object A copied from object B
     const EDGE_COMMENT_ON    = 'CMO';  // comment A is a comment on object B
     const EDGE_HAS_COMMENT   = 'HCM';  // object A has comment B
-    const EDGE_PROCESS_OF    = 'PRO';  // object A is a process of object B
-    const EDGE_HAS_PROCESS   = 'HPR';  // object A has process that is object B
     const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
     const EDGE_HAS_STORE     = 'HST';  // object A has store a store that is object B
 
@@ -149,26 +141,18 @@ class Model
             case \Model::EDGE_UNDEFINED:
                 return false;
 
-            case \Model::EDGE_CREATED:
-            case \Model::EDGE_CREATED_BY:
-            case \Model::EDGE_OWNS:
-            case \Model::EDGE_OWNED_BY:
             case \Model::EDGE_INVITED:
             case \Model::EDGE_INVITED_BY:
             case \Model::EDGE_SHARED_WITH:
             case \Model::EDGE_SHARED_FROM:
             case \Model::EDGE_FOLLOWING:
             case \Model::EDGE_FOLLOWED_BY:
-            case \Model::EDGE_MEMBER_OF:
-            case \Model::EDGE_HAS_MEMBER:
             case \Model::EDGE_LINKED_TO:
             case \Model::EDGE_LINKED_FROM:
             case \Model::EDGE_COPIED_TO:
             case \Model::EDGE_COPIED_FROM:
             case \Model::EDGE_COMMENT_ON:
             case \Model::EDGE_HAS_COMMENT:
-            case \Model::EDGE_PROCESS_OF:
-            case \Model::EDGE_HAS_PROCESS:
             case \Model::EDGE_STORE_FOR:
             case \Model::EDGE_HAS_STORE:
                 return true;

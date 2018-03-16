@@ -30,25 +30,31 @@ class Query
         // on the form of information specified in the query
 
         // for example, the following query would return the basic properties
-        // for the specified eid, as well as any members that are contained
-        // in it
+        // for the specified comment as well as replies and owner info
 
         // $query = '
         // {
-        //    "eid" : null,
-        //    "eid_type" : null,
-        //    "name" : null,
-        //    "owned_by='.Model::EDGE_OWNED_BY.'" : {
-        //        "eid" : null,
-        //        "user_name" : null,
-        //        "first_name" : null,
-        //        "last_name" : null,
-        //        "created" : null
-        //    },
-        //    "has_member='.Model::EDGE_HAS_MEMBER.'" : [{
-        //        "eid" : null,
-        //        "eid_type" : null
-        //    }]
+        //     "eid" : null,
+        //     "eid_type" : "'.\Model::TYPE_COMMENT.'",
+        //     "eid_status" : null,
+        //     "comment" : null,
+        //     "replies='.\Model::EDGE_HAS_COMMENT.'" : [{
+        //         "eid" : null,
+        //         "eid_type" : "'.\Model::TYPE_COMMENT.'",
+        //         "comment" : null,
+        //         "created" : null,
+        //         "updated" : null
+        //     }],
+        //     "owned_by" : {
+        //         "eid" : null,
+        //         "eid_type" : "'.\Model::TYPE_USER.'",
+        //         "user_name" : null,
+        //         "first_name" : null,
+        //         "last_name" : null,
+        //         "email_hash" : null
+        //     },
+        //     "created" : null,
+        //     "updated" : null
         // }
         // ';
 

@@ -99,8 +99,8 @@ class Test
         \Flexio\Tests\Check::assertArray('B.1', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $edge_owns = \Model::EDGE_OWNS;
-        $path = "$edge_owns";
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
+        $path = "$edge_copied_to";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
@@ -108,8 +108,8 @@ class Test
         \Flexio\Tests\Check::assertArray('B.2', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $edge_owns = \Model::EDGE_OWNS;
-        $path = "($edge_owns)";
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
+        $path = "($edge_copied_to)";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(

@@ -222,26 +222,6 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.7', '\Model::isValidEdge(); return false for the undefined edge',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_CREATED);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.8', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_CREATED_BY);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.9', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_OWNS);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.10', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_OWNED_BY);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.11', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::isValidEdge(\Model::EDGE_INVITED);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.12', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
@@ -272,16 +252,6 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.17', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_MEMBER_OF);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.18', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_HAS_MEMBER);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.19', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::isValidEdge(\Model::EDGE_LINKED_TO);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.20', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
@@ -310,16 +280,6 @@ class Test
         $actual = \Model::isValidEdge(\Model::EDGE_HAS_COMMENT);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.25', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_PROCESS_OF);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.26', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_HAS_PROCESS);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.27', '\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::isValidEdge(\Model::EDGE_STORE_FOR);

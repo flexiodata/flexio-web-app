@@ -31,16 +31,15 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $edge_has_member = \Model::EDGE_HAS_MEMBER;
-        $edge_owns = \Model::EDGE_OWNS;
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
         $eid1 = $pipe_model->create($info);
         $eid2 = $pipe_model->create($info);
         $eid3 = $pipe_model->create($info);
         $eid4 = $pipe_model->create($info);
-        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
-        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
-        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
-        $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member";
+        $base_model->assoc_add($eid1, $edge_copied_to, $eid2);
+        $base_model->assoc_add($eid2, $edge_copied_to, $eid3);
+        $base_model->assoc_add($eid3, $edge_copied_to, $eid4);
+        $path = "$eid1->($edge_copied_to)->$eid2->$edge_copied_to";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
@@ -51,16 +50,15 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $edge_has_member = \Model::EDGE_HAS_MEMBER;
-        $edge_owns = \Model::EDGE_OWNS;
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
         $eid1 = $pipe_model->create($info);
         $eid2 = $pipe_model->create($info);
         $eid3 = $pipe_model->create($info);
         $eid4 = $pipe_model->create($info);
-        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
-        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
-        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
-        $path = "$eid1->($edge_has_member)->$eid2->$edge_has_member->$eid3";
+        $base_model->assoc_add($eid1, $edge_copied_to, $eid2);
+        $base_model->assoc_add($eid2, $edge_copied_to, $eid3);
+        $base_model->assoc_add($eid3, $edge_copied_to, $eid4);
+        $path = "$eid1->($edge_copied_to)->$eid2->$edge_copied_to->$eid3";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(
@@ -71,19 +69,19 @@ class Test
         // BEGIN TEST
         $info = array(
         );
-        $edge_has_member = \Model::EDGE_HAS_MEMBER;
-        $edge_owns = \Model::EDGE_OWNS;
+        $edge_copied_to = \Model::EDGE_COPIED_TO;
+        $edge_linked_to = \Model::EDGE_LINKED_TO;
         $eid1 = $pipe_model->create($info);
         $eid2 = $pipe_model->create($info);
         $eid3 = $pipe_model->create($info);
         $eid4 = $pipe_model->create($info);
-        $base_model->assoc_add($eid1, $edge_has_member, $eid2);
-        $base_model->assoc_add($eid2, $edge_has_member, $eid3);
-        $base_model->assoc_add($eid3, $edge_has_member, $eid4);
-        $base_model->assoc_add($eid1, $edge_owns, $eid2);
-        $base_model->assoc_add($eid2, $edge_owns, $eid3);
-        $base_model->assoc_add($eid3, $edge_owns, $eid4);
-        $path = "$eid1->($edge_owns)->$eid2->$edge_has_member->$eid3";
+        $base_model->assoc_add($eid1, $edge_copied_to, $eid2);
+        $base_model->assoc_add($eid2, $edge_copied_to, $eid3);
+        $base_model->assoc_add($eid3, $edge_copied_to, $eid4);
+        $base_model->assoc_add($eid1, $edge_linked_to, $eid2);
+        $base_model->assoc_add($eid2, $edge_linked_to, $eid3);
+        $base_model->assoc_add($eid3, $edge_linked_to, $eid4);
+        $path = "$eid1->($edge_linked_to)->$eid2->$edge_copied_to->$eid3";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = array(

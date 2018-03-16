@@ -78,26 +78,6 @@ class Test
         \Flexio\Tests\Check::assertString('C.1', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::EDGE_CREATED;
-        $expected = 'CRT';
-        \Flexio\Tests\Check::assertString('C.2', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_CREATED_BY;
-        $expected = 'CRB';
-        \Flexio\Tests\Check::assertString('C.3', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_OWNS;
-        $expected = 'OWN';
-        \Flexio\Tests\Check::assertString('C.4', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_OWNED_BY;
-        $expected = 'OWB';
-        \Flexio\Tests\Check::assertString('C.5', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::EDGE_INVITED;
         $expected = 'INV';
         \Flexio\Tests\Check::assertString('C.6', 'Model edge constant',  $actual, $expected, $results);
@@ -128,16 +108,6 @@ class Test
         \Flexio\Tests\Check::assertString('C.11', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Model::EDGE_MEMBER_OF;
-        $expected = 'MBO';
-        \Flexio\Tests\Check::assertString('C.12', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_HAS_MEMBER;
-        $expected = 'HMB';
-        \Flexio\Tests\Check::assertString('C.13', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Model::EDGE_LINKED_TO;
         $expected = 'LKT';
         \Flexio\Tests\Check::assertString('C.14', 'Model edge constant',  $actual, $expected, $results);
@@ -166,16 +136,6 @@ class Test
         $actual = \Model::EDGE_HAS_COMMENT;
         $expected = 'HCM';
         \Flexio\Tests\Check::assertString('C.19', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_PROCESS_OF;
-        $expected = 'PRO';
-        \Flexio\Tests\Check::assertString('C.20', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_HAS_PROCESS;
-        $expected = 'HPR';
-        \Flexio\Tests\Check::assertString('C.21', 'Model edge constant',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Model::EDGE_STORE_FOR;
