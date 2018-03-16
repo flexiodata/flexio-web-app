@@ -445,37 +445,6 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function getProcessTaskStats() : array
-    {
-        $db = $this->getDatabase();
-        try
-        {
-            $rows = $db->fetchAll("select tpl.task_op as task_op,
-                                         count(*) as total_count,
-                                         avg(extract(epoch from (tpl.finished - tpl.started))) as average_time,
-                                         sum(extract(epoch from (tpl.finished - tpl.started))) as total_time
-                                   from tbl_processlog tpl
-                                   group by tpl.task_op
-                                   order by total_count desc, task_op
-                                 ");
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('task_op'      => $row['task_op'],
-                              'total_count'  => $row['total_count'],
-                              'total_time'   => $row['total_time'],
-                              'average_time' => $row['average_time']);
-        }
-
-        return $output;
-    }
-
     public function setProcessStatus(string $eid, string $status) : bool
     {
         $params['process_status'] = $status;
