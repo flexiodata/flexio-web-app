@@ -393,7 +393,7 @@ class Process extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $parent_eid = 'anonymous';
+            $parent_eid = '';
             if (\Flexio\Base\Eid::isValid($row['parent_eid']))
                 $parent_eid = $row['parent_eid'];
 
@@ -403,43 +403,6 @@ class Process extends ModelBase
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],
                               'average_time' => $row['average_time']);
-        }
-
-        return $output;
-    }
-
-    public function getPipeProcessStats() : array
-    {
-        // returns the number of times a process was created from each pipe for each day
-        // along with the average and total times across those processes for that day
-
-        $db = $this->getDatabase();
-        try
-        {
-            $rows = $db->fetchAll("select tpr.parent_eid as parent_eid,
-                                          tpr.created::DATE as created,
-                                          avg(extract(epoch from (tpr.finished - tpr.started))) as average_time,
-                                          sum(extract(epoch from (tpr.finished - tpr.started))) as total_time,
-                                          count(*) as total_count
-                                   from tbl_process tpr
-                                   where tpr.parent_eid != ''
-                                   group by tpr.target_eid, tpr.created::DATE
-                                   order by created, target_eid
-                                 ");
-         }
-         catch (\Exception $e)
-         {
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('pipe_eid'       => $row['target_eid'], // target_eid is what the process was created from
-                              'created'        => $row['created'],
-                              'total_count'    => $row['total_count'],
-                              'total_time'     => $row['total_time'],
-                              'average_time'   => $row['average_time']);
         }
 
         return $output;

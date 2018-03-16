@@ -362,12 +362,6 @@ class Process extends ModelBase
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function getPipeProcessStats() : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
     public function setProcessStatus(string $eid, string $status) : bool
     {
         $params['process_status'] = $status;

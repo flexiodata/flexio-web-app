@@ -39,32 +39,16 @@ class Statistics
         $result = array();
         foreach ($stats as $s)
         {
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = '';
-            $item['pipe']['eid_type'] = '';
-            $item['pipe']['name'] = 'Anonymous';
-            $item['pipe']['description'] = 'Anonymous Process';
+            $pipe = array(
+                'eid' => $s['pipe_eid'],
+                'eid_type' => strlen($s['pipe_eid']) > 0 ? \Model::TYPE_PIPE : ''
+            );
 
+            $item['pipe'] = $pipe;
             $item['process_created'] = $s['created'];
             $item['total_count'] = $s['total_count'];
             $item['total_time'] = $s['total_time'];
             $item['average_time'] = $s['average_time'];
-
-            try
-            {
-                // if we can load the pipe, populate the info
-                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                $pipe_info = $pipe->get();
-
-                $item['pipe'] = array();
-                $item['pipe']['eid'] = $pipe_info['eid'];
-                $item['pipe']['eid_type'] = $pipe_info['eid_type'];
-                $item['pipe']['name'] = $pipe_info['name'];
-                $item['pipe']['description'] = $pipe_info['description'];
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
 
             $result[] = $item;
         }

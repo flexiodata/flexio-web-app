@@ -240,60 +240,6 @@ class Admin
         return $result;
     }
 
-    public static function getPipeProcessStats(\Flexio\Api\Request $request) : array
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // only allow users from flex.io to get this info
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $stats = \Flexio\System\System::getModel()->process->getPipeProcessStats();
-
-        $result = array();
-        foreach ($stats as $s)
-        {
-            $item = array();
-            $item['pipe'] = array();
-            $item['pipe']['eid'] = '';
-            $item['pipe']['eid_type'] = '';
-            $item['pipe']['name'] = '';
-            $item['pipe']['ename'] = '';
-            $item['pipe']['description'] = '';
-            $item['pipe']['owned_by'] = '';
-            $item['process_created'] = $s['created'];
-            $item['total_count'] = $s['total_count'];
-            $item['total_time'] = $s['total_time'];
-            $item['average_time'] = $s['average_time'];
-
-            try
-            {
-                $pipe = \Flexio\Object\Pipe::load($s['pipe_eid']);
-                if ($pipe->getStatus() !== \Model::STATUS_DELETED)
-                {
-                    $pipe_info = $pipe->get();
-                    $item['pipe']['eid'] = $pipe_info['eid'];
-                    $item['pipe']['eid_type'] = $pipe_info['eid_type'];
-                    $item['pipe']['name'] = $pipe_info['name'];
-                    $item['pipe']['ename'] = $pipe_info['ename'];
-                    $item['pipe']['description'] = $pipe_info['description'];
-                    $item['pipe']['owned_by'] = $pipe_info['owned_by']['eid'];
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $result[] = $item;
-        }
-
-        return $result;
-    }
-
     public static function getConfiguration(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
