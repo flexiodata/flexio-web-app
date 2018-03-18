@@ -71,7 +71,7 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "Row1Col2Row2Col2Row3Col2\n";
-        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over a table with custom iterator name "moo"',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'SDK; for loop iterating over a table with custom iterator name "moo"',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -83,7 +83,7 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "111333555\n";
-        \Flexio\Tests\Check::assertString('A.3', 'SDK; for loop iterating over non-input json array with custom iterator name "moo"',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', 'SDK; for loop iterating over non-input json array with custom iterator name "moo"',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
@@ -100,7 +100,7 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "aaabbbcccdddeeefffggghhhiii\n";
-        \Flexio\Tests\Check::assertString('A.4', 'SDK; for loop iterating over multi-dimensional array',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', 'SDK; for loop iterating over multi-dimensional array',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = \Flexio\Tests\Util::getTestSDKSetup() . <<<'EOD'
@@ -117,7 +117,7 @@ Flexio.pipe()
 EOD;
         $actual = \Flexio\Tests\Util::execSDKJS($script);
         $expected = "aaabbbcccdddeeefffggghhhiii\n";
-        \Flexio\Tests\Check::assertString('A.5', 'SDK; for loop iterating over multi-dimensional array of objects',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', 'SDK; for loop iterating over multi-dimensional array of objects',  $actual, $expected, $results);
 
     }
 }
