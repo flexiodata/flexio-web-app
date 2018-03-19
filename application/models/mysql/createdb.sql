@@ -90,6 +90,7 @@ CREATE TABLE tbl_user (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_user_owned_by ON tbl_user (owned_by);
+CREATE INDEX idx_user_created ON tbl_user (created);
 
 
 
@@ -113,6 +114,7 @@ CREATE TABLE tbl_token (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_token_owned_by ON tbl_token (owned_by);
+CREATE INDEX idx_token_created ON tbl_token (created);
 
 
 
@@ -139,6 +141,7 @@ CREATE TABLE tbl_acl (
 CREATE INDEX idx_acl_object_eid ON tbl_acl (object_eid);
 CREATE INDEX idx_acl_access_code ON tbl_acl (access_code);
 CREATE INDEX idx_acl_owned_by ON tbl_acl (owned_by);
+CREATE INDEX idx_acl_created ON tbl_acl (created);
 
 
 
@@ -174,6 +177,7 @@ CREATE TABLE tbl_pipe (
 CREATE INDEX idx_pipe_schedule_status ON tbl_pipe (schedule_status);
 CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
 CREATE INDEX idx_pipe_ename ON tbl_pipe (ename);
+CREATE INDEX idx_pipe_created ON tbl_pipe (created);
 
 
 
@@ -201,8 +205,9 @@ CREATE TABLE tbl_connection (
   UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
 CREATE INDEX idx_connection_ename ON tbl_connection (ename);
+CREATE INDEX idx_connection_owned_by ON tbl_connection (owned_by);
+CREATE INDEX idx_connection_created ON tbl_connection (created);
 
 
 
@@ -240,6 +245,7 @@ CREATE INDEX idx_process_eid ON tbl_process (eid);
 CREATE INDEX idx_process_parent_eid ON tbl_process (parent_eid);
 CREATE INDEX idx_process_process_hash ON tbl_process (process_hash);
 CREATE INDEX idx_process_owned_by ON tbl_process (owned_by);
+CREATE INDEX idx_process_created ON tbl_process (created);
 
 
 
@@ -273,6 +279,7 @@ CREATE TABLE tbl_processlog (
 CREATE INDEX idx_processlog_eid ON tbl_processlog (eid);
 CREATE INDEX idx_processlog_process_eid ON tbl_processlog (process_eid);
 CREATE INDEX idx_processlog_owned_by ON tbl_processlog (owned_by);
+CREATE INDEX idx_processlog_created ON tbl_processlog (created);
 
 
 
@@ -308,6 +315,7 @@ CREATE TABLE tbl_stream (
 CREATE INDEX idx_stream_parent_eid ON tbl_stream (parent_eid);
 CREATE INDEX idx_stream_connection_eid ON tbl_stream (connection_eid);
 CREATE INDEX idx_stream_owned_by ON tbl_stream (owned_by);
+CREATE INDEX idx_stream_created ON tbl_stream (created);
 
 
 
@@ -330,6 +338,7 @@ CREATE TABLE tbl_comment (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE INDEX idx_comment_owned_by ON tbl_comment (owned_by);
+CREATE INDEX idx_comment_created ON tbl_comment (created);
 
 
 
@@ -362,6 +371,7 @@ CREATE TABLE tbl_action (
 CREATE INDEX idx_action_invoked_by ON tbl_action (invoked_by);
 CREATE INDEX idx_action_action_target ON tbl_action (action_target);
 CREATE INDEX idx_action_owned_by ON tbl_action (owned_by);
+CREATE INDEX idx_action_created ON tbl_action (created);
 
 
 
@@ -413,5 +423,4 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
 

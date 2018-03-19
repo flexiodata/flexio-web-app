@@ -176,7 +176,7 @@ class System
             {
                 try
                 {
-                    $user = \Flexio\Object\User::load($token_info['user_eid']);
+                    $user = \Flexio\Object\User::load($token_info['owned_by']);
                     if ($user->getStatus() === \Model::STATUS_DELETED)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
