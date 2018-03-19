@@ -65,8 +65,13 @@ class Trigger
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
             $pipe_properties = $pipe->get();
-            unset($pipe_properties['ename']);
-            $process = \Flexio\Object\Process::create($pipe_properties);
+            $process_properties = array(
+                'parent_eid' => $pipe_properties['eid'],
+                'task' => $pipe_properties['task'],
+                'owned_by' => $pipe_properties['owned_by']['eid'],
+                'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
+            );
+            $process = \Flexio\Object\Process::create($process_properties);
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
             // set an environment variable (parameter) with the "from" email address
