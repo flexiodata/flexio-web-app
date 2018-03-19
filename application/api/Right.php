@@ -269,11 +269,10 @@ class Right
         if (isset($validated_params['objects']))
             $filter['target_eids'] = $validated_params['objects']; // filter for specific objects
 
-        // get the rights for the user
-        $user = \Flexio\Object\User::load($user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        $rights = $user->getRightsList($filter);
+
+        // TODO: get rights info from list query in \Flexio\Object\Rights
+
+        $rights = array();
         return $rights;
     }
 

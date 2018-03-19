@@ -232,12 +232,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stream;
     }
 
-    public function getRightsList(array $filter = null) : array
-    {
-        // TODO: old implementation is deprecated
-        return array();
-    }
-
     public function getTokenList() : array
     {
         $res = array();
