@@ -246,19 +246,19 @@ class Api
             case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
 
             // sharing
-            case 'GET /rights'                         : return '\Flexio\Api\Right::listall';
+            case 'GET /rights'                         : return '\Flexio\Api\Right::list';
             case 'POS /rights'                         : return '\Flexio\Api\Right::create';
             case 'POS /rights/:eid'                    : return '\Flexio\Api\Right::set';
             case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
             case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
-            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::listall';
+            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::list';
             case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
             case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
             case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
 
             // connections
             case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
-            case 'GET /connections'                    : return '\Flexio\Api\Connection::listall';
+            case 'GET /connections'                    : return '\Flexio\Api\Connection::list';
             case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
             case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
             case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
@@ -268,7 +268,7 @@ class Api
 
             // pipes
             case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
-            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::listall';
+            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::list';
             case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
             case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
             case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
@@ -279,7 +279,7 @@ class Api
 
             // processes
             case 'POS /processes'                      : return '\Flexio\Api\Process::create';
-            case 'GET /processes'                      : return '\Flexio\Api\Process::listall';
+            case 'GET /processes'                      : return '\Flexio\Api\Process::list';
             case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
             case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
             case 'GET /processes/:eid/log'             : return '\Flexio\Api\Process::log';

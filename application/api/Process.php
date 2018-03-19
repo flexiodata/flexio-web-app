@@ -274,7 +274,7 @@ class Process
         return $process_info;
     }
 
-    public static function listall(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
