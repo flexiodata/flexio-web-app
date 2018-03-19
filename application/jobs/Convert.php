@@ -70,6 +70,47 @@ class Convert extends \Flexio\Jobs\Base
     {
         // if a job format is specified, get the mime type from the job definition
         $job_params = $this->getJobParameters();
+
+        // cast simple short-hand input/output strings to full format structure
+        $input_string = (isset($job_params['input']) && is_string($job_params['input'])) ? $job_params['input'] : null;
+        if ($input_string !== null)
+        {
+            if ($input_string === 'csv' || $input_string === 'tsv')
+            {
+                $job_params['input'] = [
+                    'format' => 'delimited',
+                    'delimiter' => ($input_string === 'csv' ? '{comma}' : '{tab}'),
+                    'header' => true,
+                    'qualifier' => '{double-quote}'
+                ];
+            }
+             else
+            {
+                $job_params['input'] = [ 'format' => $input_string ];
+            }
+        }
+
+        $output_string = (isset($job_params['output']) && is_string($job_params['output'])) ? $job_params['output'] : null;
+        if ($output_string !== null)
+        {
+            if ($output_string === 'csv' || $output_string === 'tsv')
+            {
+                $job_params['output'] = [
+                    'format' => 'delimited',
+                    'delimiter' => ($output_string === 'csv' ? '{comma}' : '{tab}'),
+                    'header' => true,
+                    'qualifier' => '{double-quote}'
+                ];
+            }
+             else
+            {
+                $job_params['output'] = [ 'format' => $output_string ];
+            }
+        }
+
+
+
+
         $input_content_type_from_definition = self::getInputMimeTypeFromDefinition($job_params);
         $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($job_params);
 
@@ -1123,13 +1164,12 @@ class Convert extends \Flexio\Jobs\Base
 
     private static function getInputMimeTypeFromDefinition(array $job_params)
     {
-        if (!isset($job_params['input']['format']))
-            return false;
-        $format = $job_params['input']['format'];
+        $input = $job_params['input'] ?? '';
+        $format = is_string($input) ? $input : ($job_params['input']['format'] ?? '');
 
-        if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'delimited_text' /* compatibility */)
+        if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'csv')
             return \Flexio\Base\ContentType::CSV;
-        else if ($format == self::FORMAT_FIXED_LENGTH || $format == 'fixed_length_text' /* compatibility */)
+        else if ($format == self::FORMAT_FIXED_LENGTH)
             return \Flexio\Base\ContentType::TEXT;
         else if ($format == self::FORMAT_JSON)
             return \Flexio\Base\ContentType::JSON;
@@ -1145,11 +1185,10 @@ class Convert extends \Flexio\Jobs\Base
 
     private static function getOutputMimeTypeFromDefinition(array $job_params)
     {
-        if (!isset($job_params['output']['format']))
-            return false;
-        $format = $job_params['output']['format'];
+        $output = $job_params['output'] ?? '';
+        $format = is_string($output) ? $output : ($output['format'] ?? '');
 
-        if ($format == self::FORMAT_DELIMITED_TEXT)
+        if ($format == self::FORMAT_DELIMITED_TEXT || $format == 'csv')
             return \Flexio\Base\ContentType::CSV;
         else if ($format == self::FORMAT_FIXED_LENGTH)
             return \Flexio\Base\ContentType::TEXT;
