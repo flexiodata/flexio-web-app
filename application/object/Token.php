@@ -194,8 +194,9 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
+                "user_eid" => null, // TODO: this is legacy for API consistency; remove when UI is updated to use owned_by
                 "access_code" => null,
-                "owner_eid" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -204,6 +205,9 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // TODO: this is legacy for API consistency; remove when UI is updated to use owned_by
+        $mapped_properties['user_eid'] = $mapped_properties['owned_by'];
 
         return $mapped_properties;
     }

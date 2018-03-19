@@ -131,8 +131,16 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tokens
+        $result = array();
+
         $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
         $tokens = \Flexio\Object\Token::list($filter);
-        return $tokens;
+
+        foreach ($tokens as $t)
+        {
+            $result[] = $t->get();
+        }
+
+        return $result;
     }
 }

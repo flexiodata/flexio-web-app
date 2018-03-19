@@ -59,7 +59,7 @@ EOT;
     $sql = <<<EOT
         alter table tbl_token
             drop column secret_code,
-            drop colum user_eid
+            drop column user_eid;
 EOT;
     $db->exec($sql);
 
