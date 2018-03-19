@@ -127,6 +127,27 @@ class Process extends ModelBase
         if (isset($filter['parent_eid']))
             $filter_expr .= (' and parent_eid = ' . $db->quote($filter['parent_eid']));
 
+        if (isset($filter['created_min']))
+        {
+            $date = $filter['created_min'];
+            $date = strtotime($date);
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and created >= ' . $db->quote($date_clean));
+            }
+        }
+        if (isset($filter['created_max']))
+        {
+            $date = $filter['created_max'];
+            $date = strtotime($date . ' + 1 days');
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and created < ' . $db->quote($date_clean)); // created is a timestamp, so use < on the next day
+            }
+        }
+
         $rows = array();
         try
         {

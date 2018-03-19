@@ -286,6 +286,7 @@ class Process
 
         // get the processes
         $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($params, $filter);
         $processes = \Flexio\Object\Process::list($filter);
 
         $result = array();
