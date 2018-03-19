@@ -206,39 +206,4 @@ class Token extends ModelBase
                      'created'     => \Flexio\Base\Util::formatDate($row['created']),
                      'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
     }
-
-    public function getInfoFromUserEid(string $user_eid) : array
-    {
-        // get the all available authentication information for the user_eid
-        $db = $this->getDatabase();
-        $rows = $db->fetchAll("select tau.eid as eid,
-                                      tau.eid_status as eid_status,
-                                      tau.access_code as access_code,
-                                      tau.owned_by as owned_by,
-                                      tau.created_by as created_by,
-                                      tau.created as created,
-                                      tau.updated as updated
-                              from tbl_token tau
-                              where tau.owned_by = ?
-                              order by tau.created
-                             ", $user_eid);
-
-        if (!$rows)
-            return array();
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] = array('eid'         => $row['eid'],
-                              'eid_type'    => \Model::TYPE_TOKEN,
-                              'eid_status'  => $row['eid_status'],
-                              'access_code' => $row['access_code'],
-                              'owned_by'    => $row['owned_by'],
-                              'created_by'  => $row['created_by'],
-                              'created'     => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
 }
