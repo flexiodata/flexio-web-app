@@ -41,7 +41,6 @@ class Token
 
         // create the token object
         $token_properties = array();
-        $token_properties['user_eid'] = $user->getEid();
         $token_properties['owned_by'] = $user->getEid();
         $token_properties['created_by'] = $requesting_user_eid;
         $token = \Flexio\Object\Token::create($token_properties);
@@ -132,13 +131,8 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tokens
-        $result = array();
-        $tokens = $user->getTokenList();
-        foreach ($tokens as $t)
-        {
-            $result[] = $t->get();
-        }
-
-        return $result;
+        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $tokens = \Flexio\Object\Token::list($filter);
+        return $tokens;
     }
 }

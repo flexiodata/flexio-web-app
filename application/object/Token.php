@@ -76,12 +76,12 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Token
     {
-        // the user_eid needs to be set and be a valid user
-        if (!isset($properties['user_eid']))
+        // the owned_by needs to be set and be a valid user
+        if (!isset($properties['owned_by']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-        $user_eid = $properties['user_eid'];
-        $user = \Flexio\Object\User::load($user_eid);
+        $owned_by = $properties['owned_by'];
+        $user = \Flexio\Object\User::load($owned_by);
 
         // generate an access code
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
@@ -194,8 +194,8 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
-                "user_eid" => null,
                 "access_code" => null,
+                "owner_eid" => null,
                 "created" => null,
                 "updated" => null
             ],

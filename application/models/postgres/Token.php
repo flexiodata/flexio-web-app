@@ -28,7 +28,6 @@ class Token extends ModelBase
             $process_arr = array(
                 'eid'           => $eid,
                 'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'user_eid'      => $params['user_eid'] ?? '',
                 'access_code'   => $params['access_code'] ?? '',
                 'owned_by'      => $params['owned_by'] ?? '',
                 'created_by'    => $params['created_by'] ?? '',
@@ -61,7 +60,6 @@ class Token extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'   => array('type' => 'string', 'required' => false),
-                'user_eid'     => array('type' => 'string', 'required' => false),
                 'access_code'  => array('type' => 'string', 'required' => false),
                 'owned_by'     => array('type' => 'string', 'required' => false),
                 'created_by'   => array('type' => 'string', 'required' => false)
@@ -102,17 +100,15 @@ class Token extends ModelBase
             $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
         if (isset($filter['eid_status']))
             $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
-        if (isset($filter['user_eid']))
-            $filter_expr .= (' and user_eid = ' . $db->quote($filter['user_eid']));
         if (isset($filter['access_code']))
             $filter_expr .= (' and access_code = ' . $db->quote($filter['access_code']));
+        if (isset($filter['owned_by']))
+            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_token where $filter_expr";
+            $query = "select * from tbl_token where $filter_expr order by created";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
@@ -129,7 +125,6 @@ class Token extends ModelBase
             $output[] = array('eid'         => $row['eid'],
                               'eid_type'    => \Model::TYPE_TOKEN,
                               'eid_status'  => $row['eid_status'],
-                              'user_eid'    => $row['user_eid'],
                               'access_code' => $row['access_code'],
                               'owned_by'    => $row['owned_by'],
                               'created_by'  => $row['created_by'],
@@ -190,9 +185,7 @@ class Token extends ModelBase
         $db = $this->getDatabase();
         $row = $db->fetchRow("select tau.eid as eid,
                                      tau.eid_status as eid_status,
-                                     tau.user_eid as user_eid,
                                      tau.access_code as access_code,
-                                     tau.secret_code as secret_code,
                                      tau.owned_by as owned_by,
                                      tau.created_by as created_by,
                                      tau.created as created,
@@ -207,7 +200,6 @@ class Token extends ModelBase
         return array('eid'         => $row['eid'],
                      'eid_type'    => \Model::TYPE_TOKEN,
                      'eid_status'  => $row['eid_status'],
-                     'user_eid'    => $row['user_eid'],
                      'access_code' => $row['access_code'],
                      'owned_by'    => $row['owned_by'],
                      'created_by'  => $row['created_by'],
@@ -221,15 +213,13 @@ class Token extends ModelBase
         $db = $this->getDatabase();
         $rows = $db->fetchAll("select tau.eid as eid,
                                       tau.eid_status as eid_status,
-                                      tau.user_eid as user_eid,
                                       tau.access_code as access_code,
-                                      tau.secret_code as secret_code,
                                       tau.owned_by as owned_by,
                                       tau.created_by as created_by,
                                       tau.created as created,
                                       tau.updated as updated
                               from tbl_token tau
-                              where tau.user_eid = ?
+                              where tau.owned_by = ?
                               order by tau.created
                              ", $user_eid);
 
@@ -242,7 +232,6 @@ class Token extends ModelBase
             $output[] = array('eid'         => $row['eid'],
                               'eid_type'    => \Model::TYPE_TOKEN,
                               'eid_status'  => $row['eid_status'],
-                              'user_eid'    => $row['user_eid'],
                               'access_code' => $row['access_code'],
                               'owned_by'    => $row['owned_by'],
                               'created_by'  => $row['created_by'],

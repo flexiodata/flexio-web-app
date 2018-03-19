@@ -102,9 +102,7 @@ CREATE TABLE tbl_token (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL,
   eid_status char(1) NOT NULL default '',
-  user_eid char(12) NOT NULL,
   access_code varchar(255) NOT NULL default '',
-  secret_code varchar(255) NOT NULL default '',
   owned_by char(12) NOT NULL default '',
   created_by char(12) NOT NULL default '',
   created timestamp NULL default NULL,
@@ -114,7 +112,6 @@ CREATE TABLE tbl_token (
   UNIQUE (access_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
 CREATE INDEX idx_token_owned_by ON tbl_token (owned_by);
 
 

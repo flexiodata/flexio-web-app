@@ -232,30 +232,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $stream;
     }
 
-    public function getTokenList() : array
-    {
-        $res = array();
-        $token_items = $this->getModel()->token->getInfoFromUserEid($this->getEid());
-        if ($token_items === false)
-            return $res;
-
-        foreach ($token_items as $token_info)
-        {
-            $token_eid = $token_info['eid'];
-            $token = \Flexio\Object\Token::load($token_eid);
-
-            // only show tokens that are available; note: token list will return
-            // all tokens, including ones that have been deleted, so this check
-            // is important
-            if ($token->getStatus() !== \Model::STATUS_AVAILABLE)
-                continue;
-
-            $res[] = $token;
-        }
-
-        return $res;
-    }
-
     public function getVerifyCode() : string
     {
         $user_model = $this->getModel()->user;

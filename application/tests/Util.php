@@ -156,11 +156,13 @@ EOD;
     {
         // returns an api token for the default test user
         $user_eid = self::getDefaultTestUser();
-        $user = \Flexio\Object\User::load($user_eid);
-        $tokens = $user->getTokenList();
+
+        // get the tokens
+        $filter = array('owned_by' => $user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $tokens = \Flexio\Object\Token::list($filter);
 
         if (count($tokens) === 0)
-            $tokens[] = \Flexio\Object\Token::create(array('user_eid' => $user_eid));
+            $tokens[] = \Flexio\Object\Token::create(array('owned_by' => $user_eid));
 
         // return the first token
         $token_info = $tokens[0]->get();

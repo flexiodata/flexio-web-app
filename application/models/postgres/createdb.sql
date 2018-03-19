@@ -86,9 +86,7 @@ CREATE TABLE tbl_token (
   id serial,
   eid varchar(12) NOT NULL,
   eid_status varchar(1) NOT NULL default '',
-  user_eid varchar(12) NOT NULL,
   access_code varchar(255) NOT NULL default '',
-  secret_code varchar(255) NOT NULL default '',
   owned_by varchar(12) NOT NULL default '',
   created_by varchar(12) NOT NULL default '',
   created timestamp NULL default NULL,
@@ -98,7 +96,6 @@ CREATE TABLE tbl_token (
   UNIQUE (access_code)
 );
 
-CREATE INDEX idx_token_user_eid ON tbl_token (user_eid);
 CREATE INDEX idx_token_owned_by ON tbl_token (owned_by);
 
 
