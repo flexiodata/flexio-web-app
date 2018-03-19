@@ -181,29 +181,12 @@ class Token extends ModelBase
 
     public function getInfoFromAccessCode(string $code) // TODO: add return type
     {
-        // get the authentication information from the access code
-        $db = $this->getDatabase();
-        $row = $db->fetchRow("select tau.eid as eid,
-                                     tau.eid_status as eid_status,
-                                     tau.access_code as access_code,
-                                     tau.owned_by as owned_by,
-                                     tau.created_by as created_by,
-                                     tau.created as created,
-                                     tau.updated as updated
-                              from tbl_token tau
-                              where tau.access_code = ?
-                             ", $code);
+        $filter = array('access_code' => $code);
+        $tokens = $this->list($filter);
 
-        if (!$row)
+        if (count($tokens) === 0)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        return array('eid'         => $row['eid'],
-                     'eid_type'    => \Model::TYPE_TOKEN,
-                     'eid_status'  => $row['eid_status'],
-                     'access_code' => $row['access_code'],
-                     'owned_by'    => $row['owned_by'],
-                     'created_by'  => $row['created_by'],
-                     'created'     => \Flexio\Base\Util::formatDate($row['created']),
-                     'updated'     => \Flexio\Base\Util::formatDate($row['updated']));
+        return $tokens[0]; // access code is unique
     }
 }
