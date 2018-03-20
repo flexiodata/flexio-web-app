@@ -214,6 +214,8 @@ class Validator
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'number' && !$this->check_number($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
+                if ($value['type'] == 'date' && !$this->check_date($p))
+                    $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'boolean' && !$this->check_bool($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
             }
@@ -294,6 +296,17 @@ class Validator
     private function check_string($value) : bool
     {
         if (!is_string($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_date($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        if (!strtotime($value))
             return false;
 
         return true;
