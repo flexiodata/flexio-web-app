@@ -115,17 +115,8 @@ class Process extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
-        if (isset($filter['parent_eid']))
-            $filter_expr .= (' and parent_eid = ' . $db->quote($filter['parent_eid']));
+        $allowed_items = array('eid', 'eid_status', 'parent_eid', 'owned_by', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
 
         $rows = array();
         try

@@ -82,13 +82,8 @@ class Action extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
+        $allowed_items = array('eid', 'eid_status', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
 
         $rows = array();
         try
