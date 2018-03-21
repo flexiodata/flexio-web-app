@@ -33,6 +33,9 @@ class ApiController extends \Flexio\System\FxControllerAction
         $post_params = $request->getPostParams();
 
 
+        // see if we can find the api version
+        $apiversion = $request->getUrlPathPart(1) ?? '';
+
 
         if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false)
         {
@@ -143,7 +146,14 @@ class ApiController extends \Flexio\System\FxControllerAction
             }
 
             // process the request
-            \Flexio\Api1\Api::request($request, $query_params, $post_params);
+            switch ($apiversion)
+            {
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
+
+                case 'v1': \Flexio\Api1\Api::request($request, $query_params, $post_params); break;
+                case 'v2': \Flexio\Api2\Api::request($request, $query_params, $post_params); break;
+            }
         }
         catch (\Flexio\Base\Exception $e)
         {

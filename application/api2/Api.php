@@ -128,7 +128,7 @@ class Api
         if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
 
-        if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v1')
+        if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v2')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
         // ROUTE 1: create a route for the request "as is" without looking for
