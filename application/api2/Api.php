@@ -18,6 +18,127 @@ namespace Flexio\Api2;
 
 class Api
 {
+    // changelog between v1 and v2:
+    // * new users are created by posting to signup endpoint:
+    //   v1: POST /users => v2: POST /signup
+    // * all connections, pipes, processes, streams, statistics endpoints prefixed with owner;
+    //   following are examples:
+    //   v1: POS /connections => v2: POS /:userid/connections
+    //   v1: DEL /pipes/:eid  => v2: DEL /:userid/pipes/:eid
+    // * /users/:eid/tokens/* api endpoints are now /:userid/auth/keys/*:
+    //   v1: GET /users/:eid/tokens      => v2: GET /:userid/auth/keys
+    //   v1: POS /users/:eid/tokens      => v2: POS /:userid/auth/keys
+    //   v1: GET /users/:eid/tokens/:eid => v2: GET /:userid/auth/keys/:eid
+    //   v1: DEL /users/:eid/tokens/:eid => v2: DEL /:userid/auth/keys/:eid
+    // * /rights/* api endpoints are now /:userid/auth/rights/*:
+    //   v1: GET /rights      => v2: GET /:userid/auth/rights
+    //   v1: POS /rights      => v2: POS /:userid/auth/rights
+    //   v1: POS /rights/:eid => v2: POS /:userid/auth/rights/:eid
+    //   v1: GET /rights/:eid => v2: GET /:userid/auth/rights/:eid
+    //   v1: DEL /rights/:eid => v2: DEL /:userid/auth/rights/:eid
+    // * removed /users/me; this info is given by /:ownerid/account
+    //   v1: GET /users/me' => v2: GET /:ownerid/account
+    // * endpoints for setting/getting user info are now under /:ownerid/account:
+    //   v1: POS /users/:eid => v2: POS /:ownerid/account
+    //   v2: GET /users/:eid => v2: GET /:ownerid/account
+    // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
+    //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
+    //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
+    // * removed internal /process/debug endpiont:
+    //   v1: GET /processes/debug => v2: (removed)
+    // * renamed /tests/* endpoints to /admin/tests/*:
+    //   v1: GET /tests/configure => v2: /admin/tests/configure
+    //   v1: GET /tests/run       => v2: /admin/tests/run
+    // * removed /admin/extract:
+    //   v1: GET /admin/extract => v2: (removed)
+
+    // TODO: migrate VFS api endpoints over to new user scheme?
+
+    // TODO: figure out how to handle these endpoints:
+    // 'POS /users/requestpasswordreset' => '\Flexio\Api2\User::requestpasswordreset'
+    // 'POS /users/resendverify'         => '\Flexio\Api2\User::resendverify'
+    // 'POS /users/activate'             => '\Flexio\Api2\User::activate'
+
+
+    private static $endpoints = array(
+
+        // PUBLIC ENDPOINTS:
+
+        // system
+        'GET /about'                               => '\Flexio\Api2\System::about',
+        'POS /validate'                            => '\Flexio\Api2\System::validate',
+        'POS /login'                               => '\Flexio\Api2\System::login',
+        'POS /logout'                              => '\Flexio\Api2\System::logout',
+        'POS /signup'                              => '\Flexio\Api2\User::create',
+
+        // AUTHENTICATED ENDPOINTS:
+
+        // users
+        'POS /:userid/account'                     => '\Flexio\Api2\User::set',
+        'GET /:userid/account'                     => '\Flexio\Api2\User::get',
+        'POS /:userid/account/credentials'         => '\Flexio\Api2\User::changepassword',
+        'DEL /:userid/account/credentials'         => '\Flexio\Api2\User::resetpassword',
+
+        // authorization
+        'GET /:userid/auth/rights'                 => '\Flexio\Api2\Right::list',
+        'POS /:userid/auth/rights'                 => '\Flexio\Api2\Right::create',
+        'POS /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::set',
+        'GET /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::get',
+        'DEL /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::delete',
+        'GET /:userid/auth/keys'                   => '\Flexio\Api2\Token::list',
+        'POS /:userid/auth/keys'                   => '\Flexio\Api2\Token::create',
+        'GET /:userid/auth/keys/:eid'              => '\Flexio\Api2\Token::get',
+        'DEL /:userid/auth/keys/:eid'              => '\Flexio\Api2\Token::delete',
+
+        // connections
+        'POS /:userid/connections'                 => '\Flexio\Api2\Connection::create',
+        'GET /:userid/connections'                 => '\Flexio\Api2\Connection::list',
+        'POS /:userid/connections/:eid'            => '\Flexio\Api2\Connection::set',
+        'GET /:userid/connections/:eid'            => '\Flexio\Api2\Connection::get',
+        'DEL /:userid/connections/:eid'            => '\Flexio\Api2\Connection::delete',
+        'GET /:userid/connections/:eid/describe'   => '\Flexio\Api2\Connection::describe',
+        'POS /:userid/connections/:eid/connect'    => '\Flexio\Api2\Connection::connect',
+        'POS /:userid/connections/:eid/disconnect' => '\Flexio\Api2\Connection::disconnect',
+
+        // pipes
+        'POS /:userid/pipes'                       => '\Flexio\Api2\Pipe::create',
+        'GET /:userid/pipes'                       => '\Flexio\Api2\Pipe::list',
+        'POS /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::set',
+        'GET /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::get',
+        'DEL /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::delete',
+        'POS /:userid/pipes/:eid/processes'        => '\Flexio\Api2\Process::create',
+        'GET /:userid/pipes/:eid/processes'        => '\Flexio\Api2\Pipe::processes',
+        'POS /:userid/pipes/:eid/run'              => '\Flexio\Api2\Pipe::run',
+        'GET /:userid/pipes/:eid/run'              => '\Flexio\Api2\Pipe::run',
+
+        // processes
+        'POS /:userid/processes'                   => '\Flexio\Api2\Process::create',
+        'GET /:userid/processes'                   => '\Flexio\Api2\Process::list',
+        'POS /:userid/processes/:eid'              => '\Flexio\Api2\Process::set',
+        'GET /:userid/processes/:eid'              => '\Flexio\Api2\Process::get',
+        'GET /:userid/processes/:eid/log'          => '\Flexio\Api2\Process::log',
+        'POS /:userid/processes/:eid/run'          => '\Flexio\Api2\Process::run',
+        'POS /:userid/processes/:eid/cancel'       => '\Flexio\Api2\Process::cancel',
+
+        // streams
+        'GET /:userid/streams/:eid'                => '\Flexio\Api2\Stream::get',
+        'GET /:userid/streams/:eid/content'        => '\Flexio\Api2\Stream::content',
+
+        // statistics
+        'GET /:userid/statistics/processes'        => '\Flexio\Api2\Statistics::getUserProcessStats',
+
+        // INTERNAL ENDPOINTS
+
+        // admin
+        'GET /admin/list/users'                    => '\Flexio\Api2\Admin::getUserList',
+        'GET /admin/statistics/users'              => '\Flexio\Api2\Admin::getUserProcessStats',
+        'GET /admin/configuration'                 => '\Flexio\Api2\Admin::getConfiguration',
+        'GET /admin/resetconfig'                   => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
+
+        'GET /admin/tests/configure'               => '\Flexio\Tests\Base::configure',
+        'GET /admin/tests/run'                     => '\Flexio\Tests\Base::run'
+    );
+
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
         // get the method
@@ -143,8 +264,6 @@ class Api
     {
         // note: creates an api endpoint string that's used to lookup the appropriate api implementation
 
-
-        // STEP 1: create a shorthand for the method
         $apiendpoint = '';
         switch ($request_method)
         {
@@ -171,137 +290,10 @@ class Api
             else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api2\Vfs::put';
         }
 
-        switch ($apiendpoint)
-        {
-            default:
-                return '';
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function === false)
+            return '';
 
-            // changelog between v1 and v2:
-            // * new users are created by posting to signup endpoint:
-            //   v1: POST /users => v2: POST /signup
-            // * all connections, pipes, processes, streams, statistics endpoints prefixed with owner;
-            //   following are examples:
-            //   v1: POS /connections => v2: POS /:userid/connections
-            //   v1: DEL /pipes/:eid  => v2: DEL /:userid/pipes/:eid
-            // * /users/:eid/tokens/* api endpoints are now /:userid/auth/keys/*:
-            //   v1: GET /users/:eid/tokens      => v2: GET /:userid/auth/keys
-            //   v1: POS /users/:eid/tokens      => v2: POS /:userid/auth/keys
-            //   v1: GET /users/:eid/tokens/:eid => v2: GET /:userid/auth/keys/:eid
-            //   v1: DEL /users/:eid/tokens/:eid => v2: DEL /:userid/auth/keys/:eid
-            // * /rights/* api endpoints are now /:userid/auth/rights/*:
-            //   v1: GET /rights      => v2: GET /:userid/auth/rights
-            //   v1: POS /rights      => v2: POS /:userid/auth/rights
-            //   v1: POS /rights/:eid => v2: POS /:userid/auth/rights/:eid
-            //   v1: GET /rights/:eid => v2: GET /:userid/auth/rights/:eid
-            //   v1: DEL /rights/:eid => v2: DEL /:userid/auth/rights/:eid
-            // * removed /users/me; this info is given by /:ownerid/account
-            //   v1: GET /users/me' => v2: GET /:ownerid/account
-            // * endpoints for setting/getting user info are now under /:ownerid/account:
-            //   v1: POS /users/:eid => v2: POS /:ownerid/account
-            //   v2: GET /users/:eid => v2: GET /:ownerid/account
-            // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
-            //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
-            //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
-            // * removed internal /process/debug endpiont:
-            //   v1: GET /processes/debug => v2: (removed)
-            // * renamed /tests/* endpoints to /admin/tests/*:
-            //   v1: GET /tests/configure => v2: /admin/tests/configure
-            //   v1: GET /tests/run       => v2: /admin/tests/run
-            // * removed /admin/extract:
-            //   v1: GET /admin/extract => v2: (removed)
-
-
-            // TODO: migrate VFS api endpoints over to new user scheme?
-
-
-            // TODO: figure out how to handle these endpoints:
-            /*
-            case 'POS /users/requestpasswordreset'   : return '\Flexio\Api2\User::requestpasswordreset';
-            case 'POS /users/resendverify'           : return '\Flexio\Api2\User::resendverify';
-            case 'POS /users/activate'               : return '\Flexio\Api2\User::activate';
-            */
-
-
-
-            // PUBLIC ENDPOINTS:
-
-            // system
-            case 'GET /about'                                : return '\Flexio\Api2\System::about';
-            case 'POS /validate'                             : return '\Flexio\Api2\System::validate';
-            case 'POS /login'                                : return '\Flexio\Api2\System::login';
-            case 'POS /logout'                               : return '\Flexio\Api2\System::logout';
-            case 'POS /signup'                               : return '\Flexio\Api2\User::create';
-
-
-
-            // AUTHENTICATED ENDPOINTS:
-
-            // users
-            case 'POS /:userid/account'                      : return '\Flexio\Api2\User::set';
-            case 'GET /:userid/account'                      : return '\Flexio\Api2\User::get';
-            case 'POS /:userid/account/credentials'          : return '\Flexio\Api2\User::changepassword';
-            case 'DEL /:userid/account/credentials'          : return '\Flexio\Api2\User::resetpassword';
-
-            // authorization
-            case 'GET /:userid/auth/rights'                  : return '\Flexio\Api2\Right::list';
-            case 'POS /:userid/auth/rights'                  : return '\Flexio\Api2\Right::create';
-            case 'POS /:userid/auth/rights/:eid'             : return '\Flexio\Api2\Right::set';
-            case 'GET /:userid/auth/rights/:eid'             : return '\Flexio\Api2\Right::get';
-            case 'DEL /:userid/auth/rights/:eid'             : return '\Flexio\Api2\Right::delete';
-            case 'GET /:userid/auth/keys'                    : return '\Flexio\Api2\Token::list';
-            case 'POS /:userid/auth/keys'                    : return '\Flexio\Api2\Token::create';
-            case 'GET /:userid/auth/keys/:eid'               : return '\Flexio\Api2\Token::get';
-            case 'DEL /:userid/auth/keys/:eid'               : return '\Flexio\Api2\Token::delete';
-
-            // connections
-            case 'POS /:userid/connections'                  : return '\Flexio\Api2\Connection::create';
-            case 'GET /:userid/connections'                  : return '\Flexio\Api2\Connection::list';
-            case 'POS /:userid/connections/:eid'             : return '\Flexio\Api2\Connection::set';
-            case 'GET /:userid/connections/:eid'             : return '\Flexio\Api2\Connection::get';
-            case 'DEL /:userid/connections/:eid'             : return '\Flexio\Api2\Connection::delete';
-            case 'GET /:userid/connections/:eid/describe'    : return '\Flexio\Api2\Connection::describe';
-            case 'POS /:userid/connections/:eid/connect'     : return '\Flexio\Api2\Connection::connect';
-            case 'POS /:userid/connections/:eid/disconnect'  : return '\Flexio\Api2\Connection::disconnect';
-
-            // pipes
-            case 'POS /:userid/pipes'                        : return '\Flexio\Api2\Pipe::create';
-            case 'GET /:userid/pipes'                        : return '\Flexio\Api2\Pipe::list';
-            case 'POS /:userid/pipes/:eid'                   : return '\Flexio\Api2\Pipe::set';
-            case 'GET /:userid/pipes/:eid'                   : return '\Flexio\Api2\Pipe::get';
-            case 'DEL /:userid/pipes/:eid'                   : return '\Flexio\Api2\Pipe::delete';
-            case 'POS /:userid/pipes/:eid/processes'         : return '\Flexio\Api2\Process::create';
-            case 'GET /:userid/pipes/:eid/processes'         : return '\Flexio\Api2\Pipe::processes';
-            case 'POS /:userid/pipes/:eid/run'               : return '\Flexio\Api2\Pipe::run';
-            case 'GET /:userid/pipes/:eid/run'               : return '\Flexio\Api2\Pipe::run';
-
-            // processes
-            case 'POS /:userid/processes'                    : return '\Flexio\Api2\Process::create';
-            case 'GET /:userid/processes'                    : return '\Flexio\Api2\Process::list';
-            case 'POS /:userid/processes/:eid'               : return '\Flexio\Api2\Process::set';
-            case 'GET /:userid/processes/:eid'               : return '\Flexio\Api2\Process::get';
-            case 'GET /:userid/processes/:eid/log'           : return '\Flexio\Api2\Process::log';
-            case 'POS /:userid/processes/:eid/run'           : return '\Flexio\Api2\Process::run';
-            case 'POS /:userid/processes/:eid/cancel'        : return '\Flexio\Api2\Process::cancel';
-
-            // streams
-            case 'GET /:userid/streams/:eid'                 : return '\Flexio\Api2\Stream::get';
-            case 'GET /:userid/streams/:eid/content'         : return '\Flexio\Api2\Stream::content';
-
-            // statistics
-            case 'GET /:userid/statistics/processes'         : return '\Flexio\Api2\Statistics::getUserProcessStats';
-
-
-
-            // INTERNAL ENDPOINTS
-
-            // admin
-            case 'GET /admin/list/users'                     : return '\Flexio\Api2\Admin::getUserList';
-            case 'GET /admin/statistics/users'               : return '\Flexio\Api2\Admin::getUserProcessStats';
-            case 'GET /admin/configuration'                  : return '\Flexio\Api2\Admin::getConfiguration';
-            case 'GET /admin/resetconfig'                    : return '\Flexio\Api2\User::resetConfig';    // resets the user configuration
-
-            case 'GET /admin/tests/configure'                : return '\Flexio\Tests\Base::configure';
-            case 'GET /admin/tests/run'                      : return '\Flexio\Tests\Base::run';
-        }
+        return $function;
     }
 }
