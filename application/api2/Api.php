@@ -202,6 +202,14 @@ class Api
             // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
             //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
             //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
+            // * removed internal /process/debug endpiont:
+            //   v1: GET /processes/debug => v2: (removed)
+            // * renamed /tests/* endpoints to /admin/tests/*:
+            //   v1: GET /tests/configure => v2: /admin/tests/configure
+            //   v1: GET /tests/run       => v2: /admin/tests/run
+            // * removed /admin/extract:
+            //   v1: GET /admin/extract => v2: (removed)
+
 
 
             // TODO: figure out how to handle these endpoints:
@@ -285,19 +293,14 @@ class Api
             // INTERNAL ENDPOINTS
 
             // admin
-            case 'GET /admin/extract'                        : return '\Flexio\Api2\Admin::getExtract';
             case 'GET /admin/list/users'                     : return '\Flexio\Api2\Admin::getUserList';
             case 'GET /admin/statistics/users'               : return '\Flexio\Api2\Admin::getUserProcessStats';
             case 'GET /admin/configuration'                  : return '\Flexio\Api2\Admin::getConfiguration';
             case 'GET /admin/resetconfig'                    : return '\Flexio\Api2\User::resetConfig';    // resets the user configuration
             case 'GET /admin/createexamples'                 : return '\Flexio\Api2\User::createExamples'; // creates example pipes
 
-            // debug
-            case 'GET /processes/debug'                      : return '\Flexio\Api2\Process::debug';    // display process info
-
-            // test
-            case 'GET /tests/configure'                      : return '\Flexio\Tests\Base::configure';
-            case 'GET /tests/run'                            : return '\Flexio\Tests\Base::run';
+            case 'GET /admin/tests/configure'                : return '\Flexio\Tests\Base::configure';
+            case 'GET /admin/tests/run'                      : return '\Flexio\Tests\Base::run';
         }
     }
 }

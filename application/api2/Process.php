@@ -26,31 +26,6 @@ class Process
         return $process->get();
     }
 
-    public static function debug(\Flexio\Api2\Request $request) : array
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // allow in debug mode or on test site
-        if (!IS_DEBUG() && !IS_TESTSITE())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-
-        // run the specified job in blocking mode
-        $params['background'] = $params['background'] ?? false;
-        $params['run'] = true;
-
-        $copied_request = $request->clone();
-        $copied_request->setPostParams($params);
-
-        $process = self::create_internal($copied_request);
-        if ($process === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        $properties = $process->get();
-
-        return $properties;
-    }
-
     private static function create_internal(\Flexio\Api2\Request $request) : \Flexio\Object\Process
     {
         $params = $request->getPostParams();
