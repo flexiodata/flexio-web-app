@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Stream
 {
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -44,7 +44,7 @@ class Stream
         return $stream->get();
     }
 
-    public static function content(\Flexio\Api\Request $request) // TODO: set function return type
+    public static function content(\Flexio\Api1\Request $request) // TODO: set function return type
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

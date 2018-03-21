@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Api
@@ -35,7 +35,7 @@ class Api
         $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
 
         // package the request info
-        $api_request = \Flexio\Api\Request::create();
+        $api_request = \Flexio\Api1\Request::create();
         $api_request->setMethod($method);
         $api_request->setUrlParams($url_params);
         $api_request->setQueryParams($query_params);
@@ -52,7 +52,7 @@ class Api
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in \Flexio\Jobs\Process
             $content = self::processRequest($api_request);
-            \Flexio\Api\Response::sendContent($content);
+            \Flexio\Api1\Response::sendContent($content);
             return;
         }
 
@@ -60,7 +60,7 @@ class Api
         try
         {
             $content = self::processRequest($api_request);
-            \Flexio\Api\Response::sendContent($content);
+            \Flexio\Api1\Response::sendContent($content);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -80,7 +80,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error);
+            \Flexio\Api1\Response::sendError($error);
         }
         catch (\Exception $e)
         {
@@ -97,7 +97,7 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error);
+            \Flexio\Api1\Response::sendError($error);
         }
         catch (\Error $e)
         {
@@ -114,11 +114,11 @@ class Api
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error);
+            \Flexio\Api1\Response::sendError($error);
         }
     }
 
-    private static function processRequest(\Flexio\Api\Request $request)
+    private static function processRequest(\Flexio\Api1\Request $request)
     {
         $request_method = $request->getMethod();
         $url_params = $request->getUrlParams();
@@ -213,9 +213,9 @@ class Api
 
         if (($url_params['apiparam1'] ?? '') == 'vfs')
         {
-                 if ($apiendpoint == 'GET /vfs/list')         return '\Flexio\Api\Vfs::list';
-            else if (substr($apiendpoint,0,9) == 'GET /vfs/') return '\Flexio\Api\Vfs::get';
-            else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api\Vfs::put';
+                 if ($apiendpoint == 'GET /vfs/list')         return '\Flexio\Api1\Vfs::list';
+            else if (substr($apiendpoint,0,9) == 'GET /vfs/') return '\Flexio\Api1\Vfs::get';
+            else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api1\Vfs::put';
         }
 
         switch ($apiendpoint)
@@ -224,10 +224,10 @@ class Api
                 return '';
 
             // system (public)
-            case 'GET /about'                          : return '\Flexio\Api\System::about';
-            case 'POS /validate'                       : return '\Flexio\Api\System::validate';
-            case 'POS /login'                          : return '\Flexio\Api\System::login';
-            case 'POS /logout'                         : return '\Flexio\Api\System::logout';
+            case 'GET /about'                          : return '\Flexio\Api1\System::about';
+            case 'POS /validate'                       : return '\Flexio\Api1\System::validate';
+            case 'POS /login'                          : return '\Flexio\Api1\System::login';
+            case 'POS /logout'                         : return '\Flexio\Api1\System::logout';
 
             // users
 
@@ -235,74 +235,74 @@ class Api
             // 'POS /users/me/credentials' // changing password
             // 'DEL /users/me/credentials' // resetting password
 
-            case 'POS /users'                          : return '\Flexio\Api\User::create';
-            case 'GET /users/me'                       : return '\Flexio\Api\User::about';
-            case 'POS /users/:eid'                     : return '\Flexio\Api\User::set';
-            case 'GET /users/:eid'                     : return '\Flexio\Api\User::get';
-            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api\User::changepassword';
-            case 'POS /users/resetpassword'            : return '\Flexio\Api\User::resetpassword';
-            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api\User::requestpasswordreset';
-            case 'POS /users/resendverify'             : return '\Flexio\Api\User::resendverify';
-            case 'POS /users/activate'                 : return '\Flexio\Api\User::activate';
+            case 'POS /users'                          : return '\Flexio\Api1\User::create';
+            case 'GET /users/me'                       : return '\Flexio\Api1\User::about';
+            case 'POS /users/:eid'                     : return '\Flexio\Api1\User::set';
+            case 'GET /users/:eid'                     : return '\Flexio\Api1\User::get';
+            case 'POS /users/:eid/changepassword'      : return '\Flexio\Api1\User::changepassword';
+            case 'POS /users/resetpassword'            : return '\Flexio\Api1\User::resetpassword';
+            case 'POS /users/requestpasswordreset'     : return '\Flexio\Api1\User::requestpasswordreset';
+            case 'POS /users/resendverify'             : return '\Flexio\Api1\User::resendverify';
+            case 'POS /users/activate'                 : return '\Flexio\Api1\User::activate';
 
             // sharing
-            case 'GET /rights'                         : return '\Flexio\Api\Right::list';
-            case 'POS /rights'                         : return '\Flexio\Api\Right::create';
-            case 'POS /rights/:eid'                    : return '\Flexio\Api\Right::set';
-            case 'GET /rights/:eid'                    : return '\Flexio\Api\Right::get';
-            case 'DEL /rights/:eid'                    : return '\Flexio\Api\Right::delete';
-            case 'GET /users/:eid/tokens'              : return '\Flexio\Api\Token::list';
-            case 'POS /users/:eid/tokens'              : return '\Flexio\Api\Token::create';
-            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::get';
-            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api\Token::delete';
+            case 'GET /rights'                         : return '\Flexio\Api1\Right::list';
+            case 'POS /rights'                         : return '\Flexio\Api1\Right::create';
+            case 'POS /rights/:eid'                    : return '\Flexio\Api1\Right::set';
+            case 'GET /rights/:eid'                    : return '\Flexio\Api1\Right::get';
+            case 'DEL /rights/:eid'                    : return '\Flexio\Api1\Right::delete';
+            case 'GET /users/:eid/tokens'              : return '\Flexio\Api1\Token::list';
+            case 'POS /users/:eid/tokens'              : return '\Flexio\Api1\Token::create';
+            case 'GET /users/:eid/tokens/:eid'         : return '\Flexio\Api1\Token::get';
+            case 'DEL /users/:eid/tokens/:eid'         : return '\Flexio\Api1\Token::delete';
 
             // connections
-            case 'POS /connections'                    : return '\Flexio\Api\Connection::create';
-            case 'GET /connections'                    : return '\Flexio\Api\Connection::list';
-            case 'POS /connections/:eid'               : return '\Flexio\Api\Connection::set';
-            case 'GET /connections/:eid'               : return '\Flexio\Api\Connection::get';
-            case 'DEL /connections/:eid'               : return '\Flexio\Api\Connection::delete';
-            case 'GET /connections/:eid/describe'      : return '\Flexio\Api\Connection::describe';
-            case 'POS /connections/:eid/connect'       : return '\Flexio\Api\Connection::connect';
-            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api\Connection::disconnect';
+            case 'POS /connections'                    : return '\Flexio\Api1\Connection::create';
+            case 'GET /connections'                    : return '\Flexio\Api1\Connection::list';
+            case 'POS /connections/:eid'               : return '\Flexio\Api1\Connection::set';
+            case 'GET /connections/:eid'               : return '\Flexio\Api1\Connection::get';
+            case 'DEL /connections/:eid'               : return '\Flexio\Api1\Connection::delete';
+            case 'GET /connections/:eid/describe'      : return '\Flexio\Api1\Connection::describe';
+            case 'POS /connections/:eid/connect'       : return '\Flexio\Api1\Connection::connect';
+            case 'POS /connections/:eid/disconnect'    : return '\Flexio\Api1\Connection::disconnect';
 
             // pipes
-            case 'POS /pipes'                          : return '\Flexio\Api\Pipe::create';
-            case 'GET /pipes'                          : return '\Flexio\Api\Pipe::list';
-            case 'POS /pipes/:eid'                     : return '\Flexio\Api\Pipe::set';
-            case 'GET /pipes/:eid'                     : return '\Flexio\Api\Pipe::get';
-            case 'DEL /pipes/:eid'                     : return '\Flexio\Api\Pipe::delete';
-            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api\Process::create';
-            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api\Pipe::processes';
-            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
-            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api\Pipe::run';
+            case 'POS /pipes'                          : return '\Flexio\Api1\Pipe::create';
+            case 'GET /pipes'                          : return '\Flexio\Api1\Pipe::list';
+            case 'POS /pipes/:eid'                     : return '\Flexio\Api1\Pipe::set';
+            case 'GET /pipes/:eid'                     : return '\Flexio\Api1\Pipe::get';
+            case 'DEL /pipes/:eid'                     : return '\Flexio\Api1\Pipe::delete';
+            case 'POS /pipes/:eid/processes'           : return '\Flexio\Api1\Process::create';
+            case 'GET /pipes/:eid/processes'           : return '\Flexio\Api1\Pipe::processes';
+            case 'POS /pipes/:eid/run'                 : return '\Flexio\Api1\Pipe::run';
+            case 'GET /pipes/:eid/run'                 : return '\Flexio\Api1\Pipe::run';
 
             // processes
-            case 'POS /processes'                      : return '\Flexio\Api\Process::create';
-            case 'GET /processes'                      : return '\Flexio\Api\Process::list';
-            case 'POS /processes/:eid'                 : return '\Flexio\Api\Process::set';
-            case 'GET /processes/:eid'                 : return '\Flexio\Api\Process::get';
-            case 'GET /processes/:eid/log'             : return '\Flexio\Api\Process::log';
-            case 'POS /processes/:eid/run'             : return '\Flexio\Api\Process::run';
-            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api\Process::cancel';
+            case 'POS /processes'                      : return '\Flexio\Api1\Process::create';
+            case 'GET /processes'                      : return '\Flexio\Api1\Process::list';
+            case 'POS /processes/:eid'                 : return '\Flexio\Api1\Process::set';
+            case 'GET /processes/:eid'                 : return '\Flexio\Api1\Process::get';
+            case 'GET /processes/:eid/log'             : return '\Flexio\Api1\Process::log';
+            case 'POS /processes/:eid/run'             : return '\Flexio\Api1\Process::run';
+            case 'POS /processes/:eid/cancel'          : return '\Flexio\Api1\Process::cancel';
 
             // streams
-            case 'GET /streams/:eid'                   : return '\Flexio\Api\Stream::get';
-            case 'GET /streams/:eid/content'           : return '\Flexio\Api\Stream::content';
+            case 'GET /streams/:eid'                   : return '\Flexio\Api1\Stream::get';
+            case 'GET /streams/:eid/content'           : return '\Flexio\Api1\Stream::content';
 
             // statistics
-            case 'GET /statistics/processes'           : return '\Flexio\Api\Statistics::getUserProcessStats';
+            case 'GET /statistics/processes'           : return '\Flexio\Api1\Statistics::getUserProcessStats';
 
             // ADMIN (internal):
-            case 'GET /admin/extract'                  : return '\Flexio\Api\Admin::getExtract';
-            case 'GET /admin/list/users'               : return '\Flexio\Api\Admin::getUserList';
-            case 'GET /admin/statistics/users'         : return '\Flexio\Api\Admin::getUserProcessStats';
-            case 'GET /admin/configuration'            : return '\Flexio\Api\Admin::getConfiguration';
-            case 'GET /admin/resetconfig'              : return '\Flexio\Api\User::resetConfig';    // resets the user configuration
-            case 'GET /admin/createexamples'           : return '\Flexio\Api\User::createExamples'; // creates example pipes
+            case 'GET /admin/extract'                  : return '\Flexio\Api1\Admin::getExtract';
+            case 'GET /admin/list/users'               : return '\Flexio\Api1\Admin::getUserList';
+            case 'GET /admin/statistics/users'         : return '\Flexio\Api1\Admin::getUserProcessStats';
+            case 'GET /admin/configuration'            : return '\Flexio\Api1\Admin::getConfiguration';
+            case 'GET /admin/resetconfig'              : return '\Flexio\Api1\User::resetConfig';    // resets the user configuration
+            case 'GET /admin/createexamples'           : return '\Flexio\Api1\User::createExamples'; // creates example pipes
 
             // DEBUG (internal):
-            case 'GET /processes/debug'                : return '\Flexio\Api\Process::debug';    // display process info
+            case 'GET /processes/debug'                : return '\Flexio\Api1\Process::debug';    // display process info
 
             // TEST (internal):
             case 'GET /tests/configure'                : return '\Flexio\Tests\Base::configure';

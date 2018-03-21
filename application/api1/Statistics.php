@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Statistics
 {
-    public static function getUserProcessStats(\Flexio\Api\Request $request) : array
+    public static function getUserProcessStats(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

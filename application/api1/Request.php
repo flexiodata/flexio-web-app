@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Request
@@ -29,12 +29,12 @@ class Request
         $this->initialize();
     }
 
-    public static function create() : \Flexio\Api\Request
+    public static function create() : \Flexio\Api1\Request
     {
         return (new static);
     }
 
-    public function clone() : \Flexio\Api\Request
+    public function clone() : \Flexio\Api1\Request
     {
         // create a new object and set the properties
         $new_request = static::create();

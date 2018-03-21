@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Pipe
 {
-    public static function create(\Flexio\Api\Request $request) : array
+    public static function create(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -65,7 +65,7 @@ class Pipe
         return self::get_internal($pipe);
     }
 
-    public static function copy(\Flexio\Api\Request $request) : array
+    public static function copy(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -118,7 +118,7 @@ class Pipe
         return self::get_internal($new_pipe);
     }
 
-    public static function delete(\Flexio\Api\Request $request) : array
+    public static function delete(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -155,7 +155,7 @@ class Pipe
         return $result;
     }
 
-    public static function set(\Flexio\Api\Request $request) : array
+    public static function set(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -196,7 +196,7 @@ class Pipe
         return self::get_internal($pipe);
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -228,7 +228,7 @@ class Pipe
         return self::get_internal($pipe);
     }
 
-    public static function list(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -255,7 +255,7 @@ class Pipe
         return $result;
     }
 
-    public static function processes(\Flexio\Api\Request $request) : array
+    public static function processes(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -318,7 +318,7 @@ class Pipe
         return $result;
     }
 
-    public static function run(\Flexio\Api\Request $request) // TODO: add return type
+    public static function run(\Flexio\Api1\Request $request) // TODO: add return type
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

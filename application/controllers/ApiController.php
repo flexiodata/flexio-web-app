@@ -143,7 +143,7 @@ class ApiController extends \Flexio\System\FxControllerAction
             }
 
             // process the request
-            \Flexio\Api\Api::request($request, $query_params, $post_params);
+            \Flexio\Api1\Api::request($request, $query_params, $post_params);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -163,7 +163,7 @@ class ApiController extends \Flexio\System\FxControllerAction
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error);
+            \Flexio\Api1\Response::sendError($error);
         }
     }
 }

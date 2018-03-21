@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class System
 {
-    public static function about(\Flexio\Api\Request $request) : array
+    public static function about(\Flexio\Api1\Request $request) : array
     {
         // return basic information
 
@@ -32,7 +32,7 @@ class System
         return $result;
     }
 
-    public static function login(\Flexio\Api\Request $request) : array
+    public static function login(\Flexio\Api1\Request $request) : array
     {
         // note: should return the same as User::about();
 
@@ -77,7 +77,7 @@ class System
         }
     }
 
-    public static function logout(\Flexio\Api\Request $request) : array
+    public static function logout(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -99,7 +99,7 @@ class System
         return $properties;
     }
 
-    public static function validate(\Flexio\Api\Request $request) : array
+    public static function validate(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

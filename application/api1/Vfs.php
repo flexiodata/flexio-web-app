@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Vfs
 {
-    public static function list(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -41,7 +41,7 @@ class Vfs
         return $result;
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api1\Request $request)
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -84,11 +84,11 @@ class Vfs
 
         if ($is_data)
             echo ']';
-        
-        exit(0);        
+
+        exit(0);
     }
 
-    public static function put(\Flexio\Api\Request $request) : array
+    public static function put(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
