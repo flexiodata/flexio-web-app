@@ -211,6 +211,8 @@ class Api
             //   v1: GET /admin/extract => v2: (removed)
 
 
+            // TODO: migrate VFS api endpoints over to new user scheme?
+
 
             // TODO: figure out how to handle these endpoints:
             /*
@@ -297,7 +299,6 @@ class Api
             case 'GET /admin/statistics/users'               : return '\Flexio\Api2\Admin::getUserProcessStats';
             case 'GET /admin/configuration'                  : return '\Flexio\Api2\Admin::getConfiguration';
             case 'GET /admin/resetconfig'                    : return '\Flexio\Api2\User::resetConfig';    // resets the user configuration
-            case 'GET /admin/createexamples'                 : return '\Flexio\Api2\User::createExamples'; // creates example pipes
 
             case 'GET /admin/tests/configure'                : return '\Flexio\Tests\Base::configure';
             case 'GET /admin/tests/run'                      : return '\Flexio\Tests\Base::run';

@@ -599,24 +599,6 @@ class User
         return array();
     }
 
-    public static function createExamples(\Flexio\Api2\Request $request) : array
-    {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // note: this is an API endpoint function for debugging; internally,
-        // createExampleObjects() is used when a user is created so that the owner
-        // will be set to the newly created user even though the user and pipes
-        // have both been created initially by the system
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        return self::createExampleObjects($requesting_user_eid);
-    }
-
     public static function createExampleObjects(string $user_eid) : array
     {
         // create sample pipes; ensure user creation even if sample fails
