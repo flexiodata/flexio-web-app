@@ -135,7 +135,7 @@ class User
 
             // create a default api key for the user
             $token_properties = array();
-            $token_properties['user_eid'] = $user->getEid();
+            $token_properties['owned_by'] = $user->getEid();
             \Flexio\Object\Token::create($token_properties);
 
             // if appropriate, send an email
