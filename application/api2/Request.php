@@ -86,22 +86,22 @@ class Request
         return $this->requesting_user;
     }
 
-    public function setOwnerEidFromUrl(string $owner_eid)
+    public function setOwnerFromUrl(string $owner_eid)
     {
         $this->url_owner_eid = $owner_eid;
     }
 
-    public function getOwnerEidFromUrl() : string
+    public function getOwnerFromUrl() : string
     {
         return $this->url_owner_eid;
     }
 
-    public function setObjectEidFromUrl(string $object_eid)
+    public function setObjectFromUrl(string $object_eid)
     {
         $this->url_object_eid = $object_eid;
     }
 
-    public function getObjectEidFromUrl() : string
+    public function getObjectFromUrl() : string
     {
         return $this->url_object_eid;
     }

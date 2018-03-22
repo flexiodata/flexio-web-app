@@ -298,7 +298,7 @@ class Api
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
         {
-            $request->setOwnerEidFromUrl($user_eid);
+            $request->setOwnerFromUrl($user_eid);
             return $function;
         }
 
@@ -313,8 +313,8 @@ class Api
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
         {
-            $request->setOwnerEidFromUrl($user_eid);
-            $request->setObjectEidFromUrl($object_eid);
+            $request->setOwnerFromUrl($user_eid);
+            $request->setObjectFromUrl($object_eid);
             return $function;
         }
 
@@ -329,8 +329,8 @@ class Api
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
         {
-            $request->setOwnerEidFromUrl($user_eid);
-            $request->setObjectEidFromUrl($object_eid);
+            $request->setOwnerFromUrl($user_eid);
+            $request->setObjectFromUrl($object_eid);
             return $function;
         }
 
