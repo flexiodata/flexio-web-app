@@ -380,7 +380,7 @@ class Api
         // to load the pipe eid from the identifier
         if ($type === 'pipes')
         {
-            $pipe_eid = \Flexio\Object\Pipes::getEidFromName($owner, $identifier);
+            $pipe_eid = \Flexio\Object\Pipe::getEidFromName($owner, $identifier);
             if ($pipe_eid !== false)
                 return $pipe_eid;
         }
@@ -389,7 +389,7 @@ class Api
         // to load the connection eid from the identifier
         if ($type === 'connections')
         {
-            $connection_eid = \Flexio\Object\Connections::getEidFromName($owner, $identifier);
+            $connection_eid = \Flexio\Object\Connection::getEidFromName($owner, $identifier);
             if ($connection_eid !== false)
                 return $connection_eid;
         }
