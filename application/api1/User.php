@@ -16,14 +16,6 @@ declare(strict_types=1);
 namespace Flexio\Api1;
 
 
-if (!isset($GLOBALS['humannameparser_included']))
-{
-    $GLOBALS['humannameparser_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'humannameparser'));
-}
-require_once 'humannameparser_init.php';
-
-
 class User
 {
     public static function create(\Flexio\Api1\Request $request) : array
@@ -554,27 +546,6 @@ class User
         $result = array();
         $result['email'] = $email;
         return $result;
-    }
-
-    public static function parseFullname(string $full_name, string &$first_name, string &$last_name)
-    {
-        // if a full name is specified, try to parse it
-        $first_name = '';
-        $last_name = '';
-        /*
-        // TODO: currently, the name parser is throwing an Exception; need to fix
-        try
-        {
-            $parser = new HumanNameParser_Parser($full_name);
-            $first_name = $parser->getFirst();
-            $last_name = $parser->getLast();
-        }
-            catch (\Exception $e)
-        {
-            // unable to parse the name; treat the set the first name as whatever was entered
-            $first_name = $params['full_name'];
-        }
-        */
     }
 
     public static function resetConfig(\Flexio\Api1\Request $request) : array
