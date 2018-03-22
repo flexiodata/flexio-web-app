@@ -36,18 +36,6 @@ class Request
         return (new static);
     }
 
-    public function clone() : \Flexio\Api2\Request
-    {
-        // create a new object and set the properties
-        $new_request = static::create();
-        $new_request->setMethod($this->getMethod());
-        $new_request->setUrlParams($this->getUrlParams());
-        $new_request->setQueryParams($this->getQueryParams());
-        $new_request->setPostParams($this->getPostParams());
-        $new_request->setRequestingUser($this->getRequestingUser());
-        return $new_request;
-    }
-
     public function setMethod(string $method)
     {
         $this->method = $method;

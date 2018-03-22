@@ -20,11 +20,11 @@ class Connection
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($post_params, array(
                 'eid_status'        => array('type' => 'string',  'required' => false),
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
@@ -35,10 +35,10 @@ class Connection
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
+        $validated_post_params = $validator->getParams();
 
         // create the object
-        $connection_properties = $validated_params;
+        $connection_properties = $validated_post_params;
         $connection_properties['owned_by'] = $requesting_user_eid;
         $connection_properties['created_by'] = $requesting_user_eid;
         $connection = \Flexio\Object\Connection::create($connection_properties);
