@@ -20,14 +20,6 @@ class Process
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
-        $process = self::create_internal($request);
-        if ($process === false)
-            return false;  // API error was set by create_internal
-        return $process->get();
-    }
-
-    private static function create_internal(\Flexio\Api2\Request $request) : \Flexio\Object\Process
-    {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -118,7 +110,7 @@ class Process
             $engine->run($background);
         }
 
-        return $process;
+        return $process->get();
     }
 
     public static function delete(\Flexio\Api2\Request $request) : array
