@@ -297,7 +297,10 @@ class Api
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
+        {
+            $request->setOwnerEidFromUrl($user_eid);
             return $function;
+        }
 
         // PATH POSSIBILITY 3: the path starts with an owner identifier, and there's also an object identifer
         // in the third part of the path
@@ -309,7 +312,11 @@ class Api
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
+        {
+            $request->setOwnerEidFromUrl($user_eid);
+            $request->setObjectEidFromUrl($object_eid);
             return $function;
+        }
 
         // PATH POSSIBILITY 4: the path starts with an owner identifier, and there's also an object identifer
         // in the fourth part of the path
@@ -321,7 +328,11 @@ class Api
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
+        {
+            $request->setOwnerEidFromUrl($user_eid);
+            $request->setObjectEidFromUrl($object_eid);
             return $function;
+        }
 
         // PATH POSSIBILITY 5; the path is a vfs path with a path after the vfs prefix
         $api_params = $url_params;
