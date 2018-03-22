@@ -22,6 +22,7 @@ class Connection
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -37,9 +38,17 @@ class Connection
 
         $validated_post_params = $validator->getParams();
 
+        // check the rights on the owner; ability to create an object is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
         // create the object
         $connection_properties = $validated_post_params;
-        $connection_properties['owned_by'] = $requesting_user_eid;
+        $connection_properties['owned_by'] = $owner_user_eid;
         $connection_properties['created_by'] = $requesting_user_eid;
         $connection = \Flexio\Object\Connection::create($connection_properties);
 
@@ -69,25 +78,15 @@ class Connection
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -106,12 +105,13 @@ class Connection
 
     public static function set(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid'               => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($post_params, array(
                 'eid_status'        => array('type' => 'string',  'required' => false),
                 'ename'             => array('type' => 'identifier', 'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
@@ -122,35 +122,22 @@ class Connection
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
+        $validated_post_params = $validator->getParams();
 
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-/*
-        // temporary measure to not set masked items; caller should not make calls to 'set' with masked items
-        if (isset($validated_params['connection_info']['access_token']) && $validated_params['connection_info']['access_token'] == '*****')
-            unset($validated_params['connection_info']['access_token']);
-        if (isset($validated_params['connection_info']['refresh_token']) && $validated_params['connection_info']['refresh_token'] == '*****')
-            unset($validated_params['connection_info']['refresh_token']);
-        if (isset($validated_params['connection_info']['password']) && $validated_params['connection_info']['password'] == '*****')
-            unset($validated_params['connection_info']['password']);
-        if (isset($validated_params['connection_info']['expires']) && $validated_params['connection_info']['expires'] == '*****')
-            unset($validated_params['connection_info']['expires']);
-*/
+
         // set the properties
-        $connection->set($validated_params);
+        $connection->set($validated_post_params);
 
         // get the $connection properties
         $properties = self::maskProperties($connection->get());
@@ -159,25 +146,15 @@ class Connection
 
     public static function get(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -192,23 +169,23 @@ class Connection
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
-        // load the object
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the connections
         $result = array();
 
-        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $connections = \Flexio\Object\Connection::list($filter);
 
         foreach ($connections as $c)
         {
-            if ($c->allows($user->getEid(), \Flexio\Object\Right::TYPE_READ) === false)
+            if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
             $properties = self::maskProperties($c->get());
@@ -228,27 +205,25 @@ class Connection
 
     public static function describe(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($query_params, array(
                 'q' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
-        $path = $validated_params['q'] ?? '';
+        $validated_query_params = $validator->getParams();
+        $path = $validated_query_params['q'] ?? '';
 
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -270,25 +245,15 @@ class Connection
 
     public static function connect(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
@@ -306,25 +271,15 @@ class Connection
 
     public static function disconnect(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $connection_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $connection_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($requesting_user_eid, $connection_identifier);
-            $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $connection = \Flexio\Object\Connection::load($connection_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($connection_eid);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
