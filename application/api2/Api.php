@@ -21,7 +21,7 @@ class Api
     // changelog between v1 and v2:
     // * new users are created by posting to signup endpoint:
     //   v1: POST /users => v2: POST /signup
-    // * all connections, pipes, processes, streams, statistics endpoints prefixed with owner;
+    // * all connections, pipes, processes, streams, vfs, statistics endpoints prefixed with owner;
     //   following are examples:
     //   v1: POS /connections => v2: POS /:userid/connections
     //   v1: DEL /pipes/:eid  => v2: DEL /:userid/pipes/:eid
@@ -59,85 +59,236 @@ class Api
     // 'POS /users/resendverify'         => '\Flexio\Api2\User::resendverify'
     // 'POS /users/activate'             => '\Flexio\Api2\User::activate'
 
+    // TODO: rename vfs endpoint to files?
+
 
     private static $endpoints = array(
 
         // PUBLIC ENDPOINTS:
 
         // system
-        'GET /about'                               => '\Flexio\Api2\System::about',
-        'POS /validate'                            => '\Flexio\Api2\System::validate',
-        'POS /login'                               => '\Flexio\Api2\System::login',
-        'POS /logout'                              => '\Flexio\Api2\System::logout',
-        'POS /signup'                              => '\Flexio\Api2\User::create',
+        'GET /about'                                  => '\Flexio\Api2\System::about',
+        'POS /validate'                               => '\Flexio\Api2\System::validate',
+        'POS /login'                                  => '\Flexio\Api2\System::login',
+        'POS /logout'                                 => '\Flexio\Api2\System::logout',
+        'POS /signup'                                 => '\Flexio\Api2\User::create',
 
         // AUTHENTICATED ENDPOINTS:
 
         // users
-        'POS /:userid/account'                     => '\Flexio\Api2\User::set',
-        'GET /:userid/account'                     => '\Flexio\Api2\User::get',
-        'POS /:userid/account/credentials'         => '\Flexio\Api2\User::changepassword',
-        'DEL /:userid/account/credentials'         => '\Flexio\Api2\User::resetpassword',
+        'POS /:userid/account'                        => '\Flexio\Api2\User::set',
+        'GET /:userid/account'                        => '\Flexio\Api2\User::get',
+        'POS /:userid/account/credentials'            => '\Flexio\Api2\User::changepassword',
+        'DEL /:userid/account/credentials'            => '\Flexio\Api2\User::resetpassword',
 
         // authorization
-        'GET /:userid/auth/rights'                 => '\Flexio\Api2\Right::list',
-        'POS /:userid/auth/rights'                 => '\Flexio\Api2\Right::create',
-        'POS /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::set',
-        'GET /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::get',
-        'DEL /:userid/auth/rights/:eid'            => '\Flexio\Api2\Right::delete',
-        'GET /:userid/auth/keys'                   => '\Flexio\Api2\Token::list',
-        'POS /:userid/auth/keys'                   => '\Flexio\Api2\Token::create',
-        'GET /:userid/auth/keys/:eid'              => '\Flexio\Api2\Token::get',
-        'DEL /:userid/auth/keys/:eid'              => '\Flexio\Api2\Token::delete',
+        'GET /:userid/auth/rights'                    => '\Flexio\Api2\Right::list',
+        'POS /:userid/auth/rights'                    => '\Flexio\Api2\Right::create',
+        'POS /:userid/auth/rights/:objeid'            => '\Flexio\Api2\Right::set',
+        'GET /:userid/auth/rights/:objeid'            => '\Flexio\Api2\Right::get',
+        'DEL /:userid/auth/rights/:objeid'            => '\Flexio\Api2\Right::delete',
+        'GET /:userid/auth/keys'                      => '\Flexio\Api2\Token::list',
+        'POS /:userid/auth/keys'                      => '\Flexio\Api2\Token::create',
+        'GET /:userid/auth/keys/:objeid'              => '\Flexio\Api2\Token::get',
+        'DEL /:userid/auth/keys/:objeid'              => '\Flexio\Api2\Token::delete',
 
         // connections
-        'POS /:userid/connections'                 => '\Flexio\Api2\Connection::create',
-        'GET /:userid/connections'                 => '\Flexio\Api2\Connection::list',
-        'POS /:userid/connections/:eid'            => '\Flexio\Api2\Connection::set',
-        'GET /:userid/connections/:eid'            => '\Flexio\Api2\Connection::get',
-        'DEL /:userid/connections/:eid'            => '\Flexio\Api2\Connection::delete',
-        'GET /:userid/connections/:eid/describe'   => '\Flexio\Api2\Connection::describe',
-        'POS /:userid/connections/:eid/connect'    => '\Flexio\Api2\Connection::connect',
-        'POS /:userid/connections/:eid/disconnect' => '\Flexio\Api2\Connection::disconnect',
+        'POS /:userid/connections'                    => '\Flexio\Api2\Connection::create',
+        'GET /:userid/connections'                    => '\Flexio\Api2\Connection::list',
+        'POS /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::set',
+        'GET /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::get',
+        'DEL /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::delete',
+        'GET /:userid/connections/:objeid/describe'   => '\Flexio\Api2\Connection::describe',
+        'POS /:userid/connections/:objeid/connect'    => '\Flexio\Api2\Connection::connect',
+        'POS /:userid/connections/:objeid/disconnect' => '\Flexio\Api2\Connection::disconnect',
 
         // pipes
-        'POS /:userid/pipes'                       => '\Flexio\Api2\Pipe::create',
-        'GET /:userid/pipes'                       => '\Flexio\Api2\Pipe::list',
-        'POS /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::set',
-        'GET /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::get',
-        'DEL /:userid/pipes/:eid'                  => '\Flexio\Api2\Pipe::delete',
-        'POS /:userid/pipes/:eid/processes'        => '\Flexio\Api2\Process::create',
-        'GET /:userid/pipes/:eid/processes'        => '\Flexio\Api2\Pipe::processes',
-        'POS /:userid/pipes/:eid/run'              => '\Flexio\Api2\Pipe::run',
-        'GET /:userid/pipes/:eid/run'              => '\Flexio\Api2\Pipe::run',
+        'POS /:userid/pipes'                          => '\Flexio\Api2\Pipe::create',
+        'GET /:userid/pipes'                          => '\Flexio\Api2\Pipe::list',
+        'POS /:userid/pipes/:objeid'                  => '\Flexio\Api2\Pipe::set',
+        'GET /:userid/pipes/:objeid'                  => '\Flexio\Api2\Pipe::get',
+        'DEL /:userid/pipes/:objeid'                  => '\Flexio\Api2\Pipe::delete',
+        'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
+        'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Pipe::processes',
+        'POS /:userid/pipes/:objeid/run'              => '\Flexio\Api2\Pipe::run',
+        'GET /:userid/pipes/:objeid/run'              => '\Flexio\Api2\Pipe::run',
 
         // processes
-        'POS /:userid/processes'                   => '\Flexio\Api2\Process::create',
-        'GET /:userid/processes'                   => '\Flexio\Api2\Process::list',
-        'POS /:userid/processes/:eid'              => '\Flexio\Api2\Process::set',
-        'GET /:userid/processes/:eid'              => '\Flexio\Api2\Process::get',
-        'GET /:userid/processes/:eid/log'          => '\Flexio\Api2\Process::log',
-        'POS /:userid/processes/:eid/run'          => '\Flexio\Api2\Process::run',
-        'POS /:userid/processes/:eid/cancel'       => '\Flexio\Api2\Process::cancel',
+        'POS /:userid/processes'                      => '\Flexio\Api2\Process::create',
+        'GET /:userid/processes'                      => '\Flexio\Api2\Process::list',
+        'POS /:userid/processes/:objeid'              => '\Flexio\Api2\Process::set',
+        'GET /:userid/processes/:objeid'              => '\Flexio\Api2\Process::get',
+        'GET /:userid/processes/:objeid/log'          => '\Flexio\Api2\Process::log',
+        'POS /:userid/processes/:objeid/run'          => '\Flexio\Api2\Process::run',
+        'POS /:userid/processes/:objeid/cancel'       => '\Flexio\Api2\Process::cancel',
 
         // streams
-        'GET /:userid/streams/:eid'                => '\Flexio\Api2\Stream::get',
-        'GET /:userid/streams/:eid/content'        => '\Flexio\Api2\Stream::content',
+        'GET /:userid/streams/:objeid'                => '\Flexio\Api2\Stream::get',
+        'GET /:userid/streams/:objeid/content'        => '\Flexio\Api2\Stream::content',
+
+        // vfs
+        'GET /:userid/vfs/list'                       => '\Flexio\Api2\Vfs::list',
+        'GET /:userid/vfs/*'                          => '\Flexio\Api2\Vfs::get',
+        'PUT /:userid/vfs/*'                          => '\Flexio\Api2\Vfs::put',
 
         // statistics
-        'GET /:userid/statistics/processes'        => '\Flexio\Api2\Statistics::getUserProcessStats',
+        'GET /:userid/statistics/processes'           => '\Flexio\Api2\Statistics::getUserProcessStats',
 
         // INTERNAL ENDPOINTS
 
         // admin
-        'GET /admin/list/users'                    => '\Flexio\Api2\Admin::getUserList',
-        'GET /admin/statistics/users'              => '\Flexio\Api2\Admin::getUserProcessStats',
-        'GET /admin/configuration'                 => '\Flexio\Api2\Admin::getConfiguration',
-        'GET /admin/resetconfig'                   => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
+        'GET /admin/list/users'                       => '\Flexio\Api2\Admin::getUserList',
+        'GET /admin/statistics/users'                 => '\Flexio\Api2\Admin::getUserProcessStats',
+        'GET /admin/configuration'                    => '\Flexio\Api2\Admin::getConfiguration',
+        'GET /admin/resetconfig'                      => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
 
-        'GET /admin/tests/configure'               => '\Flexio\Tests\Base::configure',
-        'GET /admin/tests/run'                     => '\Flexio\Tests\Base::run'
+        'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
+        'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run'
     );
+
+    private static function resolveOwnerIdentifier(string $requesting_user, string $identifier) : string
+    {
+        // if the identifier is an eid, we're done
+        if (\Flexio\Base\Eid::isValid($identifier))
+            return $identifier;
+
+        // if the identifier is 'me', return the requesting user
+        if ($identifier === 'me')
+            return $requesting_user;
+
+        // if we don't have an eid identifier, try to load the user eid from
+        // the identifier
+        $user_eid = \Flexio\Object\User::getEidFromUsername($identifier);
+        if ($user_eid !== false)
+            return $user_eid;
+
+        // invalid identifier
+        return '';
+    }
+
+    private static function resolveObjectIdentifier(string $owner, string $type, string $identifier) : string
+    {
+        // if the identifier is an eid, we're done
+        if (\Flexio\Base\Eid::isValid($identifier))
+            return $identifier;
+
+        // if we don't have an eid identifier and we have a pipe endpoint, try
+        // to load the pipe eid from the identifier
+        if ($type === 'pipes')
+        {
+            $pipe_eid = \Flexio\Object\Pipes::getEidFromName($owner, $identifier);
+            if ($pipe_eid !== false)
+                return $pipe_eid;
+        }
+
+        // if we don't have an eid identifier and we have a connection endpoint, try
+        // to load the connection eid from the identifier
+        if ($type === 'connections')
+        {
+            $connection_eid = \Flexio\Object\Connections::getEidFromName($owner, $identifier);
+            if ($connection_eid !== false)
+                return $connection_eid;
+        }
+
+        // invalid identifier
+        return '';
+    }
+
+    private static function getApiEndpoint(\Flexio\Api2\Request $request) : string
+    {
+        // note: creates an api endpoint string that's used to lookup the appropriate api implementation
+
+        $requesting_user = $request->getRequestingUser();
+        $request_method = $request->getMethod();
+        $url_params = $request->getUrlParams();
+
+        // the url path may or may not start with an owner, which we'll determine below; for
+        // now, see if the first part of the path is an owner, which we'll use below; this
+        // allows us to only have to try to identify the owner once
+        $user_eid = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam1']);
+
+
+        // PATH POSSIBILITY 1: there are no identifiers of any kind; match on the raw path
+        $api_params = $url_params;
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 2: the path starts with an owner identifier, but the rest of the path is fixed
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 3: the path starts with an owner identifier, and there's also an object identifer
+        // in the third part of the path
+        $api_params = $url_params;
+        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam2'], $url_params['apiparam3']);
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam3'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam3'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 4: the path starts with an owner identifier, and there's also an object identifer
+        // in the fourth part of the path
+        $api_params = $url_params;
+        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam4'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam4'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 5; the path is a vfs path with a path after the vfs prefix
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+             if (substr($apiendpoint,0,17) === 'GET /:userid/vfs/') $apiendpoint = 'GET /:userid/vfs/*';
+        else if (substr($apiendpoint,0,17) === 'PUT /:userid/vfs/') $apiendpoint = 'PUT /:userid/vfs/*';
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // we couldn't find any function
+        return '';
+    }
+
+    private static function buildApiEndpointString(string $request_method, array $api_params) : string
+    {
+        $apiendpoint = '';
+        switch ($request_method)
+        {
+            default:
+                return ''; // invalid request
+
+            case 'GET':     $apiendpoint .= 'GET '; break;
+            case 'POST':    $apiendpoint .= 'POS '; break;
+            case 'PUT':     $apiendpoint .= 'PUT '; break;
+            case 'DELETE':  $apiendpoint .= 'DEL '; break;
+        }
+
+        $apiendpoint .= (strlen($api_params['apiparam1']) > 0 ? ('/' . $api_params['apiparam1']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam2']) > 0 ? ('/' . $api_params['apiparam2']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam3']) > 0 ? ('/' . $api_params['apiparam3']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam4']) > 0 ? ('/' . $api_params['apiparam4']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam5']) > 0 ? ('/' . $api_params['apiparam5']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam6']) > 0 ? ('/' . $api_params['apiparam6']) : '');
+
+        return $apiendpoint;
+    }
 
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
@@ -252,48 +403,11 @@ class Api
         if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v2')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
-        $function = self::getApiEndpoint($request_method, $url_params);
+        $function = self::getApiEndpoint($request);
         if (is_callable($function) === true)
             return $function($request);
 
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-    }
-
-    private static function getApiEndpoint(string $request_method, array $url_params) : string
-    {
-        // note: creates an api endpoint string that's used to lookup the appropriate api implementation
-
-        $apiendpoint = '';
-        switch ($request_method)
-        {
-            default:
-                return ''; // invalid request
-
-            case 'GET':     $apiendpoint .= 'GET '; break;
-            case 'POST':    $apiendpoint .= 'POS '; break;
-            case 'PUT':     $apiendpoint .= 'PUT '; break;
-            case 'DELETE':  $apiendpoint .= 'DEL '; break;
-        }
-
-        $apiendpoint .= (strlen($url_params['apiparam1']) > 0 ? ('/' . $url_params['apiparam1']) : '');
-        $apiendpoint .= (strlen($url_params['apiparam2']) > 0 ? ('/' . $url_params['apiparam2']) : '');
-        $apiendpoint .= (strlen($url_params['apiparam3']) > 0 ? ('/' . $url_params['apiparam3']) : '');
-        $apiendpoint .= (strlen($url_params['apiparam4']) > 0 ? ('/' . $url_params['apiparam4']) : '');
-        $apiendpoint .= (strlen($url_params['apiparam5']) > 0 ? ('/' . $url_params['apiparam5']) : '');
-        $apiendpoint .= (strlen($url_params['apiparam6']) > 0 ? ('/' . $url_params['apiparam6']) : '');
-
-        if (($url_params['apiparam1'] ?? '') == 'vfs')
-        {
-                 if ($apiendpoint == 'GET /vfs/list')         return '\Flexio\Api2\Vfs::list';
-            else if (substr($apiendpoint,0,9) == 'GET /vfs/') return '\Flexio\Api2\Vfs::get';
-            else if (substr($apiendpoint,0,9) == 'PUT /vfs/') return '\Flexio\Api2\Vfs::put';
-        }
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function === false)
-            return '';
-
-        return $function;
     }
 }
