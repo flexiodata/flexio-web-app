@@ -20,12 +20,13 @@ class Pipe
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'copy_eid'        => array('type' => 'identifier', 'required' => false),
+        if (($validator->check($post_params, array(
+                'copy_eid'        => array('type' => 'eid', 'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
@@ -36,21 +37,31 @@ class Pipe
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
+        $validated_post_params = $validator->getParams();
 
         // if the copy_eid parameter is set, then copy the pipe,
         // using the original parameters; this simply allows us to reuse
         // the create api call, even though the two functions are distinct
-        if (isset($validated_params['copy_eid']))
+        if (isset($validated_post_params['copy_eid']))
             return self::copy($request);
 
+        // check the rights on the owner; ability to create an object is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
         // create the object
-        $pipe_properties = $validated_params;
-        $pipe_properties['owned_by'] = $requesting_user_eid;
+        $pipe_properties = $validated_post_params;
+        $pipe_properties['owned_by'] = $owner_user_eid;
         $pipe_properties['created_by'] = $requesting_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
 
-        $pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+        // grant default rights to the owner; TODO: also grant default rights
+        // to the requesting user?
+        $pipe->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
                 \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
@@ -67,27 +78,35 @@ class Pipe
 
     public static function copy(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
+        // note: the copy_eid parameter needs to be an eid because we
+        // don't know if it's coming outside the owner namespace; we
+        // may need to convert this over to a full URL path that includes
+        // owner info
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'copy_eid'    => array('type' => 'identifier', 'required' => true)
+        if (($validator->check($post_params, array(
+                'copy_eid'    => array('type' => 'eid', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $original_pipe_identifier = $validated_params['copy_eid'];
+        $validated_post_params = $validator->getParams();
+        $original_pipe_eid = $validated_post_params['copy_eid'];
+
+        // check the rights on the owner; ability to create an object is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // load the pipe
-        if (\Flexio\Base\Eid::isValid($original_pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $original_pipe_identifier);
-            $original_pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $original_pipe = \Flexio\Object\Pipe::load($original_pipe_identifier);
+        $original_pipe = \Flexio\Object\Pipe::load($original_pipe_eid);
 
-        // make sure we can read the pipe
+        // check the rights on the pipe being read from
         if ($original_pipe->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($original_pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -100,11 +119,11 @@ class Pipe
         $new_pipe_properties['name'] = $original_pipe_properties['name'] . ' copy';
         $new_pipe_properties['description'] = $original_pipe_properties['description'];
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
-        $new_pipe_properties['owned_by'] = $requesting_user_eid;
+        $new_pipe_properties['owned_by'] = $owner_user_eid;
         $new_pipe_properties['created_by'] = $requesting_user_eid;
         $new_pipe = \Flexio\Object\Pipe::create($new_pipe_properties);
 
-        $new_pipe->grant($requesting_user_eid, \Model::ACCESS_CODE_TYPE_EID,
+        $new_pipe->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
                 \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
@@ -120,25 +139,15 @@ class Pipe
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
-            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Connection::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
@@ -157,12 +166,13 @@ class Pipe
 
     public static function set(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid'             => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($post_params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
                 'ename'           => array('type' => 'identifier', 'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
@@ -173,16 +183,13 @@ class Pipe
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
+        $validated_post_params = $validator->getParams();
 
-        // load the object
-        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
-            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
@@ -191,32 +198,22 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // set the properties
-        $pipe->set($validated_params);
+        $pipe->set($validated_post_params);
 
         return self::get_internal($pipe);
     }
 
     public static function get(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
-            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
@@ -230,23 +227,23 @@ class Pipe
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
-        // load the object
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // get the pipes
         $result = array();
 
-        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $pipes = \Flexio\Object\Pipe::list($filter);
 
         foreach ($pipes as $p)
         {
-            if ($p->allows($user->getEid(), \Flexio\Object\Right::TYPE_READ) === false)
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
             $result[] = self::get_internal($p);
@@ -257,31 +254,29 @@ class Pipe
 
     public static function processes(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($query_params, array(
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
-        $start = isset($validated_params['start']) ? (int)$validated_params['start'] : null;
-        $tail = isset($validated_params['tail']) ? (int)$validated_params['tail'] : null;
-        $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : null;
+        $validated_query_params = $validator->getParams();
+        $start = isset($validated_query_params['start']) ? (int)$validated_query_params['start'] : null;
+        $tail = isset($validated_query_params['tail']) ? (int)$validated_query_params['tail'] : null;
+        $limit = isset($validated_query_params['limit']) ? (int)$validated_query_params['limit'] : null;
 
-        // load the object
-        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
-            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
@@ -289,7 +284,7 @@ class Pipe
         if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $filter = array('owned_by' => $requesting_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $pipe->getEid());
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $pipe_eid);
         $processes = \Flexio\Object\Process::list($filter);
 
         // get the processes that are accessible
@@ -320,25 +315,15 @@ class Pipe
 
     public static function run(\Flexio\Api2\Request $request) // TODO: add return type
     {
-        $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $pipe_identifier = $validated_params['eid'];
-
-        // load the object
-        if (\Flexio\Base\Eid::isValid($pipe_identifier) === false)
-        {
-            $eid_from_identifier = \Flexio\Object\Pipe::getEidFromName($requesting_user_eid, $pipe_identifier);
-            $pipe_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
-        }
-        $pipe = \Flexio\Object\Pipe::load($pipe_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($owner_user_eid !== $pipe->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the pipe object
         if ($pipe->getStatus() === \Model::STATUS_DELETED)
@@ -351,7 +336,7 @@ class Pipe
         $process_properties = array(
             'parent_eid' => $pipe_properties['eid'],
             'task' => $pipe_properties['task'],
-            'owned_by' => $pipe_properties['owned_by']['eid'],
+            'owned_by' => $pipe_properties['owned_by']['eid'], // same as $owner_user_eid
             'created_by' => $requesting_user_eid
         );
         $process = \Flexio\Object\Process::create($process_properties);
