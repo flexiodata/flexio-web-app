@@ -20,7 +20,6 @@ class Admin
 {
     public static function getUserList(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // only allow users from flex.io to get this info
@@ -51,7 +50,6 @@ class Admin
 
     public static function getUserProcessStats(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // only allow users from flex.io to get this info
@@ -133,7 +131,6 @@ class Admin
 
     public static function getConfiguration(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // only allow users from flex.io to get this info
