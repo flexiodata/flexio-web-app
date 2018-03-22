@@ -146,150 +146,6 @@ class Api
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run'
     );
 
-    private static function resolveOwnerIdentifier(string $requesting_user, string $identifier) : string
-    {
-        // if the identifier is an eid, we're done
-        if (\Flexio\Base\Eid::isValid($identifier))
-            return $identifier;
-
-        // if the identifier is 'me', return the requesting user
-        if ($identifier === 'me')
-            return $requesting_user;
-
-        // if we don't have an eid identifier, try to load the user eid from
-        // the identifier
-        $user_eid = \Flexio\Object\User::getEidFromUsername($identifier);
-        if ($user_eid !== false)
-            return $user_eid;
-
-        // invalid identifier
-        return '';
-    }
-
-    private static function resolveObjectIdentifier(string $owner, string $type, string $identifier) : string
-    {
-        // if the identifier is an eid, we're done
-        if (\Flexio\Base\Eid::isValid($identifier))
-            return $identifier;
-
-        // if we don't have an eid identifier and we have a pipe endpoint, try
-        // to load the pipe eid from the identifier
-        if ($type === 'pipes')
-        {
-            $pipe_eid = \Flexio\Object\Pipes::getEidFromName($owner, $identifier);
-            if ($pipe_eid !== false)
-                return $pipe_eid;
-        }
-
-        // if we don't have an eid identifier and we have a connection endpoint, try
-        // to load the connection eid from the identifier
-        if ($type === 'connections')
-        {
-            $connection_eid = \Flexio\Object\Connections::getEidFromName($owner, $identifier);
-            if ($connection_eid !== false)
-                return $connection_eid;
-        }
-
-        // invalid identifier
-        return '';
-    }
-
-    private static function getApiEndpoint(\Flexio\Api2\Request $request) : string
-    {
-        // note: creates an api endpoint string that's used to lookup the appropriate api implementation
-
-        $requesting_user = $request->getRequestingUser();
-        $request_method = $request->getMethod();
-        $url_params = $request->getUrlParams();
-
-        // the url path may or may not start with an owner, which we'll determine below; for
-        // now, see if the first part of the path is an owner, which we'll use below; this
-        // allows us to only have to try to identify the owner once
-        $user_eid = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam1']);
-
-
-        // PATH POSSIBILITY 1: there are no identifiers of any kind; match on the raw path
-        $api_params = $url_params;
-        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function !== false)
-            return $function;
-
-        // PATH POSSIBILITY 2: the path starts with an owner identifier, but the rest of the path is fixed
-        $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function !== false)
-            return $function;
-
-        // PATH POSSIBILITY 3: the path starts with an owner identifier, and there's also an object identifer
-        // in the third part of the path
-        $api_params = $url_params;
-        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam2'], $url_params['apiparam3']);
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $api_params['apiparam3'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam3'];
-        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function !== false)
-            return $function;
-
-        // PATH POSSIBILITY 4: the path starts with an owner identifier, and there's also an object identifer
-        // in the fourth part of the path
-        $api_params = $url_params;
-        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $api_params['apiparam4'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam4'];
-        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function !== false)
-            return $function;
-
-        // PATH POSSIBILITY 5; the path is a vfs path with a path after the vfs prefix
-        $api_params = $url_params;
-        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
-        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
-
-             if (substr($apiendpoint,0,17) === 'GET /:userid/vfs/') $apiendpoint = 'GET /:userid/vfs/*';
-        else if (substr($apiendpoint,0,17) === 'PUT /:userid/vfs/') $apiendpoint = 'PUT /:userid/vfs/*';
-
-        $function = self::$endpoints[$apiendpoint] ?? false;
-        if ($function !== false)
-            return $function;
-
-        // we couldn't find any function
-        return '';
-    }
-
-    private static function buildApiEndpointString(string $request_method, array $api_params) : string
-    {
-        $apiendpoint = '';
-        switch ($request_method)
-        {
-            default:
-                return ''; // invalid request
-
-            case 'GET':     $apiendpoint .= 'GET '; break;
-            case 'POST':    $apiendpoint .= 'POS '; break;
-            case 'PUT':     $apiendpoint .= 'PUT '; break;
-            case 'DELETE':  $apiendpoint .= 'DEL '; break;
-        }
-
-        $apiendpoint .= (strlen($api_params['apiparam1']) > 0 ? ('/' . $api_params['apiparam1']) : '');
-        $apiendpoint .= (strlen($api_params['apiparam2']) > 0 ? ('/' . $api_params['apiparam2']) : '');
-        $apiendpoint .= (strlen($api_params['apiparam3']) > 0 ? ('/' . $api_params['apiparam3']) : '');
-        $apiendpoint .= (strlen($api_params['apiparam4']) > 0 ? ('/' . $api_params['apiparam4']) : '');
-        $apiendpoint .= (strlen($api_params['apiparam5']) > 0 ? ('/' . $api_params['apiparam5']) : '');
-        $apiendpoint .= (strlen($api_params['apiparam6']) > 0 ? ('/' . $api_params['apiparam6']) : '');
-
-        return $apiendpoint;
-    }
-
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
         // get the method
@@ -409,5 +265,149 @@ class Api
 
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+    }
+
+    private static function getApiEndpoint(\Flexio\Api2\Request $request) : string
+    {
+        // note: creates an api endpoint string that's used to lookup the appropriate api implementation
+
+        $requesting_user = $request->getRequestingUser();
+        $request_method = $request->getMethod();
+        $url_params = $request->getUrlParams();
+
+        // the url path may or may not start with an owner, which we'll determine below; for
+        // now, see if the first part of the path is an owner, which we'll use below; this
+        // allows us to only have to try to identify the owner once
+        $user_eid = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam1']);
+
+
+        // PATH POSSIBILITY 1: there are no identifiers of any kind; match on the raw path
+        $api_params = $url_params;
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 2: the path starts with an owner identifier, but the rest of the path is fixed
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 3: the path starts with an owner identifier, and there's also an object identifer
+        // in the third part of the path
+        $api_params = $url_params;
+        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam2'], $url_params['apiparam3']);
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam3'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam3'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 4: the path starts with an owner identifier, and there's also an object identifer
+        // in the fourth part of the path
+        $api_params = $url_params;
+        $object_eid = self::resolveObjectIdentifier($user_eid, $url_params['apiparam3'], $url_params['apiparam4']);
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $api_params['apiparam4'] = $object_eid !== '' ? ':objeid' : $api_params['apiparam4'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // PATH POSSIBILITY 5; the path is a vfs path with a path after the vfs prefix
+        $api_params = $url_params;
+        $api_params['apiparam1'] = $user_eid !== '' ? ':userid' : $api_params['apiparam1'];
+        $apiendpoint = self::buildApiEndpointString($request_method, $api_params);
+
+             if (substr($apiendpoint,0,17) === 'GET /:userid/vfs/') $apiendpoint = 'GET /:userid/vfs/*';
+        else if (substr($apiendpoint,0,17) === 'PUT /:userid/vfs/') $apiendpoint = 'PUT /:userid/vfs/*';
+
+        $function = self::$endpoints[$apiendpoint] ?? false;
+        if ($function !== false)
+            return $function;
+
+        // we couldn't find any function
+        return '';
+    }
+
+    private static function resolveOwnerIdentifier(string $requesting_user, string $identifier) : string
+    {
+        // if the identifier is an eid, we're done
+        if (\Flexio\Base\Eid::isValid($identifier))
+            return $identifier;
+
+        // if the identifier is 'me', return the requesting user
+        if ($identifier === 'me')
+            return $requesting_user;
+
+        // if we don't have an eid identifier, try to load the user eid from
+        // the identifier
+        $user_eid = \Flexio\Object\User::getEidFromUsername($identifier);
+        if ($user_eid !== false)
+            return $user_eid;
+
+        // invalid identifier
+        return '';
+    }
+
+    private static function resolveObjectIdentifier(string $owner, string $type, string $identifier) : string
+    {
+        // if the identifier is an eid, we're done
+        if (\Flexio\Base\Eid::isValid($identifier))
+            return $identifier;
+
+        // if we don't have an eid identifier and we have a pipe endpoint, try
+        // to load the pipe eid from the identifier
+        if ($type === 'pipes')
+        {
+            $pipe_eid = \Flexio\Object\Pipes::getEidFromName($owner, $identifier);
+            if ($pipe_eid !== false)
+                return $pipe_eid;
+        }
+
+        // if we don't have an eid identifier and we have a connection endpoint, try
+        // to load the connection eid from the identifier
+        if ($type === 'connections')
+        {
+            $connection_eid = \Flexio\Object\Connections::getEidFromName($owner, $identifier);
+            if ($connection_eid !== false)
+                return $connection_eid;
+        }
+
+        // invalid identifier
+        return '';
+    }
+
+    private static function buildApiEndpointString(string $request_method, array $api_params) : string
+    {
+        $apiendpoint = '';
+        switch ($request_method)
+        {
+            default:
+                return ''; // invalid request
+
+            case 'GET':     $apiendpoint .= 'GET '; break;
+            case 'POST':    $apiendpoint .= 'POS '; break;
+            case 'PUT':     $apiendpoint .= 'PUT '; break;
+            case 'DELETE':  $apiendpoint .= 'DEL '; break;
+        }
+
+        $apiendpoint .= (strlen($api_params['apiparam1']) > 0 ? ('/' . $api_params['apiparam1']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam2']) > 0 ? ('/' . $api_params['apiparam2']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam3']) > 0 ? ('/' . $api_params['apiparam3']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam4']) > 0 ? ('/' . $api_params['apiparam4']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam5']) > 0 ? ('/' . $api_params['apiparam5']) : '');
+        $apiendpoint .= (strlen($api_params['apiparam6']) > 0 ? ('/' . $api_params['apiparam6']) : '');
+
+        return $apiendpoint;
     }
 }
