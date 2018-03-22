@@ -113,5 +113,7 @@ class Request
         $this->query_params = array();
         $this->post_params = array();
         $this->requesting_user = '';
+        $this->url_owner_eid = '';
+        $this->url_object_eid = '';
     }
 }
