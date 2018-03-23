@@ -20,19 +20,24 @@ class Right
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does this make sense?
+
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($post_params, array(
                 'rights' => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $rights = $validated_params['rights'];
-        $message = $validated_params['message'] ?? '';
+        $validated_post_params = $validator->getParams();
+        $rights = $validated_post_params['rights'];
+        $message = $validated_post_params['message'] ?? '';
 
         // validate the rights
         $object_rights_to_add = array();
@@ -141,8 +146,14 @@ class Right
 
     public static function set(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does this make sense?
+
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // note: only allow the actions to be changed; don't allow the object
         // or the user to be changed since this would allow a user to simply
@@ -150,15 +161,13 @@ class Right
         // else
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($post_params, array(
                 'actions' => array('type' => 'object', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
-        $actions = $validated_params['actions'];
+        $validated_post_params = $validator->getParams();
+        $actions = $validated_post_params['actions'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -181,17 +190,13 @@ class Right
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does this make sense?
+
         $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -218,17 +223,9 @@ class Right
 
     public static function get(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -248,27 +245,17 @@ class Right
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($query_params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $user_eid = $requesting_user_eid;
-
-        // build the filter for the rights we want to get
-        $filter = array(
-            'eid_type' => array(\Model::TYPE_PIPE, \Model::TYPE_CONNECTION),
-            'eid_status' => array(\Model::STATUS_AVAILABLE)
-        );
-
-        if (isset($validated_params['objects']))
-            $filter['target_eids'] = $validated_params['objects']; // filter for specific objects
-
+        $validated_query_params = $validator->getParams();
 
         // TODO: get rights info from list query in \Flexio\Object\Rights
 
