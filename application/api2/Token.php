@@ -96,10 +96,10 @@ class Token
 
         // check the rights on the owner; ability to read token info is governed
         // currently by user read privileges
-        $user = \Flexio\Object\User::load($owner_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tokens

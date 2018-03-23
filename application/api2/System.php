@@ -62,10 +62,10 @@ class System
 
         try
         {
-            $user = \Flexio\Object\User::load($current_user_eid);
-            if ($user->getStatus() === \Model::STATUS_DELETED)
+            $current_user = \Flexio\Object\User::load($current_user_eid);
+            if ($current_user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            return $user->get();
+            return $current_user->get();
         }
         catch (\Flexio\Base\Exception $e)
         {

@@ -31,8 +31,8 @@ class Statistics
         if ($owner_user_eid !== $requesting_user_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $user = \Flexio\Object\User::load($owner_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $stats = \Flexio\System\System::getModel()->process->getUserProcessStats($owner_user_eid);
