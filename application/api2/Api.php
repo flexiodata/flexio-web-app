@@ -148,8 +148,9 @@ class Api
 
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
-        // get the method
+        // get the method and url
         $method = $server_request->getMethod();
+        $url = $server_request->REQUEST_URI;
 
         // get the url parts and map them to the api parameters
         $url_params = array();
@@ -165,6 +166,7 @@ class Api
         // package the request info
         $api_request = \Flexio\Api2\Request::create();
         $api_request->setMethod($method);
+        $api_request->setUrl($url);
         $api_request->setUrlParams($url_params);
         $api_request->setQueryParams($query_params);
         $api_request->setPostParams($post_params);

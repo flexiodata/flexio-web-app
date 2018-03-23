@@ -56,6 +56,7 @@ class Vfs
 
     public static function get(\Flexio\Api2\Request $request)
     {
+        $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
@@ -69,7 +70,7 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $path = $_SERVER['REQUEST_URI'];
+        $path = $request_url;
         if (substr($path,0,12) != '/api/v1/vfs/')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
@@ -115,6 +116,7 @@ class Vfs
 
     public static function put(\Flexio\Api2\Request $request) : array
     {
+        $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
@@ -128,7 +130,7 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $path = $_SERVER['REQUEST_URI'];
+        $path = $request_url;
         if (substr($path,0,12) != '/api/v1/vfs/')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 

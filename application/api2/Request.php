@@ -19,6 +19,7 @@ namespace Flexio\Api2;
 class Request
 {
     private $method;
+    private $url;
     private $url_params;
     private $query_params;
     private $post_params;
@@ -44,6 +45,16 @@ class Request
     public function getMethod() : string
     {
         return $this->method;
+    }
+
+    public function setUrl(string $url)
+    {
+        $this->url = $url;
+    }
+
+    public function getUrl(string $url) : string
+    {
+        return $this->url;
     }
 
     public function setUrlParams(array $params)
@@ -109,6 +120,7 @@ class Request
     private function initialize()
     {
         $this->method = '';
+        $this->url = '';
         $this->url_params = array();
         $this->query_params = array();
         $this->post_params = array();
