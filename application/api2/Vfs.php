@@ -20,17 +20,30 @@ class Vfs
 {
     public static function list(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($query_params, array(
                 'q' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_params = $validator->getParams();
         $path = $validated_params['q'] ?? '';
+
+        // load the object; TODO: right now, govern VFS read rights using read
+        // permissions on the user; perhaps use user privileges on store/streams?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // TODO: need to patch through the owner info here
 
         $vfs = new \Flexio\Services\Vfs();
         $result = $vfs->list($path);
@@ -43,8 +56,18 @@ class Vfs
 
     public static function get(\Flexio\Api2\Request $request)
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object; TODO: right now, govern VFS read rights using read
+        // permissions on the user; perhaps use user privileges on store/streams?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $_SERVER['REQUEST_URI'];
         if (substr($path,0,12) != '/api/v1/vfs/')
@@ -55,6 +78,8 @@ class Vfs
 
         $is_data = false;
         $counter = 0;
+
+        // TODO: need to patch through the owner info here
 
         $vfs = new \Flexio\Services\Vfs();
         $vfs->read($path, function($data) use (&$is_data, &$counter) {
@@ -90,8 +115,18 @@ class Vfs
 
     public static function put(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object; TODO: right now, govern VFS write rights using write
+        // permissions on the user; perhaps use user privileges on store/streams?
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $_SERVER['REQUEST_URI'];
         if (substr($path,0,12) != '/api/v1/vfs/')
@@ -99,6 +134,8 @@ class Vfs
 
         // grab path, including preceding slash
         $path = substr($path,11);
+
+        // TODO: need to patch through the owner info here
 
         $vfs = new \Flexio\Services\Vfs();
 
