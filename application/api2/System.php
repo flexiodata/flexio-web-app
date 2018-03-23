@@ -34,23 +34,22 @@ class System
 
     public static function login(\Flexio\Api2\Request $request) : array
     {
-        // note: should return the same as User::about();
-
-        $params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
+        $post_params = $request->getPostParams();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($post_params, array(
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
+        $validated_post_params = $validator->getParams();
+        $username = $validated_params['username'];
+        $password = $validated_params['password'];
 
         // try to log in to the system
         $error_message = _('Authentication failed'); // default error message
-        $result = \Flexio\System\System::login($validated_params['username'], $validated_params['password'], $error_message);
+        $result = \Flexio\System\System::login($username, $password, $error_message);
 
         if (!$result)
         {
@@ -79,15 +78,6 @@ class System
 
     public static function logout(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // validation placeholder; no parameters are used
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
@@ -101,7 +91,7 @@ class System
 
     public static function validate(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // the input for a validation is an array of objects that each
@@ -122,14 +112,14 @@ class System
         */
 
         // make sure params is an array
-        if (!is_array($params))
+        if (!is_array($post_params))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        if (count($params) === 0 || count($params) > 10)
+        if (count($post_params) === 0 || count($post_params) > 10)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // make sure each of the items in the array has the required params
-        foreach ($params as $p)
+        foreach ($post_params as $p)
         {
             // checks to see if a username is available
             $validator = \Flexio\Base\Validator::create();
@@ -144,7 +134,7 @@ class System
 
         // build up the return object of results
         $result = array();
-        foreach ($params as $p)
+        foreach ($post_params as $p)
         {
             $result[] = self::validateObject($p, $requesting_user_eid);
         }
