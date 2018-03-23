@@ -20,9 +20,16 @@ class Right
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         // TODO: access rights are being granted to the user specified
         // in 'access_code' in the rights object; however, we're posting
-        // to a path that has an owner in the root; does this make sense?
+        // to a path that has an owner in the root; does it make sense
+        // to use the owner as the owner we're adding the rights for?
+        // what about public pipes?
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -146,6 +153,11 @@ class Right
 
     public static function set(\Flexio\Api2\Request $request) : array
     {
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         // TODO: access rights are being granted to the user specified
         // in 'access_code' in the rights object; however, we're posting
         // to a path that has an owner in the root; does this make sense?
@@ -190,6 +202,11 @@ class Right
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         // TODO: access rights are being granted to the user specified
         // in 'access_code' in the rights object; however, we're posting
         // to a path that has an owner in the root; does this make sense?
@@ -223,6 +240,11 @@ class Right
 
     public static function get(\Flexio\Api2\Request $request) : array
     {
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $right_eid = $request->getObjectFromUrl();
@@ -245,6 +267,11 @@ class Right
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
