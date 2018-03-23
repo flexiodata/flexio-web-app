@@ -20,24 +20,23 @@ class Stream
 {
     public static function get(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $stream_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $stream_identifier = $validated_params['eid'];
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check;
+        // TODO: re-add; to do this, need to add owner/rights info when streams
+        // are created
+        $stream = \Flexio\Object\Stream::load($stream_eid);
+        //if ($owner_user_eid !== $stream->getOwner())
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        $stream = \Flexio\Object\Stream::load($stream_identifier);
+        // TODO: re-add; to do this, need to add owner/rights info when streams
+        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -46,12 +45,13 @@ class Stream
 
     public static function content(\Flexio\Api2\Request $request) // TODO: set function return type
     {
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $stream_eid = $request->getObjectFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid'          => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($query_params, array(
                 'start'        => array('type' => 'integer', 'required' => false),
                 'limit'        => array('type' => 'integer', 'required' => false),
                 'metadata'     => array('type' => 'string', 'required' => false),
@@ -60,19 +60,26 @@ class Stream
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $stream_identifier = $validated_params['eid'];
-        $start = isset($validated_params['start']) ? (int)$validated_params['start'] : 0;  // start isn't specified, start at the beginning
-        $limit = isset($validated_params['limit']) ? (int)$validated_params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
-        $metadata = isset($validated_params['metadata']) ? \toBoolean($validated_params['metadata']) : false;
-        $content_type = isset($validated_params['content_type']) ? $validated_params['content_type'] : false;
-        $encode = $validated_params['encode'] ?? null;
+        $validated_query_params = $validator->getParams();
+        $start = isset($validated_query_params['start']) ? (int)$validated_query_params['start'] : 0;  // start isn't specified, start at the beginning
+        $limit = isset($validated_query_params['limit']) ? (int)$validated_query_params['limit'] : PHP_INT_MAX;  // if limit isn't specified, choose a large value (TODO: stream output in chunks?)
+        $metadata = isset($validated_query_params['metadata']) ? \toBoolean($validated_query_params['metadata']) : false;
+        $content_type = isset($validated_query_params['content_type']) ? $validated_query_params['content_type'] : false;
+        $encode = $validated_query_params['encode'] ?? null;
 
-        $stream = \Flexio\Object\Stream::load($stream_identifier);
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check;
+        // TODO: re-add; to do this, need to add owner/rights info when streams
+        // are created
+        $stream = \Flexio\Object\Stream::load($stream_eid);
+        //if ($owner_user_eid !== $stream->getOwner())
+        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        // TODO: re-add; to do this, need to add owner/rights info when streams
+        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // TODO: re-add
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
