@@ -39,18 +39,18 @@ class Segment
         if (IS_PRODSITE())
             return;
 
-        $params = $request->getQueryParams();
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
         // maek sure we have an 'action' query parameter
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($query_params, array(
                 'action'        => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $action = $params['action'];
-        self::track_request($action, $requesting_user_eid, $params);
+        $action = $query_params['action'];
+        self::track_request($action, $requesting_user_eid, $query_params);
         return array();
     }
 
