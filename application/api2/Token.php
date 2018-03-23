@@ -20,28 +20,20 @@ class Token
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $user_identifier = $validated_params['eid'];
-
-        // load the object and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($user_identifier);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        // check the rights on the owner; ability to create a token is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // create the token object
         $token_properties = array();
-        $token_properties['owned_by'] = $user->getEid();
+        $token_properties['owned_by'] = $owner_user_eid;
         $token_properties['created_by'] = $requesting_user_eid;
         $token = \Flexio\Object\Token::create($token_properties);
         return $token->get();
@@ -49,28 +41,22 @@ class Token
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $token_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $token_identifier = $validated_params['eid'];
-
-        // load the user and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        // check the rights on the owner; ability to delete a token is governed
+        // currently by user write privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false) // use write, since it's like changing a user property
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $token = \Flexio\Object\Token::load($token_identifier);
+        $token = \Flexio\Object\Token::load($token_eid);
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
         $token->delete();
 
         $result = array();
@@ -82,49 +68,35 @@ class Token
 
     public static function get(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $token_eid = $request->getObjectFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $token_identifier = $validated_params['eid'];
-
-        // load the user and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
+        // check the rights on the owner; ability to read a token is governed
+        // currently by user read privileges
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
-        $token = \Flexio\Object\Token::load($token_identifier);
+        $token = \Flexio\Object\Token::load($token_eid);
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
         $properties = $token->get();
         return $properties;
     }
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
-        $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $user_identifier = $validated_params['eid'];
-
-        // load the user and check the rights; note: user rights govern user tokens
-        $user = \Flexio\Object\User::load($user_identifier);
+        // check the rights on the owner; ability to read token info is governed
+        // currently by user read privileges
+        $user = \Flexio\Object\User::load($owner_user_eid);
         if ($user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         if ($user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
@@ -133,7 +105,7 @@ class Token
         // get the tokens
         $result = array();
 
-        $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $tokens = \Flexio\Object\Token::list($filter);
 
         foreach ($tokens as $t)
