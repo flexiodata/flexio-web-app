@@ -51,6 +51,9 @@ class Api
     //   v1: GET /tests/run       => v2: /admin/tests/run
     // * removed /admin/extract:
     //   v1: GET /admin/extract => v2: (removed)
+    // * removed /connections/:eid/describe; connection items are now retrieved through VFS
+    //   v1: GET /connections/:eid/describe => v2: (removed)
+
 
     // TODO: migrate VFS api endpoints over to new user scheme?
 
@@ -98,7 +101,6 @@ class Api
         'POS /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::set',
         'GET /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::get',
         'DEL /:userid/connections/:objeid'            => '\Flexio\Api2\Connection::delete',
-        'GET /:userid/connections/:objeid/describe'   => '\Flexio\Api2\Connection::describe',
         'POS /:userid/connections/:objeid/connect'    => '\Flexio\Api2\Connection::connect',
         'POS /:userid/connections/:objeid/disconnect' => '\Flexio\Api2\Connection::disconnect',
 

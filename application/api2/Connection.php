@@ -205,46 +205,6 @@ class Connection
         return $result;
     }
 
-    public static function describe(\Flexio\Api2\Request $request) : array
-    {
-        $query_params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-        $connection_eid = $request->getObjectFromUrl();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($query_params, array(
-                'q' => array('type' => 'string', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_query_params = $validator->getParams();
-        $path = $validated_query_params['q'] ?? '';
-
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $connection = \Flexio\Object\Connection::load($connection_eid);
-        if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the connection items
-        $service = $connection->getService();
-        if (!$service)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        $result = $service->list($path);
-        if (!is_array($result))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        return $result;
-    }
-
     public static function connect(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
