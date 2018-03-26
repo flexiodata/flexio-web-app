@@ -91,8 +91,19 @@ class Token
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
 
         // check the rights on the owner; ability to read token info is governed
         // currently by user read privileges
@@ -106,6 +117,7 @@ class Token
         $result = array();
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
         $tokens = \Flexio\Object\Token::list($filter);
 
         foreach ($tokens as $t)

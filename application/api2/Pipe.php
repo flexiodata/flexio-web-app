@@ -227,8 +227,19 @@ class Pipe
 
     public static function list(\Flexio\Api2\Request $request) : array
     {
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
 
         // make sure the owner exists
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -239,6 +250,7 @@ class Pipe
         $result = array();
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
         $pipes = \Flexio\Object\Pipe::list($filter);
 
         foreach ($pipes as $p)
@@ -259,11 +271,14 @@ class Pipe
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
 
+        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false)
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -285,6 +300,7 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $pipe_eid);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
         $processes = \Flexio\Object\Process::list($filter);
 
         // get the processes that are accessible
