@@ -99,7 +99,7 @@ class Token extends ModelBase
         $rows = array();
         try
         {
-            $query = "select * from tbl_token where $filter_expr order by created";
+            $query = "select * from tbl_token where ($filter_expr) order by id";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

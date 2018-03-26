@@ -121,7 +121,7 @@ class Process extends ModelBase
         $rows = array();
         try
         {
-            $query = "select * from tbl_process where $filter_expr";
+            $query = "select * from tbl_process where ($filter_expr) order by id";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

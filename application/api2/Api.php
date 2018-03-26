@@ -53,6 +53,7 @@ class Api
     //   v1: GET /admin/extract => v2: (removed)
     // * removed /connections/:eid/describe; connection items are now retrieved through VFS
     //   v1: GET /connections/:eid/describe => v2: (removed)
+    // * most list-type API endpoints now support created_min and created_max for date range limits
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?

@@ -225,7 +225,7 @@ class Connection extends ModelBase
         $rows = array();
         try
         {
-            $query = "select * from tbl_connection where $filter_expr";
+            $query = "select * from tbl_connection where ($filter_expr) order by id";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
