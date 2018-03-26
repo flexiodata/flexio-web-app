@@ -64,6 +64,14 @@ class Api
 
     // TODO: rename vfs endpoint to files?
 
+    // TODO: should processes run with pipe owner privileges; what about case where two
+    // users are running the same pipe; doesn't seem like each should see the output for
+    // the last time it ran for the other; if so, maybe processes should run with privileges
+    // of the process owner, which could be the requesting user; we have the following endpoints
+    // which would need to be sorted out:
+    // 'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
+    // 'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Pipe::processes',
+
 
     private static $endpoints = array(
 
