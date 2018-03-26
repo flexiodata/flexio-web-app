@@ -234,6 +234,9 @@ class Pipe
         // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
                 'created_min' => array('type' => 'date', 'required' => false),
                 'created_max' => array('type' => 'date', 'required' => false)
             ))->hasErrors()) === true)
@@ -283,9 +286,6 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_query_params = $validator->getParams();
-        $start = isset($validated_query_params['start']) ? (int)$validated_query_params['start'] : null;
-        $tail = isset($validated_query_params['tail']) ? (int)$validated_query_params['tail'] : null;
-        $limit = isset($validated_query_params['limit']) ? (int)$validated_query_params['limit'] : null;
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -314,10 +314,6 @@ class Pipe
 
             $processes_accessible[] = $p;
         }
-
-        // get the subset of the processes for any start/tail/limit
-        if (isset($start) || isset($tail) || isset($limit))
-            $processes_accessible = self::filter($processes_accessible, $start, $tail, $limit);
 
         // get the content for the selected processes
         $result = array();
@@ -402,35 +398,6 @@ class Pipe
 
         echo($content);
         exit(0);
-    }
-
-    private static function filter(array $items, int $start = null, int $tail = null, int $limit = null) : array
-    {
-        // if limit isn't defined, set it to the largest integer size
-        if (!isset($limit))
-            $limit = PHP_INT_MAX;
-
-        if ($limit < 0)
-            $limit = 0;
-
-        // if start is specified, supercede any tail
-        if (isset($start))
-        {
-            if ($start < 0)
-                $start = 0;
-            return array_slice($items, $start, $limit);
-        }
-
-        if (isset($tail))
-        {
-            $cnt = count($items);
-            if ($tail > $cnt )
-                $tail = $cnt + 1 ;
-            return array_slice($items, $cnt - $tail - 1, $limit);
-        }
-
-        // no start or tail; start at zero and return the limit
-        return array_slice($items, 0, $limit);
     }
 
     private static function get_internal($object)

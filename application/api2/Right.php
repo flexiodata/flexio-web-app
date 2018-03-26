@@ -280,6 +280,9 @@ class Right
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
                 'created_min' => array('type' => 'date', 'required' => false),
                 'created_max' => array('type' => 'date', 'required' => false)
             ))->hasErrors()) === true)

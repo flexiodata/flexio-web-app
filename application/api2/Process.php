@@ -263,6 +263,9 @@ class Process
         // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
                 'created_min' => array('type' => 'date', 'required' => false),
                 'created_max' => array('type' => 'date', 'required' => false)
             ))->hasErrors()) === true)
