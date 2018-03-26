@@ -72,6 +72,8 @@ class Api
     // 'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
     // 'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Pipe::processes',
 
+    // TODO: do we need the stream API, or can we get the content exclusively through VFS
+
 
     private static $endpoints = array(
 
