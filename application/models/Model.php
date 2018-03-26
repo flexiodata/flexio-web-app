@@ -17,7 +17,7 @@ require_once __DIR__ . '/../base/Db.php';
 require_once 'ModelBase.php';
 
 
-class Filter extends ModelBase
+class Filter
 {
     public static function build($db, array $filter_items, array $allowed_items) : string
     {
@@ -77,6 +77,32 @@ class Filter extends ModelBase
         }
 
         return $filter_expr;
+    }
+}
+
+class Limit
+{
+    public static function build($db, array $limit_items) : string
+    {
+        $limit_expr = '';
+
+        if (isset($limit_items['limit']))
+        {
+            $limit = (int)$limit_items['limit'];
+            if ($limit < 0)
+                $limit = 0;
+            $limit_expr .= ' limit ' . $db->quote($limit);
+        }
+
+        if (isset($limit_items['start']))
+        {
+            $start = (int)$limit_items['start'];
+            if ($start < 0)
+                $start = 0;
+            $limit_expr .= ' offset ' . $db->quote($start);
+        }
+
+        return $limit_expr;
     }
 }
 

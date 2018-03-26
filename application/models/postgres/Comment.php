@@ -95,11 +95,12 @@ class Comment extends ModelBase
         $db = $this->getDatabase();
         $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_comment where ($filter_expr) order by id";
+            $query = "select * from tbl_comment where ($filter_expr) order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)
