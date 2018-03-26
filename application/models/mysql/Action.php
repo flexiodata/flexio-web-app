@@ -89,7 +89,7 @@ class Action extends ModelBase
         $rows = array();
         try
         {
-            $query = "select * from tbl_action where ($filter_expr) order by id $limit_expr";
+            $query = "select * from tbl_action where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

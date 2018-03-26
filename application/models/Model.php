@@ -76,6 +76,9 @@ class Filter
             }
         }
 
+        if (strlen($filter_expr) > 0)
+            $filter_expr = '(' . $filter_expr . ')';
+
         return $filter_expr;
     }
 }
