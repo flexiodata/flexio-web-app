@@ -49,9 +49,9 @@ class Test
         $list_target = json_decode('{"op": "list", "params": {"path": "'. $target_directory . '"}}',true);
         $process_copy = \Flexio\Jobs\Process::create()->execute($copy);
         $process_list_source = \Flexio\Jobs\Process::create()->execute($list_source);
-        $process_list_target = \Flexio\Jobs\Process::create()->execute($list);
-        $actual_contents = \Flexio\Base\Util::getStreamContents($process_list_source->getStdout());
-        $expected_contents = \Flexio\Base\Util::getStreamContents($process_expected_contents->getStdout());
-        \Flexio\Tests\Check::assertArray("A.1", 'Copy; compare contents of copied folder ' . $output_folder, $actual, $expected, $results);
+        $process_list_target = \Flexio\Jobs\Process::create()->execute($list_target);
+        $actual_contents = \Flexio\Base\Util::getStreamContents($process_list_target->getStdout());
+        $expected_contents = \Flexio\Base\Util::getStreamContents($process_list_source->getStdout());
+        \Flexio\Tests\Check::assertArray("A.1", "Copy; compare contents of copied folder $target_directory with source folder $source_directory", $actual, $expected, $results);
     }
 }
