@@ -412,11 +412,16 @@ class User extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        $role = $this->getDatabase()->fetchOne("select role from tbl_user where eid = ?", $eid);
-        if ($role === false)
+        $row = $this->getDatabase()->fetchRow("select email, role from tbl_user where eid = ?", $eid);
+        if ($row === false)
             return false;
 
-        if ($role === \Model::ROLE_ADMINISTRATOR)
+        if ($row['role'] !== \Model::ROLE_ADMINISTRATOR)
+            return false;
+
+        // for now, add additional check to make sure the email is a flexio email
+        $email = $row['email'];
+        if (preg_match('/^[a-z]+@flex\.io$/i', $email))
             return true;
 
         return false;
