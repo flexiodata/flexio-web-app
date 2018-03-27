@@ -127,7 +127,7 @@ class Admin
         unlink($filezip);
     }
 
-    public static function getUserList(\Flexio\Api1\Request $request) : array
+    public static function userlist(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -139,11 +139,13 @@ class Admin
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $user_list = \Flexio\System\System::getModel()->user->getUserList();
+        $users = \Flexio\Object\Users::list();
 
         $result = array();
-        foreach ($user_list as $u)
+        foreach ($users as $userobj)
         {
+            $u = $userobj->get();
+
             $user_info = array();
             $user_info['eid'] = $u['eid'] ?? '';
             $user_info['user_name'] = $u['user_name'] ?? '';

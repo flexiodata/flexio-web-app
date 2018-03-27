@@ -272,12 +272,6 @@ class User extends ModelBase
         return $result;
     }
 
-    public function getUserList()
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-    }
-
     public function getVerifyCodeFromEid(string $eid) // TODO: add return type
     {
         if (!\Flexio\Base\Eid::isValid($eid))
