@@ -23,15 +23,6 @@ class Action
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter on one of the indexed fields
-        foreach ($filter as $key => $value)
-        {
-            if (isset($filter['eid'])) break;
-            if (isset($filter['owned_by'])) break;
-
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-
         $object = new static();
         $action_model = $object->getModel()->action;
         $items = $action_model->list($filter);

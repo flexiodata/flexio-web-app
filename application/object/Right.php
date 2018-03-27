@@ -59,15 +59,6 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter on one of the indexed fields
-        foreach ($filter as $key => $value)
-        {
-            if (isset($filter['eid'])) break;
-            if (isset($filter['owned_by'])) break;
-
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-
         $object = new static();
         $right_model = $object->getModel()->right;
         $items = $right_model->list($filter);

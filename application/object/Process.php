@@ -39,16 +39,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-        // make sure we have a filter on some type of indexed field
-        foreach ($filter as $key => $value)
-        {
-            if (isset($filter['eid'])) break;
-            if (isset($filter['owned_by'])) break;
-            if (isset($filter['parent_eid'])) break;
-
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-
         $object = new static();
         $process_model = $object->getModel()->process;
         $items = $process_model->list($filter);

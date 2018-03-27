@@ -59,18 +59,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function list(array $filter) : array
     {
-/*
-        // make sure we have a filter on one of the indexed fields
-        foreach ($filter as $key => $value)
-        {
-            if (isset($filter['eid'])) break;
-            if (isset($filter['owned_by'])) break;
-            if (isset($filter['user_name'])) break;
-            if (isset($filter['email'])) break;
-
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-*/
         $object = new static();
         $user_model = $object->getModel()->user;
         $items = $user_model->list($filter);
