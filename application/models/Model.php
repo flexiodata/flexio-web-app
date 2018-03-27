@@ -165,6 +165,9 @@ class Model
     const PIPE_STATUS_ACTIVE     = 'A';
     const PIPE_STATUS_INACTIVE   = 'I';
 
+    const ROLE_UNDEFINED     = '';
+    const ROLE_ADMINISTRATOR = 'A';
+
     private $objs = array();
     private $database = null;
     private $dbtype = '';

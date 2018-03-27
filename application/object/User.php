@@ -250,23 +250,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function isAdministrator() : bool
     {
-        // TODO: for now, administrators is any user with an email address for flexio,
-        // except for certain reserved test emails
-
-        $user_info = $this->get();
-        $user_email = $user_info['email'];
-
-        // exclude these flexio email addresses:
-        if (preg_match('/^example@flex\.io$/i', $user_email))
-            return false;
-        if (preg_match('/^test@flex\.io$/i', $user_email))
-            return false;
-
-        // include these flexio email addresses:
-        if (preg_match('/^[a-z]+@flex\.io$/i', $user_email))
-            return true;
-
-        return false;
+        return $this->getModel()->user->isAdministrator($this->getEid());
     }
 
     public function getProfilePicture()

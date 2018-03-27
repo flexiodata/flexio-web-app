@@ -407,6 +407,21 @@ class User extends ModelBase
         }
     }
 
+    public function isAdministrator(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $role = $this->getDatabase()->fetchOne("select role from tbl_user where eid = ?", $eid);
+        if ($role === false)
+            return false;
+
+        if ($role === \Model::ROLE_ADMINISTRATOR)
+            return true;
+
+        return false;
+    }
+
     private static function encodePassword(string $password) : string
     {
         return '{SSHA}' . self::hashPasswordSHA1($password);
