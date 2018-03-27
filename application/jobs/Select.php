@@ -116,7 +116,11 @@ class Select extends \Flexio\Jobs\Base
         $output_structure = $instream->getStructure()->enum($columns);
         if (count($output_structure) == 0)
         {
-            $output_structure[] = [ "name" => "no_columns", "type" => "text" ];
+            // this was option 1. Create empty output structure
+            //$output_structure[] = [ "name" => "no_columns", "type" => "text" ];
+
+            // this is option 2. Strict, don't allow zero-column tables
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Zero-column tables are not allowed");
         }
 
         $outstream->set(['structure' => $output_structure,
