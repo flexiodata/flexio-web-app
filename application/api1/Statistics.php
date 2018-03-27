@@ -34,7 +34,7 @@ class Statistics
         if ($user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $stats = \Flexio\System\System::getModel()->process->getUserProcessStats($requesting_user_eid);
+        $stats = \Flexio\System\System::getModel()->process->summary($requesting_user_eid);
 
         $result = array();
         foreach ($stats as $s)

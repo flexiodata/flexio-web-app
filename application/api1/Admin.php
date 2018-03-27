@@ -170,7 +170,7 @@ class Admin
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $stats = \Flexio\System\System::getModel()->process->getUserProcessStats();
+        $stats = \Flexio\System\System::getModel()->process->summary();
 
         $result = array();
         foreach ($stats as $s)

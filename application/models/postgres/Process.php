@@ -112,6 +112,58 @@ class Process extends ModelBase
         }
     }
 
+    public function summary(string $user_eid = null) : array
+    {
+        // returns the number of processes per pipe per day for a particular owner,
+        // along with the average and total times for those processes
+
+        $db = $this->getDatabase();
+        try
+        {
+            $filter_condition = "true";
+            if (isset($user_eid))
+            {
+                $quser_eid = $db->quote($user_eid);
+                $filter_condition .= " and tpr.owned_by = $quser_eid";
+            }
+
+            $sql = "select tpr.owned_by as owned_by, ".
+            "              tpr.parent_eid as parent_eid, ".  // parent_eid is the pipe
+            "              tpr.created::DATE as created, ".
+            "              avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
+            "              sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
+            "              count(*) as total_count ".
+            "       from tbl_process tpr ".
+            "       where $filter_condition ".
+            "       group by tpr.owned_by, tpr.parent_eid, tpr.created::DATE ".
+            "       order by created, parent_eid ";
+            $rows = $db->fetchAll($sql);
+         }
+         catch (\Exception $e)
+         {
+
+
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $parent_eid = '';
+            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
+                $parent_eid = $row['parent_eid'];
+
+            $output[] = array('user_eid'     => $row['owned_by'],
+                              'pipe_eid'     => $parent_eid,        // pipe eid if it exists; if anonymous process, then 'anonymous'
+                              'created'      => $row['created'],
+                              'total_count'  => $row['total_count'],
+                              'total_time'   => $row['total_time'],
+                              'average_time' => $row['average_time']);
+        }
+
+        return $output;
+    }
+
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
@@ -343,58 +395,6 @@ class Process extends ModelBase
                               'message'          => $row['message'],
                               'created'          => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'          => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
-    }
-
-    public function getUserProcessStats(string $user_eid = null) : array
-    {
-        // returns the number of processes per pipe per day for a particular owner,
-        // along with the average and total times for those processes
-
-        $db = $this->getDatabase();
-        try
-        {
-            $filter_condition = "true";
-            if (isset($user_eid))
-            {
-                $quser_eid = $db->quote($user_eid);
-                $filter_condition .= " and tpr.owned_by = $quser_eid";
-            }
-
-            $sql = "select tpr.owned_by as owned_by, ".
-            "              tpr.parent_eid as parent_eid, ".  // parent_eid is the pipe
-            "              tpr.created::DATE as created, ".
-            "              avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
-            "              sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
-            "              count(*) as total_count ".
-            "       from tbl_process tpr ".
-            "       where $filter_condition ".
-            "       group by tpr.owned_by, tpr.parent_eid, tpr.created::DATE ".
-            "       order by created, parent_eid ";
-            $rows = $db->fetchAll($sql);
-         }
-         catch (\Exception $e)
-         {
-
-
-             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-         }
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $parent_eid = '';
-            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
-                $parent_eid = $row['parent_eid'];
-
-            $output[] = array('user_eid'     => $row['owned_by'],
-                              'pipe_eid'     => $parent_eid,        // pipe eid if it exists; if anonymous process, then 'anonymous'
-                              'created'      => $row['created'],
-                              'total_count'  => $row['total_count'],
-                              'total_time'   => $row['total_time'],
-                              'average_time' => $row['average_time']);
         }
 
         return $output;
