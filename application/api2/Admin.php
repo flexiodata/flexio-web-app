@@ -50,7 +50,7 @@ class Admin
         return $result;
     }
 
-    public static function processes(\Flexio\Api2\Request $request) : array
+    public static function process(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -131,7 +131,7 @@ class Admin
         return $result;
     }
 
-    public static function getConfiguration(\Flexio\Api2\Request $request) : array
+    public static function config(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
 

@@ -297,7 +297,7 @@ class Api
             case 'GET /admin/extract'                  : return '\Flexio\Api1\Admin::getExtract';
             case 'GET /admin/list/users'               : return '\Flexio\Api1\Admin::userlist';
             case 'GET /admin/statistics/users'         : return '\Flexio\Api1\Admin::processes';
-            case 'GET /admin/configuration'            : return '\Flexio\Api1\Admin::getConfiguration';
+            case 'GET /admin/configuration'            : return '\Flexio\Api1\Admin::config';
             case 'GET /admin/resetconfig'              : return '\Flexio\Api1\User::resetConfig';    // resets the user configuration
             case 'GET /admin/createexamples'           : return '\Flexio\Api1\User::createExamples'; // creates example pipes
 

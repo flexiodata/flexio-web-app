@@ -242,7 +242,7 @@ class Admin
         return $result;
     }
 
-    public static function getConfiguration(\Flexio\Api1\Request $request) : array
+    public static function config(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
