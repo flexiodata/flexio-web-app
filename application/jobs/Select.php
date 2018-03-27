@@ -59,8 +59,8 @@ class Select extends \Flexio\Jobs\Base
     private function processJson(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
     {
         // get the selected columns
-        $job_definition = $this->getProperties();
-        $columns = $job_definition['params']['columns'] ?? null;
+        $params = $this->getJobParameters();
+        $columns = $params['columns'] ?? null;
         if (!is_array($columns))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
@@ -108,13 +108,16 @@ class Select extends \Flexio\Jobs\Base
     private function processTable(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
     {
         // get the selected columns
-        $job_definition = $this->getProperties();
-        $columns = $job_definition['params']['columns'] ?? null;
+        $params = $this->getJobParameters();
+        $columns = $params['columns'] ?? null;
         if (!is_array($columns))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         $output_structure = $instream->getStructure()->enum($columns);
-
+        if (count($output_structure) == 0)
+        {
+            $output_structure[] = [ "name" => "no_columns", "type" => "text" ];
+        }
 
         $outstream->set(['structure' => $output_structure,
                          'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE]);

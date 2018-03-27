@@ -200,7 +200,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
     private function applyStructureToRow(array $row) : array
     {
-        if (count($this->storefield_map) > 0)
+        if ($this->storefield_map !== null && count($this->storefield_map) > 0)
         {
             // rename any store column names back to column names user expects
             $newrow = [];
@@ -215,7 +215,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             $row = $newrow;
         }
 
-        if (count($this->keyed_structure) > 0)
+        if ($this->keyed_structure !== null && count($this->keyed_structure) > 0)
         {
             foreach ($row as $col => &$value)
             {
