@@ -294,7 +294,6 @@ class Api
             case 'GET /statistics/processes'           : return '\Flexio\Api1\Statistics::processes';
 
             // ADMIN (internal):
-            case 'GET /admin/extract'                  : return '\Flexio\Api1\Admin::getExtract';
             case 'GET /admin/list/users'               : return '\Flexio\Api1\Admin::userlist';
             case 'GET /admin/statistics/users'         : return '\Flexio\Api1\Admin::processes';
             case 'GET /admin/configuration'            : return '\Flexio\Api1\Admin::config';
