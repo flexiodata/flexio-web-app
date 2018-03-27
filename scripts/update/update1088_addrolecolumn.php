@@ -49,11 +49,12 @@ if (is_null($db))
 try
 {
     // STEP 1: add the new field
-    $sql = <<<EOT
-        alter table tbl_user
-            add column role varchar(1) NOT NULL default ''
-EOT;
-    $db->exec($sql);
+    $db->exec("alter table tbl_user add column role varchar(1) NOT NULL default '';");
+
+    // STEP 2: grant roles
+    // const ROLE_UNDEFINED     = '';
+    // const ROLE_ADMINISTRATOR = 'A';
+    $db->exec("update tbl_user set role = 'A' where email IN ('aaron@flex.io', 'ben@flex.io', 'dave@flex.io', 'nate@flex.io', 'ken@flex.io');");
 }
 catch(\Exception $e)
 {
