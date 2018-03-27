@@ -158,7 +158,7 @@ class Admin
         return $result;
     }
 
-    public static function getUserProcessStats(\Flexio\Api1\Request $request) : array
+    public static function processes(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

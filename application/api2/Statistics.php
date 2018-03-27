@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Statistics
 {
-    public static function getUserProcessStats(\Flexio\Api2\Request $request) : array
+    public static function processes(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();

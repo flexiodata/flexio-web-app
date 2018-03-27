@@ -146,13 +146,13 @@ class Api
         'PUT /:userid/vfs/*'                          => '\Flexio\Api2\Vfs::put',
 
         // statistics
-        'GET /:userid/statistics/processes'           => '\Flexio\Api2\Statistics::getUserProcessStats',
+        'GET /:userid/statistics/processes'           => '\Flexio\Api2\Statistics::processes',
 
         // INTERNAL ENDPOINTS
 
         // admin
         'GET /admin/list/users'                       => '\Flexio\Api2\Admin::getUserList',
-        'GET /admin/statistics/users'                 => '\Flexio\Api2\Admin::getUserProcessStats',
+        'GET /admin/statistics/users'                 => '\Flexio\Api2\Admin::processes',
         'GET /admin/configuration'                    => '\Flexio\Api2\Admin::getConfiguration',
         'GET /admin/resetconfig'                      => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
 

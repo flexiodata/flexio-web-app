@@ -291,12 +291,12 @@ class Api
             case 'GET /streams/:eid/content'           : return '\Flexio\Api1\Stream::content';
 
             // statistics
-            case 'GET /statistics/processes'           : return '\Flexio\Api1\Statistics::getUserProcessStats';
+            case 'GET /statistics/processes'           : return '\Flexio\Api1\Statistics::processes';
 
             // ADMIN (internal):
             case 'GET /admin/extract'                  : return '\Flexio\Api1\Admin::getExtract';
             case 'GET /admin/list/users'               : return '\Flexio\Api1\Admin::getUserList';
-            case 'GET /admin/statistics/users'         : return '\Flexio\Api1\Admin::getUserProcessStats';
+            case 'GET /admin/statistics/users'         : return '\Flexio\Api1\Admin::processes';
             case 'GET /admin/configuration'            : return '\Flexio\Api1\Admin::getConfiguration';
             case 'GET /admin/resetconfig'              : return '\Flexio\Api1\User::resetConfig';    // resets the user configuration
             case 'GET /admin/createexamples'           : return '\Flexio\Api1\User::createExamples'; // creates example pipes
