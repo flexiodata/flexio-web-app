@@ -63,6 +63,7 @@ CREATE TABLE tbl_user (
   password varchar(80) NOT NULL default '',
   verify_code varchar(40) NOT NULL default '',
   config json,
+  role varchar(1) NOT NULL default '',
   owned_by varchar(12) NOT NULL default '',
   created_by varchar(12) NOT NULL default '',
   created timestamp NULL default NULL,
