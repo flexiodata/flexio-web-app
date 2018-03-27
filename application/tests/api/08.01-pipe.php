@@ -31,10 +31,10 @@ class Test
             "description": "Test pipe"
         }
         ',true);
-        $request = \Flexio\Api\Request::create();
+        $request = \Flexio\Api1\Request::create();
         $request->setPostParams($params);
         $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
-        $actual = \Flexio\Api\Pipe::create($request);
+        $actual = \Flexio\Api1\Pipe::create($request);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_PIPE.'",
@@ -42,6 +42,6 @@ class Test
             "description": "Test pipe"
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\Pipe::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\Pipe::create(); return the object',  $actual, $expected, $results);
     }
 }

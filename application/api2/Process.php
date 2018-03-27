@@ -1,0 +1,497 @@
+<?php
+/**
+ *
+ * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
+ *
+ * Project:  Flex.io App
+ * Author:   Aaron L. Williams
+ * Created:  2016-04-07
+ *
+ * @package flexio
+ * @subpackage Api
+ */
+
+
+declare(strict_types=1);
+namespace Flexio\Api2;
+
+
+class Process
+{
+    public static function create(\Flexio\Api2\Request $request) : array
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $pipe_eid = $request->getObjectFromUrl();
+
+        // note: the parent_eid parameter needs to be an eid because we
+        // don't know if it's coming outside the owner namespace; we
+        // may need to convert this over to a full URL path that includes
+        // owner info
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'parent_eid'   => array('type' => 'eid', 'required' => false),
+                'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
+                'task'         => array('type' => 'object', 'required' => false),
+                'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
+                'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
+                'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_post_params = $validator->getParams();
+        $process_params = $validated_post_params;
+        $background = toBoolean($validated_post_params['background']);
+        $debug = toBoolean($validated_post_params['debug']);
+        $autorun = toBoolean($validated_post_params['run']);
+
+        // processes can be created from the following endpoints; check for both, giving
+        // procedence to the pipe endpoint;
+        // 'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
+        // 'POS /:userid/processes'                      => '\Flexio\Api2\Process::create',
+        if (strlen($pipe_eid) === 0 && isset($validated_post_params['parent_eid']))
+            $pipe_eid = $validated_post_params['parent_eid'];
+
+        // note: in pipes and connections, the ability to create is goverend by
+        // the user; the ability to create a process is goverend by execute
+        // rights on the pipe; if the process is anonymous, it's goverend by
+        // the ability to write to the user, simliar to pipes and connections
+
+        // check rights
+        $pipe = false;
+        if ($pipe_eid !== '')
+        {
+            // load the object; make sure the eid is associated with the owner
+            // as an additional check; note: the pipe may not have the same
+            // owner is the owner that the process is being created for
+            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+
+            // we're getting the logic from the pipe, and we're associating the process with
+            // the pipe, so we should have both read/write access to the pipe;
+            if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        }
+
+        if ($pipe !== false)
+        {
+            // TODO: we have the following two cases; should both of these run
+            // with pipe owner privileges or with the base :userid privileges?
+            // right now, we're using pipe owner privileges, but does this make
+            // sense for both? the pipe owner is in the path for the first, but
+            // the second, the owner of the pipe may be different than the user
+            // in the root of the URL
+            // POST /:userid/pipes/:pipeid/processes
+            // POST /:userid/processes?parent_eid=:pipeid
+
+            // if the process is created from a pipe, it runs with pipe owner
+            // privileges and inherits the rights from the pipe
+            $process_params['parent_eid'] = $pipe->getEid();
+            $process_params['owned_by'] = $pipe->getOwner();
+            $process_params['created_by'] = $requesting_user_eid;
+
+            // use the task of the parent, unless a task is specified directly,
+            // in which case use the task that's specified to allow runtime
+            // parameters to be set on the pipe that override the pipe variables
+            // TODO: is this still correct?
+            if (!isset($process_params['task']))
+                $process_params['task'] = $pipe->getTask();
+        }
+        else
+        {
+            // if the process is created independent of a pipe, it runs for
+            // the owner user being posted to
+            $process_params['owned_by'] = $owner_user_eid;
+            $process_params['created_by'] = $requesting_user_eid;
+        }
+
+        // create a new process job with the default task
+        $process = \Flexio\Object\Process::create($process_params);
+
+        // if the process is created from a pipe, it runs with pipe owner privileges
+        // and inherits the rights from the pipe
+        if ($pipe !== false)
+            $process->setRights($pipe->getRights());
+
+        // run the process and return the process info
+        if ($autorun === true)
+        {
+            $engine = \Flexio\Jobs\StoredProcess::create($process);
+            $engine->run($background);
+        }
+
+        return $process->get();
+    }
+
+    public static function delete(\Flexio\Api2\Request $request) : array
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $process->delete();
+
+        $result = array();
+        $result['eid'] = $process->getEid();
+        $result['eid_type'] = $process->getType();
+        $result['eid_status'] = $process->getStatus();
+        return $result;
+    }
+
+    public static function set(\Flexio\Api2\Request $request) : array
+    {
+        $post_params = $request->getPostParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'task' => array('type' => 'object', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_post_params = $validator->getParams();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // TODO: we shouldn't allow the task to be set if the process is anything
+        // past the initial pending state
+
+        // set the properties
+        $process->set($validated_params);
+        return $process->get();
+    }
+
+    public static function get(\Flexio\Api2\Request $request) : array
+    {
+        $query_params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'wait' => array('type' => 'integer', 'required' => false), // how long to block (milliseconds) until a change is detected
+                'status' => array('type' => 'boolean', 'required' => false, 'default' => false) // false returns everything; true only the process info
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
+        $process_info_only = toBoolean($validated_query_params['status']);
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // if no wait period is specified, return the information immediately
+        if (!isset($validated_query_params['wait']))
+        {
+            $process_info = $process->get();
+
+            if ($process_info_only === true)
+            {
+                $result = array();
+                $result['eid'] = $process_info['eid'];
+                $result['process_status'] = $process_info['process_status'];
+                $result['process_info'] = $process_info['process_info'];
+                return $result;
+            }
+
+            return $process_info;
+        }
+
+        // wait for any changes, then reload process to refresh the data
+        $wait_for_change = $validated_query_params['wait'];
+        self::waitforchangewhilerunning($process_eid, $wait_for_change);
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        $process_info = $process->get();
+
+        if ($process_info_only === true)
+        {
+            $result = array();
+            $result['eid'] = $process_info['eid'];
+            $result['process_status'] = $process_info['process_status'];
+            $result['process_info'] = $process_info['process_info'];
+            return $result;
+        }
+
+        return $process_info;
+    }
+
+    public static function list(\Flexio\Api2\Request $request) : array
+    {
+        $query_params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
+
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // get the processes
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $processes = \Flexio\Object\Process::list($filter);
+
+        $result = array();
+        foreach ($processes as $p)
+        {
+            if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                continue;
+
+            $process_info = $p->get();
+
+            $process_info_subset = array();
+            $process_info_subset['eid'] = $process_info['eid'];
+            $process_info_subset['eid_type'] = $process_info['eid_type'];
+            $process_info_subset['eid_status'] = $process_info['eid_status'];
+            $process_info_subset['parent'] = $process_info['parent'] ?? null;
+            $process_info_subset['started_by'] = $process_info['started_by'];
+            $process_info_subset['started'] = $process_info['started'];
+            $process_info_subset['finished'] = $process_info['finished'];
+            $process_info_subset['duration'] = $process_info['duration'];
+            $process_info_subset['process_status'] = $process_info['process_status'];
+            $process_info_subset['owned_by'] = $process_info['owned_by'];
+            $process_info_subset['created'] = $process_info['created'];
+            $process_info_subset['updated'] = $process_info['updated'];
+
+            $result[] = $process_info_subset;
+        }
+
+        return $result;
+    }
+
+    public static function log(\Flexio\Api2\Request $request) : array
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $log = $process->getLog();
+        return $log;
+    }
+
+    public static function run(\Flexio\Api2\Request $request) : array
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // create a job engine, attach it to the process object
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+
+        // parse the request content and set the stream info
+        $php_stream_handle = fopen('php://input', 'rb');
+        $post_content_type = $_SERVER['CONTENT_TYPE'] ?? '';
+        \Flexio\Base\Util::addProcessInputFromStream($php_stream_handle, $post_content_type, $engine);
+
+        // run the process
+        $engine->run(false  /*true: run in background*/);
+
+        if ($engine->hasError())
+        {
+            header('Content-Type: application/json', true, 500);
+            $content = json_encode($engine->getError());
+            echo $content;
+            exit(0);
+        }
+
+        $stream = $engine->getStdout();
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        $mime_type = $stream_info['mime_type'];
+        $start = 0;
+        $limit = PHP_INT_MAX;
+        $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+        $response_code = $engine->getResponseCode();
+
+        if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            // return content as-is
+            header('Content-Type: ' . $mime_type, true, $response_code);
+        }
+        else
+        {
+            // flexio table; return application/json in place of internal mime
+            header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
+            $content = json_encode($content);
+        }
+
+        echo($content);
+        exit(0);
+    }
+
+    public static function cancel(\Flexio\Api2\Request $request) : array
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $process_eid = $request->getObjectFromUrl();
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $process = \Flexio\Object\Process::load($process_eid);
+        if ($owner_user_eid !== $process->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
+        if ($process->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $process->cancel();
+
+        // return a subset of the info (cancel is paired with running, so uses execute
+        // privileges and we don't want to leak process info if only execute privileges
+        // are given)
+        $process_info = $process->get();
+
+        $result = array();
+        $result['eid'] = $process_info['eid'];
+        $result['process_status'] = $process_info['process_status'];
+        $result['process_info'] = $process_info['process_info'];
+
+        return $result;
+    }
+
+    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type
+    {
+        // TODO: move part of implemention to some type of function
+        // on the object?  e.g. $object->hasChanged() so we can cache
+        // non-changed portions of the object in the object layer (right
+        // now, we don't cache the process status so that we always have
+        // a fresh status since it's being updated by another process;
+        // but as a consequence, we don't cache any of the other process
+        // values either, many of which won't change (e.g. list of tasks))
+
+        // $wait_for_change is how long to wait for a change (milliseconds)
+        // before returning what we have
+
+        $minimum_wait = 0;
+        $maximum_wait = 10000; // wait 10 seconds before returning
+        $wait_interval = 100;  // check for changes every 100 milliseconds
+        $time_to_wait_for_change = $time_to_wait_for_change;
+
+        if ($time_to_wait_for_change <= $minimum_wait)
+            $time_to_wait_for_change = $minimum_wait;
+        if ($time_to_wait_for_change > $maximum_wait)
+            $time_to_wait_for_change = $maximum_wait;
+
+        $process = false;
+        try
+        {
+            $process = \Flexio\Object\Process::load($eid);
+            if ($process->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        if ($process === false)
+            return;
+
+        $status_initial = $process->getProcessStatus();
+
+        // if the job is cancelled, failed, or completed, then it's in
+        // the final state, so there's nothing to wait for
+        if ($status_initial === \Flexio\Jobs\Process::STATUS_CANCELLED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_FAILED ||
+            $status_initial === \Flexio\Jobs\Process::STATUS_COMPLETED)
+            return;
+
+        $time_waited = 0;
+        while (true)
+        {
+            usleep($wait_interval*1000);
+            $time_waited += $wait_interval;
+
+            // if the time is up, return what we have
+            if ($time_waited > $time_to_wait_for_change)
+                return;
+
+            $status_current = $process->getProcessStatus();
+
+            // compare the states of the two proces instances; use !=
+            // for value comparison rather than instance comparison
+            if ($status_current != $status_initial)
+                return;
+        }
+    }
+}

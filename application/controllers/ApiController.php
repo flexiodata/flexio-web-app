@@ -33,6 +33,14 @@ class ApiController extends \Flexio\System\FxControllerAction
         $post_params = $request->getPostParams();
 
 
+        // see if we can find the api version
+        $apiversion = '';
+        if ($request->getUrlPathPart(1) == 'v1') // v1 api path:  www.flex.io/api/v1
+            $apiversion = 'v1';
+        else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/1; for now we have www.flex.io/api/v2
+            $apiversion = 'v2';
+
+
 
         if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false)
         {
@@ -143,7 +151,14 @@ class ApiController extends \Flexio\System\FxControllerAction
             }
 
             // process the request
-            \Flexio\Api\Api::request($request, $query_params, $post_params);
+            switch ($apiversion)
+            {
+                default:
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
+
+                case 'v1': \Flexio\Api1\Api::request($request, $query_params, $post_params); break;
+                case 'v2': \Flexio\Api2\Api::request($request, $query_params, $post_params); break;
+            }
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -163,7 +178,7 @@ class ApiController extends \Flexio\System\FxControllerAction
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api\Response::sendError($error);
+            \Flexio\Api1\Response::sendError($error);
         }
     }
 }

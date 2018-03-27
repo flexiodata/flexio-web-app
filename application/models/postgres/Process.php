@@ -115,43 +115,14 @@ class Process extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
-        if (isset($filter['parent_eid']))
-            $filter_expr .= (' and parent_eid = ' . $db->quote($filter['parent_eid']));
-
-        if (isset($filter['created_min']))
-        {
-            $date = $filter['created_min'];
-            $date = strtotime($date);
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and created >= ' . $db->quote($date_clean));
-            }
-        }
-        if (isset($filter['created_max']))
-        {
-            $date = $filter['created_max'];
-            $date = strtotime($date . ' + 1 days');
-            if ($date !== false)
-            {
-                $date_clean = date('Y-m-d', $date);
-                $filter_expr .= (' and created < ' . $db->quote($date_clean)); // created is a timestamp, so use < on the next day
-            }
-        }
+        $allowed_items = array('eid', 'eid_status', 'parent_eid', 'owned_by', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_process where $filter_expr";
+            $query = "select * from tbl_process where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

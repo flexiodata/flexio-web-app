@@ -17,6 +17,98 @@ require_once __DIR__ . '/../base/Db.php';
 require_once 'ModelBase.php';
 
 
+class Filter
+{
+    public static function build($db, array $filter_items, array $allowed_items) : string
+    {
+        $allowed_item_keys = array_flip($allowed_items);
+
+        // build the filter
+        $filter_expr = 'true';
+        if (isset($filter_items['eid']) && array_key_exists('eid', $allowed_item_keys))
+            $filter_expr .= (' and (eid = ' . $db->quote($filter_items['eid']) . ')');
+
+        if (isset($filter_items['eid_status']) && array_key_exists('eid_status', $allowed_item_keys))
+            $filter_expr .= (' and (eid_status = ' . $db->quote($filter_items['eid_status']) . ')');
+
+        if (isset($filter_items['owned_by']) && array_key_exists('owned_by', $allowed_item_keys))
+            $filter_expr .= (' and (owned_by = ' . $db->quote($filter_items['owned_by']) . ')');
+
+        if (isset($filter_items['parent_eid']) && array_key_exists('parent_eid', $allowed_item_keys))
+            $filter_expr .= (' and (parent_eid = ' . $db->quote($filter_items['parent_eid']) . ')');
+
+        if (isset($filter_items['ename']) && array_key_exists('ename', $allowed_item_keys))
+            $filter_expr .= (' and (ename = ' . $db->quote($filter_items['ename']) . ')');
+
+        if (isset($filter_items['user_name']))
+            $filter_expr .= (' and (user_name = ' . $db->quote($filter_items['user_name']) . ')');
+
+        if (isset($filter_items['email']))
+            $filter_expr .= (' and (email = ' . $db->quote($filter_items['email']) . ')');
+
+        if (isset($filter_items['object_eid']) && array_key_exists('object_eid', $allowed_item_keys))
+            $filter_expr .= (' and (object_eid = ' . $db->quote($filter_items['object_eid']) . ')');
+
+        if (isset($filter_items['access_code']))
+            $filter_expr .= (' and (access_code = ' . $db->quote($filter_items['access_code']) . ')');
+
+        if (isset($filter_items['connection_eid']) && array_key_exists('connection_eid', $allowed_item_keys))
+            $filter_expr .= (' and (connection_eid = ' . $db->quote($filter_items['connection_eid']) . ')');
+
+        if (isset($filter_items['created_min']) && array_key_exists('created_min', $allowed_item_keys))
+        {
+            $date = $filter_items['created_min'];
+            $date = strtotime($date);
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (created >= ' . $db->quote($date_clean) . ')');
+            }
+        }
+        if (isset($filter_items['created_max']) && array_key_exists('created_max', $allowed_item_keys))
+        {
+            $date = $filter_items['created_max'];
+            $date = strtotime($date . ' + 1 days');
+            if ($date !== false)
+            {
+                $date_clean = date('Y-m-d', $date);
+                $filter_expr .= (' and (created < ' . $db->quote($date_clean) . ')'); // created is a timestamp, so use < on the next day
+            }
+        }
+
+        if (strlen($filter_expr) > 0)
+            $filter_expr = '(' . $filter_expr . ')';
+
+        return $filter_expr;
+    }
+}
+
+class Limit
+{
+    public static function build($db, array $limit_items) : string
+    {
+        $limit_expr = '';
+
+        if (isset($limit_items['limit']))
+        {
+            $limit = (int)$limit_items['limit'];
+            if ($limit < 0)
+                $limit = 0;
+            $limit_expr .= ' limit ' . $db->quote($limit);
+        }
+
+        if (isset($limit_items['start']))
+        {
+            $start = (int)$limit_items['start'];
+            if ($start < 0)
+                $start = 0;
+            $limit_expr .= ' offset ' . $db->quote($start);
+        }
+
+        return $limit_expr;
+    }
+}
+
 class Model
 {
     const TYPE_UNDEFINED      = '';

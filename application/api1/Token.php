@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Token
 {
-    public static function create(\Flexio\Api\Request $request) : array
+    public static function create(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -47,7 +47,7 @@ class Token
         return $token->get();
     }
 
-    public static function delete(\Flexio\Api\Request $request) : array
+    public static function delete(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -80,7 +80,7 @@ class Token
         return $result;
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -109,7 +109,7 @@ class Token
         return $properties;
     }
 
-    public static function list(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

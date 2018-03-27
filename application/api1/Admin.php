@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Admin
@@ -52,7 +52,7 @@ class Admin
         @readfile($zip_name);
     }
 
-    public static function getExtract(\Flexio\Api\Request $request)
+    public static function getExtract(\Flexio\Api1\Request $request)
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -127,7 +127,7 @@ class Admin
         unlink($filezip);
     }
 
-    public static function getUserList(\Flexio\Api\Request $request) : array
+    public static function getUserList(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -158,7 +158,7 @@ class Admin
         return $result;
     }
 
-    public static function getUserProcessStats(\Flexio\Api\Request $request) : array
+    public static function getUserProcessStats(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -240,7 +240,7 @@ class Admin
         return $result;
     }
 
-    public static function getConfiguration(\Flexio\Api\Request $request) : array
+    public static function getConfiguration(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

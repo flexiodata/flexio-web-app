@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Process
 {
-    public static function create(\Flexio\Api\Request $request) : array
+    public static function create(\Flexio\Api1\Request $request) : array
     {
         $process = self::create_internal($request);
         if ($process === false)
@@ -26,7 +26,7 @@ class Process
         return $process->get();
     }
 
-    public static function debug(\Flexio\Api\Request $request) : array
+    public static function debug(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -51,7 +51,7 @@ class Process
         return $properties;
     }
 
-    private static function create_internal(\Flexio\Api\Request $request) : \Flexio\Object\Process
+    private static function create_internal(\Flexio\Api1\Request $request) : \Flexio\Object\Process
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -146,7 +146,7 @@ class Process
         return $process;
     }
 
-    public static function delete(\Flexio\Api\Request $request) : array
+    public static function delete(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -178,7 +178,7 @@ class Process
         return $result;
     }
 
-    public static function set(\Flexio\Api\Request $request) : array
+    public static function set(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -210,7 +210,7 @@ class Process
         return $process->get();
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -274,7 +274,7 @@ class Process
         return $process_info;
     }
 
-    public static function list(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -317,7 +317,7 @@ class Process
         return $result;
     }
 
-    public static function log(\Flexio\Api\Request $request) : array
+    public static function log(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -345,7 +345,7 @@ class Process
         return $log;
     }
 
-    public static function run(\Flexio\Api\Request $request) : array
+    public static function run(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -414,7 +414,7 @@ class Process
         exit(0);
     }
 
-    public static function cancel(\Flexio\Api\Request $request) : array
+    public static function cancel(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

@@ -36,9 +36,9 @@ class Test
             "create_examples": false
         }
         ',true);
-        $request = \Flexio\Api\Request::create();
+        $request = \Flexio\Api1\Request::create();
         $request->setPostParams($params);
-        $actual= \Flexio\Api\User::create($request);
+        $actual= \Flexio\Api1\User::create($request);
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_USER.'",
@@ -46,7 +46,7 @@ class Test
             "email": "'.$email.'"
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api\User::create(); return the object',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\User::create(); return the object',  $actual, $expected, $results);
 
 
 
@@ -67,9 +67,9 @@ class Test
             "create_examples": false
         }
         ',true);
-        $request = \Flexio\Api\Request::create();
+        $request = \Flexio\Api1\Request::create();
         $request->setPostParams($params);
-        $user_info = \Flexio\Api\User::create($request);
+        $user_info = \Flexio\Api1\User::create($request);
         $user_eid = $user_info['eid'];
         $initial_password1_match = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($user_eid, $password1); // should match
         $initial_password2_match = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($user_eid, $password2); // should not match
@@ -80,15 +80,15 @@ class Test
             "new_password": "'.$password2.'"
         }
         ',true);
-        $request = \Flexio\Api\Request::create();
+        $request = \Flexio\Api1\Request::create();
         $request->setRequestingUser($user_eid);
         $request->setPostParams($params);
-        \Flexio\Api\User::changepassword($request);
+        \Flexio\Api1\User::changepassword($request);
         $updated_password1_match = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($user_eid, $password1); // should not match
         $updated_password2_match = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($user_eid, $password2); // should match
         $actual = ($initial_password1_match == true && $initial_password2_match == false && $updated_password1_match == false && $updated_password2_match == true);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api\User::changepassword(); make sure that the password is changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api1\User::changepassword(); make sure that the password is changed',  $actual, $expected, $results);
 
 
 

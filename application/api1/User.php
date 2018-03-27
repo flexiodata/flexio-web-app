@@ -13,20 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
-
-
-if (!isset($GLOBALS['humannameparser_included']))
-{
-    $GLOBALS['humannameparser_included'] = true;
-    set_include_path(get_include_path() . PATH_SEPARATOR . (dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'humannameparser'));
-}
-require_once 'humannameparser_init.php';
+namespace Flexio\Api1;
 
 
 class User
 {
-    public static function create(\Flexio\Api\Request $request) : array
+    public static function create(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -135,15 +127,15 @@ class User
 
             // create a default api key for the user
             $token_properties = array();
-            $token_properties['user_eid'] = $user->getEid();
+            $token_properties['owned_by'] = $user->getEid();
             \Flexio\Object\Token::create($token_properties);
 
             // if appropriate, send an email
             if ($send_email === true)
             {
-                $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
+                $message_type = \Flexio\Api1\Message::TYPE_EMAIL_WELCOME;
                 $email_params = array('email' => $email, 'verify_code' => $verify_code);
-                $message = \Flexio\Api\Message::create($message_type, $email_params);
+                $message = \Flexio\Api1\Message::create($message_type, $email_params);
                 $message->send();
             }
 
@@ -210,9 +202,9 @@ class User
         // if appropriate, send an email
         if ($send_email === true)
         {
-            $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
+            $message_type = \Flexio\Api1\Message::TYPE_EMAIL_WELCOME;
             $email_params = array('email' => $email, 'verify_code' => $new_verify_code);
-            $message = \Flexio\Api\Message::create($message_type, $email_params);
+            $message = \Flexio\Api1\Message::create($message_type, $email_params);
             $message->send();
         }
 
@@ -220,7 +212,7 @@ class User
         return $user->get();
     }
 
-    public static function set(\Flexio\Api\Request $request) : array
+    public static function set(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -269,10 +261,10 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights, but only if the object isn't pending;
-        // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
+        // TODO: proper approach is to always check rights; right now, \Flexio\Api1\User::set()
         // is used to set user info for unverified accounts that were created from an invitation
         // the rest of the info needs to be set to complete the process before the user is able
-        // to log in; probably best to pass the verification code and use the \Flexio\Api\User::create()
+        // to log in; probably best to pass the verification code and use the \Flexio\Api1\User::create()
         // function to complete the process rather than this, since this approach could be used to
         // set info for unverified users
         if ($user->getStatus() !== \Model::STATUS_PENDING)
@@ -285,7 +277,7 @@ class User
         return $user->get();
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -311,7 +303,7 @@ class User
         return $user->get();
     }
 
-    public static function about(\Flexio\Api\Request $request) : array
+    public static function about(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -341,7 +333,7 @@ class User
         }
     }
 
-    public static function changepassword(\Flexio\Api\Request $request) : array
+    public static function changepassword(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -382,7 +374,7 @@ class User
         return $user->get();
     }
 
-    public static function activate(\Flexio\Api\Request $request) : array
+    public static function activate(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -425,7 +417,7 @@ class User
         return $result;
     }
 
-    public static function resendverify(\Flexio\Api\Request $request) : array
+    public static function resendverify(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -459,9 +451,9 @@ class User
         if (!isset($verify_code))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
 
-        $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
+        $message_type = \Flexio\Api1\Message::TYPE_EMAIL_WELCOME;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Api\Message::create($message_type, $email_params);
+        $message = \Flexio\Api1\Message::create($message_type, $email_params);
         $message->send();
 
         $result = array();
@@ -469,7 +461,7 @@ class User
         return $result;
     }
 
-    public static function requestpasswordreset(\Flexio\Api\Request $request) : array
+    public static function requestpasswordreset(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -500,9 +492,9 @@ class User
         if ($user->set(array('verify_code' => $verify_code)) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not send password reset email at this time'));
 
-        $message_type = \Flexio\Api\Message::TYPE_EMAIL_RESET_PASSWORD;
+        $message_type = \Flexio\Api1\Message::TYPE_EMAIL_RESET_PASSWORD;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
-        $message = \Flexio\Api\Message::create($message_type, $email_params);
+        $message = \Flexio\Api1\Message::create($message_type, $email_params);
         $message->send();
 
         $result = array();
@@ -510,7 +502,7 @@ class User
         return $result;
     }
 
-    public static function resetpassword(\Flexio\Api\Request $request) : array
+    public static function resetpassword(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -556,28 +548,7 @@ class User
         return $result;
     }
 
-    public static function parseFullname(string $full_name, string &$first_name, string &$last_name)
-    {
-        // if a full name is specified, try to parse it
-        $first_name = '';
-        $last_name = '';
-        /*
-        // TODO: currently, the name parser is throwing an Exception; need to fix
-        try
-        {
-            $parser = new HumanNameParser_Parser($full_name);
-            $first_name = $parser->getFirst();
-            $last_name = $parser->getLast();
-        }
-            catch (\Exception $e)
-        {
-            // unable to parse the name; treat the set the first name as whatever was entered
-            $first_name = $params['full_name'];
-        }
-        */
-    }
-
-    public static function resetConfig(\Flexio\Api\Request $request) : array
+    public static function resetConfig(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -591,7 +562,7 @@ class User
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $new_request = \Flexio\Api\Request::create();
+        $new_request = \Flexio\Api1\Request::create();
         $new_request->setRequestingUser($requesting_user_eid);
         $new_request->setPostParams(array('eid' => $requesting_user_eid, 'config' => []));
 
@@ -599,7 +570,7 @@ class User
         return array();
     }
 
-    public static function createExamples(\Flexio\Api\Request $request) : array
+    public static function createExamples(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

@@ -13,37 +13,28 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api2;
 
 
 class Request
 {
     private $method;
+    private $url;
     private $url_params;
     private $query_params;
     private $post_params;
     private $requesting_user;
+    private $url_owner_eid;
+    private $url_object_eid;
 
     public function __construct()
     {
         $this->initialize();
     }
 
-    public static function create() : \Flexio\Api\Request
+    public static function create() : \Flexio\Api2\Request
     {
         return (new static);
-    }
-
-    public function clone() : \Flexio\Api\Request
-    {
-        // create a new object and set the properties
-        $new_request = static::create();
-        $new_request->setMethod($this->getMethod());
-        $new_request->setUrlParams($this->getUrlParams());
-        $new_request->setQueryParams($this->getQueryParams());
-        $new_request->setPostParams($this->getPostParams());
-        $new_request->setRequestingUser($this->getRequestingUser());
-        return $new_request;
     }
 
     public function setMethod(string $method)
@@ -54,6 +45,16 @@ class Request
     public function getMethod() : string
     {
         return $this->method;
+    }
+
+    public function setUrl(string $url)
+    {
+        $this->url = $url;
+    }
+
+    public function getUrl(string $url) : string
+    {
+        return $this->url;
     }
 
     public function setUrlParams(array $params)
@@ -96,12 +97,35 @@ class Request
         return $this->requesting_user;
     }
 
+    public function setOwnerFromUrl(string $owner_eid)
+    {
+        $this->url_owner_eid = $owner_eid;
+    }
+
+    public function getOwnerFromUrl() : string
+    {
+        return $this->url_owner_eid;
+    }
+
+    public function setObjectFromUrl(string $object_eid)
+    {
+        $this->url_object_eid = $object_eid;
+    }
+
+    public function getObjectFromUrl() : string
+    {
+        return $this->url_object_eid;
+    }
+
     private function initialize()
     {
         $this->method = '';
+        $this->url = '';
         $this->url_params = array();
         $this->query_params = array();
         $this->post_params = array();
         $this->requesting_user = '';
+        $this->url_owner_eid = '';
+        $this->url_object_eid = '';
     }
 }

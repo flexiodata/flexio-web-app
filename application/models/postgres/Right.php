@@ -99,22 +99,14 @@ class Right extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
-        if (isset($filter['object_eid']))
-            $filter_expr .= (' and object_eid = ' . $db->quote($filter['object_eid']));
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'object_eid');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_acl where $filter_expr";
+            $query = "select * from tbl_acl where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

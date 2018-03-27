@@ -93,22 +93,14 @@ class Token extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['access_code']))
-            $filter_expr .= (' and access_code = ' . $db->quote($filter['access_code']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'access_code', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_token where $filter_expr order by created";
+            $query = "select * from tbl_token where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

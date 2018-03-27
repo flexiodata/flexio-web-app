@@ -176,24 +176,14 @@ class User extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-
-        // build the filter
-        $filter_expr = 'true';
-        if (isset($filter['eid']))
-            $filter_expr .= (' and eid = ' . $db->quote($filter['eid']));
-        if (isset($filter['eid_status']))
-            $filter_expr .= (' and eid_status = ' . $db->quote($filter['eid_status']));
-        if (isset($filter['owned_by']))
-            $filter_expr .= (' and owned_by = ' . $db->quote($filter['owned_by']));
-        if (isset($filter['user_name']))
-            $filter_expr .= (' and user_name = ' . $db->quote($filter['user_name']));
-        if (isset($filter['email']))
-            $filter_expr .= (' and email = ' . $db->quote($filter['email']));
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'user_name', 'email', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
 
         $rows = array();
         try
         {
-            $query = "select * from tbl_user where $filter_expr";
+            $query = "select * from tbl_user where $filter_expr order by id $limit_expr";
             $rows = $db->fetchAll($query);
          }
          catch (\Exception $e)

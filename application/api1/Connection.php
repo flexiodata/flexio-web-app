@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api;
+namespace Flexio\Api1;
 
 
 class Connection
 {
-    public static function create(\Flexio\Api\Request $request) : array
+    public static function create(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -67,7 +67,7 @@ class Connection
         return $properties;
     }
 
-    public static function delete(\Flexio\Api\Request $request) : array
+    public static function delete(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -104,7 +104,7 @@ class Connection
         return $result;
     }
 
-    public static function set(\Flexio\Api\Request $request) : array
+    public static function set(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -157,7 +157,7 @@ class Connection
         return $properties;
     }
 
-    public static function get(\Flexio\Api\Request $request) : array
+    public static function get(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -190,7 +190,7 @@ class Connection
         return $properties;
     }
 
-    public static function list(\Flexio\Api\Request $request) : array
+    public static function list(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -226,7 +226,7 @@ class Connection
         return $result;
     }
 
-    public static function describe(\Flexio\Api\Request $request) : array
+    public static function describe(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -268,7 +268,7 @@ class Connection
         return $result;
     }
 
-    public static function connect(\Flexio\Api\Request $request) : array
+    public static function connect(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -304,7 +304,7 @@ class Connection
         return $properties;
     }
 
-    public static function disconnect(\Flexio\Api\Request $request) : array
+    public static function disconnect(\Flexio\Api1\Request $request) : array
     {
         $params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

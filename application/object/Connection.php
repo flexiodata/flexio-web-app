@@ -205,10 +205,8 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function authenticate(array $params) // TODO: add function return type
     {
-        // TODO: this was moved from \Flexio\Api\Connection::authenticate() which functioned
-        // somewhat like a static method so that everything was passed to the function;
-        // now that this has been moved to the object, is there anyway to save some of
-        // these in the object so we can make successive calls without sending everything?
+        // TODO: is there anyway to save some of these in the object so we can make
+        // successive calls without sending everything?
 
         $service = $params['service'] ?? '';
         $code = $params['code'] ?? false;
