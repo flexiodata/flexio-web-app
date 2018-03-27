@@ -112,37 +112,32 @@ class Process extends ModelBase
         }
     }
 
-    public function summary(string $user_eid = null) : array
+    public function summary(array $filter) : array
     {
         // returns the number of processes per pipe per day for a particular owner,
         // along with the average and total times for those processes
 
         $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'parent_eid', 'owned_by', 'created_min', 'created_max');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
+
         try
         {
-            $filter_condition = "true";
-            if (isset($user_eid))
-            {
-                $quser_eid = $db->quote($user_eid);
-                $filter_condition .= " and tpr.owned_by = $quser_eid";
-            }
-
-            $sql = "select tpr.owned_by as owned_by, ".
-            "              tpr.parent_eid as parent_eid, ".  // parent_eid is the pipe
-            "              tpr.created::DATE as created, ".
-            "              avg(extract(epoch from (tpr.finished - tpr.started))) as average_time, ".
-            "              sum(extract(epoch from (tpr.finished - tpr.started))) as total_time, ".
+            $sql = "select owned_by as owned_by, ".
+            "              parent_eid as parent_eid, ".
+            "              created::DATE as created, ".
+            "              avg(extract(epoch from (finished - started))) as average_time, ".
+            "              sum(extract(epoch from (finished - started))) as total_time, ".
             "              count(*) as total_count ".
             "       from tbl_process tpr ".
-            "       where $filter_condition ".
-            "       group by tpr.owned_by, tpr.parent_eid, tpr.created::DATE ".
-            "       order by created, parent_eid ";
+            "       where $filter_expr ".
+            "       group by owned_by, parent_eid, created::DATE ".
+            "       order by created, parent_eid $limit_expr";
             $rows = $db->fetchAll($sql);
          }
          catch (\Exception $e)
          {
-
-
              throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
          }
 
@@ -154,7 +149,7 @@ class Process extends ModelBase
                 $parent_eid = $row['parent_eid'];
 
             $output[] = array('user_eid'     => $row['owned_by'],
-                              'pipe_eid'     => $parent_eid,        // pipe eid if it exists; if anonymous process, then 'anonymous'
+                              'pipe_eid'     => $parent_eid,
                               'created'      => $row['created'],
                               'total_count'  => $row['total_count'],
                               'total_time'   => $row['total_time'],

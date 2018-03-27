@@ -66,7 +66,23 @@ class Admin
 
     public static function processes(\Flexio\Api2\Request $request) : array
     {
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'owned_by' => array('type' => 'string',  'required' => false),
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
 
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
@@ -75,7 +91,9 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $stats = \Flexio\Object\Process::summary();
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
+        $stats = \Flexio\Object\Process::summary($filter);
 
         $result = array();
         foreach ($stats as $s)

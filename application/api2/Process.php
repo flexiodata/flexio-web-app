@@ -256,8 +256,22 @@ class Process
 
     public static function summary(\Flexio\Api2\Request $request) : array
     {
+        $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
 
         // only return stats for the user that's making the request
         // make sure we have a valid user; otherwise, it's a public request, so don't allow it
@@ -271,7 +285,9 @@ class Process
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $stats = \Flexio\Object\Process::summary($owner_user_eid);
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
+        $stats = \Flexio\Object\Process::summary($filter);
 
         $result = array();
         foreach ($stats as $s)

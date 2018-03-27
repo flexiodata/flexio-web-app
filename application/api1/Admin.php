@@ -172,7 +172,8 @@ class Admin
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $stats = \Flexio\Object\Process::summary();
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
+        $stats = \Flexio\Object\Process::summary($filter);
 
         $result = array();
         foreach ($stats as $s)
