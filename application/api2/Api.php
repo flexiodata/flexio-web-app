@@ -44,7 +44,7 @@ class Api
     // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
     //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
     //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
-    // * removed internal /process/debug endpiont:
+    // * removed internal /process/debug endpoint:
     //   v1: GET /processes/debug => v2: (removed)
     // * renamed /tests/* endpoints to /admin/tests/*:
     //   v1: GET /tests/configure => v2: /admin/tests/configure
@@ -57,6 +57,13 @@ class Api
     //   tail is allowed as a parameter, but is currently not implemented
     // * process statistic api endpint moved to process/summary endpoint:
     //   v1: 'GET /:userid/statistics/processes' => v2: 'GET /:userid/processes/summary'
+    // * renamed some admin endpoints:
+    //   v1: 'GET /admin/configuration' => v2: 'GET /admin/info/system'
+    //   v1: 'GET /admin/list/users' => v2: 'GET /admin/info/users'
+    //   v1: 'GET /admin/statistics/users' => v2: 'GET /admin/info/processes/summary'
+    // * removed some admin endpoints:
+    //   v1: 'GET /admin/resetconfig' => v2: (removed)
+    //   v1: 'GET /admin/createexamples' => v2: (removed)
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?
@@ -151,11 +158,9 @@ class Api
         // INTERNAL ENDPOINTS
 
         // admin
-        'GET /admin/internal/system'                  => '\Flexio\Api2\Admin::system',
-        'GET /admin/internal/users'                   => '\Flexio\Api2\Admin::userlist',
-        'GET /admin/internal/processes/summary'       => '\Flexio\Api2\Admin::processes',
-        'GET /admin/internal/resetconfig'             => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
-
+        'GET /admin/info/system'                      => '\Flexio\Api2\Admin::system',
+        'GET /admin/info/users'                       => '\Flexio\Api2\Admin::userlist',
+        'GET /admin/info/processes/summary'           => '\Flexio\Api2\Admin::processes',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run'
     );
