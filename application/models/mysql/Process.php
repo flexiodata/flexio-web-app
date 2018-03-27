@@ -112,6 +112,12 @@ class Process extends ModelBase
         }
     }
 
+    public function summary() : array
+    {
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
@@ -346,12 +352,6 @@ class Process extends ModelBase
         }
 
         return $output;
-    }
-
-    public function getUserProcessStats() : array
-    {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function setProcessStatus(string $eid, string $status) : bool
