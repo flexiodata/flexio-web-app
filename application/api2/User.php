@@ -290,7 +290,7 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $user->get();
+        return $owner_user->get();
     }
 
     public static function changepassword(\Flexio\Api2\Request $request) : array
