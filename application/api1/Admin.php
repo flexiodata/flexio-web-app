@@ -139,10 +139,11 @@ class Admin
         if ($user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $users = \Flexio\Object\Users::list();
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
+        $userlist = \Flexio\Object\User::list($filter);
 
         $result = array();
-        foreach ($users as $userobj)
+        foreach ($userlist as $userobj)
         {
             $u = $userobj->get();
 
