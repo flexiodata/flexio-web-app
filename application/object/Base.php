@@ -59,7 +59,7 @@ class Base
             return true;
 
         // if the user is an administrator, allow access
-        if ($this->isAdministrator() === true)
+        if ($this->getModel()->user->isAdministrator($access_code) === true)
             return true;
 
         // get the rights for this object
