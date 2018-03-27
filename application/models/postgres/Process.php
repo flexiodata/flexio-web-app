@@ -420,10 +420,10 @@ class Process extends ModelBase
         {
             // see if a process output exists for the existing hash
             $db = $this->getDatabase();
-            $rows = $db->fetchAll("select tpr.eid as eid,
-                                          tpr.output as output
+            $rows = $db->fetchAll("select eid as eid,
+                                          output as output
                                    from tbl_process tpr
-                                   where tpr.process_hash = ?
+                                   where process_hash = ?
                                   ", $hash);
 
             // if we don't have any rows, return false
