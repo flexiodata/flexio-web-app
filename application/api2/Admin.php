@@ -18,6 +18,20 @@ namespace Flexio\Api2;
 
 class Admin
 {
+    public static function system(\Flexio\Api2\Request $request) : array
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        return self::checkServerSettings();
+    }
+
     public static function userlist(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
@@ -50,7 +64,7 @@ class Admin
         return $result;
     }
 
-    public static function process(\Flexio\Api2\Request $request) : array
+    public static function processes(\Flexio\Api2\Request $request) : array
     {
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -129,20 +143,6 @@ class Admin
         }
 
         return $result;
-    }
-
-    public static function config(\Flexio\Api2\Request $request) : array
-    {
-        $requesting_user_eid = $request->getRequestingUser();
-
-        // only allow users from flex.io to get this info
-        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($requesting_user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        return self::checkServerSettings();
     }
 
     private static function checkServerSettings() : array
