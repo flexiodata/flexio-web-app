@@ -55,6 +55,8 @@ class Api
     //   v1: GET /connections/:eid/describe => v2: (removed)
     // * most list-type API endpoints now allow created_min and created_max for date range limits, and start/limit;
     //   tail is allowed as a parameter, but is currently not implemented
+    // * process statistic api endpint moved to process/summary endpoint:
+    //   v1: 'GET /:userid/statistics/processes' => v2: 'GET /:userid/processes/summary'
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?
@@ -130,6 +132,7 @@ class Api
         // processes
         'POS /:userid/processes'                      => '\Flexio\Api2\Process::create',
         'GET /:userid/processes'                      => '\Flexio\Api2\Process::list',
+        'GET /:userid/processes/summary'              => '\Flexio\Api2\Process::summary',
         'POS /:userid/processes/:objeid'              => '\Flexio\Api2\Process::set',
         'GET /:userid/processes/:objeid'              => '\Flexio\Api2\Process::get',
         'GET /:userid/processes/:objeid/log'          => '\Flexio\Api2\Process::log',
@@ -144,9 +147,6 @@ class Api
         'GET /:userid/vfs/list'                       => '\Flexio\Api2\Vfs::list',
         'GET /:userid/vfs/*'                          => '\Flexio\Api2\Vfs::get',
         'PUT /:userid/vfs/*'                          => '\Flexio\Api2\Vfs::put',
-
-        // statistics
-        'GET /:userid/statistics/processes'           => '\Flexio\Api2\Statistics::processes',
 
         // INTERNAL ENDPOINTS
 
