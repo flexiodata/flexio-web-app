@@ -153,7 +153,7 @@ class Api
         // admin
         'GET /admin/list/users'                       => '\Flexio\Api2\Admin::userlist',
         'GET /admin/statistics/users'                 => '\Flexio\Api2\Admin::processes',
-        'GET /admin/configuration'                    => '\Flexio\Api2\Admin::getConfiguration',
+        'GET /admin/configuration'                    => '\Flexio\Api2\Admin::config',
         'GET /admin/resetconfig'                      => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
 
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
