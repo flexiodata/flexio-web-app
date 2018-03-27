@@ -151,10 +151,10 @@ class Api
         // INTERNAL ENDPOINTS
 
         // admin
-        'GET /admin/list/users'                       => '\Flexio\Api2\Admin::userlist',
-        'GET /admin/statistics/users'                 => '\Flexio\Api2\Admin::processes',
-        'GET /admin/configuration'                    => '\Flexio\Api2\Admin::config',
-        'GET /admin/resetconfig'                      => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
+        'GET /admin/internal/system'                  => '\Flexio\Api2\Admin::config',
+        'GET /admin/internal/users'                   => '\Flexio\Api2\Admin::userlist',
+        'GET /admin/internal/processes/summary'       => '\Flexio\Api2\Admin::processes',
+        'GET /admin/internal/resetconfig'             => '\Flexio\Api2\User::resetConfig',    // resets the user configuration
 
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run'
