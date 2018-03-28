@@ -20,10 +20,9 @@ class Action extends ModelBase
     public function create(array $params = null) : string
     {
         $db = $this->getDatabase();
-        $db->beginTransaction(); // needed to make sure eid generation is safe
         try
         {
-            $eid = $this->generateActionEid();
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_ACTION, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
                 'eid'            => $eid,
@@ -44,12 +43,10 @@ class Action extends ModelBase
             if ($db->insert('tbl_action', $process_arr) === false)
                 throw new \Exception();
 
-            $db->commit();
             return $eid;
         }
         catch (\Exception $e)
         {
-            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
@@ -155,25 +152,5 @@ class Action extends ModelBase
             return false;
 
         return $rows[0];
-    }
-
-    private function generateActionEid() : string
-    {
-        // note: this function generates a unique action eid; this function
-        // is nearly identical to \Model::generateUniqueEid() except that
-        // this function checks the tbl_action table for the eid since the
-        // action eids aren't added to the object table; to avoid future
-        // potential clashes, the object table is also checked; however,
-        // the object able doesn't check the action table, but this reduces
-        // some possibility of a clash
-
-        $eid = \Flexio\Base\Eid::generate();
-        $result1 = $this->getDatabase()->fetchOne("select eid from tbl_action where eid = ?", $eid);
-        $result2 = $this->getDatabase()->fetchOne("select eid from tbl_object where eid = ?", $eid);
-
-        if ($result1 === false && $result2 === false)
-            return $eid;
-
-        return $this->generateActionEid();
     }
 }
