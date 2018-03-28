@@ -70,6 +70,11 @@ class Test
         $expected = 'RGH';
         \Flexio\Tests\Check::assertString('B.9', 'Model type constant',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::TYPE_ACTION;
+        $expected = 'ACT';
+        \Flexio\Tests\Check::assertString('B.10', 'Model type constant',  $actual, $expected, $results);
+
 
         // TEST: Model edge constants; the database stores raw values for
         // some of these constants, so these tests ensure that the constants

@@ -234,6 +234,7 @@ class Query
             case \Model::TYPE_PROCESS        : return 'process';
             case \Model::TYPE_TOKEN          : return 'token';
             case \Model::TYPE_RIGHT          : return 'right';
+            case \Model::TYPE_ACTION         : return 'action';
         }
     }
 }

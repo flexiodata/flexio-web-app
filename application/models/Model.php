@@ -120,6 +120,7 @@ class Model
     const TYPE_PROCESS        = 'PRC';
     const TYPE_TOKEN          = 'TKN';
     const TYPE_RIGHT          = 'RGH';
+    const TYPE_ACTION         = 'ACT';
 
     const EDGE_UNDEFINED     = '';     // undefind edge
     const EDGE_INVITED       = 'INV';  // user A invited user B
@@ -222,6 +223,7 @@ class Model
             case \Model::TYPE_PROCESS:
             case \Model::TYPE_TOKEN:
             case \Model::TYPE_RIGHT:
+            case \Model::TYPE_ACTION:
                 return true;
         }
     }
