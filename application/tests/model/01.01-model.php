@@ -62,9 +62,13 @@ class Test
 
         // BEGIN TEST
         $actual = \Model::TYPE_TOKEN;
-        $expected = 'ATH';
+        $expected = 'TKN';
         \Flexio\Tests\Check::assertString('B.8', 'Model type constant',  $actual, $expected, $results);
 
+        // BEGIN TEST
+        $actual = \Model::TYPE_RIGHT;
+        $expected = 'RGH';
+        \Flexio\Tests\Check::assertString('B.9', 'Model type constant',  $actual, $expected, $results);
 
 
         // TEST: Model edge constants; the database stores raw values for

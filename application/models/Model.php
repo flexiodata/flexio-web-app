@@ -118,8 +118,8 @@ class Model
     const TYPE_CONNECTION     = 'CTN';
     const TYPE_COMMENT        = 'CMT';
     const TYPE_PROCESS        = 'PRC';
-    const TYPE_TOKEN          = 'ATH';
-    const TYPE_RIGHT          = 'ACL';
+    const TYPE_TOKEN          = 'TKN';
+    const TYPE_RIGHT          = 'RGH';
 
     const EDGE_UNDEFINED     = '';     // undefind edge
     const EDGE_INVITED       = 'INV';  // user A invited user B
