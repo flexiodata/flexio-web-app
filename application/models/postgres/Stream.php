@@ -224,19 +224,19 @@ class Stream extends ModelBase
             $where_arr = [];
             if (isset($conditions['parent_eid']))
             {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.parent_eid = ?';
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'parent_eid = ?';
                 $where_arr[] = $conditions['parent_eid'];
                 unset($conditions['parent_eid']);
             }
             if (isset($conditions['name']))
             {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.name = ?';
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'name = ?';
                 $where_arr[] = $conditions['name'];
                 unset($conditions['name']);
             }
             if (isset($conditions['stream_type']))
             {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'tst.stream_type = ?';
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'stream_type = ?';
                 $where_arr[] = $conditions['stream_type'];
                 unset($conditions['stream_type']);
             }
@@ -248,25 +248,25 @@ class Stream extends ModelBase
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
             }
 
-            $rows = $db->fetchAll("select tst.eid as eid,
-                                          tst.eid_status as eid_status,
-                                          tst.parent_eid as parent_eid,
-                                          tst.stream_type as stream_type,
-                                          tst.name as name,
-                                          tst.path as path,
-                                          tst.size as size,
-                                          tst.hash as hash,
-                                          tst.mime_type as mime_type,
-                                          tst.structure as structure,
-                                          tst.file_created as file_created,
-                                          tst.file_modified as file_modified,
-                                          tst.connection_eid as connection_eid,
-                                          tst.expires as expires,
-                                          tst.owned_by as owned_by,
-                                          tst.created_by as created_by,
-                                          tst.created as created,
-                                          tst.updated as updated
-                                from tbl_stream tst
+            $rows = $db->fetchAll("select eid as eid,
+                                          eid_status as eid_status,
+                                          parent_eid as parent_eid,
+                                          stream_type as stream_type,
+                                          name as name,
+                                          path as path,
+                                          size as size,
+                                          hash as hash,
+                                          mime_type as mime_type,
+                                          structure as structure,
+                                          file_created as file_created,
+                                          file_modified as file_modified,
+                                          connection_eid as connection_eid,
+                                          expires as expires,
+                                          owned_by as owned_by,
+                                          created_by as created_by,
+                                          created as created,
+                                          updated as updated
+                                from tbl_stream
                                 where $where
                                 ", $where_arr);
         }
