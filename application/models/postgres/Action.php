@@ -99,6 +99,11 @@ class Action extends ModelBase
         }
     }
 
+    public function delete(string $eid) : bool
+    {
+        return $this->setStatus($eid, \Model::STATUS_DELETED);
+    }
+
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
@@ -152,5 +157,22 @@ class Action extends ModelBase
             return false;
 
         return $rows[0];
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
+    }
+
+    public function getStatus(string $eid) : string
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return \Model::STATUS_UNDEFINED;
+
+        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_action where eid = ?", $eid);
+        if ($result === false)
+            return \Model::STATUS_UNDEFINED;
+
+        return $result;
     }
 }

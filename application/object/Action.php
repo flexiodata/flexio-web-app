@@ -16,10 +16,20 @@ declare(strict_types=1);
 namespace Flexio\Object;
 
 
-class Action
+class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 {
-    private $eid;
-    protected $properties;
+    public function __construct()
+    {
+    }
+
+    public function __toString()
+    {
+        $object = array(
+            'eid' => $this->getEid(),
+            'eid_type' => $this->getType()
+        );
+        return json_encode($object);
+    }
 
     public static function list(array $filter) : array
     {
@@ -40,6 +50,21 @@ class Action
         return $objects;
     }
 
+    public static function load(string $eid) : \Flexio\Object\Action
+    {
+        $object = new static();
+        $action_model = $object->getModel()->action;
+
+        $properties = $action_model->get($eid);
+        if ($properties === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        $object->setEid($eid);
+        $object->clearCache();
+        $object->properties = self::formatProperties($properties);
+        return $object;
+    }
+
     public static function create(array $properties = null) : \Flexio\Object\Action
     {
         $object = new static();
@@ -49,6 +74,14 @@ class Action
         $object->setEid($local_eid);
         $object->clearCache();
         return $object;
+    }
+
+    public function delete() : \Flexio\Object\Pipe
+    {
+        $this->clearCache();
+        $action_model = $this->getModel()->action;
+        $action_model->delete($this->getEid());
+        return $this;
     }
 
     public function set(array $properties) : \Flexio\Object\Action
@@ -69,24 +102,35 @@ class Action
         return $this->properties;
     }
 
-    public function setEid(string $eid) : \Flexio\Object\Action
+    public function getType() : string
     {
-        // only allow the eid to be set once
-        if (!is_null($this->eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        return \Model::TYPE_ACTION;
+    }
 
-        $this->eid = $eid;
+    public function setOwner(string $user_eid) : \Flexio\Object\Action
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function getOwner() : string
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public function setStatus(string $status) : \Flexio\Object\Action
+    {
+        $this->clearCache();
+        $action_model = $this->getModel()->action;
+        $result = $action_model->setStatus($this->getEid(), $status);
         return $this;
     }
 
-    public function getEid() : string
+    public function getStatus() : string
     {
-        return $this->eid;
-    }
+        if ($this->isCached() === false)
+            $this->populateCache();
 
-    protected function getModel() : \Model
-    {
-        return \Flexio\System\System::getModel();
+        return $this->properties['eid_status'];
     }
 
     private function isCached() : bool
