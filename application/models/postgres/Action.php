@@ -82,10 +82,7 @@ class Action extends ModelBase
         {
             // see if the action exists; return false otherwise; this check is to
             // achieve the same behavior as other model set functions
-            $row = $db->fetchRow("select tac.eid as eid
-                                  from tbl_action tac
-                                  where tac.eid = ?
-                                 ", $eid);
+            $row = $db->fetchRow("select eid as eid from tbl_action where eid = ?", $eid);
             if (!$row)
                 return false;
 

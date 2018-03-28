@@ -297,11 +297,7 @@ class Pipe extends ModelBase
 
     public function getScheduledPipes() : array
     {
-        $sql = "select tpi.eid as eid, ".
-               "       tpi.schedule as schedule ".
-               "from tbl_pipe tpi " .
-               "where tpi.schedule_status = 'A'";
-
+        $sql = "select eid, schedule from tbl_pipe where schedule_status = 'A'";
         $res = $this->getDatabase()->query($sql);
         if (!$res)
             return array();

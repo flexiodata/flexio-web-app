@@ -130,7 +130,7 @@ class Process extends ModelBase
             "              avg(extract(epoch from (finished - started))) as average_time, ".
             "              sum(extract(epoch from (finished - started))) as total_time, ".
             "              count(*) as total_count ".
-            "       from tbl_process tpr ".
+            "       from tbl_process  ".
             "       where $filter_expr ".
             "       group by owned_by, parent_eid, created::DATE ".
             "       order by created, parent_eid $limit_expr";
@@ -422,7 +422,7 @@ class Process extends ModelBase
             $db = $this->getDatabase();
             $rows = $db->fetchAll("select eid as eid,
                                           output as output
-                                   from tbl_process tpr
+                                   from tbl_process
                                    where process_hash = ?
                                   ", $hash);
 
