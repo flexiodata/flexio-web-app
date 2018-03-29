@@ -176,7 +176,7 @@ class User extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'created_min', 'created_max', 'owned_by', 'user_name', 'email');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'user_name', 'email');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
