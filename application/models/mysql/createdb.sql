@@ -356,7 +356,7 @@ CREATE TABLE tbl_action (
   request_ip char(40) NOT NULL default '',          -- ip address of the request if available
   request_type char(12) NOT NULL default '',        -- request type (e.g. "HTTP")
   request_method char(12) NOT NULL default '',      -- specific method for the request type (e.g. "PUT", "POST", "DELETE", etc)
-  request_route char(12) NOT NULL default '',       -- the specific route used to request the action (e.g. the url path of the request)
+  request_route text default '',                    -- the specific route used to request the action (e.g. the url path of the request)
   request_created_by char(12) NOT NULL default '',  -- the user making the request
   request_created timestamp NULL default NULL,         -- timestamp when the request was created
   request_params json,                                 -- specific parameters included with the request; note: not all params may be saved (e.g. passwords)

@@ -40,28 +40,27 @@ class Test
 
         // BEGIN TEST
         $info = array(
-            'invoked_from' => 'API',
-            'invoked_by' => 'xxxxxxxxxxxx',
             'action_type' => 'action.test',
-            'action_info' => '{"url": "https://www.flex.io/api/v1/test"}',
-            'action_target' => 'zzzzzzzzzzzz',
-            'result_type' => 'result.type',
-            'result_info' => '{}',
-            'started' => '2018-01-02 01:02:03',
-            'finished' => '2018-01-02 01:02:04'
+            'request_ip' => '127.0.0.1',
+            'request_type' => 'HTTP',
+            'request_method' => 'POST',
+            'request_route' => '/api/url/endpoint',
+            'request_created_by' => 'bxxxxxxxxxxx', // request_created_by, owned_by, and created_by will be the same in use; make sure they're uncoupled in the model
+            'request_created' => '2018-01-02 01:02:03',
+            'request_params' => '{}',
+            'target_eid' => 'byyyyyyyyyyy',
+            'target_eid_type' => 'PIP',
+            'target_owned_by' => 'cyyyyyyyyyyy',
+            'response_type' => 'HTTP',
+            'response_code' => '200',
+            'response_params' => '{}',
+            'response_created' => '2018-01-02 01:02:04',
+            'owned_by' => 'cxxxxxxxxxxx', // request_created_by, owned_by, and created_by will be the same in use; make sure they're uncoupled in the model
+            'created_by' => 'dxxxxxxxxxxx' // request_created_by, owned_by, and created_by will be the same in use; make sure they're uncoupled in the model
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'invoked_from' => 'API',
-            'invoked_by' => 'xxxxxxxxxxxx',
-            'action_type' => 'action.test',
-            'action_info' => '{"url": "https://www.flex.io/api/v1/test"}',
-            'action_target' => 'zzzzzzzzzzzz',
-            'result_type' => 'result.type',
-            'result_info' => '{}',
-            'started' => '2018-01-02 01:02:03',
-            'finished' => '2018-01-02 01:02:04'
         );
         \Flexio\Tests\Check::assertInArray('B.1', 'Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
     }

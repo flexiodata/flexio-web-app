@@ -62,7 +62,7 @@ CREATE TABLE tbl_action (
     request_ip varchar(40) NOT NULL default '',
     request_type varchar(12) NOT NULL default '',
     request_method varchar(12) NOT NULL default '',
-    request_route varchar(12) NOT NULL default '',
+    request_route text,
     request_created_by varchar(12) NOT NULL default '',
     request_created timestamp NULL default NULL,
     request_params json,
