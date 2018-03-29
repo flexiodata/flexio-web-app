@@ -335,28 +335,34 @@ CREATE INDEX idx_comment_created ON tbl_comment (created);
 DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
   id serial,
-  eid varchar(12) NOT NULL default '',           -- the eid of the action
-  eid_status varchar(1) NOT NULL default '',
-  invoked_from varchar(3) NOT NULL default '',   -- where the action was invoked from; (e.g. api, email, the scheduler)
-  invoked_by varchar(12) NOT NULL default '',    -- eid of the user that invoked the action
-  action_type text default '',                   -- the name of action being peformed
-  action_info json,                              -- the parameters when invoking the action (e.g. url, method, params)
-  action_target varchar(12) NOT NULL default '', -- the eid of the object being acted on
-  result_type text default '',                   -- the type of result; success or failure
-  result_info json,                              -- extra info about the result in case of failure
-  started timestamp NULL default NULL,           -- when the action was invoked
-  finished timestamp NULL default NULL,          -- when the action finished
-  owned_by varchar(12) NOT NULL default '',
-  created_by varchar(12) NOT NULL default '',
-  created timestamp NULL default NULL,
+  eid varchar(12) NOT NULL default '',                 -- the eid of the action
+  eid_status varchar(1) NOT NULL default '',           -- the eid status of the action
+  action_type varchar(40) NOT NULL default '',         -- logical name for the action (e.g. "create", helps map mutiple routes to similar action, such as creating an object)
+  request_ip varchar(40) NOT NULL default '',          -- ip address of the request if available
+  request_type varchar(12) NOT NULL default '',        -- request type (e.g. "HTTP")
+  request_method varchar(12) NOT NULL default '',      -- specific method for the request type (e.g. "PUT", "POST", "DELETE", etc)
+  request_route varchar(12) NOT NULL default '',       -- the specific route used to request the action (e.g. the url path of the request)
+  request_created_by varchar(12) NOT NULL default '',  -- the user making the request
+  request_created timestamp NULL default NULL,         -- timestamp when the request was created
+  request_params json,                                 -- specific parameters included with the request; note: not all params may be saved (e.g. passwords)
+  target_eid varchar(12) NOT NULL default '',          -- object eid being created, changed, deleted, etc
+  target_eid_type varchar(3) NOT NULL default '',      -- object eid type being created
+  target_owned_by varchar(12) NOT NULL default '',     -- owner eid of the object being created, chagned, deleted, etc
+  response_type varchar(12) NOT NULL default '',       -- response type (e.g. "HTTP")
+  response_code varchar(12) NOT NULL default '',       -- specific code for the response type (e.g. "200", "404", etc)
+  response_params json,                                -- subset of info returned to the user (e.g. error code and message or basic info about object)
+  response_created timestamp NULL default NULL,        -- timestamp when the response was created
+  created timestamp NULL default NULL,                 -- same as request_created
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE (eid)
 );
 
-CREATE INDEX idx_action_invoked_by ON tbl_action (invoked_by);
-CREATE INDEX idx_action_action_target ON tbl_action (action_target);
-CREATE INDEX idx_action_owned_by ON tbl_action (owned_by);
+CREATE INDEX idx_action_action_type ON tbl_action (action_type);
+CREATE INDEX idx_action_request_created_by ON tbl_action (request_created_by);
+CREATE INDEX idx_action_target_eid ON tbl_action (target_eid);
+CREATE INDEX idx_action_target_eid_type ON tbl_action (target_eid_type);
+CREATE INDEX idx_action_target_owned_by ON tbl_action (target_owned_by);
 CREATE INDEX idx_action_created ON tbl_action (created);
 
 

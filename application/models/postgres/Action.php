@@ -25,19 +25,25 @@ class Action extends ModelBase
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_ACTION, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'eid'            => $eid,
-                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'invoked_from'   => $params['invoked_from'] ?? '',
-                'invoked_by'     => $params['invoked_by'] ?? '',
-                'action_type'    => $params['action_type'] ?? '',
-                'action_info'    => $params['action_info'] ?? '{}',
-                'action_target'  => $params['action_target'] ?? '',
-                'result_type'    => $params['result_type'] ?? '',
-                'result_info'    => $params['result_info'] ?? '{}',
-                'started'        => $params['started'] ?? null,
-                'finished'       => $params['finished'] ?? null,
-                'created'        => $timestamp,
-                'updated'        => $timestamp
+                'eid'                => $eid,
+                'eid_status'         => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
+                'action_type'        => $params['action_type'] ?? '',
+                'request_ip'         => $params['request_ip'] ?? '',
+                'request_type'       => $params['request_type'] ?? '',
+                'request_method'     => $params['request_method'] ?? '',
+                'request_route'      => $params['request_route'] ?? '',
+                'request_created_by' => $params['request_created_by'] ?? '',
+                'request_created'    => $params['request_created'] ?? null,
+                'request_params'     => $params['request_params'] ?? '{}',
+                'target_eid'         => $params['target_eid'] ?? '',
+                'target_eid_type'    => $params['target_eid_type'] ?? '',
+                'target_owned_by'    => $params['target_owned_by'] ?? '',
+                'response_type'      => $params['response_type'] ?? '',
+                'response_code'      => $params['response_code'] ?? '',
+                'response_params'    => $params['response_params'] ?? '{}',
+                'response_created'   => $params['response_created'] ?? null,
+                'created'            => $timestamp,
+                'updated'            => $timestamp
             );
 
             if ($db->insert('tbl_action', $process_arr) === false)
@@ -58,16 +64,22 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'     => array('type' => 'string',  'required' => false),
-                'invoked_from'   => array('type' => 'string',  'required' => false),
-                'invoked_by'     => array('type' => 'string',  'required' => false),
-                'action_type'    => array('type' => 'string',  'required' => false),
-                'action_info'    => array('type' => 'string',  'required' => false),
-                'action_target'  => array('type' => 'string',  'required' => false),
-                'result_type'    => array('type' => 'string',  'required' => false),
-                'result_info'    => array('type' => 'string',  'required' => false),
-                'started'        => array('type' => 'string',  'required' => false),
-                'finished'      => array('type' => 'string',  'required' => false),
+                'eid_status'         => array('type' => 'string',  'required' => false),
+                'action_type'        => array('type' => 'string',  'required' => false),
+                'request_ip'         => array('type' => 'string',  'required' => false),
+                'request_type'       => array('type' => 'string',  'required' => false),
+                'request_method'     => array('type' => 'string',  'required' => false),
+                'request_route'      => array('type' => 'string',  'required' => false),
+                'request_created_by' => array('type' => 'string',  'required' => false),
+                'request_created'    => array('type' => 'string',  'required' => false),
+                'request_params'     => array('type' => 'string',  'required' => false),
+                'target_eid'         => array('type' => 'string',  'required' => false),
+                'target_eid_type'    => array('type' => 'string',  'required' => false),
+                'target_owned_by'    => array('type' => 'string',  'required' => false),
+                'response_type'      => array('type' => 'string',  'required' => false),
+                'response_code'      => array('type' => 'string',  'required' => false),
+                'response_params'    => array('type' => 'string',  'required' => false),
+                'response_created'   => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -125,19 +137,26 @@ class Action extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('eid'           => $row['eid'],
-                              'eid_status'    => $row['eid_status'],
-                              'invoked_from'  => $row['invoked_from'],
-                              'invoked_by'    => $row['invoked_by'],
-                              'action_type'   => $row['action_type'],
-                              'action_info'   => $row['action_info'],
-                              'action_target' => $row['action_target'],
-                              'result_type'   => $row['result_type'],
-                              'result_info'   => $row['result_info'],
-                              'started'       => $row['started'],
-                              'finished'      => $row['finished'],
-                              'created'       => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'       => \Flexio\Base\Util::formatDate($row['updated']));
+            $output[] = array('eid'                => $row['eid'],
+                              'eid_status'         => $row['eid_status'],
+                              'action_type'        => $row['action_type'],
+                              'request_ip'         => $row['request_ip'],
+                              'request_type'       => $row['request_type'],
+                              'request_method'     => $row['request_method'],
+                              'request_route'      => $row['request_route'],
+                              'request_created_by' => $row['request_created_by'],
+                              'request_created'    => \Flexio\Base\Util::formatDate($row['request_created']),
+                              'request_params'     => $row['request_params'],
+                              'target_eid'         => $row['target_eid'],
+                              'target_eid_type'    => $row['target_eid_type'],
+                              'target_owned_by'    => $row['target_owned_by'],
+                              'response_type'      => $row['response_type'],
+                              'response_code'      => $row['response_code'],
+                              'response_params'    => $row['response_params'],
+                              'response_created'   => \Flexio\Base\Util::formatDate($row['response_created']),
+                              'duration'           => \Flexio\Base\Util::formatDateDiff($row['request_created'], $row['response_created']),
+                              'created'            => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'            => \Flexio\Base\Util::formatDate($row['updated']));
         }
 
         return $output;

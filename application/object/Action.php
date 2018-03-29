@@ -76,7 +76,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $object;
     }
 
-    public function delete() : \Flexio\Object\Pipe
+    public function delete() : \Flexio\Object\Action
     {
         $this->clearCache();
         $action_model = $this->getModel()->action;
@@ -157,14 +157,58 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-        $action_model = $this->getModel()->action;
-        $mapped_properties = $action_model->get($properties['eid']);
+        $mapped_properties = \Flexio\Base\Util::mapArray(
+            [
+                "eid" => null,
+                "eid_status" => null,
+                "action_type" => null,
+                "request_ip" => null,
+                "request_type" => null,
+                "request_method" => null,
+                "request_route" => null,
+                "request_created_by" => null,
+                "request_created" => null,
+                "request_params" => null,
+                "target_eid" => null,
+                "target_eid_type" => null,
+                "target_owned_by" => null,
+                "response_type" => null,
+                "response_code" => null,
+                "response_params" => null,
+                "response_created" => null,
+                "request_created" => null,
+                "duration" => null,
+                "created" => null,
+                "updated" => null
+            ],
+        $properties);
 
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // return the properties
+        // unpack the request params
+        if (isset($mapped_properties['request_params']))
+        {
+            $request_params = @json_decode($mapped_properties['request_params'],true);
+            if ($request_params !== false)
+            {
+                $mapped_properties['request_params'] = $request_params;
+                $mapped_properties['request_params'] = $mapped_properties['request_params']; // TODO: fix empty params
+            }
+        }
+
+        // unpack the response params
+        if (isset($mapped_properties['response_params']))
+        {
+            $response_params = @json_decode($mapped_properties['response_params'],true);
+            if ($response_params !== false)
+            {
+                $mapped_properties['response_params'] = $response_params;
+                $mapped_properties['response_params'] = $mapped_properties['response_params']; // TODO: fix empty params
+            }
+        }
+
         return $mapped_properties;
     }
 }
