@@ -18,4 +18,13 @@ namespace Flexio\Api2;
 
 class Action
 {
+    public static function summary(\Flexio\Api2\Request $request) : array
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
+
+    public static function list(\Flexio\Api2\Request $request) : array
+    {
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+    }
 }

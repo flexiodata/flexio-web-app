@@ -64,6 +64,9 @@ class Api
     // * removed some admin endpoints:
     //   v1: 'GET /admin/resetconfig' => v2: (removed)
     //   v1: 'GET /admin/createexamples' => v2: (removed)
+    // * added endpoints for getting action history and summary
+    //   v1: (doesn't exist) => v2: 'GET /:userid/actions'
+    //   v2: (doesn't exist) => v2: 'GET /:userid/actions/summary'
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?
@@ -115,6 +118,10 @@ class Api
         'POS /:userid/auth/keys'                      => '\Flexio\Api2\Token::create',
         'GET /:userid/auth/keys/:objeid'              => '\Flexio\Api2\Token::get',
         'DEL /:userid/auth/keys/:objeid'              => '\Flexio\Api2\Token::delete',
+
+        // actions
+        'GET /:userid/actions'                        => '\Flexio\Api2\Action::list',
+        'GET /:userid/actions/summary'                => '\Flexio\Api2\Action::summary',
 
         // connections
         'POS /:userid/connections'                    => '\Flexio\Api2\Connection::create',
