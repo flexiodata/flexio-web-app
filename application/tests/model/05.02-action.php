@@ -61,6 +61,23 @@ class Test
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
+            'action_type' => 'action.test',
+            'request_ip' => '127.0.0.1',
+            'request_type' => 'HTTP',
+            'request_method' => 'POST',
+            'request_route' => '/api/url/endpoint',
+            'request_created_by' => 'bxxxxxxxxxxx',
+            'request_created' => '2018-01-02 01:02:03',
+            'request_params' => '{}',
+            'target_eid' => 'byyyyyyyyyyy',
+            'target_eid_type' => 'PIP',
+            'target_owned_by' => 'cyyyyyyyyyyy',
+            'response_type' => 'HTTP',
+            'response_code' => '200',
+            'response_params' => '{}',
+            'response_created' => '2018-01-02 01:02:04',
+            'owned_by' => 'cxxxxxxxxxxx',
+            'created_by' => 'dxxxxxxxxxxx'
         );
         \Flexio\Tests\Check::assertInArray('B.1', 'Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
     }
