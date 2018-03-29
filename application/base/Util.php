@@ -435,8 +435,11 @@ class Util
         return number_format($num, $dec, $g_store->decimal_separator, $g_store->thousands_separator);
     }
 
-    public static function formatDate(string $date) : string
+    public static function formatDate(string $date = null) : string
     {
+        if (!isset($date))
+            return '';
+
         $datetime = new \DateTime($date);
         return $datetime->format(\DateTime::ISO8601);
     }
@@ -492,7 +495,7 @@ class Util
             if ($a[$field] == $b[$field]) return 0;
             return ($a[$field] > $b[$field]) ? -1 : 1;
         });
-        
+
         return $arr;
     }
 
@@ -994,7 +997,7 @@ class Util
 
                 if ($content_type === false)
                     $content_type = \Flexio\Base\ContentType::getMimeType($filename, '');
-                
+
                 $size = 0;
 
                 $stream_info = array();
