@@ -352,7 +352,9 @@ CREATE TABLE tbl_action (
   response_code varchar(12) NOT NULL default '',       -- specific code for the response type (e.g. "200", "404", etc)
   response_params json,                                -- subset of info returned to the user (e.g. error code and message or basic info about object)
   response_created timestamp NULL default NULL,        -- timestamp when the response was created
-  created timestamp NULL default NULL,                 -- same as request_created
+  owned_by varchar(12) NOT NULL default '',            -- same as request_created_by
+  created_by varchar(12) NOT NULL default '',          -- same as request_created_by
+  created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE (eid)
@@ -363,6 +365,7 @@ CREATE INDEX idx_action_request_created_by ON tbl_action (request_created_by);
 CREATE INDEX idx_action_target_eid ON tbl_action (target_eid);
 CREATE INDEX idx_action_target_eid_type ON tbl_action (target_eid_type);
 CREATE INDEX idx_action_target_owned_by ON tbl_action (target_owned_by);
+CREATE INDEX idx_action_owned_by ON tbl_action (owned_by);
 CREATE INDEX idx_action_created ON tbl_action (created);
 
 

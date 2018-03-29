@@ -73,6 +73,8 @@ CREATE TABLE tbl_action (
     response_code varchar(12) NOT NULL default '',
     response_params json,
     response_created timestamp NULL default NULL,
+    owned_by varchar(12) NOT NULL default '',
+    created_by varchar(12) NOT NULL default '',
     created timestamp NULL default NULL,
     updated timestamp NULL default NULL,
     PRIMARY KEY (id),
@@ -88,6 +90,7 @@ EOT;
     $db->exec("CREATE INDEX idx_action_target_eid ON tbl_action (target_eid);");
     $db->exec("CREATE INDEX idx_action_target_eid_type ON tbl_action (target_eid_type);");
     $db->exec("CREATE INDEX idx_action_target_owned_by ON tbl_action (target_owned_by);");
+    $db->exec("CREATE INDEX idx_action_owned_by ON tbl_action (owned_by);");
     $db->exec("CREATE INDEX idx_action_created ON tbl_action (created);");
 }
 catch(\Exception $e)
