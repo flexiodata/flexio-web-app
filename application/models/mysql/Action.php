@@ -42,6 +42,8 @@ class Action extends ModelBase
                 'response_code'      => $params['response_code'] ?? '',
                 'response_params'    => $params['response_params'] ?? '{}',
                 'response_created'   => $params['response_created'] ?? null,
+                'owned_by'           => $params['owned_by'] ?? '',
+                'created_by'         => $params['created_by'] ?? '',
                 'created'            => $timestamp,
                 'updated'            => $timestamp
             );
@@ -79,7 +81,9 @@ class Action extends ModelBase
                 'response_type'      => array('type' => 'string',  'required' => false),
                 'response_code'      => array('type' => 'string',  'required' => false),
                 'response_params'    => array('type' => 'string',  'required' => false),
-                'response_created'   => array('type' => 'string',  'required' => false)
+                'response_created'   => array('type' => 'string',  'required' => false),
+                'owned_by'           => array('type' => 'string',  'required' => false),
+                'created_by'         => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -155,6 +159,8 @@ class Action extends ModelBase
                               'response_params'    => $row['response_params'],
                               'response_created'   => \Flexio\Base\Util::formatDate($row['response_created']),
                               'duration'           => \Flexio\Base\Util::formatDateDiff($row['request_created'], $row['response_created']),
+                              'owned_by'           => $row['owned_by'],
+                              'created_by'         => $row['created_by'],
                               'created'            => \Flexio\Base\Util::formatDate($row['created']),
                               'updated'            => \Flexio\Base\Util::formatDate($row['updated']));
         }
