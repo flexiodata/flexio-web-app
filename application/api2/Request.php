@@ -26,6 +26,7 @@ class Request
     private $requesting_user;
     private $url_owner_eid;
     private $url_object_eid;
+    private $action;
 
     public function __construct()
     {
@@ -117,6 +118,16 @@ class Request
         return $this->url_object_eid;
     }
 
+    public function setAction(\Flexio\Object\Action $action)
+    {
+        $this->action = $action;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
+
     private function initialize()
     {
         $this->method = '';
@@ -127,5 +138,6 @@ class Request
         $this->requesting_user = '';
         $this->url_owner_eid = '';
         $this->url_object_eid = '';
+        $this->action = false;
     }
 }
