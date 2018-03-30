@@ -19,6 +19,7 @@ namespace Flexio\Api2;
 class Request
 {
     private $action = false;
+    private $action_type = '';
     private $request_type = 'HTTP';
     private $request_ip_address = '';
     private $request_token = '';
@@ -29,9 +30,11 @@ class Request
     private $request_object_owner_eid = '';
     private $request_object_eid = '';
     private $request_object_type = '';
+    private $request_params = array();
     private $response_type = 'HTTP';
     private $response_code = '';
     private $response_created = '';
+    private $response_params = array();
 
     private $url_params = array();
     private $query_params = array();
@@ -41,6 +44,47 @@ class Request
     public static function create() : \Flexio\Api2\Request
     {
         return (new static);
+    }
+
+    private function getActionParams() : array
+    {
+        $params = array(
+            'action_type'        => $this->action_type,
+            'request_type'       => $this->request_type,
+            'request_ip'         => $this->request_ip_address,
+            'request_token'      => $this->request_token,
+            'request_method'     => $this->request_method,
+            'request_route'      => $this->request_url,
+            'request_created_by' => $this->request_created_by,
+            'request_created'    => $this->request_created,
+            'target_owned_by'    => $this->request_object_owner_eid,
+            'target_eid'         => $this->request_object_eid,
+            'target_eid_type'    => $this->request_object_type,
+            'request_params'     => $this->request_params,
+            'response_type'      => $this->response_type,
+            'response_code'      => $this->response_code,
+            'response_created'   => $this->response_created,
+            'response_params'    => $this->response_params,
+            'owned_by'           => $this->request_created_by,
+            'created_by'         => $this->request_created_by
+        );
+        return $params;
+    }
+
+    public function createAction(string $action_type)
+    {
+        $this->action_type = $action_type;
+        $params = $this->getActionParams();
+        $action = \Flexio\Object\Action::create($params);
+        $this->action = $action;
+    }
+
+    public function updateAction()
+    {
+        if ($this->action === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        $action->set($params);
     }
 
     public function setIpAddress(string $request_ip_address)
