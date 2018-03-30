@@ -80,12 +80,14 @@ class Request
         return $action;
     }
 
-    public function updateAction()
+    public function updateAction() : \Flexio\Object\Action
     {
         if ($this->action === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $action->set($params);
+        $params = $this->getActionParams();
+        $this->action->set($params);
+        return $this->action;
     }
 
     public function setIpAddress(string $request_ip_address)
