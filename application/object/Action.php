@@ -67,6 +67,22 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Action
     {
+        // if the params are set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['request_params']))
+        {
+            if (!is_array($properties['request_params']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+            $properties['request_params'] = json_encode($properties['request_params']);
+        }
+        if (isset($properties) && isset($properties['response_params']))
+        {
+            if (!is_array($properties['response_params']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+            $properties['response_params'] = json_encode($properties['response_params']);
+        }
+
         $object = new static();
         $action_model = $object->getModel()->action;
         $local_eid = $action_model->create($properties);
@@ -160,6 +176,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,
+                "eid_type" => null,
                 "eid_status" => null,
                 "action_type" => null,
                 "request_ip" => null,
