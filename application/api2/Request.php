@@ -26,14 +26,14 @@ class Request
     private $request_method = '';
     private $request_url = '';
     private $request_created_by = '';
-    private $request_created = '';
+    private $request_created = null; // no timestamp available by default
     private $request_object_owner_eid = '';
     private $request_object_eid = '';
     private $request_object_type = '';
     private $request_params = array();
     private $response_type = 'HTTP';
     private $response_code = '';
-    private $response_created = '';
+    private $response_created = null; // no timestamp available by default
     private $response_params = array();
 
     private $url_params = array();
