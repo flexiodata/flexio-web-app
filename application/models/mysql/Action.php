@@ -142,6 +142,7 @@ class Action extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'                => $row['eid'],
+                              'eid_type'           => \Model::TYPE_ACTION,
                               'eid_status'         => $row['eid_status'],
                               'action_type'        => $row['action_type'],
                               'request_ip'         => $row['request_ip'],
