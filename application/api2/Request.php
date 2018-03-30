@@ -71,12 +71,13 @@ class Request
         return $params;
     }
 
-    public function createAction(string $action_type)
+    public function createAction(string $action_type) : \Flexio\Object\Action
     {
         $this->action_type = $action_type;
         $params = $this->getActionParams();
         $action = \Flexio\Object\Action::create($params);
         $this->action = $action;
+        return $action;
     }
 
     public function updateAction()
@@ -233,3 +234,5 @@ class Request
         return $this->post_params;
     }
 }
+
+

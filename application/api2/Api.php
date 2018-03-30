@@ -169,15 +169,14 @@ class Api
         'GET /admin/info/users'                       => '\Flexio\Api2\Admin::userlist',
         'GET /admin/info/processes/summary'           => '\Flexio\Api2\Admin::processes',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
-        'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run'
+        'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
+
+        // test
+        'GET /admin/action/test'                      => '\Flexio\Api2\Action::test'
     );
 
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
-        // get the method and url
-        $method = $server_request->getMethod();
-        $url = $server_request->REQUEST_URI;
-
         // get the url parts and map them to the api parameters
         $url_params = array();
         $url_params['apibase']    = $server_request->getUrlPathPart(0) ?? '';
@@ -189,19 +188,30 @@ class Api
         $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
         $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
 
+
+        // get other request info
+        $request_ip_address = strtolower($server_request->getIpAddress());
+        $request_url = $server_request->getUri(); // leave URL as-is to match param handling
+        $request_method = strtoupper($server_request->getMethod());
+
+        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
+        if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
+            $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
+
+        $request_timestamp = \Flexio\System\System::getTimestamp();
+
         // package the request info
         $api_request = \Flexio\Api2\Request::create();
-        $api_request->setMethod($method);
-        $api_request->setUrl($url);
+        $api_request->setIpAddress($request_ip_address);
+        $api_request->setUrl($request_url);
+        $api_request->setMethod($request_method);
+        //$api_request->setToken($request_token); // TODO: set the token info when it's available
+        $api_request->setRequestingUser($requesting_user_eid);
+        $api_request->setRequestCreated($request_timestamp);
         $api_request->setUrlParams($url_params);
         $api_request->setQueryParams($query_params);
         $api_request->setPostParams($post_params);
 
-        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
-        if (\Flexio\Base\Eid::isValid($requesting_user_eid))
-            $api_request->setRequestingUser($requesting_user_eid);
-             else
-            $api_request->setRequestingUser(\Flexio\Object\User::MEMBER_PUBLIC);
 
         if (!IS_PROCESSTRYCATCH())
         {

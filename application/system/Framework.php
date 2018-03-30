@@ -51,9 +51,19 @@ class FrameworkRequest
             return $this->url_parts[$idx];
     }
 
-    public function getMethod()
+    public function getIpAddress() : string
     {
-        return $_SERVER['REQUEST_METHOD'];
+        return $_SERVER['REMOTE_ADDR'] ?? '';
+    }
+
+    public function getUri() : string
+    {
+        return $_SERVER['REQUEST_URI'] ?? '';
+    }
+
+    public function getMethod() : string
+    {
+        return $_SERVER['REQUEST_METHOD'] ?? '';
     }
 
     public function getQuery($key, $default = null)

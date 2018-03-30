@@ -18,6 +18,12 @@ namespace Flexio\Api2;
 
 class Action
 {
+    public static function test(\Flexio\Api2\Request $request) : array
+    {
+        $action = $request->createAction('action.test');
+        return $action->get();
+    }
+
     public static function summary(\Flexio\Api2\Request $request) : array
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
