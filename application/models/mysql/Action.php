@@ -73,7 +73,7 @@ class Action extends ModelBase
                 'request_method'     => array('type' => 'string',  'required' => false),
                 'request_route'      => array('type' => 'string',  'required' => false),
                 'request_created_by' => array('type' => 'string',  'required' => false),
-                'request_created'    => array('type' => 'string',  'required' => false),
+                'request_created'    => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
                 'request_params'     => array('type' => 'string',  'required' => false),
                 'target_eid'         => array('type' => 'string',  'required' => false),
                 'target_eid_type'    => array('type' => 'string',  'required' => false),
@@ -81,7 +81,7 @@ class Action extends ModelBase
                 'response_type'      => array('type' => 'string',  'required' => false),
                 'response_code'      => array('type' => 'string',  'required' => false),
                 'response_params'    => array('type' => 'string',  'required' => false),
-                'response_created'   => array('type' => 'string',  'required' => false),
+                'response_created'   => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
                 'owned_by'           => array('type' => 'string',  'required' => false),
                 'created_by'         => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
