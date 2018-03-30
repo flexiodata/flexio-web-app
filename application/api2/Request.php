@@ -18,49 +18,150 @@ namespace Flexio\Api2;
 
 class Request
 {
-    private $method;
-    private $url;
-    private $url_params;
-    private $query_params;
-    private $post_params;
-    private $requesting_user;
-    private $url_owner_eid;
-    private $url_object_eid;
-    private $action;
+    private $action = false;
+    private $request_type = 'HTTP';
+    private $request_ip_address = '';
+    private $request_token = '';
+    private $request_method = '';
+    private $request_url = '';
+    private $request_created_by = '';
+    private $request_created = '';
+    private $request_object_owner_eid = '';
+    private $request_object_eid = '';
+    private $request_object_type = '';
+    private $response_type = 'HTTP';
+    private $response_code = '';
+    private $response_created = '';
 
-    public function __construct()
-    {
-        $this->initialize();
-    }
+    private $url_params = array();
+    private $query_params = array();
+    private $post_params = array();
+
 
     public static function create() : \Flexio\Api2\Request
     {
         return (new static);
     }
 
-    public function setMethod(string $method)
+    public function setIpAddress(string $request_ip_address)
     {
-        $this->method = $method;
+        $this->request_ip_address = $request_ip_address;
+    }
+
+    public function getIpAddress() : string
+    {
+        return $this->request_ip_address;
+    }
+
+    public function setToken(string $request_token)
+    {
+        $this->request_token = $request_token;
+    }
+
+    public function getToken() : string
+    {
+        return $this->request_token;
+    }
+
+    public function setMethod(string $request_method)
+    {
+        $this->request_method = $request_method;
     }
 
     public function getMethod() : string
     {
-        return $this->method;
+        return $this->request_method;
     }
 
-    public function setUrl(string $url)
+    public function setUrl(string $request_url)
     {
-        $this->url = $url;
+        $this->request_url = $request_url;
     }
 
-    public function getUrl(string $url) : string
+    public function getUrl() : string
     {
-        return $this->url;
+        return $this->request_url;
     }
 
-    public function setUrlParams(array $params)
+    public function setRequestingUser(string $request_created_by)
     {
-        $this->url_params = $params;
+        // TODO: rename function to follow convention
+        $this->request_created_by = $request_created_by;
+    }
+
+    public function getRequestingUser() : string
+    {
+        // TODO: rename function to follow convention
+        return $this->request_created_by;
+    }
+
+    public function setRequestCreated(string $request_created)
+    {
+        $this->request_created = $request_created;
+    }
+
+    public function getRequestCreated() : string
+    {
+        return $this->request_created;
+    }
+
+    public function setOwnerFromUrl(string $request_object_owner_eid)
+    {
+        // TODO: rename function to follow convention
+        $this->request_object_owner_eid = $request_object_owner_eid;
+    }
+
+    public function getOwnerFromUrl() : string
+    {
+        // TODO: rename function to follow convention
+        return $this->request_object_owner_eid;
+    }
+
+    public function setObjectFromUrl(string $request_object_eid)
+    {
+        // TODO: rename function to follow convention
+        $this->request_object_eid = $request_object_eid;
+    }
+
+    public function getObjectFromUrl() : string
+    {
+        // TODO: rename function to follow convention
+        return $this->request_object_eid;
+    }
+
+    public function setObjectEidType(string $request_object_eid_type)
+    {
+        $this->request_object_eid_type = $request_object_eid_type;
+    }
+
+    public function getObjectEidType() : string
+    {
+        $this->request_object_eid_type;
+    }
+
+    public function setResponseCode(string $response_code)
+    {
+        $this->response_code = $response_code;
+    }
+
+    public function getResponseCode() : string
+    {
+        return $this->response_code;
+    }
+
+    public function setResponseCreated(string $response_created)
+    {
+        $this->response_created = $response_created;
+    }
+
+    public function getResponseCreated() : string
+    {
+        return $this->response_created;
+    }
+
+    public function setUrlParams(array $url_params)
+    {
+        $this->url_params = $url_params;
     }
 
     public function getUrlParams() : array
@@ -68,9 +169,9 @@ class Request
         return $this->url_params;
     }
 
-    public function setQueryParams(array $params)
+    public function setQueryParams(array $query_params)
     {
-        $this->query_params = $params;
+        $this->query_params = $query_params;
     }
 
     public function getQueryParams() : array
@@ -78,66 +179,13 @@ class Request
         return $this->query_params;
     }
 
-    public function setPostParams(array $params)
+    public function setPostParams(array $post_params)
     {
-        $this->post_params = $params;
+        $this->post_params = $post_params;
     }
 
     public function getPostParams() : array
     {
         return $this->post_params;
-    }
-
-    public function setRequestingUser(string $param)
-    {
-        $this->requesting_user = $param;
-    }
-
-    public function getRequestingUser() : string
-    {
-        return $this->requesting_user;
-    }
-
-    public function setOwnerFromUrl(string $owner_eid)
-    {
-        $this->url_owner_eid = $owner_eid;
-    }
-
-    public function getOwnerFromUrl() : string
-    {
-        return $this->url_owner_eid;
-    }
-
-    public function setObjectFromUrl(string $object_eid)
-    {
-        $this->url_object_eid = $object_eid;
-    }
-
-    public function getObjectFromUrl() : string
-    {
-        return $this->url_object_eid;
-    }
-
-    public function setAction(\Flexio\Object\Action $action)
-    {
-        $this->action = $action;
-    }
-
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    private function initialize()
-    {
-        $this->method = '';
-        $this->url = '';
-        $this->url_params = array();
-        $this->query_params = array();
-        $this->post_params = array();
-        $this->requesting_user = '';
-        $this->url_owner_eid = '';
-        $this->url_object_eid = '';
-        $this->action = false;
     }
 }
