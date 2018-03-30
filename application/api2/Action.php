@@ -21,8 +21,6 @@ class Action
     public static function test(\Flexio\Api2\Request $request) : array
     {
         $action = $request->createAction('action.test');
-        $request->setResponseCode('404');
-        $request->updateAction();
         return $action->get();
     }
 
