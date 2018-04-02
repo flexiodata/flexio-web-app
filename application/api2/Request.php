@@ -94,6 +94,11 @@ class Request
         return $action;
     }
 
+    public function getAction()
+    {
+        return $this->action;
+    }
+
     public function setIpAddress(string $request_ip_address) : \Flexio\Api2\Request
     {
         $this->request_ip_address = $request_ip_address;
