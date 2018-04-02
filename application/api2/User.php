@@ -94,6 +94,8 @@ class User
         // POSSIBILITY 1: user doesn't exist; create the user
         if ($user === false)
         {
+            $request->track(\Flexio\Api\Action::TYPE_USER_CREATED);
+
             // determine the status and verify code based on whether or not we're requiring verification
             $eid_status = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
             $verify_code = ($require_verification === true ? \Flexio\Base\Util::generateHandle() : '');
@@ -146,6 +148,7 @@ class User
             // return the user info
             $result = $user->get();
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+            $request->track();
             \Flexio\Api2\Response::sendContent($result);
             return;
         }
@@ -222,6 +225,8 @@ class User
 
     public static function set(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATED);
+
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -283,6 +288,7 @@ class User
         $owner_user->set($validated_post_params);
         $result = $owner_user->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
