@@ -94,9 +94,10 @@ class Request
         return $action;
     }
 
-    public function setIpAddress(string $request_ip_address)
+    public function setIpAddress(string $request_ip_address) : \Flexio\Api2\Request
     {
         $this->request_ip_address = $request_ip_address;
+        return $this;
     }
 
     public function getIpAddress() : string
@@ -104,9 +105,10 @@ class Request
         return $this->request_ip_address;
     }
 
-    public function setToken(string $request_token)
+    public function setToken(string $request_token) : \Flexio\Api2\Request
     {
         $this->request_token = $request_token;
+        return $this;
     }
 
     public function getToken() : string
@@ -114,9 +116,10 @@ class Request
         return $this->request_token;
     }
 
-    public function setMethod(string $request_method)
+    public function setMethod(string $request_method) : \Flexio\Api2\Request
     {
         $this->request_method = $request_method;
+        return $this;
     }
 
     public function getMethod() : string
@@ -124,9 +127,10 @@ class Request
         return $this->request_method;
     }
 
-    public function setUrl(string $request_url)
+    public function setUrl(string $request_url) : \Flexio\Api2\Request
     {
         $this->request_url = $request_url;
+        return $this;
     }
 
     public function getUrl() : string
@@ -134,10 +138,11 @@ class Request
         return $this->request_url;
     }
 
-    public function setRequestingUser(string $request_created_by)
+    public function setRequestingUser(string $request_created_by) : \Flexio\Api2\Request
     {
         // TODO: rename function to follow convention
         $this->request_created_by = $request_created_by;
+        return $this;
     }
 
     public function getRequestingUser() : string
@@ -146,9 +151,10 @@ class Request
         return $this->request_created_by;
     }
 
-    public function setRequestCreated(string $request_created)
+    public function setRequestCreated(string $request_created) : \Flexio\Api2\Request
     {
         $this->request_created = $request_created;
+        return $this;
     }
 
     public function getRequestCreated() : string
@@ -156,10 +162,11 @@ class Request
         return $this->request_created;
     }
 
-    public function setOwnerFromUrl(string $request_object_owner_eid)
+    public function setOwnerFromUrl(string $request_object_owner_eid) : \Flexio\Api2\Request
     {
         // TODO: rename function to follow convention
         $this->request_object_owner_eid = $request_object_owner_eid;
+        return $this;
     }
 
     public function getOwnerFromUrl() : string
@@ -168,10 +175,11 @@ class Request
         return $this->request_object_owner_eid;
     }
 
-    public function setObjectFromUrl(string $request_object_eid)
+    public function setObjectFromUrl(string $request_object_eid) : \Flexio\Api2\Request
     {
         // TODO: rename function to follow convention
         $this->request_object_eid = $request_object_eid;
+        return $this;
     }
 
     public function getObjectFromUrl() : string
@@ -180,9 +188,10 @@ class Request
         return $this->request_object_eid;
     }
 
-    public function setObjectEidType(string $request_object_eid_type)
+    public function setObjectEidType(string $request_object_eid_type) : \Flexio\Api2\Request
     {
         $this->request_object_eid_type = $request_object_eid_type;
+        return $this;
     }
 
     public function getObjectEidType() : string
@@ -190,9 +199,10 @@ class Request
         $this->request_object_eid_type;
     }
 
-    public function setResponseCode(string $response_code)
+    public function setResponseCode(string $response_code) : \Flexio\Api2\Request
     {
         $this->response_code = $response_code;
+        return $this;
     }
 
     public function getResponseCode() : string
@@ -200,9 +210,10 @@ class Request
         return $this->response_code;
     }
 
-    public function setResponseCreated(string $response_created)
+    public function setResponseCreated(string $response_created) : \Flexio\Api2\Request
     {
         $this->response_created = $response_created;
+        return $this;
     }
 
     public function getResponseCreated() : string
@@ -210,9 +221,10 @@ class Request
         return $this->response_created;
     }
 
-    public function setUrlParams(array $url_params)
+    public function setUrlParams(array $url_params) : \Flexio\Api2\Request
     {
         $this->url_params = $url_params;
+        return $this;
     }
 
     public function getUrlParams() : array
@@ -220,9 +232,10 @@ class Request
         return $this->url_params;
     }
 
-    public function setQueryParams(array $query_params)
+    public function setQueryParams(array $query_params) : \Flexio\Api2\Request
     {
         $this->query_params = $query_params;
+        return $this;
     }
 
     public function getQueryParams() : array
@@ -230,9 +243,10 @@ class Request
         return $this->query_params;
     }
 
-    public function setPostParams(array $post_params)
+    public function setPostParams(array $post_params) : \Flexio\Api2\Request
     {
         $this->post_params = $post_params;
+        return $this;
     }
 
     public function getPostParams() : array
