@@ -38,8 +38,6 @@ class Action
     const TYPE_CONNECTION_CONNECT    = 'action.connection.connect';
     const TYPE_CONNECTION_DISCONNECT = 'action.connection.disconnect';
 
-
-
     // TODO: add actions for following API endpoints:
 
     // * creating folder/file; TODO: what about delete?
