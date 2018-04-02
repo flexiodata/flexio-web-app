@@ -20,6 +20,8 @@ class Connection
 {
     public static function create(\Flexio\Api2\Request $request) : array
     {
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATED);
+
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -75,11 +77,14 @@ class Connection
         if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
             $properties['connection_info'] = (object)$properties['connection_info'];
 
+        $request->track();
         return $properties;
     }
 
     public static function delete(\Flexio\Api2\Request $request) : array
     {
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DELETED);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
@@ -102,11 +107,15 @@ class Connection
         $result['eid'] = $connection->getEid();
         $result['eid_type'] = $connection->getType();
         $result['eid_status'] = $connection->getStatus();
+
+        $request->track();
         return $result;
     }
 
     public static function set(\Flexio\Api2\Request $request) : array
     {
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATED);
+
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -143,6 +152,8 @@ class Connection
 
         // get the $connection properties
         $properties = self::maskProperties($connection->get());
+
+        $request->track();
         return $properties;
     }
 
