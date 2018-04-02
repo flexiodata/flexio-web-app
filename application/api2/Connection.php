@@ -262,28 +262,6 @@ class Connection
         \Flexio\Api2\Response::sendContent($result);
     }
 
-    private static function maskProperties(array $properties) : array
-    {
-        // TODO: figure out a way to make public/private properties
-        // on the object so we can use the full object internally,
-        // but not expose these on the api
-
-        if (!isset($properties['connection_info']))
-            return $properties;
-
-        if (!is_array($properties['connection_info']))
-            return $properties;
-
-        // remove tokens and passwords if they are set
-        $connection_info = $properties['connection_info'];
-        $connection_info['password'] = "*****";
-        $connection_info['access_token'] = "*****";
-        $connection_info['refresh_token'] = "*****";
-
-        $properties['connection_info'] = $connection_info;
-        return $properties;
-    }
-
     private static function get_internal($object)
     {
         // TODO: figure out a way to make public/private properties
