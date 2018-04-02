@@ -67,6 +67,10 @@ class Api
     // * added endpoints for getting action history and summary
     //   v1: (doesn't exist) => v2: 'GET /:userid/actions'
     //   v2: (doesn't exist) => v2: 'GET /:userid/actions/summary'
+    // * removed pipe endpoint for getting process list; use process list directly with query param of parent_eid=<pipe_eid>
+    //   this will help give us consistent behavior with the list and summary version of processes (e.g. get a summary view
+    //   of the list using the same params)
+    //   v1: 'GET /pipes/:eid/processes' => v2: (removed in v2) use: GET /:userid/processes?parent_eid=:eid
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?
@@ -139,7 +143,6 @@ class Api
         'GET /:userid/pipes/:objeid'                  => '\Flexio\Api2\Pipe::get',
         'DEL /:userid/pipes/:objeid'                  => '\Flexio\Api2\Pipe::delete',
         'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
-        'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Pipe::processes',
         'POS /:userid/pipes/:objeid/run'              => '\Flexio\Api2\Pipe::run',
         'GET /:userid/pipes/:objeid/run'              => '\Flexio\Api2\Pipe::run',
 

@@ -292,65 +292,6 @@ class Pipe
         \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function processes(\Flexio\Api2\Request $request)
-    {
-        $query_params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $owner_user_eid = $request->getOwnerFromUrl();
-        $pipe_eid = $request->getObjectFromUrl();
-
-        // TODO: add other query string params?
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($query_params, array(
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_query_params = $validator->getParams();
-
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-        if ($owner_user_eid !== $pipe->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        // check the rights on the object
-        if ($pipe->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE, 'parent_eid' => $pipe_eid);
-        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
-        $processes = \Flexio\Object\Process::list($filter);
-
-        // get the processes that are accessible
-        $processes_accessible = array();
-        foreach ($processes as $p)
-        {
-            // a pipe can be run by different users; make sure the given user can only see
-            // processes that they have rights to
-            if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-                continue;
-
-            $processes_accessible[] = $p;
-        }
-
-        // get the content for the selected processes
-        $result = array();
-        foreach ( $processes_accessible as $p)
-        {
-            $result[] = self::get_internal($p);
-        }
-
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
-    }
-
     public static function run(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
