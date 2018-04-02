@@ -18,15 +18,17 @@ namespace Flexio\Api2;
 
 class Action
 {
-    const TYPE_UNDEFINED             = '';
-    const TYPE_TEST                  = 'action.test';
+    const TYPE_UNDEFINED              = '';
+    const TYPE_TEST                   = 'action.test';
 
-    const TYPE_USER_LOGIN            = 'action.user.login';
-    const TYPE_USER_LOGOUT           = 'action.user.logout';
+    const TYPE_USER_LOGIN             = 'action.user.login';
+    const TYPE_USER_LOGOUT            = 'action.user.logout';
 
-    const TYPE_USER_CREATE           = 'action.user.create';
-    const TYPE_USER_UPDATE           = 'action.user.update';
-    const TYPE_USER_DELETE           = 'action.user.delete';
+    const TYPE_USER_CREATE            = 'action.user.create';
+    const TYPE_USER_UPDATE            = 'action.user.update';
+    const TYPE_USER_DELETE            = 'action.user.delete';
+    const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
+    const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
     const TYPE_PIPE_CREATE           = 'action.pipe.create';
     const TYPE_PIPE_UPDATE           = 'action.pipe.update';
