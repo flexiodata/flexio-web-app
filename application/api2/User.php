@@ -355,6 +355,56 @@ class User
         \Flexio\Api2\Response::sendContent($result);
     }
 
+
+    public static function resetpassword(\Flexio\Api2\Request $request)
+    {
+        $request->track(\Flexio\Api2\Action::TYPE_USER_CREDENTIAL_RESET);
+
+        $post_params = $request->getPostParams();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'email'       => array('type' => 'string', 'required' => true),
+                'password'    => array('type' => 'string', 'required' => true),
+                'verify_code' => array('type' => 'string', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_post_params = $validator->getParams();
+        $email = $validated_post_params['email'];
+        $password = $validated_post_params['password'];
+        $code = $validated_post_params['verify_code'];
+
+        // make sure the new password is valid
+        if (\Flexio\Base\Util::isValidPassword($password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $user = false;
+        try
+        {
+            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
+            $user = \Flexio\Object\User::load($user_eid);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
+        }
+
+        if ($user->getVerifyCode() !== $code)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
+
+        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
+
+        $result = array();
+        $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api2\Response::sendContent($result);
+    }
+
     public static function activate(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
@@ -480,55 +530,6 @@ class User
         $result = array();
         $result['email'] = $email;
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
-    }
-
-    public static function resetpassword(\Flexio\Api2\Request $request)
-    {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_CREDENTIAL_RESET);
-
-        $post_params = $request->getPostParams();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($post_params, array(
-                'email'       => array('type' => 'string', 'required' => true),
-                'password'    => array('type' => 'string', 'required' => true),
-                'verify_code' => array('type' => 'string', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_post_params = $validator->getParams();
-        $email = $validated_post_params['email'];
-        $password = $validated_post_params['password'];
-        $code = $validated_post_params['verify_code'];
-
-        // make sure the new password is valid
-        if (\Flexio\Base\Util::isValidPassword($password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $user = false;
-        try
-        {
-            $user_eid = \Flexio\Object\User::getEidFromEmail($email);
-            $user = \Flexio\Object\User::load($user_eid);
-            if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, _('This user is unavailable'));
-        }
-
-        if ($user->getVerifyCode() !== $code)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
-
-        if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
-
-        $result = array();
-        $result['email'] = $email;
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
