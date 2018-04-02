@@ -77,7 +77,7 @@ class Connection
         if (isset($result['connection_info']) && is_array($result['connection_info']) && count($result['connection_info'])==0)
             $result['connection_info'] = (object)$result['connection_info'];
 
-        $request->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -108,7 +108,7 @@ class Connection
         $result['eid_type'] = $connection->getType();
         $result['eid_status'] = $connection->getStatus();
 
-        $request->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -153,7 +153,7 @@ class Connection
         // get the $connection properties
         $result = self::maskProperties($connection->get());
 
-        $request->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 

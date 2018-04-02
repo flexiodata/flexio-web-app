@@ -38,7 +38,10 @@ class Action
 
     public static function test(\Flexio\Api2\Request $request)
     {
-        $action = $request->track('action.test');
+        $request->track(\Flexio\Api2\Action::TYPE_TEST);
+        sleep(1);
+        $action = $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
+
         $result = $action->get();
         \Flexio\Api2\Response::sendContent($result);
     }
