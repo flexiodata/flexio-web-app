@@ -123,6 +123,7 @@ class Process
         }
 
         $result = $process->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -150,6 +151,8 @@ class Process
         $result['eid'] = $process->getEid();
         $result['eid_type'] = $process->getType();
         $result['eid_status'] = $process->getStatus();
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -186,6 +189,7 @@ class Process
         // set the properties
         $process->set($validated_params);
         $result = $process->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -229,10 +233,14 @@ class Process
                 $result['eid'] = $process_info['eid'];
                 $result['process_status'] = $process_info['process_status'];
                 $result['process_info'] = $process_info['process_info'];
+
+                $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
                 \Flexio\Api2\Response::sendContent($result);
+
                 return;
             }
 
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($process_info);
             return;
         }
@@ -252,10 +260,14 @@ class Process
             $result['eid'] = $process_info['eid'];
             $result['process_status'] = $process_info['process_status'];
             $result['process_info'] = $process_info['process_info'];
+
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($result);
+
             return;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($process_info);
         return;
     }
@@ -312,6 +324,7 @@ class Process
             $result[] = $item;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -369,6 +382,7 @@ class Process
             $result[] = $process_info_subset;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -391,6 +405,8 @@ class Process
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $process->getLog();
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -487,6 +503,8 @@ class Process
         $result['eid'] = $process_info['eid'];
         $result['process_status'] = $process_info['process_status'];
         $result['process_info'] = $process_info['process_info'];
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

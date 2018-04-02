@@ -30,6 +30,7 @@ class Admin
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = self::checkServerSettings();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -79,6 +80,7 @@ class Admin
             $result[] = $user_info;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -178,6 +180,7 @@ class Admin
             $result[] = $item;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

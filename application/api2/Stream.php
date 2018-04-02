@@ -41,6 +41,7 @@ class Stream
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $stream->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

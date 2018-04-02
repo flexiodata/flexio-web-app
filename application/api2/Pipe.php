@@ -74,6 +74,7 @@ class Pipe
 
         // get the pipe properties
         $result = self::get_internal($pipe);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -136,6 +137,7 @@ class Pipe
         );
 
         $result = self::get_internal($new_pipe);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -163,6 +165,8 @@ class Pipe
         $result['eid'] = $pipe->getEid();
         $result['eid_type'] = $pipe->getType();
         $result['eid_status'] = $pipe->getStatus();
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -203,6 +207,7 @@ class Pipe
         $pipe->set($validated_post_params);
 
         $result = self::get_internal($pipe);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -226,6 +231,7 @@ class Pipe
 
         // get the properties
         $result = self::get_internal($pipe);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -268,6 +274,7 @@ class Pipe
             $result[] = self::get_internal($p);
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -326,6 +333,7 @@ class Pipe
             $result[] = self::get_internal($p);
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

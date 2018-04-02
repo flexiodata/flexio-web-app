@@ -147,6 +147,7 @@ class Right
             $result[] = $object->getRights();
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -197,6 +198,7 @@ class Right
         $object->setRights($new_rights);
 
         $result = $right->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -235,6 +237,8 @@ class Right
         $result['eid'] = $right->getEid();
         $result['eid_type'] = $right->getType();
         $result['eid_status'] = $right->getStatus();
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -263,6 +267,7 @@ class Right
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $right->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -294,6 +299,7 @@ class Right
         // TODO: get rights info from list query in \Flexio\Object\Rights
 
         $result = array();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

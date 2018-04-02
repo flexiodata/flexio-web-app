@@ -51,6 +51,7 @@ class Vfs
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -147,6 +148,7 @@ class Vfs
         {
             $success = $vfs->createDirectory($path);
             $result = array('success' => $success);
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($result);
             return;
         }
@@ -165,6 +167,7 @@ class Vfs
         fclose($php_stream_handle);
 
         $result = array('success' => true);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 }

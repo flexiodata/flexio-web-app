@@ -36,7 +36,9 @@ class Token
         $token_properties['owned_by'] = $owner_user_eid;
         $token_properties['created_by'] = $requesting_user_eid;
         $token = \Flexio\Object\Token::create($token_properties);
+
         $result = $token->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -64,6 +66,8 @@ class Token
         $result['eid'] = $token->getEid();
         $result['eid_type'] = $token->getType();
         $result['eid_status'] = $token->getStatus();
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -87,6 +91,7 @@ class Token
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         $result = $token->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -129,6 +134,7 @@ class Token
             $result[] = $t->get();
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 }

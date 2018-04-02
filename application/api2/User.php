@@ -145,6 +145,7 @@ class User
 
             // return the user info
             $result = $user->get();
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($result);
             return;
         }
@@ -181,6 +182,7 @@ class User
 
             // we're done; other parts of the account will have already been created
             $result = $user->get();
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($result);
             return;
         }
@@ -214,6 +216,7 @@ class User
 
         // return the user info
         $result = $user->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -279,6 +282,7 @@ class User
 
         $owner_user->set($validated_post_params);
         $result = $owner_user->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -297,6 +301,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $owner_user->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -338,6 +343,7 @@ class User
         );
         $owner_user->set($new_params);
         $result = $owner_user->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -380,6 +386,7 @@ class User
 
         $result = array();
         $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -423,6 +430,7 @@ class User
 
         $result = array();
         $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -463,6 +471,7 @@ class User
 
         $result = array();
         $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -508,6 +517,7 @@ class User
 
         $result = array();
         $result['email'] = $email;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -530,6 +540,8 @@ class User
         $new_params = array('config' => array());
         $owner_user->set($new_params);
         $result = array('success' => true);
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 

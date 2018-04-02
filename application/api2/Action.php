@@ -43,6 +43,7 @@ class Action
         $action = $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
 
         $result = $action->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -109,6 +110,7 @@ class Action
             $result[] = $action_info_subset;
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 }

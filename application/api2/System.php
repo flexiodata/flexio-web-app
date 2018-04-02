@@ -29,6 +29,8 @@ class System
         $result['name'] = $package_info['name'] ?? '';
         $result['version'] = $package_info['version'] ?? '';
         $result['sha'] = $git_version;
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -66,7 +68,10 @@ class System
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             $result = $current_user->get();
+
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             \Flexio\Api2\Response::sendContent($result);
+
             return;
         }
         catch (\Flexio\Base\Exception $e)
@@ -76,6 +81,8 @@ class System
         $result = array();
         $result['eid'] = '';
         $result['eid_type'] = \Model::TYPE_USER;
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -89,6 +96,8 @@ class System
         $result = array();
         $result['eid'] = '';
         $result['eid_type'] = \Model::TYPE_USER;
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -142,6 +151,7 @@ class System
             $result[] = self::validateObject($p, $requesting_user_eid);
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
