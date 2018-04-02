@@ -20,7 +20,7 @@ class Action
 {
     public static function test(\Flexio\Api2\Request $request) : array
     {
-        $action = $request->createAction('action.test');
+        $action = $request->track('action.test');
         return $action->get();
     }
 

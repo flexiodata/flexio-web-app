@@ -71,23 +71,25 @@ class Request
         return $params;
     }
 
-    public function createAction(string $action_type) : \Flexio\Object\Action
+    public function track(string $action_type) : \Flexio\Object\Action
     {
+        // if the action has already been set, change the state
+        if ($this->action !== false)
+        {
+            if ($this->action_type !== $action_type)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            $params = $this->getActionParams();
+            $this->action->set($params);
+            return $this->action;
+        }
+
+        // otherwise, create a new action
         $this->action_type = $action_type;
         $params = $this->getActionParams();
         $action = \Flexio\Object\Action::create($params);
         $this->action = $action;
         return $action;
-    }
-
-    public function updateAction() : \Flexio\Object\Action
-    {
-        if ($this->action === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-        $params = $this->getActionParams();
-        $this->action->set($params);
-        return $this->action;
     }
 
     public function setIpAddress(string $request_ip_address)
