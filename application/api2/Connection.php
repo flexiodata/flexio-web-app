@@ -66,9 +66,10 @@ class Connection
             )
         );
 
-        // get the connection properties
+        // return the result
         $result = self::get_internal($connection);
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -92,14 +93,17 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // delete the object
         $connection->delete();
 
+        // return the result
         $result = array();
         $result['eid'] = $connection->getEid();
         $result['eid_type'] = $connection->getType();
         $result['eid_status'] = $connection->getStatus();
 
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -141,9 +145,10 @@ class Connection
         // set the properties
         $connection->set($validated_post_params);
 
-        // get the connection properties
+        // return the result
         $result = self::get_internal($connection);
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -165,8 +170,9 @@ class Connection
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // get the connection properties
+        // return the result
         $result = self::get_internal($connection);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -194,7 +200,7 @@ class Connection
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // get the connections
+        // return the result
         $result = array();
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
@@ -209,6 +215,7 @@ class Connection
             $result[] = self::get_internal($c);
         }
 
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -234,7 +241,10 @@ class Connection
 
         // try to connect
         $connection->connect();
+
+        // return the result
         $result = self::get_internal($connection);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -258,7 +268,10 @@ class Connection
 
         // disconnect
         $connection->disconnect();
+
+        // return the result
         $result = self::get_internal($connection);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);
     }
 
