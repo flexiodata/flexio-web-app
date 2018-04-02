@@ -67,16 +67,7 @@ class Connection
         );
 
         // get the connection properties
-        $result = self::maskProperties($connection->get());
-
-        // coerce an empty connection_info array() from [] into object {}
-
-        if (isset($result['connection_info']['headers']) && is_array($result['connection_info']['headers']) && count($result['connection_info']['headers'])==0)
-            $result['connection_info']['headers'] = (object)$result['connection_info']['headers'];
-
-        if (isset($result['connection_info']) && is_array($result['connection_info']) && count($result['connection_info'])==0)
-            $result['connection_info'] = (object)$result['connection_info'];
-
+        $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
         \Flexio\Api2\Response::sendContent($result);
     }
@@ -150,9 +141,8 @@ class Connection
         // set the properties
         $connection->set($validated_post_params);
 
-        // get the $connection properties
-        $result = self::maskProperties($connection->get());
-
+        // get the connection properties
+        $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
         \Flexio\Api2\Response::sendContent($result);
     }
@@ -176,7 +166,7 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
-        $result = self::maskProperties($connection->get());
+        $result = self::get_internal($connection);
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -216,16 +206,7 @@ class Connection
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $properties = self::maskProperties($c->get());
-
-            // coerce [] -> {}
-            if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
-                $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
-
-            if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
-                $properties['connection_info'] = (object)$properties['connection_info'];
-
-            $result[] = $properties;
+            $result[] = self::get_internal($c);
         }
 
         \Flexio\Api2\Response::sendContent($result);
@@ -253,7 +234,7 @@ class Connection
 
         // try to connect
         $connection->connect();
-        $result = self::maskProperties($connection->get());
+        $result = self::get_internal($connection);
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -277,7 +258,7 @@ class Connection
 
         // disconnect
         $connection->disconnect();
-        $result = self::maskProperties($connection->get());
+        $result = self::get_internal($connection);
         \Flexio\Api2\Response::sendContent($result);
     }
 
@@ -300,6 +281,38 @@ class Connection
         $connection_info['refresh_token'] = "*****";
 
         $properties['connection_info'] = $connection_info;
+        return $properties;
+    }
+
+    private static function get_internal($object)
+    {
+        // TODO: figure out a way to make public/private properties
+        // on the object so we can use the full object internally,
+        // but not expose these on the api
+
+        $properties = $object->get();
+
+        if (!isset($properties['connection_info']))
+            return $properties;
+
+        if (!is_array($properties['connection_info']))
+            return $properties;
+
+        // remove tokens and passwords if they are set
+        $connection_info = $properties['connection_info'];
+        $connection_info['password'] = "*****";
+        $connection_info['access_token'] = "*****";
+        $connection_info['refresh_token'] = "*****";
+
+        $properties['connection_info'] = $connection_info;
+
+        // coerce [] -> {}; TODO: handle objects as objects rather than key/value arrays for coercion isn't necessary?
+        if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
+            $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
+
+        if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
+            $properties['connection_info'] = (object)$properties['connection_info'];
+
         return $properties;
     }
 }
