@@ -36,6 +36,8 @@ class System
 
     public static function login(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api\Action::TYPE_USER_SIGNED_IN);
+
         $post_params = $request->getPostParams();
 
         $validator = \Flexio\Base\Validator::create();
@@ -70,6 +72,7 @@ class System
             $result = $current_user->get();
 
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+            $request->track();
             \Flexio\Api2\Response::sendContent($result);
 
             return;
@@ -83,11 +86,14 @@ class System
         $result['eid_type'] = \Model::TYPE_USER;
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
     public static function logout(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api\Action::TYPE_USER_SIGNED_OUT);
+
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
@@ -98,6 +104,7 @@ class System
         $result['eid_type'] = \Model::TYPE_USER;
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
