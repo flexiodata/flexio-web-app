@@ -32,7 +32,7 @@ class Pipe
 
         // start tracking the request after copy() since copy() may be called
         // separately and has it's own tracking function
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATED);
+        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATE);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -85,7 +85,7 @@ class Pipe
 
     public static function copy(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATED);
+        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -151,7 +151,7 @@ class Pipe
 
     public static function delete(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_DELETED);
+        $request->track(\Flexio\Api2\Action::TYPE_PIPE_DELETE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -183,7 +183,7 @@ class Pipe
 
     public static function set(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_UPDATED);
+        $request->track(\Flexio\Api2\Action::TYPE_PIPE_UPDATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

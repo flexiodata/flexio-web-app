@@ -36,7 +36,7 @@ class System
 
     public static function login(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_SIGNED_IN);
+        $request->track(\Flexio\Api2\Action::TYPE_USER_SIGNIN);
 
         $post_params = $request->getPostParams();
 
@@ -92,7 +92,7 @@ class System
 
     public static function logout(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_SIGNED_OUT);
+        $request->track(\Flexio\Api2\Action::TYPE_USER_SIGNOUT);
 
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();

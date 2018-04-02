@@ -20,7 +20,7 @@ class Connection
 {
     public static function create(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_CREATED);
+        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_CREATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -75,7 +75,7 @@ class Connection
 
     public static function delete(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_DELETED);
+        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_DELETE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -109,7 +109,7 @@ class Connection
 
     public static function set(\Flexio\Api2\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_UPDATED);
+        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_UPDATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

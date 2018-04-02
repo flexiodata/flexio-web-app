@@ -21,20 +21,20 @@ class Action
     const TYPE_UNDEFINED          = '';
     const TYPE_TEST               = 'action.test';
 
-    const TYPE_USER_SIGNED_IN     = 'action.user.signed-in';
-    const TYPE_USER_SIGNED_OUT    = 'action.user.signed-out';
+    const TYPE_USER_SIGNIN       = 'action.user.signin';
+    const TYPE_USER_SIGNOUT      = 'action.user.signout';
 
-    const TYPE_USER_CREATED       = 'action.user.created';
-    const TYPE_USER_UPDATED       = 'action.user.updated';
-    const TYPE_USER_DELETED       = 'action.user.deleted';
+    const TYPE_USER_CREATE       = 'action.user.create';
+    const TYPE_USER_UPDATE       = 'action.user.update';
+    const TYPE_USER_DELETE       = 'action.user.delete';
 
-    const TYPE_CONNECTION_CREATED = 'action.connection.created';
-    const TYPE_CONNECTION_UPDATED = 'action.connection.updated';
-    const TYPE_CONNECTION_DELETED = 'action.connection.deleted';
+    const TYPE_CONNECTION_CREATE = 'action.connection.create';
+    const TYPE_CONNECTION_UPDATE = 'action.connection.update';
+    const TYPE_CONNECTION_DELETE = 'action.connection.delete';
 
-    const TYPE_PIPE_CREATED       = 'action.pipe.created';
-    const TYPE_PIPE_UPDATED       = 'action.pipe.updated';
-    const TYPE_PIPE_DELETED       = 'action.pipe.deleted';
+    const TYPE_PIPE_CREATE       = 'action.pipe.create';
+    const TYPE_PIPE_UPDATE       = 'action.pipe.update';
+    const TYPE_PIPE_DELETE       = 'action.pipe.delete';
 
     // TODO: add actions for following API endpoints:
 
