@@ -528,14 +528,6 @@ class System
         return $GLOBALS['g_store']->timezone;
     }
 
-    public static function getCurrentTimezoneOffsetInMinutes() : float
-    {
-        $tz_utc = new \DateTimeZone('UTC');
-        $tz_local = new \DateTimeZone($GLOBALS['g_store']->timezone);
-        $dt_local = new \DateTime('now', $tz_utc);
-        return (float)($tz_local->getOffset($dt_local) / 60);
-    }
-
     public static function getTimestamp() : string
     {
         // gives us a way of getting a consistent time in

@@ -536,6 +536,16 @@ class Util
     }
 
     /* // works, but currently not in use
+    public static function getCurrentTimezoneOffsetInMinutes() : float
+    {
+        $tz_utc = new \DateTimeZone('UTC');
+        $tz_local = new \DateTimeZone($GLOBALS['g_store']->timezone);
+        $dt_local = new \DateTime('now', $tz_utc);
+        return (float)($tz_local->getOffset($dt_local) / 60);
+    }
+    */
+
+    /* // works, but currently not in use
     public static function getCurrentTimezoneOffset()
     {
         $tz1 = new \DateTimeZone($GLOBALS['g_store']->timezone);
