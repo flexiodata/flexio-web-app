@@ -32,7 +32,7 @@ class Request
     private $request_object_type = '';
     private $request_params = array();
     private $response_type = 'HTTP';
-    private $response_code = '';
+    private $response_code = '200';
     private $response_created = null; // no timestamp available by default
     private $response_params = array();
 
