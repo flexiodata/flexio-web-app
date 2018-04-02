@@ -466,7 +466,7 @@ class User
         \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function resetpassword(\Flexio\Api2\Request $request
+    public static function resetpassword(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
 
