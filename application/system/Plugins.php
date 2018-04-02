@@ -46,7 +46,15 @@ class FlexioPlugin extends \Flexio\System\FrameworkPlugin
                 return;
             }
 
-            // api controller
+            // api controllers
+            case 'v1':
+            {
+                $request->setControllerName('v1');
+                $request->setActionName('index');
+
+                return;
+            }
+
             case 'api':
             {
                 $request->setControllerName('api');
