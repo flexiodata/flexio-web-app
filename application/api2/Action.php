@@ -30,15 +30,18 @@ class Action
     const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
     const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
-    const TYPE_PIPE_CREATE           = 'action.pipe.create';
-    const TYPE_PIPE_UPDATE           = 'action.pipe.update';
-    const TYPE_PIPE_DELETE           = 'action.pipe.delete';
+    const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
+    const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
 
-    const TYPE_CONNECTION_CREATE     = 'action.connection.create';
-    const TYPE_CONNECTION_UPDATE     = 'action.connection.update';
-    const TYPE_CONNECTION_DELETE     = 'action.connection.delete';
-    const TYPE_CONNECTION_CONNECT    = 'action.connection.connect';
-    const TYPE_CONNECTION_DISCONNECT = 'action.connection.disconnect';
+    const TYPE_PIPE_CREATE            = 'action.pipe.create';
+    const TYPE_PIPE_UPDATE            = 'action.pipe.update';
+    const TYPE_PIPE_DELETE            = 'action.pipe.delete';
+
+    const TYPE_CONNECTION_CREATE      = 'action.connection.create';
+    const TYPE_CONNECTION_UPDATE      = 'action.connection.update';
+    const TYPE_CONNECTION_DELETE      = 'action.connection.delete';
+    const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
+    const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
 
     // TODO: add actions for following API endpoints:
 

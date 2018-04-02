@@ -20,6 +20,8 @@ class Token
 {
     public static function create(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api2\Action::TYPE_USER_AUTHKEY_CREATE);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
@@ -39,11 +41,14 @@ class Token
 
         $result = $token->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
     public static function delete(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api2\Action::TYPE_USER_AUTHKEY_DELETE);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $token_eid = $request->getObjectFromUrl();
@@ -68,6 +73,7 @@ class Token
         $result['eid_status'] = $token->getStatus();
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
