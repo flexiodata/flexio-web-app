@@ -23,7 +23,6 @@ class Process
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
-        $pipe_eid = $request->getObjectFromUrl();
 
         // note: the parent_eid parameter needs to be an eid because we
         // don't know if it's coming outside the owner namespace; we
@@ -45,22 +44,16 @@ class Process
         $background = toBoolean($validated_post_params['background']);
         $debug = toBoolean($validated_post_params['debug']);
         $autorun = toBoolean($validated_post_params['run']);
+        $pipe_eid = $validated_post_params['parent_eid'] ?? false;
 
-        // processes can be created from the following endpoints; check for both, giving
-        // procedence to the pipe endpoint;
-        // 'POS /:userid/pipes/:objeid/processes'        => '\Flexio\Api2\Process::create',
-        // 'POS /:userid/processes'                      => '\Flexio\Api2\Process::create',
-        if (strlen($pipe_eid) === 0 && isset($validated_post_params['parent_eid']))
-            $pipe_eid = $validated_post_params['parent_eid'];
-
-        // note: in pipes and connections, the ability to create is goverend by
+        // note: in pipes and connections, the ability to create is governed by
         // the user; the ability to create a process is goverend by execute
         // rights on the pipe; if the process is anonymous, it's goverend by
         // the ability to write to the user, simliar to pipes and connections
 
         // check rights
         $pipe = false;
-        if ($pipe_eid !== '')
+        if ($pipe_eid !== false)
         {
             // load the object; make sure the eid is associated with the owner
             // as an additional check; note: the pipe may not have the same
