@@ -154,7 +154,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         $this->procobj->set([
             'process_status' => \Flexio\Jobs\Process::STATUS_RUNNING,
-            'started' => self::getProcessTimestamp()
+            'started' => \Flexio\Base\Util::getCurrentTimestamp()
         ]);
 
         // STEP 3: run the job
@@ -247,7 +247,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
-        $process_params['finished'] = self::getProcessTimestamp();
+        $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         $process_params['cache_used'] = 'N';
         if ($this->isStopped() === false)
         {
@@ -281,7 +281,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params = array();
         $params['task_op'] = $task['op'] ?? '';
         $params['task'] = json_encode($task);
-        $params['started'] = self::getProcessTimestamp();
+        $params['started'] = \Flexio\Base\Util::getCurrentTimestamp();
 //        $params['input'] = json_encode($storable_stream_info);
 //        $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
 //        $params['message'] = '';
@@ -303,7 +303,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $params = array();
         //$params['task_op'] = $task['op'] ?? '';
         //$params['task'] = json_encode($task);
-        $params['finished'] = self::getProcessTimestamp();
+        $params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
         $params['output'] = json_encode($storable_stream_info);
         $params['log_type'] = \Flexio\Jobs\Process::LOG_TYPE_SYSTEM;
         $params['message'] = '';
@@ -346,16 +346,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
 
         return $storable_stream;
-    }
-
-    private static function getProcessTimestamp() : string
-    {
-        // return the timestamp as accurately as we can determine
-        $time_exact = microtime(true);
-        $time_rounded = floor($time_exact);
-        $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
-        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
-        return ($date->format("Y-m-d H:i:s.u"));
     }
 
     private static function getEnvironmentParams() : array

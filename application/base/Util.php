@@ -525,6 +525,16 @@ class Util
         return array_combine($k, explode(":", $s));
     }
 
+    public static function getCurrentTimestamp() : string
+    {
+        // return the timestamp as accurately as we can determine
+        $time_exact = microtime(true);
+        $time_rounded = floor($time_exact);
+        $time_micropart = sprintf("%06d", ($time_exact - $time_rounded) * 1000000);
+        $date = new \DateTime(date('Y-m-d H:i:s.' . $time_micropart, (int)$time_rounded));
+        return ($date->format("Y-m-d H:i:s.u"));
+    }
+
     /* // works, but currently not in use
     public static function getCurrentTimezoneOffset()
     {

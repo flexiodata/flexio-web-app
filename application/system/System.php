@@ -546,7 +546,8 @@ class System
         if (isset($g_store->timestamp))
             return $g_store->timestamp;
 
-        $g_store->timestamp = date("Y-m-d H:i:s", time());
+        //$g_store->timestamp = date("Y-m-d H:i:s", time());
+        $g_store->timestamp = \Flexio\Base\Util::getCurrentTimestamp(); // use more precise timestamp
         return $g_store->timestamp;
     }
 
