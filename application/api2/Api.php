@@ -217,16 +217,15 @@ class Api
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in \Flexio\Jobs\Process
-            $content = self::processRequest($api_request);
-            \Flexio\Api2\Response::sendContent($content);
+            self::processRequest($api_request);
             return;
         }
 
         // process the request
         try
         {
-            $content = self::processRequest($api_request);
-            \Flexio\Api2\Response::sendContent($content);
+            self::processRequest($api_request);
+            return;
         }
         catch (\Flexio\Base\Exception $e)
         {

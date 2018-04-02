@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Vfs
 {
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -51,7 +51,7 @@ class Vfs
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     public static function get(\Flexio\Api2\Request $request)
@@ -114,7 +114,7 @@ class Vfs
         exit(0);
     }
 
-    public static function put(\Flexio\Api2\Request $request) : array
+    public static function put(\Flexio\Api2\Request $request)
     {
         $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
@@ -146,7 +146,9 @@ class Vfs
         if (($headers['content-type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
         {
             $success = $vfs->createDirectory($path);
-            return array('success' => $success);
+            $result = array('success' => $success);
+            \Flexio\Api2\Response::sendContent($result);
+            return;
         }
 
         $php_stream_handle = fopen('php://input', 'rb');
@@ -162,6 +164,7 @@ class Vfs
 
         fclose($php_stream_handle);
 
-        return array('success' => true);
+        $result = array('success' => true);
+        \Flexio\Api2\Response::sendContent($result);
     }
 }

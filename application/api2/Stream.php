@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Stream
 {
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -40,10 +40,11 @@ class Stream
         //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
         //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $stream->get();
+        $result = $stream->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function content(\Flexio\Api2\Request $request) // TODO: set function return type
+    public static function content(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

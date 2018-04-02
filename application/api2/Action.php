@@ -36,18 +36,19 @@ class Action
     // TODO: add actions for following API endpoints:
 
 
-    public static function test(\Flexio\Api2\Request $request) : array
+    public static function test(\Flexio\Api2\Request $request)
     {
         $action = $request->track('action.test');
-        return $action->get();
+        $result = $action->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function summary(\Flexio\Api2\Request $request) : array
+    public static function summary(\Flexio\Api2\Request $request)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -105,6 +106,6 @@ class Action
             $result[] = $action_info_subset;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 }

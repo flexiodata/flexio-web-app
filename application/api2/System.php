@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class System
 {
-    public static function about(\Flexio\Api2\Request $request) : array
+    public static function about(\Flexio\Api2\Request $request)
     {
         // return basic information
 
@@ -29,10 +29,10 @@ class System
         $result['name'] = $package_info['name'] ?? '';
         $result['version'] = $package_info['version'] ?? '';
         $result['sha'] = $git_version;
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function login(\Flexio\Api2\Request $request) : array
+    public static function login(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
 
@@ -65,31 +65,34 @@ class System
             $current_user = \Flexio\Object\User::load($current_user_eid);
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            return $current_user->get();
+            $result = $current_user->get();
+            \Flexio\Api2\Response::sendContent($result);
+            return;
         }
         catch (\Flexio\Base\Exception $e)
         {
-            $properties = array();
-            $properties['eid'] = '';
-            $properties['eid_type'] = \Model::TYPE_USER;
-            return $properties;
         }
+
+        $result = array();
+        $result['eid'] = '';
+        $result['eid_type'] = \Model::TYPE_USER;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function logout(\Flexio\Api2\Request $request) : array
+    public static function logout(\Flexio\Api2\Request $request)
     {
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
         @setcookie('FXSESSID', '', time()-86400, '/');
 
         // return empty "about" info
-        $properties = array();
-        $properties['eid'] = '';
-        $properties['eid_type'] = \Model::TYPE_USER;
-        return $properties;
+        $result = array();
+        $result['eid'] = '';
+        $result['eid_type'] = \Model::TYPE_USER;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function validate(\Flexio\Api2\Request $request) : array
+    public static function validate(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -139,7 +142,7 @@ class System
             $result[] = self::validateObject($p, $requesting_user_eid);
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     private static function validateObject(array $params, string $requesting_user_eid = null) : array
@@ -244,12 +247,12 @@ class System
 
         // echo back the key and whether or not it's valid (note: don't echo
         // back the value to minimize transport of values like a password)
-        $result = array();
-        $result['key'] = $key;
-        $result['valid'] = $valid;
-        $result['message'] = $message;
+        $properties = array();
+        $properties['key'] = $key;
+        $properties['valid'] = $valid;
+        $properties['message'] = $message;
 
-        return $result;
+        return $properties;
     }
 
     private static function validateIdentifier(string $type, string $value, string &$message = '') : bool

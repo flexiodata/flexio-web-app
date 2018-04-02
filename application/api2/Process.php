@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Process
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -70,7 +70,7 @@ class Process
             // we're getting the logic from the pipe, and we're associating the process with
             // the pipe, so we should have both read/write access to the pipe;
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
@@ -122,10 +122,11 @@ class Process
             $engine->run($background);
         }
 
-        return $process->get();
+        $result = $process->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request) : array
+    public static function delete(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -149,10 +150,10 @@ class Process
         $result['eid'] = $process->getEid();
         $result['eid_type'] = $process->getType();
         $result['eid_status'] = $process->getStatus();
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request) : array
+    public static function set(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -184,10 +185,11 @@ class Process
 
         // set the properties
         $process->set($validated_params);
-        return $process->get();
+        $result = $process->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -227,10 +229,12 @@ class Process
                 $result['eid'] = $process_info['eid'];
                 $result['process_status'] = $process_info['process_status'];
                 $result['process_info'] = $process_info['process_info'];
-                return $result;
+                \Flexio\Api2\Response::sendContent($result);
+                return;
             }
 
-            return $process_info;
+            \Flexio\Api2\Response::sendContent($process_info);
+            return;
         }
 
         // wait for any changes, then reload process to refresh the data
@@ -248,13 +252,15 @@ class Process
             $result['eid'] = $process_info['eid'];
             $result['process_status'] = $process_info['process_status'];
             $result['process_info'] = $process_info['process_info'];
-            return $result;
+            \Flexio\Api2\Response::sendContent($result);
+            return;
         }
 
-        return $process_info;
+        \Flexio\Api2\Response::sendContent($process_info);
+        return;
     }
 
-    public static function summary(\Flexio\Api2\Request $request) : array
+    public static function summary(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -306,10 +312,10 @@ class Process
             $result[] = $item;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -363,10 +369,10 @@ class Process
             $result[] = $process_info_subset;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function log(\Flexio\Api2\Request $request) : array
+    public static function log(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -384,11 +390,11 @@ class Process
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        $log = $process->getLog();
-        return $log;
+        $result = $process->getLog();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api2\Request $request) : array
+    public static function run(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -452,7 +458,7 @@ class Process
         exit(0);
     }
 
-    public static function cancel(\Flexio\Api2\Request $request) : array
+    public static function cancel(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -481,8 +487,7 @@ class Process
         $result['eid'] = $process_info['eid'];
         $result['process_status'] = $process_info['process_status'];
         $result['process_info'] = $process_info['process_info'];
-
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type

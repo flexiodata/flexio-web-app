@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class User
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -144,7 +144,9 @@ class User
                 self::createExampleObjects($user_eid);
 
             // return the user info
-            return $user->get();
+            $result = $user->get();
+            \Flexio\Api2\Response::sendContent($result);
+            return;
         }
 
 
@@ -178,7 +180,9 @@ class User
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Operation failed'));
 
             // we're done; other parts of the account will have already been created
-            return $user->get();
+            $result = $user->get();
+            \Flexio\Api2\Response::sendContent($result);
+            return;
         }
 
 
@@ -209,10 +213,11 @@ class User
         }
 
         // return the user info
-        return $user->get();
+        $result = $user->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request) : array
+    public static function set(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -273,10 +278,11 @@ class User
         }
 
         $owner_user->set($validated_post_params);
-        return $owner_user->get();
+        $result = $owner_user->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -290,10 +296,11 @@ class User
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $owner_user->get();
+        $result = $owner_user->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function changepassword(\Flexio\Api2\Request $request) : array
+    public static function changepassword(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -330,10 +337,11 @@ class User
             'password' => $new_password
         );
         $owner_user->set($new_params);
-        return $owner_user->get();
+        $result = $owner_user->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function activate(\Flexio\Api2\Request $request) : array
+    public static function activate(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
 
@@ -372,10 +380,10 @@ class User
 
         $result = array();
         $result['email'] = $email;
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function resendverify(\Flexio\Api2\Request $request) : array
+    public static function resendverify(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
 
@@ -415,10 +423,10 @@ class User
 
         $result = array();
         $result['email'] = $email;
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function requestpasswordreset(\Flexio\Api2\Request $request) : array
+    public static function requestpasswordreset(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
 
@@ -455,10 +463,10 @@ class User
 
         $result = array();
         $result['email'] = $email;
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function resetpassword(\Flexio\Api2\Request $request) : array
+    public static function resetpassword(\Flexio\Api2\Request $request
     {
         $post_params = $request->getPostParams();
 
@@ -500,10 +508,10 @@ class User
 
         $result = array();
         $result['email'] = $email;
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function resetConfig(\Flexio\Api2\Request $request) : array
+    public static function resetConfig(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -521,40 +529,40 @@ class User
 
         $new_params = array('config' => array());
         $owner_user->set($new_params);
-        return array();
+        $result = array('success' => true);
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     public static function createExampleObjects(string $user_eid) : array
     {
         // create sample pipes; ensure user creation even if sample fails
-        $results = array();
+        $created_items = array();
 
-            $objects = self::getExampleObjects();
-            foreach ($objects as $o)
+        $objects = self::getExampleObjects();
+        foreach ($objects as $o)
+        {
+            if (!isset($o['eid_type']))
+                continue;
+
+            $new_object = false;
+            switch ($o['eid_type'])
             {
-                if (!isset($o['eid_type']))
-                    continue;
+                case \Model::TYPE_CONNECTION:
+                    $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
+                    $new_object = \Flexio\Object\Connection::load($object_eid);
+                    break;
 
-                $new_object = false;
-                switch ($o['eid_type'])
-                {
-                    case \Model::TYPE_CONNECTION:
-                        $object_eid = self::createConnectionFromFile($user_eid, $o['path']);
-                        $new_object = \Flexio\Object\Connection::load($object_eid);
-                        break;
-
-                    case \Model::TYPE_PIPE:
-                        $object_eid = self::createPipeFromFile($user_eid, $o['path']);
-                        $new_object = \Flexio\Object\Pipe::load($object_eid);
-                        break;
-                }
-
-                if ($new_object !== false)
-                    $results[] = $new_object->get();
+                case \Model::TYPE_PIPE:
+                    $object_eid = self::createPipeFromFile($user_eid, $o['path']);
+                    $new_object = \Flexio\Object\Pipe::load($object_eid);
+                    break;
             }
 
+            if ($new_object !== false)
+                $created_items[] = $new_object->get();
+        }
 
-        return $results;
+        return $created_items;
     }
 
     public static function createConnectionFromFile(string $user_eid, string $file_name) : string

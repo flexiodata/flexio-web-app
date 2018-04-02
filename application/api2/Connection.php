@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Connection
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATED);
 
@@ -67,21 +67,21 @@ class Connection
         );
 
         // get the connection properties
-        $properties = self::maskProperties($connection->get());
+        $result = self::maskProperties($connection->get());
 
         // coerce an empty connection_info array() from [] into object {}
 
-        if (isset($properties['connection_info']['headers']) && is_array($properties['connection_info']['headers']) && count($properties['connection_info']['headers'])==0)
-            $properties['connection_info']['headers'] = (object)$properties['connection_info']['headers'];
+        if (isset($result['connection_info']['headers']) && is_array($result['connection_info']['headers']) && count($result['connection_info']['headers'])==0)
+            $result['connection_info']['headers'] = (object)$result['connection_info']['headers'];
 
-        if (isset($properties['connection_info']) && is_array($properties['connection_info']) && count($properties['connection_info'])==0)
-            $properties['connection_info'] = (object)$properties['connection_info'];
+        if (isset($result['connection_info']) && is_array($result['connection_info']) && count($result['connection_info'])==0)
+            $result['connection_info'] = (object)$result['connection_info'];
 
         $request->track();
-        return $properties;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request) : array
+    public static function delete(\Flexio\Api2\Request $request)
     {
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DELETED);
 
@@ -109,10 +109,10 @@ class Connection
         $result['eid_status'] = $connection->getStatus();
 
         $request->track();
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request) : array
+    public static function set(\Flexio\Api2\Request $request)
     {
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATED);
 
@@ -151,13 +151,13 @@ class Connection
         $connection->set($validated_post_params);
 
         // get the $connection properties
-        $properties = self::maskProperties($connection->get());
+        $result = self::maskProperties($connection->get());
 
         $request->track();
-        return $properties;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -176,11 +176,11 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the connection properties
-        $properties = self::maskProperties($connection->get());
-        return $properties;
+        $result = self::maskProperties($connection->get());
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -228,10 +228,10 @@ class Connection
             $result[] = $properties;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function connect(\Flexio\Api2\Request $request) : array
+    public static function connect(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -253,11 +253,11 @@ class Connection
 
         // try to connect
         $connection->connect();
-        $properties = self::maskProperties($connection->get());
-        return $properties;
+        $result = self::maskProperties($connection->get());
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function disconnect(\Flexio\Api2\Request $request) : array
+    public static function disconnect(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -277,8 +277,8 @@ class Connection
 
         // disconnect
         $connection->disconnect();
-        $properties = self::maskProperties($connection->get());
-        return $properties;
+        $result = self::maskProperties($connection->get());
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     private static function maskProperties(array $properties) : array

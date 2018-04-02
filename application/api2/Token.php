@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Token
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -36,10 +36,11 @@ class Token
         $token_properties['owned_by'] = $owner_user_eid;
         $token_properties['created_by'] = $requesting_user_eid;
         $token = \Flexio\Object\Token::create($token_properties);
-        return $token->get();
+        $result = $token->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request) : array
+    public static function delete(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -63,10 +64,10 @@ class Token
         $result['eid'] = $token->getEid();
         $result['eid_type'] = $token->getType();
         $result['eid_status'] = $token->getStatus();
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -85,11 +86,11 @@ class Token
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        $properties = $token->get();
-        return $properties;
+        $result = $token->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -128,6 +129,6 @@ class Token
             $result[] = $t->get();
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 }

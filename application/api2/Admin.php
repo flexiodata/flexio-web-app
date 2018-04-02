@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Admin
 {
-    public static function system(\Flexio\Api2\Request $request) : array
+    public static function system(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -29,10 +29,11 @@ class Admin
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return self::checkServerSettings();
+        $result = self::checkServerSettings();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function userlist(\Flexio\Api2\Request $request) : array
+    public static function userlist(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -78,10 +79,10 @@ class Admin
             $result[] = $user_info;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function processes(\Flexio\Api2\Request $request) : array
+    public static function processes(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -177,7 +178,7 @@ class Admin
             $result[] = $item;
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     private static function checkServerSettings() : array

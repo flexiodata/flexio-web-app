@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Right
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -53,7 +53,6 @@ class Right
             $object_eid = $r['object_eid'] ?? false;
             $access_code = $r['access_code'] ?? false;
             $actions = $r['actions'] ?? false;
-
 
             if (!is_string($object_eid))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -148,10 +147,10 @@ class Right
             $result[] = $object->getRights();
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request) : array
+    public static function set(\Flexio\Api2\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -197,10 +196,11 @@ class Right
         $new_rights = array(array('eid' => $right_eid, 'actions' => $actions));
         $object->setRights($new_rights);
 
-        return $right->get();
+        $result = $right->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request) : array
+    public static function delete(\Flexio\Api2\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -235,10 +235,10 @@ class Right
         $result['eid'] = $right->getEid();
         $result['eid_type'] = $right->getType();
         $result['eid_status'] = $right->getStatus();
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -262,10 +262,11 @@ class Right
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $right->get();
+        $result = $right->get();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -292,8 +293,8 @@ class Right
 
         // TODO: get rights info from list query in \Flexio\Object\Rights
 
-        $rights = array();
-        return $rights;
+        $result = array();
+        \Flexio\Api2\Response::sendContent($result);
     }
 
     private static function createUser(string $identifier, string $requesting_user_eid) : \Flexio\Object\User

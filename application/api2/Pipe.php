@@ -18,7 +18,7 @@ namespace Flexio\Api2;
 
 class Pipe
 {
-    public static function create(\Flexio\Api2\Request $request) : array
+    public static function create(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -73,10 +73,11 @@ class Pipe
         );
 
         // get the pipe properties
-        return self::get_internal($pipe);
+        $result = self::get_internal($pipe);
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function copy(\Flexio\Api2\Request $request) : array
+    public static function copy(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -134,10 +135,11 @@ class Pipe
             )
         );
 
-        return self::get_internal($new_pipe);
+        $result = self::get_internal($new_pipe);
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request) : array
+    public static function delete(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -161,10 +163,10 @@ class Pipe
         $result['eid'] = $pipe->getEid();
         $result['eid_type'] = $pipe->getType();
         $result['eid_status'] = $pipe->getStatus();
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request) : array
+    public static function set(\Flexio\Api2\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -200,10 +202,11 @@ class Pipe
         // set the properties
         $pipe->set($validated_post_params);
 
-        return self::get_internal($pipe);
+        $result = self::get_internal($pipe);
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request) : array
+    public static function get(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -222,10 +225,11 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
-        return self::get_internal($pipe);
+        $result = self::get_internal($pipe);
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request) : array
+    public static function list(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -264,10 +268,10 @@ class Pipe
             $result[] = self::get_internal($p);
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function processes(\Flexio\Api2\Request $request) : array
+    public static function processes(\Flexio\Api2\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -322,10 +326,10 @@ class Pipe
             $result[] = self::get_internal($p);
         }
 
-        return $result;
+        \Flexio\Api2\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api2\Request $request) // TODO: add return type
+    public static function run(\Flexio\Api2\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
