@@ -308,13 +308,18 @@ class Api
         }
 
         // we have an error, if an action has been set, set the response type and info
+        //$api_request->track('action.test');
         if ($api_request->getActionType() !== \Flexio\Api2\Action::TYPE_UNDEFINED)
         {
-            // TODO: set the response type and the ap
-            $request->setResponseType('400');  // TODO: get response type from error
-            $request->setResponseParams($error);
-            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            $request->track();
+            $http_error_code = (string)\Flexio\Api2\Response::getHttpErrorCode($error['code']);
+            $api_request->setResponseCode($http_error_code);
+            //$api_request->setResponseParams($error);
+            $api_request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+            $api_request->track();
+
+
+            $t = $api_request->getAction()->get();
+            \Flexio\Api2\Response::sendContent($t);
         }
 
         // send the error info
