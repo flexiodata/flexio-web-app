@@ -18,6 +18,24 @@ namespace Flexio\Api2;
 
 class Action
 {
+    const TYPE_UNDEFINED          = '';
+    const TYPE_TEST               = 'action.test';
+
+    const TYPE_USER_CREATED       = 'action.user.created';
+    const TYPE_USER_UPDATED       = 'action.user.updated';
+    const TYPE_USER_DELETED       = 'action.user.deleted';
+
+    const TYPE_CONNECTION_CREATED = 'action.connection.created';
+    const TYPE_CONNECTION_UPDATED = 'action.connection.updated';
+    const TYPE_CONNECTION_DELETED = 'action.connection.deleted';
+
+    const TYPE_PIPE_CREATED       = 'action.pipe.created';
+    const TYPE_PIPE_UPDATED       = 'action.pipe.updated';
+    const TYPE_PIPE_DELETED       = 'action.pipe.deleted';
+
+    // TODO: add actions for following API endpoints:
+
+
     public static function test(\Flexio\Api2\Request $request) : array
     {
         $action = $request->track('action.test');
