@@ -178,16 +178,42 @@ class Api
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
         // get the url parts and map them to the api parameters
-        $url_params = array();
-        $url_params['apibase']    = $server_request->getUrlPathPart(0) ?? '';
-        $url_params['apiversion'] = $server_request->getUrlPathPart(1) ?? '';
-        $url_params['apiparam1']  = $server_request->getUrlPathPart(2) ?? '';
-        $url_params['apiparam2']  = $server_request->getUrlPathPart(3) ?? '';
-        $url_params['apiparam3']  = $server_request->getUrlPathPart(4) ?? '';
-        $url_params['apiparam4']  = $server_request->getUrlPathPart(5) ?? '';
-        $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
-        $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
 
+
+        // API v2 request can currently come from one of two patterns
+        // TODO: handle both for now, but remove /api/v2 when appropriate
+        // https://api.host.io/v1
+        // https://www.host.io/api/v2
+
+        $url_params = array();
+        $url_part0 = $server_request->getUrlPathPart(0) ?? '';
+        $url_part1 = $server_request->getUrlPathPart(1) ?? '';
+
+        if ($url_part0 === 'v1')
+        {
+            $url_params['apiversion'] = $server_request->getUrlPathPart(0) ?? '';
+            $url_params['apiparam1']  = $server_request->getUrlPathPart(1) ?? '';
+            $url_params['apiparam2']  = $server_request->getUrlPathPart(2) ?? '';
+            $url_params['apiparam3']  = $server_request->getUrlPathPart(3) ?? '';
+            $url_params['apiparam4']  = $server_request->getUrlPathPart(4) ?? '';
+            $url_params['apiparam5']  = $server_request->getUrlPathPart(5) ?? '';
+            $url_params['apiparam6']  = $server_request->getUrlPathPart(6) ?? '';
+        }
+
+        if ($url_part0 === 'api' && $url_part1 === 'v2')
+        {
+            $url_params['apiversion'] = $server_request->getUrlPathPart(1) ?? '';
+            $url_params['apiparam1']  = $server_request->getUrlPathPart(2) ?? '';
+            $url_params['apiparam2']  = $server_request->getUrlPathPart(3) ?? '';
+            $url_params['apiparam3']  = $server_request->getUrlPathPart(4) ?? '';
+            $url_params['apiparam4']  = $server_request->getUrlPathPart(5) ?? '';
+            $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
+            $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
+        }
+
+        // unhandled case
+        if (count($url_params) === 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
         // get other request info
         $request_ip_address = strtolower($server_request->getIpAddress());
@@ -292,9 +318,6 @@ class Api
 
         if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
-
-        if ($url_params['apibase'] !== 'api' || $url_params['apiversion'] !== 'v2')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
         $function = self::getApiEndpoint($request);
         if (is_callable($function) === true)
