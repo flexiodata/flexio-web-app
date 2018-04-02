@@ -71,20 +71,22 @@ class Request
         return $params;
     }
 
-    public function track(string $action_type) : \Flexio\Object\Action
+    public function track(string $action_type = null) : \Flexio\Object\Action
     {
         // if the action has already been set, change the state
         if ($this->action !== false)
         {
-            if ($this->action_type !== $action_type)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
+            // note: don't reset the action type if an action_type is specified
+            // but an action has already been created
             $params = $this->getActionParams();
             $this->action->set($params);
             return $this->action;
         }
 
-        // otherwise, create a new action
+        if (!isset($action_type))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // the action hasn't been set yet; create a new action
         $this->action_type = $action_type;
         $params = $this->getActionParams();
         $action = \Flexio\Object\Action::create($params);
