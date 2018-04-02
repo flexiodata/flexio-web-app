@@ -18,8 +18,8 @@ namespace Flexio\Api2;
 
 class Action
 {
-    const TYPE_UNDEFINED          = '';
-    const TYPE_TEST               = 'action.test';
+    const TYPE_UNDEFINED         = '';
+    const TYPE_TEST              = 'action.test';
 
     const TYPE_USER_LOGIN        = 'action.user.login';
     const TYPE_USER_LOGOUT       = 'action.user.logout';
