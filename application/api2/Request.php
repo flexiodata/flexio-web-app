@@ -19,7 +19,7 @@ namespace Flexio\Api2;
 class Request
 {
     private $action = false;
-    private $action_type = '';
+    private $action_type = \Flexio\Api2\Action::TYPE_UNDEFINED;
     private $request_type = 'HTTP';
     private $request_ip_address = '';
     private $request_token = '';
@@ -97,6 +97,11 @@ class Request
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function getActionType() : string
+    {
+        return $this->action_type;
     }
 
     public function setIpAddress(string $request_ip_address) : \Flexio\Api2\Request

@@ -248,9 +248,17 @@ class Api
         }
 
         // process the request
+
+        $error = array(
+            'code' => \Flexio\Base\Error::GENERAL,
+            'message' => ''
+        );
+
         try
         {
             self::processRequest($api_request);
+
+            // success
             return;
         }
         catch (\Flexio\Base\Exception $e)
@@ -258,7 +266,6 @@ class Api
             $info = $e->getMessage(); // exception info is packaged up in message
             $info = json_decode($info,true);
 
-            $error = array();
             $error['code'] = $info['code'];
             $error['message'] = $info['message'];
 
@@ -270,12 +277,9 @@ class Api
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
-
-            \Flexio\Api2\Response::sendError($error);
         }
         catch (\Exception $e)
         {
-            $error = array();
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
@@ -287,12 +291,9 @@ class Api
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
-
-            \Flexio\Api2\Response::sendError($error);
         }
         catch (\Error $e)
         {
-            $error = array();
             $error['code'] = \Flexio\Base\Error::GENERAL;
             $error['message'] = '';
 
@@ -304,9 +305,20 @@ class Api
                 $error['debug_message'] = $e->getMessage();
                 $error['trace'] = $e->getTrace();
             }
-
-            \Flexio\Api2\Response::sendError($error);
         }
+
+        // we have an error, if an action has been set, set the response type and info
+        if ($api_request->getActionType() !== \Flexio\Api2\Action::TYPE_UNDEFINED)
+        {
+            // TODO: set the response type and the ap
+            $request->setResponseType('400');  // TODO: get response type from error
+            $request->setResponseParams($error);
+            $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+            $request->track();
+        }
+
+        // send the error info
+        \Flexio\Api2\Response::sendError($error);
     }
 
     private static function processRequest(\Flexio\Api2\Request $request)
