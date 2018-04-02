@@ -221,6 +221,8 @@ class Connection
 
     public static function connect(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_CONNECT);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
@@ -245,11 +247,14 @@ class Connection
         // return the result
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 
     public static function disconnect(\Flexio\Api2\Request $request)
     {
+        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_DISCONNECT);
+
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
@@ -272,6 +277,7 @@ class Connection
         // return the result
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
         \Flexio\Api2\Response::sendContent($result);
     }
 

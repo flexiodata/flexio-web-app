@@ -18,23 +18,25 @@ namespace Flexio\Api2;
 
 class Action
 {
-    const TYPE_UNDEFINED         = '';
-    const TYPE_TEST              = 'action.test';
+    const TYPE_UNDEFINED             = '';
+    const TYPE_TEST                  = 'action.test';
 
-    const TYPE_USER_LOGIN        = 'action.user.login';
-    const TYPE_USER_LOGOUT       = 'action.user.logout';
+    const TYPE_USER_LOGIN            = 'action.user.login';
+    const TYPE_USER_LOGOUT           = 'action.user.logout';
 
-    const TYPE_USER_CREATE       = 'action.user.create';
-    const TYPE_USER_UPDATE       = 'action.user.update';
-    const TYPE_USER_DELETE       = 'action.user.delete';
+    const TYPE_USER_CREATE           = 'action.user.create';
+    const TYPE_USER_UPDATE           = 'action.user.update';
+    const TYPE_USER_DELETE           = 'action.user.delete';
 
-    const TYPE_CONNECTION_CREATE = 'action.connection.create';
-    const TYPE_CONNECTION_UPDATE = 'action.connection.update';
-    const TYPE_CONNECTION_DELETE = 'action.connection.delete';
+    const TYPE_PIPE_CREATE           = 'action.pipe.create';
+    const TYPE_PIPE_UPDATE           = 'action.pipe.update';
+    const TYPE_PIPE_DELETE           = 'action.pipe.delete';
 
-    const TYPE_PIPE_CREATE       = 'action.pipe.create';
-    const TYPE_PIPE_UPDATE       = 'action.pipe.update';
-    const TYPE_PIPE_DELETE       = 'action.pipe.delete';
+    const TYPE_CONNECTION_CREATE     = 'action.connection.create';
+    const TYPE_CONNECTION_UPDATE     = 'action.connection.update';
+    const TYPE_CONNECTION_DELETE     = 'action.connection.delete';
+    const TYPE_CONNECTION_CONNECT    = 'action.connection.connect';
+    const TYPE_CONNECTION_DISCONNECT = 'action.connection.disconnect';
 
     // TODO: add actions for following API endpoints:
 
