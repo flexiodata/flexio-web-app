@@ -21,8 +21,8 @@ class Action
     const TYPE_UNDEFINED          = '';
     const TYPE_TEST               = 'action.test';
 
-    const TYPE_USER_SIGNIN       = 'action.user.signin';
-    const TYPE_USER_SIGNOUT      = 'action.user.signout';
+    const TYPE_USER_LOGIN        = 'action.user.login';
+    const TYPE_USER_LOGOUT       = 'action.user.logout';
 
     const TYPE_USER_CREATE       = 'action.user.create';
     const TYPE_USER_UPDATE       = 'action.user.update';
