@@ -231,6 +231,17 @@ class Request
         return $this->response_created;
     }
 
+    public function setResponseParams(array $response_params) : \Flexio\Api2\Request
+    {
+        $this->response_params = $response_params;
+        return $this;
+    }
+
+    public function getResponseParams() : array
+    {
+        return $this->response_params;
+    }
+
     public function setUrlParams(array $url_params) : \Flexio\Api2\Request
     {
         $this->url_params = $url_params;
