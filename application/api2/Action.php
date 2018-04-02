@@ -38,8 +38,13 @@ class Action
     const TYPE_CONNECTION_CONNECT    = 'action.connection.connect';
     const TYPE_CONNECTION_DISCONNECT = 'action.connection.disconnect';
 
+
+
     // TODO: add actions for following API endpoints:
 
+    // * creating folder/file; TODO: what about delete?
+    //   const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
+    //   const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
 
     public static function test(\Flexio\Api2\Request $request)
     {
