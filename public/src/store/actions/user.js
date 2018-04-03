@@ -80,7 +80,8 @@ export const signIn = ({ commit }, { attrs }) => {
     commit(types.SIGNED_IN, user)
     commit(types.SIGNING_IN, false)
 
-    //analytics.track('Signed In', _.omit(attrs, ['password']))
+    var analytics_payload = _.omit(attrs, ['password'])
+    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed In' }))
 
     return response
   }, response => {
@@ -90,7 +91,7 @@ export const signIn = ({ commit }, { attrs }) => {
   })
 }
 
-export const signOut = ({ commit }) => {
+export const signOut = ({ commit, dispatch }) => {
   commit(types.SIGNING_OUT, true)
 
   return api.logout().then(response => {
@@ -98,7 +99,7 @@ export const signOut = ({ commit }) => {
     commit(types.SIGNED_OUT)
     commit(types.SIGNING_OUT, false)
 
-    //analytics.track('Signed Out')
+    dispatch('analyticsTrack', { event_name: 'Signed Out' })
 
     return response
   }, response => {
@@ -108,7 +109,7 @@ export const signOut = ({ commit }) => {
   })
 }
 
-export const signUp = ({ commit }, { attrs }) => {
+export const signUp = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_UP, true)
 
   return api.signUp({ attrs }).then(response => {
@@ -116,7 +117,8 @@ export const signUp = ({ commit }, { attrs }) => {
     commit(types.SIGNED_UP)
     commit(types.SIGNING_UP, false)
 
-    //analytics.track('Signed Up', _.omit(attrs, ['password']))
+    var analytics_payload = _.omit(attrs, ['password'])
+    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed Up' }))
 
     return response
   }, response => {
