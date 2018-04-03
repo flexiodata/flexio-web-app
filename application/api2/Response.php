@@ -101,9 +101,6 @@ class Response
             case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::MISSING_PARAMETER:
             case \Flexio\Base\Error::INVALID_PARAMETER:
-            case \Flexio\Base\Error::NO_DATABASE:
-            case \Flexio\Base\Error::NO_MODEL:
-            case \Flexio\Base\Error::NO_SERVICE:
             case \Flexio\Base\Error::NO_OBJECT:
                 return 404;
 
