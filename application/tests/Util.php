@@ -60,7 +60,7 @@ class Util
 
         foreach ($params as $key => &$value)
         {
-            if (substr($value, 0, 1) == '@')
+            if (is_string($value) && substr($value, 0, 1) == '@')
             {
                 $value = curl_file_create(substr($value, 1));
             }
