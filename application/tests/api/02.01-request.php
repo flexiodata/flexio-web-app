@@ -23,7 +23,7 @@ class Test
         // SETUP
 
 
-        // TEST: basic getter/setter tests
+        // TEST: basic get/set tests
 
         // BEGIN TEST
         $request_ip_address = '1.1.1.1';
