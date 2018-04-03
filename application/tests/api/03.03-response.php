@@ -31,8 +31,9 @@ class Test
             'message' => 'Invalid request'
         );
         ob_start();
-        \Flexio\Api2\Response::sendError($content);
+        @\Flexio\Api2\Response::sendError($content);
         $result = ob_get_clean();
+        http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
         $actual = json_decode($result,true);
         $expected = array(
             'error' => $content
