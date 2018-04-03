@@ -96,20 +96,5 @@ class Test
         $actual = \Flexio\Api2\Response::getHttpErrorCode($flexio_error_code);
         $expected = 500;
         \Flexio\Tests\Check::assertNumber('A.12', '\Flexio\Api2\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
-
-
-
-        // TEST: tests for sending a content response
-
-        // BEGIN TEST
-        //\Flexio\Api2\Response::sendContent($content);
-
-
-        // TEST: tests for sending an error response
-
-        // BEGIN TEST
-        //\Flexio\Api2\Response::sendError($error);
-
-
     }
 }
