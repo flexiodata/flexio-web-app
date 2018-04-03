@@ -36,8 +36,8 @@ class Response
 
     public static function sendError(array $error)
     {
-        $response = array();
-        $response['error'] = $error;
+        $error_code = $error['code'] ?? \Flexio\Base\Error::GENERAL;
+        $error_message = $error['message'] ?? '';
 
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
@@ -49,18 +49,20 @@ class Response
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        $error = $response['error'];
-        $error_code = $error['code'] ?? '';
-        $error_message = $error['message'] ?? '';
-
         // set the http error code
         $http_error_code = self::getHttpErrorCode($error_code);
         \Flexio\Base\Util::header_error($http_error_code);
 
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
-            $error['message'] = \Flexio\Base\Error::getDefaultMessage($error_code);
+            $error_message = \Flexio\Base\Error::getDefaultMessage($error_code);
 
+        // make sure the error code and message are updated with defaults
+        $error['code'] = $error_code;
+        $error['message'] = $error_message;
+
+        // send the response
+        $response = array();
         $response['error'] = $error;
         $response = @json_encode($response, JSON_PRETTY_PRINT);
         echo $response;
