@@ -28,22 +28,15 @@
         @requested-password="$emit('requested-password')"
         v-else-if="view === 'forgotpassword'"
       />
-      <sign-up-modal-success
-        :eid="user_eid"
-        @close-click="$emit('cancel')"
-        v-else-if="view === 'sign-up-success'"
-      />
     </div>
   </flexio-modal>
 </template>
 
 <script>
-  import _ from 'lodash'
   import FlexioModal from './FlexioModal.vue'
   import SignUpForm from './SignUpForm.vue'
   import SignInForm from './SignInForm.vue'
   import ForgotPasswordForm from './ForgotPasswordForm.vue'
-  import SignUpModalSuccess from './SignUpModalSuccess.vue'
 
   export default {
     props: {
@@ -56,8 +49,7 @@
       FlexioModal,
       SignUpForm,
       SignInForm,
-      ForgotPasswordForm,
-      SignUpModalSuccess
+      ForgotPasswordForm
     },
     watch: {
       view: {
@@ -67,9 +59,7 @@
     },
     data() {
       return {
-        view: this.initialView,
-        user_info: {},
-        user_eid: ''
+        view: this.initialView // 'signin', 'signup' or 'forgotpassword'
       }
     },
     methods: {
@@ -82,65 +72,22 @@
           if (window.analytics) {
             window.analytics.track('Visited Sign In Page', { label: window.location.pathname })
           }
+        } else if (this.view == 'forgotpassword') {
+          if (window.analytics) {
+            window.analytics.track('Visited Forgot Password Page', { label: window.location.pathname })
+          }
         }
       },
-      getUserInfo(include_label) {
-        var info = this.user_info
-        var user_info = _.pick(info, ['first_name', 'last_name', 'email'])
-
-        // add Segment-friendly keys
-        _.assign(user_info, {
-          firstName: _.get(info, 'first_name'),
-          lastName: _.get(info, 'last_name'),
-          username: _.get(info, 'user_name'),
-          createdAt: _.get(info, 'created')
-        })
-
-        // add current pathname as 'label' (for Google Analytics)
-        if (include_label === true) {
-          _.assign(user_info, {
-            label: window.location.pathname
-          })
-        }
-
-        return user_info
-      },
-      onSignedIn(user_info) {
+      onSignedIn() {
         this.$emit('signed-in')
-        this.user_eid = _.get(user_info, 'eid', '')
-        this.user_info = _.assign({}, this.user_info, user_info)
-
-        // identify user
-        if (window.analytics) {
-          window.analytics.identify(this.user_eid, this.getUserInfo())
-        }
-
-        // track sign in
-        setTimeout(() => {
-          if (window.analytics) {
-            window.analytics.track('Signed In', this.getUserInfo(true))
-            setTimeout(function() { window.location = '/app' }, 500)
-          }
-        }, 100)
+        setTimeout(function() { window.location = '/app' }, 500)
       },
-      onSignedUp(user_info) {
+      onSignedUp() {
+        // do nothing
+      },
+      onSignedUpAndIn() {
         this.$emit('signed-up')
-        this.user_eid = _.get(user_info, 'eid', '')
-        this.user_info = _.assign({}, this.user_info, user_info)
-
-        // identify user
-        if (window.analytics) {
-          window.analytics.identify(this.user_eid, this.getUserInfo())
-        }
-      },
-      onSignedUpAndIn(user_info) {
-        // track sign up
-        setTimeout(() => {
-          if (window.analytics) {
-            window.analytics.track('Signed Up', this.getUserInfo(true))
-            setTimeout(function() { window.location = '/app/learn' }, 500)
-          }
-        }, 100)
+        setTimeout(function() { window.location = '/app/learn' }, 500)
       }
     }
   }
