@@ -47,20 +47,16 @@ class Util
 
     public static function callApi(array $call_params)
     {
-        $host = \Flexio\Tests\Util::getTestApiEndpoint();
         $method = $call_params['method'] ?? 'GET';
-        $path = $call_params['path'] ?? '';
-        $token = $call_params['token'] ?? \Flexio\Tests\Util::getDefaultTestUserToken();
+        $url = $call_params['url'] ?? '';
+        $token = $call_params['token'] ?? '';
         $params = $call_params['params'] ?? [];
         $content_type = $call_params['content_type'] ?? null;
 
-
-        if (strlen($path) == 0)
+        if (strlen($url) == 0)
         {
             throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
         }
-        if ($path[0] != '/')
-            $path = '/' . $path;
 
         foreach ($params as $key => &$value)
         {
@@ -91,8 +87,7 @@ class Util
                 break;
         }
 
-
-        curl_setopt($ch, CURLOPT_URL, "https://$host" . $path);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$token]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -118,7 +113,7 @@ class Util
     public static function getTestSDKSetup()
     {
         $default_user_token = \Flexio\Tests\Util::getDefaultTestUserToken();
-        $test_api_endpoint = \Flexio\Tests\Util::getTestApiEndpoint();
+        $test_api_endpoint = \Flexio\Tests\Util::getTestHost() . '/api/v1';
 
         $script = <<<EOD
 
@@ -129,10 +124,10 @@ EOD;
         return $script;
     }
 
-    public static function getTestApiEndpoint()
+    public static function getTestHost()
     {
-        $host = IS_LOCALHOST() ? $_SERVER['SERVER_ADDR'] : $_SERVER['HTTP_HOST'];
-        return 'https://' . $host . '/api/v1';
+        $host = 'https://' . (IS_LOCALHOST() ? $_SERVER['SERVER_ADDR'] : $_SERVER['HTTP_HOST']);
+        return $host;
     }
 
     public static function getDefaultTestUser()

@@ -20,5 +20,26 @@ class Test
 {
     public function run(&$results)
     {
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
+
+
+        // TEST: basic API call
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'GET',
+            'url' => $apibase . '/about',
+            'token' => $token
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "name": "Flex.io"
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/about; return basic info',  $actual, $expected, $results);
     }
 }
