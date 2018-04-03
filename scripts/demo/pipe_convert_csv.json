@@ -16,15 +16,8 @@
                 {
                     "op": "convert",
                     "params": {
-                        "input": {
-                            "format": "delimited",
-                            "delimiter": "{comma}",
-                            "qualifier": "{double-quote}",
-                            "header": true
-                        },
-                        "output": {
-                            "format": "json"
-                        }
+                        "input": "csv",
+                        "output": "json"
                     }
                 }
             ]
