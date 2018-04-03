@@ -20,38 +20,46 @@ class Test
 {
     public function run(&$results)
     {
-/*
-// TODO: old tests; convert over to new
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
 
-        // TEST: object creation
+
+        // TEST: create a new user
 
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = \Flexio\Base\Util::generatePassword();
 
-        $params = json_decode('
-        {
-            "user_name": "'.$username.'",
-            "email": "'.$email.'",
-            "password": "'.$password.'",
-            "send_email": false,
-            "create_examples": false
-        }
-        ',true);
-        $request = \Flexio\Api1\Request::create();
-        $request->setPostParams($params);
-        $actual= \Flexio\Api1\User::create($request);
+        $params = array(
+            'method' => 'POST',
+            'url' => $apibase . '/signup',
+            'params' => array(
+                'user_name' => $username,
+                'email' => $email,
+                'password' => $password,
+                'send_email' => 'true',
+                'create_examples' => 'true'
+            )
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_USER.'",
             "user_name": "'.$username.'",
             "email": "'.$email.'"
-        }
-        ';
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\User::create(); return the object',  $actual, $expected, $results);
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
 
 
+        // TEST: create a new user
+
+        // BEGIN TEST
+
+/*
+// TODO: old tests; convert over to new
 
         // TEST: change password
 
