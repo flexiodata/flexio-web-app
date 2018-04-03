@@ -70,6 +70,25 @@ export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
   })
 }
 
+export const signUp = ({ commit, dispatch }, { attrs }) => {
+  commit(types.SIGNING_UP, true)
+
+  return api.signUp({ attrs }).then(response => {
+    // success callback
+    commit(types.SIGNED_UP)
+    commit(types.SIGNING_UP, false)
+
+    var analytics_payload = _.omit(attrs, ['password'])
+    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed Up' }))
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.SIGNING_UP, false)
+    return response
+  })
+}
+
 export const signIn = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_IN, true)
 
@@ -105,25 +124,6 @@ export const signOut = ({ commit, dispatch }) => {
   }, response => {
     // error callback
     commit(types.SIGNING_OUT, false)
-    return response
-  })
-}
-
-export const signUp = ({ commit, dispatch }, { attrs }) => {
-  commit(types.SIGNING_UP, true)
-
-  return api.signUp({ attrs }).then(response => {
-    // success callback
-    commit(types.SIGNED_UP)
-    commit(types.SIGNING_UP, false)
-
-    var analytics_payload = _.omit(attrs, ['password'])
-    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed Up' }))
-
-    return response
-  }, response => {
-    // error callback
-    commit(types.SIGNING_UP, false)
     return response
   })
 }

@@ -60,12 +60,9 @@
       SignUpModalSuccess
     },
     watch: {
-      view: function(val, old_val) {
-        if (val == 'signup') {
-          if (window.analytics) {
-            window.analytics.track('Visited Sign Up Page', { label: window.location.pathname })
-          }
-        }
+      view: {
+        handler: 'trackPage',
+        immediate: true
       }
     },
     data() {
@@ -75,34 +72,17 @@
         user_eid: ''
       }
     },
-    mounted() {
-      if (this.view == 'signup') {
-        if (window.analytics) {
-          window.analytics.track('Visited Sign Up Page', { label: window.location.pathname })
-        }
-      }
-    },
     methods: {
-      onSignedIn(user_info) {
-        this.$emit('signed-in')
-        this.user_eid = _.get(user_info, 'eid', '')
-        this.user_info = _.assign({}, this.user_info, user_info)
-
-        this.fireIdentify()
-        this.fireSignIn()
-      },
-      onSignedUp(user_info) {
-        this.$emit('signed-up')
-        this.user_eid = _.get(user_info, 'eid', '')
-        this.user_info = _.assign({}, this.user_info, user_info)
-
-        this.fireIdentify()
-        //this.fireSignUp()
-      },
-      onSignedUpAndIn(user_info) {
-        //this.$emit('signed-up-signed-in')
-        //this.view = 'sign-up-success'
-        this.fireSignUp()
+      trackPage() {
+        if (this.view == 'signup') {
+          if (window.analytics) {
+            window.analytics.track('Visited Sign Up Page', { label: window.location.pathname })
+          }
+        } else if (this.view == 'signin') {
+          if (window.analytics) {
+            window.analytics.track('Visited Sign In Page', { label: window.location.pathname })
+          }
+        }
       },
       getUserInfo(include_label) {
         var info = this.user_info
@@ -125,26 +105,42 @@
 
         return user_info
       },
-      fireIdentify() {
+      onSignedIn(user_info) {
+        this.$emit('signed-in')
+        this.user_eid = _.get(user_info, 'eid', '')
+        this.user_info = _.assign({}, this.user_info, user_info)
+
+        // identify user
         if (window.analytics) {
           window.analytics.identify(this.user_eid, this.getUserInfo())
         }
-      },
-      fireSignIn() {
+
+        // track sign in
         setTimeout(() => {
           if (window.analytics) {
             window.analytics.track('Signed In', this.getUserInfo(true))
             setTimeout(function() { window.location = '/app' }, 500)
           }
-        }, 50)
+        }, 100)
       },
-      fireSignUp() {
+      onSignedUp(user_info) {
+        this.$emit('signed-up')
+        this.user_eid = _.get(user_info, 'eid', '')
+        this.user_info = _.assign({}, this.user_info, user_info)
+
+        // identify user
+        if (window.analytics) {
+          window.analytics.identify(this.user_eid, this.getUserInfo())
+        }
+      },
+      onSignedUpAndIn(user_info) {
+        // track sign up
         setTimeout(() => {
           if (window.analytics) {
             window.analytics.track('Signed Up', this.getUserInfo(true))
             setTimeout(function() { window.location = '/app/learn' }, 500)
           }
-        }, 50)
+        }, 100)
       }
     }
   }
