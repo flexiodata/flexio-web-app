@@ -61,10 +61,10 @@
     },
     watch: {
       view: function(val, old_val) {
-        if (val == 'signup')
-        {
-          if (window.analytics)
+        if (val == 'signup') {
+          if (window.analytics) {
             window.analytics.track('Visited Sign Up Page', { label: window.location.pathname })
+          }
         }
       }
     },
@@ -76,10 +76,10 @@
       }
     },
     mounted() {
-      if (this.view == 'signup')
-      {
-        if (window.analytics)
+      if (this.view == 'signup') {
+        if (window.analytics) {
           window.analytics.track('Visited Sign Up Page', { label: window.location.pathname })
+        }
       }
     },
     methods: {
@@ -117,8 +117,7 @@
         })
 
         // add current pathname as 'label' (for Google Analytics)
-        if (include_label === true)
-        {
+        if (include_label === true) {
           _.assign(user_info, {
             label: window.location.pathname
           })
@@ -127,13 +126,13 @@
         return user_info
       },
       fireIdentify() {
-        if (window.analytics)
+        if (window.analytics) {
           window.analytics.identify(this.user_eid, this.getUserInfo())
+        }
       },
       fireSignIn() {
         setTimeout(() => {
-          if (window.analytics)
-          {
+          if (window.analytics) {
             window.analytics.track('Signed In', this.getUserInfo(true))
             setTimeout(function() { window.location = '/app' }, 500)
           }
@@ -141,9 +140,10 @@
       },
       fireSignUp() {
         setTimeout(() => {
-          if (window.analytics)
+          if (window.analytics) {
             window.analytics.track('Signed Up', this.getUserInfo(true))
             setTimeout(function() { window.location = '/app/learn' }, 500)
+          }
         }, 50)
       }
     }
