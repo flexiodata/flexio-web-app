@@ -206,7 +206,7 @@ class Request
 
     public function getObjectEidType() : string
     {
-        $this->request_object_eid_type;
+        return $this->request_object_eid_type;
     }
 
     public function setResponseCode(string $response_code) : \Flexio\Api2\Request
