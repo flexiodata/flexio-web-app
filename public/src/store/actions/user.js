@@ -70,7 +70,7 @@ export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
   })
 }
 
-export const signIn = ({ commit }, { attrs }) => {
+export const signIn = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_IN, true)
 
   return api.login({ attrs }).then(response => {

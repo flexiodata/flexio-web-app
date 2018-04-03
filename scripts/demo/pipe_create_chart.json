@@ -16,12 +16,8 @@
                 {
                     "op": "convert",
                     "params": {
-                        "input": {
-                            "format": "json"
-                        },
-                        "output": {
-                            "format": "table"
-                        }
+                        "input": "json",
+                        "output": "table"
                     }
                 },
                 {
