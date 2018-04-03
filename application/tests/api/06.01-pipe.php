@@ -20,6 +20,9 @@ class Test
 {
     public function run(&$results)
     {
+/*
+// TODO: old tests; convert over to new
+
         // TODO: add tests
 
         // TEST: object creation
@@ -43,5 +46,6 @@ class Test
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\Pipe::create(); return the object',  $actual, $expected, $results);
+*/
     }
 }
