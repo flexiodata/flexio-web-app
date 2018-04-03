@@ -20,6 +20,9 @@ class Test
 {
     public function run(&$results)
     {
+/*
+// TODO: old tests; convert over to new
+
         // TODO: add tests
 
         // TEST: object creation
@@ -82,5 +85,6 @@ class Test
         $actual = ($status2 === \Flexio\Jobs\Process::STATUS_RUNNING && $status3 === \Flexio\Jobs\Process::STATUS_COMPLETED);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api1\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
+*/
     }
 }
