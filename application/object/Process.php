@@ -84,7 +84,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if not process mode is specified, run everything
+        // if no process mode is specified, run everything
         if (!isset($properties['process_mode']))
             $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
 
