@@ -14,7 +14,6 @@ import {
   StatisticsResource,
   StreamResource,
   TestResource,
-  TrashResource,
   ValidateResource,
   VfsResource
 } from './resources'
@@ -113,10 +112,6 @@ export default {
     var params = _.assign({ eid, p1: 'processes' }, attrs)
     return PipeResource[GET] (params)
   },
-
-  // trash
-  fetchTrash:                     function()                            { return TrashResource[GET] ()                                                                    },
-  emptyTrash:                     function({ attrs })                   { return TrashResource[DEL] ({}, attrs)                                                           },
 
   // process
   fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                                                           },

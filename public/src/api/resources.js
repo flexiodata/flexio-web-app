@@ -30,5 +30,4 @@ export const AdminResource      = Vue.resource(V1_ROOT+'/admin/statistics{/type}
 export const StatisticsResource = Vue.resource(V1_ROOT+'/statistics{/type}')
 export const StreamResource     = Vue.resource(V1_ROOT+'/streams{/eid}')
 export const TestResource       = Vue.resource(V1_ROOT+'/tests'+SUFFIX)
-export const TrashResource      = Vue.resource(V1_ROOT+'/trash'+SUFFIX)
 export const VfsResource        = Vue.resource(V1_ROOT+'/vfs{/action}'+SUFFIX)

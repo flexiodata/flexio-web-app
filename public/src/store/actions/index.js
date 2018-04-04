@@ -10,7 +10,6 @@ import * as stream from './stream.js'
 import * as task from './task.js'
 import * as token from './token.js'
 import * as right from './right.js'
-import * as trash from './trash.js'
 
 export default _.assign({},
   user,
@@ -24,6 +23,5 @@ export default _.assign({},
   stream,
   task,
   token,
-  right,
-  trash
+  right
 )
