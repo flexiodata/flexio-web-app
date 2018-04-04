@@ -224,7 +224,6 @@ class Test
             "process_info" : {
             },
             "process_status" : null,
-            "cache_used" : null,
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null

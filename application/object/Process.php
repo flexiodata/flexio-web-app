@@ -334,7 +334,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             "duration" : null,
             "process_info" : null,
             "process_status" : null,
-            "cache_used" : null,
             "created" : null,
             "updated" : null
         }
@@ -354,7 +353,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "duration" => null,
                 "process_info" => null,
                 "process_status" => null,
-                "cache_used" => null,
                 "owned_by" => null,
                 "created" => null,
                 "updated" => null

@@ -92,7 +92,6 @@ class Test
             "process_info": {
             },
             "process_status": "S",
-            "cache_used": "N",
             "owned_by": {
                 "eid": "'.$userid.'",
                 "eid_type": "USR"
@@ -102,18 +101,3 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
     }
 }
-
-/*
-
-        "process_mode": null,
-        "task" : null,
-        "started_by" : null,
-        "started" : null,
-        "finished" : null,
-        "duration" : null,
-        "process_info" : null,
-        "process_status" : null,
-        "cache_used" : null,
-        "created" : null,
-        "updated" : null
-*/
