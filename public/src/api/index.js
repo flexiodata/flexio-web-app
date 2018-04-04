@@ -5,7 +5,6 @@ import {
   HelpResource,
   UserResource,
   UserTokenResource,
-  ProjectResource,
   ConnectionResource,
   PipeResource,
   ProcessResource,

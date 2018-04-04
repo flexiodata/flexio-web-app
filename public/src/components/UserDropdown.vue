@@ -50,9 +50,6 @@
       openHelpDocs() {
         window.open('https://'+HOSTNAME+'/docs', '_blank')
       },
-      gotoProjects() {
-        this.$router.push({ name: ROUTE_HOME })
-      },
       gotoAccount() {
         this.$router.push({ name: ROUTE_ACCOUNT })
       },
@@ -71,7 +68,6 @@
       onCommand(cmd) {
         switch (cmd)
         {
-          case 'projects': return this.gotoProjects()
           case 'account':  return this.gotoAccount()
           case 'docs':     return this.openHelpDocs()
           case 'sign-out': return this.signOut()
