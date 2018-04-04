@@ -35,13 +35,14 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => $apibase . '/signup',
-            'params' => array(
-                'user_name' => $username,
-                'email' => $email,
-                'password' => $password,
-                'send_email' => 'true',
-                'create_examples' => 'true'
-            )
+            'content_type' => 'application/json',
+            'params' => '{
+                "user_name": "'.$username.'",
+                "email": "'.$email.'",
+                "password": "'.$password.'",
+                "send_email": "true",
+                "create_examples": "true"
+            }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
@@ -54,9 +55,65 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
 
 
-        // TEST: create a new user
+        // TEST: make sure we can't create a duplicate user on either username or email
 
         // BEGIN TEST
+        $username_original = \Flexio\Base\Util::generateHandle();
+        $email_original = \Flexio\Tests\Util::createEmailAddress();
+        $password = \Flexio\Base\Util::generatePassword();
+
+        for ($i = 1; $i <= 3; ++$i)
+        {
+            $username = $username_original;
+            $email = $email_original;
+
+            // on first loop, create the user; on second loop, check
+            // for duplicate username (i.e., change the email); on third
+            // loop, check for duplicate email (i.e., change the username)
+            if ($i === 2)
+            {
+                $email = \Flexio\Tests\Util::createEmailAddress();
+            }
+            if ($i === 3)
+                $username = \Flexio\Base\Util::generateHandle();
+
+            $params = array(
+                'method' => 'POST',
+                'url' => $apibase . '/signup',
+                'content_type' => 'application/json',
+                'params' => '{
+                    "user_name": "'.$username.'",
+                    "email": "'.$email.'",
+                    "password": "'.$password.'",
+                    "send_email": "true",
+                    "create_examples": "true"
+                }'
+            );
+            $result = \Flexio\Tests\Util::callApi($params);
+            $actual = $result['response'];
+
+            if ($i === 1)
+            {
+                $expected = '
+                {
+                    "eid_type": "'.\Model::TYPE_USER.'",
+                    "user_name": "'.$username.'",
+                    "email": "'.$email.'"
+                }';
+                \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
+            }
+
+            if ($i === 2 || $i === 3)
+            {
+                $expected = '
+                {
+                    "error" : {
+                        "code": "create-failed"
+                    }
+                }';
+                \Flexio\Tests\Check::assertInArray("B.$i", 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
+            }
+        }
 
 /*
 // TODO: old tests; convert over to new
