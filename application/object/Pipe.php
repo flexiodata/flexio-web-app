@@ -343,7 +343,7 @@ EOD;
         "properties": {
             "frequency": {
                 "type": "string",
-                "enum": ["one-minute","five-minutes","thirty-minutes","hourly","daily","weekly","monthly"]
+                "enum": ["", "one-minute","five-minutes","thirty-minutes","hourly","daily","weekly","monthly"]
             },
             "timezone": {
                 "type": "string"
