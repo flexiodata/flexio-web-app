@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POS /signup
+        // ENDPOINT: POST /signup
 
 
         // SETUP

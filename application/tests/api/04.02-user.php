@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POS /:userid/credentials
+        // ENDPOINT: POST /:userid/credentials
 
 
         // SETUP

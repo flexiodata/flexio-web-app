@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POS /:userid/connections
+        // ENDPOINT: POST /:userid/connections
 
 
         // SETUP
