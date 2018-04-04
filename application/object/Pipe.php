@@ -249,32 +249,6 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_PIPE.'",
-            "eid_status" : null,
-            "ename" : null,
-            "name" : null,
-            "description" : null,
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "task" : null,
-            "schedule" : null,
-            "schedule_status" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
-
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,

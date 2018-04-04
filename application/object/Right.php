@@ -199,27 +199,6 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_RIGHT.'",
-            "eid_status" : null,
-            "access_code" : null,
-            "access_type" : null,
-            "actions" : null,
-            "user" : null,
-            "object=object_eid" : {
-                "eid": null,
-                "eid_type": null
-            },
-            "object_eid": null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
-
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,

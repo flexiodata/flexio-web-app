@@ -310,39 +310,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_PROCS.'",
-            "eid_status" : null,
-            "parent" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_PIPE.'",
-                "name" : null,
-                "description" : null
-            },
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "process_mode": null,
-            "task" : null,
-            "started_by" : null,
-            "started" : null,
-            "finished" : null,
-            "duration" : null,
-            "process_info" : null,
-            "process_status" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,

@@ -162,33 +162,6 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_COMMENT.'",
-            "eid_status" : null,
-            "comment" : null,
-            "replies='.\Model::EDGE_HAS_COMMENT.'" : [{
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_COMMENT.'",
-                "comment" : null,
-                "created" : null,
-                "updated" : null
-            }],
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,
