@@ -29,7 +29,8 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'GET',
-            'url' => $apibase . '/about'
+            'url' => "$apibase/about",
+            // 'token' => '', // don't include a token
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
@@ -38,74 +39,6 @@ class Test
             "name": "Flex.io"
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/about; return basic info',  $actual, $expected, $results);
-
-
-        // TEST: /validate
-
-        // BEGIN TEST
-        $key = \Flexio\Base\Eid::generate();
-        $params = array(
-            'method' => 'POST',
-            'url' => $apibase . '/validate',
-            'content_type' => 'application/json',
-            'params' => '
-                [
-                    {
-                        "key": "'.$key.'",
-                        "value": "abcd3fg",
-                        "type": "password"
-                    },
-                    {
-                        "key": "'.$key.'",
-                        "value": "abcdefgh",
-                        "type": "password"
-                    },
-                    {
-                        "key": "'.$key.'",
-                        "value": "abcd3fgh",
-                        "type": "password"
-                    },
-                    {
-                        "key": "'.$key.'",
-                        "value": "12345678",
-                        "type": "password"
-                    }
-                ]
-            '
-        );
-        $result = \Flexio\Tests\Util::callApi($params);
-        $actual = $result['response'];
-        $expected = '
-        [
-            {
-                "key":"'.$key.'",
-                "valid":false
-            },
-            {
-                "key":"'.$key.'",
-                "valid":false
-            },
-            {
-                "key":"'.$key.'",
-                "valid":true
-            },
-            {
-                "key":"'.$key.'",
-                "valid":true
-            }
-        ]
-        ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/validate; return basic info',  $actual, $expected, $results);
-
-
-        // TODO: add tests for following validation types:
-        /*
-        'identifier'
-        'username'
-        'email'
-        'ename'
-        'password'
-        */
+        \Flexio\Tests\Check::assertInArray('A.1', 'GET /about; return basic info',  $actual, $expected, $results);
     }
 }

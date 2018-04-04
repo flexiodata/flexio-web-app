@@ -20,32 +20,82 @@ class Test
 {
     public function run(&$results)
     {
-/*
-// TODO: old tests; convert over to new
+        // ENDPOINT: POST /:userid/connections
 
-        // TODO: add tests
 
-        // TEST: object creation
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $userid = \Flexio\Tests\Util::getDefaultTestUser();
+        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
+
+
+        // TEST: create a new connection
 
         // BEGIN TEST
-        $params = json_decode('
-        {
-            "name": "Connection",
-            "description": "Test connection"
-        }
-        ',true);
-        $request = \Flexio\Api1\Request::create();
-        $request->setPostParams($params);
-        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
-        $actual = \Flexio\Api1\Connection::create($request);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/connections",
+            // 'token' => '', // don't include a token
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
         $expected = '
         {
-            "eid_type": "'.\Model::TYPE_CONNECTION.'",
-            "name": "Connection",
-            "description": "Test connection"
+            "error" : {
+                "code": "insufficient-rights"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/connections",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection",
+                "ename": "",
+                "description": "Test Connection Description",
+                "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
+                "connection_info": {
+                    "host": "https://api.domain.com",
+                    "port": 443,
+                    "username": "default",
+                    "password": "default"
+                },
+                "expires": null
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "CTN",
+            "eid_status": "A",
+            "ename": "",
+            "name": "Test Connection",
+            "description": "Test Connection Description",
+            "connection_type": "http",
+            "connection_status": "A",
+            "connection_info": {
+                "host": "https://api.domain.com",
+                "port": 443,
+                "username": "default",
+                "password": "*****"
+            },
+            "expires": null,
+            "owned_by": {
+                "eid": "'.$userid.'",
+                "eid_type": "USR"
+            }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\Connection::create(); return the object',  $actual, $expected, $results);
-*/
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
     }
 }

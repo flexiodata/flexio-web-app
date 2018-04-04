@@ -20,32 +20,64 @@ class Test
 {
     public function run(&$results)
     {
-/*
-// TODO: old tests; convert over to new
+        // ENDPOINT: POST /:userid/pipes
 
-        // TODO: add tests
 
-        // TEST: object creation
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $userid = \Flexio\Tests\Util::getDefaultTestUser();
+        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
+
+
+        // TEST: create a new pipe
 
         // BEGIN TEST
-        $params = json_decode('
-        {
-            "name": "Pipe",
-            "description": "Test pipe"
-        }
-        ',true);
-        $request = \Flexio\Api1\Request::create();
-        $request->setPostParams($params);
-        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
-        $actual = \Flexio\Api1\Pipe::create($request);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            // 'token' => '', // don't include a token
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
         $expected = '
         {
-            "eid_type": "'.\Model::TYPE_PIPE.'",
-            "name": "Pipe",
-            "description": "Test pipe"
+            "error" : {
+                "code": "insufficient-rights"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "ename": "",
+                "description": "Test Pipe Description"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "ename": "",
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "owned_by": {
+                "eid": "'.$userid.'",
+                "eid_type": "USR"
+            }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Api1\Pipe::create(); return the object',  $actual, $expected, $results);
-*/
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes; create a new pipe',  $actual, $expected, $results);
     }
 }
