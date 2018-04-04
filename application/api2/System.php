@@ -164,7 +164,6 @@ class System
 
     private static function validateObject(array $params, string $requesting_user_eid = null) : array
     {
-
         $key = $params['key'];
         $value = $params['value'];
         $type = $params['type'];
