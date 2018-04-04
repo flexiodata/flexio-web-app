@@ -53,17 +53,22 @@ class Test
                 [
                     {
                         "key": "'.$key.'",
-                        "value": "1",
+                        "value": "abcd3fg",
                         "type": "password"
                     },
                     {
                         "key": "'.$key.'",
-                        "value": "1234567890",
+                        "value": "abcdefgh",
                         "type": "password"
                     },
                     {
                         "key": "'.$key.'",
-                        "value": "abcd1efgh",
+                        "value": "abcd3fgh",
+                        "type": "password"
+                    },
+                    {
+                        "key": "'.$key.'",
+                        "value": "12345678",
                         "type": "password"
                     }
                 ]
@@ -79,6 +84,10 @@ class Test
             },
             {
                 "key":"'.$key.'",
+                "valid":false
+            },
+            {
+                "key":"'.$key.'",
                 "valid":true
             },
             {
@@ -87,7 +96,7 @@ class Test
             }
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/about; return basic info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/validate; return basic info',  $actual, $expected, $results);
 
 
         // TODO: add tests for following validation types:
