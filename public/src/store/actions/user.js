@@ -70,6 +70,7 @@ export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {
   })
 }
 
+/*
 export const signUp = ({ commit, dispatch }, { attrs }) => {
   commit(types.SIGNING_UP, true)
 
@@ -109,6 +110,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     return response
   })
 }
+*/
 
 export const signOut = ({ commit, dispatch }) => {
   commit(types.SIGNING_OUT, true)

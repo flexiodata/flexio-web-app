@@ -1,7 +1,7 @@
 import {
-  LoginResource,
+  //SignupResource,
+  //LoginResource,
   LogoutResource,
-  SignupResource,
   HelpResource,
   UserResource,
   UserTokenResource,
@@ -43,11 +43,12 @@ var PUT = 'update'
 var DEL = 'delete'
 
 export default {
+  // NO V2 // login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
+  // NO V2 // signUp:                         function()                            { return SignupResource[POS] ({}, attrs)                                                          },
+  // NO V2 // checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
+
   // auth
-  login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
-  signUp:                         function()                            { return SignupResource[POS] ({}, attrs)                                                          },
-  checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
 
   // validation
   validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                                        },
@@ -65,7 +66,7 @@ export default {
   fetchUser:                      function({ eid })                     { return UserResource[GET] ({ eid })                                                              },
   createUser:                     function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
   updateUser:                     function({ eid, attrs })              { return UserResource[POS] ({ eid }, attrs)                                                       },
-  signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
+  // NO V2 // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
   changePassword:                 function({ eid, attrs })              { return UserResource[POS] ({ eid, p1: 'changepassword'       }, attrs)                           },
   requestPasswordReset:           function({ attrs })                   { return UserResource[POS] ({      p1: 'requestpasswordreset' }, attrs)                           },
   resetPassword:                  function({ attrs })                   { return UserResource[POS] ({      p1: 'resetpassword'        }, attrs)                           },
