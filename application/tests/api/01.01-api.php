@@ -22,7 +22,6 @@ class Test
     {
         // BEGIN TEST
         $object = new \Flexio\Api2\Api;
-        $actual = 'Flexio\Api\Api';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Api2\Api; return the object if it\'s successfully created',  $actual, $expected, $results);
     }
