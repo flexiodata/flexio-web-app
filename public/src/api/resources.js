@@ -20,7 +20,6 @@ export const LogoutResource     = Vue.resource(V2_ROOT+'/logout')
 export const ValidateResource   = Vue.resource(V2_ROOT+'/validate'+SUFFIX)
 
 export const RightsResource     = Vue.resource(V1_ROOT+'/rights{/eid}'+SUFFIX)
-export const HelpResource       = Vue.resource(V1_ROOT+'/help/conversation')
 export const UserResource       = Vue.resource(V1_ROOT+'/users{/eid}'+SUFFIX)
 export const ConnectionResource = Vue.resource(V1_ROOT+'/connections{/eid}'+SUFFIX)
 export const PipeResource       = Vue.resource(V1_ROOT+'/pipes{/eid}'+SUFFIX)

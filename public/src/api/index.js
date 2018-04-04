@@ -2,9 +2,7 @@ import {
   //SignupResource,
   //LoginResource,
   LogoutResource,
-  HelpResource,
   UserResource,
-  UserTokenResource,
   ConnectionResource,
   PipeResource,
   ProcessResource,
@@ -41,10 +39,8 @@ var PUT = 'update'
 var DEL = 'delete'
 
 export default {
-  // NO V2 // login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
-  // NO V2 // signUp:                         function()                            { return SignupResource[POS] ({}, attrs)                                                          },
-  // NO V2 // checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
-  // NO V2 // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
+  // NOT USED // login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
+  // NOT USED // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
 
   // auth
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
