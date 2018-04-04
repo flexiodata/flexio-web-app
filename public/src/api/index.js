@@ -59,9 +59,6 @@ export default {
   updateRight:                    function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                                                     },
   deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                                                            },
 
-  // help
-  sendEmailSupport:               function({ attrs })                   { return HelpResource[POS] ({}, attrs)                                                            },
-
   // user
   fetchUser:                      function({ eid })                     { return UserResource[GET] ({ eid })                                                              },
   createUser:                     function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },

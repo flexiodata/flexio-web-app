@@ -1,4 +1,3 @@
-import * as core from './core.js'
 import * as user from './user.js'
 import * as project from './project.js'
 import * as pipe from './pipe.js'
@@ -14,7 +13,6 @@ import * as right from './right.js'
 import * as trash from './trash.js'
 
 export default _.assign({},
-  core,
   user,
   project,
   pipe,
