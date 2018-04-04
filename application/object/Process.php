@@ -88,6 +88,10 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties['process_mode']))
             $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
 
+        // if no process status is set, set a default
+        if (!isset($properties['process_status']))
+            $properties['process_status'] = \Flexio\Jobs\Process::STATUS_PENDING;
+
         $object = new static();
         $process_model = $object->getModel()->process;
         $local_eid = $process_model->create($properties);
