@@ -123,7 +123,7 @@
         'getAllTokens'
       ]),
       tryFetchTokens() {
-        this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+        this.$store.dispatch('fetchTokens', { eid: this.active_user_eid })
       },
       tryFetchPipes() {
         this.$store.dispatch('fetchPipes')

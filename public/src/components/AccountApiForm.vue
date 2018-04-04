@@ -87,13 +87,13 @@
       ]),
       tryFetchTokens() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+          this.$store.dispatch('fetchTokens', { eid: this.active_user_eid })
       },
       createApiKey() {
-        this.$store.dispatch('createUserToken', { eid: this.active_user_eid, attrs: {} })
+        this.$store.dispatch('createToken', { eid: this.active_user_eid, attrs: {} })
       },
       deleteKey(token) {
-        this.$store.dispatch('deleteUserToken', { eid: this.active_user_eid, token_eid: token.eid })
+        this.$store.dispatch('deleteToken', { eid: this.active_user_eid, token_eid: token.eid })
       }
     }
   }

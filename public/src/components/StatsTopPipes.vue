@@ -173,7 +173,7 @@
     methods: {
       tryFetchStats() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchAdminStatistics', { type: 'processes' })
+          this.$store.dispatch('fetchAdminInfo', { type: 'processes' })
       },
       getDatasetData(stats, range) {
         // remove out-of-bounds values

@@ -156,7 +156,7 @@
     methods: {
       tryFetchStats() {
         if (!this.is_fetched && this.isAdmin)
-          this.$store.dispatch('fetchAdminStatistics', { type: 'processes' })
+          this.$store.dispatch('fetchAdminInfo', { type: 'processes' })
 
         if (!this.is_fetched && !this.isAdmin)
           this.$store.dispatch('fetchStatistics', { type: 'processes' })

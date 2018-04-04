@@ -82,7 +82,7 @@
         'getActiveUser'
       ]),
       tryFetchTokens() {
-        this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+        this.$store.dispatch('fetchTokens', { eid: this.active_user_eid })
       },
       onOnboardingItemChange(id) {
         var item = _.find(this.items, { id })

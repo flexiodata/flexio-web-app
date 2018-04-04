@@ -1,16 +1,18 @@
 import {
-  //SignupResource,
-  //LoginResource,
+  SignupResource,
+  LoginResource,
   LogoutResource,
   UserResource,
   ConnectionResource,
   PipeResource,
   ProcessResource,
   RightsResource,
-  AdminResource,
+  TokenResource,
   StatisticsResource,
   StreamResource,
-  TestResource,
+  AccountResource,
+  AdminInfoResource,
+  AdminTestResource,
   ValidateResource,
   VfsResource
 } from './resources'
@@ -39,10 +41,10 @@ var PUT = 'update'
 var DEL = 'delete'
 
 export default {
-  // NOT USED // login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
-  // NOT USED // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
 
   // auth
+  signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                                                            },
+  login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
 
   // validation
@@ -54,18 +56,16 @@ export default {
   updateRight:                    function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                                                     },
   deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                                                            },
 
-  // user
-  fetchUser:                      function({ eid })                     { return UserResource[GET] ({ eid })                                                              },
-  createUser:                     function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
-  updateUser:                     function({ eid, attrs })              { return UserResource[POS] ({ eid }, attrs)                                                       },
-  changePassword:                 function({ eid, attrs })              { return UserResource[POS] ({ eid, p1: 'changepassword'       }, attrs)                           },
-  requestPasswordReset:           function({ attrs })                   { return UserResource[POS] ({      p1: 'requestpasswordreset' }, attrs)                           },
-  resetPassword:                  function({ attrs })                   { return UserResource[POS] ({      p1: 'resetpassword'        }, attrs)                           },
-
   // token
-  fetchUserTokens:                function({ eid })                     { return UserResource[GET] ({ eid, p1: 'tokens' })                                                },
-  createUserToken:                function({ eid, attrs })              { return UserResource[POS] ({ eid, p1: 'tokens' }, attrs)                                         },
-  deleteUserToken:                function({ eid, token_eid })          { return UserResource[DEL] ({ eid, p1: 'tokens', p2: token_eid })                                 },
+  fetchTokens:                    function({ eid })                     { return TokenResource[GET] ({ eid, p1: 'tokens' })                                                },
+  createToken:                    function({ eid, attrs })              { return TokenResource[POS] ({ eid, p1: 'tokens' }, attrs)                                         },
+  deleteToken:                    function({ eid, token_eid })          { return TokenResource[DEL] ({ eid, p1: 'tokens', p2: token_eid })                                 },
+
+  // user
+  fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                                                              },
+  updateUser:                     function({ eid, attrs })              { return AccountResource[POS] ({ eid }, attrs)                                                       },
+  changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)                           },
+  resetPassword:                  function({ attrs })                   { return AccountResource[DEL] ({ eid, p1: 'credentials' }, attrs)                           },
 
   // connection
   fetchConnections:               function()                            { return ConnectionResource[GET] ()                                                               },
@@ -73,7 +73,6 @@ export default {
   createConnection:               function({ attrs })                   { return ConnectionResource[POS] ({}, attrs)                                                      },
   updateConnection:               function({ eid, attrs })              { return ConnectionResource[POS] ({ eid }, attrs)                                                 },
   deleteConnection:               function({ eid })                     { return ConnectionResource[DEL] ({ eid })                                                        },
-  describeConnection:             function({ eid, path })               { return ConnectionResource[GET] ({ eid, p1: 'describe', q: path })                               },
   testConnection:                 function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'connect' }, attrs)                                  },
   disconnectConnection:           function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'disconnect' }, attrs)                               },
 
@@ -98,18 +97,16 @@ export default {
   // process (other)
   fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                                                },
 
-  // admin statistics
-  fetchAdminStatistics:           function({ type })                    { return AdminResource[GET] ({ type })                                                            },
-
   // statistics
   fetchStatistics:                function({ type })                    { return StatisticsResource[GET] ({ type })                                                       },
 
   // stream
   fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                                            },
 
-  // test
-  fetchTests:                     function()                            { return TestResource[GET] ({ p1: 'configure' })                                                  },
-  runTest:                        function({ id })                      { return TestResource[GET] ({ p1: 'run', id })                                                    },
+  // admin
+  fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                                                            },
+  fetchTests:                     function()                            { return AdminTestResource[GET] ({ p1: 'configure' })                                                  },
+  runTest:                        function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                                                    },
 
   // vfs
   vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                                              },

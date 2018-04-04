@@ -3,10 +3,10 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchAdminStatistics = ({ commit }, { type }) => {
+export const fetchAdminInfo = ({ commit }, { type }) => {
   commit(types.FETCHING_STATISTICS, { type: 'admin-'+type, fetching: true })
 
-  return api.fetchAdminStatistics({ type }).then(response => {
+  return api.fetchAdminInfo({ type }).then(response => {
     // success callback
     commit(types.FETCHED_STATISTICS, { type: 'admin-'+type, statistics: response.body })
     commit(types.FETCHING_STATISTICS, { type: 'admin-'+type, fetching: false })

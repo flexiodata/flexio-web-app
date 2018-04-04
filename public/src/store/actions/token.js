@@ -3,10 +3,10 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchUserTokens = ({ commit }, { eid }) => {
+export const fetchTokens = ({ commit }, { eid }) => {
   commit(types.FETCHING_TOKENS, { eid, fetching: true })
 
-  return api.fetchUserTokens({ eid }).then(response => {
+  return api.fetchTokens({ eid }).then(response => {
     // success callback
     commit(types.FETCHED_TOKENS, { eid, tokens: response.body })
     commit(types.FETCHING_TOKENS, { eid, fetching: false })
@@ -20,10 +20,10 @@ export const fetchUserTokens = ({ commit }, { eid }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createUserToken = ({ commit, dispatch }, { eid, attrs }) => {
+export const createToken = ({ commit, dispatch }, { eid, attrs }) => {
   commit(types.CREATING_TOKEN, { eid, attrs })
 
-  return api.createUserToken({ eid, attrs }).then(response => {
+  return api.createToken({ eid, attrs }).then(response => {
     // success callback
     commit(types.CREATED_TOKEN, { eid, attrs: response.body })
 
@@ -36,10 +36,10 @@ export const createUserToken = ({ commit, dispatch }, { eid, attrs }) => {
   })
 }
 
-export const deleteUserToken = ({ commit }, { eid, token_eid }) => {
+export const deleteToken = ({ commit }, { eid, token_eid }) => {
   commit(types.DELETING_TOKEN, { eid, token_eid })
 
-  return api.deleteUserToken({ eid, token_eid }).then(response => {
+  return api.deleteToken({ eid, token_eid }).then(response => {
     // success callback
     commit(types.DELETED_TOKEN, { eid, token_eid })
     return response
