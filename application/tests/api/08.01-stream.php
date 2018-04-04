@@ -20,6 +20,5 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: add tests
     }
 }
