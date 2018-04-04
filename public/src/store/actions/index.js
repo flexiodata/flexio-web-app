@@ -4,7 +4,6 @@ import * as pipe from './pipe.js'
 import * as member from './member.js'
 import * as connection from './connection.js'
 import * as process from './process.js'
-import * as processtask from './process-task.js'
 import * as statistic from './statistic.js'
 import * as stream from './stream.js'
 import * as task from './task.js'
@@ -18,7 +17,6 @@ export default _.assign({},
   member,
   connection,
   process,
-  processtask,
   statistic,
   stream,
   task,

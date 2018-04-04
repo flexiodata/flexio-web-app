@@ -120,8 +120,6 @@ export default {
 
   // process (other)
   fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                                                },
-  fetchProcessTaskInputInfo:      function({ eid, task_eid })           { return ProcessResource[GET] ({ eid, p1: 'tasks', p2: task_eid, p3: 'input', p4: 'info' })       },
-  fetchProcessTaskOutputInfo:     function({ eid, task_eid })           { return ProcessResource[GET] ({ eid, p1: 'tasks', p2: task_eid, p3: 'output', p4: 'info' })      },
 
   // admin statistics
   fetchAdminStatistics:           function({ type })                    { return AdminResource[GET] ({ type })                                                            },
