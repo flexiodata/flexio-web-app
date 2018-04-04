@@ -59,15 +59,10 @@
       EmptyItem
     },
     computed: {
-      ...mapState([
-        'active_user_eid'
-      ]),
-      is_fetched() {
-        return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetched', false)
-      },
-      is_fetching() {
-        return _.get(_.find(this.getAllUsers(), { eid: this.active_user_eid }), 'tokens_fetching', true)
-      },
+      ...mapState({
+        'is_fetching': 'tokens_fetching',
+        'is_fetched': 'tokens_fetched'
+      }),
       tokens() {
         var tokens = this.getAllTokens()
 
@@ -82,18 +77,17 @@
     },
     methods: {
       ...mapGetters([,
-        'getAllTokens',
-        'getAllUsers'
+        'getAllTokens'
       ]),
       tryFetchTokens() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchTokens', { eid: this.active_user_eid })
+          this.$store.dispatch('fetchTokens')
       },
       createApiKey() {
-        this.$store.dispatch('createToken', { eid: this.active_user_eid, attrs: {} })
+        this.$store.dispatch('createToken')
       },
       deleteKey(token) {
-        this.$store.dispatch('deleteToken', { eid: this.active_user_eid, token_eid: token.eid })
+        this.$store.dispatch('deleteToken', { eid: token.eid })
       }
     }
   }

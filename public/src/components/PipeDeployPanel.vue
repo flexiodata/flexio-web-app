@@ -122,7 +122,7 @@
         'getAllTokens'
       ]),
       tryFetchTokens() {
-        this.$store.dispatch('fetchTokens', { eid: this.active_user_eid })
+        this.$store.dispatch('fetchTokens')
       }
     }
   }

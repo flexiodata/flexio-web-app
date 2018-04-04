@@ -3,29 +3,29 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchTokens = ({ commit }, { eid }) => {
-  commit(types.FETCHING_TOKENS, { eid, fetching: true })
+export const fetchTokens = ({ commit }) => {
+  commit(types.FETCHING_TOKENS, { fetching: true })
 
-  return api.fetchTokens({ eid }).then(response => {
+  return api.fetchTokens().then(response => {
     // success callback
-    commit(types.FETCHED_TOKENS, { eid, tokens: response.body })
-    commit(types.FETCHING_TOKENS, { eid, fetching: false })
+    commit(types.FETCHED_TOKENS, { tokens: response.body })
+    commit(types.FETCHING_TOKENS, { fetching: false })
     return response
   }, response => {
     // error callback
-    commit(types.FETCHING_TOKENS, { eid, fetching: false })
+    commit(types.FETCHING_TOKENS, { fetching: false })
     return response
   })
 }
 
 // ----------------------------------------------------------------------- //
 
-export const createToken = ({ commit, dispatch }, { eid, attrs }) => {
-  commit(types.CREATING_TOKEN, { eid, attrs })
+export const createToken = ({ commit, dispatch }) => {
+  commit(types.CREATING_TOKEN)
 
-  return api.createToken({ eid, attrs }).then(response => {
+  return api.createToken().then(response => {
     // success callback
-    commit(types.CREATED_TOKEN, { eid, attrs: response.body })
+    commit(types.CREATED_TOKEN, { attrs: response.body })
 
     dispatch('analyticsTrack', { event_name: 'Created API Key' })
 
@@ -36,12 +36,12 @@ export const createToken = ({ commit, dispatch }, { eid, attrs }) => {
   })
 }
 
-export const deleteToken = ({ commit }, { eid, token_eid }) => {
-  commit(types.DELETING_TOKEN, { eid, token_eid })
+export const deleteToken = ({ commit }, { eid }) => {
+  commit(types.DELETING_TOKEN, { eid })
 
-  return api.deleteToken({ eid, token_eid }).then(response => {
+  return api.deleteToken({ eid }).then(response => {
     // success callback
-    commit(types.DELETED_TOKEN, { eid, token_eid })
+    commit(types.DELETED_TOKEN, { eid })
     return response
   }, response => {
     // error callback

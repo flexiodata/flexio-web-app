@@ -57,9 +57,9 @@ export default {
   deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                              },
 
   // token
-  fetchTokens:                    function({ eid })                     { return TokenResource[GET] ({ eid, p1: 'tokens' })                 },
-  createToken:                    function({ eid, attrs })              { return TokenResource[POS] ({ eid, p1: 'tokens' }, attrs)          },
-  deleteToken:                    function({ eid, token_eid })          { return TokenResource[DEL] ({ eid, p1: 'tokens', p2: token_eid })  },
+  fetchTokens:                    function()                            { return TokenResource[GET] ()                                      },
+  createToken:                    function()                            { return TokenResource[POS] ()                                      },
+  deleteToken:                    function({ eid })                     { return TokenResource[DEL] ({ eid })                               },
 
   // user
   fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                             },
