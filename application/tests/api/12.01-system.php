@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // ENDPOINT: GET /about
+
+
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
 
 
-        // TEST: /about
+        // TEST: get system information
 
         // BEGIN TEST
         $params = array(

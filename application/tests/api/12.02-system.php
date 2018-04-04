@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // ENDPOINT: POST /validate
+
+
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
 
 
-        // TEST: /validate
+        // TEST: check validation
 
         // BEGIN TEST
         $key = \Flexio\Base\Eid::generate();
