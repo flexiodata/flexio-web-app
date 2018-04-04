@@ -19,22 +19,6 @@ export const fetchConnections = ({ commit }) => {
   })
 }
 
-// DEPRECATED
-export const fetchProjectConnections = ({ commit }, project_eid) => {
-  commit(types.FETCHING_CONNECTIONS, { project_eid, fetching: true })
-
-  return api.fetchProjectConnections({ eid: project_eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_CONNECTIONS, { project_eid, connections: response.body })
-    commit(types.FETCHING_CONNECTIONS, { project_eid, fetching: false })
-    return response
-  }, response => {
-    // error callback
-    commit(types.FETCHING_CONNECTIONS, { project_eid, fetching: false })
-    return response
-  })
-}
-
 // ----------------------------------------------------------------------- //
 
 export const createConnection = ({ commit }, { attrs }) => {

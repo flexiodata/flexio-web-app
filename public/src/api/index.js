@@ -28,12 +28,12 @@ import {
   this.$http.post('/someUrl', [body], [options]).then(successCallback, errorCallback);
 
   // resource default actions
-  get: {method: 'GET'},
-  save: {method: 'POST'},
-  query: {method: 'GET'},
-  update: {method: 'PUT'},
-  remove: {method: 'DELETE'},
-  delete: {method: 'DELETE'}
+  get:    { method: 'GET'    },
+  save:   { method: 'POST'   },
+  query:  { method: 'GET'    },
+  update: { method: 'PUT'    },
+  remove: { method: 'DELETE' },
+  delete: { method: 'DELETE' }
 */
 
 var GET = 'get'
@@ -45,6 +45,7 @@ export default {
   // NO V2 // login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                                           },
   // NO V2 // signUp:                         function()                            { return SignupResource[POS] ({}, attrs)                                                          },
   // NO V2 // checkSignup:                    function({ attrs })                   { return SignupResource[POS] ({ p1: 'check' }, attrs)                                             },
+  // NO V2 // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
 
   // auth
   logout:                         function()                            { return LogoutResource[POS] ()                                                                   },
@@ -62,7 +63,6 @@ export default {
   fetchUser:                      function({ eid })                     { return UserResource[GET] ({ eid })                                                              },
   createUser:                     function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
   updateUser:                     function({ eid, attrs })              { return UserResource[POS] ({ eid }, attrs)                                                       },
-  // NO V2 // signUp:                         function({ attrs })                   { return UserResource[POS] ({}, attrs)                                                            },
   changePassword:                 function({ eid, attrs })              { return UserResource[POS] ({ eid, p1: 'changepassword'       }, attrs)                           },
   requestPasswordReset:           function({ attrs })                   { return UserResource[POS] ({      p1: 'requestpasswordreset' }, attrs)                           },
   resetPassword:                  function({ attrs })                   { return UserResource[POS] ({      p1: 'resetpassword'        }, attrs)                           },
@@ -71,24 +71,6 @@ export default {
   fetchUserTokens:                function({ eid })                     { return UserResource[GET] ({ eid, p1: 'tokens' })                                                },
   createUserToken:                function({ eid, attrs })              { return UserResource[POS] ({ eid, p1: 'tokens' }, attrs)                                         },
   deleteUserToken:                function({ eid, token_eid })          { return UserResource[DEL] ({ eid, p1: 'tokens', p2: token_eid })                                 },
-
-  // project
-  fetchProjects:                  function()                            { return ProjectResource[GET] ()                                                                  },
-  fetchProject:                   function({ eid })                     { return ProjectResource[GET] ({ eid })                                                           },
-  createProject:                  function({ attrs })                   { return ProjectResource[POS] ({}, attrs)                                                         },
-  updateProject:                  function({ eid, attrs })              { return ProjectResource[POS] ({ eid }, attrs)                                                    },
-  deleteProject:                  function({ eid })                     { return ProjectResource[DEL] ({ eid })                                                           },
-
-  // project (member)
-  fetchProjectMembers:            function({ eid })                     { return ProjectResource[GET] ({ eid, p1: 'followers' })                                          },
-  createProjectMembers:           function({ eid, attrs })              { return ProjectResource[POS] ({ eid, p1: 'followers' }, attrs)                                   },
-  deleteProjectMember:            function({ eid, member_eid })         { return ProjectResource[DEL] ({ eid, p1: 'followers', p2: member_eid })                          },
-
-  // project (other)
-  fetchProjectPipes:              function({ eid })                     { return ProjectResource[GET] ({ eid, p1: 'pipes' })                                              },
-  fetchProjectConnections:        function({ eid })                     { return ProjectResource[GET] ({ eid, p1: 'connections' })                                        },
-  fetchProjectTrash:              function({ eid })                     { return ProjectResource[GET] ({ eid, p1: 'trash' })                                              },
-  bulkDeleteProjectItems:         function({ eid, attrs })              { return ProjectResource[DEL] ({ eid, p1: 'trash' }, attrs)                                       },
 
   // connection
   fetchConnections:               function()                            { return ConnectionResource[GET] ()                                                               },

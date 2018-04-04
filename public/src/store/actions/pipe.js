@@ -19,22 +19,6 @@ export const fetchPipes = ({ commit }) => {
   })
 }
 
-// DEPRECATED
-export const fetchProjectPipes = ({ commit }, project_eid) => {
-  commit(types.FETCHING_PIPES, { project_eid, fetching: true })
-
-  return api.fetchProjectPipes({ eid: project_eid }).then(response => {
-    // success callback
-    commit(types.FETCHED_PIPES, { project_eid, pipes: response.body })
-    commit(types.FETCHING_PIPES, { project_eid, fetching: false })
-    return response
-  }, response => {
-    // error callback
-    commit(types.FETCHING_PIPES, { project_eid, fetching: false })
-    return response
-  })
-}
-
 // ----------------------------------------------------------------------- //
 
 export const createPipe = ({ commit, dispatch }, { attrs }) => {
