@@ -35,8 +35,8 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid/connections",
-            'content_type' => 'application/json',
             // 'token' => '', // don't include a token
+            'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection"
             }'

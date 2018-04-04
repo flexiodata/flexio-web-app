@@ -20,6 +20,9 @@ class Test
 {
     public function run(&$results)
     {
+        // ENDPOINT: POS /signup
+
+
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
         $token = \Flexio\Tests\Util::getDefaultTestUserToken();
@@ -34,7 +37,8 @@ class Test
 
         $params = array(
             'method' => 'POST',
-            'url' => $apibase . '/signup',
+            'url' => "$apibase/signup",
+            // 'token' => '', // don't include a token
             'content_type' => 'application/json',
             'params' => '{
                 "user_name": "'.$username.'",
@@ -52,7 +56,7 @@ class Test
             "user_name": "'.$username.'",
             "email": "'.$email.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'GET /signup; create a new user',  $actual, $expected, $results);
 
 
         // TEST: make sure we can't create a duplicate user on either username or email
@@ -79,7 +83,8 @@ class Test
 
             $params = array(
                 'method' => 'POST',
-                'url' => $apibase . '/signup',
+                'url' => "$apibase/signup",
+                // 'token' => '', // don't include a token
                 'content_type' => 'application/json',
                 'params' => '{
                     "user_name": "'.$username.'",
@@ -100,7 +105,7 @@ class Test
                     "user_name": "'.$username.'",
                     "email": "'.$email.'"
                 }';
-                \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray('B.1', 'GET /signup; create a new user',  $actual, $expected, $results);
             }
 
             if ($i === 2 || $i === 3)
@@ -111,7 +116,7 @@ class Test
                         "code": "create-failed"
                     }
                 }';
-                \Flexio\Tests\Check::assertInArray("B.$i", 'GET /api/v2/signup; create a new user',  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray("B.$i", 'GET /signup; create a new user',  $actual, $expected, $results);
             }
         }
 
