@@ -20,71 +20,58 @@ class Test
 {
     public function run(&$results)
     {
-/*
-// TODO: old tests; convert over to new
-
-        // TODO: add tests
-
-        // TEST: object creation
-
-        // BEGIN TEST
-        $params = array();
-        $params['run'] = false;
-        $params['task'] = json_decode('[
-            {
-                "op": "sleep",
-                "params": {
-                    "value": 4000
-                }
-            }
-        ]',true);
-        $request = \Flexio\Api1\Request::create();
-        $request->setPostParams($params);
-        $request->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
-        $process_info = \Flexio\Api1\Process::create($request);
-        $actual = $process_info['task'][0]['op'];
-        $expected = 'sleep';
-        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Api1\Process::create(); return the object',  $actual, $expected, $results);
+        // ENDPOINT: POST /:userid/processes
 
 
-        // TEST: process background job processing and status
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $userid = \Flexio\Tests\Util::getDefaultTestUser();
+        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
+
+
+        // TEST: create a new process
 
         // BEGIN TEST
-        $params = array();
-        $params['run'] = true;
-        $params['background'] = true;
-        $params['task'] = json_decode('[
-            {
-                "op": "sleep",
-                "params": {
-                    "value": 4000
-                }
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/processes",
+            // 'token' => '', // don't include a token
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error" : {
+                "code": "insufficient-rights"
             }
-        ]',true);
-        $user_eid = \Flexio\Tests\Util::getDefaultTestUser();
-        $request_create = \Flexio\Api1\Request::create();
-        $request_create->setPostParams($params);
-        $request_create->setRequestingUser($user_eid);
-        $process_info1 = \Flexio\Api1\Process::create($request_create);
-        $process = \Flexio\Object\Process::load($process_info1['eid']);
-        $process->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
-            \Flexio\Object\Right::TYPE_READ,
-            \Flexio\Object\Right::TYPE_WRITE,
-            \Flexio\Object\Right::TYPE_DELETE,
-            \Flexio\Object\Right::TYPE_EXECUTE
-        ));
-        sleep(2);
-        $request_get = \Flexio\Api1\Request::create();
-        $request_get->setQueryParams($process_info1);
-        $request_get->setRequestingUser(\Flexio\Tests\Util::getDefaultTestUser());
-        $process_info2 = \Flexio\Api1\Process::get($request_get);
-        $status2 = $process_info2['process_status'];
-        sleep(4);
-        $process_info3 = \Flexio\Api1\Process::get($request_get);
-        $status3 = $process_info3['process_status'];
-        $actual = ($status2 === \Flexio\Jobs\Process::STATUS_RUNNING && $status3 === \Flexio\Jobs\Process::STATUS_COMPLETED);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Api1\Process::create(); make sure a process runs in the background and the appropriate process status codes are set',  $actual, $expected, $results);
-*/
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/processes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PRC",
+            "eid_status": "A",
+            "owned_by": {
+                "eid": "'.$userid.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
     }
 }
