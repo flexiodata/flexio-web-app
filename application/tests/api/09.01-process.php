@@ -58,6 +58,14 @@ class Test
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
+                "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
+                "task": {
+                    "op": "request",
+                    "params": {
+                        "url": "https://api.domain.com"
+                    }
+                },
+                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -66,6 +74,25 @@ class Test
         {
             "eid_type": "PRC",
             "eid_status": "A",
+            "parent" : {
+                "eid" : "",
+                "eid_type" : "PIP"
+            },
+            "process_mode": "R",
+            "task": {
+                "op": "request",
+                "params": {
+                    "url": "https://api.domain.com"
+                }
+            },
+            "started_by": "",
+            "started": null,
+            "finished": null,
+            "duration": null,
+            "process_info": {
+            },
+            "process_status": "S",
+            "cache_used": "N",
             "owned_by": {
                 "eid": "'.$userid.'",
                 "eid_type": "USR"
@@ -75,3 +102,18 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
     }
 }
+
+/*
+
+        "process_mode": null,
+        "task" : null,
+        "started_by" : null,
+        "started" : null,
+        "finished" : null,
+        "duration" : null,
+        "process_info" : null,
+        "process_status" : null,
+        "cache_used" : null,
+        "created" : null,
+        "updated" : null
+*/
