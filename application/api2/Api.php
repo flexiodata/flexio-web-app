@@ -172,6 +172,7 @@ class Api
         'GET /admin/info/system'                      => '\Flexio\Api2\Admin::system',
         'GET /admin/info/users'                       => '\Flexio\Api2\Admin::userlist',
         'GET /admin/info/processes/summary'           => '\Flexio\Api2\Admin::processes',
+        'GET /admin/cron/run'                         => '\Flexio\Api2\Cron::run',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
 
