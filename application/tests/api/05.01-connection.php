@@ -49,7 +49,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POS /:userid/connections; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -96,6 +96,6 @@ class Test
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POS /:userid/connections; basic connection creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
     }
 }

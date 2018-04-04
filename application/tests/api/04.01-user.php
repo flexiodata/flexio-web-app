@@ -56,7 +56,7 @@ class Test
             "user_name": "'.$username.'",
             "email": "'.$email.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'GET /signup; create a new user',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /signup; create a new user',  $actual, $expected, $results);
 
 
         // TEST: make sure we can't create a duplicate user on either username or email
@@ -105,7 +105,7 @@ class Test
                     "user_name": "'.$username.'",
                     "email": "'.$email.'"
                 }';
-                \Flexio\Tests\Check::assertInArray('B.1', 'GET /signup; create a new user',  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray('B.1', 'POST /signup; create a new user',  $actual, $expected, $results);
             }
 
             if ($i === 2 || $i === 3)
@@ -116,7 +116,7 @@ class Test
                         "code": "create-failed"
                     }
                 }';
-                \Flexio\Tests\Check::assertInArray("B.$i", 'GET /signup; create a new user',  $actual, $expected, $results);
+                \Flexio\Tests\Check::assertInArray("B.$i", 'POST /signup; fail if username or email are already taken',  $actual, $expected, $results);
             }
         }
     }

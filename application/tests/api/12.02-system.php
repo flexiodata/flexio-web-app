@@ -79,7 +79,7 @@ class Test
             }
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'GET /validate; return basic info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /validate; return password validation information',  $actual, $expected, $results);
 
 
         // TODO: add tests for following validation types:
