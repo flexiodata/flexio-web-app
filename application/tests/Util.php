@@ -58,16 +58,25 @@ class Util
             throw new \Error("Invalid method specified in call to \Flexio\Tests\Util::callApi");
         }
 
-        foreach ($params as $key => &$value)
+        if (is_array($params)) // content can be posted as a JSON string, so make sure we're working with an array
         {
-            if (is_string($value) && substr($value, 0, 1) == '@')
+            foreach ($params as $key => &$value)
             {
-                $value = curl_file_create(substr($value, 1));
+                if (is_string($value) && substr($value, 0, 1) == '@')
+                {
+                    $value = curl_file_create(substr($value, 1));
+                }
             }
+            unset($value);
         }
-        unset($value);
 
         $ch = curl_init();
+
+        $headers = array();
+        if (isset($content_type))
+            $headers[] = 'Content-Type: ' . $content_type;
+        if (isset($token))
+            $headers[] = 'Authorization: Bearer ' . $token;
 
         switch ($method)
         {
@@ -77,8 +86,6 @@ class Util
             case 'POST':
                 curl_setopt($ch, CURLOPT_POST, TRUE);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-                if (isset($content_type))
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, [ 'Content-Type: '. $content_type ]);
                 break;
             case 'PUT':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');    break;
             case 'DELETE':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;
@@ -88,7 +95,7 @@ class Util
         }
 
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$token]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
