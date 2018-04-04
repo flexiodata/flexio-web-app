@@ -30,7 +30,7 @@ class Test
         $key = \Flexio\Base\Eid::generate();
         $params = array(
             'method' => 'POST',
-            'url' => $apibase . '/validate',
+            'url' => "$apibase/validate",
             'content_type' => 'application/json',
             'params' => '
                 [
@@ -79,7 +79,7 @@ class Test
             }
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/validate; return basic info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'GET /validate; return basic info',  $actual, $expected, $results);
 
 
         // TODO: add tests for following validation types:

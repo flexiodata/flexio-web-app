@@ -29,7 +29,8 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'GET',
-            'url' => $apibase . '/about'
+            'url' => "$apibase/about",
+            // 'token' => '', // don't include a token
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
@@ -38,6 +39,6 @@ class Test
             "name": "Flex.io"
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/about; return basic info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'GET /about; return basic info',  $actual, $expected, $results);
     }
 }
