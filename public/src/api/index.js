@@ -85,7 +85,7 @@ export default {
   deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                },
 
   // process
-  fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] ({}, attrs)                           },
+  fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                               },
   fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                             },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                           },
   cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})           },
