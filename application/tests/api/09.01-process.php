@@ -98,9 +98,9 @@ class Test
         {
             "eid_type": "PRC",
             "eid_status": "A",
-            "parent" : {
-                "eid" : "",
-                "eid_type" : "PIP"
+            "parent": {
+                "eid": "",
+                "eid_type": "PIP"
             },
             "process_mode": "R",
             "task": {
