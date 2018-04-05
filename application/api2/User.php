@@ -28,7 +28,6 @@ class User
                 'user_name'             => array('type' => 'string',  'required' => true),
                 'email'                 => array('type' => 'string',  'required' => true),
                 'password'              => array('type' => 'string',  'required' => true),
-                'full_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
                 'first_name'            => array('type' => 'string',  'required' => false, 'default' => ''),
                 'last_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
                 'phone'                 => array('type' => 'string',  'required' => false, 'default' => ''),
@@ -235,7 +234,6 @@ class User
         if (($validator->check($post_params, array(
                 'user_name'         => array('type' => 'string', 'required' => false),
                 'password'          => array('type' => 'string', 'required' => false),
-                'full_name'         => array('type' => 'string', 'required' => false),
                 'first_name'        => array('type' => 'string', 'required' => false),
                 'last_name'         => array('type' => 'string', 'required' => false),
                 'email'             => array('type' => 'string', 'required' => false),
