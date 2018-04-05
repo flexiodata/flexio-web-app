@@ -171,8 +171,15 @@ EOD;
         return $token_info['access_code'];
     }
 
-    public static function createUser($username, $email, $password)
+    public static function createUser(string $username = null, string $email = null, string $password = null) : string
     {
+        if (!isset($username))
+            $username = \Flexio\Base\Util::generateHandle();
+        if (!isset($email))
+            $email = Flexio\Base\Util::createEmailAddress();
+        if (!isset($password))
+            $password = \Flexio\Base\Util::generateHandle();
+
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array('user_name' => $username,
                                'email' => $email,
@@ -185,7 +192,13 @@ EOD;
         return $user->getEid();
     }
 
-    public static function createPipe($user_eid, $pipe_name)
+    public static function createToken(string $user_eid) : string
+    {
+        $token = \Flexio\Object\Token::create(array('owned_by' => $user_eid));
+        return $token->getEid();
+    }
+
+    public static function createPipe(string $user_eid, string $pipe_name) : string
     {
         $properties['name'] = $pipe_name;
         $properties['owned_by'] = $user_eid;
@@ -194,7 +207,7 @@ EOD;
         return $pipe->getEid();
     }
 
-    public static function createStreamFromFile($path) : \Flexio\Base\Stream
+    public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
     {
         $f = @fopen($path, 'rb');
         if (!$f)
@@ -212,7 +225,7 @@ EOD;
         return $stream;
     }
 
-    public static function createEmailAddress()
+    public static function createEmailAddress() : string
     {
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Base\Util::generateHandle();
@@ -251,7 +264,7 @@ EOD;
         return date("YmdHis", time());
     }
 
-    public static function convertToNumber($size_str)
+    public static function convertToNumber(string $size_str) : int
     {
         switch (strtoupper(substr($size_str, -1)))
         {
