@@ -176,7 +176,7 @@ EOD;
         if (!isset($username))
             $username = \Flexio\Base\Util::generateHandle();
         if (!isset($email))
-            $email = Flexio\Base\Util::createEmailAddress();
+            $email = \Flexio\Tests\Util::createEmailAddress();
         if (!isset($password))
             $password = \Flexio\Base\Util::generateHandle();
 
