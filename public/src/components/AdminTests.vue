@@ -119,7 +119,7 @@
     mounted() {
       var me = this
 
-      api.fetchTests().then(response => {
+      api.fetchAdminTests().then(response => {
         var tests = _.map(response.body, (id, idx) => {
           return { id, idx }
         })
@@ -151,7 +151,7 @@
 
         this.tests[test_id] = _.assign({}, test, { is_running: true })
 
-        api.runTest({ id: test_id }).then(response => {
+        api.runAdminTest({ id: test_id }).then(response => {
           var xhr = _.pick(response, ['ok', 'status', 'statusText'])
 
           if (!_.isNil(response.body))

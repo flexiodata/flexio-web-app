@@ -101,8 +101,8 @@ export default {
 
   // admin
   fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })          },
-  fetchTests:                     function()                            { return AdminTestResource[GET] ({ p1: 'configure' })               },
-  runTest:                        function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                 },
+  fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })               },
+  runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                 },
 
   // vfs
   vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                },
