@@ -208,7 +208,7 @@
           })
         }
 
-        axios.post('/api/v1/validate', validate_attrs).then(response => {
+        axios.post('/api/v2/validate', validate_attrs).then(response => {
           this.ss_errors = _.keyBy(response.data, 'key')
 
           if (_.isFunction(callback))
@@ -247,7 +247,7 @@
         this.label_submitting = 'Signing in...'
         this.is_submitting = true
 
-        axios.post('/api/v1/login', attrs).then(response => {
+        axios.post('/api/v2/login', attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
           this.is_submitting = false
           this.$emit('signed-in', user_info)

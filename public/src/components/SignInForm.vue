@@ -80,7 +80,7 @@
 
         this.is_submitting = true
 
-        axios.post('/api/v1/login', attrs).then(response => {
+        axios.post('/api/v2/login', attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
           this.is_submitting = false
           this.$emit('signed-in', user_info)
