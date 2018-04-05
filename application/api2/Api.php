@@ -73,12 +73,13 @@ class Api
     //   v1: 'GET /pipes/:eid/processes' => v2: (removed) use: GET /:userid/processes
     // * removed pipe endpoint for creating a process; use process creation endpoint with parent_eid (in POST params) for getting info from pipe
     //   v1: 'POS /pipes/:eid/processes' => v2: (removed) use: POST /:userid/processes with parent_eid as POST parameter
+    // * changed endpoint for resetting password
+    //   v1: 'POS /users/requestpasswordreset' => v2: '\Flexio\Api2\User::forgotpassword'
 
 
     // TODO: migrate VFS api endpoints over to new user scheme?
 
     // TODO: figure out how to handle these endpoints:
-    // 'POS /users/requestpasswordreset' => '\Flexio\Api2\User::requestpasswordreset'
     // 'POS /users/resendverify'         => '\Flexio\Api2\User::resendverify'
     // 'POS /users/activate'             => '\Flexio\Api2\User::activate'
 
@@ -105,7 +106,7 @@ class Api
         'POS /login'                                  => '\Flexio\Api2\System::login',
         'POS /logout'                                 => '\Flexio\Api2\System::logout',
         'POS /signup'                                 => '\Flexio\Api2\User::create',
-        'POS /requestpasswordreset'                   => '\Flexio\Api2\User::requestpasswordreset',
+        'POS /forgotpassword'                         => '\Flexio\Api2\User::requestpasswordreset',
 
         // AUTHENTICATED ENDPOINTS:
 
