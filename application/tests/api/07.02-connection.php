@@ -261,12 +261,12 @@ class Test
                 "username": "default",
                 "password": "*****"
             },
-            "expires": null,
+            "expires": "2018-01-02 03:04:05",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/connections/:objeid; return updated connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/connections/:objeid; return updated connection info',  $actual, $expected, $results);
     }
 }
