@@ -107,6 +107,7 @@ class Api
         'POS /logout'                                 => '\Flexio\Api2\System::logout',
         'POS /signup'                                 => '\Flexio\Api2\User::create',
         'POS /forgotpassword'                         => '\Flexio\Api2\User::requestpasswordreset',
+        'POS /resetpassword'                          => '\Flexio\Api2\User::resetpassword',
 
         // AUTHENTICATED ENDPOINTS:
 
@@ -114,7 +115,6 @@ class Api
         'POS /:userid/account'                        => '\Flexio\Api2\User::set',
         'GET /:userid/account'                        => '\Flexio\Api2\User::get',
         'POS /:userid/account/credentials'            => '\Flexio\Api2\User::changepassword',
-        'DEL /:userid/account/credentials'            => '\Flexio\Api2\User::resetpassword',
 
         // authorization
         'GET /:userid/auth/rights'                    => '\Flexio\Api2\Right::list',
