@@ -25,8 +25,12 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $userid = \Flexio\Tests\Util::createUser();
-        $token = \Flexio\Tests\Util::createToken($userid);
+        $password1 = \Flexio\Base\Util::generateHandle();
+        $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
+        $token1 = \Flexio\Tests\Util::createToken($userid1);
+        $password2 = \Flexio\Base\Util::generateHandle();
+        $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
+        $token2 = \Flexio\Tests\Util::createToken($userid2);
 
 
         // TEST: create a new connection
@@ -34,7 +38,7 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/connections",
+            'url' => "$apibase/$userid1/connections",
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
@@ -54,8 +58,28 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/connections",
-            'token' => $token,
+            'url' => "$apibase/$userid1/connections",
+            'token' => $token2, // token for another user
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error" : {
+                "code": "insufficient-rights"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/connections",
+            'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection",
@@ -91,11 +115,11 @@ class Test
             },
             "expires": null,
             "owned_by": {
-                "eid": "'.$userid.'",
+                "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
     }
 }
