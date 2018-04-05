@@ -11,12 +11,12 @@
 </template>
 
 <script>
-  const nav_items = [
+  const nav_items = [/*
     {
       route: 'dashboard',
       name: 'Dashboard',
       icon: 'dashboard'
-    },
+    },*/
     {
       route: 'tests',
       name: 'Tests',
