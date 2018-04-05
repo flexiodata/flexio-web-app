@@ -25,8 +25,8 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $userid = \Flexio\Tests\Util::getDefaultTestUser();
-        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
+        $userid = \Flexio\Tests\Util::createUser();
+        $token = \Flexio\Tests\Util::createToken($userid);
 
 
         // TEST: create a new process

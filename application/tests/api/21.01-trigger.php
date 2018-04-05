@@ -25,7 +25,7 @@ class Test
         // BEGIN TEST
         $properties = array();
         $properties['task'] = json_decode('{}', true);
-        $user_eid = \Flexio\Tests\Util::getDefaultTestUser();
+        $user_eid = \Flexio\Tests\Util::createUser();
         $pipe = \Flexio\Object\Pipe::create($properties);
         $pipe->setOwner($user_eid);
         $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(

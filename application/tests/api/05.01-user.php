@@ -25,7 +25,6 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $token = \Flexio\Tests\Util::getDefaultTestUserToken();
 
 
         // TEST: create a new user
