@@ -400,34 +400,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_USER.'",
-            "eid_status" : null,
-            "user_name" : null,
-            "first_name" : null,
-            "last_name" : null,
-            "email" : null,
-            "email_hash" : null,
-            "phone" : null,
-            "location_city" : null,
-            "location_state" : null,
-            "location_country" : null,
-            "company_name" : null,
-            "company_url" : null,
-            "locale_language" : null,
-            "locale_decimal" : null,
-            "locale_thousands" : null,
-            "locale_dateformat" : null,
-            "timezone" : null,
-            "config" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,

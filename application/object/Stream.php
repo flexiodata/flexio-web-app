@@ -481,29 +481,6 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_STREAM.'",
-            "eid_status" : null,
-            "stream_type" : null,
-            "parent_eid" : null,
-            "name" : null,
-            "path" : null,
-            "size" : null,
-            "hash" : null,
-            "mime_type" : null,
-            "structure" : null,
-            "file_created" : null,
-            "file_modified" : null,
-            "connection_eid" :  null,
-            "expires" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,

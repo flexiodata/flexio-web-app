@@ -159,7 +159,7 @@ class Pipe
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
-        $pipe = \Flexio\Object\Connection::load($pipe_eid);
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
         if ($owner_user_eid !== $pipe->getOwner())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 

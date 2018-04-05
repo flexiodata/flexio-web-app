@@ -248,7 +248,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // STEP 4: save final job output and status; only save the status if the status if it hasn't already been set
         $process_params = array();
         $process_params['finished'] = \Flexio\Base\Util::getCurrentTimestamp();
-        $process_params['cache_used'] = 'N';
         if ($this->isStopped() === false)
         {
             $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_COMPLETED;

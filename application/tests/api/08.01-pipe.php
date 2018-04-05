@@ -60,7 +60,25 @@ class Test
             'params' => '{
                 "name": "Test Pipe",
                 "ename": "",
-                "description": "Test Pipe Description"
+                "description": "Test Pipe Description",
+                "task": {
+                    "op": "request",
+                    "params": {
+                        "url": "https://api.domain.com"
+                    }
+                },
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["mon","tue","wed","thu","fri"],
+                    "times": [
+                        {
+                            "hour": 5,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -72,6 +90,23 @@ class Test
             "ename": "",
             "name": "Test Pipe",
             "description": "Test Pipe Description",
+            "task": {
+                "op": "request",
+                "params": {
+                    "url": "https://api.domain.com"
+                }
+            },
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["mon","tue","wed","thu","fri"],
+                "times": [
+                    {
+                        "hour": 5,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
             "owned_by": {
                 "eid": "'.$userid.'",
                 "eid_type": "USR"
