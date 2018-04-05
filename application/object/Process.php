@@ -84,9 +84,13 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if not process mode is specified, run everything
+        // if no process mode is specified, run everything
         if (!isset($properties['process_mode']))
             $properties['process_mode'] = \Flexio\Jobs\Process::MODE_RUN;
+
+        // if no process status is set, set a default
+        if (!isset($properties['process_status']))
+            $properties['process_status'] = \Flexio\Jobs\Process::STATUS_PENDING;
 
         $object = new static();
         $process_model = $object->getModel()->process;
@@ -306,40 +310,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     private static function formatProperties(array $properties) : array
     {
-/*
-        $query = '
-        {
-            "eid" : null,
-            "eid_type" : "'.\Model::TYPE_PROCS.'",
-            "eid_status" : null,
-            "parent" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_PIPE.'",
-                "name" : null,
-                "description" : null
-            },
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : "'.\Model::TYPE_USER.'",
-                "user_name" : null,
-                "first_name" : null,
-                "last_name" : null,
-                "email_hash" : null
-            },
-            "process_mode": null,
-            "task" : null,
-            "started_by" : null,
-            "started" : null,
-            "finished" : null,
-            "duration" : null,
-            "process_info" : null,
-            "process_status" : null,
-            "cache_used" : null,
-            "created" : null,
-            "updated" : null
-        }
-        ';
-*/
         $mapped_properties = \Flexio\Base\Util::mapArray(
             [
                 "eid" => null,
@@ -354,7 +324,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "duration" => null,
                 "process_info" => null,
                 "process_status" => null,
-                "cache_used" => null,
                 "owned_by" => null,
                 "created" => null,
                 "updated" => null

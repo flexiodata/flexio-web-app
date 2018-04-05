@@ -20,34 +20,20 @@ class Test
 {
     public function run(&$results)
     {
+        // ENDPOINT: POST /validate
+
+
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
 
 
-        // TEST: /about
-
-        // BEGIN TEST
-        $params = array(
-            'method' => 'GET',
-            'url' => $apibase . '/about'
-        );
-        $result = \Flexio\Tests\Util::callApi($params);
-        $actual = $result['response'];
-        $expected = '
-        {
-            "name": "Flex.io"
-        }
-        ';
-        \Flexio\Tests\Check::assertInArray('A.1', 'GET /api/v2/about; return basic info',  $actual, $expected, $results);
-
-
-        // TEST: /validate
+        // TEST: check validation
 
         // BEGIN TEST
         $key = \Flexio\Base\Eid::generate();
         $params = array(
             'method' => 'POST',
-            'url' => $apibase . '/validate',
+            'url' => "$apibase/validate",
             'content_type' => 'application/json',
             'params' => '
                 [
@@ -96,7 +82,7 @@ class Test
             }
         ]
         ';
-        \Flexio\Tests\Check::assertInArray('B.1', 'GET /api/v2/validate; return basic info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /validate; return password validation information',  $actual, $expected, $results);
 
 
         // TODO: add tests for following validation types:
