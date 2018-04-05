@@ -79,12 +79,12 @@
     computed: {
       is_fetching() {
         var lookup = 'state.statistics_fetching.'
-        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
         return _.get(this.$store, lookup, false)
       },
       is_fetched() {
         var lookup = 'state.statistics_fetched.'
-        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
         return _.get(this.$store, lookup, false)
       },
       end_date() {
@@ -118,7 +118,7 @@
       },
       store_stats() {
         var lookup = 'state.statistics.'
-        lookup += this.isAdmin ? 'admin-processes': 'processes'
+        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
         return _.get(this.$store, lookup, [])
       },
       stats_with_created() {
@@ -156,10 +156,10 @@
     methods: {
       tryFetchStats() {
         if (!this.is_fetched && this.isAdmin)
-          this.$store.dispatch('fetchAdminInfo', { type: 'processes' })
+          this.$store.dispatch('fetchAdminInfo', { type: 'processes', action: 'summary' })
 
         if (!this.is_fetched && !this.isAdmin)
-          this.$store.dispatch('fetchStatistics', { type: 'processes' })
+          this.$store.dispatch('fetchStatistics', { type: 'processes', action: 'summary' })
       },
       getDatasetData(stats, range) {
         // remove out-of-bounds values

@@ -18,6 +18,7 @@ export const LoginResource      = Vue.resource(V2_ROOT+'/login')
 export const LogoutResource     = Vue.resource(V2_ROOT+'/logout')
 export const ValidateResource   = Vue.resource(V2_ROOT+'/validate')
 
+export const BaseResource       = Vue.resource(V2_ROOT+'/me'+SUFFIX)
 export const AccountResource    = Vue.resource(V2_ROOT+'{/eid}/account'+SUFFIX)
 export const RightsResource     = Vue.resource(V2_ROOT+'/me/auth/rights{/eid}'+SUFFIX)
 export const TokenResource      = Vue.resource(V2_ROOT+'/me/auth/keys{/eid}'+SUFFIX)
@@ -26,7 +27,6 @@ export const ConnectionResource = Vue.resource(V2_ROOT+'/me/connections{/eid}'+S
 export const ProcessResource    = Vue.resource(V2_ROOT+'/me/processes{/eid}'+SUFFIX)
 export const StreamResource     = Vue.resource(V2_ROOT+'/me/streams{/eid}')
 export const VfsResource        = Vue.resource(V2_ROOT+'/me/vfs{/action}'+SUFFIX)
-export const StatisticsResource = Vue.resource(V2_ROOT+'/me/statistics{/type}')
 
 export const AdminTestResource  = Vue.resource(V2_ROOT+'/admin/tests'+SUFFIX)
 export const AdminInfoResource  = Vue.resource(V2_ROOT+'/admin/info'+SUFFIX)
