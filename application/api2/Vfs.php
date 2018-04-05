@@ -30,8 +30,8 @@ class Vfs
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $path = $validated_params['q'] ?? '';
+        $validated_query_params = $validator->getParams();
+        $path = $validated_query_params['q'] ?? '';
 
         // load the object; TODO: right now, govern VFS read rights using read
         // permissions on the user; perhaps use user privileges on store/streams?

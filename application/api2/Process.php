@@ -180,7 +180,7 @@ class Process
         // past the initial pending state
 
         // set the properties
-        $process->set($validated_params);
+        $process->set($validated_post_params);
         $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api2\Response::sendContent($result);

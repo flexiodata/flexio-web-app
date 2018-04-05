@@ -48,8 +48,8 @@ class System
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_post_params = $validator->getParams();
-        $username = $validated_params['username'];
-        $password = $validated_params['password'];
+        $username = $validated_post_params['username'];
+        $password = $validated_post_params['password'];
 
         // try to log in to the system
         $error_message = _('Authentication failed'); // default error message
