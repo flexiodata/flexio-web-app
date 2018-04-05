@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-column">
     <!-- control bar -->
-    <div class="pa3 relative bg-white bb b--black-05">
+    <div class="pa2 relative bg-white bb b--black-05" style="margin-top: 2px">
       <div class="flex flex-row items-center">
         <el-input
-          class="w-100 mw5 mr3"
+          class="w-100 mw5 mr2"
           size="medium"
           placeholder="Filter tests..."
           :disabled="is_running"
@@ -32,16 +32,19 @@
           <span v-else>Cancel</span>
         </el-button>
         <toggle-button
-          class="ml3 mr2"
+          class="ml3 mr1"
           :checked="show_errors_only"
           @click="toggleErrorsOnly"
         />
         <span class="f5 fw6 pointer black-60" @click.stop="toggleErrorsOnly">Only show errors</span>
         <div class="flex-fill">&nbsp;</div>
-        <div class="f5 b pv2 ph3 br b--black-10 yellow">Ajax Errors: {{ajax_fail_cnt}}</div>
-        <div class="f5 b pv2 ph3 br b--black-10 dark-green">Passed: {{pass_cnt}}</div>
-        <div class="f5 b pv2 ph3 br b--black-10 dark-red">Failed: {{fail_cnt}}</div>
-        <div class="f5 b pv2 pl3">Total: {{total_cnt}}</div>
+        <div class="f5 b pv2 ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
+        <span class="moon-gray">/</span>
+        <div class="f5 b pv2 ph2 dark-green">Passed: {{pass_cnt}}</div>
+        <span class="moon-gray">/</span>
+        <div class="f5 b pv2 ph2 dark-red">Failed: {{fail_cnt}}</div>
+        <span class="moon-gray">/</span>
+        <div class="f5 b pv2 ph2">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill overflow-auto">
