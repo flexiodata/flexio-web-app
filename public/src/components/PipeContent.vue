@@ -30,7 +30,7 @@
 
 <script>
   import * as mt from '../constants/mimetype'
-  import { API_ROOT } from '../api/resources'
+  import { API_V1_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
@@ -66,9 +66,9 @@
 
       stream_content_url() {
         if (this.is_flexio_html)
-          return API_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
+          return API_V1_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
 
-        return API_ROOT+'/streams/'+this.streamEid+'/content'
+        return API_V1_ROOT+'/streams/'+this.streamEid+'/content'
       },
 
       stream_query_params() {
