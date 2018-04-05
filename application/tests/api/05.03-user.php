@@ -78,6 +78,48 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/account/credentials; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/account/credentials",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "old_password": "'.strtoupper($password1).'",
+                "new_password": "'.$password2.'"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error" : {
+                "code": "invalid-parameter"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/account/credentials; fail if old password doesn\'t match',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/account/credentials",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "old_password": "'.$password1.'",
+                "new_password": "abcdef"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error" : {
+                "code": "invalid-parameter"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/account/credentials; fail if new password is a bad parameter',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $password1_matches_before = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password1);
         $password2_matches_before = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password2);
         $params = array(
@@ -96,7 +138,7 @@ class Test
         $password2_matches_after = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password2);
         $actual = ($password1_matches_before == true && $password2_matches_before == false && $password1_matches_after == false && $password2_matches_after == true);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.3', 'POST /:userid/account/credentials; make sure that the password is changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', 'POST /:userid/account/credentials; make sure that the password is changed',  $actual, $expected, $results);
 
         $actual = $result['response'];
         $expected = '
@@ -105,6 +147,6 @@ class Test
             "eid_type": "USR",
             "eid_status": "A"
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/account/credentials; change password response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/account/credentials; change password response',  $actual, $expected, $results);
     }
 }
