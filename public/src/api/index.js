@@ -15,6 +15,7 @@ import {
   AdminInfoResource,
   AdminTestResource,
   ValidateResource,
+  ResetPasswordResource,
   VfsResource
 } from './resources'
 
@@ -47,6 +48,7 @@ export default {
   signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                            },
   login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                             },
   logout:                         function()                            { return LogoutResource[POS] ()                                     },
+  resetPassword:                  function({ attrs })                   { return ResetPasswordResource[POS] ({}, attrs)                     },
 
   // validation
   validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                          },
@@ -66,7 +68,6 @@ export default {
   fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                             },
   updateUser:                     function({ eid, attrs })              { return AccountResource[POS] ({ eid }, attrs)                      },
   changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)   },
-  resetPassword:                  function({ attrs })                   { return AccountResource[DEL] ({ eid, p1: 'credentials' }, attrs)   },
 
   // connection
   fetchConnections:               function()                            { return ConnectionResource[GET] ()                                 },
