@@ -18,19 +18,19 @@
       :query-params="stream_query_params"
       :is-json="is_json"
       :is-html="is_html"
-    ></stream-text>
+    />
   </div>
   <div v-else-if="is_table" :style="inner_style" class="bg-white ba b--black-10">
     <grid
       :data-url="stream_content_url"
       :live-scroll="false"
-    ></grid>
+    />
   </div>
 </template>
 
 <script>
   import * as mt from '../constants/mimetype'
-  import { API_V1_ROOT } from '../api/resources'
+  import { API_V2_ROOT } from '../api/resources'
   import Grid from 'vue-grid2'
   import Spinner from 'vue-simple-spinner'
   import StreamText from './StreamText.vue'
@@ -66,9 +66,9 @@
 
       stream_content_url() {
         if (this.is_flexio_html)
-          return API_V1_ROOT+'/streams/'+this.streamEid+'/content?content_type=text/html'
+          return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content?content_type=text/html'
 
-        return API_V1_ROOT+'/streams/'+this.streamEid+'/content'
+        return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content'
       },
 
       stream_query_params() {

@@ -10,7 +10,6 @@ Vue.http.options.credentials = true
 var SUFFIX = '{/p1}{/p2}{/p3}{/p4}'
 
 // api root
-export const API_V1_ROOT = '/api/v1'
 export const API_V2_ROOT = '/api/v2'
 
 export const SignupResource     = Vue.resource(API_V2_ROOT+'/signup')
