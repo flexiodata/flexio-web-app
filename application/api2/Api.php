@@ -105,6 +105,7 @@ class Api
         'POS /login'                                  => '\Flexio\Api2\System::login',
         'POS /logout'                                 => '\Flexio\Api2\System::logout',
         'POS /signup'                                 => '\Flexio\Api2\User::create',
+        'POS /requestpasswordreset'                   => '\Flexio\Api2\User::requestpasswordreset',
 
         // AUTHENTICATED ENDPOINTS:
 
