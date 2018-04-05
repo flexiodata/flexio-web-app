@@ -37,7 +37,7 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/signup",
-            // 'token' => '', // don't include a token
+            // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
                 "user_name": "'.$username.'",
@@ -83,7 +83,7 @@ class Test
             $params = array(
                 'method' => 'POST',
                 'url' => "$apibase/signup",
-                // 'token' => '', // don't include a token
+                // 'token' => '', // no token included
                 'content_type' => 'application/json',
                 'params' => '{
                     "user_name": "'.$username.'",

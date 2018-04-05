@@ -39,7 +39,7 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/account/credentials",
-            // 'token' => '', // don't include a token
+            // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
                 "old_password": "'.$password1.'",
@@ -75,7 +75,7 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/account/credentials; fail if requesting user doesn\'t have access',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/account/credentials; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $password1_matches_before = \Flexio\Tests\Util::getModel()->user->checkUserPasswordByEid($userid1, $password1);

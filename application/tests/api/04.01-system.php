@@ -33,7 +33,7 @@ class Test
         $params = array(
             'method' => 'GET',
             'url' => "$apibase/about",
-            // 'token' => '', // don't include a token
+            // 'token' => '', // no token included
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];

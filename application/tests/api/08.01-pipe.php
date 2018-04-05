@@ -35,7 +35,7 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid/pipes",
-            // 'token' => '', // don't include a token
+            // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Pipe"
