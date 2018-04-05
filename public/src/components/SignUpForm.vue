@@ -228,7 +228,7 @@
             return
           }
 
-          axios.post('/api/v1/users', attrs).then(response => {
+          axios.post('/api/v2/signup', attrs).then(response => {
             var user_info =  _.get(response, 'data', {})
             this.is_submitting = false
             this.$emit('signed-up', user_info)
