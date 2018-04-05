@@ -78,7 +78,7 @@
 
         this.is_submitting = true
 
-        axios.post('/api/v1/users/requestpasswordreset', attrs).then(response => {
+        axios.post('/api/v2/forgotpassword', attrs).then(response => {
           this.is_submitting = false
           this.is_sent = true
           this.$emit('requested-password')
