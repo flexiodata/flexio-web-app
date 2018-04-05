@@ -71,7 +71,7 @@ class Test
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/auth/keys",
-            'token' => $token
+            'token' => $token1
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
