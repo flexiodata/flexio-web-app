@@ -48,8 +48,11 @@ if (is_null($db))
 
 try
 {
+    // const EDGE_PROCESS_OF    = 'PRO';  // object A is a process of object B
+    // const EDGE_HAS_PROCESS   = 'HPR';  // object A has process that is object B
+
     // STEP 1: copy the "process of" information from the association table to the process parent_eid field
-    $db->exec("update tbl_process as tar set parent_eid = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_PROCESS_OF ."'");
+    $db->exec("update tbl_process as tar set parent_eid = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'PRO'");
 }
 catch(\Exception $e)
 {

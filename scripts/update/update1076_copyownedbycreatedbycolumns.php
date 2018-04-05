@@ -48,6 +48,11 @@ if (is_null($db))
 
 try
 {
+    // const EDGE_CREATED       = 'CRT';  // user A created object B
+    // const EDGE_CREATED_BY    = 'CRB';  // object A was created by user B
+    // const EDGE_OWNS          = 'OWN';  // user A owns object B
+    // const EDGE_OWNED_BY      = 'OWB';  // object A is owned by user B
+
     // STEP 1: add the owned_by and created_by columns to the various tables
     $db->exec("alter table tbl_user add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
     $db->exec("alter table tbl_token add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
@@ -61,28 +66,28 @@ try
     $db->exec("alter table tbl_action add column owned_by varchar(12) NOT NULL default '', add column created_by varchar(12) NOT NULL default ''");
 
     // STEP 2: copy the owned_by information from the association table to the various tables
-    $db->exec("update tbl_user as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_token as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_acl as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_pipe as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_connection as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_process as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_processlog as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_stream as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_comment as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
-    $db->exec("update tbl_action as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_OWNED_BY ."'");
+    $db->exec("update tbl_user as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_token as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_acl as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_pipe as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_connection as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_process as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_processlog as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_stream as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_comment as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
+    $db->exec("update tbl_action as tar set owned_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'OWB'");
 
     // STEP 3: copy the created_by information from the association table to the various tables
-    $db->exec("update tbl_user as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_token as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_acl as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_pipe as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_connection as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_process as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_processlog as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_stream as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_comment as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
-    $db->exec("update tbl_action as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = '". \Model::EDGE_CREATED_BY ."'");
+    $db->exec("update tbl_user as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_token as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_acl as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_pipe as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_connection as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_process as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_processlog as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_stream as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_comment as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
+    $db->exec("update tbl_action as tar set created_by = src.target_eid from tbl_association as src where tar.eid = src.source_eid and src.association_type = 'CRB'");
 
     // STEP 4: add the indexes to the various tables
     $db->exec("create index idx_user_owned_by ON tbl_user (owned_by)");
