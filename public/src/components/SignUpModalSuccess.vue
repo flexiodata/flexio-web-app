@@ -52,7 +52,7 @@
       fetchApiKey() {
         this.is_submitting = true
 
-        axios.get('/api/v1/users/'+this.eid+'/tokens').then(response => {
+        axios.get('/api/v2/' + this.eid + '/auth/keys').then(response => {
           this.is_submitting = false
           this.api_key = _.get(response, 'data[0].access_code', '')
         }).catch(error => {

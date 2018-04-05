@@ -10,22 +10,22 @@ Vue.http.options.credentials = true
 var SUFFIX = '{/p1}{/p2}{/p3}{/p4}'
 
 // api root
-export const API_ROOT = '/api/v1'
-export const V1_ROOT = '/api/v1'
-export const V2_ROOT = '/api/v2'
+export const API_V2_ROOT = '/api/v2'
 
-//export const SignupResource     = Vue.resource(V2_ROOT+'/signup'+SUFFIX)
-//export const LoginResource      = Vue.resource(V2_ROOT+'/login')
-export const LogoutResource     = Vue.resource(V2_ROOT+'/logout')
-export const ValidateResource   = Vue.resource(V2_ROOT+'/validate'+SUFFIX)
+export const SignupResource     = Vue.resource(API_V2_ROOT+'/signup')
+export const LoginResource      = Vue.resource(API_V2_ROOT+'/login')
+export const LogoutResource     = Vue.resource(API_V2_ROOT+'/logout')
+export const ValidateResource   = Vue.resource(API_V2_ROOT+'/validate')
 
-export const RightsResource     = Vue.resource(V1_ROOT+'/rights{/eid}'+SUFFIX)
-export const UserResource       = Vue.resource(V1_ROOT+'/users{/eid}'+SUFFIX)
-export const ConnectionResource = Vue.resource(V1_ROOT+'/connections{/eid}'+SUFFIX)
-export const PipeResource       = Vue.resource(V1_ROOT+'/pipes{/eid}'+SUFFIX)
-export const ProcessResource    = Vue.resource(V1_ROOT+'/processes{/eid}'+SUFFIX)
-export const AdminResource      = Vue.resource(V1_ROOT+'/admin/statistics{/type}')
-export const StatisticsResource = Vue.resource(V1_ROOT+'/statistics{/type}')
-export const StreamResource     = Vue.resource(V1_ROOT+'/streams{/eid}')
-export const TestResource       = Vue.resource(V1_ROOT+'/tests'+SUFFIX)
-export const VfsResource        = Vue.resource(V1_ROOT+'/vfs{/action}'+SUFFIX)
+export const BaseResource       = Vue.resource(API_V2_ROOT+'/me'+SUFFIX)
+export const AccountResource    = Vue.resource(API_V2_ROOT+'{/eid}/account'+SUFFIX)
+export const RightsResource     = Vue.resource(API_V2_ROOT+'/me/auth/rights{/eid}'+SUFFIX)
+export const TokenResource      = Vue.resource(API_V2_ROOT+'/me/auth/keys{/eid}'+SUFFIX)
+export const PipeResource       = Vue.resource(API_V2_ROOT+'/me/pipes{/eid}'+SUFFIX)
+export const ConnectionResource = Vue.resource(API_V2_ROOT+'/me/connections{/eid}'+SUFFIX)
+export const ProcessResource    = Vue.resource(API_V2_ROOT+'/me/processes{/eid}'+SUFFIX)
+export const StreamResource     = Vue.resource(API_V2_ROOT+'/me/streams{/eid}')
+export const VfsResource        = Vue.resource(API_V2_ROOT+'/me/vfs{/action}'+SUFFIX)
+
+export const AdminTestResource  = Vue.resource(API_V2_ROOT+'/admin/tests'+SUFFIX)
+export const AdminInfoResource  = Vue.resource(API_V2_ROOT+'/admin/info'+SUFFIX)

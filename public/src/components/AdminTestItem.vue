@@ -1,5 +1,5 @@
 <template>
-  <article class="pa2 ma2 ba b--black-05" :class="cls">
+  <article class="pa2 ma1 ba b--black-05" :class="cls">
     <div class="flex flex-row items-center">
       <span class="black-30 mr2" @click="toggleDetails">
         <i

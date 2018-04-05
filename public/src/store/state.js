@@ -9,6 +9,8 @@ export default () => {
     pipes_fetching: false,
     connections_fetched: false,
     connections_fetching: false,
+    tokens_fetched: false,
+    tokens_fetching: false,
     trash_fetched: false,
     trash_fetching: false,
 

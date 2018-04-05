@@ -65,7 +65,7 @@
         return _.get(tokens, '[0].access_code', '')
       },
       sdk_options() {
-        return { baseUrl: 'https://' + window.location.host + '/api/v1' }
+        return { baseUrl: 'https://' + window.location.host + '/api/v2/me' }
       },
       active_item() {
         var item = _.find(this.items, { id: this.active_item_id })
@@ -82,7 +82,7 @@
         'getActiveUser'
       ]),
       tryFetchTokens() {
-        this.$store.dispatch('fetchUserTokens', { eid: this.active_user_eid })
+        this.$store.dispatch('fetchTokens')
       },
       onOnboardingItemChange(id) {
         var item = _.find(this.items, { id })

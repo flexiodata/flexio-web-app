@@ -67,7 +67,7 @@
     methods: {
       tryFetchStats() {
         if (!this.is_fetched)
-          this.$store.dispatch('fetchAdminStatistics', { type: 'tasks' })
+          this.$store.dispatch('fetchAdminInfo', { type: 'tasks' })
       },
       getAvgTime(v) {
         return _.isString(v) ? parseFloat(v).toFixed(4) : '--'

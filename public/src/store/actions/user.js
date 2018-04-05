@@ -26,19 +26,6 @@ export const fetchCurrentUser = ({ commit, dispatch }) => {
 
 // ----------------------------------------------------------------------- //
 
-export const createUser = ({ commit }, { attrs }) => {
-  commit(types.CREATING_USER, { attrs })
-
-  return api.createUser({ attrs }).then(response => {
-    // success callback
-    commit(types.CREATED_USER, { attrs, user: response.body })
-    return response
-  }, response => {
-    // error callback
-    return response
-  })
-}
-
 export const updateUser = ({ commit }, { eid, attrs }) => {
   commit(types.UPDATING_USER, { eid, attrs })
 

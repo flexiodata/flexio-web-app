@@ -550,9 +550,9 @@
         // will cause our component to update
         if (!this.processes_fetched)
         {
-          var pipe_eid = this.eid
-          var attrs = { tail: 0 }
-          this.$store.dispatch('fetchProcesses', { pipe_eid, attrs })
+          var parent_eid = this.eid
+          var attrs = { parent_eid, tail: 0 }
+          this.$store.dispatch('fetchProcesses', { attrs })
         }
       },
 

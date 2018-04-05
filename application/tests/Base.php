@@ -42,7 +42,7 @@ class Base
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
     }
 
-    public static function configure(\Flexio\Api1\Request $request) : array
+    public static function configure(\Flexio\Api2\Request $request)
     {
         if (!self::testsAllowed())
             return array();
@@ -59,10 +59,10 @@ class Base
         self::addTests('api', $tests);
         self::addTests('sdk', $tests);
 
-        return $tests;
+        \Flexio\Api2\Response::sendContent($tests);
     }
 
-    public static function run(\Flexio\Api1\Request $request) : array
+    public static function run(\Flexio\Api2\Request $request)
     {
         $params = $request->getQueryParams();
 
@@ -70,14 +70,16 @@ class Base
         {
             $r = array();
             $r['name'] = "Error: tests aren't allowed";
-            return $r;
+            \Flexio\Api2\Response::sendContent($r);
+            return;
         }
 
         if (!isset($params['id']))
         {
             $r = array();
             $r['name'] = "Error: missing test 'id' parameter";
-            return $r;
+            \Flexio\Api2\Response::sendContent($r);
+            return;
         }
 
         $param_parts = explode('/', $params['id']);
@@ -85,7 +87,8 @@ class Base
         {
             $r = array();
             $r['name'] = "Error: invalid test request";
-            return $r;
+            \Flexio\Api2\Response::sendContent($r);
+            return;
         }
 
         $test_name = $params['id'];
@@ -100,7 +103,8 @@ class Base
         {
             $r = array();
             $r['name'] = "Error: unable to locate the test: " . $test_name;
-            return $r;
+            \Flexio\Api2\Response::sendContent($r);
+            return;
         }
 
         // load the job's php file and instantiate the job object
@@ -112,7 +116,8 @@ class Base
         {
             $r = array();
             $r['name'] = "Error: unable to load the test: " . $test_name;
-            return $r;
+            \Flexio\Api2\Response::sendContent($r);
+            return;
         }
 
 
@@ -165,7 +170,8 @@ class Base
         $r['time'] = $test_time;
         $r['details'] = $results;
 
-        return $r;
+        \Flexio\Api2\Response::sendContent($r);
+        return;
     }
 
     private static function addTests($subfolder, &$tests)

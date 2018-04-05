@@ -3,32 +3,32 @@ import * as types from '../mutation-types'
 
 // ----------------------------------------------------------------------- //
 
-export const fetchAdminStatistics = ({ commit }, { type }) => {
-  commit(types.FETCHING_STATISTICS, { type: 'admin-'+type, fetching: true })
+export const fetchAdminInfo = ({ commit }, { type, action }) => {
+  commit(types.FETCHING_STATISTICS, { type: 'admin-'+type+'-'+action, fetching: true })
 
-  return api.fetchAdminStatistics({ type }).then(response => {
+  return api.fetchAdminInfo({ type, action }).then(response => {
     // success callback
-    commit(types.FETCHED_STATISTICS, { type: 'admin-'+type, statistics: response.body })
-    commit(types.FETCHING_STATISTICS, { type: 'admin-'+type, fetching: false })
+    commit(types.FETCHED_STATISTICS, { type: 'admin-'+type+'-'+action, statistics: response.body })
+    commit(types.FETCHING_STATISTICS, { type: 'admin-'+type+'-'+action, fetching: false })
     return response
   }, response => {
     // error callback
-    commit(types.FETCHING_STATISTICS, { type: 'admin-'+type, fetching: false })
+    commit(types.FETCHING_STATISTICS, { type: 'admin-'+type+'-'+action, fetching: false })
     return response
   })
 }
 
-export const fetchStatistics = ({ commit }, { type }) => {
-  commit(types.FETCHING_STATISTICS, { type, fetching: true })
+export const fetchStatistics = ({ commit }, { type, action }) => {
+  commit(types.FETCHING_STATISTICS, { type: type+'-'+action, fetching: true })
 
-  return api.fetchStatistics({ type }).then(response => {
+  return api.fetchStatistics({ type, action }).then(response => {
     // success callback
-    commit(types.FETCHED_STATISTICS, { type, statistics: response.body })
-    commit(types.FETCHING_STATISTICS, { type, fetching: false })
+    commit(types.FETCHED_STATISTICS, { type: type+'-'+action, statistics: response.body })
+    commit(types.FETCHING_STATISTICS, { type: type+'-'+action, fetching: false })
     return response
   }, response => {
     // error callback
-    commit(types.FETCHING_STATISTICS, { type, fetching: false })
+    commit(types.FETCHING_STATISTICS, { type: type+'-'+action, fetching: false })
     return response
   })
 }

@@ -1,6 +1,6 @@
 import store from '../store'
 import * as types from '../store/mutation-types'
-import { ROUTE_DEV } from '../constants/route'
+import { ROUTE_ADMIN } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
 import AdminTests from '../components/AdminTests.vue'
@@ -14,10 +14,10 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /admin/dashboard
+      // redirect to /admin/tests
       path: '',
-      name: ROUTE_DEV,
-      redirect: 'dashboard'
+      name: ROUTE_ADMIN,
+      redirect: 'tests'
     },
     {
       // AdminDashboard will be rendered inside AdminHome's <router-view>

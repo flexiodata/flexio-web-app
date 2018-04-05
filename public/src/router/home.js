@@ -6,9 +6,7 @@ import {
   ROUTE_HOME_PIPES,
   ROUTE_HOME_MEMBERS,
   ROUTE_HOME_CONNECTIONS,
-  ROUTE_HOME_STORAGE,
-  ROUTE_HOME_STORAGE_OLD,
-  ROUTE_HOME_TRASH
+  ROUTE_HOME_STORAGE
 } from '../constants/route'
 import * as types from '../store/mutation-types'
 import store from '../store'

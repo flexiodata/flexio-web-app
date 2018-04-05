@@ -24,11 +24,6 @@ const PIPE_DEFAULTS = {
   processes_fetching: false
 }
 
-const USER_DEFAULTS = {
-  tokens_fetched: false,
-  tokens_fetching: false,
-}
-
 const STREAM_DEFAULTS = {
   uploading: false,
   uploaded: false
@@ -48,6 +43,7 @@ const PROCESS_TASK_OUTPUT_INFO_DEFAULTS = {
   output_columns: []
 }
 
+const USER_DEFAULTS = { }
 const MEMBER_DEFAULTS = { }
 const PROCESS_DEFAULTS = { }
 const TOKEN_DEFAULTS = { }
