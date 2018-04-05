@@ -355,7 +355,6 @@ class User
         \Flexio\Api2\Response::sendContent($result);
     }
 
-
     public static function resetpassword(\Flexio\Api2\Request $request)
     {
         $request->track(\Flexio\Api2\Action::TYPE_USER_CREDENTIAL_RESET);
