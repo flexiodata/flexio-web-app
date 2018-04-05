@@ -178,10 +178,11 @@ EOD;
         if (!isset($email))
             $email = \Flexio\Tests\Util::createEmailAddress();
         if (!isset($password))
-            $password = \Flexio\Base\Util::generateHandle();
+            $password = \Flexio\Base\Util::generatePassword();
 
         $verify_code = \Flexio\Base\Util::generateHandle();
-        $new_user_info = array('user_name' => $username,
+        $new_user_info = array(
+                               'user_name' => $username,
                                'email' => $email,
                                'full_name' => $username,
                                'eid_status' => \Model::STATUS_AVAILABLE,
@@ -189,13 +190,35 @@ EOD;
                                'verify_code' => '');
 
         $user = \Flexio\Object\User::create($new_user_info);
-        return $user->getEid();
+        $user_eid = $user->getEid();
+
+        // owner and created have to be set after creation the user eid
+        // isn't yet known, and the owner and creator are the eid of the
+        // user created
+        $additional_user_properties = array(
+            'owned_by' => $user_eid,
+            'created_by' => $user_eid
+        );
+        $user->set($additional_user_properties);
+
+        $user->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID,
+            array(
+                \Flexio\Object\Right::TYPE_READ_RIGHTS,
+                \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
+                \Flexio\Object\Right::TYPE_READ,
+                \Flexio\Object\Right::TYPE_WRITE,
+                \Flexio\Object\Right::TYPE_DELETE
+            )
+        );
+
+        return $user_eid;
     }
 
     public static function createToken(string $user_eid) : string
     {
         $token = \Flexio\Object\Token::create(array('owned_by' => $user_eid));
-        return $token->getEid();
+        $token_info = $token->get();
+        return $token_info['access_code'];
     }
 
     public static function createPipe(string $user_eid, string $pipe_name) : string
