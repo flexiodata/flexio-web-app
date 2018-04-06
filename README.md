@@ -121,7 +121,7 @@ git push
 
 Once the push is complete, open up the [Flex.io Web App](https://github.com/flexiodata/flexio) on GitHub and go to the `Releases` tab and click 'Draft a new release' button. Name the release the same thing as the version number in the `package.json` file, but prefixed with the letter 'v' (e.g. for version 1.1.6, both the Tag version and the Release title would be 'v1.1.6').. Add any pertinent release notes and click the 'Publish release' button to finalize the release.
 
-## Updating a package dependency (e.g. Flex.io JS SDK)
+## Updating a package dependency (e.g. flexio-sdk-js)
 
 To update a package dependency, do the following:
 
