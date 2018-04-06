@@ -44,10 +44,10 @@ class V1Controller extends \Flexio\System\FxControllerAction
         }
         else
         {
-            if (0 == strncmp($request->REQUEST_URI, '/api/v1/connections', 19) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/pipes', 13) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/streams', 15))
+            if (0 == strncmp($request->REQUEST_URI, '/v1/connections', 19) ||
+                0 == strncmp($request->REQUEST_URI, '/v1/processes', 17) ||
+                0 == strncmp($request->REQUEST_URI, '/v1/pipes', 13) ||
+                0 == strncmp($request->REQUEST_URI, '/v1/streams', 15))
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
