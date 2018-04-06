@@ -140,6 +140,21 @@ class Test
             "eid_status": "D"
         }';
         \Flexio\Tests\Check::assertInArray('A.4', 'DELETE /:userid/connections/:objeid; delete connection',  $actual, $expected, $results);
+        $params = array(
+            'method' => 'GET',
+            'url' => "$apibase/$userid1/connections/$objeid1",
+            'token' => $token1
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error": {
+                "code":"no-object",
+                "message":"Object not available"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -155,6 +170,70 @@ class Test
             "eid_type": "CTN",
             "eid_status": "D"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/connections/:objeid; allow deletion by ename',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'DELETE /:userid/connections/:objeid; allow deletion by ename',  $actual, $expected, $results);
+        $params = array(
+            'method' => 'DELETE',
+            'url' => "$apibase/$userid1/connections/ename3",
+            'token' => $token1
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error": {
+                "code":"no-object",
+                "message":"Object not available"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
+
+        // BEGIN
+        $unique_ename = \Flexio\Base\Util::generateHandle();
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/connections",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection",
+                "ename": "'.$unique_ename.'"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $response = json_decode($result['response'],true);
+        $objeid1 = $response['eid'] ?? '';
+        $params = array(
+            'method' => 'DELETE',
+            'url' => "$apibase/$userid1/connections/$unique_ename",
+            'token' => $token1
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid": "'.$objeid1.'",
+            "eid_type": "CTN",
+            "eid_status": "D"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.8', 'DELETE /:userid/connections/:objeid; delete connection',  $actual, $expected, $results);
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/connections",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Connection",
+                "ename": "'.$unique_ename.'"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "CTN",
+            "eid_status": "A",
+            "ename": "'.$unique_ename.'"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.9', 'DELETE /:userid/connections/:objeid; clear out ename when deleting a connection',  $actual, $expected, $results);
     }
 }
