@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api1;
+namespace Flexio\Api;
 
 
 class Response
@@ -36,8 +36,8 @@ class Response
 
     public static function sendError(array $error)
     {
-        $response = array();
-        $response['error'] = $error;
+        $error_code = $error['code'] ?? \Flexio\Base\Error::GENERAL;
+        $error_message = $error['message'] ?? '';
 
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
@@ -49,15 +49,32 @@ class Response
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        $error = $response['error'];
-        $error_code = $error['code'] ?? '';
-        $error_message = $error['message'] ?? '';
+        // set the http error code
+        $http_error_code = self::getHttpErrorCode($error_code);
+        \Flexio\Base\Util::header_error($http_error_code);
 
+        // if a message isn't specified, supply a default message
+        if (strlen($error_message ) == 0)
+            $error_message = \Flexio\Base\Error::getDefaultMessage($error_code);
+
+        // make sure the error code and message are updated with defaults
+        $error['code'] = $error_code;
+        $error['message'] = $error_message;
+
+        // send the response
+        $response = array();
+        $response['error'] = $error;
+        $response = @json_encode($response, JSON_PRETTY_PRINT);
+        echo $response;
+    }
+
+    public static function getHttpErrorCode(string $error_code) : int
+    {
         // change the error code to be more specific in case of unauthorized access
         if ($error_code === \Flexio\Base\Error::INSUFFICIENT_RIGHTS && self::sessionAuthExpired() === true)
             $error_code = \Flexio\Base\Error::UNAUTHORIZED;
 
-        // set the specific error header
+        // return the associated http error code
         switch ($error_code)
         {
             // TODO: for now, map the default and ERROR_GENERAL to 400, which
@@ -66,19 +83,16 @@ class Response
             // assign ERROR_GENERAL to other categories when appropriate
             default:
             case \Flexio\Base\Error::GENERAL:
-                \Flexio\Base\Util::header_error(400);
-                break;
+                return 400;
 
             // "UNAUTHORIZED" type errors; the user might have access to the object
             // if they were logged in, but the session is invalid
             case \Flexio\Base\Error::UNAUTHORIZED:
-                \Flexio\Base\Util::header_error(401);
-                break;
+                return 401;
 
             // "FORBIDDEN" type errors; access not allowed
             case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
-                \Flexio\Base\Util::header_error(403);
-                break;
+                return 403;
 
             // "NOT FOUND" type errors; invalid requests, invalid
             // parameters, or valid requests for objects that can't
@@ -89,12 +103,8 @@ class Response
             case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::MISSING_PARAMETER:
             case \Flexio\Base\Error::INVALID_PARAMETER:
-            case \Flexio\Base\Error::NO_DATABASE:
-            case \Flexio\Base\Error::NO_MODEL:
-            case \Flexio\Base\Error::NO_SERVICE:
             case \Flexio\Base\Error::NO_OBJECT:
-                \Flexio\Base\Util::header_error(404);
-                break;
+                return 404;
 
             // "UNPROCESSABLE ENTITY"; request can't be processed
             // for some reason
@@ -106,25 +116,15 @@ class Response
             case \Flexio\Base\Error::READ_FAILED:
             case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:
             case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
-                \Flexio\Base\Util::header_error(422);
-                break;
+                return 422;
 
             // "INTERNAL SERVER ERROR"; something is wrong internally
             case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::NO_DATABASE:
             case \Flexio\Base\Error::NO_MODEL:
             case \Flexio\Base\Error::NO_SERVICE:
-                \Flexio\Base\Util::header_error(500);
-                break;
+                return 500;
         }
-
-        // if a message isn't specified, supply a default message
-        if (strlen($error_message ) == 0)
-            $error['message'] = \Flexio\Base\Error::getDefaultMessage($error_code);
-
-        $response['error'] = $error;
-        $response = @json_encode($response, JSON_PRETTY_PRINT);
-        echo $response;
     }
 
     private static function sessionAuthExpired() : bool

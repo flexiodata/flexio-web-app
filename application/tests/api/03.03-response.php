@@ -31,13 +31,13 @@ class Test
             'message' => 'Invalid request'
         );
         ob_start();
-        @\Flexio\Api2\Response::sendError($content);
+        @\Flexio\Api\Response::sendError($content);
         $result = ob_get_clean();
         http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
         $actual = json_decode($result,true);
         $expected = array(
             'error' => $content
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Api2\Response::sendError(); basic content response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Api\Response::sendError(); basic content response',  $actual, $expected, $results);
     }
 }

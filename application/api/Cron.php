@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api1;
+namespace Flexio\Api;
 
 
 class Cron
@@ -55,12 +55,29 @@ class Cron
         $scheduler->loop();
     }
 
-    private function loop()
+    public static function runOnce()
+    {
+        // the scheduler script uses UTC as its timezone
+        date_default_timezone_set('UTC');
+        $dt = \Flexio\Base\Util::getDateTimeParts();
+        printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
+
+        $scheduler = new static();
+        $scheduler->loop(1);
+    }
+
+    private function loop(int $count = null)
     {
         $lastkey = '';
 
+        $loop_count = 0;
         while (true)
         {
+            if (isset($count) && $loop_count >= $count)
+                break;
+
+            $loop_count++;
+
             $dt = getdate();
             $hour = $dt['hours'];
             $minute = $dt['minutes'];
@@ -271,7 +288,7 @@ class Cron
     private static function runPipe(string $pipe_eid)
     {
         // TODO: following run code is similar to \1\Process::create()
-        // should factor; for example, the \Flexio\Api1\Process::create()
+        // should factor; for example, the \Flexio\Api\Process::create()
         // adds on the parent and owner
 
         // TODO: check permissions based on the owner of the pipe

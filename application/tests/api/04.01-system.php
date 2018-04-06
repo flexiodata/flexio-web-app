@@ -39,7 +39,7 @@ class Test
         $actual = $result['response'];
         $expected = '
         {
-            "name": "Flex.io"
+            "name": "flexio"
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.1', 'GET /about; return basic info',  $actual, $expected, $results);

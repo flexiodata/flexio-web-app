@@ -888,22 +888,8 @@ class Model
         @readfile($zip_name);
     }
 
-    public static function getExtract(\Flexio\Api1\Request $request)
+    public static function getExtract()
     {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
-        $items = $params['items'] ?? false;
-
-        if (!is_string($items) || $items !== '*') // for now only allow all items to be selected
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-
-        // only allow users from flex.io to get this info
-        $user = \Flexio\Object\User::load($requesting_user_eid);
-        if ($user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($user->isAdministrator() !== true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
         $items_selected = array(
             'object' => 'select eid, eid_type from tbl_object',
             'association' => 'select source_eid, target_eid, association_type, created, updated from tbl_association',

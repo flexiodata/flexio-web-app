@@ -29,22 +29,22 @@ class Test
         $content = array(
         );
         ob_start();
-        \Flexio\Api2\Response::sendContent($content);
+        \Flexio\Api\Response::sendContent($content);
         $result = ob_get_clean();
         $actual = json_decode($result,true);
         $expected = $content;
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Api2\Response::sendContent(); basic content response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Api\Response::sendContent(); basic content response',  $actual, $expected, $results);
 
         // BEGIN TEST
         $content = array(
             'success' => true
         );
         ob_start();
-        \Flexio\Api2\Response::sendContent($content);
+        \Flexio\Api\Response::sendContent($content);
         $result = ob_get_clean();
         $actual = json_decode($result,true);
         $expected = $content;
-        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Api2\Response::sendContent(); basic content response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Api\Response::sendContent(); basic content response',  $actual, $expected, $results);
 
         // BEGIN TEST
         $object = \Flexio\Object\Pipe::create();
@@ -54,10 +54,10 @@ class Test
             'eid_status' => $object->getStatus()
         );
         ob_start();
-        \Flexio\Api2\Response::sendContent($content);
+        \Flexio\Api\Response::sendContent($content);
         $result = ob_get_clean();
         $actual = json_decode($result,true);
         $expected = $content;
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Api2\Response::sendContent(); basic content response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Api\Response::sendContent(); basic content response',  $actual, $expected, $results);
     }
 }

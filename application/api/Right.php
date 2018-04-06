@@ -13,26 +13,38 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api1;
+namespace Flexio\Api;
 
 
 class Right
 {
-    public static function create(\Flexio\Api1\Request $request) : array
+    public static function create(\Flexio\Api\Request $request)
     {
-        $params = $request->getPostParams();
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does it make sense
+        // to use the owner as the owner we're adding the rights for?
+        // what about public pipes?
+
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($post_params, array(
                 'rights' => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $rights = $validated_params['rights'];
-        $message = $validated_params['message'] ?? '';
+        $validated_post_params = $validator->getParams();
+        $rights = $validated_post_params['rights'];
+        $message = $validated_post_params['message'] ?? '';
 
         // validate the rights
         $object_rights_to_add = array();
@@ -41,7 +53,6 @@ class Right
             $object_eid = $r['object_eid'] ?? false;
             $access_code = $r['access_code'] ?? false;
             $actions = $r['actions'] ?? false;
-
 
             if (!is_string($object_eid))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -136,13 +147,25 @@ class Right
             $result[] = $object->getRights();
         }
 
-        return $result;
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api1\Request $request) : array
+    public static function set(\Flexio\Api\Request $request)
     {
-        $params = $request->getPostParams();
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does this make sense?
+
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // note: only allow the actions to be changed; don't allow the object
         // or the user to be changed since this would allow a user to simply
@@ -150,15 +173,13 @@ class Right
         // else
 
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true),
+        if (($validator->check($post_params, array(
                 'actions' => array('type' => 'object', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
-        $actions = $validated_params['actions'];
+        $validated_post_params = $validator->getParams();
+        $actions = $validated_post_params['actions'];
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -176,22 +197,25 @@ class Right
         $new_rights = array(array('eid' => $right_eid, 'actions' => $actions));
         $object->setRights($new_rights);
 
-        return $right->get();
+        $result = $right->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api1\Request $request) : array
+    public static function delete(\Flexio\Api\Request $request)
     {
-        $params = $request->getQueryParams();
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
+        // TODO: access rights are being granted to the user specified
+        // in 'access_code' in the rights object; however, we're posting
+        // to a path that has an owner in the root; does this make sense?
+
         $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -213,22 +237,21 @@ class Right
         $result['eid'] = $right->getEid();
         $result['eid_type'] = $right->getType();
         $result['eid_status'] = $right->getStatus();
-        return $result;
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api1\Request $request) : array
+    public static function get(\Flexio\Api\Request $request)
     {
-        $params = $request->getQueryParams();
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+
+
         $requesting_user_eid = $request->getRequestingUser();
-
-        $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
-                'eid' => array('type' => 'identifier', 'required' => true)
-            ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        $validated_params = $validator->getParams();
-        $right_eid = $validated_params['eid'];
+        $owner_user_eid = $request->getOwnerFromUrl();
+        $right_eid = $request->getObjectFromUrl();
 
         // make sure we're allowed to modify the rights
         $right = \Flexio\Object\Right::load($right_eid);
@@ -243,37 +266,41 @@ class Right
         if ($object->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE_RIGHTS) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        return $right->get();
+        $result = $right->get();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api1\Request $request) : array
+    public static function list(\Flexio\Api\Request $request)
     {
-        $params = $request->getQueryParams();
-        $requesting_user_eid = $request->getRequestingUser();
+        // TODO: the behavior of this API endpoint isn't yet finalized;
+        // throw an exception until it's ready
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
 
+
+        $query_params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
-        if (($validator->check($params, array(
+        if (($validator->check($query_params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        $validated_params = $validator->getParams();
-        $user_eid = $requesting_user_eid;
-
-        // build the filter for the rights we want to get
-        $filter = array(
-            'eid_type' => array(\Model::TYPE_PIPE, \Model::TYPE_CONNECTION),
-            'eid_status' => array(\Model::STATUS_AVAILABLE)
-        );
-
-        if (isset($validated_params['objects']))
-            $filter['target_eids'] = $validated_params['objects']; // filter for specific objects
-
+        $validated_query_params = $validator->getParams();
 
         // TODO: get rights info from list query in \Flexio\Object\Rights
 
-        $rights = array();
-        return $rights;
+        $result = array();
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function createUser(string $identifier, string $requesting_user_eid) : \Flexio\Object\User
@@ -297,11 +324,11 @@ class Right
                                'require_verification' => true); // require verification to give user a chance to fill out their info
 
         // if the user isn't invited, create the user; if something went wrong, move on
-        $new_user_request = \Flexio\Api1\Request::create();
+        $new_user_request = \Flexio\Api\Request::create();
         $new_user_request->setRequestingUser($requesting_user_eid);
         $new_user_request->setPostParams($new_user_info);
 
-        $user_info = \Flexio\Api1\User::create($new_user_request);
+        $user_info = \Flexio\Api\User::create($new_user_request);
         if (!isset($user_info) || $user_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
@@ -362,7 +389,7 @@ class Right
         $email_params['object_eid'] = $object_eid;
         $email_params['message'] = $message;
 
-        $email = \Flexio\Api1\Message::create(\Flexio\Api1\Message::TYPE_EMAIL_SHARE_PIPE, $email_params);
+        $email = \Flexio\Api\Message::create(\Flexio\Api\Message::TYPE_EMAIL_SHARE_PIPE, $email_params);
         $email->send();
 
         return true;

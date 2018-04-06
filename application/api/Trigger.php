@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Trigger
