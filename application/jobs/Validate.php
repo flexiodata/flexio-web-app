@@ -26,7 +26,7 @@ namespace Flexio\Jobs;
             "properties": {
                 "mime_type": {
                     "type": "string",
-                    "enum": ["image/png, "image/jpeg", "image/gif", "image/tiff"]
+                    "enum": ["image/png", "image/jpeg", "image/gif", "image/tiff"]
                 }
             }
         }
