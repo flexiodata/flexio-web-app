@@ -156,7 +156,6 @@ class ApiController extends \Flexio\System\FxControllerAction
                 default:
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
-                case 'v1': \Flexio\Api1\Api::request($request, $query_params, $post_params); break;
                 case 'v2': \Flexio\Api2\Api::request($request, $query_params, $post_params); break;
             }
         }
@@ -178,7 +177,7 @@ class ApiController extends \Flexio\System\FxControllerAction
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api1\Response::sendError($error);
+            \Flexio\Api2\Response::sendError($error);
         }
     }
 }
