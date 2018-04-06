@@ -36,7 +36,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
         if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+            header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN']??'*'));
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
