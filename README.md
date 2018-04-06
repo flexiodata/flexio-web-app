@@ -127,12 +127,12 @@ To update a package dependency, do the following:
 
 ```
 yarn add <package-name>
-git commit -a -m "Updated <package-name>."
+git commit -a -m "Updated <package-name> to v1.2.3."
 ```
 
 For example, to update the Flex.io JS SDK to the latest version, you would do the following:
 
 ```
 yarn add flexio-sdk-js
-git commit -a -m "Updated Flex.io JS SDK."
+git commit -a -m "Updated Flex.io JS SDK to v1.2.3."
 ```
