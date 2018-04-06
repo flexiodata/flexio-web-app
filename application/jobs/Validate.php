@@ -22,10 +22,18 @@ namespace Flexio\Jobs;
     "params": {
         "path": ""
         "validator": {
+            "type": "object",
+            "properties": {
+                "mime_type": {
+                    "type": "string",
+                    "enum": ["image/png, "image/jpeg", "image/gif", "image/tiff"]
+                }
+            }
         }
     }
 }
 */
+
 
 class Validate extends \Flexio\Jobs\Base
 {
