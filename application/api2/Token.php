@@ -53,17 +53,17 @@ class Token
         $owner_user_eid = $request->getOwnerFromUrl();
         $token_eid = $request->getObjectFromUrl();
 
-        // check the rights on the owner; ability to delete a token is governed
-        // currently by user write privileges
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
         $token = \Flexio\Object\Token::load($token_eid);
+        if ($owner_user_eid !== $token->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($token->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $token->delete();
 
@@ -83,18 +83,17 @@ class Token
         $owner_user_eid = $request->getOwnerFromUrl();
         $token_eid = $request->getObjectFromUrl();
 
-        // check the rights on the owner; ability to read a token is governed
-        // currently by user read privileges
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
-
-        // get the properties
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
         $token = \Flexio\Object\Token::load($token_eid);
+        if ($owner_user_eid !== $token->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($token->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $token->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -120,13 +119,10 @@ class Token
 
         $validated_query_params = $validator->getParams();
 
-        // check the rights on the owner; ability to read token info is governed
-        // currently by user read privileges
+        // make sure the owner exists
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the tokens
         $result = array();
@@ -137,6 +133,9 @@ class Token
 
         foreach ($tokens as $t)
         {
+            if ($t->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                continue;
+
             $result[] = $t->get();
         }
 
