@@ -37,13 +37,23 @@ class V1Controller extends \Flexio\System\FxControllerAction
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
+            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
             //header('Content-Type: application/json');  // this line absolutely can't be right, so it got commented out
         }
         else
         {
+            $host = GET_HTTP_HOST();
+            if (substr($host, 0, 4) == 'api.' && substr($host, -8) == '.flex.io')
+            {
+                header('Access-Control-Allow-Origin: *');
+                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                header('Access-Control-Allow-Headers: authorization, content-type');
+            }
+
+
+            /*
             if (0 == strncmp($request->REQUEST_URI, '/v1/connections', 19) ||
                 0 == strncmp($request->REQUEST_URI, '/v1/processes', 17) ||
                 0 == strncmp($request->REQUEST_URI, '/v1/pipes', 13) ||
@@ -53,6 +63,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
                 header('Access-Control-Allow-Headers: authorization, content-type');
             }
+            */
         }
 
         if ($method == 'OPTIONS')
