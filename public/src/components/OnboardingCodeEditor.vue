@@ -138,7 +138,7 @@
           if (window.location.hostname == 'www.flex.io')
             return {}
 
-          return { baseUrl: 'https://test.flex.io/api/v2/me' }
+          return { baseUrl: 'https://test.flex.io/api/v2' }
         }
       },
       'response-type': {

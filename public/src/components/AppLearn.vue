@@ -65,7 +65,10 @@
         return _.get(tokens, '[0].access_code', '')
       },
       sdk_options() {
-        return { baseUrl: 'https://' + window.location.host + '/api/v2/me' }
+        if (window.location.hostname == 'www.flex.io')
+          return {}
+
+        return { baseUrl: 'https://' + window.location.host + '/api/v2' }
       },
       active_item() {
         var item = _.find(this.items, { id: this.active_item_id })
