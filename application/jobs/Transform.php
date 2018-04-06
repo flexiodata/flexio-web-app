@@ -162,8 +162,6 @@ class Transform extends \Flexio\Jobs\Base
         };
 
         // create the output with the replaced values
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
         $output_columns = $instream->getStructure()->enum();
         foreach ($output_columns as &$column)
         {
@@ -176,7 +174,11 @@ class Transform extends \Flexio\Jobs\Base
                 $column['scale'] = $output_structure['scale'];
             }
         }
-        $outstream->setStructure($output_columns);
+
+
+        $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                         'structure' => $output_columns ]);
+
         $streamreader = $instream->getReader();
         $streamwriter = $outstream->getWriter();
 
