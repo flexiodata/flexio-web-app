@@ -54,22 +54,6 @@
           @submit="tryUpdateConnection"
         />
       </div>
-
-      <!-- connection create dialog -->
-      <el-dialog
-        custom-class="no-header no-footer"
-        width="51rem"
-        top="8vh"
-        :modal-append-to-body="false"
-        :visible.sync="show_connection_new_dialog"
-      >
-        <connection-edit-panel
-          @close="show_connection_new_dialog = false"
-          @cancel="show_connection_new_dialog = false"
-          @submit="tryUpdateConnection"
-          v-if="show_connection_new_dialog"
-        />
-      </el-dialog>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
       <empty-item>
@@ -77,6 +61,22 @@
         <span slot="text">No connections to show</span>
       </empty-item>
     </div>
+
+    <!-- connection create dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="51rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_connection_new_dialog"
+    >
+      <connection-edit-panel
+        @close="show_connection_new_dialog = false"
+        @cancel="show_connection_new_dialog = false"
+        @submit="tryUpdateConnection"
+        v-if="show_connection_new_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
