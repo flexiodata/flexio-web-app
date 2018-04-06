@@ -33,7 +33,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
         $post_params = $request->getPostParams();
 
 
-        if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false)
+        if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
             header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
