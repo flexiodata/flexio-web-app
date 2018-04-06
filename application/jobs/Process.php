@@ -89,7 +89,8 @@ class Process implements \Flexio\IFace\IProcess
         'write'     => '\Flexio\Jobs\Write',
         'report'    => '\Flexio\Jobs\Report',
         'set'       => '\Flexio\Jobs\Set',
-        'mkdir'     => '\Flexio\Jobs\Mkdir'
+        'mkdir'     => '\Flexio\Jobs\Mkdir',
+        'validate'  => '\Flexio\Jobs\Validate'
     );
 
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
