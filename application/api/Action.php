@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Action
@@ -49,23 +49,23 @@ class Action
     //   const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
     //   const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
 
-    public static function test(\Flexio\Api2\Request $request)
+    public static function test(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_TEST);
+        $request->track(\Flexio\Api\Action::TYPE_TEST);
         sleep(1);
         $action = $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp())->track();
 
         $result = $action->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function summary(\Flexio\Api2\Request $request)
+    public static function summary(\Flexio\Api\Request $request)
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -124,6 +124,6 @@ class Action
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 }

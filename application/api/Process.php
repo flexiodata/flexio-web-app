@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Process
 {
-    public static function create(\Flexio\Api2\Request $request)
+    public static function create(\Flexio\Api\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -117,10 +117,10 @@ class Process
 
         $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request)
+    public static function delete(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -146,10 +146,10 @@ class Process
         $result['eid_status'] = $process->getStatus();
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request)
+    public static function set(\Flexio\Api\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -183,10 +183,10 @@ class Process
         $process->set($validated_post_params);
         $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -228,13 +228,13 @@ class Process
                 $result['process_info'] = $process_info['process_info'];
 
                 $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-                \Flexio\Api2\Response::sendContent($result);
+                \Flexio\Api\Response::sendContent($result);
 
                 return;
             }
 
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api2\Response::sendContent($process_info);
+            \Flexio\Api\Response::sendContent($process_info);
             return;
         }
 
@@ -255,17 +255,17 @@ class Process
             $result['process_info'] = $process_info['process_info'];
 
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api2\Response::sendContent($result);
+            \Flexio\Api\Response::sendContent($result);
 
             return;
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($process_info);
+        \Flexio\Api\Response::sendContent($process_info);
         return;
     }
 
-    public static function summary(\Flexio\Api2\Request $request)
+    public static function summary(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -319,10 +319,10 @@ class Process
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -378,10 +378,10 @@ class Process
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function log(\Flexio\Api2\Request $request)
+    public static function log(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -402,10 +402,10 @@ class Process
         $result = $process->getLog();
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api2\Request $request)
+    public static function run(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -469,7 +469,7 @@ class Process
         exit(0);
     }
 
-    public static function cancel(\Flexio\Api2\Request $request)
+    public static function cancel(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -500,7 +500,7 @@ class Process
         $result['process_info'] = $process_info['process_info'];
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type

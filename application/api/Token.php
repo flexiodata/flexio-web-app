@@ -13,14 +13,14 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Token
 {
-    public static function create(\Flexio\Api2\Request $request)
+    public static function create(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_AUTHKEY_CREATE);
+        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_CREATE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -42,12 +42,12 @@ class Token
         $result = $token->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request)
+    public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_AUTHKEY_DELETE);
+        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_DELETE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -74,10 +74,10 @@ class Token
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -97,10 +97,10 @@ class Token
 
         $result = $token->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -140,6 +140,6 @@ class Token
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 }

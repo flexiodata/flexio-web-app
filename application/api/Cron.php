@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Cron
@@ -288,7 +288,7 @@ class Cron
     private static function runPipe(string $pipe_eid)
     {
         // TODO: following run code is similar to \1\Process::create()
-        // should factor; for example, the \Flexio\Api2\Process::create()
+        // should factor; for example, the \Flexio\Api\Process::create()
         // adds on the parent and owner
 
         // TODO: check permissions based on the owner of the pipe

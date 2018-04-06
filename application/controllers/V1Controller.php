@@ -150,7 +150,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
                 }
             }
 
-            \Flexio\Api2\Api::request($request, $query_params, $post_params);
+            \Flexio\Api\Api::request($request, $query_params, $post_params);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -170,7 +170,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
                 $error['trace'] = $e->getTrace();
             }
 
-            \Flexio\Api2\Response::sendError($error);
+            \Flexio\Api\Response::sendError($error);
         }
     }
 }

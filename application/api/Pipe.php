@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Pipe
 {
-    public static function create(\Flexio\Api2\Request $request)
+    public static function create(\Flexio\Api\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -32,7 +32,7 @@ class Pipe
 
         // start tracking the request after copy() since copy() may be called
         // separately and has it's own tracking function
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATE);
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -80,12 +80,12 @@ class Pipe
         $result = self::get_internal($pipe);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function copy(\Flexio\Api2\Request $request)
+    public static function copy(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_CREATE);
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -146,12 +146,12 @@ class Pipe
         $result = self::get_internal($new_pipe);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request)
+    public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_DELETE);
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_DELETE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -178,12 +178,12 @@ class Pipe
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request)
+    public static function set(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_PIPE_UPDATE);
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_UPDATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -222,10 +222,10 @@ class Pipe
         $result = self::get_internal($pipe);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -246,10 +246,10 @@ class Pipe
         // get the properties
         $result = self::get_internal($pipe);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -289,10 +289,10 @@ class Pipe
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api2\Request $request)
+    public static function run(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();

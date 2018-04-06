@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Message
@@ -30,7 +30,7 @@ class Message
         $this->initialize();
     }
 
-    public static function create(string $type, array $params) : \Flexio\Api2\Message
+    public static function create(string $type, array $params) : \Flexio\Api\Message
     {
         switch ($type)
         {

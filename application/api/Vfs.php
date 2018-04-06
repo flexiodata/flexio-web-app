@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Vfs
 {
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -52,10 +52,10 @@ class Vfs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
@@ -115,7 +115,7 @@ class Vfs
         exit(0);
     }
 
-    public static function put(\Flexio\Api2\Request $request)
+    public static function put(\Flexio\Api\Request $request)
     {
         $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
@@ -149,7 +149,7 @@ class Vfs
             $success = $vfs->createDirectory($path);
             $result = array('success' => $success);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            \Flexio\Api2\Response::sendContent($result);
+            \Flexio\Api\Response::sendContent($result);
             return;
         }
 
@@ -168,6 +168,6 @@ class Vfs
 
         $result = array('success' => true);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 }

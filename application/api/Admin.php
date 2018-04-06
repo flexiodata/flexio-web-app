@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Admin
 {
-    public static function system(\Flexio\Api2\Request $request)
+    public static function system(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -31,10 +31,10 @@ class Admin
 
         $result = self::checkServerSettings();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function userlist(\Flexio\Api2\Request $request)
+    public static function userlist(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -81,10 +81,10 @@ class Admin
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function processes(\Flexio\Api2\Request $request)
+    public static function processes(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -181,7 +181,7 @@ class Admin
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function checkServerSettings() : array

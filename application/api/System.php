@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class System
 {
-    public static function about(\Flexio\Api2\Request $request)
+    public static function about(\Flexio\Api\Request $request)
     {
         // return basic information
 
@@ -31,12 +31,12 @@ class System
         $result['sha'] = $git_version;
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function login(\Flexio\Api2\Request $request)
+    public static function login(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_LOGIN);
+        $request->track(\Flexio\Api\Action::TYPE_USER_LOGIN);
 
         $post_params = $request->getPostParams();
 
@@ -73,7 +73,7 @@ class System
 
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
-            \Flexio\Api2\Response::sendContent($result);
+            \Flexio\Api\Response::sendContent($result);
 
             return;
         }
@@ -87,12 +87,12 @@ class System
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function logout(\Flexio\Api2\Request $request)
+    public static function logout(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_USER_LOGOUT);
+        $request->track(\Flexio\Api\Action::TYPE_USER_LOGOUT);
 
         \Flexio\System\System::clearLoginIdentity();
         @session_destroy();
@@ -105,10 +105,10 @@ class System
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function validate(\Flexio\Api2\Request $request)
+    public static function validate(\Flexio\Api\Request $request)
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -159,7 +159,7 @@ class System
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function validateObject(array $params, string $requesting_user_eid = null) : array

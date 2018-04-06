@@ -13,14 +13,14 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Connection
 {
-    public static function create(\Flexio\Api2\Request $request)
+    public static function create(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_CREATE);
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -70,12 +70,12 @@ class Connection
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request)
+    public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_DELETE);
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DELETE);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -104,12 +104,12 @@ class Connection
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request)
+    public static function set(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_UPDATE);
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATE);
 
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -149,10 +149,10 @@ class Connection
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -173,10 +173,10 @@ class Connection
         // return the result
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -216,12 +216,12 @@ class Connection
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function connect(\Flexio\Api2\Request $request)
+    public static function connect(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_CONNECT);
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CONNECT);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -248,12 +248,12 @@ class Connection
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function disconnect(\Flexio\Api2\Request $request)
+    public static function disconnect(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api2\Action::TYPE_CONNECTION_DISCONNECT);
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT);
 
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -278,7 +278,7 @@ class Connection
         $result = self::get_internal($connection);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function get_internal($object)

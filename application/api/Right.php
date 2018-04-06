@@ -13,12 +13,12 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Right
 {
-    public static function create(\Flexio\Api2\Request $request)
+    public static function create(\Flexio\Api\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -148,10 +148,10 @@ class Right
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api2\Request $request)
+    public static function set(\Flexio\Api\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -199,10 +199,10 @@ class Right
 
         $result = $right->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api2\Request $request)
+    public static function delete(\Flexio\Api\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -239,10 +239,10 @@ class Right
         $result['eid_status'] = $right->getStatus();
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api2\Request $request)
+    public static function get(\Flexio\Api\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -268,10 +268,10 @@ class Right
 
         $result = $right->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api2\Request $request)
+    public static function list(\Flexio\Api\Request $request)
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -300,7 +300,7 @@ class Right
 
         $result = array();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-        \Flexio\Api2\Response::sendContent($result);
+        \Flexio\Api\Response::sendContent($result);
     }
 
     private static function createUser(string $identifier, string $requesting_user_eid) : \Flexio\Object\User
@@ -324,11 +324,11 @@ class Right
                                'require_verification' => true); // require verification to give user a chance to fill out their info
 
         // if the user isn't invited, create the user; if something went wrong, move on
-        $new_user_request = \Flexio\Api2\Request::create();
+        $new_user_request = \Flexio\Api\Request::create();
         $new_user_request->setRequestingUser($requesting_user_eid);
         $new_user_request->setPostParams($new_user_info);
 
-        $user_info = \Flexio\Api2\User::create($new_user_request);
+        $user_info = \Flexio\Api\User::create($new_user_request);
         if (!isset($user_info) || $user_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
@@ -389,7 +389,7 @@ class Right
         $email_params['object_eid'] = $object_eid;
         $email_params['message'] = $message;
 
-        $email = \Flexio\Api2\Message::create(\Flexio\Api2\Message::TYPE_EMAIL_SHARE_PIPE, $email_params);
+        $email = \Flexio\Api\Message::create(\Flexio\Api\Message::TYPE_EMAIL_SHARE_PIPE, $email_params);
         $email->send();
 
         return true;

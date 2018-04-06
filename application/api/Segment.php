@@ -13,7 +13,7 @@
 
 
 declare(strict_types=1);
-namespace Flexio\Api2;
+namespace Flexio\Api;
 
 
 class Segment
@@ -33,7 +33,7 @@ class Segment
     const TYPE_PIPE_RUN           = 'action.pipe.run';
     const TYPE_PROCESS_CREATED    = 'action.process.created';
 
-    public static function trackTest(\Flexio\Api2\Request $request)
+    public static function trackTest(\Flexio\Api\Request $request)
     {
         // only allow test tracking on non-production systems
         if (IS_PRODSITE())
