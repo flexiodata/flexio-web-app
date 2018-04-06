@@ -130,6 +130,7 @@ class Convert extends \Flexio\Jobs\Base
                 $instream_mime_type = $input_content_type_from_definition;
         }
 
+
         switch ($instream_mime_type)
         {
             // unhandled input
@@ -172,6 +173,12 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromTableInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
     {
+        $instream_mime_type = $instream->getMimeType();
+        if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_FORMAT, "Input file must be a table");
+        }
+
         $job_params = $this->getJobParameters();
 
         $outstream->setMimeType($output_mime_type);
