@@ -344,6 +344,24 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function cron(\Flexio\Api\Request $request)
+    {
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // the scheduler script uses UTC as its timezone
+        //date_default_timezone_set('UTC');
+        //$dt = \Flexio\Base\Util::getDateTimeParts();
+        //printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
+        $result = array('success' => true);
+
+        $scheduler = new \Flexio\Api\Cron;
+        $scheduler->loop(1);
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     private static function checkServerSettings() : array
     {
         $messages = array();
