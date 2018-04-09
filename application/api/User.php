@@ -146,6 +146,7 @@ class User
 
             // return the user info
             $result = $user->get();
+            $request->setRequestingUser($user_eid);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
             \Flexio\Api\Response::sendContent($result);

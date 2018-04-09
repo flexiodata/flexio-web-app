@@ -71,6 +71,7 @@ class System
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
             $result = $current_user->get();
 
+            $request->setRequestingUser($current_user_eid);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
             \Flexio\Api\Response::sendContent($result);
