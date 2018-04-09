@@ -5,7 +5,7 @@
       <span class="ml2 f5">Loading...</span>
     </div>
   </div>
-  <div class="pa3" v-else>
+  <div class="pa3" v-else-if="is_fetched">
     <div class="f3 ma0 pb2 mb3" v-if="title.length > 0">{{title}}</div>
     <line-chart
       :height="chartHeight"
@@ -79,6 +79,8 @@
     },
     data() {
       return {
+        is_fetched: false,
+        is_fetching: false,
         stats: []
       }
     },
@@ -146,17 +148,25 @@
     },
     methods: {
       tryFetchStats() {
+        this.is_fetching = true
+
         if (this.isAdmin) {
           api.fetchAdminInfo({ type: 'processes', action: 'summary' }).then(response => {
               this.stats = response.data
+              this.is_fetching = false
+              this.is_fetched = true
             }, response => {
               // TODO: add error checking
+              this.is_fetching = false
             })
         } else {
           api.fetchStatistics({ type: 'processes', action: 'summary' }).then(response => {
               this.stats = response.data
+              this.is_fetching = false
+              this.is_fetched = true
             }, response => {
               // TODO: add error checking
+              this.is_fetching = false
             })
         }
       },
