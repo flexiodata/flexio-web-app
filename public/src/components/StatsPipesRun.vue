@@ -5,7 +5,7 @@
       <span class="ml2 f5">Loading...</span>
     </div>
   </div>
-  <div class="pa3" v-else>
+  <div class="pa3" v-else-if="is_fetched">
     <div class="f3 ma0 pb2 mb3" v-if="title.length > 0">{{title}}</div>
     <line-chart
       :height="chartHeight"
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+  import api from '../api'
   import moment from 'moment'
   import Spinner from 'vue-simple-spinner'
   import LineChart from './LineChart.vue'
@@ -76,17 +77,14 @@
       Spinner,
       LineChart
     },
+    data() {
+      return {
+        is_fetched: false,
+        is_fetching: false,
+        stats: []
+      }
+    },
     computed: {
-      is_fetching() {
-        var lookup = 'state.statistics_fetching.'
-        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
-        return _.get(this.$store, lookup, false)
-      },
-      is_fetched() {
-        var lookup = 'state.statistics_fetched.'
-        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
-        return _.get(this.$store, lookup, false)
-      },
       end_date() {
         var end = _.isString(this.endDate) ? moment(this.endDate).utc() : moment().utc()
         return end.endOf('day')
@@ -116,14 +114,9 @@
           return _.get(s, 'created').format('MMM D')
         })
       },
-      store_stats() {
-        var lookup = 'state.statistics.'
-        lookup += this.isAdmin ? 'admin-processes-summary': 'processes-summary'
-        return _.get(this.$store, lookup, [])
-      },
       stats_with_created() {
         // add a moment date to each stat
-        return _.map(this.store_stats, (s) => {
+        return _.map(this.stats, (s) => {
           return _.assign(s, {
             created: moment(_.get(s, 'process_created')).utc().startOf('day')
           })
@@ -155,11 +148,27 @@
     },
     methods: {
       tryFetchStats() {
-        if (!this.is_fetched && this.isAdmin)
-          this.$store.dispatch('fetchAdminInfo', { type: 'processes', action: 'summary' })
+        this.is_fetching = true
 
-        if (!this.is_fetched && !this.isAdmin)
-          this.$store.dispatch('fetchStatistics', { type: 'processes', action: 'summary' })
+        if (this.isAdmin) {
+          api.fetchAdminInfo({ type: 'processes', action: 'summary' }).then(response => {
+              this.stats = response.data
+              this.is_fetching = false
+              this.is_fetched = true
+            }, response => {
+              // TODO: add error checking
+              this.is_fetching = false
+            })
+        } else {
+          api.fetchStatistics({ type: 'processes', action: 'summary' }).then(response => {
+              this.stats = response.data
+              this.is_fetching = false
+              this.is_fetched = true
+            }, response => {
+              // TODO: add error checking
+              this.is_fetching = false
+            })
+        }
       },
       getDatasetData(stats, range) {
         // remove out-of-bounds values
