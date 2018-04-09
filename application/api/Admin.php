@@ -34,6 +34,46 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function actions(\Flexio\Api\Request $request)
+    {
+        $query_params = $request->getQueryParams();
+        $requesting_user_eid = $request->getRequestingUser();
+
+        // TODO: add other query string params?
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($query_params, array(
+                'owned_by' => array('type' => 'string',  'required' => false),
+                'start'    => array('type' => 'integer', 'required' => false),
+                'tail'     => array('type' => 'integer', 'required' => false),
+                'limit'    => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date', 'required' => false),
+                'created_max' => array('type' => 'date', 'required' => false)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $validated_query_params = $validator->getParams();
+
+        // only allow users from flex.io to get this info
+        $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
+        if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($requesting_user->isAdministrator() !== true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $filter = array('eid_status' => \Model::STATUS_AVAILABLE);
+        $filter = array_merge($validated_query_params, $filter); // give precedence to fixed status
+        $actions = \Flexio\Object\Action::list($filter);
+
+        $result = array();
+        foreach ($actions as $a)
+        {
+            $result[] = $a->get();
+        }
+
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function userlist(\Flexio\Api\Request $request)
     {
         $query_params = $request->getQueryParams();
