@@ -178,7 +178,7 @@ class Api
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
         'GET /admin/info/processes/summary'           => '\Flexio\Api\Admin::process_summary',
-        'GET /admin/cron/run'                         => '\Flexio\Api\Cron::runOnce',
+        'GET /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
 
