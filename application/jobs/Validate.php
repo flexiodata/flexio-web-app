@@ -43,11 +43,8 @@ class Validate extends \Flexio\Jobs\Base
 
         $outstream = $process->getStdout();
         $job_params = $this->getJobParameters();
-        $path = $job_params['path'] ?? null;
-        $validator = $job_params['validator'] ?? null;
+        $validator = (object)$job_params['validator'] ?? null;
 
-        if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
         if (is_null($validator))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'validator'");
 
@@ -55,10 +52,8 @@ class Validate extends \Flexio\Jobs\Base
         if (\Flexio\Base\ValidatorSchema::checkSchema($validator)->hasErrors())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid validator format");
 
-        $vfs = new \Flexio\Services\Vfs();
-        $vfs->setProcess($process);
-
-        $info = $vfs->getFileInfo($path);
+        $instream = $process->getStdin();
+        $info = $instream->get();
 
         $info_to_validate = array(
             'name' => $info['name'] ?? '',
