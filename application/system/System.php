@@ -222,6 +222,16 @@ class System
         return true;
     }
 
+    public static function setCurrentUserEid(string $user_eid)
+    {
+        $GLOBALS['g_store']->user_eid = $user_eid;
+    }
+
+    public static function getCurrentUserEid() : string
+    {
+        return $GLOBALS['g_store']->user_eid;
+    }
+
     public static function setCurrentLanguage(string $lang)
     {
         $GLOBALS['g_store']->lang = $lang;
@@ -570,11 +580,6 @@ class System
         }
 
         return null;
-    }
-
-    public static function getCurrentUserEid() : string
-    {
-        return $GLOBALS['g_store']->user_eid;
     }
 
     public static function isPlatformWindows() : bool
