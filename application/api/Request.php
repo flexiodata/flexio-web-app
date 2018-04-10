@@ -172,6 +172,20 @@ class Request
         return $this->request_created;
     }
 
+    public function setRequestParams(array $params) : \Flexio\Api\Request
+    {
+        // note: the request params may be all or a sanitized subset of the
+        // parameters sent with the request (e.g., parameters such as credential
+        // info may not be included)
+        $this->request_params = $params;
+        return $this;
+    }
+
+    public function getRequestParams() : array
+    {
+        return $this->request_params;
+    }
+
     public function setOwnerFromUrl(string $request_object_owner_eid) : \Flexio\Api\Request
     {
         // TODO: rename function to follow convention
