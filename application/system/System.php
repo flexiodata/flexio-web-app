@@ -57,10 +57,6 @@ class System
             \Flexio\System\System::clearLoginIdentity();
 
             $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
-            $_SESSION['env']['user_first_name'] = '';
-            $_SESSION['env']['user_last_name'] = '';
-            $_SESSION['env']['user_name'] = 'nobody';
-            $_SESSION['env']['user_email'] = '';
             $_SESSION['env']['user_eid'] = '';
             $_SESSION['env']['lang'] = '';
             $_SESSION['env']['thousands_separator'] = ',';
@@ -105,10 +101,6 @@ class System
 
         // set new identity
         $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
-        $_SESSION['env']['user_first_name'] = $user_info['first_name'];
-        $_SESSION['env']['user_last_name'] = $user_info['last_name'];
-        $_SESSION['env']['user_name'] = $user_info['user_name'];
-        $_SESSION['env']['user_email'] = $user_info['email'];
         $_SESSION['env']['user_eid'] = $user_info['eid'];
         $_SESSION['env']['lang'] = $user_info['locale_language'];
         $_SESSION['env']['thousands_separator'] = $user_info['locale_thousands'];
@@ -136,10 +128,6 @@ class System
             return false;
 
         // reset identity to nothing
-        $g_store->user_first_name = '';
-        $g_store->user_last_name = '';
-        $g_store->user_name = '';
-        $g_store->user_email = '';
         $g_store->user_eid = '';
         $g_store->lang = '';
         $g_store->thousands_separator = ',';
@@ -183,10 +171,6 @@ class System
                     $user_info = $user->get();
 
                     // set user info
-                    $g_store->user_first_name = $user_info['first_name'];
-                    $g_store->user_last_name = $user_info['last_name'];
-                    $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-                    $g_store->user_email = $user_info['email'];
                     $g_store->user_eid = $user_info['eid'];
                     $g_store->lang = $user_info['locale_language'];
                     $g_store->thousands_separator = $user_info['locale_thousands'];
@@ -233,10 +217,6 @@ class System
                         $user_info = $user->get();
 
                         // set user info
-                        $g_store->user_first_name = $user_info['first_name'];
-                        $g_store->user_last_name = $user_info['last_name'];
-                        $g_store->user_name = $user_info['first_name'] . ' ' . $user_info['last_name'];
-                        $g_store->user_email = $user_info['email'];
                         $g_store->user_eid = $user_info['eid'];
                         $g_store->lang = $user_info['locale_language'];
                         $g_store->thousands_separator = $user_info['locale_thousands'];
@@ -262,16 +242,12 @@ class System
 
 
         // AUTHENTICATION TYPE 3: try to authenticate the user using a session cookie
-        if (!isset($_SESSION['env']['user_name']) || strlen($_SESSION['env']['user_name']) == 0)
+        if (!isset($_SESSION['env']['user_eid']) || strlen($_SESSION['env']['user_eid']) == 0)
             return false;
         if ($_SESSION['env']['session_version'] < \Flexio\System\System::SESSION_VERSION)
             return false;
 
         // set user info
-        $g_store->user_first_name = $_SESSION['env']['user_first_name'];
-        $g_store->user_last_name = $_SESSION['env']['user_last_name'];
-        $g_store->user_name = $_SESSION['env']['user_name'];
-        $g_store->user_email = $_SESSION['env']['user_email'];
         $g_store->user_eid = $_SESSION['env']['user_eid'];
         $g_store->lang = $_SESSION['env']['lang'];
         $g_store->thousands_separator = $_SESSION['env']['thousands_separator'];
@@ -292,20 +268,12 @@ class System
     {
         global $g_store;
 
-        $g_store->user_first_name = '';
-        $g_store->user_last_name = '';
-        $g_store->user_name = '';
-        $g_store->user_email = '';
         $g_store->user_eid = '';
 
         if (!IS_CLI())
         {
             if (session_id())
             {
-                $_SESSION['env']['user_first_name'] = '';
-                $_SESSION['env']['user_last_name'] = '';
-                $_SESSION['env']['user_name'] = '';
-                $_SESSION['env']['user_email'] = '';
                 $_SESSION['env']['user_eid'] = '';
             }
         }
@@ -316,25 +284,15 @@ class System
         global $g_store;
 
         return base64_encode(serialize(
-                array('user_first_name'    => $g_store->user_first_name,
-                      'user_last_name'     => $g_store->user_last_name,
-                      'user_name'          => $g_store->user_name,
-                      'user_email'         => $g_store->user_email,
-                      'user_eid'           => $g_store->user_eid)));
+                array('user_eid'           => $g_store->user_eid)));
     }
 
     public static function unserializeGlobalVars(string $str)
     {
         global $g_store;
         $arr = unserialize(base64_decode($str));
-
-        $g_store->user_first_name = $arr['user_first_name'];
-        $g_store->user_last_name = $arr['user_last_name'];
-        $g_store->user_name = $arr['user_name'];
-        $g_store->user_email = $arr['user_email'];
         $g_store->user_eid = $arr['user_eid'];
     }
-
 
     public static function generateTemporaryAuthToken(string $user_eid)
     {
@@ -387,7 +345,6 @@ class System
 
         return true;
     }
-
 
     public static function resetModel()
     {
@@ -714,26 +671,6 @@ class System
         }
 
         return null;
-    }
-
-    public static function getCurrentUserFirstName() : string
-    {
-        return $GLOBALS['g_store']->user_first_name;
-    }
-
-    public static function getCurrentUserLastName() : string
-    {
-        return $GLOBALS['g_store']->user_last_name;
-    }
-
-    public static function getCurrentUserEmail() : string
-    {
-        return $GLOBALS['g_store']->user_email;
-    }
-
-    public static function getCurrentUserName() : string
-    {
-        return $GLOBALS['g_store']->user_name;
     }
 
     public static function getCurrentUserEid() : string
