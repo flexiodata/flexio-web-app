@@ -53,6 +53,7 @@ class Admin
 
         $validated_query_params = $validator->getParams();
 
+
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)

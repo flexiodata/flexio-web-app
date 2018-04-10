@@ -354,11 +354,24 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // TODO: do we want to "namespace" the variables? right now, variables are
         // limited to alphanumeric, but maybe we want to do something like:
         // "flexio.user_firstname", "flexio.user_lastname", etc
-        $environment_params = array();
 
-        $environment_params['process.user.firstname'] = \Flexio\System\System::getCurrentUserFirstName();
-        $environment_params['process.user.lastname'] = \Flexio\System\System::getCurrentUserLastName();
-        $environment_params['process.user.email'] = \Flexio\System\System::getCurrentUserEmail();
+        $current_user_info = array();
+        try
+        {
+            // TODO: don't use current user info from session; use calling or owner
+            // user info
+            $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+            $current_user = \Flexio\Object\User::load($current_user_eid);
+            $current_user_info = $current_user->get();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        $environment_params = array();
+        $environment_params['process.user.firstname'] = $current_user_info['first_name'] ?? '';
+        $environment_params['process.user.lastname'] = $current_user_info['last_name'] ?? '';
+        $environment_params['process.user.email'] = $current_user_info['email'] ?? '';
         $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
         $environment_params['process.time.unix'] = (string)time();
 
