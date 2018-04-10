@@ -63,10 +63,9 @@ class System
         }
 
         // return "about" info
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-
         try
         {
+            $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
             $current_user = \Flexio\Object\User::load($current_user_eid);
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);

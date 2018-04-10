@@ -203,7 +203,21 @@ class Api
         $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
 
         $header_params = $server_request->getHeaders();
-        $user_eid_from_token = self::getUserEidFromRequestParams($header_params, $query_params);
+        $user_eid_from_token = '';
+
+        try
+        {
+            $token = self::getTokenFromRequestParams($header_params, $query_params);
+            $user = \Flexio\Object\User::load($token);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+            $user_eid_from_token = $user->getEid();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
         $user_eid_from_session = \Flexio\System\System::getCurrentUserEid();
 
         if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
@@ -523,9 +537,9 @@ class Api
         return $apiendpoint;
     }
 
-    private static function getUserEidFromRequestParams(array $header_params, array $query_params) : string
+    private static function getTokenFromRequestParams(array $header_params, array $query_params) : string
     {
-        // AUTHENTICATION TYPE 1: try to authenticate the user using an API key in the query params
+        // AUTHENTICATION TYPE 1: try to get the token from the query params
         if (isset($query_params['flexio_api_key']))
         {
             $access_code = $query_params['flexio_api_key'];
@@ -533,25 +547,11 @@ class Api
 
             $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
             if ($token_info)
-            {
-                try
-                {
-                    $user = \Flexio\Object\User::load($token_info['owned_by']);
-                    if ($user->getStatus() === \Model::STATUS_DELETED)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-                    return $user->getEid();
-                }
-                catch (\Flexio\Base\Exception $e)
-                {
-                    // fall through
-                }
-            }
+                return $token_info['owned_by'];
         }
 
-        // AUTHENTICATION TYPE 2: try to authenticate the user using an authorization token in the header
+        // AUTHENTICATION TYPE 2: try to get the token from the header
         $header_params = array_change_key_case($header_params, $case = CASE_LOWER);
-
         if (isset($header_params['authorization']))
         {
             $auth_header = trim($header_params['authorization']);
@@ -567,28 +567,7 @@ class Api
 
                 $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
                 if ($token_info)
-                {
-                    try
-                    {
-                        $user = \Flexio\Object\User::load($token_info['owned_by']);
-                        if ($user->getStatus() === \Model::STATUS_DELETED)
-                            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-
-                        return $user->getEid();
-                    }
-                    catch (\Flexio\Base\Exception $e)
-                    {
-                        // fall through
-                    }
-                }
-            }
-             else
-            {
-                // TODO: handle with exceptions
-
-                // unknown algorith/auth type
-                \Flexio\Base\Util::header_error(400); // return 400 Bad Request
-                exit(0);
+                    return $token_info['owned_by'];
             }
         }
 
