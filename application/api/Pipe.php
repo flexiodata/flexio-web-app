@@ -175,11 +175,7 @@ class Pipe
 
         $pipe->delete();
 
-        $result = array();
-        $result['eid'] = $pipe->getEid();
-        $result['eid_type'] = $pipe->getType();
-        $result['eid_status'] = $pipe->getStatus();
-
+        $result = self::get_internal($pipe);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();

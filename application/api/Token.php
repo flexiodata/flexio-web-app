@@ -68,11 +68,7 @@ class Token
 
         $token->delete();
 
-        $result = array();
-        $result['eid'] = $token->getEid();
-        $result['eid_type'] = $token->getType();
-        $result['eid_status'] = $token->getStatus();
-
+        $result = $token->get();
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();

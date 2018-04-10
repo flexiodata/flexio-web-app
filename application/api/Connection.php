@@ -100,13 +100,9 @@ class Connection
         $connection->delete();
 
         // return the result
-        $result = array();
-        $result['eid'] = $connection->getEid();
-        $result['eid_type'] = $connection->getType();
-        $result['eid_status'] = $connection->getStatus();
-
-        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $result = self::get_internal($connection);
         $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
     }

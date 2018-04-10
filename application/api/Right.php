@@ -233,11 +233,7 @@ class Right
         // delete the right
         $right->delete();
 
-        $result = array();
-        $result['eid'] = $right->getEid();
-        $result['eid_type'] = $right->getType();
-        $result['eid_status'] = $right->getStatus();
-
+        $result = $right->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }

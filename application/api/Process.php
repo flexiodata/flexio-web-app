@@ -140,11 +140,7 @@ class Process
 
         $process->delete();
 
-        $result = array();
-        $result['eid'] = $process->getEid();
-        $result['eid_type'] = $process->getType();
-        $result['eid_status'] = $process->getStatus();
-
+        $result = $process->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
