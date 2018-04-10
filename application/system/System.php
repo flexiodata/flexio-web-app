@@ -545,7 +545,7 @@ class System
 
     public static function isLoggedIn() : bool
     {
-        return (\Flexio\System\System::getCurrentUserName() != '') ? true : false;
+        return (\Flexio\System\System::getCurrentUserEid() != '') ? true : false;
     }
 
     public static function getBaseDirectory() : string
