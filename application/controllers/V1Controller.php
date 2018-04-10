@@ -108,7 +108,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
         {
             if ($method != 'GET' && ini_get('enable_post_data_reading') == '1')
             {
-                $all_headers = getallheaders();
+                $all_headers = $request->getHeaders();
 
                 // TODO: currently, in some configurations (e.g. the test site but not localhost),
                 // two content-type headers are being returned; one of them is null, and the

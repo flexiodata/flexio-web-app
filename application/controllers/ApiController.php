@@ -32,7 +32,6 @@ class ApiController extends \Flexio\System\FxControllerAction
         $query_params = $request->getQueryParams();
         $post_params = $request->getPostParams();
 
-
         // see if we can find the api version
         $apiversion = '';
         if ($request->getUrlPathPart(1) == 'v1') // v1 api path:  www.flex.io/api/v1
@@ -108,7 +107,7 @@ class ApiController extends \Flexio\System\FxControllerAction
         {
             if ($method != 'GET' && ini_get('enable_post_data_reading') == '1')
             {
-                $all_headers = getallheaders();
+                $all_headers = $request->getHeaders();
 
                 // TODO: currently, in some configurations (e.g. the test site but not localhost),
                 // two content-type headers are being returned; one of them is null, and the

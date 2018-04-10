@@ -188,14 +188,36 @@ class Api
 
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
     {
-        // get the url parts and map them to the api parameters
-
-
         // API v2 request can currently come from one of two patterns
         // TODO: handle both for now, but remove /api/v2 when appropriate
         // https://api.host.io/v1
         // https://www.host.io/api/v2
 
+
+        // before anything else, find the requesting user from the request params;
+        // if we can find a requesting user from the params, set the system session
+        // user to that user; if we can't find the requesting user from the request
+        // params, then try to get the requesting user from the system session info;
+        // if we can't, it's a public request
+
+        $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
+
+        $header_params = $server_request->getHeaders();
+        $user_eid_from_token = self::getUserEidFromRequestParams($header_params, $query_params);
+        $user_eid_from_session = \Flexio\System\System::getCurrentUserEid();
+
+        if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
+        {
+            \Flexio\System\System::setCurrentUserEid($user_eid_from_token);
+            $requesting_user_eid = $user_eid_from_token;
+        }
+        else
+        {
+            if (\Flexio\Base\Eid::isValid($user_eid_from_session) === true)
+                $requesting_user_eid = $user_eid_from_session;
+        }
+
+        // get the url parts and map them to the api parameters
         $url_params = array();
         $url_part0 = $server_request->getUrlPathPart(0) ?? '';
         $url_part1 = $server_request->getUrlPathPart(1) ?? '';
@@ -230,11 +252,6 @@ class Api
         $request_ip_address = strtolower($server_request->getIpAddress());
         $request_url = $server_request->getUri(); // leave URL as-is to match param handling
         $request_method = strtoupper($server_request->getMethod());
-
-        $requesting_user_eid = \Flexio\System\System::getCurrentUserEid();
-        if (\Flexio\Base\Eid::isValid($requesting_user_eid) === false)
-            $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC;
-
         $request_timestamp = \Flexio\System\System::getTimestamp();
 
         // package the request info
@@ -245,6 +262,7 @@ class Api
         //$api_request->setToken($request_token); // TODO: set the token info when it's available
         $api_request->setRequestingUser($requesting_user_eid);
         $api_request->setRequestCreated($request_timestamp);
+        $api_request->setHeaderParams($header_params);
         $api_request->setUrlParams($url_params);
         $api_request->setQueryParams($query_params);
         $api_request->setPostParams($post_params);
@@ -503,5 +521,77 @@ class Api
         $apiendpoint .= (strlen($api_params['apiparam6']) > 0 ? ('/' . $api_params['apiparam6']) : '');
 
         return $apiendpoint;
+    }
+
+    private static function getUserEidFromRequestParams(array $header_params, array $query_params) : string
+    {
+        // AUTHENTICATION TYPE 1: try to authenticate the user using an API key in the query params
+        if (isset($query_params['flexio_api_key']))
+        {
+            $access_code = $query_params['flexio_api_key'];
+            $access_code = trim($access_code);
+
+            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
+            if ($token_info)
+            {
+                try
+                {
+                    $user = \Flexio\Object\User::load($token_info['owned_by']);
+                    if ($user->getStatus() === \Model::STATUS_DELETED)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+                    return $user->getEid();
+                }
+                catch (\Flexio\Base\Exception $e)
+                {
+                    // fall through
+                }
+            }
+        }
+
+        // AUTHENTICATION TYPE 2: try to authenticate the user using an authorization token in the header
+        $header_params = array_change_key_case($header_params, $case = CASE_LOWER);
+
+        if (isset($header_params['authorization']))
+        {
+            $auth_header = trim($header_params['authorization']);
+
+            $pos = strpos($auth_header, ' ');
+            $auth_type = ($pos === false) ? $auth_header : substr($auth_header, 0, $pos);
+            $params_raw = ($pos === false) ? '' : trim(substr($auth_header, $pos+1));
+            $user_info = false;
+
+            if ($auth_type == 'Bearer')
+            {
+                $access_code = trim($params_raw);
+
+                $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
+                if ($token_info)
+                {
+                    try
+                    {
+                        $user = \Flexio\Object\User::load($token_info['owned_by']);
+                        if ($user->getStatus() === \Model::STATUS_DELETED)
+                            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+                        return $user->getEid();
+                    }
+                    catch (\Flexio\Base\Exception $e)
+                    {
+                        // fall through
+                    }
+                }
+            }
+             else
+            {
+                // TODO: handle with exceptions
+
+                // unknown algorith/auth type
+                \Flexio\Base\Util::header_error(400); // return 400 Bad Request
+                exit(0);
+            }
+        }
+
+        return '';
     }
 }

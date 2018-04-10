@@ -142,7 +142,7 @@ class Vfs
 
         $vfs = new \Flexio\Services\Vfs();
 
-        $headers = getallheaders();
+        $headers = $request->getHeaderParams();
         $headers = array_change_key_case($headers, $case = CASE_LOWER);
         if (($headers['content-type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
         {

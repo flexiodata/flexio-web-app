@@ -36,6 +36,7 @@ class Request
     private $response_created = null; // no timestamp available by default
     private $response_params = array();
 
+    private $header_params = array();
     private $url_params = array();
     private $query_params = array();
     private $post_params = array();
@@ -254,6 +255,17 @@ class Request
     public function getResponseParams() : array
     {
         return $this->response_params;
+    }
+
+    public function setHeaderParams(array $header_params) : \Flexio\Api\Request
+    {
+        $this->header_params = $header_params;
+        return $this;
+    }
+
+    public function getHeaderParams() : array
+    {
+        return $this->header_params;
     }
 
     public function setUrlParams(array $url_params) : \Flexio\Api\Request
