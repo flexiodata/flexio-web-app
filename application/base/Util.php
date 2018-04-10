@@ -536,20 +536,17 @@ class Util
         return ($date->format("Y-m-d H:i:s.u"));
     }
 
-    /* // works, but currently not in use
-    public static function getCurrentTimezoneOffsetInMinutes() : float
+    public static function getCurrentTimezoneOffsetInMinutes(string $local_timezone) : float
     {
         $tz_utc = new \DateTimeZone('UTC');
-        $tz_local = new \DateTimeZone($GLOBALS['g_store']->timezone);
+        $tz_local = new \DateTimeZone($local_timezone);
         $dt_local = new \DateTime('now', $tz_utc);
         return (float)($tz_local->getOffset($dt_local) / 60);
     }
-    */
 
-    /* // works, but currently not in use
-    public static function getCurrentTimezoneOffset()
+    public static function getCurrentTimezoneOffset(string $local_timezone) : string
     {
-        $tz1 = new \DateTimeZone($GLOBALS['g_store']->timezone);
+        $tz1 = new \DateTimeZone($local_timezone);
         $dt = new \DateTime('now');
         $off = $tz1->getOffset($dt);
         $sign = ($off < 0 ? '-' : '+');
@@ -559,7 +556,6 @@ class Util
         $minutes -= ($hours*60);
         return sprintf('%s%02d:%02d', $sign, $hours, $minutes);
     }
-    */
 
     public static function isPositiveInteger($value) : bool
     {
