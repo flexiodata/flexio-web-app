@@ -33,11 +33,9 @@ if ($configjson !== false)
 // g_store stores global variables, such as database pointers
 $g_store = new stdClass();
 $g_store->user_eid = '';
+$g_store->lang = '';
 $g_store->dir_home = ($g_config->dir_home ?? dirname(__DIR__));
 $g_store->http_host = null;    // see GET_HTTP_HOST() below
-$g_store->lang = '';
-$g_store->date_format = 'm/d/Y';
-$g_store->timezone = 'UTC';
 $g_store->timestamp = null;
 $g_store->model = null;
 $g_store->connections = [];
@@ -356,7 +354,6 @@ class Flexio
             }
         }
 
-
 /*
         // check idle
         if (!\self::checkIdle())
@@ -410,9 +407,9 @@ class Flexio
         // checkIdle() returns true if idle is ok
 
         // check if we aren't logged in at all; if not, return ok
-        if (!isset($_SESSION['env']['user_name']))
+        if (!isset($_SESSION['env']['user_eid']))
             return true;
-        if (strlen($_SESSION['env']['user_name']) == 0)
+        if (strlen($_SESSION['env']['user_eid']) == 0)
             return true;
 
         // check if idle time checking is disabled for this session

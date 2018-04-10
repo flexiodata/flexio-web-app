@@ -59,10 +59,6 @@ class System
             $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
             $_SESSION['env']['user_eid'] = '';
             $_SESSION['env']['lang'] = '';
-            $_SESSION['env']['thousands_separator'] = ',';
-            $_SESSION['env']['decimal_separator'] = '.';
-            $_SESSION['env']['date_format'] = 'm/d/Y';
-            $_SESSION['env']['timezone'] = 'UTC';
 
             return true;
         }
@@ -103,10 +99,6 @@ class System
         $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
         $_SESSION['env']['user_eid'] = $user_info['eid'];
         $_SESSION['env']['lang'] = $user_info['locale_language'];
-        $_SESSION['env']['thousands_separator'] = $user_info['locale_thousands'];
-        $_SESSION['env']['decimal_separator'] = $user_info['locale_decimal'];
-        $_SESSION['env']['date_format'] = $user_info['locale_dateformat'];
-        $_SESSION['env']['timezone'] = $user_info['timezone'];
 
         // make sure we don't have any inactivity value
         if (isset($_SESSION['last_activity']))
@@ -130,21 +122,7 @@ class System
         // reset identity to nothing
         $g_store->user_eid = '';
         $g_store->lang = '';
-        $g_store->date_format = 'm/d/Y';
-        $g_store->timezone = 'UTC';
 
-/*
-        // note: always return dates in the API using UTC rather than local
-        // timezone; the UI will do the appropriate conversion; see
-        // date_default_timezone_set('UTC') in bootstrap.php for the default
-
-        // set current timezone
-        if (!@date_default_timezone_set($g_store->timezone))
-        {
-            // bad timezone identifier -- use UTC
-            $g_store->timezone = 'UTC';
-        }
-*/
         // set the language to use
         if (strlen($g_store->lang) > 0)
             \Flexio\System\System::setCurrentLanguage($g_store->lang);
@@ -171,8 +149,6 @@ class System
                     // set user info
                     $g_store->user_eid = $user_info['eid'];
                     $g_store->lang = $user_info['locale_language'];
-                    $g_store->date_format = $user_info['locale_dateformat'];
-                    $g_store->timezone = $user_info['timezone'];
 
                     return true;
                 }
@@ -215,8 +191,6 @@ class System
                         // set user info
                         $g_store->user_eid = $user_info['eid'];
                         $g_store->lang = $user_info['locale_language'];
-                        $g_store->date_format = $user_info['locale_dateformat'];
-                        $g_store->timezone = $user_info['timezone'];
 
                         return true;
                     }
@@ -244,8 +218,6 @@ class System
         // set user info
         $g_store->user_eid = $_SESSION['env']['user_eid'];
         $g_store->lang = $_SESSION['env']['lang'];
-        $g_store->date_format = $_SESSION['env']['date_format'];
-        $g_store->timezone = $_SESSION['env']['timezone'];
 
         return true;
     }
@@ -254,6 +226,11 @@ class System
     {
         $GLOBALS['g_store']->lang = $lang;
         \Flexio\System\Translate::setLocale($lang);
+    }
+
+    public static function getCurrentLanguage() : string
+    {
+        return $GLOBALS['g_store']->lang;
     }
 
     public static function clearLoginIdentity()
@@ -267,6 +244,7 @@ class System
             if (session_id())
             {
                 $_SESSION['env']['user_eid'] = '';
+                $_SESSION['env']['lang'] = '';
             }
         }
     }
@@ -366,43 +344,6 @@ class System
         return $model;
     }
 
-    public static function setLocaleSettings(array $params)
-    {
-        // NB: Make sure call this function before session_write_close()
-        // has been invoked
-
-        global $g_store;
-        $session_active = isset($_SESSION);
-
-
-        if (isset($params['locale_language']))
-        {
-            $g_store->lang = $params['locale_language'];
-            if ($session_active)
-                $_SESSION['env']['lang'] = $params['locale_language'];
-        }
-
-        if (isset($params['locale_dateformat']))
-        {
-            $g_store->date_format = $params['locale_dateformat'];
-            if ($session_active)
-                $_SESSION['env']['date_format'] = $params['locale_dateformat'];
-        }
-
-        if (isset($params['timezone']))
-        {
-            $g_store->timezone = $params['timezone'];
-            if ($session_active)
-                $_SESSION['env']['timezone'] = $params['timezone'];
-            date_default_timezone_set($g_store->timezone);
-        }
-    }
-
-    public static function getLocaleShortDateFormat() : string
-    {
-        return $GLOBALS['g_store']->date_format;
-    }
-
     public static function getLocaleDateFormat() : string
     {
         $lang = $GLOBALS['g_store']->lang;
@@ -442,18 +383,6 @@ class System
 
         return $res;
     }
-
-/*
-    public static function getCurrentLanguage() : string
-    {
-        return $GLOBALS['g_store']->lang;
-    }
-
-    public static function getCurrentTimezone() : string
-    {
-        return $GLOBALS['g_store']->timezone;
-    }
-*/
 
     public static function getTimestamp() : string
     {
