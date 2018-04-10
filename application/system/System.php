@@ -58,7 +58,6 @@ class System
 
             $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
             $_SESSION['env']['user_eid'] = '';
-            $_SESSION['env']['lang'] = '';
 
             return true;
         }
@@ -98,7 +97,6 @@ class System
         // set new identity
         $_SESSION['env']['session_version'] = \Flexio\System\System::SESSION_VERSION;
         $_SESSION['env']['user_eid'] = $user_info['eid'];
-        $_SESSION['env']['lang'] = $user_info['locale_language'];
 
         // make sure we don't have any inactivity value
         if (isset($_SESSION['last_activity']))
@@ -121,12 +119,6 @@ class System
 
         // reset identity to nothing
         $g_store->user_eid = '';
-        $g_store->lang = '';
-
-        // set the language to use
-        if (strlen($g_store->lang) > 0)
-            \Flexio\System\System::setCurrentLanguage($g_store->lang);
-
 
         // AUTHENTICATION TYPE 1: try to authenticate the user using an API key in the query params
         if (isset($_GET['flexio_api_key']))
@@ -144,12 +136,8 @@ class System
                     if ($user->getStatus() === \Model::STATUS_DELETED)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-                    $user_info = $user->get();
-
                     // set user info
-                    $g_store->user_eid = $user_info['eid'];
-                    $g_store->lang = $user_info['locale_language'];
-
+                    $g_store->user_eid = $user->getEid();
                     return true;
                 }
                 catch (\Flexio\Base\Exception $e)
@@ -186,12 +174,8 @@ class System
                         if ($user->getStatus() === \Model::STATUS_DELETED)
                             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-                        $user_info = $user->get();
-
                         // set user info
-                        $g_store->user_eid = $user_info['eid'];
-                        $g_store->lang = $user_info['locale_language'];
-
+                        $g_store->user_eid = $user->getEid();
                         return true;
                     }
                     catch (\Flexio\Base\Exception $e)
@@ -217,8 +201,6 @@ class System
 
         // set user info
         $g_store->user_eid = $_SESSION['env']['user_eid'];
-        $g_store->lang = $_SESSION['env']['lang'];
-
         return true;
     }
 
@@ -232,17 +214,6 @@ class System
         return $GLOBALS['g_store']->user_eid;
     }
 
-    public static function setCurrentLanguage(string $lang)
-    {
-        $GLOBALS['g_store']->lang = $lang;
-        \Flexio\System\Translate::setLocale($lang);
-    }
-
-    public static function getCurrentLanguage() : string
-    {
-        return $GLOBALS['g_store']->lang;
-    }
-
     public static function clearLoginIdentity()
     {
         global $g_store;
@@ -252,10 +223,7 @@ class System
         if (!IS_CLI())
         {
             if (session_id())
-            {
                 $_SESSION['env']['user_eid'] = '';
-                $_SESSION['env']['lang'] = '';
-            }
         }
     }
 
@@ -354,9 +322,8 @@ class System
         return $model;
     }
 
-    public static function getLocaleDateFormat() : string
+    public static function getLocaleDateFormat(string $lang) : string
     {
-        $lang = $GLOBALS['g_store']->lang;
         $lang_prefix = substr($lang, 0, 2);
 
         switch ($lang_prefix)
@@ -374,9 +341,8 @@ class System
         return $res;
     }
 
-    public static function getLocaleDateTimeFormat() : string
+    public static function getLocaleDateTimeFormat(string $lang) : string
     {
-        $lang = $GLOBALS['g_store']->lang;
         $lang_prefix = substr($lang, 0, 2);
 
         switch ($lang_prefix)

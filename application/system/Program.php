@@ -69,7 +69,6 @@ class Program
         $stubphp .= '/scripts/stub.php';
 
         $curidentity = \Flexio\System\System::serializeGlobalVars();
-        $curlang = $GLOBALS['g_store']->lang;
         $cursessid = session_id();
         $curservername = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 
@@ -91,7 +90,6 @@ class Program
             if (strlen('$curservername') > 0)
                 \$_SERVER['SERVER_NAME'] = '$curservername';
             \\Flexio\\System\\System::unserializeGlobalVars('$curidentity');
-            \\Flexio\\System\\System::setCurrentLanguage('$curlang');
             \$GLOBALS['g_store']->http_host = $httphost;
             $code;
 EOT;
