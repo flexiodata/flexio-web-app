@@ -431,8 +431,9 @@ class Util
 
     public static function formatNumber(float $num, int $dec = 0) : string
     {
-        global $g_store;
-        return number_format($num, $dec, $g_store->decimal_separator, $g_store->thousands_separator);
+        $decimal_separator = '.';
+        $thousands_separator = ',';
+        return number_format($num, $dec, $decimal_separator, $thousands_separator);
     }
 
     public static function formatDate(string $date = null) : string

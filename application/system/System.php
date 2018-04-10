@@ -465,6 +465,7 @@ class System
         return $res;
     }
 
+/*
     public static function getCurrentThousandsSeparator() : string
     {
         return $GLOBALS['g_store']->thousands_separator;
@@ -484,6 +485,7 @@ class System
     {
         return $GLOBALS['g_store']->timezone;
     }
+*/
 
     public static function getTimestamp() : string
     {
