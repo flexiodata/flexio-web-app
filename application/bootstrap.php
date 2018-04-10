@@ -32,10 +32,6 @@ if ($configjson !== false)
 
 // g_store stores global variables, such as database pointers
 $g_store = new stdClass();
-$g_store->user_name = '';
-$g_store->user_email = '';
-$g_store->user_first_name = '';
-$g_store->user_last_name = '';
 $g_store->user_eid = '';
 $g_store->dir_home = ($g_config->dir_home ?? dirname(__DIR__));
 $g_store->http_host = null;    // see GET_HTTP_HOST() below
@@ -171,7 +167,7 @@ if (!function_exists('getallheaders'))
         }
         return $headers;
     }
-} 
+}
 
 spl_autoload_register(function ($class) {
     if (strpos($class, 'Flexio\\') === 0)
