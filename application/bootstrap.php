@@ -152,6 +152,8 @@ function fxStartSession()
 
 if (!function_exists('getallheaders'))
 {
+    // implementation for nginx
+
     function getallheaders()
     {
         $headers = [];
