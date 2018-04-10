@@ -130,8 +130,6 @@ class System
         // reset identity to nothing
         $g_store->user_eid = '';
         $g_store->lang = '';
-        $g_store->thousands_separator = ',';
-        $g_store->decimal_separator = '.';
         $g_store->date_format = 'm/d/Y';
         $g_store->timezone = 'UTC';
 
@@ -173,8 +171,6 @@ class System
                     // set user info
                     $g_store->user_eid = $user_info['eid'];
                     $g_store->lang = $user_info['locale_language'];
-                    $g_store->thousands_separator = $user_info['locale_thousands'];
-                    $g_store->decimal_separator = $user_info['locale_decimal'];
                     $g_store->date_format = $user_info['locale_dateformat'];
                     $g_store->timezone = $user_info['timezone'];
 
@@ -219,8 +215,6 @@ class System
                         // set user info
                         $g_store->user_eid = $user_info['eid'];
                         $g_store->lang = $user_info['locale_language'];
-                        $g_store->thousands_separator = $user_info['locale_thousands'];
-                        $g_store->decimal_separator = $user_info['locale_decimal'];
                         $g_store->date_format = $user_info['locale_dateformat'];
                         $g_store->timezone = $user_info['timezone'];
 
@@ -250,8 +244,6 @@ class System
         // set user info
         $g_store->user_eid = $_SESSION['env']['user_eid'];
         $g_store->lang = $_SESSION['env']['lang'];
-        $g_store->thousands_separator = $_SESSION['env']['thousands_separator'];
-        $g_store->decimal_separator = $_SESSION['env']['decimal_separator'];
         $g_store->date_format = $_SESSION['env']['date_format'];
         $g_store->timezone = $_SESSION['env']['timezone'];
 
@@ -390,20 +382,6 @@ class System
                 $_SESSION['env']['lang'] = $params['locale_language'];
         }
 
-        if (isset($params['locale_thousands']))
-        {
-            $g_store->thousands_separator = $params['locale_thousands'];
-            if ($session_active)
-                $_SESSION['env']['thousands_separator'] = $params['locale_thousands'];
-        }
-
-        if (isset($params['locale_decimal']))
-        {
-            $g_store->decimal_separator = $params['locale_decimal'];
-            if ($session_active)
-                $_SESSION['env']['decimal_separator'] = $params['locale_decimal'];
-        }
-
         if (isset($params['locale_dateformat']))
         {
             $g_store->date_format = $params['locale_dateformat'];
@@ -466,16 +444,6 @@ class System
     }
 
 /*
-    public static function getCurrentThousandsSeparator() : string
-    {
-        return $GLOBALS['g_store']->thousands_separator;
-    }
-
-    public static function getCurrentDecimalSeparator() : string
-    {
-        return $GLOBALS['g_store']->decimal_separator;
-    }
-
     public static function getCurrentLanguage() : string
     {
         return $GLOBALS['g_store']->lang;
