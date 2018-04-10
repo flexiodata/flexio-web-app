@@ -20,10 +20,10 @@ class Token
 {
     public static function create(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_CREATE);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_CREATE);
 
         // check the rights on the owner; ability to create a token is governed
         // currently by user write privileges
@@ -40,6 +40,7 @@ class Token
         $token = \Flexio\Object\Token::create($token_properties);
 
         $result = $token->get();
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -47,11 +48,11 @@ class Token
 
     public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_DELETE);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $token_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_AUTHKEY_DELETE);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -72,6 +73,7 @@ class Token
         $result['eid_type'] = $token->getType();
         $result['eid_status'] = $token->getStatus();
 
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);

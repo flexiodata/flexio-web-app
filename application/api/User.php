@@ -94,6 +94,8 @@ class User
         if ($user === false)
         {
             $request->track(\Flexio\Api\Action::TYPE_USER_CREATE);
+            // TODO: store placeholder for password info
+            // $request->setRequestParams($post_params);
 
             // determine the status and verify code based on whether or not we're requiring verification
             $eid_status = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
@@ -147,6 +149,7 @@ class User
             // return the user info
             $result = $user->get();
             $request->setRequestingUser($user_eid);
+            $request->setResponseParams($result);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
             \Flexio\Api\Response::sendContent($result);
@@ -225,11 +228,13 @@ class User
 
     public static function set(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
+        // TODO: store placeholder for password info
+        // $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -286,6 +291,7 @@ class User
 
         $owner_user->set($validated_post_params);
         $result = $owner_user->get();
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -312,11 +318,13 @@ class User
 
     public static function changepassword(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_UPDATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_UPDATE);
+        // TODO: store placeholder for password info
+        // $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -350,15 +358,18 @@ class User
         );
         $owner_user->set($new_params);
         $result = $owner_user->get();
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
 
     public static function resetpassword(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_RESET);
-
         $post_params = $request->getPostParams();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_RESET);
+        // TODO: store placeholder for password info
+        // $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -398,6 +409,7 @@ class User
 
         $result = array();
         $result['email'] = $email;
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);

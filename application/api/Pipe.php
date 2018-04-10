@@ -33,6 +33,7 @@ class Pipe
         // start tracking the request after copy() since copy() may be called
         // separately and has it's own tracking function
         $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
+        $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -78,6 +79,7 @@ class Pipe
 
         // get the pipe properties
         $result = self::get_internal($pipe);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -85,11 +87,12 @@ class Pipe
 
     public static function copy(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_CREATE);
+        $request->setRequestParams($post_params);
 
         // note: the copy_eid parameter needs to be an eid because we
         // don't know if it's coming outside the owner namespace; we
@@ -144,6 +147,7 @@ class Pipe
         );
 
         $result = self::get_internal($new_pipe);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -151,11 +155,11 @@ class Pipe
 
     public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_PIPE_DELETE);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_DELETE);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -176,6 +180,7 @@ class Pipe
         $result['eid_type'] = $pipe->getType();
         $result['eid_status'] = $pipe->getStatus();
 
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -183,12 +188,13 @@ class Pipe
 
     public static function set(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_PIPE_UPDATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_UPDATE);
+        $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -220,6 +226,7 @@ class Pipe
         $pipe->set($validated_post_params);
 
         $result = self::get_internal($pipe);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);

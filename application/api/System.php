@@ -36,9 +36,10 @@ class System
 
     public static function login(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_USER_LOGIN);
-
         $post_params = $request->getPostParams();
+
+        $request->track(\Flexio\Api\Action::TYPE_USER_LOGIN);
+        // note: don't track request params since these contain credentials
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -72,6 +73,7 @@ class System
             $result = $current_user->get();
 
             $request->setRequestingUser($current_user_eid);
+            $request->setResponseParams($result);
             $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
             $request->track();
             \Flexio\Api\Response::sendContent($result);
@@ -86,6 +88,7 @@ class System
         $result['eid'] = '';
         $result['eid_type'] = \Model::TYPE_USER;
 
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -104,6 +107,7 @@ class System
         $result['eid'] = '';
         $result['eid_type'] = \Model::TYPE_USER;
 
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);

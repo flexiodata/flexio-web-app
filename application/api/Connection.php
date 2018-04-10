@@ -20,11 +20,13 @@ class Connection
 {
     public static function create(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATE);
+        // TODO: don't store sensitive info
+        // $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -68,6 +70,7 @@ class Connection
 
         // return the result
         $result = self::get_internal($connection);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -75,11 +78,11 @@ class Connection
 
     public static function delete(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DELETE);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DELETE);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -103,18 +106,21 @@ class Connection
         $result['eid_status'] = $connection->getStatus();
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->setResponseParams($result);
         $request->track();
         \Flexio\Api\Response::sendContent($result);
     }
 
     public static function set(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATE);
-
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATE);
+        // TODO: don't store sensitive info
+        // $request->setRequestParams($post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -147,6 +153,7 @@ class Connection
 
         // return the result
         $result = self::get_internal($connection);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -221,11 +228,11 @@ class Connection
 
     public static function connect(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CONNECT);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CONNECT);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -246,6 +253,7 @@ class Connection
 
         // return the result
         $result = self::get_internal($connection);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
@@ -253,11 +261,11 @@ class Connection
 
     public static function disconnect(\Flexio\Api\Request $request)
     {
-        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT);
-
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $connection_eid = $request->getObjectFromUrl();
+
+        $request->track(\Flexio\Api\Action::TYPE_CONNECTION_DISCONNECT);
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -276,6 +284,7 @@ class Connection
 
         // return the result
         $result = self::get_internal($connection);
+        $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
