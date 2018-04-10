@@ -195,7 +195,18 @@ class AController extends \Flexio\System\FxControllerAction
 
         $url = isset($object_eid) ? "/app/pipes/$object_eid" : '/app/home';
 
-        if (\Flexio\System\System::isLoggedIn() && isset($email) && $email === \Flexio\System\System::getCurrentUserName())
+        $current_user_email = '';
+        try
+        {
+            $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+            $current_user_info = \Flexio\Object\User::load($current_user_eid)->get();
+            $current_user_email = $current_user_info['email'];
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
+
+        if (\Flexio\System\System::isLoggedIn() && isset($email) && $email === $current_user_email)
         {
             // CASE 1: user is logged in, and user is the same as the one
             // with the link; try to access the shared pipe (TODO:
