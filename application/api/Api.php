@@ -201,14 +201,15 @@ class Api
         // if we can't, it's a public request
 
         $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
+        $requesting_user_token = '';
 
         $header_params = $server_request->getHeaders();
         $user_eid_from_token = '';
 
         try
         {
-            $token = self::getTokenFromRequestParams($header_params, $query_params);
-            $user = \Flexio\Object\User::load($token);
+            $requesting_user_token = self::getTokenFromRequestParams($header_params, $query_params);
+            $user = \Flexio\Object\User::load($requesting_user_token);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
@@ -273,7 +274,7 @@ class Api
         $api_request->setIpAddress($request_ip_address);
         $api_request->setUrl($request_url);
         $api_request->setMethod($request_method);
-        //$api_request->setToken($request_token); // TODO: set the token info when it's available
+        $api_request->setToken($requesting_user_token); // TODO: set the token info when it's available
         $api_request->setRequestingUser($requesting_user_eid);
         $api_request->setRequestCreated($request_timestamp);
         $api_request->setHeaderParams($header_params);
