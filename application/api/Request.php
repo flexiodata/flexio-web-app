@@ -22,6 +22,7 @@ class Request
     private $action_type = \Flexio\Api\Action::TYPE_UNDEFINED;
     private $request_type = 'HTTP';
     private $request_ip_address = '';
+    private $request_user_agent = '';
     private $request_access_code = '';
     private $request_method = '';
     private $request_url = '';
@@ -53,6 +54,7 @@ class Request
             'action_type'         => $this->action_type,
             'request_type'        => $this->request_type,
             'request_ip'          => $this->request_ip_address,
+            'request_user_agent'  => $this->request_user_agent,
             'request_access_code' => $this->request_access_code,
             'request_method'      => $this->request_method,
             'request_route'       => $this->request_url,
@@ -114,6 +116,17 @@ class Request
     public function getIpAddress() : string
     {
         return $this->request_ip_address;
+    }
+
+    public function setUserAgent(string $request_user_agent) : \Flexio\Api\Request
+    {
+        $this->request_user_agent = $request_user_agent;
+        return $this;
+    }
+
+    public function getUserAgent() : string
+    {
+        return $this->request_user_agent;
     }
 
     public function setToken(string $request_access_code) : \Flexio\Api\Request

@@ -51,6 +51,11 @@ class FrameworkRequest
             return $this->url_parts[$idx];
     }
 
+    public function getUserAgent() : string
+    {
+        return $_SERVER['HTTP_USER_AGENT'] ?? '';
+    }
+
     public function getIpAddress() : string
     {
         return $_SERVER['REMOTE_ADDR'] ?? '';

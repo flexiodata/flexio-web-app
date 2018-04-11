@@ -269,12 +269,14 @@ class Api
 
         // get other request info
         $request_ip_address = strtolower($server_request->getIpAddress());
+        $request_user_agent = $server_request->getUserAgent();
         $request_url = $server_request->getUri(); // leave URL as-is to match param handling
         $request_method = strtoupper($server_request->getMethod());
         $request_timestamp = \Flexio\System\System::getTimestamp();
 
         // package the request info
         $api_request = \Flexio\Api\Request::create();
+        $api_request->setUserAgent($request_user_agent);
         $api_request->setIpAddress($request_ip_address);
         $api_request->setUrl($request_url);
         $api_request->setMethod($request_method);

@@ -49,7 +49,12 @@ if (is_null($db))
 try
 {
     // STEP 1: add the new field
-    $db->exec("alter table tbl_action add column request_access_code varchar(255) NOT NULL default '';");
+    $sql = <<<EOT
+        alter table tbl_action
+            add column request_user_agent text default '',
+            add column request_access_code varchar(255) NOT NULL default '';
+EOT;
+    $db->exec($sql);
 }
 catch(\Exception $e)
 {
