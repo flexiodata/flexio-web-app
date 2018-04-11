@@ -80,7 +80,65 @@ class Test
         $response = json_decode($result['response'],true);
         $objeid3 = $response['eid'] ?? '';
 
+
         // TEST: run pipe
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1/run",
+            // 'token' => '', // no token included
+            'content_type' => 'application/json',
+            'params' => '{
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error": {
+                "code": "insufficient-rights"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid2/run",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error": {
+                "code": "no-object"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1/run",
+            'token' => $token2, // token for another user
+            'content_type' => 'application/json',
+            'params' => '{
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "error": {
+                "code": "insufficient-rights"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -94,7 +152,7 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'Message: ';
-        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe without posted variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.4', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe without posted variables',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -109,6 +167,6 @@ class Test
         $response = $result['response'];
         $actual = $response;
         $expected = 'Message: Hi';
-        \Flexio\Tests\Check::assertString('A.2', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables',  $actual, $expected, $results);
     }
 }
