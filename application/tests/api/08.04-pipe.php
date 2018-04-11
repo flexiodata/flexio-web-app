@@ -81,15 +81,35 @@ class Test
         $objeid3 = $response['eid'] ?? '';
 
         // TEST: run pipe
+
+        // BEGIN TEST
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/pipes/$objeid1/run",
             'token' => $token1,
             'params' => array(
-                "param1"=> "my value"
+                "param1"=> "Hi"
             )
         );
         $result = \Flexio\Tests\Util::callApi($params);
-        $response = json_decode($result['response'],true);
+        $response = $result['response'];
+        $actual = $response;
+        $expected = 'Message: ';
+        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe without posted variables',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1/run",
+            'token' => $token1,
+            'params' => array(
+                "param1"=> "Hi"
+            )
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $response = $result['response'];
+        $actual = $response;
+        $expected = 'Message: Hi';
+        \Flexio\Tests\Check::assertString('A.2', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables',  $actual, $expected, $results);
     }
 }
