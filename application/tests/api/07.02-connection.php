@@ -196,7 +196,7 @@ class Test
             "eid_status": "A",
             "ename": "ename1"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/connections/:objeid; allow ename to be set to what it alrady is',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/connections/:objeid; allow ename to be set to what it already is',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(

@@ -140,7 +140,7 @@ class Test
             "user_name": "'.$username1.'",
             "email": "'.$email1.'"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/account; allow username and email to be set to what they alrady are',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/account; allow username and email to be set to what they already are',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Util::generateHandle();
