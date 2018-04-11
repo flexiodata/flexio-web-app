@@ -88,7 +88,6 @@ class Test
             'url' => "$apibase/$userid1/pipes/$objeid1/run",
             'token' => $token1,
             'params' => array(
-                "param1"=> "Hi"
             )
         );
         $result = \Flexio\Tests\Util::callApi($params);
