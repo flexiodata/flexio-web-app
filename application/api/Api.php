@@ -209,11 +209,15 @@ class Api
         try
         {
             $requesting_user_token = self::getTokenFromRequestParams($header_params, $query_params);
-            $user = \Flexio\Object\User::load($requesting_user_token);
-            if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
+            if ($token_info)
+            {
+                $user = \Flexio\Object\User::load($token_info['owned_by']);
+                if ($user->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-            $user_eid_from_token = $user->getEid();
+                $user_eid_from_token = $user->getEid();
+            }
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -274,7 +278,7 @@ class Api
         $api_request->setIpAddress($request_ip_address);
         $api_request->setUrl($request_url);
         $api_request->setMethod($request_method);
-        $api_request->setToken($requesting_user_token); // TODO: set the token info when it's available
+        $api_request->setToken($requesting_user_token);
         $api_request->setRequestingUser($requesting_user_eid);
         $api_request->setRequestCreated($request_timestamp);
         $api_request->setHeaderParams($header_params);
@@ -545,10 +549,7 @@ class Api
         {
             $access_code = $query_params['flexio_api_key'];
             $access_code = trim($access_code);
-
-            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
-            if ($token_info)
-                return $token_info['owned_by'];
+            return $access_code;
         }
 
         // AUTHENTICATION TYPE 2: try to get the token from the header
@@ -560,15 +561,11 @@ class Api
             $pos = strpos($auth_header, ' ');
             $auth_type = ($pos === false) ? $auth_header : substr($auth_header, 0, $pos);
             $params_raw = ($pos === false) ? '' : trim(substr($auth_header, $pos+1));
-            $user_info = false;
 
             if ($auth_type == 'Bearer')
             {
                 $access_code = trim($params_raw);
-
-                $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($access_code);
-                if ($token_info)
-                    return $token_info['owned_by'];
+                return $access_code;
             }
         }
 
