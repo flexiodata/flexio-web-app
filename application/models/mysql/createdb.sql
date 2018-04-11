@@ -350,25 +350,26 @@ CREATE INDEX idx_comment_created ON tbl_comment (created);
 DROP TABLE IF EXISTS tbl_action;
 CREATE TABLE tbl_action (
   id int UNSIGNED NOT NULL auto_increment,
-  eid char(12) NOT NULL default '',                 -- the eid of the action
-  eid_status char(1) NOT NULL default '',           -- the eid status of the action
-  action_type char(40) NOT NULL default '',         -- logical name for the action (e.g. "create", helps map mutiple routes to similar action, such as creating an object)
-  request_ip char(40) NOT NULL default '',          -- ip address of the request if available
-  request_type char(12) NOT NULL default '',        -- request type (e.g. "HTTP")
-  request_method char(12) NOT NULL default '',      -- specific method for the request type (e.g. "PUT", "POST", "DELETE", etc)
-  request_route text default '',                    -- the specific route used to request the action (e.g. the url path of the request)
-  request_created_by char(12) NOT NULL default '',  -- the user making the request
-  request_created timestamp NULL default NULL,         -- timestamp when the request was created
-  request_params json,                                 -- specific parameters included with the request; note: not all params may be saved (e.g. passwords)
-  target_eid char(12) NOT NULL default '',          -- object eid being created, changed, deleted, etc
-  target_eid_type char(3) NOT NULL default '',      -- object eid type being created
-  target_owned_by char(12) NOT NULL default '',     -- owner eid of the object being created, chagned, deleted, etc
-  response_type char(12) NOT NULL default '',       -- response type (e.g. "HTTP")
-  response_code char(12) NOT NULL default '',       -- specific code for the response type (e.g. "200", "404", etc)
-  response_params json,                                -- subset of info returned to the user (e.g. error code and message or basic info about object)
-  response_created timestamp NULL default NULL,        -- timestamp when the response was created
-  owned_by char(12) NOT NULL default '',            -- same as request_created_by
-  created_by char(12) NOT NULL default '',          -- same as request_created_by
+  eid char(12) NOT NULL default '',                     -- the eid of the action
+  eid_status char(1) NOT NULL default '',               -- the eid status of the action
+  action_type char(40) NOT NULL default '',             -- logical name for the action (e.g. "create", helps map mutiple routes to similar action, such as creating an object)
+  request_ip char(40) NOT NULL default '',              -- ip address of the request if available
+  request_type char(12) NOT NULL default '',            -- request type (e.g. "HTTP")
+  request_method char(12) NOT NULL default '',          -- specific method for the request type (e.g. "PUT", "POST", "DELETE", etc)
+  request_route text default '',                        -- the specific route used to request the action (e.g. the url path of the request)
+  request_created_by char(12) NOT NULL default '',      -- the user making the request
+  request_created timestamp NULL default NULL,          -- timestamp when the request was created
+  request_access_code varchar(255) NOT NULL default '', -- access code used to authenticate the request if it exists
+  request_params json,                                  -- specific parameters included with the request; note: not all params may be saved (e.g. passwords)
+  target_eid char(12) NOT NULL default '',              -- object eid being created, changed, deleted, etc
+  target_eid_type char(3) NOT NULL default '',          -- object eid type being created
+  target_owned_by char(12) NOT NULL default '',         -- owner eid of the object being created, chagned, deleted, etc
+  response_type char(12) NOT NULL default '',           -- response type (e.g. "HTTP")
+  response_code char(12) NOT NULL default '',           -- specific code for the response type (e.g. "200", "404", etc)
+  response_params json,                                 -- subset of info returned to the user (e.g. error code and message or basic info about object)
+  response_created timestamp NULL default NULL,         -- timestamp when the response was created
+  owned_by char(12) NOT NULL default '',                -- same as request_created_by
+  created_by char(12) NOT NULL default '',              -- same as request_created_by
   created timestamp NULL default NULL,
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),

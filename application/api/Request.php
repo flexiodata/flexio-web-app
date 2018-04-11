@@ -22,7 +22,7 @@ class Request
     private $action_type = \Flexio\Api\Action::TYPE_UNDEFINED;
     private $request_type = 'HTTP';
     private $request_ip_address = '';
-    private $request_token = '';
+    private $request_access_code = '';
     private $request_method = '';
     private $request_url = '';
     private $request_created_by = '';
@@ -50,24 +50,24 @@ class Request
     private function getActionParams() : array
     {
         $params = array(
-            'action_type'        => $this->action_type,
-            'request_type'       => $this->request_type,
-            'request_ip'         => $this->request_ip_address,
-            'request_token'      => $this->request_token,
-            'request_method'     => $this->request_method,
-            'request_route'      => $this->request_url,
-            'request_created_by' => $this->request_created_by,
-            'request_created'    => $this->request_created,
-            'target_owned_by'    => $this->request_object_owner_eid,
-            'target_eid'         => $this->request_object_eid,
-            'target_eid_type'    => $this->request_object_type,
-            'request_params'     => $this->request_params,
-            'response_type'      => $this->response_type,
-            'response_code'      => $this->response_code,
-            'response_created'   => $this->response_created,
-            'response_params'    => $this->response_params,
-            'owned_by'           => $this->request_created_by,
-            'created_by'         => $this->request_created_by
+            'action_type'         => $this->action_type,
+            'request_type'        => $this->request_type,
+            'request_ip'          => $this->request_ip_address,
+            'request_access_code' => $this->request_access_code,
+            'request_method'      => $this->request_method,
+            'request_route'       => $this->request_url,
+            'request_created_by'  => $this->request_created_by,
+            'request_created'     => $this->request_created,
+            'target_owned_by'     => $this->request_object_owner_eid,
+            'target_eid'          => $this->request_object_eid,
+            'target_eid_type'     => $this->request_object_type,
+            'request_params'      => $this->request_params,
+            'response_type'       => $this->response_type,
+            'response_code'       => $this->response_code,
+            'response_created'    => $this->response_created,
+            'response_params'     => $this->response_params,
+            'owned_by'            => $this->request_created_by,
+            'created_by'          => $this->request_created_by
         );
         return $params;
     }
@@ -116,15 +116,15 @@ class Request
         return $this->request_ip_address;
     }
 
-    public function setToken(string $request_token) : \Flexio\Api\Request
+    public function setToken(string $request_access_code) : \Flexio\Api\Request
     {
-        $this->request_token = $request_token;
+        $this->request_access_code = $request_access_code;
         return $this;
     }
 
     public function getToken() : string
     {
-        return $this->request_token;
+        return $this->request_access_code;
     }
 
     public function setMethod(string $request_method) : \Flexio\Api\Request

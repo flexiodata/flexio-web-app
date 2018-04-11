@@ -25,27 +25,28 @@ class Action extends ModelBase
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_ACTION, $params);
             $timestamp = \Flexio\System\System::getTimestamp();
             $process_arr = array(
-                'eid'                => $eid,
-                'eid_status'         => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'action_type'        => $params['action_type'] ?? '',
-                'request_ip'         => $params['request_ip'] ?? '',
-                'request_type'       => $params['request_type'] ?? '',
-                'request_method'     => $params['request_method'] ?? '',
-                'request_route'      => $params['request_route'] ?? '',
-                'request_created_by' => $params['request_created_by'] ?? '',
-                'request_created'    => $params['request_created'] ?? null,
-                'request_params'     => $params['request_params'] ?? '{}',
-                'target_eid'         => $params['target_eid'] ?? '',
-                'target_eid_type'    => $params['target_eid_type'] ?? '',
-                'target_owned_by'    => $params['target_owned_by'] ?? '',
-                'response_type'      => $params['response_type'] ?? '',
-                'response_code'      => $params['response_code'] ?? '',
-                'response_params'    => $params['response_params'] ?? '{}',
-                'response_created'   => $params['response_created'] ?? null,
-                'owned_by'           => $params['owned_by'] ?? '',
-                'created_by'         => $params['created_by'] ?? '',
-                'created'            => $timestamp,
-                'updated'            => $timestamp
+                'eid'                 => $eid,
+                'eid_status'          => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
+                'action_type'         => $params['action_type'] ?? '',
+                'request_ip'          => $params['request_ip'] ?? '',
+                'request_type'        => $params['request_type'] ?? '',
+                'request_method'      => $params['request_method'] ?? '',
+                'request_route'       => $params['request_route'] ?? '',
+                'request_created_by'  => $params['request_created_by'] ?? '',
+                'request_created'     => $params['request_created'] ?? null,
+                'request_access_code' => $params['request_access_code'] ?? '',
+                'request_params'      => $params['request_params'] ?? '{}',
+                'target_eid'          => $params['target_eid'] ?? '',
+                'target_eid_type'     => $params['target_eid_type'] ?? '',
+                'target_owned_by'     => $params['target_owned_by'] ?? '',
+                'response_type'       => $params['response_type'] ?? '',
+                'response_code'       => $params['response_code'] ?? '',
+                'response_params'     => $params['response_params'] ?? '{}',
+                'response_created'    => $params['response_created'] ?? null,
+                'owned_by'            => $params['owned_by'] ?? '',
+                'created_by'          => $params['created_by'] ?? '',
+                'created'             => $timestamp,
+                'updated'             => $timestamp
             );
 
             if ($db->insert('tbl_action', $process_arr) === false)
@@ -66,24 +67,25 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'         => array('type' => 'string',  'required' => false),
-                'action_type'        => array('type' => 'string',  'required' => false),
-                'request_ip'         => array('type' => 'string',  'required' => false),
-                'request_type'       => array('type' => 'string',  'required' => false),
-                'request_method'     => array('type' => 'string',  'required' => false),
-                'request_route'      => array('type' => 'string',  'required' => false),
-                'request_created_by' => array('type' => 'string',  'required' => false),
-                'request_created'    => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'request_params'     => array('type' => 'string',  'required' => false),
-                'target_eid'         => array('type' => 'string',  'required' => false),
-                'target_eid_type'    => array('type' => 'string',  'required' => false),
-                'target_owned_by'    => array('type' => 'string',  'required' => false),
-                'response_type'      => array('type' => 'string',  'required' => false),
-                'response_code'      => array('type' => 'string',  'required' => false),
-                'response_params'    => array('type' => 'string',  'required' => false),
-                'response_created'   => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'owned_by'           => array('type' => 'string',  'required' => false),
-                'created_by'         => array('type' => 'string',  'required' => false)
+                'eid_status'          => array('type' => 'string',  'required' => false),
+                'action_type'         => array('type' => 'string',  'required' => false),
+                'request_ip'          => array('type' => 'string',  'required' => false),
+                'request_type'        => array('type' => 'string',  'required' => false),
+                'request_method'      => array('type' => 'string',  'required' => false),
+                'request_route'       => array('type' => 'string',  'required' => false),
+                'request_created_by'  => array('type' => 'string',  'required' => false),
+                'request_created'     => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'request_access_code' => array('type' => 'string',  'required' => false),
+                'request_params'      => array('type' => 'string',  'required' => false),
+                'target_eid'          => array('type' => 'string',  'required' => false),
+                'target_eid_type'     => array('type' => 'string',  'required' => false),
+                'target_owned_by'     => array('type' => 'string',  'required' => false),
+                'response_type'       => array('type' => 'string',  'required' => false),
+                'response_code'       => array('type' => 'string',  'required' => false),
+                'response_params'     => array('type' => 'string',  'required' => false),
+                'response_created'    => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'owned_by'            => array('type' => 'string',  'required' => false),
+                'created_by'          => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -141,29 +143,30 @@ class Action extends ModelBase
         $output = array();
         foreach ($rows as $row)
         {
-            $output[] = array('eid'                => $row['eid'],
-                              'eid_type'           => \Model::TYPE_ACTION,
-                              'eid_status'         => $row['eid_status'],
-                              'action_type'        => $row['action_type'],
-                              'request_ip'         => $row['request_ip'],
-                              'request_type'       => $row['request_type'],
-                              'request_method'     => $row['request_method'],
-                              'request_route'      => $row['request_route'],
-                              'request_created_by' => $row['request_created_by'],
-                              'request_created'    => $row['request_created'],
-                              'request_params'     => $row['request_params'],
-                              'target_eid'         => $row['target_eid'],
-                              'target_eid_type'    => $row['target_eid_type'],
-                              'target_owned_by'    => $row['target_owned_by'],
-                              'response_type'      => $row['response_type'],
-                              'response_code'      => $row['response_code'],
-                              'response_params'    => $row['response_params'],
-                              'response_created'   => $row['response_created'],
-                              'duration'           => \Flexio\Base\Util::formatDateDiff($row['request_created'], $row['response_created']),
-                              'owned_by'           => $row['owned_by'],
-                              'created_by'         => $row['created_by'],
-                              'created'            => \Flexio\Base\Util::formatDate($row['created']),
-                              'updated'            => \Flexio\Base\Util::formatDate($row['updated']));
+            $output[] = array('eid'                 => $row['eid'],
+                              'eid_type'            => \Model::TYPE_ACTION,
+                              'eid_status'          => $row['eid_status'],
+                              'action_type'         => $row['action_type'],
+                              'request_ip'          => $row['request_ip'],
+                              'request_type'        => $row['request_type'],
+                              'request_method'      => $row['request_method'],
+                              'request_route'       => $row['request_route'],
+                              'request_created_by'  => $row['request_created_by'],
+                              'request_created'     => $row['request_created'],
+                              'request_access_code' => $row['request_access_code'],
+                              'request_params'      => $row['request_params'],
+                              'target_eid'          => $row['target_eid'],
+                              'target_eid_type'     => $row['target_eid_type'],
+                              'target_owned_by'     => $row['target_owned_by'],
+                              'response_type'       => $row['response_type'],
+                              'response_code'       => $row['response_code'],
+                              'response_params'     => $row['response_params'],
+                              'response_created'    => $row['response_created'],
+                              'duration'            => \Flexio\Base\Util::formatDateDiff($row['request_created'], $row['response_created']),
+                              'owned_by'            => $row['owned_by'],
+                              'created_by'          => $row['created_by'],
+                              'created'             => \Flexio\Base\Util::formatDate($row['created']),
+                              'updated'             => \Flexio\Base\Util::formatDate($row['updated']));
         }
 
         return $output;
