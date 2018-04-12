@@ -273,7 +273,7 @@
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
       active_username() {
-        return _.get(this.getActiveUser(), 'user_name', '')
+        return _.get(this.getActiveUser(), 'username', '')
       },
       alias_error() {
         if (this.mode == 'edit' && _.get(this.edit_connection, 'alias') === _.get(this.connection, 'alias'))

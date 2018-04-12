@@ -26,7 +26,7 @@
         label="Username"
         floating-label
         help=" "
-        v-model="user_name"
+        v-model="username"
       />
       <ui-textbox
         type="email"
@@ -52,7 +52,7 @@
       return {
         first_name: ' ',
         last_name: ' ',
-        user_name: ' ',
+        username: ' ',
         show_success: false,
         show_error: false
       }
@@ -84,11 +84,11 @@
       initFromActiveUser() {
         this.first_name = _.get(this.active_user, 'first_name', ' ')
         this.last_name = _.get(this.active_user, 'last_name', ' ')
-        this.user_name = _.get(this.active_user, 'user_name', ' ')
+        this.username = _.get(this.active_user, 'username', ' ')
       },
       trySaveChanges() {
-        var old_username = _.get(this.active_user, 'user_name', ' ')
-        var new_username = _.get(this.$data, 'user_name')
+        var old_username = _.get(this.active_user, 'username', ' ')
+        var new_username = _.get(this.$data, 'username')
 
         if (new_username == old_username)
           this.saveChanges()
@@ -97,7 +97,7 @@
       },
       saveChanges() {
         var eid = this.active_user_eid
-        var attrs = _.pick(this.$data, ['first_name', 'last_name', 'user_name'])
+        var attrs = _.pick(this.$data, ['first_name', 'last_name', 'username'])
         this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
           if (response.ok)
           {

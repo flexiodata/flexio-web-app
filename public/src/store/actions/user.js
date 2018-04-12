@@ -124,7 +124,7 @@ export const analyticsIdentify = ({}, attrs) => {
   _.assign(analytics_payload, {
     firstName: _.get(attrs, 'first_name', null),
     lastName: _.get(attrs, 'last_name', null),
-    username: _.get(attrs, 'user_name', null),
+    username: _.get(attrs, 'username', null),
     createdAt: _.get(attrs, 'created', null)
   })
 
@@ -145,7 +145,7 @@ export const analyticsTrack = ({}, attrs) => {
   _.assign(analytics_payload, {
     firstName: _.get(attrs, 'first_name', null),
     lastName: _.get(attrs, 'last_name', null),
-    username: _.get(attrs, 'user_name', null),
+    username: _.get(attrs, 'username', null),
     createdAt: _.get(attrs, 'created', null)
   })
 

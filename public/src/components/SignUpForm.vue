@@ -50,7 +50,7 @@
           autocomplete=off
           spellcheck="false"
           :class="input_cls"
-          v-model="user_name"
+          v-model="username"
         >
         <span class="f8 dark-red" v-show="has_username_error">{{username_error}}</span>
       </div>
@@ -115,7 +115,7 @@
       return {
         first_name: '',
         last_name: '',
-        user_name: '',
+        username: '',
         email: '',
         password: '',
         label_submitting: 'Creating account...',
@@ -130,7 +130,7 @@
     },
     watch: {
       email: function(val, old_val) { this.checkSignup('email') },
-      user_name: function(val, old_val) { this.checkSignup('user_name') },
+      username: function(val, old_val) { this.checkSignup('username') },
       password: function(val, old_val) { this.checkSignup('password') }
     },
     computed: {
@@ -138,7 +138,7 @@
         return _.get(this.ss_errors, 'email.message', '')
       },
       username_error() {
-        return _.get(this.ss_errors, 'user_name.message', '')
+        return _.get(this.ss_errors, 'username.message', '')
       },
       password_error() {
         return _.get(this.ss_errors, 'password.message', '')
@@ -169,7 +169,7 @@
     methods: {
       getAttrs() {
         // assemble non-empty values for submitting to the backend
-        return _.pick(this.$data, ['first_name', 'last_name', 'user_name', 'email', 'password', 'verify_code'])
+        return _.pick(this.$data, ['first_name', 'last_name', 'username', 'email', 'password', 'verify_code'])
       },
       getSignInAttrs() {
         // massage attributes to match login call's expected params
@@ -191,8 +191,8 @@
           value: _.get(attrs, 'email', ''),
           type: 'email'
         },{
-          key: 'user_name',
-          value: _.get(attrs, 'user_name', ''),
+          key: 'username',
+          value: _.get(attrs, 'username', ''),
           type: 'username'
         },{
           key: 'password',
@@ -264,7 +264,7 @@
         _.assign(user_info, {
           firstName: _.get(attrs, 'first_name'),
           lastName: _.get(attrs, 'last_name'),
-          username: _.get(attrs, 'user_name'),
+          username: _.get(attrs, 'username'),
           createdAt: _.get(attrs, 'created')
         })
 

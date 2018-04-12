@@ -101,7 +101,7 @@
         return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
       owner_username() {
-        return _.get(this.item, 'owned_by.user_name', '')
+        return _.get(this.item, 'owned_by.username', '')
       },
       owner_fullname() {
         return _.get(this.item, 'owned_by.first_name', '')+' '+_.get(this.item, 'owned_by.last_name', '')

@@ -54,7 +54,7 @@
         'active_user_eid'
       ]),
       active_username() {
-        return _.get(this.getActiveUser(), 'user_name', '')
+        return _.get(this.getActiveUser(), 'username', '')
       },
       api_key() {
         var tokens = this.getAllTokens()
