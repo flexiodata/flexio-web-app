@@ -108,33 +108,38 @@ class Test
         \Flexio\Tests\Check::assertString('A.17', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
+        $actual = \Flexio\Base\Error::EXECUTE_FAILED;
+        $expected = 'execute-failed';
+        \Flexio\Tests\Check::assertString('A.18', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+
+        // BEGIN TEST
         $actual = \Flexio\Base\Error::UNAUTHORIZED;
         $expected = 'unauthorized';
-        \Flexio\Tests\Check::assertString('A.18', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INSUFFICIENT_RIGHTS;
         $expected = 'insufficient-rights';
-        \Flexio\Tests\Check::assertString('A.19', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
         $expected = 'size-limit-exceeded';
-        \Flexio\Tests\Check::assertString('A.20', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::RATE_LIMIT_EXCEEDED;
         $expected = 'rate-limit-exceeded';
-        \Flexio\Tests\Check::assertString('A.21', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.22', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_VERSION;
         $expected = 'invalid-version';
-        \Flexio\Tests\Check::assertString('A.22', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.23', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_REQUEST;
         $expected = 'invalid-request';
-        \Flexio\Tests\Check::assertString('A.23', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.24', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
     }
 }

@@ -175,23 +175,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->properties['eid_status'];
     }
 
-    public function pause() : \Flexio\Object\Process
-    {
-        $this->clearCache();
-        $process_model = $this->getModel()->process;
-        $process_status = $process_model->getProcessStatus($this->getEid());
-
-        switch ($process_status)
-        {
-            // only allow jobs that are running to be paused
-            case \Flexio\Jobs\Process::STATUS_RUNNING:
-                $process_model->setProcessStatus($this->getEid(), \Flexio\Jobs\Process::STATUS_PAUSED);
-                break;
-        }
-
-        return $this;
-    }
-
     public function cancel() : \Flexio\Object\Process
     {
         $this->clearCache();

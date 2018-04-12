@@ -419,6 +419,11 @@ class Process
         if ($process->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        // only allow a process to be run once
+        $process_status = $process->getProcessStatus();
+        if ($process_status !== \Flexio\Jobs\Process::STATUS_PENDING)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED);
+
         // create a job engine, attach it to the process object
         $engine = \Flexio\Jobs\StoredProcess::create($process);
 

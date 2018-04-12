@@ -467,7 +467,10 @@ class Api
 
         $function = self::$endpoints[$apiendpoint] ?? false;
         if ($function !== false)
+        {
+            $request->setOwnerFromUrl($user_eid);
             return $function;
+        }
 
         // we couldn't find any function
         return '';
