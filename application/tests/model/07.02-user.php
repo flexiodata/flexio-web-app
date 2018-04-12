@@ -62,7 +62,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::MISSING_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); throw an exception if a user_name isn\'t specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); throw an exception if a username isn\'t specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -70,7 +70,7 @@ class Test
         {
             $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
-                'user_name' => $handle
+                'username' => $handle
             );
             $eid = $model->create($info);
         }
@@ -86,13 +86,13 @@ class Test
 
 
 
-        // TEST: \Model::create(); user creation with basic user_name input
+        // TEST: \Model::create(); user creation with basic username input
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -107,11 +107,11 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info1 = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => $handle2
             );
             $info2 = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => $handle2
             );
             $eid_first_time_creation = $model->create($info1);
@@ -134,11 +134,11 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info1 = array(
-                'user_name' => $handle1 . 'a',
+                'username' => $handle1 . 'a',
                 'email' => $handle2
             );
             $info2 = array(
-                'user_name' => $handle1 . 'b',
+                'username' => $handle1 . 'b',
                 'email' => $handle2
             );
             $eid_first_time_creation = $model->create($info1);
@@ -182,7 +182,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -194,7 +194,7 @@ class Test
         $handle1 = strtoupper(\Flexio\Base\Util::generateHandle());
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -230,7 +230,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -242,7 +242,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = strtoupper(\Flexio\Tests\Util::createEmailAddress());
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -252,7 +252,7 @@ class Test
 
 
 
-        // TEST: \Model::getEidFromIdentifier(); test ability to get the eid from the user_name or email
+        // TEST: \Model::getEidFromIdentifier(); test ability to get the eid from the username or email
 
         // BEGIN TEST
         $actual = '';
@@ -279,7 +279,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -291,7 +291,7 @@ class Test
         $handle1 = strtoupper(\Flexio\Base\Util::generateHandle());
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -303,7 +303,7 @@ class Test
         $handle1 = strtolower(\Flexio\Base\Util::generateHandle());
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -340,7 +340,7 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = 'xxxxxxxx';
         $info = array(
-            'user_name' => $username,
+            'username' => $username,
             'email' => $email,
             'password' => $password
         );
@@ -354,7 +354,7 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = 'xxxxxxxx';
         $info = array(
-            'user_name' => $username,
+            'username' => $username,
             'email' => $email,
             'password' => $password
         );
@@ -368,7 +368,7 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = 'xxxxxxxx';
         $info = array(
-            'user_name' => $username,
+            'username' => $username,
             'email' => $email,
             'password' => $password
         );
@@ -382,7 +382,7 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = 'xxxxxxxx';
         $info = array(
-            'user_name' => $username,
+            'username' => $username,
             'email' => $email,
             'password' => $password
         );
@@ -396,7 +396,7 @@ class Test
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = 'xxxxxxxx';
         $info = array(
-            'user_name' => $username,
+            'username' => $username,
             'email' => $email,
             'password' => $password
         );

@@ -141,16 +141,16 @@ EOD;
     {
         // returns the eid of a default test user; creates the user if the
         // user doesn't exist
-        $user_name = "testuser";
+        $username = "testuser";
         $email = "test@flex.io";
         $password = 'test@flex.io';
 
         // see if the user already exists
-        $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($user_name);
+        $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($username);
         if (\Flexio\Base\Eid::isValid($user_eid))
             return $user_eid;
 
-        $user_eid = \Flexio\Tests\Util::createUser($user_name, $email, $password);
+        $user_eid = \Flexio\Tests\Util::createUser($username, $email, $password);
         return $user_eid;
     }
 
@@ -182,7 +182,7 @@ EOD;
 
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array(
-                               'user_name' => $username,
+                               'username' => $username,
                                'email' => $email,
                                'full_name' => $username,
                                'eid_status' => \Model::STATUS_AVAILABLE,

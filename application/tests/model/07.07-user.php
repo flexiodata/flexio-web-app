@@ -32,7 +32,7 @@ class Test
         {
             $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
-                'user_name' => $handle
+                'username' => $handle
             );
             $model->set(null, $info);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
@@ -47,7 +47,7 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'user_name' => $handle
+            'username' => $handle
         );
         $actual = $model->set('', $info);
         $expected = false;
@@ -60,7 +60,7 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'user_name' => $handle
+            'username' => $handle
         );
         $eid = \Flexio\Base\Eid::generate();
         $actual = $model->set($eid, $info);
@@ -71,7 +71,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -89,7 +89,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -103,12 +103,12 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
         $info = array(
-            'user_name' => $handle1
+            'username' => $handle1
         );
         $actual = $model->set($eid, $info);
         $expected = true;
@@ -118,7 +118,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -133,7 +133,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -151,12 +151,12 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => $handle2
             );
             $eid = $model->create($info);
             $info = array(
-                'user_name' => null
+                'username' => null
             );
             $result = $model->set($eid, $info);
         }
@@ -178,7 +178,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -188,7 +188,7 @@ class Test
         $result = $model->set($eid, $info);
         $actual = $model->get($eid);
         $expected = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2,
             'company_name' => 'Express Kitchen'
         );
@@ -204,7 +204,7 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);

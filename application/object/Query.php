@@ -48,7 +48,7 @@ class Query
         //     "owned_by" : {
         //         "eid" : null,
         //         "eid_type" : "'.\Model::TYPE_USER.'",
-        //         "user_name" : null,
+        //         "username" : null,
         //         "first_name" : null,
         //         "last_name" : null,
         //         "email_hash" : null

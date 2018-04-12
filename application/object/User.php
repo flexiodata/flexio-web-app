@@ -103,12 +103,12 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $email= $username.'@flex.io';
         if (!isset($properties))
         {
-            $properties = array('user_name' => $username, 'email' => $email);
+            $properties = array('username' => $username, 'email' => $email);
         }
-        if (is_array($properties) && !isset($properties['user_name']))
+        if (is_array($properties) && !isset($properties['username']))
         {
-            if (!isset($properties['user_name']))
-                $properties['user_name'] = $username;
+            if (!isset($properties['username']))
+                $properties['username'] = $username;
             if (!isset($properties['email']))
                 $properties['email'] = $email;
         }
@@ -405,7 +405,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "eid" => null,
                 "eid_type" => null,
                 "eid_status" => null,
-                "user_name" => null,
+                "username" => null,
                 "first_name" => null,
                 "last_name" => null,
                 "email" => null,

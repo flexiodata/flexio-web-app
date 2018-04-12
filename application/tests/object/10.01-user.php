@@ -93,7 +93,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
-        $properties = array('user_name' => $username, 'email' => $email);
+        $properties = array('username' => $username, 'email' => $email);
         $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = 'Flexio\Object\User';
@@ -103,7 +103,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
-        $properties = array('user_name' => $username, 'email' => $email);
+        $properties = array('username' => $username, 'email' => $email);
         $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $object->getType();
@@ -113,7 +113,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
-        $properties = array('user_name' => $username, 'email' => $email);
+        $properties = array('username' => $username, 'email' => $email);
         $eid = $model->user->create($properties);
         $object = \Flexio\Object\User::load($eid);
         $actual = $eid;
@@ -217,7 +217,7 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
-            "user_name" : null,
+            "username" : null,
             "first_name" : null,
             "last_name" : null,
             "email" : null,

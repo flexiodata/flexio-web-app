@@ -35,7 +35,7 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => $handle2
             );
             $eid = $model->create($info);
