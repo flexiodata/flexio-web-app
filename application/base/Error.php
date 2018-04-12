@@ -39,6 +39,7 @@ class Error
     const READ_FAILED            =  'read-failed';
     const WRITE_FAILED           =  'write-failed';
     const DELETE_FAILED          =  'delete-failed';
+    const EXECUTE_FAILED         =  'execute-failed';
     const NO_DATABASE            =  'no-database';
     const NO_MODEL               =  'no-model';
     const NO_SERVICE             =  'no-service';
@@ -71,6 +72,7 @@ class Error
             case self::DELETE_FAILED:          return 'Could not delete object';
             case self::WRITE_FAILED:           return 'Could not write to object';
             case self::READ_FAILED:            return 'Could not read from object';
+            case self::EXECUTE_FAILED:         return 'Could not execute process';
             case self::UNAUTHORIZED:           return 'Unauthorized';
             case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
             case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';

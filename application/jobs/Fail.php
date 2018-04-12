@@ -58,6 +58,7 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::DELETE_FAILED:
             case \Flexio\Base\Error::WRITE_FAILED:
             case \Flexio\Base\Error::READ_FAILED:
+            case \Flexio\Base\Error::EXECUTE_FAILED:
             case \Flexio\Base\Error::UNAUTHORIZED:
             case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
             case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:

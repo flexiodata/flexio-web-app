@@ -959,7 +959,7 @@ class Test
                 "code": "execute-failed"
             }
         }';
-        \Flexio\Tests\Check::assertString('E.1', 'POST /:userid/processes/:objeid/run; only allow a job to be run once',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', 'POST /:userid/processes/:objeid/run; only allow a job to be run once',  $actual, $expected, $results);
     }
 }
 
