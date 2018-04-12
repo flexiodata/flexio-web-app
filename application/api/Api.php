@@ -155,6 +155,7 @@ class Api
         'GET /:userid/processes/summary'              => '\Flexio\Api\Process::summary',
         'POS /:userid/processes/:objeid'              => '\Flexio\Api\Process::set',
         'GET /:userid/processes/:objeid'              => '\Flexio\Api\Process::get',
+        'DEL /:userid/processes/:objeid'              => '\Flexio\Api\Process::delete',
         'GET /:userid/processes/:objeid/log'          => '\Flexio\Api\Process::log',
         'POS /:userid/processes/:objeid/run'          => '\Flexio\Api\Process::run',
         'POS /:userid/processes/:objeid/cancel'       => '\Flexio\Api\Process::cancel',
