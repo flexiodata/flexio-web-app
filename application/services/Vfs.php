@@ -103,7 +103,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 if ($info['connection_status'] != 'A') // only return active connections
                     continue;
 
-                $name = $info['ename'];
+                $name = $info['alias'];
                 if (strlen($name) == 0)
                     $name = $info['eid'];
 
@@ -118,7 +118,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 //$entry['.connection_eid'] = $info['eid'];
                 //$entry['.connection_type'] = $info['connection_type'];
 
-                $entry['connection'] = \Flexio\Base\Util::filterArray($info, ['eid','ename','name','connection_type']);
+                $entry['connection'] = \Flexio\Base\Util::filterArray($info, ['eid','alias','name','connection_type']);
 
                 $results[] = $entry;
             }

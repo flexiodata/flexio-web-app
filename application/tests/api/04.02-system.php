@@ -90,7 +90,7 @@ class Test
         'identifier'
         'username'
         'email'
-        'ename'
+        'alias'
         'password'
         */
     }

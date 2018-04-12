@@ -183,6 +183,8 @@ class Identifier
                 return true;
 
             // api-related names
+            case 'alias':
+            case 'aliases':
             case 'id':
             case 'ids':
             case 'eid':
@@ -220,6 +222,8 @@ class Identifier
             case 'repositories':
             case 'resource':
             case 'resources':
+            case 'slug':
+            case 'slugs':
             case 'system':
             case 'systems':
             case 'trash':
@@ -252,6 +256,8 @@ class Identifier
             case 'unfollow':
             case 'notice':
             case 'notices':
+            case 'url':
+            case 'urls':
                 return true;
 
             // api-function related names

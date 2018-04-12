@@ -37,8 +37,8 @@ class Filter
         if (isset($filter_items['parent_eid']) && array_key_exists('parent_eid', $allowed_item_keys))
             $filter_expr .= (' and (parent_eid = ' . $db->quote($filter_items['parent_eid']) . ')');
 
-        if (isset($filter_items['ename']) && array_key_exists('ename', $allowed_item_keys))
-            $filter_expr .= (' and (ename = ' . $db->quote($filter_items['ename']) . ')');
+        if (isset($filter_items['alias']) && array_key_exists('alias', $allowed_item_keys))
+            $filter_expr .= (' and (alias = ' . $db->quote($filter_items['alias']) . ')');
 
         if (isset($filter_items['user_name']))
             $filter_expr .= (' and (user_name = ' . $db->quote($filter_items['user_name']) . ')');
@@ -894,8 +894,8 @@ class Model
             'object' => 'select eid, eid_type from tbl_object',
             'association' => 'select source_eid, target_eid, association_type, created, updated from tbl_association',
             'user' => 'select eid, eid_status, user_name, email, description, full_name, first_name, last_name, owned_by, created_by, created, updated from tbl_user',
-            'pipe' => 'select eid, eid_status, ename, name, description, task, input, output, schedule, schedule_status, owned_by, created_by, created, updated from tbl_pipe',
-            'connection' => 'select eid, eid_status, ename, name, description, connection_type, connection_status, expires, owned_by, created_by, created, updated from tbl_connection',
+            'pipe' => 'select eid, eid_status, alias, name, description, task, input, output, schedule, schedule_status, owned_by, created_by, created, updated from tbl_pipe',
+            'connection' => 'select eid, eid_status, alias, name, description, connection_type, connection_status, expires, owned_by, created_by, created, updated from tbl_connection',
             'process' => 'select eid, eid_status, parent_eid, process_mode, process_hash, task, input, output, started_by, started, finished, process_info, process_status, cache_used, owned_by, created_by, created, updated from tbl_process',
             'comment' => 'select eid, eid_status, comment, owned_by, created_by, created, updated from tbl_comment',
             'system' => 'select name, value, created, updated from tbl_system'

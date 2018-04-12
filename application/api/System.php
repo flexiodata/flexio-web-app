@@ -199,9 +199,9 @@ class System
                 $valid = self::validateEmail($type, $value, $message);
                 break;
 
-            case 'ename':
+            case 'alias':
                 $user = $requesting_user_eid ?? '';
-                $valid = self::validateEname($type, $eid_type, $user, $value, $message);
+                $valid = self::validateAlias($type, $eid_type, $user, $value, $message);
                 break;
 
             case 'password':
@@ -331,7 +331,7 @@ class System
         return true;
     }
 
-    private static function validateEname(string $type, string $eid_type, string $user_eid, string $value, string &$message = '') : bool
+    private static function validateAlias(string $type, string $eid_type, string $user_eid, string $value, string &$message = '') : bool
     {
         try
         {
@@ -342,7 +342,7 @@ class System
                 $message = _('An alias must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
             }
 
-            // enames can only be specific for a valid user; if the user doesn't load
+            // an alias can only be specific for a valid user; if the user doesn't load
             // an exception will be thrown
             $user = \Flexio\Object\User::load($user_eid);
 

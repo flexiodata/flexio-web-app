@@ -83,7 +83,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Pipe",
-                "ename": "",
+                "alias": "",
                 "description": "Test Pipe Description",
                 "task": {
                     "op": "echo",
@@ -111,7 +111,7 @@ class Test
         {
             "eid_type": "PIP",
             "eid_status": "A",
-            "ename": "",
+            "alias": "",
             "name": "Test Pipe",
             "description": "Test Pipe Description",
             "task": {

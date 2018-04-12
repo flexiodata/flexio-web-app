@@ -39,7 +39,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection",
-                "ename": "ename1"
+                "alias": "alias1"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,7 +53,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection",
-                "ename": "ename2"
+                "alias": "alias2"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -67,7 +67,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection",
-                "ename": "ename3"
+                "alias": "alias3"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -143,7 +143,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "ename": "ename3"
+                "alias": "alias3"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -154,7 +154,7 @@ class Test
                 "code": "write-failed"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/connections/:objeid; fail if ename already exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/connections/:objeid; fail if alias already exists',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -163,7 +163,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "ename": "ename2"
+                "alias": "alias2"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -173,9 +173,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "CTN",
             "eid_status": "A",
-            "ename": "ename2"
+            "alias": "alias2"
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/connections/:objeid; make sure unique ename only applies within an owner',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/connections/:objeid; make sure unique alias only applies within an owner',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -184,7 +184,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "ename": "ename1"
+                "alias": "alias1"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -194,9 +194,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "CTN",
             "eid_status": "A",
-            "ename": "ename1"
+            "alias": "alias1"
         }';
-        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/connections/:objeid; allow ename to be set to what it already is',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', 'POST /:userid/connections/:objeid; allow alias to be set to what it already is',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
@@ -205,7 +205,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "ename": ""
+                "alias": ""
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -215,9 +215,9 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "CTN",
             "eid_status": "A",
-            "ename": ""
+            "alias": ""
         }';
-        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/connections/:objeid; allow ename to be reset',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/connections/:objeid; allow alias to be reset',  $actual, $expected, $results);
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Util::generateHandle();
@@ -230,7 +230,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection Updated",
-                "ename": "ename1-updated",
+                "alias": "alias1-updated",
                 "description": "Test Connection Description Updated",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
@@ -250,7 +250,7 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "CTN",
             "eid_status": "A",
-            "ename": "ename1-updated",
+            "alias": "alias1-updated",
             "name": "Test Connection Updated",
             "description": "Test Connection Description Updated",
             "connection_type": "http",

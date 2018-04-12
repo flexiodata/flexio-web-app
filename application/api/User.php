@@ -609,7 +609,7 @@ class User
 
         // STEP 2: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Connection';
-        $call_params['ename'] = $definition['ename'] ?? '';
+        $call_params['alias'] = $definition['alias'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
 
         if (isset($definition['connection_type']))
@@ -646,7 +646,7 @@ class User
 
         // STEP 2: create the object
         $call_params['name'] = $definition['name'] ?? 'Sample Pipe';
-        $call_params['ename'] = $definition['ename'] ?? '';
+        $call_params['alias'] = $definition['alias'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
         $call_params['task'] = array();
         if (isset($definition['task']))

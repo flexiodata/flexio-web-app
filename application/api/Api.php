@@ -76,7 +76,6 @@ class Api
     // * changed endpoint for resetting password
     //   v1: 'POS /users/requestpasswordreset' => v2: '\Flexio\Api\User::forgotpassword'
 
-
     // TODO: migrate VFS api endpoints over to new user scheme?
 
     // TODO: figure out how to handle these endpoints:

@@ -83,7 +83,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Connection",
-                "ename": "",
+                "alias": "",
                 "description": "Test Connection Description",
                 "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
                 "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
@@ -102,7 +102,7 @@ class Test
         {
             "eid_type": "CTN",
             "eid_status": "A",
-            "ename": "",
+            "alias": "",
             "name": "Test Connection",
             "description": "Test Connection Description",
             "connection_type": "http",

@@ -208,7 +208,7 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
-            "ename" : null,
+            "alias" : null,
             "name" : null,
             "description" : null,
             "connection_type" : null,

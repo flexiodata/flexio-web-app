@@ -38,15 +38,15 @@ class Connection extends ModelBase
 
         // if an identifier is non-zero-length identifier is specified, make sure
         // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an ename identifier
-        if (isset($params['ename']) && $params['ename'] !== '')
+        // on both an eid and an alias
+        if (isset($params['alias']) && $params['alias'] !== '')
         {
-            $ename = $params['ename'];
-            if (!is_string($ename))
+            $alias = $params['alias'];
+            if (!is_string($alias))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($ename) === false)
+            if (\Flexio\Base\Identifier::isValid($alias) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
+            if (\Flexio\Base\Eid::isValid($alias) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
@@ -54,13 +54,13 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['ename']) && $params['ename'] !== '')
+            if (isset($params['enaaliasme']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
                 $ownedby = $params['owned_by'] ?? '';
                 $qownedby = $db->quote($ownedby);
-                $qename = $db->quote($ename);
-                $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
+                $qalias = $db->quote($alias);
+                $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
                 if ($existing_item !== false)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             }
@@ -71,7 +71,7 @@ class Connection extends ModelBase
             $process_arr = array(
                 'eid'               => $eid,
                 'eid_status'        => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'ename'             => $params['ename'] ?? '',
+                'alias'             => $params['alias'] ?? '',
                 'name'              => $params['name'] ?? '',
                 'description'       => $params['description'] ?? '',
                 'connection_type'   => $params['connection_type'] ?? '',
@@ -103,8 +103,8 @@ class Connection extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        // set the status to deleted and clear out any existing ename
-        $params = array('eid_status' => \Model::STATUS_DELETED, 'ename' => '');
+        // set the status to deleted and clear out any existing alias
+        $params = array('eid_status' => \Model::STATUS_DELETED, 'alias' => '');
         return $this->set($eid, $params);
     }
 
@@ -116,7 +116,7 @@ class Connection extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'        => array('type' => 'string',  'required' => false),
-                'ename'             => array('type' => 'string',  'required' => false),
+                'alias'             => array('type' => 'string',  'required' => false),
                 'name'              => array('type' => 'string',  'required' => false),
                 'description'       => array('type' => 'string',  'required' => false),
                 'connection_type'   => array('type' => 'string',  'required' => false),
@@ -157,15 +157,15 @@ class Connection extends ModelBase
 
         // if an identifier is non-zero-length identifier is specified, make sure
         // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an ename identifier
-        if (isset($params['ename']) && $params['ename'] !== '')
+        // on both an eid and an alias
+        if (isset($params['alias']) && $params['alias'] !== '')
         {
-            $ename = $process_arr['ename'];
-            if (!is_string($ename))
+            $alias = $process_arr['alias'];
+            if (!is_string($alias))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($ename) === false)
+            if (\Flexio\Base\Identifier::isValid($alias) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($ename) === true)
+            if (\Flexio\Base\Eid::isValid($alias) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         }
 
@@ -181,7 +181,7 @@ class Connection extends ModelBase
                 return false;
             }
 
-            if (isset($params['ename']) && $params['ename'] !== '')
+            if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
                 $qeid = $db->quote($eid);
@@ -191,13 +191,13 @@ class Connection extends ModelBase
 
                 if ($owner_to_check !== false)
                 {
-                    // we found an owner; see if the ename exists for the owner
+                    // we found an owner; see if the alias exists for the owner
                     $qownedby = $db->quote($owner_to_check);
-                    $qename = $db->quote($ename);
-                    $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and ename = $qename");
+                    $qalias= $db->quote($alias);
+                    $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
 
-                    // don't allow an ename to be set if it's already used for another eid
-                    // (but if the ename is passed for the same eid, it's ok, because it's
+                    // don't allow an alias to be set if it's already used for another eid
+                    // (but if the alias is passed for the same eid, it's ok, because it's
                     // just setting it to what it already is)
                     if ($existing_eid !== false && $existing_eid !== $eid)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -219,7 +219,7 @@ class Connection extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'ename');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'alias');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -245,7 +245,7 @@ class Connection extends ModelBase
             $output[] = array('eid'               => $row['eid'],
                               'eid_type'          => \Model::TYPE_CONNECTION,
                               'eid_status'        => $row['eid_status'],
-                              'ename'             => $row['ename'],
+                              'alias'             => $row['alias'],
                               'name'              => $row['name'],
                               'description'       => $row['description'],
                               'connection_type'   => $row['connection_type'],
@@ -274,19 +274,19 @@ class Connection extends ModelBase
         return $rows[0];
     }
 
-    public function getEidFromName(string $owner, string $ename) // TODO: add return type
+    public function getEidFromName(string $owner, string $alias) // TODO: add return type
     {
-        // eids must correspond to a valid owner and ename (although these fields can
+        // eids must correspond to a valid owner and alias (although these fields can
         // be empty strings, only allow lookups for specifically named, owned pipes)
         if (!\Flexio\Base\Eid::isValid($owner))
             return false;
-        if (strlen($ename) === 0)
+        if (strlen($alias) === 0)
             return false;
 
         $db = $this->getDatabase();
         $qowner = $db->quote($owner);
-        $qename = $db->quote($ename);
-        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and ename = $qename");
+        $qalias = $db->quote($alias);
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and alias = $qalias");
 
         if ($result === false)
             return false;

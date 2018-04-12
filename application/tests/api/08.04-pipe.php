@@ -39,7 +39,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Pipe",
-                "ename": "ename1",
+                "alias": "alias1",
                 "task": {
                     "op": "echo",
                     "params": {
@@ -59,7 +59,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Pipe",
-                "ename": "ename2",
+                "alias": "alias2",
                 "task": {
                     "op": "echo",
                     "params": {
@@ -79,7 +79,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "name": "Test Pipe",
-                "ename": "ename3",
+                "alias": "alias3",
                 "task": {
                     "op": "echo",
                     "params": {
