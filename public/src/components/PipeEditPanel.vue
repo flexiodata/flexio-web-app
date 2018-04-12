@@ -165,7 +165,7 @@
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
       },
       active_username() {
-        return _.get(this.getActiveUser(), 'user_name', '')
+        return _.get(this.getActiveUser(), 'username', '')
       },
       alias_error() {
         if (this.mode == 'edit' && _.get(this.edit_pipe, 'alias') === _.get(this.pipe, 'alias'))

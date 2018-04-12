@@ -98,7 +98,7 @@
         _.assign(user_info, {
           firstName: _.get(attrs, 'first_name'),
           lastName: _.get(attrs, 'last_name'),
-          username: _.get(attrs, 'user_name'),
+          username: _.get(attrs, 'username'),
           createdAt: _.get(attrs, 'created')
         })
 
