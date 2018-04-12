@@ -7,7 +7,7 @@
  * Author:   Aaron L. Williams
  * Created:  2016-03-25
  *
- * @package gp
+ * @package flexio
  * @subpackage Model
  */
 
