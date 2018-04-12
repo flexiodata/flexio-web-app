@@ -86,9 +86,9 @@ class Test
                 "ename": "",
                 "description": "Test Pipe Description",
                 "task": {
-                    "op": "request",
+                    "op": "echo",
                     "params": {
-                        "url": "https://api.domain.com"
+                        "msg": "finished"
                     }
                 },
                 "schedule": {
@@ -115,9 +115,9 @@ class Test
             "name": "Test Pipe",
             "description": "Test Pipe Description",
             "task": {
-                "op": "request",
+                "op": "echo",
                 "params": {
-                    "url": "https://api.domain.com"
+                    "msg": "finished"
                 }
             },
             "schedule": {

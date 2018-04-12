@@ -84,9 +84,9 @@ class Test
             'params' => '{
                 "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
                 "task": {
-                    "op": "request",
+                    "op": "echo",
                     "params": {
-                        "url": "https://api.domain.com"
+                        "msg": "finished"
                     }
                 },
                 "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
@@ -104,9 +104,9 @@ class Test
             },
             "process_mode": "R",
             "task": {
-                "op": "request",
+                "op": "echo",
                 "params": {
-                    "url": "https://api.domain.com"
+                    "msg": "finished"
                 }
             },
             "started_by": "",

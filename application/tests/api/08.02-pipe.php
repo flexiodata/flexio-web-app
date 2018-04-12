@@ -233,9 +233,9 @@ class Test
                 "ename": "ename1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "request",
+                    "op": "echo",
                     "params": {
-                        "url": "https://api.domain.com"
+                        "msg": "finished"
                     }
                 },
                 "schedule": {
@@ -263,9 +263,9 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "request",
+                "op": "echo",
                 "params": {
-                    "url": "https://api.domain.com"
+                    "msg": "finished"
                 }
             },
             "schedule": {
