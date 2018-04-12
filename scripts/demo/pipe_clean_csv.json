@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "Clean a CSV",
-    "ename": "clean-csv",
+    "alias": "clean-csv",
     "description": "Clean a CSV by removing some columns",
     "task": {
         "op": "sequence",

@@ -20,9 +20,9 @@
             <inline-edit-text
               class="dib f7 silver pv1 ph2 mr1 bg-black-05"
               placeholder="Add an alias"
-              input-key="ename"
+              input-key="alias"
               tooltip-cls="hint--bottom"
-              :val="pipe_ename"
+              :val="pipe_alias"
               :show-edit-button="false"
               @change="onAliasChange"
               @cancel="cancelEditPipeAlias"
@@ -31,12 +31,12 @@
             <div
               class="hint--bottom hint--large cursor-default"
               aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
-              v-if="pipe_ename.length == 0"
+              v-if="pipe_alias.length == 0"
             >
               <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
             </div>
           </div>
-          <div class="dark-red f7" v-if="ename_error.length > 0">{{ename_error}}</div>
+          <div class="dark-red f7" v-if="alias_error.length > 0">{{alias_error}}</div>
         </div>
       </div>
       <div class="flex-none flex flex-column flex-row-ns items-end items-center-ns" v-if="is_signed_in && !pipeOptions.fetchError">
@@ -123,11 +123,11 @@
       pipe_name() {
         return _.get(this.pipe, 'name', '')
       },
-      pipe_ename() {
-        return _.get(this.pipe, 'ename', '')
+      pipe_alias() {
+        return _.get(this.pipe, 'alias', '')
       },
-      ename_error() {
-        return _.get(this.ss_errors, 'ename.message', '')
+      alias_error() {
+        return _.get(this.ss_errors, 'alias.message', '')
       },
       user_eid() {
         return _.get(this.getActiveUser(), 'eid', '')
@@ -162,18 +162,18 @@
       },
       editPipeAlias(attrs, input) {
         var eid = this.pipeEid
-        var ename = _.get(attrs, 'ename', '')
+        var alias = _.get(attrs, 'alias', '')
 
-        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
+        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
           var errors = _.omitBy(errors, (e) => { return _.get(e, 'valid') })
 
-          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+          this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
 
-          if (ename.length > 0 && _.size(errors) > 0)
+          if (alias.length > 0 && _.size(errors) > 0)
           {
-            this.$store.track('Updated Pipe: Alias (Invalid)', { eid, ename })
+            this.$store.track('Updated Pipe: Alias (Invalid)', { eid, alias })
           }
            else
           {
@@ -181,12 +181,12 @@
               if (response.ok)
               {
                 input.endEdit()
-                this.$store.track('Updated Pipe: Alias', { eid, ename })
+                this.$store.track('Updated Pipe: Alias', { eid, alias })
               }
                else
               {
                 input.endEdit(false)
-                this.$store.track('Updated Pipe: Alias (Error)', { eid, ename })
+                this.$store.track('Updated Pipe: Alias (Error)', { eid, alias })
               }
             })
           }
@@ -201,15 +201,15 @@
       cancelProcess() {
         this.$emit('cancel-process')
       },
-      onAliasChange(ename) {
-        if (ename == this.pipe_ename)
+      onAliasChange(alias) {
+        if (alias == this.pipe_alias)
         {
-          this.ss_errors = _.omit(this.ss_errors, ['ename'])
+          this.ss_errors = _.omit(this.ss_errors, ['alias'])
           return
         }
 
-        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
-          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+          this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
         })

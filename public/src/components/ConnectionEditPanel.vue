@@ -55,9 +55,9 @@
                 spellcheck="false"
                 label="Alias"
                 help=" "
-                :error="ename_error"
-                :invalid="ename_error.length > 0"
-                v-model="edit_connection.ename"
+                :error="alias_error"
+                :invalid="alias_error.length > 0"
+                v-model="edit_connection.alias"
               ></ui-textbox>
             </div>
             <div
@@ -146,7 +146,7 @@
       eid: null,
       eid_status: OBJECT_STATUS_PENDING,
       name: '',
-      ename: '',
+      alias: '',
       description: '',
       connection_type: '',
       connection_info: {
@@ -208,11 +208,11 @@
         this.edit_connection = _.cloneDeep(val)
         this.updateConnection(val)
       },
-      'edit_connection.ename': function(val, old_val) {
-        var ename = val
+      'edit_connection.alias': function(val, old_val) {
+        var alias = val
 
         this.validateEname(OBJECT_TYPE_CONNECTION, val, (response, errors) => {
-          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+          this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
         })
@@ -275,18 +275,18 @@
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
       },
-      ename_error() {
-        if (this.mode == 'edit' && _.get(this.edit_connection, 'ename') === _.get(this.connection, 'ename'))
+      alias_error() {
+        if (this.mode == 'edit' && _.get(this.edit_connection, 'alias') === _.get(this.connection, 'alias'))
           return ''
 
-        return _.get(this.ss_errors, 'ename.message', '')
+        return _.get(this.ss_errors, 'alias.message', '')
       },
       has_client_errors() {
         var errors = _.get(this.errors, 'errors', [])
         return _.size(errors) > 0
       },
       has_errors() {
-        return this.has_client_errors || this.ename_error.length > 0
+        return this.has_client_errors || this.alias_error.length > 0
       }
     },
     methods: {
@@ -302,14 +302,14 @@
           if (!success)
             return
 
-          var ename = _.get(this.edit_connection, 'ename', '')
+          var alias = _.get(this.edit_connection, 'alias', '')
 
-          this.validateEname(OBJECT_TYPE_CONNECTION, ename, (response, errors) => {
-            this.ss_errors = ename.length > 0 && _.size(errors) > 0
+          this.validateEname(OBJECT_TYPE_CONNECTION, alias, (response, errors) => {
+            this.ss_errors = alias.length > 0 && _.size(errors) > 0
               ? _.assign({}, errors)
               : _.assign({})
 
-            if (this.ename_error.length == 0)
+            if (this.alias_error.length == 0)
               this.$nextTick(() => { this.$emit('submit', this.edit_connection) })
           })
         })
@@ -330,8 +330,8 @@
             var connection = _.cloneDeep(response.body)
 
             // create a default alias
-            connection.ename = item.service_name.trim()
-            connection.ename = connection.ename.toLowerCase().replace(/\s/g, '-')
+            connection.alias = item.service_name.trim()
+            connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
 
             this.updateConnection(connection)
           }

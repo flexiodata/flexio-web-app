@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "Create a Chart",
-    "ename": "create-chart",
+    "alias": "create-chart",
     "description": "Create a chart using Python Matplotlib",
     "task": {
         "op": "sequence",

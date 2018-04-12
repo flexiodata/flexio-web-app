@@ -79,7 +79,7 @@
             return { name, path, is_connection: false }
 
           // show the service icon and name
-          if (name === _.get(this.connection, 'eid') || name === _.get(this.connection, 'ename'))
+          if (name === _.get(this.connection, 'eid') || name === _.get(this.connection, 'alias'))
             return { name, path, is_connection: true }
         })
       }

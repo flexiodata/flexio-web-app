@@ -139,7 +139,7 @@
           if (response.ok)
           {
             var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
             this.$store.track('Created Pipe: New', analytics_payload)
 
             this.openPipe(response.body.eid)
@@ -190,7 +190,7 @@
       },
       getAnalyticsPayload(pipe) {
         var edit_code = Flexio.pipe(pipe.task).toCode()
-        var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename'])
+        var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias'])
 
         _.assign(analytics_payload, {
           title: pipe.name,

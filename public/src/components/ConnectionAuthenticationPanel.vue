@@ -373,7 +373,7 @@
           this.$store.dispatch('fetchConnection', { eid }).then(response => {
             if (response.ok)
             {
-              this.$emit('change', _.omit(response.body, ['name', 'ename', 'description']))
+              this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
             }
              else
             {
@@ -384,7 +384,7 @@
       },
       tryTest(attrs) {
         var eid = attrs.eid
-        //attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
+        //attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
         attrs = _.pick(attrs, ['name', 'description', 'connection_info'])
 
         // update the connection
@@ -398,7 +398,7 @@
             this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
-                this.$emit('change', _.omit(response.body, ['name', 'ename', 'description', 'connection_info']))
+                this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
               }
                else
               {

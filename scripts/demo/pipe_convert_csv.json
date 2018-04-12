@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "Convert a CSV to JSON",
-    "ename": "convert-csv-to-json",
+    "alias": "convert-csv-to-json",
     "description": "Create a JSON data feed from a CSV",
     "task": {
         "op": "sequence",

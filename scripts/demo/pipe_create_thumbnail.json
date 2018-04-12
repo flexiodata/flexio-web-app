@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "Create a Thumbnail",
-    "ename": "create-thumbnail",
+    "alias": "create-thumbnail",
     "description": "Create a thumbnail of a webpage",
     "task": {
         "op": "sequence",

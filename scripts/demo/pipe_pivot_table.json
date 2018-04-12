@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
     "name": "Pivot a table",
-    "ename": "pivot-table",
+    "alias": "pivot-table",
     "description": "Pivot a table using Python Pandas",
     "task": {
         "op": "sequence",

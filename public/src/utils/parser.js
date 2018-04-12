@@ -1028,11 +1028,11 @@
       if (json.params.hasOwnProperty('attachments'))
       {
         var str = ''
-        
+
 
         for (var i = 0; i < json.params.attachments.length; ++i)
-        { 
-          
+        {
+
 
           if (str.length > 0)
             str += ", ";
@@ -1053,7 +1053,7 @@
           }
         }
 
-        if (str.length > 0) { 
+        if (str.length > 0) {
           res = this.append(res, "attachments: " + str);
         }
       }
@@ -2438,7 +2438,7 @@
       {
         json.params['var'] = params['var'].value;
       }
-  
+
       if (params.hasOwnProperty('value'))
       {
         json.params['value'] = params['value'].value;
@@ -2949,9 +2949,9 @@
         options.connections = [];
       for (var i = 0; i < options.connections.length; ++i)
       {
-        if (options.connections[i].hasOwnProperty('ename') && options.connections[i].ename.length > 0)
+        if (options.connections[i].hasOwnProperty('alias') && options.connections[i].alias.length > 0)
         {
-          connections.push(options.connections[i].ename);
+          connections.push(options.connections[i].alias);
         }
         else if (options.connections[i].hasOwnProperty('eid'))
         {

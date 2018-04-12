@@ -111,7 +111,7 @@
         return _.get(this.item, 'connection_info.url', '')
       },
       identifier() {
-        var cid = _.get(this.item, 'ename', '')
+        var cid = _.get(this.item, 'alias', '')
         return cid.length > 0 ? cid : _.get(this.item, 'eid', '')
       },
       is_home() {

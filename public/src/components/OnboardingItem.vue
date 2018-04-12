@@ -180,13 +180,13 @@ If you have any questions, please send us a note using the chat button at the bo
       pipe_attrs() {
         var attrs = {
           name: _.get(this.edit_item, 'name', ''),
-          ename: _.get(this.edit_item, 'id', ''),
+          alias: _.get(this.edit_item, 'id', ''),
           description: ''
         }
 
         // clean up alias
-        attrs.ename = attrs.ename.trim()
-        attrs.ename = attrs.ename.toLowerCase().replace(/\s/g, '-')
+        attrs.alias = attrs.alias.trim()
+        attrs.alias = attrs.alias.toLowerCase().replace(/\s/g, '-')
 
         return attrs
       }
@@ -252,7 +252,7 @@ If you have any questions, please send us a note using the chat button at the bo
         var ctype = _.get(attrs, 'connection_type', '')
         var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
 
-        attrs = _.pick(attrs, ['name', 'ename', 'description', 'connection_info'])
+        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
         _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
 
         // update the connection and make it available
@@ -266,11 +266,11 @@ If you have any questions, please send us a note using the chat button at the bo
 
             if (is_pending)
             {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'ename', 'description', 'connection_type'])
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
               this.$store.track('Created Connection In Onboarding', analytics_payload)
             }
 
-            this.connection_alias = _.get(connection, 'ename', '')
+            this.connection_alias = _.get(connection, 'alias', '')
 
             this.show_connection_new_dialog = false
 
@@ -293,12 +293,12 @@ If you have any questions, please send us a note using the chat button at the bo
           if (response.ok)
           {
             var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'ename', 'created'])
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
 
             this.$store.track('Created Pipe In Onboarding', analytics_payload)
 
             this.pipe_name = _.get(pipe, 'name', '')
-            this.pipe_alias = _.get(pipe, 'ename', '')
+            this.pipe_alias = _.get(pipe, 'alias', '')
             this.pipe = _.cloneDeep(pipe)
 
             this.$nextTick(() => { this.show_pipe_save_dialog = false })

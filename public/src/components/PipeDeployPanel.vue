@@ -99,7 +99,7 @@
         return _.get(this.pipe, 'name', '')
       },
       pipe_identifier() {
-        return _.get(this.pipe, 'ename', '') || _.get(this.pipe, 'eid', '')
+        return _.get(this.pipe, 'alias', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
         var code = "Flexio.setup('"+this.api_key+"')\n\n"

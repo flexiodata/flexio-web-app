@@ -44,7 +44,7 @@
     return {
       eid: null,
       name: 'New Pipe',
-      ename: '',
+      alias: '',
       description: ''
     }
   }
@@ -120,7 +120,7 @@
         this.items = []
       },
       getConnectionIdentifier() {
-        var cid = _.get(this.connection, 'ename', '')
+        var cid = _.get(this.connection, 'alias', '')
         return cid.length > 0 ? cid : _.get(this.connection, 'eid', '')
       },
       getConnectionBasePath() {

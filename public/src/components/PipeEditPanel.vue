@@ -34,9 +34,9 @@
               spellcheck="false"
               label="Alias"
               help=" "
-              :error="ename_error"
-              :invalid="ename_error.length > 0"
-              v-model="edit_pipe.ename"
+              :error="alias_error"
+              :invalid="alias_error.length > 0"
+              v-model="edit_pipe.alias"
             />
             <div
               class="hint--bottom-left hint--large cursor-default"
@@ -98,7 +98,7 @@
     return {
       eid: null,
       name: 'New Pipe',
-      ename: '',
+      alias: '',
       description: '',
       rights: defaultRights()
     }
@@ -133,11 +133,11 @@
         this.edit_pipe = _.cloneDeep(val)
         this.updatePipe(val)
       },
-      'edit_pipe.ename': function(val, old_val) {
-        var ename = val
+      'edit_pipe.alias': function(val, old_val) {
+        var alias = val
 
-        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
-          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+          this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
         })
@@ -167,27 +167,27 @@
       active_username() {
         return _.get(this.getActiveUser(), 'user_name', '')
       },
-      ename_error() {
-        if (this.mode == 'edit' && _.get(this.edit_pipe, 'ename') === _.get(this.pipe, 'ename'))
+      alias_error() {
+        if (this.mode == 'edit' && _.get(this.edit_pipe, 'alias') === _.get(this.pipe, 'alias'))
           return ''
 
-        return _.get(this.ss_errors, 'ename.message', '')
+        return _.get(this.ss_errors, 'alias.message', '')
       },
       has_client_errors() {
         var errors = _.get(this.errors, 'errors', [])
         return _.size(errors) > 0
       },
       has_errors() {
-        return this.has_client_errors || this.ename_error.length > 0
+        return this.has_client_errors || this.alias_error.length > 0
       }
     },
     mounted() {
       if (this.mode != 'edit')
       {
-        var ename = _.get(this.edit_pipe, 'ename', '')
+        var alias = _.get(this.edit_pipe, 'alias', '')
 
-        this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
-          this.ss_errors = ename.length > 0 && _.size(errors) > 0
+        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+          this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
         })
@@ -206,14 +206,14 @@
           if (!success)
             return
 
-          var ename = _.get(this.edit_pipe, 'ename', '')
+          var alias = _.get(this.edit_pipe, 'alias', '')
 
-          this.validateEname(OBJECT_TYPE_PIPE, ename, (response, errors) => {
-            this.ss_errors = ename.length > 0 && _.size(errors) > 0
+          this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+            this.ss_errors = alias.length > 0 && _.size(errors) > 0
               ? _.assign({}, errors)
               : _.assign({})
 
-            if (this.ename_error.length == 0)
+            if (this.alias_error.length == 0)
               this.$emit('submit', this.edit_pipe)
           })
         })

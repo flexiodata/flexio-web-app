@@ -13,7 +13,7 @@
       <div class="flex-fill mh2 fw6 f6 f5-ns">
         <div class="flex flex-row items-center">
           <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h3>
-          <div class="dib f8 silver pv1 ph2 ml2 bg-black-05 br1" v-if="item.ename">{{item.ename}}</div>
+          <div class="dib f8 silver pv1 ph2 ml2 bg-black-05 br1" v-if="item.alias">{{item.alias}}</div>
         </div>
         <div class="dn db-l mw7" v-if="has_description">
           <h4 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h4>
