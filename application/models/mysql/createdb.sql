@@ -59,7 +59,7 @@ CREATE TABLE tbl_user (
   id int UNSIGNED NOT NULL auto_increment,
   eid char(12) NOT NULL,
   eid_status char(1) NOT NULL default '',
-  user_name char(80) NOT NULL default '',
+  username char(80) NOT NULL default '',
   email varchar(255) default '',
   description text default '',
   full_name text default '',
@@ -86,7 +86,7 @@ CREATE TABLE tbl_user (
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE KEY (eid),
-  UNIQUE KEY (user_name),
+  UNIQUE KEY (username),
   UNIQUE KEY (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

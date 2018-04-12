@@ -33,7 +33,7 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => null,
+                'username' => null,
                 'email' => $handle2,
                 'password' => $handle1
             );
@@ -47,7 +47,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::MISSING_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -56,7 +56,7 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => 'ab',
+                'username' => 'ab',
                 'email' => $handle2,
                 'password' => $handle1
             );
@@ -70,7 +70,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -79,7 +79,7 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => null,
                 'password' => $handle1
             );
@@ -93,7 +93,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::MISSING_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.3', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -102,7 +102,7 @@ class Test
             $handle1 = \Flexio\Base\Util::generateHandle();
             $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
-                'user_name' => $handle1,
+                'username' => $handle1,
                 'email' => 'abc',
                 'password' => $handle1
             );
@@ -116,13 +116,13 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('A.4', '\Model::create(); throw an exception when a user_name is invalid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
@@ -134,16 +134,16 @@ class Test
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
             'eid' => $eid,
-            'user_name' => $handle1,
+            'username' => $handle1,
             'email' => $handle2
         );
-        \Flexio\Tests\Check::assertInArray('A.6', '\Model::create(); make sure that eid and user_name are set when a user is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.6', '\Model::create(); make sure that eid and username are set when a user is created',  $actual, $expected, $results);
     }
 }

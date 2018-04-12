@@ -40,7 +40,7 @@ class Test
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "user_name": "'.$username.'",
+                "username": "'.$username.'",
                 "email": "'.$email.'",
                 "password": "'.$password.'",
                 "send_email": "true",
@@ -52,7 +52,7 @@ class Test
         $expected = '
         {
             "eid_type": "'.\Model::TYPE_USER.'",
-            "user_name": "'.$username.'",
+            "username": "'.$username.'",
             "email": "'.$email.'"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'POST /signup; create a new user',  $actual, $expected, $results);
@@ -86,7 +86,7 @@ class Test
                 // 'token' => '', // no token included
                 'content_type' => 'application/json',
                 'params' => '{
-                    "user_name": "'.$username.'",
+                    "username": "'.$username.'",
                     "email": "'.$email.'",
                     "password": "'.$password.'",
                     "send_email": "true",
@@ -101,7 +101,7 @@ class Test
                 $expected = '
                 {
                     "eid_type": "'.\Model::TYPE_USER.'",
-                    "user_name": "'.$username.'",
+                    "username": "'.$username.'",
                     "email": "'.$email.'"
                 }';
                 \Flexio\Tests\Check::assertInArray('B.1', 'POST /signup; create a new user',  $actual, $expected, $results);

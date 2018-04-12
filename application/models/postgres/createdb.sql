@@ -43,7 +43,7 @@ CREATE TABLE tbl_user (
   id serial,
   eid varchar(12) NOT NULL,
   eid_status varchar(1) NOT NULL default '',
-  user_name varchar(80) NOT NULL default '',
+  username varchar(80) NOT NULL default '',
   email varchar(255) default '',
   description text default '',
   full_name text default '',
@@ -70,7 +70,7 @@ CREATE TABLE tbl_user (
   updated timestamp NULL default NULL,
   PRIMARY KEY (id),
   UNIQUE (eid),
-  UNIQUE (user_name),
+  UNIQUE (username),
   UNIQUE (email)
 );
 

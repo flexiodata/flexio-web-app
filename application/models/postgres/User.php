@@ -19,16 +19,16 @@ class User extends ModelBase
 {
     public function create(array $params = null) : string
     {
-        if (!isset($params['user_name']))
+        if (!isset($params['username']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
         if (!isset($params['email']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
         // convert username and email to lowercase
-        $params['user_name'] = strtolower($params['user_name']);
+        $params['username'] = strtolower($params['username']);
         $params['email'] = strtolower($params['email']);
 
-        if (!\Flexio\Base\Identifier::isValid($params['user_name']))
+        if (!\Flexio\Base\Identifier::isValid($params['username']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Flexio\Services\Email::isValid($params['email']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -41,11 +41,11 @@ class User extends ModelBase
         try
         {
             // make sure the user doesn't already exist, based on
-            // user_name and email
-            $qusername = $db->quote($params['user_name']);
+            // username and email
+            $qusername = $db->quote($params['username']);
             $qemail = $db->quote($params['email']);
 
-            $eid = $db->fetchOne("select eid from tbl_user where user_name = $qusername or email = $qemail");
+            $eid = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
             if ($eid !== false)
                 throw new \Exception();
 
@@ -55,7 +55,7 @@ class User extends ModelBase
             $process_arr = array(
                 'eid'                    => $eid,
                 'eid_status'             => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'user_name'              => $params['user_name'] ?? '',
+                'username'               => $params['username'] ?? '',
                 'full_name'              => $params['full_name'] ?? '',
                 'first_name'             => $params['first_name'] ?? '',
                 'last_name'              => $params['last_name'] ?? '',
@@ -107,13 +107,13 @@ class User extends ModelBase
             $params['password'] = self::encodePassword($params['password']);
 
         // convert username and email to lowercase
-        if (isset($params['user_name']))
-            $params['user_name'] = strtolower($params['user_name']);
+        if (isset($params['username']))
+            $params['username'] = strtolower($params['username']);
         if (isset($params['email']))
             $params['email'] = strtolower($params['email']);
 
-        // if user_name or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('user_name', $params) && !\Flexio\Base\Identifier::isValid($params['user_name']))
+        // if username or email is specified, make sure it's not set to null
+        if (is_array($params) && array_key_exists('username', $params) && !\Flexio\Base\Identifier::isValid($params['username']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -122,7 +122,7 @@ class User extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'             => array('type' => 'string', 'required' => false),
-                'user_name'              => array('type' => 'string',  'required' => false),
+                'username'               => array('type' => 'string',  'required' => false),
                 'full_name'              => array('type' => 'string',  'required' => false),
                 'first_name'             => array('type' => 'string',  'required' => false),
                 'last_name'              => array('type' => 'string',  'required' => false),
@@ -176,7 +176,7 @@ class User extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'user_name', 'email');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'username', 'email');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -200,7 +200,7 @@ class User extends ModelBase
             $output[] = array('eid'                    => $row['eid'],
                               'eid_type'               => \Model::TYPE_USER,
                               'eid_status'             => $row['eid_status'],
-                              'user_name'              => $row['user_name'],
+                              'username'               => $row['username'],
                               'full_name'              => $row['full_name'],
                               'first_name'             => $row['first_name'],
                               'last_name'              => $row['last_name'],
@@ -291,11 +291,11 @@ class User extends ModelBase
             return false;
 
         $db = $this->getDatabase();
-        $user_name = $db->fetchOne('select user_name from tbl_user where eid = ?', $eid);
-        if ($user_name === false)
+        $username = $db->fetchOne('select username from tbl_user where eid = ?', $eid);
+        if ($username === false)
             return false;
 
-        return $user_name;
+        return $username;
     }
 
     public function getEmailFromEid(string $eid) // TODO: add return type
@@ -313,17 +313,17 @@ class User extends ModelBase
 
     public function getEidFromIdentifier(string $identifier) // TODO: add return type
     {
-        // gets the eid from either the user_name or the email
+        // gets the eid from either the username or the email
 
         // identifiers can be a username or an email, so only perform the
         // most basic string check
         if (!is_string($identifier) || strlen($identifier) <= 0)
             return false;
 
-        // the identifier is either the user_name or the email; identifiers are case insensitive
+        // the identifier is either the username or the email; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-        $eid = $db->fetchOne("select eid from tbl_user where user_name = $qidentifier or email = $qidentifier");
+        $eid = $db->fetchOne("select eid from tbl_user where username = $qidentifier or email = $qidentifier");
         if ($eid === false)
             return false;
 
@@ -339,7 +339,7 @@ class User extends ModelBase
         // get the eid; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-        $eid = $db->fetchOne("select eid from tbl_user where user_name = $qidentifier");
+        $eid = $db->fetchOne("select eid from tbl_user where username = $qidentifier");
         if ($eid === false)
             return false;
 
@@ -367,7 +367,7 @@ class User extends ModelBase
         // get the password; identifiers are case insensitive
         $db = $this->getDatabase();
         $qidentifier = $db->quote(strtolower($identifier));
-        $user_info = $db->fetchRow("select password from tbl_user where user_name = $qidentifier or email = $qidentifier");
+        $user_info = $db->fetchRow("select password from tbl_user where username = $qidentifier or email = $qidentifier");
         if ($user_info === false)
             return false;
 

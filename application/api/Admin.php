@@ -72,7 +72,7 @@ class Admin
 
             $user_info = array();
             $user_info['eid'] = $u['eid'] ?? '';
-            $user_info['user_name'] = $u['user_name'] ?? '';
+            $user_info['username'] = $u['username'] ?? '';
             $user_info['email'] = $u['email'] ?? '';
             $user_info['first_name'] = $u['first_name'] ?? '';
             $user_info['last_name'] = $u['last_name'] ?? '';
@@ -284,7 +284,7 @@ class Admin
             $item['user'] = array();
             $item['user']['eid'] = '';
             $item['user']['eid_type'] = '';
-            $item['user']['user_name'] = '';
+            $item['user']['username'] = '';
             $item['user']['first_name'] = '';
             $item['user']['last_name'] = '';
 
@@ -308,7 +308,7 @@ class Admin
                     $user_info = $user->get();
                     $item['user']['eid'] = $user_info['eid'];
                     $item['user']['eid_type'] = $user_info['eid_type'];
-                    $item['user']['user_name'] = $user_info['user_name'];
+                    $item['user']['username'] = $user_info['username'];
                     $item['user']['first_name'] = $user_info['first_name'];
                     $item['user']['last_name'] = $user_info['last_name'];
                 }

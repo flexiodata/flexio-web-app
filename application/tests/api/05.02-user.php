@@ -86,7 +86,7 @@ class Test
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "user_name": "'.$username2.'"
+                "username": "'.$username2.'"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -137,7 +137,7 @@ class Test
             "eid": "'.$userid1.'",
             "eid_type": "USR",
             "eid_status": "A",
-            "user_name": "'.$username1.'",
+            "username": "'.$username1.'",
             "email": "'.$email1.'"
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/account; allow username and email to be set to what they already are',  $actual, $expected, $results);
@@ -152,7 +152,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "user_name": "'.$new_username.'",
+                "username": "'.$new_username.'",
                 "password": "'.$new_password.'",
                 "first_name": "a",
                 "last_name": "b",
@@ -180,7 +180,7 @@ class Test
             "eid": "'.$userid1.'",
             "eid_type": "USR",
             "eid_status": "A",
-            "user_name": "'.$new_username.'",
+            "username": "'.$new_username.'",
             "first_name": "a",
             "last_name": "b",
             "email": "'.$new_email.'",

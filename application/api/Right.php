@@ -307,7 +307,7 @@ class Right
         $password = \Flexio\Base\Util::generatePassword();
         $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 
-        $new_user_info = array('user_name' => $username,
+        $new_user_info = array('username' => $username,
                                'email' => $user_email,
                                'eid_status' => \Model::STATUS_PENDING,
                                'password' => $password,

@@ -229,7 +229,7 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $info['eid'] = $user_info['eid'];
             $info['eid_type'] = $user_info['eid_type'];
             $info['eid_status'] = $user_info['eid_status'];
-            $info['user_name'] = $user_info['user_name'];
+            $info['username'] = $user_info['username'];
             $info['first_name'] = $user_info['first_name'];
             $info['last_name'] = $user_info['last_name'];
             $info['email'] = $user_info['email'];

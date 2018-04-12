@@ -119,8 +119,8 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = $username . '@flex.io';
-        $properties = array('user_name' => $username, 'email' => $email);
-        $eid = $model->user->create($properties); // user creation requires user_name and email
+        $properties = array('username' => $username, 'email' => $email);
+        $eid = $model->user->create($properties); // user creation requires username and email
         $object = \Flexio\Object\Store::load($eid);
         $actual = \Flexio\Base\Eid::isValid($eid) && $object->getEid() === $eid;
         $expected = true;

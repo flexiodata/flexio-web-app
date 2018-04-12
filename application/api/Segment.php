@@ -89,7 +89,7 @@ class Segment
                     "firstName" => $params['first_name'] ?? '',
                     "lastName" => $params['last_name'] ?? '',
                     "email" => $params['email'] ?? '',
-                    "username" => $params['user_name'] ?? '',
+                    "username" => $params['username'] ?? '',
                     "createdAt" => $params['created'] ?? ''
                 );
 

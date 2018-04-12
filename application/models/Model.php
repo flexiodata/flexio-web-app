@@ -40,8 +40,8 @@ class Filter
         if (isset($filter_items['alias']) && array_key_exists('alias', $allowed_item_keys))
             $filter_expr .= (' and (alias = ' . $db->quote($filter_items['alias']) . ')');
 
-        if (isset($filter_items['user_name']))
-            $filter_expr .= (' and (user_name = ' . $db->quote($filter_items['user_name']) . ')');
+        if (isset($filter_items['username']))
+            $filter_expr .= (' and (username = ' . $db->quote($filter_items['username']) . ')');
 
         if (isset($filter_items['email']))
             $filter_expr .= (' and (email = ' . $db->quote($filter_items['email']) . ')');
@@ -893,7 +893,7 @@ class Model
         $items_selected = array(
             'object' => 'select eid, eid_type from tbl_object',
             'association' => 'select source_eid, target_eid, association_type, created, updated from tbl_association',
-            'user' => 'select eid, eid_status, user_name, email, description, full_name, first_name, last_name, owned_by, created_by, created, updated from tbl_user',
+            'user' => 'select eid, eid_status, username, email, description, full_name, first_name, last_name, owned_by, created_by, created, updated from tbl_user',
             'pipe' => 'select eid, eid_status, alias, name, description, task, input, output, schedule, schedule_status, owned_by, created_by, created, updated from tbl_pipe',
             'connection' => 'select eid, eid_status, alias, name, description, connection_type, connection_status, expires, owned_by, created_by, created, updated from tbl_connection',
             'process' => 'select eid, eid_status, parent_eid, process_mode, process_hash, task, input, output, started_by, started, finished, process_info, process_status, cache_used, owned_by, created_by, created, updated from tbl_process',

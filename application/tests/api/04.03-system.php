@@ -105,7 +105,7 @@ class Test
             "eid":"'.$userid1.'",
             "eid_type":"USR",
             "eid_status":"A",
-            "user_name":"'.$username1.'",
+            "username":"'.$username1.'",
             "first_name":"",
             "last_name":"",
             "email":"'.$email1.'"
@@ -131,7 +131,7 @@ class Test
             "eid":"'.$userid1.'",
             "eid_type":"USR",
             "eid_status":"A",
-            "user_name":"'.$username1.'",
+            "username":"'.$username1.'",
             "first_name":"",
             "last_name":"",
             "email":"'.$email1.'"
@@ -160,7 +160,7 @@ class Test
             "eid":"'.$userid1.'",
             "eid_type":"USR",
             "eid_status":"A",
-            "user_name":"'.$username1.'",
+            "username":"'.$username1.'",
             "first_name":"",
             "last_name":"",
             "email":"'.$email1.'"
