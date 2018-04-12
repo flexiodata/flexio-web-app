@@ -356,8 +356,10 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public function readFile(string $spreadsheet_id, string $worksheet_title, callable $callback)
     {
+        $url = "https://sheets.googleapis.com/v4/spreadsheets/".rawurlencode($spreadsheet_id)."/values/".rawurlencode($worksheet_title);
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://sheets.googleapis.com/v4/spreadsheets/$spreadsheet_id/values/$worksheet_title");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -365,6 +367,8 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
         $result = curl_exec($ch);
         $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+
         curl_close($ch);
 
 
