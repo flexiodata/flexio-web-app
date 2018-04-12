@@ -164,7 +164,7 @@
         var eid = this.pipeEid
         var alias = _.get(attrs, 'alias', '')
 
-        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+        this.validateAlias(OBJECT_TYPE_PIPE, alias, (response, errors) => {
           var errors = _.omitBy(errors, (e) => { return _.get(e, 'valid') })
 
           this.ss_errors = alias.length > 0 && _.size(errors) > 0
@@ -208,7 +208,7 @@
           return
         }
 
-        this.validateEname(OBJECT_TYPE_PIPE, alias, (response, errors) => {
+        this.validateAlias(OBJECT_TYPE_PIPE, alias, (response, errors) => {
           this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})

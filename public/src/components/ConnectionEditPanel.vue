@@ -211,7 +211,7 @@
       'edit_connection.alias': function(val, old_val) {
         var alias = val
 
-        this.validateEname(OBJECT_TYPE_CONNECTION, val, (response, errors) => {
+        this.validateAlias(OBJECT_TYPE_CONNECTION, val, (response, errors) => {
           this.ss_errors = alias.length > 0 && _.size(errors) > 0
             ? _.assign({}, errors)
             : _.assign({})
@@ -304,7 +304,7 @@
 
           var alias = _.get(this.edit_connection, 'alias', '')
 
-          this.validateEname(OBJECT_TYPE_CONNECTION, alias, (response, errors) => {
+          this.validateAlias(OBJECT_TYPE_CONNECTION, alias, (response, errors) => {
             this.ss_errors = alias.length > 0 && _.size(errors) > 0
               ? _.assign({}, errors)
               : _.assign({})
