@@ -146,7 +146,7 @@ class Pipe extends ModelBase
                     // we found an owner; see if the alias exists for the owner
                     $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
-                    $qalias= $db->quote($alias);
+                    $qalias = $db->quote($alias);
                     $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
 
                     // don't allow an alias to be set if it's already used for another eid
@@ -252,11 +252,6 @@ class Pipe extends ModelBase
         return $result;
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -269,6 +264,11 @@ class Pipe extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

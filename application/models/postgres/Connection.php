@@ -171,7 +171,6 @@ class Connection extends ModelBase
             if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
-                $alias = $params['alias'];
                 $qeid = $db->quote($eid);
                 $owner_to_check = $process_arr['owned_by'] ?? false;
                 if ($owner_to_check === false) // owner isn't specified; find out what it is
@@ -180,8 +179,9 @@ class Connection extends ModelBase
                 if ($owner_to_check !== false)
                 {
                     // we found an owner; see if the alias exists for the owner
+                    $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
-                    $qalias= $db->quote($alias);
+                    $qalias = $db->quote($alias);
                     $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
 
                     // don't allow an alias to be set if it's already used for another eid

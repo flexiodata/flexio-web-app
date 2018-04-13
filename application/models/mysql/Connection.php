@@ -200,7 +200,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
         }
     }
 
@@ -275,15 +275,11 @@ class Connection extends ModelBase
         $qowner = $db->quote($owner);
         $qalias = $db->quote($alias);
         $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and alias = $qalias");
+
         if ($result === false)
             return false;
 
         return $result;
-    }
-
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getOwner(string $eid) : string
@@ -298,6 +294,11 @@ class Connection extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

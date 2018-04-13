@@ -130,7 +130,7 @@ class Process extends ModelBase
             "              avg(extract(epoch from (finished - started))) as average_time, ".
             "              sum(extract(epoch from (finished - started))) as total_time, ".
             "              count(*) as total_count ".
-            "       from tbl_process  ".
+            "       from tbl_process ".
             "       where $filter_expr ".
             "       group by owned_by, parent_eid, created::DATE ".
             "       order by created, parent_eid $limit_expr";
@@ -221,11 +221,6 @@ class Process extends ModelBase
         return $rows[0];
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -238,6 +233,11 @@ class Process extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string
@@ -376,7 +376,7 @@ class Process extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'              => $row['eid'],
-                              'eid'              => $row['eid_status'],
+                              'eid_status'       => $row['eid_status'],
                               'process_eid'      => $row['process_eid'],
                               'task_op'          => $row['task_op'],
                               'task_version'     => $row['task_version'],
@@ -444,7 +444,6 @@ class Process extends ModelBase
              return false;
          }
     }
-
 
     private function processExists(string $eid) : bool
     {
