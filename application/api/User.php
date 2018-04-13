@@ -26,7 +26,7 @@ class User
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'username'              => array('type' => 'identifier', 'required' => true),
-                'email'                 => array('type' => 'string',  'required' => true),
+                'email'                 => array('type' => 'email',  'required' => true),
                 'password'              => array('type' => 'password', 'required' => true),
                 'first_name'            => array('type' => 'string',  'required' => false, 'default' => ''),
                 'last_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
@@ -231,10 +231,10 @@ class User
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'username'          => array('type' => 'identifier', 'required' => false),
+                'email'             => array('type' => 'email', 'required' => false),
                 'password'          => array('type' => 'password', 'required' => false),
                 'first_name'        => array('type' => 'string', 'required' => false),
                 'last_name'         => array('type' => 'string', 'required' => false),
-                'email'             => array('type' => 'string', 'required' => false),
                 'phone'             => array('type' => 'string', 'required' => false),
                 'location_city'     => array('type' => 'string', 'required' => false),
                 'location_state'    => array('type' => 'string', 'required' => false),
@@ -353,7 +353,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'       => array('type' => 'string', 'required' => true),
+                'email'       => array('type' => 'email', 'required' => true),
                 'password'    => array('type' => 'password', 'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
@@ -397,8 +397,8 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true),
-                'verify_code'      => array('type' => 'string', 'required' => true)
+                'email'       => array('type' => 'email', 'required' => true),
+                'verify_code' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -440,7 +440,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true)
+                'email'     => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -484,7 +484,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true)
+                'email'     => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
