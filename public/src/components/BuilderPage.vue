@@ -11,8 +11,22 @@
           <ConnectionAuthenticationPanel :connection="active_item_connection" />
         </div>
         <div class="flex flex-row justify-end">
-          <el-button class="ttu b" type="plain" @click="$store.commit('BUILDER__GO_PREV_ITEM')" v-show="!is_first_item">Go Back</el-button>
-          <el-button class="ttu b" type="primary" @click="$store.commit('BUILDER__GO_NEXT_ITEM')">Continue</el-button>
+          <el-button
+            class="ttu b"
+            type="plain"
+            @click="$store.commit('BUILDER__GO_PREV_ITEM')"
+            v-show="!is_first_item"
+          >
+            Go Back
+          </el-button>
+          <el-button
+            class="ttu b"
+            type="primary"
+            :disabled="can_continue"
+            @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+          >
+            Continue
+          </el-button>
         </div>
       </div>
     </div>
@@ -21,6 +35,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
   import ServiceName from './ServiceName.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
@@ -46,6 +61,13 @@
       },
       is_last_item() {
         return this.active_item_idx == this.items.length - 1
+      },
+      can_continue() {
+        if (this.active_item_type == 'connection') {
+          return _.get(this.active_item_connection, 'connection_status', '') != CONNECTION_STATUS_AVAILABLE
+        }
+
+        return true
       },
       debug_json() {
         return JSON.stringify(this.active_item, null, 2)
