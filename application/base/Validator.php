@@ -319,6 +319,7 @@ class Validator
     {
         // validate against several formats:
         // 'YYYY-MM-DDThh:mm:ss'
+        // 'YYYY-MM-DD hh:mm:ss.u'
         // 'YYYY-MM-DD hh:mm:ss'
         // 'YYYY-MM-DD'
 
@@ -329,6 +330,10 @@ class Validator
         // types of date time formats allowed by the standard (i.e, partial
         // times given by ".ttt" in the following: YYYY-MM-DDThh:mm:ss.tttZ)
         $dt = \DateTime::createFromFormat(\DateTime::ISO8601, $value);
+        if ($dt !== false)
+            return true;
+
+        $dt = \DateTime::createFromFormat('Y-m-d H:i:s.u', $value);
         if ($dt !== false)
             return true;
 

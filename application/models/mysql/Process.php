@@ -78,8 +78,8 @@ class Process extends ModelBase
                 'input'          => array('type' => 'string', 'required' => false),
                 'output'         => array('type' => 'string', 'required' => false),
                 'started_by'     => array('type' => 'string', 'required' => false),
-                'started'        => array('type' => 'string', 'required' => false),
-                'finished'       => array('type' => 'string', 'required' => false),
+                'started'        => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'finished'       => array('type' => 'date',   'required' => false, 'allow_null' => true),
                 'process_info'   => array('type' => 'string', 'required' => false),
                 'process_status' => array('type' => 'string', 'required' => false),
                 'cache_used'     => array('type' => 'string', 'required' => false),
@@ -311,8 +311,8 @@ class Process extends ModelBase
                     'task'         => array('type' => 'string',  'required' => false),
                     'input'        => array('type' => 'string',  'required' => false),
                     'output'       => array('type' => 'string',  'required' => false),
-                    'started'      => array('type' => 'string',  'required' => false),
-                    'finished'     => array('type' => 'string',  'required' => false),
+                    'started'      => array('type' => 'date',    'required' => false, 'allow_null' => true),
+                    'finished'     => array('type' => 'date',    'required' => false, 'allow_null' => true),
                     'log_type'     => array('type' => 'string',  'required' => false),
                     'message'      => array('type' => 'string',  'required' => false)
                 ))->hasErrors()) === true)
