@@ -150,7 +150,7 @@ class Validator
         foreach ($checks as $key => $value)
         {
             // if the value is required, make sure it's present
-            if ($value['required'] && !array_key_exists($key, $params))
+            if (!array_key_exists($key, $params) && $value['required'])
             {
                 $missing_fields[] = $key;
                 continue;
@@ -159,7 +159,7 @@ class Validator
             // if the field doesn't exist and the field isn't required and a default
             // value is specified, add the default value to the params and continue
             // on so that the default value can be validated like any other parameter
-            if (!array_key_exists($key, $params) && !$value['required'] && isset($value['default']))
+            if (!array_key_exists($key, $params) && array_key_exists('default', $value) && !$value['required'])
             {
                 $params[$key] = $value['default'];
             }
@@ -173,6 +173,14 @@ class Validator
             if ($value['type'] === 'boolean' && $this->check_bool($params[$key]))
             {
                 $result[$key] = toBoolean($params[$key]);
+                continue;
+            }
+
+            // if the field exists, and a null value is allowed, check if the value
+            // is null; if so, move on
+            if (isset($value['allow_null']) && ($value['allow_null'] === true && !isset($params[$key])))
+            {
+                $result[$key] = null;
                 continue;
             }
 
@@ -309,13 +317,30 @@ class Validator
 
     private function check_date($value) : bool
     {
+        // validate against several formats:
+        // 'YYYY-MM-DDThh:mm:ss'
+        // 'YYYY-MM-DD hh:mm:ss'
+        // 'YYYY-MM-DD'
+
         if (!is_string($value))
             return false;
 
-        if (!strtotime($value))
-            return false;
+        // TODO: the \DateTime::createFromFormat() can't handle certain
+        // types of date time formats allowed by the standard (i.e, partial
+        // times given by ".ttt" in the following: YYYY-MM-DDThh:mm:ss.tttZ)
+        $dt = \DateTime::createFromFormat(\DateTime::ISO8601, $value);
+        if ($dt !== false)
+            return true;
 
-        return true;
+        $dt = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        if ($dt !== false)
+            return true;
+
+        $dt = \DateTime::createFromFormat('Y-m-d', $value);
+        if ($dt !== false)
+            return true;
+
+        return false;
     }
 
     private function check_eid($value) : bool
