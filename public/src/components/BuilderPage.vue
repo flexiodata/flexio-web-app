@@ -13,6 +13,9 @@
         <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_item_type == 'connection-file'">
           File list
         </div>
+        <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_item_type == 'string'">
+          File list
+        </div>
         <div class="flex flex-row justify-end">
           <el-button
             class="ttu b"
