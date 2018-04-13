@@ -77,10 +77,11 @@ class Test
         $eid_type = \Model::TYPE_UNDEFINED;
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $handle3 = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $handle1,
             'email' => $handle2,
-            'password' => $handle1
+            'password' => $handle3
         );
         $eid = $model->create($info);
         $info = $model->get($eid);

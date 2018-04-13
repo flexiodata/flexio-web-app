@@ -338,7 +338,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = 'xxxxxxxx';
+        $password = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $username,
             'email' => $email,
@@ -352,7 +352,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = 'xxxxxxxx';
+        $password = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $username,
             'email' => $email,
@@ -366,7 +366,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = 'xxxxxxxx';
+        $password = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $username,
             'email' => $email,
@@ -380,7 +380,7 @@ class Test
         // BEGIN TEST
         $username = strtoupper(\Flexio\Base\Util::generateHandle());
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = 'xxxxxxxx';
+        $password = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $username,
             'email' => $email,
@@ -394,7 +394,7 @@ class Test
         // BEGIN TEST
         $username = strtolower(\Flexio\Base\Util::generateHandle());
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = 'xxxxxxxx';
+        $password = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $username,
             'email' => $email,

@@ -32,9 +32,11 @@ class User extends ModelBase
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
         if (!\Flexio\Services\Email::isValid($params['email']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        if (isset($params['password']) && !\Flexio\Base\Password::isValid($params['password']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // encode the password
-        if (isset($params['password']) && strlen($params['password']) > 0)
+        if (isset($params['password']))
             $params['password'] = self::encodePassword($params['password']);
 
         $db = $this->getDatabase();
@@ -112,37 +114,31 @@ class User extends ModelBase
         if (isset($params['email']))
             $params['email'] = strtolower($params['email']);
 
-        // if username or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('username', $params) && !\Flexio\Base\Identifier::isValid($params['username']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'             => array('type' => 'string',  'required' => false),
-                'username'               => array('type' => 'string',  'required' => false),
-                'full_name'              => array('type' => 'string',  'required' => false),
-                'first_name'             => array('type' => 'string',  'required' => false),
-                'last_name'              => array('type' => 'string',  'required' => false),
-                'email'                  => array('type' => 'string',  'required' => false),
-                'phone'                  => array('type' => 'string',  'required' => false),
-                'location_city'          => array('type' => 'string',  'required' => false),
-                'location_state'         => array('type' => 'string',  'required' => false),
-                'location_country'       => array('type' => 'string',  'required' => false),
-                'company_name'           => array('type' => 'string',  'required' => false),
-                'company_url'            => array('type' => 'string',  'required' => false),
-                'locale_language'        => array('type' => 'string',  'required' => false),
-                'locale_decimal'         => array('type' => 'string',  'required' => false),
-                'locale_thousands'       => array('type' => 'string',  'required' => false),
-                'locale_dateformat'      => array('type' => 'string',  'required' => false),
-                'timezone'               => array('type' => 'string',  'required' => false),
-                'password'               => array('type' => 'string',  'required' => false),
-                'verify_code'            => array('type' => 'string',  'required' => false),
-                'config'                 => array('type' => 'string',  'required' => false),
-                'owned_by'               => array('type' => 'string',  'required' => false),
-                'created_by'             => array('type' => 'string',  'required' => false)
+                'eid_status'             => array('type' => 'string', 'required' => false),
+                'username'               => array('type' => 'identifier', 'required' => false),
+                'full_name'              => array('type' => 'string', 'required' => false),
+                'first_name'             => array('type' => 'string', 'required' => false),
+                'last_name'              => array('type' => 'string', 'required' => false),
+                'email'                  => array('type' => 'email',  'required' => false),
+                'phone'                  => array('type' => 'string', 'required' => false),
+                'location_city'          => array('type' => 'string', 'required' => false),
+                'location_state'         => array('type' => 'string', 'required' => false),
+                'location_country'       => array('type' => 'string', 'required' => false),
+                'company_name'           => array('type' => 'string', 'required' => false),
+                'company_url'            => array('type' => 'string', 'required' => false),
+                'locale_language'        => array('type' => 'string', 'required' => false),
+                'locale_decimal'         => array('type' => 'string', 'required' => false),
+                'locale_thousands'       => array('type' => 'string', 'required' => false),
+                'locale_dateformat'      => array('type' => 'string', 'required' => false),
+                'timezone'               => array('type' => 'string', 'required' => false),
+                'password'               => array('type' => 'password', 'required' => false),
+                'verify_code'            => array('type' => 'string', 'required' => false),
+                'config'                 => array('type' => 'string', 'required' => false),
+                'owned_by'               => array('type' => 'string', 'required' => false),
+                'created_by'             => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
