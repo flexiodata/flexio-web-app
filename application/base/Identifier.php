@@ -23,9 +23,10 @@ class Identifier
         // identifiers (e.g. usernames, or other 'named handles') must
         // follow the following rules:
         //     1. be a lowercase string
-        //     2. have a length between 3 and 80 chars
-        //     3. start with a letter
-        //     4. not be one of a list of various reserved words
+        //     2. must not be an eid
+        //     3. have a length between 3 and 80 chars
+        //     4. start with a letter
+        //     5. not be one of a list of various reserved words
 
         // initialize the message parameter
         $message = '';
@@ -36,6 +37,12 @@ class Identifier
         if ($identifier !== strtolower($identifier))
         {
             $message = _('An identifier must be lowercase');
+            return false;
+        }
+
+        if (\Flexio\Base\Eid::isValid($identifier))
+        {
+            $message = _('An identifier must not be an eid');
             return false;
         }
 

@@ -30,13 +30,13 @@ class Connection
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'eid_status'        => array('type' => 'string',  'required' => false),
-                'alias'             => array('type' => 'identifier', 'required' => false),
-                'name'              => array('type' => 'string',  'required' => false),
-                'description'       => array('type' => 'string',  'required' => false),
-                'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false),
-                'connection_info'   => array('type' => 'object',  'required' => false)
+                'eid_status'        => array('type' => 'string', 'required' => false),
+                'alias'             => array('type' => 'alias',  'required' => false),
+                'name'              => array('type' => 'string', 'required' => false),
+                'description'       => array('type' => 'string', 'required' => false),
+                'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_status' => array('type' => 'string', 'required' => false),
+                'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -120,13 +120,13 @@ class Connection
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'eid_status'        => array('type' => 'string',  'required' => false),
-                'alias'             => array('type' => 'identifier', 'required' => false),
-                'name'              => array('type' => 'string',  'required' => false),
-                'description'       => array('type' => 'string',  'required' => false),
-                'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false),
-                'connection_info'    => array('type' => 'object', 'required' => false)
+                'eid_status'        => array('type' => 'string', 'required' => false),
+                'alias'             => array('type' => 'alias',  'required' => false),
+                'name'              => array('type' => 'string', 'required' => false),
+                'description'       => array('type' => 'string', 'required' => false),
+                'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_status' => array('type' => 'string', 'required' => false),
+                'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

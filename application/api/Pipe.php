@@ -37,9 +37,9 @@ class Pipe
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'copy_eid'        => array('type' => 'eid', 'required' => false),
+                'copy_eid'        => array('type' => 'eid',    'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
-                'alias'           => array('type' => 'identifier', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
@@ -195,7 +195,7 @@ class Pipe
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
-                'alias'           => array('type' => 'identifier', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),

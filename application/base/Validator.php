@@ -204,6 +204,10 @@ class Validator
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'identifier' && !$this->check_identifier($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
+                if ($value['type'] == 'password' && !$this->check_password($p))
+                    $invalid_values[] = $key . ":" . self::makeString($p);
+                if ($value['type'] == 'alias' && !$this->check_alias($p))
+                    $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'json' && !$this->check_json($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'object' && !$this->check_object($p))
@@ -328,8 +332,30 @@ class Validator
         if (!is_string($value))
             return false;
 
-        // note: include strlen check so that identifiers can be zero length so they can be set to ''
-        if (!\Flexio\Base\Eid::isValid($value) && (strlen($value) > 0 && !\Flexio\Base\Identifier::isValid($value)))
+        if (!\Flexio\Base\Identifier::isValid($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_password($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        if (!\Flexio\Base\Password::isValid($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_alias($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        // note: include strlen check so that aliases can be zero length so they can be set to ''
+        if ((strlen($value) > 0 && !\Flexio\Base\Identifier::isValid($value)))
             return false;
 
         return true;
