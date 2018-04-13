@@ -27,12 +27,12 @@ class Test
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
         $username1 = \Flexio\Base\Util::generateHandle();
         $email1 = \Flexio\Tests\Util::createEmailAddress();
-        $password1 = \Flexio\Base\Util::generatePassword();
+        $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser($username1, $email1, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
         $username2 = \Flexio\Base\Util::generateHandle();
         $email2 = \Flexio\Tests\Util::createEmailAddress();
-        $password2 = \Flexio\Base\Util::generatePassword();
+        $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser($username2, $email2, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 
@@ -144,7 +144,7 @@ class Test
 
         // BEGIN TEST
         $new_username = \Flexio\Base\Util::generateHandle();
-        $new_password = \Flexio\Base\Util::generatePassword();
+        $new_password = \Flexio\Base\Password::generate();
         $new_email = \Flexio\Tests\Util::createEmailAddress();
         $params = array(
             'method' => 'POST',

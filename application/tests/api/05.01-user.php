@@ -32,7 +32,7 @@ class Test
         // BEGIN TEST
         $username = \Flexio\Base\Util::generateHandle();
         $email = \Flexio\Tests\Util::createEmailAddress();
-        $password = \Flexio\Base\Util::generatePassword();
+        $password = \Flexio\Base\Password::generate();
 
         $params = array(
             'method' => 'POST',
@@ -63,7 +63,7 @@ class Test
         // BEGIN TEST
         $username_original = \Flexio\Base\Util::generateHandle();
         $email_original = \Flexio\Tests\Util::createEmailAddress();
-        $password = \Flexio\Base\Util::generatePassword();
+        $password = \Flexio\Base\Password::generate();
 
         for ($i = 1; $i <= 3; ++$i)
         {

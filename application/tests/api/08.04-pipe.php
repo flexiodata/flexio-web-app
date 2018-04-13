@@ -25,10 +25,10 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $password1 = \Flexio\Base\Util::generatePassword();
+        $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
-        $password2 = \Flexio\Base\Util::generatePassword();
+        $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 

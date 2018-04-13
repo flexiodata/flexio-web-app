@@ -687,19 +687,6 @@ class Util
         return self::generateRandomString(20);
     }
 
-    public static function generatePassword() : string
-    {
-        $pw = self::generateRandomString(10);
-        $pw[2] = ''.random_int(0, 9);
-        $pw[6] = ''.random_int(0, 9);
-        $i = random_int(0, 9);
-        if ($i == 2 || $i == 6)
-            $i--;
-        $pw[$i] = strtoupper($pw[$i]);
-
-        return $pw;
-    }
-
     public static function encrypt(string $plaintext, string $key = null) // TODO: set function return type
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';

@@ -178,7 +178,7 @@ EOD;
         if (!isset($email))
             $email = \Flexio\Tests\Util::createEmailAddress();
         if (!isset($password))
-            $password = \Flexio\Base\Util::generatePassword();
+            $password = \Flexio\Base\Password::generate();
 
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array(
