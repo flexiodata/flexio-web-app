@@ -667,24 +667,6 @@ class Util
         return false;
     }
 
-    public static function isValidPassword($value) : bool
-    {
-        // make sure a password is a string that's a minimum
-        // of 8 characters
-        if (!is_string($value))
-            return false;
-
-        if (strlen($value) < 8)
-            return false;
-
-        // make sure we have at least one number
-        $regex = "/[0-9]/";
-        if (preg_match($regex, $value) === 0)
-            return false;
-
-        return true;
-    }
-
     public static function generateRandomString(int $length) : string
     {
         $result = '';

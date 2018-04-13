@@ -1061,132 +1061,127 @@ class Test
 
 
 
-        // TEST: validation tests for isValidPassword()
+        // TEST: validation tests for \Flexio\Base\Password::isValid()
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword(null);
+        $actual = \Flexio\Base\Password::isValid(null);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.1', '\Flexio\Base\Util::isValidPassword(); test for non-string input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.1', '\Flexio\Base\Password::isValid(); test for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword(true);
+        $actual = \Flexio\Base\Password::isValid(true);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.2', '\Flexio\Base\Util::isValidPassword(); test for non-string input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.2', '\Flexio\Base\Password::isValid(); test for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword(1111111111);
+        $actual = \Flexio\Base\Password::isValid(1111111111);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.3', '\Flexio\Base\Util::isValidPassword(); test for non-string input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.3', '\Flexio\Base\Password::isValid(); test for non-string input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('');
+        $actual = \Flexio\Base\Password::isValid('');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.4', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.4', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('a');
+        $actual = \Flexio\Base\Password::isValid('a');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.5', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.5', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.6', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.6', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.7', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.7', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.8', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.8', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.9', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.9', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaa1');
+        $actual = \Flexio\Base\Password::isValid('aaaaaa1');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.10', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.10', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaa1');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaa1');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.11', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.11', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaaaaaaa1');
+        $actual = \Flexio\Base\Password::isValid('aaaaaaaa1');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.12', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
-
-
+        \Flexio\Tests\Check::assertBoolean('H.12', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('1aaaaaa');
+        $actual = \Flexio\Base\Password::isValid('1aaaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.13', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.13', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('1aaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('1aaaaaaa');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.14', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.14', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('1aaaaaaaa');
+        $actual = \Flexio\Base\Password::isValid('1aaaaaaaa');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.15', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
-
+        \Flexio\Tests\Check::assertBoolean('H.15', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa1aaa');
+        $actual = \Flexio\Base\Password::isValid('aaa1aaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.16', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.16', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa1aaaa');
+        $actual = \Flexio\Base\Password::isValid('aaa1aaaa');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.17', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.17', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa1aaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaa1aaaaa');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.18', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
-
-
+        \Flexio\Tests\Check::assertBoolean('H.18', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa.aaa');
+        $actual = \Flexio\Base\Password::isValid('aaa.aaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.16', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.16', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa.aaaa');
+        $actual = \Flexio\Base\Password::isValid('aaa.aaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.17', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.17', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa.aaaaa');
+        $actual = \Flexio\Base\Password::isValid('aaa.aaaaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.18', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.18', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aa1.aaa');
+        $actual = \Flexio\Base\Password::isValid('aa1.aaa');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('H.19', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.19', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa.a1aa');
+        $actual = \Flexio\Base\Password::isValid('aaa.a1aa');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.20', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.20', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Util::isValidPassword('aaa.aaaa1a');
+        $actual = \Flexio\Base\Password::isValid('aaa.aaaa1a');
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('H.21', '\Flexio\Base\Util::isValidPassword(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('H.21', '\Flexio\Base\Password::isValid(); valid passwords require a minimum length of 8 characters and at least 1 number',  $actual, $expected, $results);
     }
 }

@@ -206,7 +206,7 @@ class System
 
             case 'password':
                 {
-                    if (\Flexio\Base\Util::isValidPassword($value) === false)
+                    if (\Flexio\Base\Password::isValid($value) === false)
                     {
                         // invalid password
                         $valid = false;

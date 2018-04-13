@@ -57,11 +57,11 @@ class User
         $password = $validated_post_params['password'];
 
         // make sure the username is valid syntactically; note: don't check for existence here
-        if (!\Flexio\Base\Identifier::isValid($username))
+        if (\Flexio\Base\Identifier::isValid($username) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
 
         // make sure the password is valid
-        if (\Flexio\Base\Util::isValidPassword($password) === false)
+        if (\Flexio\Base\Password::isValid($password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The password is invalid.  Please try another.'));
 
         // configuration fields we don't want to pass on
@@ -264,11 +264,11 @@ class User
         $validated_post_params = $validator->getParams();
 
         // if a username is specified, make sure it's valid
-        if (isset($validated_post_params['username']) && !\Flexio\Base\Identifier::isValid($validated_post_params['username']))
+        if (isset($validated_post_params['username']) && \Flexio\Base\Identifier::isValid($validated_post_params['username']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // if a password is specified, make sure it's valid
-        if (isset($validated_post_params['password']) && \Flexio\Base\Util::isValidPassword($validated_post_params['password']) === false)
+        if (isset($validated_post_params['password']) && \Flexio\Base\Password::isValid($validated_post_params['password']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the user
@@ -338,7 +338,7 @@ class User
         $new_password = $validated_post_params['new_password'];
 
         // make sure the new password is valid
-        if (\Flexio\Base\Util::isValidPassword($new_password) === false)
+        if (\Flexio\Base\Password::isValid($new_password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the object
@@ -385,7 +385,7 @@ class User
         $code = $validated_post_params['verify_code'];
 
         // make sure the new password is valid
-        if (\Flexio\Base\Util::isValidPassword($password) === false)
+        if (\Flexio\Base\Password::isValid($password) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user = false;
