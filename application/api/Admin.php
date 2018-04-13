@@ -39,7 +39,6 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),
@@ -90,7 +89,6 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),
@@ -130,7 +128,6 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),
@@ -170,7 +167,6 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),
@@ -210,7 +206,6 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),
@@ -251,7 +246,6 @@ class Admin
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'owned_by' => array('type' => 'string',  'required' => false),

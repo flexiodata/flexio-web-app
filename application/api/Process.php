@@ -267,7 +267,6 @@ class Process
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'parent_eid'  => array('type' => 'string', 'required' => false),
@@ -324,7 +323,6 @@ class Process
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'parent_eid'  => array('type' => 'string', 'required' => false),

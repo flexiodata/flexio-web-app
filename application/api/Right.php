@@ -278,7 +278,6 @@ class Right
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
                 'objects' => array('type' => 'string', 'array' => true, 'required' => false),
