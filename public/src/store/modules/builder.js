@@ -52,8 +52,18 @@ const state = {
       }
     ]
   },
+  title: '',
   items: [],
-  active_item: {}
+  active_item: {},
+  output: {
+    name: '',
+    task: {
+      op: 'sequence',
+      params: {
+        items: []
+      }
+    }
+  }
 }
 
 const mutations = {
@@ -61,6 +71,8 @@ const mutations = {
     var idx = 0
     var variables = _.get(state, 'def.variables', {})
 
+    state.title = state.def.name
+    state.output.name = state.def.name
     state.items = _.mapValues(variables, (item) => {
       return _.assign({}, item, { idx: idx++ })
     })
