@@ -204,6 +204,8 @@ class Validator
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'identifier' && !$this->check_identifier($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
+                if ($value['type'] == 'email' && !$this->check_email($p))
+                    $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'password' && !$this->check_password($p))
                     $invalid_values[] = $key . ":" . self::makeString($p);
                 if ($value['type'] == 'alias' && !$this->check_alias($p))
@@ -333,6 +335,17 @@ class Validator
             return false;
 
         if (!\Flexio\Base\Identifier::isValid($value))
+            return false;
+
+        return true;
+    }
+
+    private function check_email($value) : bool
+    {
+        if (!is_string($value))
+            return false;
+
+        if (!\Flexio\Base\Util::isValidEmail($value))
             return false;
 
         return true;
