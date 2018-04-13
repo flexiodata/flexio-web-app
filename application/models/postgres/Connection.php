@@ -123,7 +123,7 @@ class Connection extends ModelBase
                 'connection_type'   => array('type' => 'string', 'required' => false),
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'string', 'required' => false),
-                'expires'           => array('type' => 'any',    'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'expires'           => array('type' => 'date',   'required' => false, 'allow_null' => true),
                 'owned_by'          => array('type' => 'string', 'required' => false),
                 'created_by'        => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
