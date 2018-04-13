@@ -3,10 +3,12 @@ import VueRouter from 'vue-router'
 
 import account from './account'
 import admin from './admin'
+import builder from './builder'
 import home from './home'
 import pipes from './pipes'
 
 import {
+  ROUTE_BUILDER,
   ROUTE_HOME,
   ROUTE_SIGNIN,
   ROUTE_SIGNUP,
@@ -34,6 +36,7 @@ const routes = [
   basepath_redirect,
   account,
   admin,
+  builder,
   home,
   pipes,
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignInPage         },
