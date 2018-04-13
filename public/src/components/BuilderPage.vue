@@ -46,6 +46,20 @@
       ServiceName,
       ConnectionAuthenticationPanel
     },
+    watch: {
+      active_item() {
+        if (this.active_item_type != 'connection')
+          return
+
+        if (_.isNil(this.active_item_connection_eid)) {
+          var attrs = { connection_type: this.active_item_connection_type }
+          this.$store.dispatch('createConnection', { attrs }).then(response => {
+            var connection = response.body
+            this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
+          })
+        }
+      }
+    },
     computed: {
       ...mapState({
         title: state => state.builder.title,
@@ -53,14 +67,17 @@
         active_item: state => state.builder.active_item,
         active_item_idx: state => state.builder.active_item.idx,
         active_item_type: state => state.builder.active_item.type,
-        active_item_connection_type: state => state.builder.active_item.connection_type,
-        active_item_connection: state => state.builder.active_item.connection
+        active_item_connection_eid: state => state.builder.active_item.connection_eid,
+        active_item_connection_type: state => state.builder.active_item.connection_type
       }),
       is_first_item() {
         return this.active_item_idx == 0
       },
       is_last_item() {
         return this.active_item_idx == this.items.length - 1
+      },
+      active_item_connection() {
+        return _.get(this.$store, 'state.objects.'+this.active_item_connection_eid, {})
       },
       can_continue() {
         if (this.active_item_type == 'connection') {

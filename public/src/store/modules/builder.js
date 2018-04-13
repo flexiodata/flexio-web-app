@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import api from '../../api'
 
 const state = {
   def: {
@@ -75,12 +76,21 @@ const mutations = {
       var o = _.assign({}, item, { idx: idx++ })
 
       if (o.type == 'connection') {
-        _.assign(o, { connection: _.pick(o, ['connection_type']) })
+        _.assign(o, { connection_eid: null })
       }
 
       return o
     })
     state.active_item = _.find(state.items, { idx: 0 })
+  },
+
+  BUILDER__UPDATE_ACTIVE_ITEM (state, attrs) {
+    state.active_item = _.assign({}, state.active_item, attrs)
+    state.items = _.mapValues(state.items, (item) => {
+      if (item.idx == state.active_item.idx)
+        return state.active_item
+      return item
+    })
   },
 
   BUILDER__GO_PREV_ITEM (state) {
