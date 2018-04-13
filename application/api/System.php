@@ -147,9 +147,9 @@ class System
             // checks to see if a username is available
             $validator = \Flexio\Base\Validator::create();
             if (($validator->check($p, array(
-                    'key' => array('type' => 'string', 'required' => true),
-                    'value' => array('type' => 'string', 'required' => true),
-                    'type' => array('type' => 'string', 'required' => true),
+                    'key'      => array('type' => 'string', 'required' => true),
+                    'value'    => array('type' => 'string', 'required' => true),
+                    'type'     => array('type' => 'string', 'required' => true),
                     'eid_type' => array('type' => 'string', 'required' => false)
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);

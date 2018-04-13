@@ -30,9 +30,9 @@ class Process
         // owner info
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'parent_eid'   => array('type' => 'eid', 'required' => false),
-                'process_mode' => array('type' => 'string', 'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
-                'task'         => array('type' => 'object', 'required' => false),
+                'parent_eid'   => array('type' => 'eid',     'required' => false),
+                'process_mode' => array('type' => 'string',  'required' => false, 'default' => \Flexio\Jobs\Process::MODE_RUN),
+                'task'         => array('type' => 'object',  'required' => false),
                 'background'   => array('type' => 'boolean', 'required' => false, 'default' => true),
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
@@ -191,7 +191,7 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'wait' => array('type' => 'integer', 'required' => false), // how long to block (milliseconds) until a change is detected
+                'wait'   => array('type' => 'integer', 'required' => false), // how long to block (milliseconds) until a change is detected
                 'status' => array('type' => 'boolean', 'required' => false, 'default' => false) // false returns everything; true only the process info
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -269,12 +269,12 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'parent_eid'  => array('type' => 'eid', 'required' => false),
+                'parent_eid'  => array('type' => 'eid',     'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -325,12 +325,12 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'parent_eid'  => array('type' => 'eid', 'required' => false),
+                'parent_eid'  => array('type' => 'eid',     'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

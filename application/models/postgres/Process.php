@@ -69,22 +69,22 @@ class Process extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'     => array('type' => 'string',  'required' => false),
-                'parent_eid'     => array('type' => 'string',  'required' => false),
-                'process_mode'   => array('type' => 'string',  'required' => false),
-                'process_hash'   => array('type' => 'string',  'required' => false),
-                'impl_revision'  => array('type' => 'string',  'required' => false),
-                'task'           => array('type' => 'string',  'required' => false),
-                'input'          => array('type' => 'string',  'required' => false),
-                'output'         => array('type' => 'string',  'required' => false),
-                'started_by'     => array('type' => 'string',  'required' => false),
-                'started'        => array('type' => 'string',  'required' => false),
-                'finished'       => array('type' => 'string',  'required' => false),
-                'process_info'   => array('type' => 'string',  'required' => false),
-                'process_status' => array('type' => 'string',  'required' => false),
-                'cache_used'     => array('type' => 'string',  'required' => false),
-                'owned_by'       => array('type' => 'string',  'required' => false),
-                'created_by'     => array('type' => 'string',  'required' => false)
+                'eid_status'     => array('type' => 'string', 'required' => false),
+                'parent_eid'     => array('type' => 'string', 'required' => false),
+                'process_mode'   => array('type' => 'string', 'required' => false),
+                'process_hash'   => array('type' => 'string', 'required' => false),
+                'impl_revision'  => array('type' => 'string', 'required' => false),
+                'task'           => array('type' => 'string', 'required' => false),
+                'input'          => array('type' => 'string', 'required' => false),
+                'output'         => array('type' => 'string', 'required' => false),
+                'started_by'     => array('type' => 'string', 'required' => false),
+                'started'        => array('type' => 'string', 'required' => false),
+                'finished'       => array('type' => 'string', 'required' => false),
+                'process_info'   => array('type' => 'string', 'required' => false),
+                'process_status' => array('type' => 'string', 'required' => false),
+                'cache_used'     => array('type' => 'string', 'required' => false),
+                'owned_by'       => array('type' => 'string', 'required' => false),
+                'created_by'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

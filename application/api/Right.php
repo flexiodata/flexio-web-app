@@ -37,7 +37,7 @@ class Right
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'rights' => array('type' => 'object', 'required' => true),
+                'rights'  => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -280,12 +280,12 @@ class Right
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'objects' => array('type' => 'string', 'array' => true, 'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'objects'     => array('type' => 'string',  'required' => false, 'array' => true),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

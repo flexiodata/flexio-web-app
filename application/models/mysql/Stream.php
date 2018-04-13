@@ -80,21 +80,21 @@ class Stream extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'           => array('type' => 'string',  'required' => false),
-                'parent_eid'           => array('type' => 'eid',     'required' => false),
-                'stream_type'          => array('type' => 'string',  'required' => false),
-                'name'                 => array('type' => 'string',  'required' => false),
-                'path'                 => array('type' => 'string',  'required' => false),
-                'size'                 => array('type' => 'number',  'required' => false),
-                'hash'                 => array('type' => 'string',  'required' => false),
-                'mime_type'            => array('type' => 'string',  'required' => false),
-                'structure'            => array('type' => 'string',  'required' => false),
-                'file_created'         => array('type' => 'string',  'required' => false),
-                'file_modified'        => array('type' => 'string',  'required' => false),
-                'connection_eid'       => array('type' => 'eid',     'required' => false),
-                'expires'              => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
-                'owned_by'             => array('type' => 'string',  'required' => false),
-                'created_by'           => array('type' => 'string',  'required' => false)
+                'eid_status'     => array('type' => 'string', 'required' => false),
+                'parent_eid'     => array('type' => 'eid',    'required' => false),
+                'stream_type'    => array('type' => 'string', 'required' => false),
+                'name'           => array('type' => 'string', 'required' => false),
+                'path'           => array('type' => 'string', 'required' => false),
+                'size'           => array('type' => 'number', 'required' => false),
+                'hash'           => array('type' => 'string', 'required' => false),
+                'mime_type'      => array('type' => 'string', 'required' => false),
+                'structure'      => array('type' => 'string', 'required' => false),
+                'file_created'   => array('type' => 'string', 'required' => false),
+                'file_modified'  => array('type' => 'string', 'required' => false),
+                'connection_eid' => array('type' => 'eid',    'required' => false),
+                'expires'        => array('type' => 'any',    'required' => false), // TODO: workaround null problem; any = allow nulls
+                'owned_by'       => array('type' => 'string', 'required' => false),
+                'created_by'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

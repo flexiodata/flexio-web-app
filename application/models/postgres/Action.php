@@ -68,26 +68,26 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'          => array('type' => 'string',  'required' => false),
-                'action_type'         => array('type' => 'string',  'required' => false),
-                'request_ip'          => array('type' => 'string',  'required' => false),
-                'request_user_agent'  => array('type' => 'string',  'required' => false),
-                'request_type'        => array('type' => 'string',  'required' => false),
-                'request_method'      => array('type' => 'string',  'required' => false),
-                'request_route'       => array('type' => 'string',  'required' => false),
-                'request_created_by'  => array('type' => 'string',  'required' => false),
-                'request_created'     => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'request_access_code' => array('type' => 'string',  'required' => false),
-                'request_params'      => array('type' => 'string',  'required' => false),
-                'target_eid'          => array('type' => 'string',  'required' => false),
-                'target_eid_type'     => array('type' => 'string',  'required' => false),
-                'target_owned_by'     => array('type' => 'string',  'required' => false),
-                'response_type'       => array('type' => 'string',  'required' => false),
-                'response_code'       => array('type' => 'string',  'required' => false),
-                'response_params'     => array('type' => 'string',  'required' => false),
-                'response_created'    => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'owned_by'            => array('type' => 'string',  'required' => false),
-                'created_by'          => array('type' => 'string',  'required' => false)
+                'eid_status'          => array('type' => 'string', 'required' => false),
+                'action_type'         => array('type' => 'string', 'required' => false),
+                'request_ip'          => array('type' => 'string', 'required' => false),
+                'request_user_agent'  => array('type' => 'string', 'required' => false),
+                'request_type'        => array('type' => 'string', 'required' => false),
+                'request_method'      => array('type' => 'string', 'required' => false),
+                'request_route'       => array('type' => 'string', 'required' => false),
+                'request_created_by'  => array('type' => 'string', 'required' => false),
+                'request_created'     => array('type' => 'any',    'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'request_access_code' => array('type' => 'string', 'required' => false),
+                'request_params'      => array('type' => 'string', 'required' => false),
+                'target_eid'          => array('type' => 'string', 'required' => false),
+                'target_eid_type'     => array('type' => 'string', 'required' => false),
+                'target_owned_by'     => array('type' => 'string', 'required' => false),
+                'response_type'       => array('type' => 'string', 'required' => false),
+                'response_code'       => array('type' => 'string', 'required' => false),
+                'response_params'     => array('type' => 'string', 'required' => false),
+                'response_created'    => array('type' => 'any',    'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'owned_by'            => array('type' => 'string', 'required' => false),
+                'created_by'          => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
