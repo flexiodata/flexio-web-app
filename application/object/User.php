@@ -99,7 +99,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
-        $username = \Flexio\Base\Util::generateHandle();
+        $username = \Flexio\Base\Identifier::generate();
         $email= $username.'@flex.io';
         if (!isset($properties))
         {

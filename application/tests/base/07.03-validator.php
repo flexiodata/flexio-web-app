@@ -345,7 +345,7 @@ class Test
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
-        $handle = \Flexio\Base\Util::generateHandle();
+        $handle = \Flexio\Base\Identifier::generate();
         $values = array(
             'identifier' => $handle
         );
@@ -476,7 +476,7 @@ class Test
 
         // BEGIN TEST
         $validator = \Flexio\Base\Validator::create();
-        $handle = \Flexio\Base\Util::generateHandle();
+        $handle = \Flexio\Base\Identifier::generate();
         $values = array(
             'alias' => $handle
         );

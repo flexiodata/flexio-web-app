@@ -302,7 +302,7 @@ class Right
     {
         // user doesn't exist; create a user
         $user_email = $identifier;
-        $username = \Flexio\Base\Util::generateHandle(); // default username
+        $username = \Flexio\Base\Identifier::generate(); // default username
         $password = \Flexio\Base\Password::generate();
         $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 

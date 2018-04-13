@@ -188,7 +188,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
 
         // BEGIN
-        $unique_alias = \Flexio\Base\Util::generateHandle();
+        $unique_alias = \Flexio\Base\Identifier::generate();
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/connections",

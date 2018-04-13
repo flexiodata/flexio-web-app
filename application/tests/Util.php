@@ -174,7 +174,7 @@ EOD;
     public static function createUser(string $username = null, string $email = null, string $password = null) : string
     {
         if (!isset($username))
-            $username = \Flexio\Base\Util::generateHandle();
+            $username =\Flexio\Base\Identifier::generate();
         if (!isset($email))
             $email = \Flexio\Tests\Util::createEmailAddress();
         if (!isset($password))

@@ -20,31 +20,44 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: non-string inputs
+        // TEST: type and length
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid(null);
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Identifier::isValid() null input', $actual, $expected, $results);
+        $str = \Flexio\Base\Identifier::generate();
+        $actual = is_string($str);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Base\Identifier::generate(); test for string return type',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid(false);
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Identifier::isValid() false input', $actual, $expected, $results);
+        $str = \Flexio\Base\Identifier::generate();
+        $actual = strlen($str) >= 10;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Base\Identifier::generate(); test for length',  $actual, $expected, $results);
+
+
+
+        // TEST: make sure identifier is valid
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid(true);
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Base\Identifier::isValid() true input', $actual, $expected, $results);
+        $str = \Flexio\Base\Identifier::generate();
+        $actual = \Flexio\Base\Identifier::isValid($str);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Identifier::generate(); test for embedded uppercase',  $actual, $expected, $results);
+
+
+
+        // TEST: check for some variation within multiple creations
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid(111111111111);
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Base\Identifier::isValid() numeric input', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Base\Identifier::isValid(array());
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Base\Identifier::isValid() array input', $actual, $expected, $results);
+        $random_str = array();
+        for ($i = 0; $i < 1000; $i++)
+        {
+            $str = \Flexio\Base\Identifier::generate();
+            $random_str[$str] = 1;
+        }
+        $random_str_count = count($random_str);
+        $actual = $random_str_count === 1000;  // we should have enough variation to have 1000 unique values
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Base\Identifier::generate(); test for randomness',  $actual, $expected, $results);
     }
 }

@@ -30,7 +30,7 @@ class Test
         // TEST: create a new user
 
         // BEGIN TEST
-        $username = \Flexio\Base\Util::generateHandle();
+        $username = \Flexio\Base\Identifier::generate();
         $email = \Flexio\Tests\Util::createEmailAddress();
         $password = \Flexio\Base\Password::generate();
 
@@ -61,7 +61,7 @@ class Test
         // TEST: make sure we can't create a duplicate user on either username or email
 
         // BEGIN TEST
-        $username_original = \Flexio\Base\Util::generateHandle();
+        $username_original = \Flexio\Base\Identifier::generate();
         $email_original = \Flexio\Tests\Util::createEmailAddress();
         $password = \Flexio\Base\Password::generate();
 
@@ -78,7 +78,7 @@ class Test
                 $email = \Flexio\Tests\Util::createEmailAddress();
             }
             if ($i === 3)
-                $username = \Flexio\Base\Util::generateHandle();
+                $username = \Flexio\Base\Identifier::generate();
 
             $params = array(
                 'method' => 'POST',

@@ -18,6 +18,11 @@ namespace Flexio\Base;
 
 class Identifier
 {
+    public static function generate() : string
+    {
+        return \Flexio\Base\Util::generateHandle();
+    }
+
     public static function isValid($identifier, &$message = '') : bool
     {
         // identifiers (e.g. usernames, or other 'named handles') must

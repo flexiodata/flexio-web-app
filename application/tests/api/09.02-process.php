@@ -147,7 +147,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes/:objeid; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $new_username = \Flexio\Base\Util::generateHandle();
+        $new_username = \Flexio\Base\Identifier::generate();
         $new_password = \Flexio\Base\Password::generate();
         $new_email = \Flexio\Tests\Util::createEmailAddress();
         $params = array(

@@ -220,7 +220,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.7', 'POST /:userid/connections/:objeid; allow alias to be reset',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $new_username = \Flexio\Base\Util::generateHandle();
+        $new_username = \Flexio\Base\Identifier::generate();
         $new_password = \Flexio\Base\Password::generate();
         $new_email = \Flexio\Tests\Util::createEmailAddress();
         $params = array(

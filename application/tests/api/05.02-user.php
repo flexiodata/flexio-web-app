@@ -25,12 +25,12 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $username1 = \Flexio\Base\Util::generateHandle();
+        $username1 = \Flexio\Base\Identifier::generate();
         $email1 = \Flexio\Tests\Util::createEmailAddress();
         $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser($username1, $email1, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
-        $username2 = \Flexio\Base\Util::generateHandle();
+        $username2 = \Flexio\Base\Identifier::generate();
         $email2 = \Flexio\Tests\Util::createEmailAddress();
         $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser($username2, $email2, $password2);
@@ -143,7 +143,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/account; allow username and email to be set to what they already are',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $new_username = \Flexio\Base\Util::generateHandle();
+        $new_username = \Flexio\Base\Identifier::generate();
         $new_password = \Flexio\Base\Password::generate();
         $new_email = \Flexio\Tests\Util::createEmailAddress();
         $params = array(
