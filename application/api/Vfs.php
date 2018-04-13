@@ -134,11 +134,14 @@ class Vfs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
-        if (substr($path,0,12) != '/api/v1/vfs/')
+
+        $pos = strpos($path, '/vfs/');
+        if ($pos === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // grab path, including preceding slash
-        $path = substr($path,11);
+        $path = substr($path, $pos+4);
+    
 
         // TODO: need to patch through the owner info here
 
