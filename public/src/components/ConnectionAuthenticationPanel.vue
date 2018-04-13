@@ -2,17 +2,17 @@
   <div>
     <div v-if="is_oauth">
       <div v-if="is_connected">
-        <div class="flex flex-row items-center mv1 lh-copy">
+        <div class="flex flex-row items-center lh-copy">
           <i class="el-icon-success v-mid dark-green f3 mr2"></i>
           <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
         </div>
-        <div class="mv3 tc">
+        <div class="mt3 tc">
           <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
         </div>
       </div>
       <div v-else>
-        <div class="mv1 lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-        <div class="mv3 tc">
+        <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+        <div class="mt3 tc">
           <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
         </div>
       </div>
@@ -25,7 +25,7 @@
         {{error_msg}}
       </ui-alert>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="flex flex-column w-50-ns center mv3">
+      <div class="flex flex-column w-50-ns center mt3">
         <ui-textbox
           autocomplete="off"
           spellcheck="false"

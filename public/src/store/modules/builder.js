@@ -25,8 +25,7 @@ const state = {
       read_path: {
         type: 'file',
         connection: 'connection1',
-        val: '/input-folder/file.txt',
-        runtime: true
+        val: '/my-folder/my-file.txt'
       },
       connection2: {
         type: 'connection',
@@ -35,8 +34,7 @@ const state = {
       write_path: {
         type: 'string',
         connection: 'connection2',
-        val: '/output-folder/file.txt',
-        runtime: true
+        val: '/my-folder/my-file.txt'
       }
     },
     task: [
@@ -53,7 +51,7 @@ const state = {
     ]
   },
   title: '',
-  items: [],
+  items: {},
   active_item: {},
   output: {
     name: '',
@@ -74,7 +72,13 @@ const mutations = {
     state.title = state.def.name
     state.output.name = state.def.name
     state.items = _.mapValues(variables, (item) => {
-      return _.assign({}, item, { idx: idx++ })
+      var o = _.assign({}, item, { idx: idx++ })
+
+      if (o.type == 'connection') {
+        _.assign(o, { connection: _.pick(o, ['connection_type']) })
+      }
+
+      return o
     })
     state.active_item = _.find(state.items, { idx: 0 })
   },
