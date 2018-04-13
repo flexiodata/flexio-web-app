@@ -112,6 +112,7 @@ router.beforeEach((to, from, next) => {
   if (store.state.active_user_eid.length > 0)
   {
     // user is signed in; move to the next route
+    store.dispatch('fetchConnections')
     next()
   }
    else if (to.matched.some(record => record.meta.requiresAuth))
@@ -126,6 +127,7 @@ router.beforeEach((to, from, next) => {
       if (store.state.active_user_eid.length > 0)
       {
         // user is signed in; move to the next route
+        store.dispatch('fetchConnections')
         next()
       }
        else
