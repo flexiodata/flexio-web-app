@@ -24,7 +24,7 @@ const state = {
         connection_type: 'googledrive'
       },
       read_path: {
-        type: 'file',
+        type: 'connection-file',
         connection: 'connection1',
         val: '/my-folder/my-file.txt'
       },
