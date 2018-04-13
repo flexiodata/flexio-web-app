@@ -10,6 +10,12 @@ const options = require('./options')
 const base = {
   entry: options.paths.resolve('src/signup.js'),
 
+  // without this, webpack throws in a polyfill for node.js's Buffer class
+  node: {
+    Buffer: false,
+    process: false
+  },
+
   output: {
     filename: options.isProduction ? 'flexio-signup.min.js' : 'flexio-signup.js',
     path: options.paths.output.signup,
