@@ -269,7 +269,7 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'parent_eid'  => array('type' => 'string', 'required' => false),
+                'parent_eid'  => array('type' => 'eid', 'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),
@@ -325,7 +325,7 @@ class Process
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'parent_eid'  => array('type' => 'string', 'required' => false),
+                'parent_eid'  => array('type' => 'eid', 'required' => false),
                 'start'       => array('type' => 'integer', 'required' => false),
                 'tail'        => array('type' => 'integer', 'required' => false),
                 'limit'       => array('type' => 'integer', 'required' => false),

@@ -54,9 +54,10 @@ class Connection extends ModelBase
         $db->beginTransaction();
         try
         {
-            if (isset($params['enaaliasme']) && $params['alias'] !== '')
+            if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
+                $alias = $params['alias'];
                 $ownedby = $params['owned_by'] ?? '';
                 $qownedby = $db->quote($ownedby);
                 $qalias = $db->quote($alias);
@@ -115,16 +116,16 @@ class Connection extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'        => array('type' => 'string',  'required' => false),
-                'alias'             => array('type' => 'string',  'required' => false),
-                'name'              => array('type' => 'string',  'required' => false),
-                'description'       => array('type' => 'string',  'required' => false),
-                'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false),
-                'connection_info'   => array('type' => 'string',  'required' => false),
-                'expires'           => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'owned_by'          => array('type' => 'string',  'required' => false),
-                'created_by'        => array('type' => 'string',  'required' => false)
+                'eid_status'        => array('type' => 'string', 'required' => false),
+                'alias'             => array('type' => 'alias',  'required' => false),
+                'name'              => array('type' => 'string', 'required' => false),
+                'description'       => array('type' => 'string', 'required' => false),
+                'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_status' => array('type' => 'string', 'required' => false),
+                'connection_info'   => array('type' => 'string', 'required' => false),
+                'expires'           => array('type' => 'any',    'required' => false),    // TODO: workaround null problem; any = allow nulls
+                'owned_by'          => array('type' => 'string', 'required' => false),
+                'created_by'        => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -155,20 +156,6 @@ class Connection extends ModelBase
             }
         }
 
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $process_arr['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
-
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
@@ -184,6 +171,7 @@ class Connection extends ModelBase
             if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
+                $alias = $params['alias'];
                 $qeid = $db->quote($eid);
                 $owner_to_check = $process_arr['owned_by'] ?? false;
                 if ($owner_to_check === false) // owner isn't specified; find out what it is

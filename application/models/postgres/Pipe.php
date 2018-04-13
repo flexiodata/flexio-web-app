@@ -40,6 +40,7 @@ class Pipe extends ModelBase
             if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
+                $alias = $params['alias'];
                 $ownedby = $params['owned_by'] ?? '';
                 $qownedby = $db->quote($ownedby);
                 $qalias = $db->quote($alias);
@@ -100,17 +101,17 @@ class Pipe extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'      => array('type' => 'string',  'required' => false),
-                'alias'           => array('type' => 'string',  'required' => false),
-                'name'            => array('type' => 'string',  'required' => false),
-                'description'     => array('type' => 'string',  'required' => false),
-                'input'           => array('type' => 'string',  'required' => false),
-                'output'          => array('type' => 'string',  'required' => false),
-                'task'            => array('type' => 'string',  'required' => false),
-                'schedule'        => array('type' => 'string',  'required' => false),
-                'schedule_status' => array('type' => 'string',  'required' => false),
-                'owned_by'        => array('type' => 'string',  'required' => false),
-                'created_by'      => array('type' => 'string',  'required' => false)
+                'eid_status'      => array('type' => 'string', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
+                'name'            => array('type' => 'string', 'required' => false),
+                'description'     => array('type' => 'string', 'required' => false),
+                'input'           => array('type' => 'string', 'required' => false),
+                'output'          => array('type' => 'string', 'required' => false),
+                'task'            => array('type' => 'string', 'required' => false),
+                'schedule'        => array('type' => 'string', 'required' => false),
+                'schedule_status' => array('type' => 'string', 'required' => false),
+                'owned_by'        => array('type' => 'string', 'required' => false),
+                'created_by'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -119,20 +120,6 @@ class Pipe extends ModelBase
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $process_arr['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -157,6 +144,7 @@ class Pipe extends ModelBase
                 if ($owner_to_check !== false)
                 {
                     // we found an owner; see if the alias exists for the owner
+                    $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
                     $qalias = $db->quote($alias);
                     $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");

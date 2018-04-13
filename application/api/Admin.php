@@ -41,7 +41,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
@@ -91,7 +91,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
@@ -130,7 +130,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
@@ -169,7 +169,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
@@ -208,7 +208,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
@@ -248,7 +248,7 @@ class Admin
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
+                'owned_by' => array('type' => 'eid', 'required' => false),
                 'start'    => array('type' => 'integer', 'required' => false),
                 'tail'     => array('type' => 'integer', 'required' => false),
                 'limit'    => array('type' => 'integer', 'required' => false),
