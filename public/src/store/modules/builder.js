@@ -3,7 +3,7 @@ import api from '../../api'
 
 const state = {
   def: {
-    name: 'Copy files from Google Drive to Dropbox',
+    title: 'Copy files from Google Drive to Dropbox',
     description: 'Copy files from Google Drive to Dropbox programmatically or on a regularly scheduled basis',
     keywords: [
       'flex.io',
@@ -18,26 +18,28 @@ const state = {
       'dropbox'
     ],
     intro: "# Copy files from Google Drive to Dropbox\n\nWant an easier way to programmatically copy files from Google Drive to Dropbox? With this integration, files can be bulk copied from Google Drive to Dropbox in the original file format (e.g. PDF, PNG or DOCX). You'll never need to worry about keeping cloud storage folders in sync again.\n\n### How it Works\n\nWhen this pipe is run programmatically or on a regularly scheduled basis, Flex.io copies the specified files or folders from Google Drive to Dropbox so you can keep them in sync between your cloud services.\n\n### What You Need\n\nGoogle Drive account\nDropbox account\n",
-    variables: {
-      connection1: {
-        type: 'connection',
-        connection_type: 'googledrive'
+    prompts: [
+      {
+        variable: 'connection1',
+        connection_type: 'googledrive',
+        ui: 'connection-chooser'
       },
-      read_path: {
-        type: 'connection-file',
-        connection: 'connection1',
-        val: '/my-folder/my-file.txt'
+      {
+        variable: 'read_path',
+        connection: 'prompts.connection1',
+        ui: 'file-chooser'
       },
-      connection2: {
-        type: 'connection',
-        connection_type: 'dropbox'
+      {
+        variable: 'connection2',
+        connection_type: 'dropbox',
+        ui: 'connection-chooser'
       },
-      write_path: {
-        type: 'string',
-        connection: 'connection2',
-        val: '/my-folder/my-file.txt'
+      {
+        variable: 'write_path',
+        connection: 'prompts.connection2',
+        ui: 'file-chooser'
       }
-    },
+    ],
     task: [
       {
         op: 'read',
@@ -52,61 +54,49 @@ const state = {
     ]
   },
   title: '',
-  items: {},
-  active_item: {},
-  output: {
-    name: '',
-    task: {
-      op: 'sequence',
-      params: {
-        items: []
-      }
-    }
-  }
+  prompts: [],
+  active_prompt: {},
+  active_prompt_idx: null
 }
 
 const mutations = {
   BUILDER__INIT_ITEMS (state) {
-    var idx = 0
-    var variables = _.get(state, 'def.variables', {})
+    var prompts = _.get(state, 'def.prompts', [])
 
-    state.title = state.def.name
-    state.output.name = state.def.name
-    state.items = _.mapValues(variables, (item) => {
-      var o = _.assign({}, item, { idx: idx++ })
+    state.title = state.def.title
+    state.prompts = _.map(prompts, p => {
+      if (p.ui == 'connection-chooser')
+        return _.assign(p, { connection_eid: null })
 
-      if (o.type == 'connection') {
-        _.assign(o, { connection_eid: null })
-      }
-
-      return o
+      return p
     })
-    state.active_item = _.find(state.items, { idx: 0 })
+    state.active_prompt_idx = 0
+    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
   BUILDER__UPDATE_ACTIVE_ITEM (state, attrs) {
-    state.active_item = _.assign({}, state.active_item, attrs)
-    state.items = _.mapValues(state.items, (item) => {
-      if (item.idx == state.active_item.idx)
-        return state.active_item
-      return item
+    state.active_prompt = _.assign({}, state.active_prompt, attrs)
+
+    var idx = 0
+    state.prompts = _.map(state.prompts, p => {
+      if (idx == state.active_prompt_idx) {
+        idx++
+        return state.active_prompt
+      } else {
+        idx++
+        return p
+      }
     })
   },
 
   BUILDER__GO_PREV_ITEM (state) {
-    var active_idx = _.get(state, 'active_item.idx', 0)
-    var item = _.find(state.items, { idx: active_idx - 1 })
-
-    if (!_.isNil(item))
-      state.active_item = _.assign({}, item)
+    state.active_prompt_idx--
+    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
   BUILDER__GO_NEXT_ITEM (state) {
-    var active_idx = _.get(state, 'active_item.idx', 1000)
-    var item = _.find(state.items, { idx:  active_idx + 1 })
-
-    if (!_.isNil(item))
-      state.active_item = _.assign({}, item)
+    state.active_prompt_idx++
+    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   }
 }
 
