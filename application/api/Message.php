@@ -141,9 +141,9 @@ class Message
         if (($validator->check($params, array(
                 'email'       => array('type' => 'email',  'required' => true),
                 'from_name'   => array('type' => 'string', 'required' => true),
-                'from_email'  => array('type' => 'string', 'required' => true),
+                'from_email'  => array('type' => 'email',  'required' => true),
                 'object_name' => array('type' => 'string', 'required' => true),
-                'object_eid'  => array('type' => 'string', 'required' => true),
+                'object_eid'  => array('type' => 'eid',    'required' => true),
                 'message'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             return false;
