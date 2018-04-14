@@ -116,7 +116,7 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
         {
             if (!is_string($data))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, 'Expected string value');
-            
+
             $curlen = strlen($this->stream->buffer);
             $datalen = strlen($data);
             if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream

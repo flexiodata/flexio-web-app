@@ -79,7 +79,7 @@ class Test
         $actual = '';
         try
         {
-            $eid = $model->pipe->create(null); // make sure eid of other types can't be loaded
+            $eid = $model->pipe->create(array()); // make sure eid of other types can't be loaded
             $object = \Flexio\Object\User::load($eid);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }

@@ -80,7 +80,7 @@ class Test
         $actual = '';
         try
         {
-            $eid = $model->pipe->create(null);; // make sure eid of other types can't be loaded
+            $eid = $model->pipe->create(array()); // make sure eid of other types can't be loaded
             $object = \Flexio\Object\Comment::load($eid);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
@@ -92,21 +92,21 @@ class Test
         \Flexio\Tests\Check::assertString('B.2', 'Comment::load(); throw exception if an object fails to load',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->comment->create(null);
+        $eid = $model->comment->create(array());
         $object = \Flexio\Object\Comment::load($eid);
         $actual = 'Flexio\Object\Comment';
         $expected = get_class($object);
         \Flexio\Tests\Check::assertString('B.3', 'Comment::load(); return the object if it\'s successfully loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->comment->create(null);
+        $eid = $model->comment->create(array());
         $object = \Flexio\Object\Comment::load($eid);
         $actual = $object->getType();
         $expected = \Model::TYPE_COMMENT;
         \Flexio\Tests\Check::assertString('B.4', 'Comment::load(); make sure the type is set when an object is loaded',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $eid = $model->comment->create(null);
+        $eid = $model->comment->create(array());
         $object = \Flexio\Object\Comment::load($eid);
         $actual = $eid;
         $expected = $object->getEid();

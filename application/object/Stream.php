@@ -73,13 +73,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public static function create(array $properties = null) : \Flexio\Object\Stream
     {
-        if (is_null($properties))
-        {
-            $properties = [];
-        }
+        if (!isset($properties))
+            $properties = array();
 
-        // structure is stored as json string; it needs to be validated
-        // and encoded
+        // structure is stored as json string; it needs to be validated and encoded
         $structure = null;
 
         if (isset($properties) && isset($properties['structure']))

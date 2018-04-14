@@ -17,25 +17,32 @@ declare(strict_types=1);
 
 class Token extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'  => array('type' => 'string', 'required' => false, 'default' =>  \Model::STATUS_AVAILABLE),
+                'access_code' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'    => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'  => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $db = $this->getDatabase();
         try
         {
-            // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_TOKEN, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'           => $eid,
-                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'access_code'   => $params['access_code'] ?? '',
-                'owned_by'      => $params['owned_by'] ?? '',
-                'created_by'    => $params['created_by'] ?? '',
-                'created'       => $timestamp,
-                'updated'       => $timestamp
-            );
 
-            // add the properties
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
+
             if ($db->insert('tbl_token', $process_arr) === false)
                 throw new \Exception();
 

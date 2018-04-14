@@ -17,34 +17,43 @@ declare(strict_types=1);
 
 class Process extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'parent_eid'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'process_mode'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'process_hash'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'impl_revision'  => array('type' => 'string', 'required' => false, 'default' => ''),
+                'task'           => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'input'          => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'output'         => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'started_by'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'started'        => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'finished'       => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'process_info'   => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'process_status' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'cache_used'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'     => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $db = $this->getDatabase();
         try
         {
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'            => $eid,
-                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'parent_eid'     => $params['parent_eid'] ?? '',
-                'process_mode'   => $params['process_mode'] ?? '',
-                'process_hash'   => $params['process_hash'] ?? '',
-                'impl_revision'  => $params['impl_revision'] ?? '',
-                'task'           => $params['task'] ?? '{}',
-                'input'          => $params['input'] ?? '{}',
-                'output'         => $params['output'] ?? '{}',
-                'started_by'     => $params['started_by'] ?? '',
-                'started'        => $params['started'] ?? null,
-                'finished'       => $params['finished'] ?? null,
-                'process_info'   => $params['process_info'] ?? '{}',
-                'process_status' => $params['process_status'] ?? '',
-                'cache_used'     => $params['cache_used'] ?? '',
-                'owned_by'       => $params['owned_by'] ?? '',
-                'created_by'     => $params['created_by'] ?? '',
-                'created'        => $timestamp,
-                'updated'        => $timestamp
-            );
+
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             if ($db->insert('tbl_process', $process_arr) === false)
                 throw new \Exception();

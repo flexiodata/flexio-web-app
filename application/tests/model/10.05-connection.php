@@ -87,11 +87,13 @@ class Test
             'eid' => $eid,
             'eid_type' => \Model::TYPE_CONNECTION,
             'eid_status' => \Model::STATUS_AVAILABLE,
+            'alias' => '',
             'name' => '',
             'description' => '',
             'connection_type' => '',
             'connection_status' => \Model::CONNECTION_STATUS_UNAVAILABLE,
-            'connection_info' => '',
+            'connection_info' => '{}',
+            'expires' => null,
             'owned_by' => '',
             'created_by' => ''
         );

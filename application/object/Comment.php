@@ -67,6 +67,9 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Comment
     {
+        if (!isset($properties))
+            $properties = array();
+
         $object = new static();
         $comment_model = $object->getModel()->comment;
         $local_eid = $comment_model->create($properties);

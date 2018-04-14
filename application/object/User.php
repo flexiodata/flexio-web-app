@@ -93,6 +93,9 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\User
     {
+        if (!isset($properties))
+            $properties = array();
+
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
