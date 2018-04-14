@@ -322,6 +322,7 @@ class Validator
         // 'YYYY-MM-DD hh:mm:ss.u'
         // 'YYYY-MM-DD hh:mm:ss'
         // 'YYYY-MM-DD'
+        // 'YYYYMMDD'
 
         if (!is_string($value))
             return false;
@@ -342,6 +343,10 @@ class Validator
             return true;
 
         $dt = \DateTime::createFromFormat('Y-m-d', $value);
+        if ($dt !== false)
+            return true;
+
+        $dt = \DateTime::createFromFormat('Ymd', $value);
         if ($dt !== false)
             return true;
 
