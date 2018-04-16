@@ -29,8 +29,8 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!\Flexio\Base\Eid::isValid($params['owned_by']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
 
-        $this->owner_eid = $params['owned_by'];
         $service = new self();
+        $service->owner_eid = $params['owned_by'];
         return $service;
     }
 

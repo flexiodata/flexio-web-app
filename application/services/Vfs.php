@@ -388,7 +388,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if ($connection_identifier == 'home')
         {
             if ($this->store_service === null)
-                $this->store_service = \Flexio\Services\Store::create();
+            {
+                $params = array('owned_by' => $this->getOwner());
+                $this->store_service = \Flexio\Services\Store::create($params);
+            }
             $this->service_map[$connection_identifier] = $this->store_service;
             return $this->store_service;
         }
