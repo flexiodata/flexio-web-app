@@ -343,7 +343,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
         foreach ($rows as $row)
         {
-            $inserter->write($row);
+            $worksheet->insertRow($row);
         }
 
         $worksheet->finishInsert();
