@@ -7,7 +7,10 @@
       <div v-else-if="is_fetched">
         <h1 class="fw6 f3 mid-gray mb4">{{title}}</h1>
         <div class="bg-white pa4 css-dashboard-box">
-          <div class="tc" v-if="active_prompt_ui == 'connection-chooser'">
+          <div
+            class="tc"
+            v-if="active_prompt_ui == 'connection-chooser'"
+          >
             <ServiceIcon class="square-5" :type="active_prompt_connection_type" />
             <h2 class="fw6 f4 mid-gray mt2">Connect to {{active_prompt_service_name}}</h2>
             <div class="mv4 pa4 br2 ba b--black-05">
@@ -49,6 +52,12 @@
               @selection-change="updateFiles"
             />
           </div>
+          <div
+            class="tc mv4 pa4 br2 ba b--black-05"
+            v-else-if="active_prompt_ui == 'summary-page'"
+          >
+            Summary of steps goes here...
+          </div>
           <div class="flex flex-row justify-end">
             <el-button
               class="ttu b"
@@ -63,8 +72,18 @@
               type="primary"
               :disabled="!can_continue"
               @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+              v-show="!is_last_prompt"
             >
               Continue
+            </el-button>
+            <el-button
+              class="ttu b"
+              type="primary"
+              :disabled="!can_continue"
+              @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+              v-show="is_last_prompt"
+            >
+              Finish
             </el-button>
           </div>
         </div>
