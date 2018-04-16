@@ -15,9 +15,13 @@
                 :connection="active_prompt_connection"
                 v-if="active_prompt_connection"
               />
-              <div class="tl" v-else>
+              <div
+                class="tl"
+                v-else
+              >
                 <connection-chooser-list
                   class="mb4"
+                  style="max-height: 24rem"
                   layout="list"
                   :connection-type-filter="active_prompt_connection_type"
                   :show-selection="true"
@@ -35,8 +39,15 @@
               </div>
             </div>
           </div>
-          <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_prompt_ui == 'file-chooser'">
-            File Chooser
+          <div
+            class="tc mv4 pa4 br2 ba b--black-05"
+            v-else-if="active_prompt_ui == 'file-chooser'"
+          >
+            <file-chooser
+              style="max-height: 24rem"
+              :connection="active_prompt_connection"
+              @selection-change="updateFiles"
+            />
           </div>
           <div class="flex flex-row justify-end">
             <el-button
@@ -70,6 +81,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
+  import FileChooser from './FileChooser.vue'
   import MixinConnectionInfo from './mixins/connection-info'
 
   export default {
@@ -78,7 +90,8 @@
       Spinner,
       ServiceIcon,
       ConnectionChooserList,
-      ConnectionAuthenticationPanel
+      ConnectionAuthenticationPanel,
+      FileChooser
     },
     watch: {
       template_slug: {
@@ -111,7 +124,19 @@
         return this.active_prompt_idx == this.prompts.length - 1
       },
       active_prompt_connection() {
-        var connection_eid = _.get(this.active_prompt, 'connection_eid', '')
+        var connection_eid = ''
+
+        switch (this.active_prompt_ui) {
+          case 'connection-chooser':
+            connection_eid = _.get(this.active_prompt, 'connection_eid', '')
+            break
+          case 'file-chooser':
+            var variable = _.get(this.active_prompt, 'connection', '')
+            var connection_prompt = _.find(this.prompts, { variable })
+            connection_eid = _.get(connection_prompt, 'connection_eid', '')
+            break
+        }
+
         return _.get(this.$store, 'state.objects.'+connection_eid, null)
       },
       active_prompt_connection_eid() {
@@ -130,6 +155,10 @@
       can_continue() {
         if (this.active_prompt_ui == 'connection-chooser') {
           return _.get(this.active_prompt_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+        }
+
+        if (this.active_prompt_ui == 'file-chooser') {
+          return _.get(this.active_prompt, 'files', []).length > 0
         }
 
         return true
@@ -157,6 +186,9 @@
       },
       chooseConnection(connection) {
         this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
+      },
+      updateFiles(files) {
+        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { files })
       },
       updateTemplate() {
         this.$store.commit('BUILDER__FETCHING_DEF', true)

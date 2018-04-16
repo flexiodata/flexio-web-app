@@ -130,6 +130,7 @@
       },
       updateItems(items) {
         this.items = items
+        this.$emit('selection-change', this.items, this)
       }
     }
   }
