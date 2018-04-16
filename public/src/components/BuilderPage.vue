@@ -9,10 +9,22 @@
         <div class="bg-white pa4 css-dashboard-box">
           <div class="tc" v-if="active_prompt_ui == 'connection-chooser'">
             <ServiceIcon class="square-5" :type="active_prompt_connection_type" />
-            <h2 class="fw6 f4 mid-gray mt2">Connect to <ServiceName :type="active_prompt_connection_type" /></h2>
-          </div>
-          <div class="tc mv4 pa4 br2 ba b--black-05" v-if="active_prompt_ui == 'connection-chooser' && active_prompt_connection">
-            <ConnectionAuthenticationPanel :connection="active_prompt_connection" />
+            <h2 class="fw6 f4 mid-gray mt2">Connect to {{active_connection_service_name}}</h2>
+            <div class="mv4 pa4 br2 ba b--black-05">
+              <ConnectionAuthenticationPanel
+                :connection="active_prompt_connection"
+                v-if="active_prompt_connection"
+              />
+              <div v-else>
+                <el-button
+                  class="ttu b"
+                  type="primary"
+                  @click="setUpConnection"
+                >
+                  Set up a new connection
+                </el-button>
+              </div>
+            </div>
           </div>
           <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_prompt_ui == 'file-chooser'">
             File Chooser
@@ -47,32 +59,20 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import Spinner from 'vue-simple-spinner'
   import ServiceIcon from './ServiceIcon.vue'
-  import ServiceName from './ServiceName.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
+  import MixinConnectionInfo from './mixins/connection-info'
 
   export default {
+    mixins: [MixinConnectionInfo],
     components: {
       Spinner,
       ServiceIcon,
-      ServiceName,
       ConnectionAuthenticationPanel
     },
     watch: {
       template_slug: {
         handler: 'updateTemplate',
         immediate: true
-      },
-      active_prompt_idx() {
-        if (this.active_prompt_ui != 'connection-chooser')
-          return
-
-        if (_.isNil(this.active_prompt_connection_eid)) {
-          var attrs = { connection_type: this.active_prompt_connection_type }
-          this.$store.dispatch('createConnection', { attrs }).then(response => {
-            var connection = response.body
-            this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
-          })
-        }
       }
     },
     computed: {
@@ -84,6 +84,9 @@
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched
       }),
+      connections() {
+        return this.getAllConnections()
+      },
       template_slug() {
         return _.get(this.$route, 'params.template', undefined)
       },
@@ -106,6 +109,9 @@
       active_prompt_connection_type() {
         return _.get(this.active_prompt, 'connection_type', '')
       },
+      active_connection_service_name() {
+        return this.getConnectionInfo(this.active_prompt_connection_type, 'service_name')
+      },
       can_continue() {
         if (this.active_prompt_ui == 'connection-chooser') {
           return _.get(this.active_prompt_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
@@ -115,6 +121,23 @@
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
+      setUpConnection() {
+        if (this.active_prompt_ui != 'connection-chooser')
+          return
+
+        if (_.isNil(this.active_prompt_connection_eid)) {
+          var attrs = {
+            connection_type: this.active_prompt_connection_type
+          }
+          this.$store.dispatch('createConnection', { attrs }).then(response => {
+            var connection = response.body
+            this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
+          })
+        }
+      },
       updateTemplate() {
         this.$store.commit('BUILDER__FETCHING_DEF', true)
 

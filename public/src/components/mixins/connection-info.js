@@ -2,10 +2,18 @@ import * as connections from '../../constants/connection-info'
 
 export default {
   methods: {
-    isStorageConnection(c) {
-      var connection_type = c.connection_type
+    getConnectionInfo(c, key, def) {
+      var connection_type = c.connection_type || c
       var info = _.find(connections, { connection_type })
-      return _.get(info, 'is_storage', false)
+      if (!_.isString(key))
+        return info
+      return _.get(info, key, def)
+    },
+    getConnectionServiceName(c) {
+      return this.getConnectionInfo(c, 'service_name', '')
+    },
+    isStorageConnection(c) {
+      return this.getConnectionInfo(c, 'is_storage', false)
     }
   }
 }
