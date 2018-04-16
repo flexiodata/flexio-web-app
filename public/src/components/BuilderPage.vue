@@ -1,35 +1,40 @@
 <template>
   <div class="bg-nearer-white pv4 overflow-y-auto">
     <div class="center mw7">
-      <h1 class="fw6 f3 mid-gray mb4">{{title}}</h1>
-      <div class="bg-white pa4 css-dashboard-box">
-        <div class="tc" v-if="active_prompt_ui == 'connection-chooser'">
-          <ServiceIcon class="square-5" :type="active_prompt_connection_type" />
-          <h2 class="fw6 f4 mid-gray mt2">Connect to <ServiceName :type="active_prompt_connection_type" /></h2>
-        </div>
-        <div class="tc mv4 pa4 br2 ba b--black-05" v-if="active_prompt_ui == 'connection-chooser' && active_prompt_connection">
-          <ConnectionAuthenticationPanel :connection="active_prompt_connection" />
-        </div>
-        <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_prompt_ui == 'file-chooser'">
-          File Chooser
-        </div>
-        <div class="flex flex-row justify-end">
-          <el-button
-            class="ttu b"
-            type="plain"
-            @click="$store.commit('BUILDER__GO_PREV_ITEM')"
-            v-show="!is_first_prompt"
-          >
-            Go Back
-          </el-button>
-          <el-button
-            class="ttu b"
-            type="primary"
-            :disabled="!can_continue"
-            @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
-          >
-            Continue
-          </el-button>
+      <div class="mv5" v-if="is_fetching">
+        <spinner size="large" message="Loading template..." />
+      </div>
+      <div v-else-if="is_fetched">
+        <h1 class="fw6 f3 mid-gray mb4">{{title}}</h1>
+        <div class="bg-white pa4 css-dashboard-box">
+          <div class="tc" v-if="active_prompt_ui == 'connection-chooser'">
+            <ServiceIcon class="square-5" :type="active_prompt_connection_type" />
+            <h2 class="fw6 f4 mid-gray mt2">Connect to <ServiceName :type="active_prompt_connection_type" /></h2>
+          </div>
+          <div class="tc mv4 pa4 br2 ba b--black-05" v-if="active_prompt_ui == 'connection-chooser' && active_prompt_connection">
+            <ConnectionAuthenticationPanel :connection="active_prompt_connection" />
+          </div>
+          <div class="tc mv4 pa4 br2 ba b--black-05" v-else-if="active_prompt_ui == 'file-chooser'">
+            File Chooser
+          </div>
+          <div class="flex flex-row justify-end">
+            <el-button
+              class="ttu b"
+              type="plain"
+              @click="$store.commit('BUILDER__GO_PREV_ITEM')"
+              v-show="!is_first_prompt"
+            >
+              Go Back
+            </el-button>
+            <el-button
+              class="ttu b"
+              type="primary"
+              :disabled="!can_continue"
+              @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+            >
+              Continue
+            </el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -40,12 +45,14 @@
   import axios from 'axios'
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import Spinner from 'vue-simple-spinner'
   import ServiceIcon from './ServiceIcon.vue'
   import ServiceName from './ServiceName.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
 
   export default {
     components: {
+      Spinner,
       ServiceIcon,
       ServiceName,
       ConnectionAuthenticationPanel
@@ -73,7 +80,9 @@
         title: state => state.builder.title,
         prompts: state => state.builder.prompts,
         active_prompt: state  => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx
+        active_prompt_idx: state => state.builder.active_prompt_idx,
+        is_fetching: state => state.builder.fetching,
+        is_fetched: state => state.builder.fetched
       }),
       template_slug() {
         return _.get(this.$route, 'params.template', undefined)
@@ -107,14 +116,14 @@
     },
     methods: {
       updateTemplate() {
-        this.$store.commit('BUILDER__FETCH_DEF', true)
+        this.$store.commit('BUILDER__FETCHING_DEF', true)
 
         axios.get('/def/templates/' + this.template_slug + '.json').then(response => {
           var def = response.data
           this.$store.commit('BUILDER__INIT_DEF', def)
-          this.$store.commit('BUILDER__FETCH_DEF', false)
+          this.$store.commit('BUILDER__FETCHING_DEF', false)
         }).catch(error => {
-          this.$store.commit('BUILDER__FETCH_DEF', false)
+          this.$store.commit('BUILDER__FETCHING_DEF', false)
         })
       }
     }

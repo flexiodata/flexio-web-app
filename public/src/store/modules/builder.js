@@ -12,8 +12,15 @@ const state = {
 }
 
 const mutations = {
-  BUILDER__FETCH_DEF (state, fetching) {
+  BUILDER__FETCHING_DEF (state, fetching) {
     state.fetching = fetching
+
+    if (fetching === true)
+    {
+      state.fetched = false
+      state.active_prompt_idx = null
+      state.active_prompt = {}
+    }
   },
 
   BUILDER__INIT_DEF (state, def) {
@@ -21,6 +28,7 @@ const mutations = {
 
     var prompts = _.get(state, 'def.prompts', [])
 
+    state.fetched = true
     state.title = state.def.title
     state.prompts = _.map(prompts, p => {
       if (p.ui == 'connection-chooser')
