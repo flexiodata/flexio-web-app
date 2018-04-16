@@ -18,6 +18,8 @@ namespace Flexio\IFace;
 
 interface IProcess
 {
+    public function setOwner(string $owner_eid);
+    public function getOwner();
     public function setParams(array $arr);
     public function getParams();
     public function addFile(string $name, \Flexio\IFace\IStream $stream);

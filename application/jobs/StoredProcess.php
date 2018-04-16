@@ -49,6 +49,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
+    public function setOwner(string $owner_eid) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->setOwner($arr);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->engine->getOwner();
+    }
+
     public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setParams($arr);

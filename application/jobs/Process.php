@@ -93,6 +93,7 @@ class Process implements \Flexio\IFace\IProcess
         'validate'  => '\Flexio\Jobs\Validate'
     );
 
+    private $owner_eid;     // user eid of the owner of the process
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
@@ -105,6 +106,7 @@ class Process implements \Flexio\IFace\IProcess
 
     public function __construct()
     {
+        $this->owner_eid = '';
         $this->params = array();
         $this->stdin = self::createStream();
         $this->stdout =  self::createStream();
@@ -160,6 +162,17 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->handlers[] = $handler;
         return $this;
+    }
+
+    public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
+    {
+        $this->owner_eid = $owner_eid;
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->owner_eid;
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\Process
