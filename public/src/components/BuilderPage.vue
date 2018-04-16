@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
@@ -50,6 +51,10 @@
       ConnectionAuthenticationPanel
     },
     watch: {
+      template_slug: {
+        handler: 'updateTemplate',
+        immediate: true
+      },
       active_prompt_idx() {
         if (this.active_prompt_ui != 'connection-chooser')
           return
@@ -70,6 +75,9 @@
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      template_slug() {
+        return _.get(this.$route, 'params.template', undefined)
+      },
       active_prompt_ui() {
         return _.get(this.active_prompt, 'ui', '')
       },
@@ -97,8 +105,18 @@
         return true
       }
     },
-    mounted() {
-      this.$store.commit('BUILDER__INIT_ITEMS')
+    methods: {
+      updateTemplate() {
+        this.$store.commit('BUILDER__FETCH_DEF', true)
+
+        axios.get('/def/templates/' + this.template_slug + '.json').then(response => {
+          var def = response.data
+          this.$store.commit('BUILDER__INIT_DEF', def)
+          this.$store.commit('BUILDER__FETCH_DEF', false)
+        }).catch(error => {
+          this.$store.commit('BUILDER__FETCH_DEF', false)
+        })
+      }
     }
   }
 </script>
