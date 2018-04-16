@@ -41,13 +41,13 @@ class Write extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
         $stream_properties = $instream->get();
-            
+
         // the write job's "stdout" is always just a copy of its "stdin"; do this first
         $outstream->copyFrom($instream);
-        $outstream = null;        
+        $outstream = null;
 
         // now perform the write to 'path'
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
         // not all services support open/readers/writers; try that first
@@ -69,11 +69,11 @@ class Write extends \Flexio\Jobs\Base
 
             if (!$vfs->createFile($path, $create_params))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-    
+
             $outstream = $vfs->open($path);
             if (!$outstream)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-        
+
             $reader = $instream->getReader();
             $writer = $outstream->getWriter();
 

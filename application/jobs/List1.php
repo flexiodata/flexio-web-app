@@ -68,7 +68,7 @@ class List1 extends \Flexio\Jobs\Base
 
 
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
         $files = $vfs->list($path);
 

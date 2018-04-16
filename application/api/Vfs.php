@@ -45,7 +45,7 @@ class Vfs
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $result = $vfs->list($path);
 
         if (!is_array($result))
@@ -85,7 +85,7 @@ class Vfs
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $vfs->read($path, function($data) use (&$is_data, &$counter) {
             if ($counter == 0)
             {
@@ -141,11 +141,11 @@ class Vfs
 
         // grab path, including preceding slash
         $path = substr($path, $pos+4);
-    
+
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
 
         $headers = $request->getHeaderParams();
         $headers = array_change_key_case($headers, $case = CASE_LOWER);

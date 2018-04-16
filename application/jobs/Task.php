@@ -34,26 +34,27 @@ class Task extends \Flexio\Jobs\Base
         // stdin/stdout
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
-        $this->processStream($instream, $outstream);
+        $this->processStream($process->getOwner(), $instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(string $process_user_eid, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
         {
             default:
-                $this->getOutput($instream, $outstream);
+                $this->getOutput($process_user_eid, $instream, $outstream);
                 return;
         }
     }
 
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutput(string $process_user_eid, \Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // STEP 1: create a subprocess and add the task to run
         $job_definition = $this->getProperties();
         $job_task = $job_definition['params'];
         $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setOwner($process_user_eid);
 
         // STEP 2: pass on the stdin from the main process to the subprocess
         $subprocess_stdin = $subprocess->getStdin();

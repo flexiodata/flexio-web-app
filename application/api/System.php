@@ -178,6 +178,7 @@ class System
         {
             switch ($type)
             {
+                case 'task':
                 case 'javascript':
                 case 'python':
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
@@ -244,7 +245,7 @@ class System
             {
                 $task = $value;
                 $error_list = array();
-                $err = self::validateTask($task, $error_list);
+                $err = self::validateTask($requesting_user_eid, $task, $error_list);
 
                 if ($err === true)
                 {
@@ -372,12 +373,15 @@ class System
         return true;
     }
 
-    private static function validateTask(array $task, array &$errors) : bool
+    private static function validateTask(string $process_owner_eid, array $task, array &$errors) : bool
     {
         // returns true if the task is valid; false otherwise; sets the errors
         // parameter to an array of errors
 
-        $errors = \Flexio\Jobs\Process::create()->validate($t);
+        $process = \Flexio\Jobs\Process::create();
+        $process->setOwner($process_owner_eid);
+
+        $errors = $process->validate($t);
         if (count($errors) > 0)
             return false;
 

@@ -18,8 +18,18 @@ namespace Flexio\Services;
 
 class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
-    public static function create(array $params = null) : \Flexio\Services\Store
+
+    private $owner_eid = '';
+
+    public static function create(array $params) : \Flexio\Services\Store
     {
+        if (!isset($params['owned_by']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        if (!\Flexio\Base\Eid::isValid($params['owned_by']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        $this->owner_eid = $params['owned_by'];
         $service = new self();
         return $service;
     }
@@ -323,9 +333,6 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $streamwriter->write($buf);
     }
 
-
-
-
     public function insert(array $params, array $rows)  // $rows is an array of rows
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
@@ -348,13 +355,14 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
 
 
-
-
-
-
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
+
+    public function getOwner() : string
+    {
+        return $this->owner_eid;
+    }
 
     private function connect() : bool
     {
@@ -363,11 +371,11 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function getStreamFromPath(string $path, bool $create_dir_structure = false) // : ?\Flexio\Object\Stream
     {
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $owner_user_eid = $this->getOwner();
         $user = false;
         try
         {
-            $user = \Flexio\Object\User::load($current_user_eid);
+            $user = \Flexio\Object\User::load($owner_user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
         }

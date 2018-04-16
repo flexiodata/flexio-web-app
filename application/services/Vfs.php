@@ -18,14 +18,19 @@ namespace Flexio\Services;
 
 class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 {
+    private $owner_eid = ''; // the user to use when evaluating vfs paths
     private $process_context_service = null;
     private $store_service = null;
+
+    public function __construct(string $owner_eid)
+    {
+        $this->owner_eid = $owner_eid;
+    }
 
     public function setProcess(\Flexio\IFace\IProcess $process)
     {
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
-
 
     ////////////////////////////////////////////////////////////
     // IFileSystem interface
@@ -34,6 +39,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     public function getFlags() : int
     {
         return 0;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->owner_eid;
     }
 
     private function isStorageConnectionType(string $type) : bool
@@ -62,18 +72,18 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     {
         $results = [];
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $owner_user_eid = $this->getOwner();
 
         if ($path == '' || $path == '/')
         {
-            if (strlen($current_user_eid)==0)
+            if (strlen($owner_user_eid)==0)
             {
                 // no user logged in; return empty array
                 return [];
             }
 
             // load the object
-            $user = \Flexio\Object\User::load($current_user_eid);
+            $user = \Flexio\Object\User::load($owner_user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
@@ -93,7 +103,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
             foreach ($connections as $c)
             {
-                if ($c->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                if ($c->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                     continue;
 
                 $info = $c->get();
@@ -173,7 +183,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         return $service->exists($rpath);
     }
-
 
     public function createFile(string $path, array $properties = []) : bool
     {
@@ -302,11 +311,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->insert([ 'path' => $rpath ], $rows);
     }
 
-
-
-
-
-
     public function splitPath(string $path) : array
     {
         $path = trim($path);
@@ -389,12 +393,12 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $this->store_service;
         }
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $owner_user_eid = $this->getOwner();
 
         // load the connection
         if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
         {
-            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $connection_identifier);
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
             $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
         }
         $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -402,7 +406,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         // check the rights on the connection
         if ($connection->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        if ($connection->allows($current_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+        if ($connection->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
@@ -412,19 +416,5 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $service = $connection->getService();
         $this->service_map[$connection_identifier] = $service;
         return $service;
-
-            /*
-        $connection_info = $connection->get();
-
-        if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        $this->service_map[$connection_identifier] = $service;
-        return $service;
-        */
     }
 }

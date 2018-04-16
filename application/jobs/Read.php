@@ -38,7 +38,7 @@ class Read extends \Flexio\Jobs\Base
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
         $info = $vfs->getFileInfo($path);
@@ -71,7 +71,7 @@ class Read extends \Flexio\Jobs\Base
 
         $streamwriter = $outstream->getWriter();
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
         // not all services support open(). Try that first, and if it fails,

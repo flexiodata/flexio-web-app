@@ -346,13 +346,15 @@ class ScriptHost
     private $output_streams = [];
     private $output_writers = [];
 
-    public function setProcess($process)
+    public function setProcess(\Flexio\IFace\Process $process)
     {
         $this->process = $process;
     }
 
-
-
+    public function getProcess() : \Flexio\IFace\Process
+    {
+        return $this->process;
+    }
 
     private function getInputReader($idx)
     {
@@ -392,8 +394,6 @@ class ScriptHost
         return $ret;
     }
 
-
-
     public function func_hello($message)
     {
         return "Parameter = $message";
@@ -429,6 +429,7 @@ class ScriptHost
             $this->runjob_stdin = $this->process->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
+        $process->setOwner($this->getProcess());
         $process->getStdin()->copyFrom($this->runjob_stdin);
         $process->execute($task);
 
@@ -586,7 +587,7 @@ class ScriptHost
 
         if (is_object($properties))
             $properties = (array)$properties;
-        
+
         $stream = $this->output_streams[$stream_idx];
 
         $set = array();
@@ -602,7 +603,7 @@ class ScriptHost
                 if (is_object($properties['structure'][$i]))
                     $properties['structure'][$i] = (array)$properties['structure'][$i];
             }
-            
+
             $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }
