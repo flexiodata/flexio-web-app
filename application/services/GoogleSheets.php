@@ -296,12 +296,25 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
     {
         $spreadsheet_id = null;
         $worksheet_title = null;
+        $worksheet = null;
 
         if (isset($params['spreadsheet_id']))
         {
             $spreadsheet_id = $params['spreadsheet_id'];
+            $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+            if (!$spreadsheet)
+                return; // throw
             if (isset($params['worksheet_title']))
-                $worksheet_title = $params['worksheet_title'];
+            {
+                $worksheets = $spreadsheet->getWorksheets();
+                foreach ($worksheets as $w)
+                {
+                    if ($w->title == $params['worksheet_title'])
+                        $worksheet = $w;
+                }
+                if (!$worksheet)
+                    return; // throw
+            }
         }
          else
         {
@@ -309,49 +322,31 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
             $ids = $this->getIdsFromPath($path);
             if (isset($ids['spreadsheet_id']))
+            {
                 $spreadsheet_id = $ids['spreadsheet_id'];
-            if (isset($ids['worksheet_title']))
-                $worksheet_title = $ids['worksheet_title'];
+                $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+                if (!$spreadsheet)
+                    return; // throw
+                $worksheets = $spreadsheet->getWorksheets();
+                if (count($worksheets) < 1)
+                    return; // throw
+                $worksheet = $spreadsheet->worksheets[0];
+            }
         }
 
-        // if we don't have a spreadsheet id, we cannot continue
-        if (!isset($spreadsheet_id))
-            return;
-
-        // if we don't have a worksheet id, use the first one inside the spreadsheet
-        if (!isset($worksheet_title))
+        if (!$worksheet)
         {
-            $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
-            if (!$spreadsheet)
-                return;
-            $worksheets = $spreadsheet->getWorksheets();
-            if (count($worksheets) < 1)
-                return;
-            $worksheet_title = $spreadsheet->worksheets[0]->title;
+            return; // throw
         }
 
-        $this->readFile($spreadsheet_id, $worksheet_title, $callback);
-
-
-
-
-
-
-
-
-
-
-        $stream = $this->getStreamFromPath($path);
-
-        if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
-        $inserter = $stream->getInserter();
+        $worksheet->startInsert([]);
 
         foreach ($rows as $row)
         {
             $inserter->write($row);
         }
+
+        $worksheet->finishInsert();
 
         return true;
     }
