@@ -9,13 +9,22 @@
         <div class="bg-white pa4 css-dashboard-box">
           <div class="tc" v-if="active_prompt_ui == 'connection-chooser'">
             <ServiceIcon class="square-5" :type="active_prompt_connection_type" />
-            <h2 class="fw6 f4 mid-gray mt2">Connect to {{active_connection_service_name}}</h2>
+            <h2 class="fw6 f4 mid-gray mt2">Connect to {{active_prompt_service_name}}</h2>
             <div class="mv4 pa4 br2 ba b--black-05">
               <ConnectionAuthenticationPanel
                 :connection="active_prompt_connection"
                 v-if="active_prompt_connection"
               />
-              <div v-else>
+              <div class="tl" v-else>
+                <connection-chooser-list
+                  class="mb4"
+                  layout="list"
+                  :connection-type-filter="active_prompt_connection_type"
+                  :show-selection="true"
+                  :show-selection-checkmark="true"
+                  @item-activate="chooseConnection"
+                  v-if="active_prompt_connections.length > 0"
+                />
                 <el-button
                   class="ttu b"
                   type="primary"
@@ -59,6 +68,7 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import Spinner from 'vue-simple-spinner'
   import ServiceIcon from './ServiceIcon.vue'
+  import ConnectionChooserList from './ConnectionChooserList.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import MixinConnectionInfo from './mixins/connection-info'
 
@@ -67,6 +77,7 @@
     components: {
       Spinner,
       ServiceIcon,
+      ConnectionChooserList,
       ConnectionAuthenticationPanel
     },
     watch: {
@@ -109,8 +120,12 @@
       active_prompt_connection_type() {
         return _.get(this.active_prompt, 'connection_type', '')
       },
-      active_connection_service_name() {
+      active_prompt_service_name() {
         return this.getConnectionInfo(this.active_prompt_connection_type, 'service_name')
+      },
+      active_prompt_connections() {
+        var connection_type = this.active_prompt_connection_type
+        return _.filter(this.connections, { connection_type })
       },
       can_continue() {
         if (this.active_prompt_ui == 'connection-chooser') {
@@ -130,6 +145,8 @@
 
         if (_.isNil(this.active_prompt_connection_eid)) {
           var attrs = {
+            //eid_status: OBJECT_STATUS_PENDING,
+            name: this.active_prompt_service_name,
             connection_type: this.active_prompt_connection_type
           }
           this.$store.dispatch('createConnection', { attrs }).then(response => {
@@ -137,6 +154,9 @@
             this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
           })
         }
+      },
+      chooseConnection(connection) {
+        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
       },
       updateTemplate() {
         this.$store.commit('BUILDER__FETCHING_DEF', true)
