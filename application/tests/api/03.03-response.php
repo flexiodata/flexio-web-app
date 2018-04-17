@@ -22,6 +22,60 @@ class Test
     {
         // SETUP
 
+        // TEST: tests for sending an error response code
+
+        // BEGIN TEST
+        $content = array(
+            'code' => 'unauthorized'
+        );
+        ob_start();
+        @\Flexio\Api\Response::sendError($content);
+        $result = ob_get_clean();
+        $code = http_response_code(); // get the response code before it's reset
+        http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
+        $actual = $code;
+        $expected = 401;
+        \Flexio\Tests\Check::assertNumber('A.1', '\Flexio\Api\Response::sendError(); error response code',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = array(
+            'code' => 'insufficient-rights'
+        );
+        ob_start();
+        @\Flexio\Api\Response::sendError($content);
+        $result = ob_get_clean();
+        $code = http_response_code(); // get the response code before it's reset
+        http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
+        $actual = $code;
+        $expected = 403;
+        \Flexio\Tests\Check::assertNumber('A.2', '\Flexio\Api\Response::sendError(); error response code',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = array(
+            'code' => 'invalid-request'
+        );
+        ob_start();
+        @\Flexio\Api\Response::sendError($content);
+        $result = ob_get_clean();
+        $code = http_response_code(); // get the response code before it's reset
+        http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
+        $actual = $code;
+        $expected = 404;
+        \Flexio\Tests\Check::assertNumber('A.4', '\Flexio\Api\Response::sendError(); error response code',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $content = array(
+            'code' => 'no-model'
+        );
+        ob_start();
+        @\Flexio\Api\Response::sendError($content);
+        $result = ob_get_clean();
+        $code = http_response_code(); // get the response code before it's reset
+        http_response_code(200); // reset the response code so that the test doesn't fail from the http header that's set in the sendError() function
+        $actual = $code;
+        $expected = 500;
+        \Flexio\Tests\Check::assertNumber('A.4', '\Flexio\Api\Response::sendError(); error response code',  $actual, $expected, $results);
+
 
         // TEST: tests for sending an error response
 
@@ -38,6 +92,6 @@ class Test
         $expected = array(
             'error' => $content
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Api\Response::sendError(); basic content response',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Api\Response::sendError(); error response content',  $actual, $expected, $results);
     }
 }
