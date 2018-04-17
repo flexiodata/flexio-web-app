@@ -23,6 +23,7 @@ class Test
         // TODO: writing with bad info (e.g. malformed paths, no file extension, bad file characters)
 
         // SETUP
+        $process_owner = \Flexio\System\System::getCurrentUserEid();
         $files = \Flexio\Tests\Util::getTestDataFiles();
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_LOCAL . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
@@ -33,8 +34,8 @@ class Test
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
         $filepath = $folderpath . '/' . $filename;
-        $process_write = \Flexio\Tests\Process::write($filepath);
-        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $process_write = \Flexio\Tests\Process::write($process_owner, $filepath);
+        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename];
         \Flexio\Tests\Check::assertArray("A.1", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
@@ -44,9 +45,9 @@ class Test
         $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
         $filepath1 = $folderpath . '/' . $filename1;
         $filepath2 = $folderpath . '/' . $filename2;
-        $process_write = \Flexio\Tests\Process::write($filepath1);
-        $process_write = \Flexio\Tests\Process::write($filepath2);
-        $process_list = \Flexio\Tests\Process::list($filepath1);
+        $process_write = \Flexio\Tests\Process::write($process_owner, $filepath1);
+        $process_write = \Flexio\Tests\Process::write($process_owner, $filepath2);
+        $process_list = \Flexio\Tests\Process::list($process_owner, $filepath1);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename1];
         \Flexio\Tests\Check::assertArray("A.2", 'List; listing of folder with single file ' . $folderpath, $actual, $expected, $results);
@@ -57,7 +58,7 @@ class Test
         foreach ($filenames as $f)
         {
             $filepath = $folder . '/' . $f;
-            $process_write = \Flexio\Tests\Process::write($filepath);
+            $process_write = \Flexio\Tests\Process::write($process_owner, $filepath);
         }
         $tests = [
             ["pattern" => "$folder/*.txt",       "expected" => ["file1.txt"]],
@@ -79,7 +80,7 @@ class Test
         foreach ($tests as $t)
         {
             $idx++;
-            $process_list = \Flexio\Tests\Process::list($t['pattern']);
+            $process_list = \Flexio\Tests\Process::list($process_owner, $t['pattern']);
             $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
             $expected = $t['expected'];
             \Flexio\Tests\Check::assertArray("A.$idx", 'List; listing of folder with wildcard' . $folder, $actual, $expected, $results);
@@ -91,25 +92,25 @@ class Test
 
         // BEGIN TEST
         $foldername = 'empty_folder1';
-        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername . '/'); // folder path with path terminator
-        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername . '/'); // folder path with path terminator
+        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
         \Flexio\Tests\Check::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
-        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername); // folder path without path terminator
-        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername); // folder path without path terminator
+        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
         \Flexio\Tests\Check::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder3';
-        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername);
+        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
         $has_error_after_first_attempt = $process_create->hasError();
-        $process_create = \Flexio\Tests\Process::mkdir($folderpath . '/' . $foldername);
+        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
@@ -121,17 +122,17 @@ class Test
 
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $filename);
-        $process_list = \Flexio\Tests\Process::list($folderpath);
+        $process_create = \Flexio\Tests\Process::create($process_owner, $folderpath . '/' . $filename);
+        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$filename];
         \Flexio\Tests\Check::assertInArray("C.1", 'Create; create a file with no content in a folder; file should be ' . $filename, $actual, $expected, $results);
 
         // BEGIN TEST
         $name = 'test_folder';
-        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name . '/file.txt');
+        $process_create = \Flexio\Tests\Process::create($process_owner, $folderpath . '/' . $name . '/file.txt');
         $has_error_after_first_attempt = $process_create->hasError();
-        $process_create = \Flexio\Tests\Process::create($folderpath . '/' . $name);
+        $process_create = \Flexio\Tests\Process::create($process_owner, $folderpath . '/' . $name);
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
@@ -143,7 +144,7 @@ class Test
 
         // BEGIN TEST
         $filename = 'file_that_does_not_exist.txt';
-        $process_read = \Flexio\Tests\Process::read($folderpath . '/' . $filename);
+        $process_read = \Flexio\Tests\Process::read($process_owner, $folderpath . '/' . $filename);
         $actual = $process_read->hasError();
         $expected = true;
         \Flexio\Tests\Check::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
@@ -156,8 +157,8 @@ class Test
 
             $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);
             $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
-            $process_write = \Flexio\Tests\Process::write($filepath, $stream);
-            $process_read = \Flexio\Tests\Process::read($filepath);
+            $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
+            $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
             $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
             $actual = md5($actual_contents);
@@ -180,8 +181,8 @@ class Test
             $idx++;
             $stream = \Flexio\Base\Stream::create();
             $stream->getWriter()->write($c);
-            $process_write = \Flexio\Tests\Process::write($filepath, $stream);
-            $process_read = \Flexio\Tests\Process::read($filepath);
+            $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
+            $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
             $expected = $c;
             \Flexio\Tests\Check::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
@@ -201,10 +202,10 @@ class Test
         // BEGIN TEST
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
         $filepath = $folderpath . '/' . $filename;
-        $process_create = \Flexio\Tests\Process::create($filepath);
-        $process_list1 = \Flexio\Tests\Process::list($folderpath);
-        $process_delete = \Flexio\Tests\Process::delete($filepath);
-        $process_list2 = \Flexio\Tests\Process::list($folderpath);
+        $process_create = \Flexio\Tests\Process::create($process_owner, $filepath);
+        $process_list1 = \Flexio\Tests\Process::list($process_owner, $folderpath);
+        $process_delete = \Flexio\Tests\Process::delete($process_owner, $filepath);
+        $process_list2 = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $list1 = \Flexio\Tests\Content::getValues($process_list1->getStdout(),'name');
         $list2 = \Flexio\Tests\Content::getValues($process_list2->getStdout(),'name');
         $actual = array_values(array_diff($list1, $list2));

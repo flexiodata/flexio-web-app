@@ -18,34 +18,35 @@ namespace Flexio\Tests;
 
 class Process
 {
-    public static function list(string $path) : \Flexio\Jobs\Process
+    public static function list(string $owner, string $path) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "list", "params": {"path": "'. $path . '"}}',true);
-        return \Flexio\Jobs\Process::create()->execute($task);
+        return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
-    public static function mkdir(string $path) : \Flexio\Jobs\Process
+    public static function mkdir(string $owner, string $path) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "mkdir", "params": {"path": "'. $path . '"}}',true);
-        return \Flexio\Jobs\Process::create()->execute($task);
+        return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
-    public static function create(string $path) : \Flexio\Jobs\Process
+    public static function create(string $owner, string $path) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "create", "params": {"path": "'. $path . '"}}',true);
-        return \Flexio\Jobs\Process::create()->execute($task);
+        return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
-    public static function delete(string $path) : \Flexio\Jobs\Process
+    public static function delete(string $owner, string $path) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "delete", "params": {"path": "'. $path . '"}}',true);
-        return \Flexio\Jobs\Process::create()->execute($task);
+        return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
-    public static function write(string $path, \Flexio\Base\Stream $stream = null) : \Flexio\Jobs\Process
+    public static function write(string $owner, string $path, \Flexio\Base\Stream $stream = null) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "write", "params": {"path": "'. $path . '"}}',true);
         $process = \Flexio\Jobs\Process::create();
+        $process->setOwner($owner);
 
         if (isset($stream))
             $process->setStdin($stream);
@@ -54,9 +55,9 @@ class Process
         return $process;
     }
 
-    public static function read(string $path) : \Flexio\Jobs\Process
+    public static function read(string $owner, string $path) : \Flexio\Jobs\Process
     {
         $task = json_decode('{"op": "read", "params": {"path": "'. $path . '"}}',true);
-        return \Flexio\Jobs\Process::create()->execute($task);
+        return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 }
