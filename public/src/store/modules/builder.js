@@ -3,7 +3,6 @@ import api from '../../api'
 
 const state = {
   def: {},
-  title: '',
   prompts: [],
   active_prompt: {},
   active_prompt_idx: null,
@@ -29,7 +28,6 @@ const mutations = {
     var prompts = _.get(state, 'def.prompts', [])
 
     state.fetched = true
-    state.title = state.def.title
     state.prompts = _.map(prompts, p => {
       if (p.ui == 'connection-chooser')
         return _.assign(p, { connection_eid: null })
