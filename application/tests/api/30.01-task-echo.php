@@ -57,7 +57,7 @@ class Test
         ));
         $actual = $result['response'];
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return results of echo task',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
     }
 }
 
