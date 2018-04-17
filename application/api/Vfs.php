@@ -92,7 +92,7 @@ class Vfs
                 if (is_array($data))
                 {
                     $is_data = true;
-                    header('Content-Type: application/json', true, 500);
+                    header('Content-Type: application/json', true, 200);
                     echo '[';
                 }
             }
