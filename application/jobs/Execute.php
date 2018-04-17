@@ -346,12 +346,24 @@ class ScriptHost
     private $output_streams = [];
     private $output_writers = [];
 
-    public function setProcess(\Flexio\IFace\Process $process)
+    
+    
+    // I'd like to add these type checks back, but I was getting an error running this pipe:
+    // Flexio.pipe()
+    //   .javascript(function(ctx) {
+    //        ctx.pipe.create("/google-sheets-bwilliams/BensNewSheet222")
+    //        ctx.pipe.insert("/google-sheets-bwilliams/BensNewSheet222", [["a","b","c"]])
+    //    })
+    
+    
+    //public function setProcess(\Flexio\IFace\Process $process)
+    public function setProcess($process)
     {
         $this->process = $process;
     }
 
-    public function getProcess() : \Flexio\IFace\Process
+    //public function getProcess() : \Flexio\IFace\Process
+    public function getProcess()
     {
         return $this->process;
     }
@@ -429,7 +441,7 @@ class ScriptHost
             $this->runjob_stdin = $this->process->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
-        $process->setOwner($this->getProcess());
+        $process->setOwner($this->getProcess()->getOwner());
         $process->getStdin()->copyFrom($this->runjob_stdin);
         $process->execute($task);
 
