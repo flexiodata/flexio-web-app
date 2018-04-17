@@ -64,8 +64,7 @@ class Pipe
         $pipe_properties['created_by'] = $requesting_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
 
-        // grant default rights to the owner; TODO: also grant default rights
-        // to the requesting user?
+        // grant default rights to the owner
         $pipe->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,

@@ -56,8 +56,7 @@ class Connection
         $connection_properties['created_by'] = $requesting_user_eid;
         $connection = \Flexio\Object\Connection::create($connection_properties);
 
-        // grant default rights to the owner; TODO: also grant default rights
-        // to the requesting user?
+        // grant default rights to the owner
         $connection->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
