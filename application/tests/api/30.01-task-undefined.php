@@ -51,16 +51,24 @@ class Test
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token
         ));
-        $actual = $result;
-        $expected = array(
-            "code" => 404,
-            "response" => json_encode(array(
-                "error" => "missing-parameter",
-                "message" => "Missing operation \'op\' task parameter"
-            ))
-        );
+        $code = $result['code'];
+        $response = json_decode($result['response'],true);
+        $actual = '{
+            "code": '.$code.',
+            "response": {
+                "error": '.$response['error'].',
+                "message": '.$response['message'].'
+            }
+        }';
+        $expected = '{
+            "code": 404,
+            "response": {
+                "error": "",
+                "message": ""
+            }
+        }';
         \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
-
+return;
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -86,9 +94,9 @@ class Test
             "response" => json_encode(array(
                 "error" => "invalid-parameter",
                 "message" => "Invalid operation \'op\' task parameter"
-            ))
+            ),JSON_PRETTY_PRINT)
         );
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
@@ -115,7 +123,7 @@ class Test
             "response" => json_encode(array(
                 "error" => "invalid-parameter",
                 "message" => "Invalid operation \'op\' task parameter"
-            ))
+            ),JSON_PRETTY_PRINT)
         );
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
     }

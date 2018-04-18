@@ -335,9 +335,8 @@ class Pipe
 
         if ($engine->hasError())
         {
-            header('Content-Type: application/json', true, 500);
-            $content = json_encode($engine->getError());
-            echo $content;
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 

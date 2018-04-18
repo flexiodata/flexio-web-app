@@ -47,7 +47,7 @@ class Process
         $pipe_eid = $validated_post_params['parent_eid'] ?? false;
 
         // note: in pipes and connections, the ability to create is governed by
-        // the user; the ability to create a process is goverend by execute
+        // the user; the ability to create a process is governed by execute
         // rights on the pipe; if the process is anonymous, it's goverend by
         // the ability to write to the user, simliar to pipes and connections
 
@@ -435,9 +435,8 @@ class Process
 
         if ($engine->hasError())
         {
-            header('Content-Type: application/json', true, 500);
-            $content = json_encode($engine->getError());
-            echo $content;
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 
