@@ -50,20 +50,15 @@ class Test
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token
         ));
-        $code = $result['code'];
         $response = json_decode($result['response'],true);
-        $actual = '{
-            "code": '.$code.',
-            "response": {
-                "error": '.$response['error'].',
-                "message": '.$response['message'].'
-            }
-        }';
+        $actual = $result;
+        $actual['response'] = $response;
         $expected = '{
             "code": 404,
+            "content_type": "application/json",
             "response": {
-                "error": "",
-                "message": ""
+                "error": "missing-parameter",
+                "message": "Missing \'op\' task parameter"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
@@ -87,14 +82,19 @@ class Test
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token
         ));
+        $response = json_decode($result['response'],true);
         $actual = $result;
-        $expected = array(
-            "code" => 404,
-            "response" => json_encode(array(
-                "error" => "invalid-parameter",
-                "message" => "Invalid operation \'op\' task parameter"
-            ),JSON_PRETTY_PRINT)
-        );
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 404,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "invalid-parameter",
+                    "message": "Invalid operation \'op\' task parameter"
+                }
+            }
+        }';
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -116,14 +116,19 @@ class Test
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token
         ));
+        $response = json_decode($result['response'],true);
         $actual = $result;
-        $expected = array(
-            "code" => 404,
-            "response" => json_encode(array(
-                "error" => "invalid-parameter",
-                "message" => "Invalid operation \'op\' task parameter"
-            ),JSON_PRETTY_PRINT)
-        );
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 404,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "invalid-parameter",
+                    "message": "Invalid operation \'op\' task parameter"
+                }
+            }
+        }';
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
     }
 }
