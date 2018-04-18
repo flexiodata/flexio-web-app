@@ -100,11 +100,12 @@ class Util
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // because using localhost
-        $result = curl_exec($ch);
+        $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         curl_close($ch);
 
-        return [ 'code' => $http_code, 'response' => $result ];
+        return [ 'code' => $http_code, 'content_type' => $content_type, 'response' => $response ];
     }
 
     public static function evalExpression($expr)
