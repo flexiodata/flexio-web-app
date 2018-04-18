@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-nearer-white pa4 overflow-y-auto" :id="id">
+  <div class="bg-nearer-white pa5 overflow-y-auto" :id="id">
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"

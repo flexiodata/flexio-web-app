@@ -36,17 +36,19 @@
       })
     },
     methods: {
-      scrollToActive() {
-        var item_id = _.get(this.active_prompt, 'id', null)
-
+      scrollToItem(item_id) {
         if (_.isString(item_id) && _.isString(this.containerId)) {
           this.$scrollTo('#'+item_id, {
               container: '#'+this.containerId,
               duration: 400,
               easing: 'ease-out',
-              offset: -54
+              offset: -60
           })
         }
+      },
+      scrollToActive() {
+        var item_id = _.get(this.active_prompt, 'id', null)
+        this.scrollToItem(item_id)
       }
     }
   }
