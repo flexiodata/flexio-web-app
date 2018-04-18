@@ -4,8 +4,11 @@
     :id="item.id"
   >
 
-    <!-- lines and insert buttons -->
-    <div class="absolute h-100 ml4">
+    <!-- insert buttons -->
+    <div
+      class="absolute h-100 ml4"
+      v-if="showAddButtons"
+    >
       <!-- vertical line -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
@@ -42,7 +45,10 @@
     </div>
 
     <!-- icon -->
-    <div class="flex-none pa4 nt2">
+    <div
+      class="flex-none pa4 nt2"
+      v-if="showIcons"
+    >
       <service-icon
         class="br1 square-3"
         :type="item.connection_type"
@@ -50,7 +56,10 @@
     </div>
 
     <!-- number -->
-    <div class="flex-none pv4 pr3">
+    <div
+      class="flex-none pv4 pr3"
+      v-if="showNumbers"
+    >
       {{index+1}}.
     </div>
 
@@ -111,6 +120,18 @@
       index: {
         type: Number,
         required: true
+      },
+      showAddButtons: {
+        type: Boolean,
+        default: true
+      },
+      showIcons: {
+        type: Boolean,
+        default: true
+      },
+      showNumbers: {
+        type: Boolean,
+        default: true
       }
     },
     components: {

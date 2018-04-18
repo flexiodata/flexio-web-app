@@ -5,6 +5,7 @@
       :item="item"
       :index="index"
       :key="item.id"
+      :show-add-buttons="false"
     />
   </div>
 </template>
