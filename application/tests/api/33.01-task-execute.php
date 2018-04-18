@@ -66,7 +66,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -103,7 +103,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; execute task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task basic functionality',  $actual, $expected, $results);
     }
 }
 

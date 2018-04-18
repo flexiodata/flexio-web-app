@@ -69,7 +69,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task python context query parameters',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task context query parameters',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -112,7 +112,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; execute task javascript context query parameters',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task context query parameters',  $actual, $expected, $results);
     }
 }
 

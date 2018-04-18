@@ -61,7 +61,7 @@ class Test
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task with remote code',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
@@ -93,7 +93,7 @@ class Test
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; execute task with remote code and sha256 integrity check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code and sha256 integrity check',  $actual, $expected, $results);
 
 
         // TEST: execute task with remote code, but local override
@@ -133,7 +133,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "This is local."
         }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid/run; execute task with remote code, but local override',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code, but local override',  $actual, $expected, $results);
     }
 }
 
