@@ -44,6 +44,10 @@
         type: String,
         required: false
       },
+      'connection': {
+        type: Object,
+        default: () => { return null }
+      },
       'list-type': {
         type: String,
         default: 'input'
@@ -95,6 +99,9 @@
       EmptyItem
     },
     watch: {
+      connection(val) {
+        this.onItemActivate(val)
+      },
       connectionType: function(val, old_val) {
         this.connection_type = val
       }

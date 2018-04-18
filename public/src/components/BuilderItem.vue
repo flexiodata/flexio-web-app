@@ -58,12 +58,12 @@
       class="flex-none pa4 nt2"
       v-if="showIcons"
     >
-      <service-icon
+      <ServiceIcon
         class="br1 square-3"
         :type="item.connection_type"
         v-if="item.connection_type"
       />
-      <task-icon
+      <TaskIcon
         class="br1 square-3"
         :icon="task_icon"
         :bg-color="task_color"
@@ -86,13 +86,19 @@
       :class="content_cls"
     >
       <div class="flex-fill">
-        <span class="silver">
-          {{item.ui}}
-          <span v-if="item.variable">:</span>
-        </span>
-        {{item.variable}}
+        <BuilderItemConnectionChooser
+          :item="item"
+          v-if="item.ui == 'connection-chooser'"
+        />
+        <div v-else>
+          <span class="silver">
+            {{item.ui}}
+            <span v-if="item.variable">:</span>
+          </span>
+          {{item.variable}}
+        </div>
       </div>
-      <div class="flex-none mt3 nr3 nb3 flex flex-row justify-end" v-if="is_active">
+      <div class="flex-none mt3 flex flex-row justify-end" v-if="is_active">
         <el-button
           class="ttu b"
           type="plain"
@@ -127,6 +133,7 @@
   import { mapState } from 'vuex'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
+  import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
 
   export default {
     props: {
@@ -157,7 +164,8 @@
     },
     components: {
       ServiceIcon,
-      TaskIcon
+      TaskIcon,
+      BuilderItemConnectionChooser
     },
     computed: {
       ...mapState({
@@ -176,7 +184,7 @@
       },
       content_cls() {
         return {
-          'b--black-10': true,
+          'b--white-box': true,
           'bl br': !this.is_first && !this.is_last,
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
@@ -195,6 +203,9 @@
           case 'file-chooser': return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
+      },
+      item_component() {
+        return 'PipeBuilderConnectionChooser'
       }
     },
     methods: {

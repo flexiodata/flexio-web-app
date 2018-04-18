@@ -1,6 +1,6 @@
 <template>
   <div>
-    <builder-item
+    <BuilderItem
       v-for="(item, index) in prompts"
       :item="item"
       :index="index"
