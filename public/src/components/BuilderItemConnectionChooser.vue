@@ -4,8 +4,9 @@
       <ServiceIcon class="square-4" :type="ctype" />
       <h3 class="fw6 f4 mid-gray mt2">Connect to {{service_name}}</h3>
     </div>
-    <div class="mv4 pa4 br2 ba b--black-05">
-      <ConnectionAuthenticationPanel
+    <div class="mv4">
+      <ConnectionEditPanel
+        :show-header="false"
         :connection="store_connection"
         v-if="ceid && !store_connection_status_available"
       />
@@ -37,7 +38,7 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
-  import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
+  import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import MixinConnectionInfo from './mixins/connection-info'
 
@@ -51,7 +52,7 @@
     mixins: [MixinConnectionInfo],
     components: {
       ServiceIcon,
-      ConnectionAuthenticationPanel,
+      ConnectionEditPanel,
       ConnectionChooserList
     },
     computed: {

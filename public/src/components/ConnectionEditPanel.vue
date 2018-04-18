@@ -1,11 +1,15 @@
 <template>
   <div class="mid-gray">
-    <div class="w-100 mb4">
-      <div class="flex flex-row items-center" v-if="showHeader">
+    <div class="w-100 mb4" v-if="showHeader">
+      <div class="flex flex-row items-center" v-if="showTitle">
         <span class="flex-fill f4">{{our_title}}</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
-      <div class="flex flex-row" :class="showHeader ? 'mt2 pt2 bt b--black-10' : ''" v-if="has_connection">
+      <div
+        class="flex flex-row"
+        :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
+        v-if="has_connection"
+      >
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4"></service-icon>
         <div class="flex-fill flex flex-column ml2">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
@@ -81,10 +85,10 @@
           <connection-info-panel :connection.sync="edit_connection" />
         </div>
         <div class="mt4" v-else>
-          <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy fw6">
-            <i class="material-icons mr1">lock</i> Authentication
+          <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy ttu fw6 f6">
+            <i class="material-icons mr1 f5">lock</i> Authentication
           </div>
-          <div class="pa3 ba bt-0 b--light-gray br2 br--bottom">
+          <div class="pa3 pb4 ba bt-0 b--light-gray br2 br--bottom">
             <connection-authentication-panel
               :connection="edit_connection"
               :mode="mode"
@@ -177,6 +181,10 @@
         default: true
       },
       'show-footer': {
+        type: Boolean,
+        default: true
+      },
+      'show-title': {
         type: Boolean,
         default: true
       },

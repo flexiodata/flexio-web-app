@@ -203,9 +203,6 @@
           case 'file-chooser': return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
-      },
-      item_component() {
-        return 'PipeBuilderConnectionChooser'
       }
     },
     methods: {
