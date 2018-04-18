@@ -4,9 +4,22 @@
     :class="cls"
     :id="item.id"
   >
-    <div class="flex-none pv4 ph3">
+
+    <!-- icon -->
+    <div class="flex-none pa4 nt2">
+      <service-icon
+        class="br1 square-3"
+        empty-cls=""
+        :type="item.connection_type"
+      />
+    </div>
+
+    <!-- number -->
+    <div class="flex-none pv4 pr3">
       {{index+1}}.
     </div>
+
+    <!-- main content -->
     <div
       class="flex-fill bg-white pa4"
       :class="content_cls"
@@ -45,11 +58,13 @@
         </el-button>
       </div>
     </div>
+
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import ServiceIcon from './ServiceIcon.vue'
 
   export default {
     props: {
@@ -61,6 +76,9 @@
         type: Number,
         required: true
       }
+    },
+    components: {
+      ServiceIcon
     },
     computed: {
       ...mapState({
