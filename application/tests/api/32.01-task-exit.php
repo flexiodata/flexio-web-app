@@ -30,7 +30,7 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: basic task functionality
+        // TEST: exit task basic task functionality
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
@@ -66,7 +66,7 @@ class Test
                 "message" => "The item you requested was not found."
             ))
         );
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; exit task basic functionality',  $actual, $expected, $results);
     }
 }
 

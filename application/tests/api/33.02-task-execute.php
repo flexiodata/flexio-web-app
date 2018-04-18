@@ -63,7 +63,7 @@ class Test
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello,World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task with sha256 integrity check',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task with lowercase sha256 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -136,7 +136,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; sha256 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes/:objeid/run; execute task with sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -176,7 +176,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/pipes/:objeid/run; sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/pipes/:objeid/run; execute task with sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
@@ -216,7 +216,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/pipes/:objeid/run; md5 integrity failure; md5 not supported',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.5', 'POST /:userid/pipes/:objeid/run; execute task with md5 integrity failure; md5 not supported',  $actual, $expected, $results);
 
 
 
@@ -293,7 +293,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; sha384 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; execute task with sha384 integrity failure',  $actual, $expected, $results);
 
 
         // TEST: execute task sha512 integrity check
@@ -369,7 +369,7 @@ class Test
                 }
             }
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; sha512 integrity failure',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; execute task with sha512 integrity failure',  $actual, $expected, $results);
     }
 }
 

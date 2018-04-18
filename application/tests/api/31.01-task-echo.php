@@ -30,7 +30,7 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: basic task functionality
+        // TEST: echo task basic functionality
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
@@ -56,7 +56,7 @@ class Test
         ));
         $actual = $result['response'];
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; echo task basic functionality',  $actual, $expected, $results);
     }
 }
 

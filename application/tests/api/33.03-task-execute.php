@@ -61,7 +61,7 @@ class Test
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task with remote code execution',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; execute task with remote code',  $actual, $expected, $results);
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
