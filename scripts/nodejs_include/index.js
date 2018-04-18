@@ -550,6 +550,7 @@ class Context {
     constructor() {
         var pThis = this
         this._query = null
+        this._form = null
 
         this.pipe = {}
         for (var task_name in Flexio.task) {
@@ -573,6 +574,12 @@ class Context {
         return this._query
     }
 
+    get form() {
+        if (this._form === null) {
+            this._form = proxy.invokeSync('getFormParameters', [])
+        }
+        return this._form
+    }
 }
 
 

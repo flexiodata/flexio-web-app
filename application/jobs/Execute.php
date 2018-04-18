@@ -429,6 +429,20 @@ class ScriptHost
         return (object)$_GET;
     }
 
+    public function func_getFormParameters()
+    {
+        $form = [];
+        $params = $this->process->getParams();
+        foreach ($params as $k => $v)
+        {
+            if (substr($k, 0, 5) == 'form.')
+            {
+                $form[substr($k,5)] = $v->getReader()->read();
+            }
+        }
+        return (object)$form;
+    }
+
     private $runjob_stdin = null;
 
     public function func_runJob($json)
