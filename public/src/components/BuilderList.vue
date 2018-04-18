@@ -42,7 +42,7 @@
               container: '#'+this.containerId,
               duration: 400,
               easing: 'ease-out',
-              offset: -60
+              offset: -64
           })
         }
       },

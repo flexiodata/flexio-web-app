@@ -8,7 +8,7 @@
     </div>
     <builder-list
       class="center"
-      style="max-width: 1440px"
+      style="max-width: 1280px"
       :container-id="id"
       v-else-if="is_fetched"
     />

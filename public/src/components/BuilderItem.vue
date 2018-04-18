@@ -1,15 +1,50 @@
 <template>
   <div
-    class="flex flex-row"
-    :class="cls"
+    class="flex flex-row relative"
     :id="item.id"
   >
+
+    <!-- lines and insert buttons -->
+    <div class="absolute h-100 ml4">
+      <!-- vertical line -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 0; height: 19px; left: 15px"
+        v-if="!is_first"
+      ></div>
+
+      <!-- vertical line -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 61px; bottom: 30px; left: 15px"
+      ></div>
+
+      <!-- insert before button -->
+      <div
+        class="absolute"
+        style="top: -10px; left: 4px"
+        v-if="is_first"
+      >
+        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
+
+      <!-- insert after button -->
+      <div
+        class="absolute"
+        style="bottom: 0; left: 4px"
+      >
+        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
+    </div>
 
     <!-- icon -->
     <div class="flex-none pa4 nt2">
       <service-icon
         class="br1 square-3"
-        empty-cls=""
         :type="item.connection_type"
       />
     </div>
@@ -21,17 +56,18 @@
 
     <!-- main content -->
     <div
-      class="flex-fill bg-white pa4"
+      class="flex-fill flex flex-column bg-white pa4"
+      style="min-height: 10rem"
       :class="content_cls"
     >
-      <div>
+      <div class="flex-fill">
         <span class="silver">
           {{item.ui}}
           <span v-if="item.variable">:</span>
         </span>
         {{item.variable}}
       </div>
-      <div class="mt3 nr3 nb3 flex flex-row justify-end" v-if="is_active">
+      <div class="flex-none mt3 nr3 nb3 flex flex-row justify-end" v-if="is_active">
         <el-button
           class="ttu b"
           type="plain"
@@ -94,10 +130,6 @@
       },
       is_active() {
         return this.index == this.active_prompt_idx
-      },
-      cls() {
-        return {
-        }
       },
       content_cls() {
         return {
