@@ -64,7 +64,7 @@
         v-if="item.connection_type"
       />
       <task-icon
-        class="br1 square-3"
+        class="br1 square-3 invisible"
         v-else
       />
     </div>
