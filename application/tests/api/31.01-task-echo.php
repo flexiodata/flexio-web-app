@@ -31,7 +31,7 @@ class Test
 
 
 
-        // TEST: run process with rights checks
+        // TEST: basic task functionality
 
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
