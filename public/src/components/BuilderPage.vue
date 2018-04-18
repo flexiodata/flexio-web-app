@@ -7,6 +7,8 @@
       <spinner size="large" message="Loading..." />
     </div>
     <builder-list
+      class="center"
+      style="max-width: 1440px"
       :container-id="id"
       v-else-if="is_fetched"
     />
