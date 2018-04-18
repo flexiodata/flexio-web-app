@@ -558,6 +558,7 @@ class Context {
                 if (Flexio.task.hasOwnProperty(task_name) && task_name != 'toCode') {
                   pThis.pipe[task_name] = function() {
                       proxy.invokeSync('runJob', [ JSON.stringify(task_func.apply(this, arguments)) ])
+                      return pThis.pipe
                   }
                 }
               })(task_name, Flexio.task[task_name])
