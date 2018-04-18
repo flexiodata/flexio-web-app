@@ -30,7 +30,6 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-
         // TEST: basic task functionality
 
         // BEGIN TEST

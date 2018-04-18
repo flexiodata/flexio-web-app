@@ -30,7 +30,6 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-
         // TEST: run process with rights checks
 
         // BEGIN TEST
@@ -68,7 +67,7 @@ class Test
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
-return;
+
         // BEGIN TEST
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
