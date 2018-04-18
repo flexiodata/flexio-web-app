@@ -61,6 +61,11 @@
       <service-icon
         class="br1 square-3"
         :type="item.connection_type"
+        v-if="item.connection_type"
+      />
+      <task-icon
+        class="br1 square-3"
+        v-else
       />
     </div>
 
@@ -119,6 +124,7 @@
 <script>
   import { mapState } from 'vuex'
   import ServiceIcon from './ServiceIcon.vue'
+  import TaskIcon from './TaskIcon.vue'
 
   export default {
     props: {
@@ -148,7 +154,8 @@
       }
     },
     components: {
-      ServiceIcon
+      ServiceIcon,
+      TaskIcon
     },
     computed: {
       ...mapState({
