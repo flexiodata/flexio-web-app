@@ -136,7 +136,7 @@
         return items
       },
       input_services() {
-        var items = [].concat(this.default_connections, this.getAllConnections())
+        var items = [].concat(this.default_connections, this.getAvailableConnections())
 
         if (this.connectionTypeFilter.length == 0)
           return items
@@ -155,7 +155,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)

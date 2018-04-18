@@ -609,7 +609,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       getOrigJson() {
         return _.get(this, 'item', {})
@@ -751,7 +751,7 @@
           // NOTE: it's really important to include the '_' on the same line
           // as the 'return', otherwise JS will return without doing anything
           var connection = _
-            .chain(this.getAllConnections())
+            .chain(this.getAvailableConnections())
             .find((c) => {
               if (connection_identifier.length == 0)
                 return false

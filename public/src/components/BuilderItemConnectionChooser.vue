@@ -4,39 +4,50 @@
       <ServiceIcon class="square-4" :type="ctype" />
       <h3 class="fw6 f4 mid-gray mt2">Connect to {{service_name}}</h3>
     </div>
-    <div class="mv4">
-      <ConnectionEditPanel
-        :show-header="false"
+    <div class="mv4 pa4 br2 ba b--black-05">
+      <ConnectionChooserList
+        class="mb3"
+        style="max-height: 24rem"
+        layout="list"
         :connection="store_connection"
-        v-if="ceid && !store_connection_status_available"
+        :connection-type-filter="ctype"
+        :show-selection="true"
+        :show-selection-checkmark="true"
+        @item-activate="chooseConnection"
+        v-if="connections_of_type.length > 0"
       />
-      <div v-else>
-        <ConnectionChooserList
-          class="mb3"
-          style="max-height: 24rem"
-          layout="list"
-          :connection="store_connection"
-          :connection-type-filter="ctype"
-          :show-selection="true"
-          :show-selection-checkmark="true"
-          @item-activate="chooseConnection"
-          v-if="connections_of_type.length > 0"
-        />
-        <el-button
-          class="ttu b"
-          type="plain"
-          @click="setUpConnection"
-        >
-          Set up a new connection
-        </el-button>
-      </div>
+      <el-button
+        class="ttu b"
+        type="plain"
+        @click="createPendingConnection"
+      >
+        Set up a new connection
+      </el-button>
     </div>
+
+    <!-- connect to storage dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="51rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_connection_dialog"
+    >
+      <ConnectionEditPanel
+        :connection="store_connection"
+        @close="show_connection_dialog = false"
+        @cancel="show_connection_dialog = false"
+        @submit="tryUpdateConnection"
+        v-if="show_connection_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
@@ -54,6 +65,11 @@
       ServiceIcon,
       ConnectionEditPanel,
       ConnectionChooserList
+    },
+    data() {
+      return {
+        show_connection_dialog: false
+      }
     },
     computed: {
       ceid() {
@@ -85,9 +101,9 @@
       chooseConnection(connection) {
         this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
       },
-      setUpConnection() {
+      createPendingConnection() {
         var attrs = {
-          //eid_status: OBJECT_STATUS_PENDING,
+          eid_status: OBJECT_STATUS_PENDING,
           name: this.service_name,
           connection_type: this.ctype
         }
@@ -95,8 +111,38 @@
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           var connection = response.body
           this.chooseConnection(connection)
+          this.show_connection_dialog = true
         })
-      }
+      },
+      tryUpdateConnection(attrs) {
+        var eid = attrs.eid
+        var is_pending = attrs.eid_status === OBJECT_STATUS_PENDING
+
+        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+
+        // update the connection and make it available
+        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          if (response.ok)
+          {
+            // TODO: shouldn't we do this in the ConnectionEditPanel?
+            // try to connect to the connection
+            this.$store.dispatch('testConnection', { eid, attrs })
+
+            if (is_pending)
+            {
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
+              this.$store.track('Created Connection In Template Builder', analytics_payload)
+            }
+
+            this.show_connection_dialog = false
+          }
+           else
+          {
+            this.$store.track('Created Connection In Template Builder (Error)')
+          }
+        })
+      },
     }
   }
 </script>

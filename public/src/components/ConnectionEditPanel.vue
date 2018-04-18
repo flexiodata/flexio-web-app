@@ -212,9 +212,9 @@
       ConnectionInfoPanel
     },
     watch: {
-      'connection': function(val, old_val) {
-        this.edit_connection = _.cloneDeep(val)
-        this.updateConnection(val)
+      connection: {
+        handler: 'initConnection',
+        immediate: true
       },
       'edit_connection.alias': function(val, old_val) {
         var alias = val
@@ -348,6 +348,10 @@
             // TODO: add error handling
           }
         })
+      },
+      initConnection() {
+        this.edit_connection = _.cloneDeep(this.connection)
+        this.updateConnection(this.edit_connection)
       },
       updateConnection(attrs) {
         var connection_info = _.get(attrs, 'connection_info', {})

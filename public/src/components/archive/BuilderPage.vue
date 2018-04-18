@@ -128,7 +128,7 @@
         is_fetched: state => state.builder.fetched
       }),
       connections() {
-        return this.getAllConnections()
+        return this.getAvailableConnections()
       },
       template_slug() {
         return _.get(this.$route, 'params.template', undefined)
@@ -185,7 +185,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       setUpConnection() {
         if (this.active_prompt_ui != 'connection-chooser')

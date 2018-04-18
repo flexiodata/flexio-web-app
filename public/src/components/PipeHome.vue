@@ -298,7 +298,7 @@
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
       },
       connections() {
-        return this.getAllConnections()
+        return this.getAvailableConnections()
       }
     },
     created() {
@@ -319,7 +319,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections',
+        'getAvailableConnections',
         'getActiveDocumentProcesses',
         'getActiveUser'
       ]),

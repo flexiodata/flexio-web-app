@@ -47,7 +47,7 @@
           class="pa3 pa4-l"
           style="max-width: 60rem"
           mode="edit"
-          :show-header="false"
+          :show-title="false"
           :show-steps="false"
           :connection="connection"
           @cancel="cancelChanges"
@@ -114,7 +114,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        return this.getAllConnections()
+        return this.getAvailableConnections()
       },
       ctype() {
         return _.get(this.connection, 'connection_type', '')
@@ -134,7 +134,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
