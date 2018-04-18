@@ -29,6 +29,8 @@ const mutations = {
 
     state.fetched = true
     state.prompts = _.map(prompts, p => {
+      _.assign(p, { id: _.uniqueId('prompt-') })
+
       if (p.ui == 'connection-chooser')
         return _.assign(p, { connection_eid: null })
 

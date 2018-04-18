@@ -1,7 +1,7 @@
 <template>
   <div
+    :id="item.id"
     :class="cls"
-    :style="styl"
   >
     <div>
       {{index+1}}.
@@ -78,11 +78,9 @@
           'mv3': !this.is_first && !this.is_last,
           'mb3': this.is_first,
           'mt3': this.is_last,
-          'bg-white': this.is_active
+          'bg-white': this.is_active,
+          'css-active': this.is_active
         }
-      },
-      styl() {
-        return this.is_active ? 'box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)' : ''
       }
     },
     methods: {
@@ -92,3 +90,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .css-active {
+    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
+  }
+</style>

@@ -1,9 +1,15 @@
 <template>
-  <div class="bg-nearer-white pa4 overflow-y-auto">
-    <div class="h-100 flex flex-row items-center justify-center" v-if="is_fetching">
+  <div class="bg-nearer-white pa4 overflow-y-auto" :id="id">
+    <div
+      class="h-100 flex flex-row items-center justify-center"
+      v-if="is_fetching"
+    >
       <spinner size="large" message="Loading..." />
     </div>
-    <builder-list v-else-if="is_fetched" />
+    <builder-list
+      :container-id="id"
+      v-else-if="is_fetched"
+    />
   </div>
 </template>
 
@@ -22,6 +28,11 @@
       slug: {
         handler: 'loadTemplate',
         immediate: true
+      }
+    },
+    data() {
+      return {
+        id: _.uniqueId('builder-page-')
       }
     },
     computed: {
