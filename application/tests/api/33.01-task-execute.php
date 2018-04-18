@@ -30,7 +30,6 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-
         // TEST: basic task functionality
 
         // BEGIN TEST
@@ -61,9 +60,51 @@ EOD;
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token
         ));
-        $actual = $result['response'];
-        $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text\/plain;charset=UTF-8",
+            "response": "Hello, World!"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
+
+
+        // BEGIN TEST
+        $script = <<<EOD
+exports.flexio_handler = function(context) {
+    context.output.content_type = "text/plain"
+    context.output.write('Hello, World!')
+}
+EOD;
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "task": {
+                    "op": "execute",
+                    "params": {
+                        "lang": "javascript",
+                        "code": "'.base64_encode($script).'"
+                    }
+                }
+            }'
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'token' => $token
+        ));
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text\/plain;charset=UTF-8",
+            "response": "Hello, World!"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; return results of task',  $actual, $expected, $results);
     }
 }
 
