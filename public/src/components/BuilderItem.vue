@@ -4,58 +4,17 @@
     :id="item.id"
   >
 
-    <!-- insert buttons -->
+    <!-- number -->
     <div
-      class="absolute h-100 ml4"
-      v-if="(showLine || showInsertButtons) && showIcons"
+      class="flex-none pv4"
+      v-if="showNumbers"
     >
-      <!-- vertical line w/o buttons -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 61px; bottom: -19px; left: 15px"
-        v-if="!is_last && showLine && !showInsertButtons"
-      ></div>
-
-      <!-- vertical line (above icon) w/buttons -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 0; height: 19px; left: 15px"
-        v-if="!is_first && showLine && showInsertButtons"
-      ></div>
-
-      <!-- vertical line (below icon) w/buttons -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 61px; bottom: 30px; left: 15px"
-        v-if="showLine && showInsertButtons"
-      ></div>
-
-      <!-- insert before button -->
-      <div
-        class="absolute"
-        style="top: -10px; left: 4px"
-        v-if="is_first && showInsertButtons"
-      >
-        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-          <i class="db material-icons f3">add_circle</i>
-        </div>
-      </div>
-
-      <!-- insert after button -->
-      <div
-        class="absolute"
-        style="bottom: 0; left: 4px"
-        v-if="showInsertButtons"
-      >
-        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-          <i class="db material-icons f3">add_circle</i>
-        </div>
-      </div>
+      {{index+1}}.
     </div>
 
     <!-- icon -->
     <div
-      class="flex-none pa4 nt2"
+      class="flex-none pv4 pl3 pr4 nt2"
       v-if="showIcons"
     >
       <ServiceIcon
@@ -71,12 +30,53 @@
       />
     </div>
 
-    <!-- number -->
+    <!-- vertical line and insert buttons -->
     <div
-      class="flex-none pv4 pr3"
-      v-if="showNumbers"
+      class="absolute h-100"
+      v-if="(showLine || showInsertButtons) && showIcons"
     >
-      {{index+1}}.
+      <!-- vertical line w/o buttons -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 61px; bottom: -19px; left: 44px"
+        v-if="!is_last && showLine && !showInsertButtons"
+      ></div>
+
+      <!-- vertical line (above icon) w/buttons -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 0; height: 19px; left: 44px"
+        v-if="!is_first && showLine && showInsertButtons"
+      ></div>
+
+      <!-- vertical line (below icon) w/buttons -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 61px; bottom: 30px; left: 44px"
+        v-if="showLine && showInsertButtons"
+      ></div>
+
+      <!-- insert before button -->
+      <div
+        class="absolute"
+        style="top: -10px; left: 33px"
+        v-if="is_first && showInsertButtons"
+      >
+        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
+
+      <!-- insert after button -->
+      <div
+        class="absolute"
+        style="bottom: 0; left: 33px"
+        v-if="showInsertButtons"
+      >
+        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <i class="db material-icons f3">add_circle</i>
+        </div>
+      </div>
     </div>
 
     <!-- main content -->
