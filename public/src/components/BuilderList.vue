@@ -5,7 +5,6 @@
       :item="item"
       :index="index"
       :key="item.id"
-      :show-line="false"
       :show-insert-buttons="false"
     />
   </div>

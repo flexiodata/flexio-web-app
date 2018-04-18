@@ -64,7 +64,9 @@
         v-if="item.connection_type"
       />
       <task-icon
-        class="br1 square-3 invisible"
+        class="br1 square-3"
+        :icon="task_icon"
+        :bg-color="task_color"
         v-else
       />
     </div>
@@ -180,6 +182,18 @@
           'bl br bb br2 br--bottom': this.is_last,
           'relative z-2 css-active': this.is_active,
           'o-40 no-pointer-events': !this.is_active
+        }
+      },
+      task_icon() {
+        switch (this.item.ui) {
+          case 'file-chooser': return 'insert_drive_file'
+          case 'summary-page': return 'check'
+        }
+      },
+      task_color() {
+        switch (this.item.ui) {
+          case 'file-chooser': return '#0ab5f3'
+          case 'summary-page': return '#009900'
         }
       }
     },
