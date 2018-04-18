@@ -110,6 +110,7 @@
         <el-button
           class="ttu b"
           type="primary"
+          :disabled="!is_next_allowed"
           @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
           v-show="!is_last"
         >
@@ -130,7 +131,8 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
+  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
@@ -173,6 +175,15 @@
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      ceid() {
+        return _.get(this.item, 'connection_eid', null)
+      },
+      connections() {
+        return this.getAllConnections()
+      },
+      store_connection() {
+        return _.find(this.connections, { eid: this.ceid }, null)
+      },
       is_first() {
         return this.index == 0
       },
@@ -203,9 +214,19 @@
           case 'file-chooser': return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
+      },
+      is_next_allowed() {
+        if (this.item.ui == 'connection-chooser') {
+          return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+        }
+
+        return true
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllConnections'
+      ]),
       finishClick() {
         alert('Finished!')
       }
