@@ -1,7 +1,5 @@
 <template>
   <div>
-    Builder List
-    <hr>
     <builder-item
       v-for="(item, index) in prompts"
       :item="item"

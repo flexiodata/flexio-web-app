@@ -1,6 +1,5 @@
 <template>
   <div
-    class="pa2 mv2"
     :class="cls"
     :style="styl"
   >
@@ -14,29 +13,29 @@
     </div>
     <div class="flex flex-row justify-end" v-if="is_active">
       <el-button
-        size="mini"
+        size="small"
         class="ttu b"
         type="plain"
         @click="$store.commit('BUILDER__GO_PREV_ITEM')"
-        v-show="index > 0"
+        v-show="!is_first"
       >
         Back
       </el-button>
       <el-button
-        size="mini"
+        size="small"
         class="ttu b"
         type="primary"
         @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
-        v-show="index < prompts.length - 1"
+        v-show="!is_last"
       >
         Next
       </el-button>
       <el-button
-        size="mini"
+        size="small"
         class="ttu b"
         type="primary"
         @click="finishClick"
-        v-show="index == prompts.length - 1"
+        v-show="is_last"
       >
         Finish
       </el-button>
@@ -64,11 +63,23 @@
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      is_first() {
+        return this.index == 0
+      },
+      is_last() {
+        return this.index == this.prompts.length - 1
+      },
       is_active() {
         return this.index == this.active_prompt_idx
       },
       cls() {
-        return this.is_active ? 'bg-white' : ''
+        return {
+          'pa3': true,
+          'mv3': !this.is_first && !this.is_last,
+          'mb3': this.is_first,
+          'mt3': this.is_last,
+          'bg-white': this.is_active
+        }
       },
       styl() {
         return this.is_active ? 'box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)' : ''
