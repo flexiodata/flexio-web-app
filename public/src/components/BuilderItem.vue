@@ -1,44 +1,49 @@
 <template>
   <div
-    :id="item.id"
+    class="flex flex-row"
     :class="cls"
+    :id="item.id"
   >
-    <div>
+    <div class="flex-none pv4 ph3">
       {{index+1}}.
-      <span class="silver">
-        {{item.ui}}
-        <span v-if="item.variable">:</span>
-      </span>
-      {{item.variable}}
     </div>
-    <div class="flex flex-row justify-end" v-if="is_active">
-      <el-button
-        size="small"
-        class="ttu b"
-        type="plain"
-        @click="$store.commit('BUILDER__GO_PREV_ITEM')"
-        v-show="!is_first"
-      >
-        Back
-      </el-button>
-      <el-button
-        size="small"
-        class="ttu b"
-        type="primary"
-        @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
-        v-show="!is_last"
-      >
-        Next
-      </el-button>
-      <el-button
-        size="small"
-        class="ttu b"
-        type="primary"
-        @click="finishClick"
-        v-show="is_last"
-      >
-        Finish
-      </el-button>
+    <div
+      class="flex-fill bg-white pa4"
+      :class="content_cls"
+    >
+      <div>
+        <span class="silver">
+          {{item.ui}}
+          <span v-if="item.variable">:</span>
+        </span>
+        {{item.variable}}
+      </div>
+      <div class="mt3 nr3 nb3 flex flex-row justify-end" v-if="is_active">
+        <el-button
+          class="ttu b"
+          type="plain"
+          @click="$store.commit('BUILDER__GO_PREV_ITEM')"
+          v-show="!is_first"
+        >
+          Back
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+          v-show="!is_last"
+        >
+          Next
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click="finishClick"
+          v-show="is_last"
+        >
+          Finish
+        </el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -74,12 +79,16 @@
       },
       cls() {
         return {
-          'pa3': true,
-          'mv3': !this.is_first && !this.is_last,
-          'mb3': this.is_first,
-          'mt3': this.is_last,
-          'bg-white': this.is_active,
-          'css-active': this.is_active
+        }
+      },
+      content_cls() {
+        return {
+          'b--black-10': true,
+          'bl br': !this.is_first && !this.is_last,
+          'bl br bt br2 br--top': this.is_first,
+          'bl br bb br2 br--bottom': this.is_last,
+          'relative z-2 css-active': this.is_active,
+          'o-40 no-pointer-events': !this.is_active
         }
       }
     },
@@ -94,5 +103,6 @@
 <style scoped>
   .css-active {
     box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
+    transition: all 0.15s ease;
   }
 </style>
