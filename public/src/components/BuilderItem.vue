@@ -7,26 +7,34 @@
     <!-- insert buttons -->
     <div
       class="absolute h-100 ml4"
-      v-if="showAddButtons"
+      v-if="(showLine || showInsertButtons) && showIcons"
     >
-      <!-- vertical line -->
+      <!-- vertical line w/o buttons -->
+      <div
+        class="bl bw1 b--black-10 pl3 absolute"
+        style="top: 61px; bottom: -19px; left: 15px"
+        v-if="!is_last && showLine && !showInsertButtons"
+      ></div>
+
+      <!-- vertical line (above icon) w/buttons -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 0; height: 19px; left: 15px"
-        v-if="!is_first"
+        v-if="!is_first && showLine && showInsertButtons"
       ></div>
 
-      <!-- vertical line -->
+      <!-- vertical line (below icon) w/buttons -->
       <div
         class="bl bw1 b--black-10 pl3 absolute"
         style="top: 61px; bottom: 30px; left: 15px"
+        v-if="showLine && showInsertButtons"
       ></div>
 
       <!-- insert before button -->
       <div
         class="absolute"
         style="top: -10px; left: 4px"
-        v-if="is_first"
+        v-if="is_first && showInsertButtons"
       >
         <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
           <i class="db material-icons f3">add_circle</i>
@@ -37,6 +45,7 @@
       <div
         class="absolute"
         style="bottom: 0; left: 4px"
+        v-if="showInsertButtons"
       >
         <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
           <i class="db material-icons f3">add_circle</i>
@@ -121,7 +130,11 @@
         type: Number,
         required: true
       },
-      showAddButtons: {
+      showLine: {
+        type: Boolean,
+        default: true
+      },
+      showInsertButtons: {
         type: Boolean,
         default: true
       },
