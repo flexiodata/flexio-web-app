@@ -82,7 +82,6 @@
     <!-- main content -->
     <div
       class="flex-fill flex flex-column bg-white pa4"
-      style="min-height: 10rem"
       :class="content_cls"
     >
       <div class="flex-fill">

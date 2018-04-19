@@ -4,7 +4,7 @@
       <ServiceIcon class="square-4" :type="ctype" />
       <h3 class="fw6 f4 mid-gray mt2">Connect to {{service_name}}</h3>
     </div>
-    <div class="mv4 pa4 br2 ba b--black-05">
+    <div class="pa4 br2 ba b--black-05">
       <ConnectionChooserList
         class="mb3"
         style="max-height: 24rem"
@@ -34,7 +34,7 @@
       :visible.sync="show_connection_dialog"
     >
       <ConnectionEditPanel
-        :connection="store_connection"
+        :connection="edit_connection"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
         @submit="tryUpdateConnection"
@@ -68,6 +68,7 @@
     },
     data() {
       return {
+        edit_connection: null,
         show_connection_dialog: false
       }
     },
@@ -110,7 +111,7 @@
 
         this.$store.dispatch('createConnection', { attrs }).then(response => {
           var connection = response.body
-          this.chooseConnection(connection)
+          this.edit_connection = connection
           this.show_connection_dialog = true
         })
       },
@@ -123,6 +124,8 @@
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          var connection = response.body
+
           if (response.ok)
           {
             // TODO: shouldn't we do this in the ConnectionEditPanel?
@@ -135,6 +138,7 @@
               this.$store.track('Created Connection In Template Builder', analytics_payload)
             }
 
+            this.chooseConnection(connection)
             this.show_connection_dialog = false
           }
            else

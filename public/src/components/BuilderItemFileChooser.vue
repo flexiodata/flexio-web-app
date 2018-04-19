@@ -3,7 +3,7 @@
     <div class="tc">
       <h3 class="fw6 f4 mid-gray mt2">Choose files</h3>
     </div>
-    <div class="mv4 pa4 br2 ba b--black-05">
+    <div class="pa4 br2 ba b--black-05">
       <file-chooser
         style="max-height: 24rem"
         :connection="store_connection"
