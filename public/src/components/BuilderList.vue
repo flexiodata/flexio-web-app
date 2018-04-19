@@ -44,7 +44,7 @@
                 container: '#'+this.containerId,
                 duration: 400,
                 easing: 'ease-out',
-                offset: -64
+                offset: -132
             })
           }, 10)
         }

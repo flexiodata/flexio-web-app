@@ -6,12 +6,16 @@
     >
       <spinner size="large" message="Loading..." />
     </div>
-    <builder-list
+    <div
       class="center"
       style="max-width: 1280px"
-      :container-id="id"
       v-else-if="is_fetched"
-    />
+    >
+      <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
+      <builder-list
+        :container-id="id"
+      />
+    </div>
   </div>
 </template>
 
@@ -45,7 +49,8 @@
       ...mapState({
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
-        active_prompt_idx: state => state.builder.active_prompt_idx
+        active_prompt_idx: state => state.builder.active_prompt_idx,
+        title: state => state.builder.def.title
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
