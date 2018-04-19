@@ -31,7 +31,7 @@ const mutations = {
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
-      if (p.ui == 'connection-chooser')
+      if (p.ui == 'connection-chooser' || p.ui == 'file-chooser')
         return _.assign(p, { connection_eid: null })
 
       return p
@@ -43,13 +43,16 @@ const mutations = {
   BUILDER__UPDATE_ACTIVE_ITEM (state, attrs) {
     state.active_prompt = _.assign({}, state.active_prompt, attrs)
 
-    var idx = 0
+    var ap = state.active_prompt
     state.prompts = _.map(state.prompts, p => {
-      if (idx == state.active_prompt_idx) {
-        idx++
-        return state.active_prompt
+      if (p.id == ap.id) {
+        return ap
       } else {
-        idx++
+        // update any prompts that want to reference
+        // the active prompt's connection
+        if (p.connection == ap.variable) {
+          return _.assign(p, { connection_eid: ap.connection_eid })
+        }
         return p
       }
     })

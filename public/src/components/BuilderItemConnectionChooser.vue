@@ -78,9 +78,6 @@
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
-      service_name() {
-        return this.getConnectionInfo(this.ctype, 'service_name')
-      },
       connections() {
         return this.getAllConnections()
       },
@@ -92,6 +89,9 @@
       },
       store_connection_status_available() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
+      service_name() {
+        return this.getConnectionInfo(this.ctype, 'service_name')
       }
     },
     methods: {

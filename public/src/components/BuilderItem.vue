@@ -90,6 +90,10 @@
           :item="item"
           v-if="item.ui == 'connection-chooser'"
         />
+        <BuilderItemFileChooser
+          :item="item"
+          v-else-if="item.ui == 'file-chooser'"
+        />
         <div v-else>
           <span class="silver">
             {{item.ui}}
@@ -136,6 +140,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
+  import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
 
   export default {
     props: {
@@ -167,7 +172,8 @@
     components: {
       ServiceIcon,
       TaskIcon,
-      BuilderItemConnectionChooser
+      BuilderItemConnectionChooser,
+      BuilderItemFileChooser
     },
     computed: {
       ...mapState({
