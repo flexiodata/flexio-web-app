@@ -6,7 +6,7 @@
       </div>
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose files</h3>
     </div>
-    <div>
+    <div v-show="is_shown">
       <file-chooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -29,6 +29,10 @@
         type: Object,
         required: true
       },
+      index: {
+        type: Number,
+        required: true
+      }
     },
     components: {
       TaskIcon,
@@ -36,7 +40,8 @@
     },
     computed: {
       ...mapState({
-        prompts: state => state.builder.prompts
+        prompts: state => state.builder.prompts,
+        active_prompt_idx: state => state.builder.active_prompt_idx
       }),
       id() {
         return _.get(this.item, 'id', '')
@@ -52,6 +57,9 @@
       },
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
+      },
+      is_shown() {
+        return this.index <= this.active_prompt_idx
       }
     },
     methods: {

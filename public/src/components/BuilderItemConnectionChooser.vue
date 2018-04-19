@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="tl pb3 bb b--light-gray">
+    <div class="tl pb3">
       <ServiceIcon class="square-4" :type="ctype" v-if="false" />
       <h3 class="fw6 f3 mid-gray mt0 mb2">Connect to {{service_name}}</h3>
     </div>
-    <div>
+    <div class="bt b--light-gray" v-show="is_shown">
       <ConnectionChooserList
         class="mb3"
         style="max-height: 24rem"
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ServiceIcon from './ServiceIcon.vue'
@@ -61,6 +61,10 @@
         type: Object,
         required: true
       },
+      index: {
+        type: Number,
+        required: true
+      }
     },
     mixins: [MixinConnectionInfo],
     components: {
@@ -75,6 +79,9 @@
       }
     },
     computed: {
+      ...mapState({
+        active_prompt_idx: state => state.builder.active_prompt_idx
+      }),
       ceid() {
         return _.get(this.item, 'connection_eid', null)
       },
@@ -95,6 +102,9 @@
       },
       service_name() {
         return this.getConnectionInfo(this.ctype, 'service_name')
+      },
+      is_shown() {
+        return this.index <= this.active_prompt_idx
       }
     },
     methods: {

@@ -87,18 +87,19 @@
       <div class="flex-fill">
         <BuilderItemConnectionChooser
           :item="item"
+          :index="index"
           v-if="item.ui == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
+          :index="index"
           v-else-if="item.ui == 'file-chooser'"
         />
-        <div
+        <BuilderItemSummaryPage
+          :item="item"
+          :index="index"
           v-else-if="item.ui == 'summary-page'"
-        >
-          <i class="el-icon-success v-mid dark-green f2"></i>
-
-        </div>
+        />
         <div v-else>
           <span class="silver">
             {{item.ui}}
@@ -107,7 +108,10 @@
           {{item.variable}}
         </div>
       </div>
-      <div class="flex-none mt4 flex flex-row justify-end" v-if="is_active">
+      <div
+        class="flex-none mt4 flex flex-row justify-end"
+        v-if="is_active && !is_last"
+      >
         <el-button
           class="ttu b"
           type="plain"
@@ -121,17 +125,8 @@
           type="primary"
           :disabled="!is_next_allowed"
           @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
-          v-show="!is_last"
         >
           Next
-        </el-button>
-        <el-button
-          class="ttu b"
-          type="primary"
-          @click="finishClick"
-          v-show="is_last"
-        >
-          Finish
         </el-button>
       </div>
     </div>
@@ -147,6 +142,7 @@
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
+  import BuilderItemSummaryPage from './BuilderItemSummaryPage.vue'
 
   export default {
     props: {
@@ -179,7 +175,8 @@
       ServiceIcon,
       TaskIcon,
       BuilderItemConnectionChooser,
-      BuilderItemFileChooser
+      BuilderItemFileChooser,
+      BuilderItemSummaryPage
     },
     computed: {
       ...mapState({
@@ -259,45 +256,7 @@
       ...mapGetters([
         'getAllConnections',
         'getAllTokens'
-      ]),
-      finishClick() {
-        alert('Finished!')
-
-        /*
-        var attrs = { name: _.get(this.def, 'title', 'Untitled Pipe') }
-
-        var pipe_fn = (Flexio, callback) => {
-          eval(this.code)
-        }
-
-        Flexio.setup(this.apiKey, this.sdkOptions)
-
-        pipe_fn.call(this, Flexio, (err, response) => {
-          debugger
-        })
-
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
-
-            this.$store.track('Created Pipe In Onboarding', analytics_payload)
-
-            this.pipe_name = _.get(pipe, 'name', '')
-            this.pipe_alias = _.get(pipe, 'alias', '')
-            this.pipe = _.cloneDeep(pipe)
-
-            this.$nextTick(() => { this.show_pipe_save_dialog = false })
-            this.show_pipe_deploy_dialog = true
-          }
-           else
-          {
-            this.$store.track('Created Pipe In Onboarding (Error)')
-          }
-        })
-        */
-      }
+      ])
     }
   }
 </script>
