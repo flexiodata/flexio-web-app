@@ -438,6 +438,7 @@ class Context(object):
         self.input = input
         self.output = output
         self._query = None
+        self._form = None
         self.pipe = PipeFunctions()
 
     @property
@@ -446,6 +447,11 @@ class Context(object):
             self._query = proxy.invoke('getQueryParameters', [])
         return self._query
 
+    @property
+    def form(self):
+        if self._form is None:
+            self._form = proxy.invoke('getFormParameters', [])
+        return self._form
 
 def run(handler):
 
