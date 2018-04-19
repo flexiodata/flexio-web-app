@@ -95,6 +95,11 @@
           :index="index"
           v-else-if="item.ui == 'file-chooser'"
         />
+        <BuilderItemInput
+          :item="item"
+          :index="index"
+          v-else-if="item.ui == 'input'"
+        />
         <BuilderItemSummaryPage
           :item="item"
           :index="index"
@@ -141,6 +146,7 @@
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
+  import BuilderItemInput from './BuilderItemInput.vue'
   import BuilderItemSummaryPage from './BuilderItemSummaryPage.vue'
 
   export default {
@@ -175,6 +181,7 @@
       TaskIcon,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
+      BuilderItemInput,
       BuilderItemSummaryPage
     },
     computed: {
@@ -211,6 +218,10 @@
           return _.get(this.item, 'files', []).length > 0
         }
 
+        if (this.item.ui == 'input') {
+          return _.get(this.item, 'value', '').length > 0
+        }
+
         return true
       },
       content_cls() {
@@ -226,12 +237,14 @@
       task_icon() {
         switch (this.item.ui) {
           case 'file-chooser': return 'insert_drive_file'
+          case 'input':        return 'edit'
           case 'summary-page': return 'check'
         }
       },
       task_color() {
         switch (this.item.ui) {
           case 'file-chooser': return '#0ab5f3'
+          case 'input':        return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
       }

@@ -28,6 +28,37 @@
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
 
+  const test_def = {
+    "title": "Test Prompts",
+    "description": "",
+    "keywords": [],
+    "connections": [],
+    "content": "# Test prompts\n\nExample template for rendering ar\n",
+    "prompts": [
+      {
+        "variable": "input",
+        "ui": "input",
+        "msg": "Enter a value",
+        "value": ""
+      },
+      {
+        "variable": "connection-chooser",
+        "ui": "connection-chooser",
+        "connection_type": "dropbox"
+      },
+      {
+        "variable": "file-chooser",
+        "ui": "file-chooser",
+        "connection": "connection-chooser"
+      },
+      {
+        "ui": "summary-page"
+      }
+    ],
+    "pipe_language": "javascript",
+    "pipe": "Flexio.pipe()\n  .echo('${input}')\n"
+  }
+
   export default {
     components: {
       Spinner,
@@ -64,13 +95,18 @@
       loadTemplate() {
         this.$store.commit('BUILDER__FETCHING_DEF', true)
 
-        axios.get('/def/templates/' + this.slug + '.json').then(response => {
-          var def = response.data
-          this.$store.commit('BUILDER__INIT_DEF', def)
+        if (this.slug == 'test') {
+          this.$store.commit('BUILDER__INIT_DEF', test_def)
           this.$store.commit('BUILDER__FETCHING_DEF', false)
-        }).catch(error => {
-          this.$store.commit('BUILDER__FETCHING_DEF', false)
-        })
+        } else {
+          axios.get('/def/templates/' + this.slug + '.json').then(response => {
+            var def = response.data
+            this.$store.commit('BUILDER__INIT_DEF', def)
+            this.$store.commit('BUILDER__FETCHING_DEF', false)
+          }).catch(error => {
+            this.$store.commit('BUILDER__FETCHING_DEF', false)
+          })
+        }
       },
       updateCode() {
         this.$store.commit('BUILDER__UPDATE_CODE')
