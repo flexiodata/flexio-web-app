@@ -306,11 +306,11 @@
       this.tryFetchPipe()
       this.tryFetchProcesses()
       this.tryFetchConnections()
-      this.setPipeView(PIPEHOME_VIEW_SDK_JS)
+      //this.setPipeView(PIPEHOME_VIEW_SDK_JS)
     },
     mounted() {
       // only start in configure mode if we have a pipe and it's already been fetched;
-      // if not, do this check one the pipe has been fetched in tryFetchPipe()
+      // if not, do this check once the pipe has been fetched in tryFetchPipe()
       if (_.isObject(this.pipe) && _.get(this.pipe, 'is_fetched'))
       {
         // if we're starting in configure mode, start the prompting
@@ -330,6 +330,7 @@
       ]),
 
       setPipeView(view) {
+        /*
         if (_.includes([PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER], view))
         {
           // don't strip off query string
@@ -345,6 +346,7 @@
 
           this.$router.replace({ name: ROUTE_PIPES, params, query })
         }
+        */
       },
 
       showBuilderView() {
@@ -507,6 +509,13 @@
             }
           })
         }
+
+        // make sure we remove the 'run' state
+        if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_RUN) {
+          var params = _.omit(_.get(this.$route, 'params', {}), ['state'])
+          var query = _.get(this.$route, 'query', undefined)
+          this.$router.replace({ name: ROUTE_PIPES, params, query })
+        }
       },
 
       cancelProcess() {
@@ -535,6 +544,10 @@
             {
               // if we're starting in configure mode, start the prompting
               if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
+                this.runPipe()
+
+              // if we're starting in run mode, run the pipe
+              if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_RUN)
                 this.runPipe()
             }
              else

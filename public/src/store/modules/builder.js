@@ -34,7 +34,10 @@ const mutations = {
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
-      if (p.ui == 'connection-chooser' || p.ui == 'file-chooser')
+      if (p.ui == 'connection-chooser')
+        return _.assign(p, { connection_eid: null })
+
+      if (p.ui == 'file-chooser')
         return _.assign(p, { connection_eid: null })
 
       return p
@@ -82,6 +85,10 @@ const mutations = {
           if (!_.isNil(path)) {
             code = code.replace(regex, path)
           }
+          break
+        case 'input':
+          var val = _.get(p, 'value', '')
+          code = code.replace(regex, val)
           break
       }
     })

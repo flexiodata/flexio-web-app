@@ -20,7 +20,7 @@ import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
 import util from './utils'
-import { ROUTE_SIGNIN } from './constants/route'
+import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 import './stylesheets/style.less' // common styles
 
@@ -122,6 +122,8 @@ router.beforeEach((to, from, next) => {
     if (store.state.user_fetching)
       return
 
+    var redirect_to_signup = to.name == ROUTE_BUILDER
+
     // check if the user is signed in
     store.dispatch('fetchCurrentUser').then(response => {
       if (store.state.active_user_eid.length > 0)
@@ -134,14 +136,14 @@ router.beforeEach((to, from, next) => {
       {
         // user is not signed in; redirect them to the sign in page
         next({
-          name: ROUTE_SIGNIN,
+          name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
           query: { redirect: to.fullPath }
         })
       }
     }, response => {
       // error fetching current user; bail out
       next({
-        name: ROUTE_SIGNIN,
+        name: redirect_to_signup ? ROUTE_SIGNUP : ROUTE_SIGNIN,
         query: { redirect: to.fullPath }
       })
     })
