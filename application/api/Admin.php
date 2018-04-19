@@ -39,15 +39,14 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -90,15 +89,14 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -130,15 +128,14 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -170,15 +167,14 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -210,15 +206,14 @@ class Admin
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -251,15 +246,14 @@ class Admin
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'owned_by' => array('type' => 'string',  'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'owned_by'    => array('type' => 'eid',     'required' => false),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

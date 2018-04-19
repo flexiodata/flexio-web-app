@@ -17,70 +17,70 @@ declare(strict_types=1);
 
 class User extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
-        if (!isset($params['username']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-        if (!isset($params['email']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
-
         // convert username and email to lowercase
-        $params['username'] = strtolower($params['username']);
-        $params['email'] = strtolower($params['email']);
+        if (isset($params['username']))
+            $params['username'] = strtolower($params['username']);
+        if (isset($params['email']))
+            $params['email'] = strtolower($params['email']);
 
-        if (!\Flexio\Base\Identifier::isValid($params['username']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        if (!\Flexio\Services\Email::isValid($params['email']))
+        // make sure the properties that are being updated are the correct type
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'        => array('type' => 'string',     'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'username'          => array('type' => 'identifier', 'required' => true),
+                'full_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'first_name'        => array('type' => 'string',     'required' => false, 'default' => ''),
+                'last_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'email'             => array('type' => 'email',      'required' => true),
+                'phone'             => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_city'     => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_state'    => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_country'  => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_name'      => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_url'       => array('type' => 'string',     'required' => false, 'default' => ''),
+                'locale_language'   => array('type' => 'string',     'required' => false, 'default' => 'en_US'),
+                'locale_decimal'    => array('type' => 'string',     'required' => false, 'default' => '.'),
+                'locale_thousands'  => array('type' => 'string',     'required' => false, 'default' => ','),
+                'locale_dateformat' => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
+                'timezone'          => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
+                'password'          => array('type' => 'password',   'required' => false),
+                'verify_code'       => array('type' => 'string',     'required' => false, 'default' => ''),
+                'config'            => array('type' => 'string',     'required' => false, 'default' => '{}'),
+                'owned_by'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'created_by'        => array('type' => 'string',     'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        // encode the password
-        if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = self::encodePassword($params['password']);
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // if a password is supplied, encrypt it; otherwise write out an empty string
+        if (isset($process_arr['password']))
+            $process_arr['password'] = self::encodePassword($process_arr['password']);
+             else
+            $process_arr['password'] = '';
 
         $db = $this->getDatabase();
         try
         {
-            // make sure the user doesn't already exist, based on
-            // username and email
-            $qusername = $db->quote($params['username']);
-            $qemail = $db->quote($params['email']);
+            // make sure the user doesn't already exist, based on username and email
+            $qusername = $db->quote($process_arr['username']);
+            $qemail = $db->quote($process_arr['email']);
+            $existing_item = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
+            if ($existing_item !== false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-            $eid = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
-            if ($eid !== false)
-                throw new \Exception();
-
-            // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'                    => $eid,
-                'eid_status'             => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'username'               => $params['username'] ?? '',
-                'full_name'              => $params['full_name'] ?? '',
-                'first_name'             => $params['first_name'] ?? '',
-                'last_name'              => $params['last_name'] ?? '',
-                'email'                  => $params['email'] ?? '',
-                'phone'                  => $params['phone'] ?? '',
-                'location_city'          => $params['location_city'] ?? '',
-                'location_state'         => $params['location_state'] ?? '',
-                'location_country'       => $params['location_country'] ?? '',
-                'company_name'           => $params['company_name'] ?? '',
-                'company_url'            => $params['company_url'] ?? '',
-                'locale_language'        => $params['locale_language'] ?? 'en_US',
-                'locale_decimal'         => $params['locale_decimal'] ?? '.',
-                'locale_thousands'       => $params['locale_thousands'] ?? ',',
-                'locale_dateformat'      => $params['locale_dateformat'] ?? 'm/d/Y',
-                'timezone'               => $params['timezone'] ?? 'UTC',
-                'password'               => $params['password'] ?? '',
-                'verify_code'            => $params['verify_code'] ?? '',
-                'config'                 => $params['config'] ?? '{}',
-                'owned_by'               => $params['owned_by'] ?? '',
-                'created_by'             => $params['created_by'] ?? '',
-                'created'                => $timestamp,
-                'updated'                => $timestamp
-            );
 
-            // add the properties
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
+
             if ($db->insert('tbl_user', $process_arr) === false)
                 throw new \Exception();
 
@@ -102,47 +102,37 @@ class User extends ModelBase
         if (!\Flexio\Base\Eid::isValid($eid))
             return false;
 
-        // encode the password
-        if (isset($params['password']) && strlen($params['password']) > 0)
-            $params['password'] = self::encodePassword($params['password']);
-
         // convert username and email to lowercase
         if (isset($params['username']))
             $params['username'] = strtolower($params['username']);
         if (isset($params['email']))
             $params['email'] = strtolower($params['email']);
 
-        // if username or email is specified, make sure it's not set to null
-        if (is_array($params) && array_key_exists('username', $params) && !\Flexio\Base\Identifier::isValid($params['username']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        if (is_array($params) && array_key_exists('email', $params) && !\Flexio\Services\Email::isValid($params['email']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
         // make sure the properties that are being updated are the correct type
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'             => array('type' => 'string', 'required' => false),
-                'username'               => array('type' => 'string',  'required' => false),
-                'full_name'              => array('type' => 'string',  'required' => false),
-                'first_name'             => array('type' => 'string',  'required' => false),
-                'last_name'              => array('type' => 'string',  'required' => false),
-                'email'                  => array('type' => 'string',  'required' => false),
-                'phone'                  => array('type' => 'string',  'required' => false),
-                'location_city'          => array('type' => 'string',  'required' => false),
-                'location_state'         => array('type' => 'string',  'required' => false),
-                'location_country'       => array('type' => 'string',  'required' => false),
-                'company_name'           => array('type' => 'string',  'required' => false),
-                'company_url'            => array('type' => 'string',  'required' => false),
-                'locale_language'        => array('type' => 'string',  'required' => false),
-                'locale_decimal'         => array('type' => 'string',  'required' => false),
-                'locale_thousands'       => array('type' => 'string',  'required' => false),
-                'locale_dateformat'      => array('type' => 'string',  'required' => false),
-                'timezone'               => array('type' => 'string',  'required' => false),
-                'password'               => array('type' => 'string',  'required' => false),
-                'verify_code'            => array('type' => 'string',  'required' => false),
-                'config'                 => array('type' => 'string',  'required' => false),
-                'owned_by'               => array('type' => 'string',  'required' => false),
-                'created_by'             => array('type' => 'string',  'required' => false)
+                'eid_status'        => array('type' => 'string',     'required' => false),
+                'username'          => array('type' => 'identifier', 'required' => false),
+                'full_name'         => array('type' => 'string',     'required' => false),
+                'first_name'        => array('type' => 'string',     'required' => false),
+                'last_name'         => array('type' => 'string',     'required' => false),
+                'email'             => array('type' => 'email',      'required' => false),
+                'phone'             => array('type' => 'string',     'required' => false),
+                'location_city'     => array('type' => 'string',     'required' => false),
+                'location_state'    => array('type' => 'string',     'required' => false),
+                'location_country'  => array('type' => 'string',     'required' => false),
+                'company_name'      => array('type' => 'string',     'required' => false),
+                'company_url'       => array('type' => 'string',     'required' => false),
+                'locale_language'   => array('type' => 'string',     'required' => false),
+                'locale_decimal'    => array('type' => 'string',     'required' => false),
+                'locale_thousands'  => array('type' => 'string',     'required' => false),
+                'locale_dateformat' => array('type' => 'string',     'required' => false),
+                'timezone'          => array('type' => 'string',     'required' => false),
+                'password'          => array('type' => 'password',   'required' => false),
+                'verify_code'       => array('type' => 'string',     'required' => false),
+                'config'            => array('type' => 'string',     'required' => false),
+                'owned_by'          => array('type' => 'string',     'required' => false),
+                'created_by'        => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -152,23 +142,46 @@ class User extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        // encode the password
+        if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
+            $process_arr['password'] = self::encodePassword($process_arr['password']);
+
         $db = $this->getDatabase();
+        $db->beginTransaction();
         try
         {
-            // TODO: make sure we're not changing the user name or email to
-            // another one that already exists
-
-            // if the item doesn't exist, return false; TODO: throw exception instead?
+            // if the item doesn't exist, return false
             $existing_status = $this->getStatus($eid);
             if ($existing_status === \Model::STATUS_UNDEFINED)
+            {
+                $db->rollback();
                 return false;
+            }
+
+            if (isset($process_arr['username']))
+            {
+                $qusername = $db->quote($process_arr['username']);
+                $existing_eid = $db->fetchOne("select eid from tbl_user where username = $qusername");
+                if ($existing_eid !== false && $existing_eid !== $eid)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            }
+
+            if (isset($process_arr['email']))
+            {
+                $qemail = $db->quote($process_arr['email']);
+                $existing_eid = $db->fetchOne("select eid from tbl_user where email = $qemail");
+                if ($existing_eid !== false && $existing_eid !== $eid)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            }
 
             // set the properties
             $db->update('tbl_user', $process_arr, 'eid = ' . $db->quote($eid));
+            $db->commit();
             return true;
         }
         catch (\Exception $e)
         {
+            $db->rollback();
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
     }

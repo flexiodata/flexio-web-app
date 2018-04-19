@@ -42,7 +42,7 @@ class Insert extends \Flexio\Jobs\Base
         if (strlen($path) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
 

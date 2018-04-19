@@ -17,60 +17,53 @@ declare(strict_types=1);
 
 class Pipe extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $params['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'      => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'alias'           => array('type' => 'alias',  'required' => false, 'default' => ''),
+                'name'            => array('type' => 'string', 'required' => false, 'default' => ''),
+                'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'input'           => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'output'          => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
+                'schedule_status' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_STATUS_INACTIVE),
+                'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'      => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
-            if (isset($params['alias']) && $params['alias'] !== '')
+            if ($process_arr['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
-                $ownedby = $params['owned_by'] ?? '';
-                $qownedby = $db->quote($ownedby);
-                $qalias = $db->quote($alias);
+                $qownedby = $db->quote($process_arr['owned_by']);
+                $qalias = $db->quote($process_arr['alias']);
                 $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
                 if ($existing_item !== false)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             }
 
             // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PIPE, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'             => $eid,
-                'eid_status'      => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'alias'           => $params['alias'] ?? '',
-                'name'            => $params['name'] ?? '',
-                'description'     => $params['description'] ?? '',
-                'input'           => $params['input'] ?? '{}',
-                'output'          => $params['output'] ?? '{}',
-                'task'            => $params['task'] ?? '{}',
-                'schedule'        => $params['schedule'] ?? '',
-                'schedule_status' => $params['schedule_status'] ?? \Model::PIPE_STATUS_INACTIVE,
-                'owned_by'        => $params['owned_by'] ?? '',
-                'created_by'      => $params['created_by'] ?? '',
-                'created'         => $timestamp,
-                'updated'         => $timestamp
-            );
 
-            // make sure the schedule status is an 'A' or an 'I'
-            if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             // add the properties
             if ($db->insert('tbl_pipe', $process_arr) === false)
@@ -100,17 +93,17 @@ class Pipe extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'      => array('type' => 'string',  'required' => false),
-                'alias'           => array('type' => 'string',  'required' => false),
-                'name'            => array('type' => 'string',  'required' => false),
-                'description'     => array('type' => 'string',  'required' => false),
-                'input'           => array('type' => 'string',  'required' => false),
-                'output'          => array('type' => 'string',  'required' => false),
-                'task'            => array('type' => 'string',  'required' => false),
-                'schedule'        => array('type' => 'string',  'required' => false),
-                'schedule_status' => array('type' => 'string',  'required' => false),
-                'owned_by'        => array('type' => 'string',  'required' => false),
-                'created_by'      => array('type' => 'string',  'required' => false)
+                'eid_status'      => array('type' => 'string', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
+                'name'            => array('type' => 'string', 'required' => false),
+                'description'     => array('type' => 'string', 'required' => false),
+                'input'           => array('type' => 'string', 'required' => false),
+                'output'          => array('type' => 'string', 'required' => false),
+                'task'            => array('type' => 'string', 'required' => false),
+                'schedule'        => array('type' => 'string', 'required' => false),
+                'schedule_status' => array('type' => 'string', 'required' => false),
+                'owned_by'        => array('type' => 'string', 'required' => false),
+                'created_by'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -119,20 +112,6 @@ class Pipe extends ModelBase
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $process_arr['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -157,8 +136,9 @@ class Pipe extends ModelBase
                 if ($owner_to_check !== false)
                 {
                     // we found an owner; see if the alias exists for the owner
+                    $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
-                    $qalias= $db->quote($alias);
+                    $qalias = $db->quote($alias);
                     $existing_eid = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
 
                     // don't allow an alias to be set if it's already used for another eid
@@ -264,11 +244,6 @@ class Pipe extends ModelBase
         return $result;
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -281,6 +256,11 @@ class Pipe extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

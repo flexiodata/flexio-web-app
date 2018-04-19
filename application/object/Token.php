@@ -67,6 +67,9 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Token
     {
+        if (!isset($properties))
+            $properties = array();
+
         // the owned_by needs to be set and be a valid user
         if (!isset($properties['owned_by']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);

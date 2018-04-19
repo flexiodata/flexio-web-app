@@ -17,23 +17,29 @@ declare(strict_types=1);
 
 class Comment extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status' => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'comment'    => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by' => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
         $db = $this->getDatabase();
         try
         {
             // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_COMMENT, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_COMMENT, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'           => $eid,
-                'eid_status'    => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'comment'       => $params['comment'] ?? '',
-                'owned_by'      => $params['owned_by'] ?? '',
-                'created_by'    => $params['created_by'] ?? '',
-                'created'       => $timestamp,
-                'updated'       => $timestamp
-            );
+
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             // add the properties
             if ($db->insert('tbl_comment', $process_arr) === false)
@@ -140,11 +146,6 @@ class Comment extends ModelBase
         return $rows[0];
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -157,6 +158,11 @@ class Comment extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

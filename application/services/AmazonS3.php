@@ -31,8 +31,8 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'region' => array('type' => 'string', 'required' => true),
-                'bucket' => array('type' => 'string', 'required' => true),
+                'region'    => array('type' => 'string', 'required' => true),
+                'bucket'    => array('type' => 'string', 'required' => true),
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
@@ -313,7 +313,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                         $path = rtrim($path, '/');
                         if (substr($path, 0, 1) != '/')
                             $path = '/' . $path;
-                        
+
                         $arr = \Flexio\Base\File::splitBasePathAndName($path);
                         $base = $arr['base'];
                         $name = $arr['name'];
@@ -475,7 +475,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
 
-        
+
         $dest_is_folder = false;
         try
         {

@@ -28,7 +28,7 @@ class Ftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'host' => array('type' => 'string', 'required' => true),
+                'host'     => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)

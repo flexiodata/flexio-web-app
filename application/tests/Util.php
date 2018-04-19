@@ -100,11 +100,12 @@ class Util
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); // because using localhost
-        $result = curl_exec($ch);
+        $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
         curl_close($ch);
 
-        return [ 'code' => $http_code, 'response' => $result ];
+        return [ 'code' => $http_code, 'content_type' => $content_type, 'response' => $response ];
     }
 
     public static function evalExpression($expr)
@@ -174,11 +175,11 @@ EOD;
     public static function createUser(string $username = null, string $email = null, string $password = null) : string
     {
         if (!isset($username))
-            $username = \Flexio\Base\Util::generateHandle();
+            $username =\Flexio\Base\Identifier::generate();
         if (!isset($email))
             $email = \Flexio\Tests\Util::createEmailAddress();
         if (!isset($password))
-            $password = \Flexio\Base\Util::generatePassword();
+            $password = \Flexio\Base\Password::generate();
 
         $verify_code = \Flexio\Base\Util::generateHandle();
         $new_user_info = array(

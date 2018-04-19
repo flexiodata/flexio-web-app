@@ -35,7 +35,7 @@ class Request extends \Flexio\Jobs\Base
 
         $params = $this->getJobParameters();
 
-        $current_user_eid = \Flexio\System\System::getCurrentUserEid();
+        $owner_user_eid = $process->getOwner();
 
         // note: don't clear out the streams; this job simply adds a new stream
 
@@ -56,7 +56,7 @@ class Request extends \Flexio\Jobs\Base
         {
             if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
             {
-                $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $connection_identifier);
+                $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
                 $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
             }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
@@ -70,7 +70,7 @@ class Request extends \Flexio\Jobs\Base
                 $eid_from_identifier = $url;
                 if (\Flexio\Base\Eid::isValid($eid_from_identifier) === false)
                 {
-                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($current_user_eid, $eid_from_identifier);
+                    $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $eid_from_identifier);
                     if ($eid_from_identifier === false)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
                 }

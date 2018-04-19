@@ -182,7 +182,7 @@ class Email extends \Flexio\Jobs\Base
         $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
         $fname = $storage_tmpbase . "emailattach-" . \Flexio\Base\Util::generateRandomString(20);
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
 

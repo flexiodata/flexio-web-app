@@ -45,7 +45,7 @@ class Segment
         // maek sure we have an 'action' query parameter
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'action'        => array('type' => 'string', 'required' => true)
+                'action' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

@@ -20,7 +20,8 @@ namespace Flexio\Jobs;
 {
     "op": "exit",
     "params": {
-        "code": ""
+        "code": "",
+        "response": ""
     }
 }
 */
@@ -31,10 +32,23 @@ class Exit1 extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
+        $instream = $process->getStdin();
+        $outstream = $process->getStdout();
+
         $job_definition = $this->getProperties();
         $code = $job_definition['params']['code'] ?? \Flexio\Jobs\Process::RESPONSE_NORMAL;
+        $response = $job_definition['params']['response'] ?? '';
 
-        // this next line will cause the proces loop to exit
+        if (is_array($response) || is_object($response))
+        {
+            $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
+            $response = json_encode($response);
+        }
+
+        $streamwriter = $outstream->getWriter();
+        $streamwriter->write($response);
+
+        // this next line will cause the process loop to exit
         // and return the http response code in $code
         $process->setResponseCode((int)$code);
     }

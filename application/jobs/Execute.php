@@ -346,13 +346,27 @@ class ScriptHost
     private $output_streams = [];
     private $output_writers = [];
 
+    
+    
+    // I'd like to add these type checks back, but I was getting an error running this pipe:
+    // Flexio.pipe()
+    //   .javascript(function(ctx) {
+    //        ctx.pipe.create("/google-sheets-bwilliams/BensNewSheet222")
+    //        ctx.pipe.insert("/google-sheets-bwilliams/BensNewSheet222", [["a","b","c"]])
+    //    })
+    
+    
+    //public function setProcess(\Flexio\IFace\Process $process)
     public function setProcess($process)
     {
         $this->process = $process;
     }
 
-
-
+    //public function getProcess() : \Flexio\IFace\Process
+    public function getProcess()
+    {
+        return $this->process;
+    }
 
     private function getInputReader($idx)
     {
@@ -392,8 +406,6 @@ class ScriptHost
         return $ret;
     }
 
-
-
     public function func_hello($message)
     {
         return "Parameter = $message";
@@ -417,6 +429,20 @@ class ScriptHost
         return (object)$_GET;
     }
 
+    public function func_getFormParameters()
+    {
+        $form = [];
+        $params = $this->process->getParams();
+        foreach ($params as $k => $v)
+        {
+            if (substr($k, 0, 5) == 'form.')
+            {
+                $form[substr($k,5)] = $v->getReader()->read();
+            }
+        }
+        return (object)$form;
+    }
+
     private $runjob_stdin = null;
 
     public function func_runJob($json)
@@ -429,6 +455,7 @@ class ScriptHost
             $this->runjob_stdin = $this->process->getStdin();
 
         $process = \Flexio\Jobs\Process::create();
+        $process->setOwner($this->getProcess()->getOwner());
         $process->getStdin()->copyFrom($this->runjob_stdin);
         $process->execute($task);
 
@@ -586,7 +613,7 @@ class ScriptHost
 
         if (is_object($properties))
             $properties = (array)$properties;
-        
+
         $stream = $this->output_streams[$stream_idx];
 
         $set = array();
@@ -602,7 +629,7 @@ class ScriptHost
                 if (is_object($properties['structure'][$i]))
                     $properties['structure'][$i] = (array)$properties['structure'][$i];
             }
-            
+
             $set['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
             $set['structure'] = $properties['structure'];
         }

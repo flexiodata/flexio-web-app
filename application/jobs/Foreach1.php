@@ -80,7 +80,7 @@ class Foreach1 extends \Flexio\Jobs\Base
         {
             while (($row = $streamreader->readRow()) !== false)
             {
-                $this->doIteration($row);
+                $this->doIteration($process->getOwner(), $row);
             }
         }
         else if ($mime_type == \Flexio\Base\ContentType::JSON)
@@ -94,28 +94,28 @@ class Foreach1 extends \Flexio\Jobs\Base
             {
                 foreach ($json as $item)
                 {
-                    $this->doIteration($item);
+                    $this->doIteration($process->getOwner(), $item);
                 }
             }
             else
             {
-                $this->doIteration($json);
+                $this->doIteration($process->getOwner(), $json);
             }
         }
         else
         {
             // nothing to iterate over -- use the input stream
-            $this->doIteration($instream);
+            $this->doIteration($process->getOwner(), $instream);
         }
 
 
         $process->setParams($this->env);
     }
 
-
-    private function doIteration($input)
+    private function doIteration(string $process_user_eid, $input)
     {
         $subprocess = \Flexio\Jobs\Process::create();
+        $subprocess->setOwner($process_user_eid);
         $subprocess->setParams($this->env);
 
         if ($input instanceof \Flexio\Iface\IStream)

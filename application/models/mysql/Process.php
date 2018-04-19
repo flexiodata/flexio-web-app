@@ -17,34 +17,43 @@ declare(strict_types=1);
 
 class Process extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'parent_eid'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'process_mode'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'process_hash'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'impl_revision'  => array('type' => 'string', 'required' => false, 'default' => ''),
+                'task'           => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'input'          => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'output'         => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'started_by'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'started'        => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'finished'       => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'process_info'   => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'process_status' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'cache_used'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'owned_by'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'     => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $db = $this->getDatabase();
         try
         {
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_PROCESS, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'            => $eid,
-                'eid_status'     => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'parent_eid'     => $params['parent_eid'] ?? '',
-                'process_mode'   => $params['process_mode'] ?? '',
-                'process_hash'   => $params['process_hash'] ?? '',
-                'impl_revision'  => $params['impl_revision'] ?? '',
-                'task'           => $params['task'] ?? '{}',
-                'input'          => $params['input'] ?? '{}',
-                'output'         => $params['output'] ?? '{}',
-                'started_by'     => $params['started_by'] ?? '',
-                'started'        => $params['started'] ?? null,
-                'finished'       => $params['finished'] ?? null,
-                'process_info'   => $params['process_info'] ?? '{}',
-                'process_status' => $params['process_status'] ?? '',
-                'cache_used'     => $params['cache_used'] ?? '',
-                'owned_by'       => $params['owned_by'] ?? '',
-                'created_by'     => $params['created_by'] ?? '',
-                'created'        => $timestamp,
-                'updated'        => $timestamp
-            );
+
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             if ($db->insert('tbl_process', $process_arr) === false)
                 throw new \Exception();
@@ -69,22 +78,22 @@ class Process extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'     => array('type' => 'string',  'required' => false),
-                'parent_eid'     => array('type' => 'string',  'required' => false),
-                'process_mode'   => array('type' => 'string',  'required' => false),
-                'process_hash'   => array('type' => 'string',  'required' => false),
-                'impl_revision'  => array('type' => 'string',  'required' => false),
-                'task'           => array('type' => 'string',  'required' => false),
-                'input'          => array('type' => 'string',  'required' => false),
-                'output'         => array('type' => 'string',  'required' => false),
-                'started_by'     => array('type' => 'string',  'required' => false),
-                'started'        => array('type' => 'string',  'required' => false),
-                'finished'       => array('type' => 'string',  'required' => false),
-                'process_info'   => array('type' => 'string',  'required' => false),
-                'process_status' => array('type' => 'string',  'required' => false),
-                'cache_used'     => array('type' => 'string',  'required' => false),
-                'owned_by'       => array('type' => 'string',  'required' => false),
-                'created_by'     => array('type' => 'string',  'required' => false)
+                'eid_status'     => array('type' => 'string', 'required' => false),
+                'parent_eid'     => array('type' => 'string', 'required' => false),
+                'process_mode'   => array('type' => 'string', 'required' => false),
+                'process_hash'   => array('type' => 'string', 'required' => false),
+                'impl_revision'  => array('type' => 'string', 'required' => false),
+                'task'           => array('type' => 'string', 'required' => false),
+                'input'          => array('type' => 'string', 'required' => false),
+                'output'         => array('type' => 'string', 'required' => false),
+                'started_by'     => array('type' => 'string', 'required' => false),
+                'started'        => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'finished'       => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'process_info'   => array('type' => 'string', 'required' => false),
+                'process_status' => array('type' => 'string', 'required' => false),
+                'cache_used'     => array('type' => 'string', 'required' => false),
+                'owned_by'       => array('type' => 'string', 'required' => false),
+                'created_by'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -130,7 +139,7 @@ class Process extends ModelBase
             "              avg(extract(epoch from (finished - started))) as average_time, ".
             "              sum(extract(epoch from (finished - started))) as total_time, ".
             "              count(*) as total_count ".
-            "       from tbl_process  ".
+            "       from tbl_process ".
             "       where $filter_expr ".
             "       group by owned_by, parent_eid, created::DATE ".
             "       order by created, parent_eid $limit_expr";
@@ -221,11 +230,6 @@ class Process extends ModelBase
         return $rows[0];
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -238,6 +242,11 @@ class Process extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string
@@ -311,8 +320,8 @@ class Process extends ModelBase
                     'task'         => array('type' => 'string',  'required' => false),
                     'input'        => array('type' => 'string',  'required' => false),
                     'output'       => array('type' => 'string',  'required' => false),
-                    'started'      => array('type' => 'string',  'required' => false),
-                    'finished'     => array('type' => 'string',  'required' => false),
+                    'started'      => array('type' => 'date',    'required' => false, 'allow_null' => true),
+                    'finished'     => array('type' => 'date',    'required' => false, 'allow_null' => true),
                     'log_type'     => array('type' => 'string',  'required' => false),
                     'message'      => array('type' => 'string',  'required' => false)
                 ))->hasErrors()) === true)
@@ -376,7 +385,7 @@ class Process extends ModelBase
         foreach ($rows as $row)
         {
             $output[] = array('eid'              => $row['eid'],
-                              'eid'              => $row['eid_status'],
+                              'eid_status'       => $row['eid_status'],
                               'process_eid'      => $row['process_eid'],
                               'task_op'          => $row['task_op'],
                               'task_version'     => $row['task_version'],
@@ -444,7 +453,6 @@ class Process extends ModelBase
              return false;
          }
     }
-
 
     private function processExists(string $eid) : bool
     {

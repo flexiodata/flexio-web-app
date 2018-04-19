@@ -532,7 +532,7 @@ EOD;
         $r17 = \Flexio\Base\ValidatorSchema::check($v17, $template)->hasErrors() === false;
         $r18 = \Flexio\Base\ValidatorSchema::check($v18, $template)->hasErrors() === false;
         $actual = array($r1,$r2,$r3,$r4,$r5,$r6,$r7,$r8,$r9,$r10,$r11,$r12,$r13,$r14,$r15,$r16,$r17,$r18);
-        $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,false,false,false,false,true,true);
+        $expected = array(true,true,true,true,true,true,true,false,false,true,false,false,false,false,false,false,false,true);
         \Flexio\Tests\Check::assertArray('A.11', '\Flexio\Base\ValidatorSchema::check(); return false if the value doesn\'t match a known, specified format',  $actual, $expected, $results);
 
         // BEGIN TEST

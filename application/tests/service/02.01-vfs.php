@@ -25,7 +25,8 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $service = new \Flexio\Services\Vfs;
+        $test_user_eid = \Flexio\System\System::getCurrentUserEid();  // TODO: depends on running the user that has the various test connection setup
+        $service = new \Flexio\Services\Vfs($test_user_eid);
         $actual = get_class($service);
         $expected = 'Flexio\Services\Vfs';
         \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Services\Vfs; basic file syntax check',  $actual, $expected, $results);
@@ -42,7 +43,7 @@ class Test
             \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
-            \Flexio\Tests\Base::STORAGE_SFTP
+            //\Flexio\Tests\Base::STORAGE_SFTP
         ];
 
         $idx = 0;
@@ -53,7 +54,7 @@ class Test
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . $filename;
 
-            $vfs = new \Flexio\Services\Vfs();
+            $vfs = new \Flexio\Services\Vfs($test_user_eid); // TODO: set VFS owner
             $vfs->createDirectory($folderpath);
             $vfs->createFile($filepath);
 

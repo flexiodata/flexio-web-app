@@ -56,9 +56,9 @@ class Stream
         if (($validator->check($query_params, array(
                 'start'        => array('type' => 'integer', 'required' => false),
                 'limit'        => array('type' => 'integer', 'required' => false),
-                'metadata'     => array('type' => 'string', 'required' => false),
-                'content_type' => array('type' => 'string', 'required' => false),
-                'encode'       => array('type' => 'string', 'required' => false)
+                'metadata'     => array('type' => 'string',  'required' => false),
+                'content_type' => array('type' => 'string',  'required' => false),
+                'encode'       => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

@@ -25,27 +25,27 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'username'              => array('type' => 'string',  'required' => true),
-                'email'                 => array('type' => 'string',  'required' => true),
-                'password'              => array('type' => 'string',  'required' => true),
-                'first_name'            => array('type' => 'string',  'required' => false, 'default' => ''),
-                'last_name'             => array('type' => 'string',  'required' => false, 'default' => ''),
-                'phone'                 => array('type' => 'string',  'required' => false, 'default' => ''),
-                'location_city'         => array('type' => 'string',  'required' => false, 'default' => ''),
-                'location_state'        => array('type' => 'string',  'required' => false, 'default' => ''),
-                'location_country'      => array('type' => 'string',  'required' => false, 'default' => ''),
-                'company_name'          => array('type' => 'string',  'required' => false, 'default' => ''),
-                'company_url'           => array('type' => 'string',  'required' => false, 'default' => ''),
-                'locale_language'       => array('type' => 'string',  'required' => false, 'default' => 'en_US'),
-                'locale_decimal'        => array('type' => 'string',  'required' => false, 'default' => '.'),
-                'locale_thousands'      => array('type' => 'string',  'required' => false, 'default' => ','),
-                'locale_dateformat'     => array('type' => 'string',  'required' => false, 'default' => 'm/d/Y'),
-                'timezone'              => array('type' => 'string',  'required' => false, 'default' => 'UTC'),
-                'verify_code'           => array('type' => 'string',  'required' => false, 'default' => ''),
-                'config'                => array('type' => 'object',  'required' => false, 'default' => []),
-                'send_email'            => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'create_examples' => array('type' => 'boolean', 'required' => false, 'default' => true),
-                'require_verification'  => array('type' => 'boolean', 'required' => false, 'default' => false)
+                'username'             => array('type' => 'identifier', 'required' => true),
+                'email'                => array('type' => 'email',      'required' => true),
+                'password'             => array('type' => 'password',   'required' => true),
+                'first_name'           => array('type' => 'string',     'required' => false, 'default' => ''),
+                'last_name'            => array('type' => 'string',     'required' => false, 'default' => ''),
+                'phone'                => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_city'        => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_state'       => array('type' => 'string',     'required' => false, 'default' => ''),
+                'location_country'     => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_name'         => array('type' => 'string',     'required' => false, 'default' => ''),
+                'company_url'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'locale_language'      => array('type' => 'string',     'required' => false, 'default' => 'en_US'),
+                'locale_decimal'       => array('type' => 'string',     'required' => false, 'default' => '.'),
+                'locale_thousands'     => array('type' => 'string',     'required' => false, 'default' => ','),
+                'locale_dateformat'    => array('type' => 'string',     'required' => false, 'default' => 'm/d/Y'),
+                'timezone'             => array('type' => 'string',     'required' => false, 'default' => 'UTC'),
+                'verify_code'          => array('type' => 'string',     'required' => false, 'default' => ''),
+                'config'               => array('type' => 'object',     'required' => false, 'default' => []),
+                'send_email'           => array('type' => 'boolean',    'required' => false, 'default' => true),
+                'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
+                'require_verification' => array('type' => 'boolean',    'required' => false, 'default' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -55,14 +55,6 @@ class User
         $username = $validated_post_params['username'];
         $email = $validated_post_params['email'];
         $password = $validated_post_params['password'];
-
-        // make sure the username is valid syntactically; note: don't check for existence here
-        if (!\Flexio\Base\Identifier::isValid($username))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('This username is invalid.  Please try another.'));
-
-        // make sure the password is valid
-        if (\Flexio\Base\Util::isValidPassword($password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The password is invalid.  Please try another.'));
 
         // configuration fields we don't want to pass on
         $send_email = $validated_post_params['send_email'];
@@ -238,23 +230,23 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'username'          => array('type' => 'string', 'required' => false),
-                'password'          => array('type' => 'string', 'required' => false),
-                'first_name'        => array('type' => 'string', 'required' => false),
-                'last_name'         => array('type' => 'string', 'required' => false),
-                'email'             => array('type' => 'string', 'required' => false),
-                'phone'             => array('type' => 'string', 'required' => false),
-                'location_city'     => array('type' => 'string', 'required' => false),
-                'location_state'    => array('type' => 'string', 'required' => false),
-                'location_country'  => array('type' => 'string', 'required' => false),
-                'company_name'      => array('type' => 'string', 'required' => false),
-                'company_url'       => array('type' => 'string', 'required' => false),
-                'locale_language'   => array('type' => 'string', 'required' => false),
-                'locale_decimal'    => array('type' => 'string', 'required' => false),
-                'locale_thousands'  => array('type' => 'string', 'required' => false),
-                'locale_dateformat' => array('type' => 'string', 'required' => false),
-                'timezone'          => array('type' => 'string', 'required' => false),
-                'config'            => array('type' => 'object', 'required' => false)
+                'username'          => array('type' => 'identifier', 'required' => false),
+                'email'             => array('type' => 'email',      'required' => false),
+                'password'          => array('type' => 'password',   'required' => false),
+                'first_name'        => array('type' => 'string',     'required' => false),
+                'last_name'         => array('type' => 'string',     'required' => false),
+                'phone'             => array('type' => 'string',     'required' => false),
+                'location_city'     => array('type' => 'string',     'required' => false),
+                'location_state'    => array('type' => 'string',     'required' => false),
+                'location_country'  => array('type' => 'string',     'required' => false),
+                'company_name'      => array('type' => 'string',     'required' => false),
+                'company_url'       => array('type' => 'string',     'required' => false),
+                'locale_language'   => array('type' => 'string',     'required' => false),
+                'locale_decimal'    => array('type' => 'string',     'required' => false),
+                'locale_thousands'  => array('type' => 'string',     'required' => false),
+                'locale_dateformat' => array('type' => 'string',     'required' => false),
+                'timezone'          => array('type' => 'string',     'required' => false),
+                'config'            => array('type' => 'object',     'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -262,14 +254,6 @@ class User
         // type of workflow (such as when sharing with a user that doesn't exist)
 
         $validated_post_params = $validator->getParams();
-
-        // if a username is specified, make sure it's valid
-        if (isset($validated_post_params['username']) && !\Flexio\Base\Identifier::isValid($validated_post_params['username']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-        // if a password is specified, make sure it's valid
-        if (isset($validated_post_params['password']) && \Flexio\Base\Util::isValidPassword($validated_post_params['password']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the user
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -328,18 +312,14 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'old_password'      => array('type' => 'string', 'required' => true),
-                'new_password'      => array('type' => 'string', 'required' => true)
+                'old_password' => array('type' => 'password', 'required' => true),
+                'new_password' => array('type' => 'password', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $validated_post_params = $validator->getParams();
         $old_password = $validated_post_params['old_password'];
         $new_password = $validated_post_params['new_password'];
-
-        // make sure the new password is valid
-        if (\Flexio\Base\Util::isValidPassword($new_password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         // load the object
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
@@ -373,9 +353,9 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'       => array('type' => 'string', 'required' => true),
-                'password'    => array('type' => 'string', 'required' => true),
-                'verify_code' => array('type' => 'string', 'required' => true)
+                'email'       => array('type' => 'email',    'required' => true),
+                'password'    => array('type' => 'password', 'required' => true),
+                'verify_code' => array('type' => 'string',   'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -383,10 +363,6 @@ class User
         $email = $validated_post_params['email'];
         $password = $validated_post_params['password'];
         $code = $validated_post_params['verify_code'];
-
-        // make sure the new password is valid
-        if (\Flexio\Base\Util::isValidPassword($password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         $user = false;
         try
@@ -421,8 +397,8 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true),
-                'verify_code'      => array('type' => 'string', 'required' => true)
+                'email'       => array('type' => 'email',  'required' => true),
+                'verify_code' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -464,7 +440,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true)
+                'email' => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -508,7 +484,7 @@ class User
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'email'     => array('type' => 'string', 'required' => true)
+                'email' => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 

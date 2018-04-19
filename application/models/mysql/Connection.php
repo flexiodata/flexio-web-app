@@ -17,75 +17,55 @@ declare(strict_types=1);
 
 class Connection extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
-        // if the connection_status parameter is set, make sure the status is set
-        // to a valid value
-        if (isset($params['connection_status']))
-        {
-            $status = $params['connection_status'];
-            switch ($status)
-            {
-                default:
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'        => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'alias'             => array('type' => 'alias',  'required' => false, 'default' => ''),
+                'name'              => array('type' => 'string', 'required' => false, 'default' => ''),
+                'description'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'connection_type'   => array('type' => 'string', 'required' => false, 'default' => ''),
+                'connection_status' => array('type' => 'string', 'required' => false, 'default' => \Model::CONNECTION_STATUS_UNAVAILABLE),
+                'connection_info'   => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'expires'           => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'owned_by'          => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'        => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-                case \Model::CONNECTION_STATUS_UNAVAILABLE:
-                case \Model::CONNECTION_STATUS_AVAILABLE:
-                case \Model::CONNECTION_STATUS_ERROR:
-                    break;
-            }
-        }
+        $process_arr = $validator->getParams();
 
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $params['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        if (self::isValidConnectionStatus($process_arr['connection_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        // encrypt the connection info
+        $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
-            if (isset($params['alias']) && $params['alias'] !== '')
+            if ($process_arr['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
-                $ownedby = $params['owned_by'] ?? '';
-                $qownedby = $db->quote($ownedby);
-                $qalias = $db->quote($alias);
+                $qownedby = $db->quote($process_arr['owned_by']);
+                $qalias = $db->quote($process_arr['alias']);
                 $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
                 if ($existing_item !== false)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             }
 
             // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_CONNECTION, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'               => $eid,
-                'eid_status'        => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'alias'             => $params['alias'] ?? '',
-                'name'              => $params['name'] ?? '',
-                'description'       => $params['description'] ?? '',
-                'connection_type'   => $params['connection_type'] ?? '',
-                'connection_status' => $params['connection_status'] ?? \Model::CONNECTION_STATUS_UNAVAILABLE,
-                'connection_info'   => $params['connection_info'] ?? '',
-                'expires'           => $params['expires'] ?? '',
-                'owned_by'          => $params['owned_by'] ?? '',
-                'created_by'        => $params['created_by'] ?? '',
-                'created'           => $timestamp,
-                'updated'           => $timestamp
-            );
 
-            // encrypt the connection info
-            $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             // add the properties
             if ($db->insert('tbl_connection', $process_arr) === false)
@@ -115,16 +95,16 @@ class Connection extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'        => array('type' => 'string',  'required' => false),
-                'alias'             => array('type' => 'string',  'required' => false),
-                'name'              => array('type' => 'string',  'required' => false),
-                'description'       => array('type' => 'string',  'required' => false),
-                'connection_type'   => array('type' => 'string',  'required' => false),
-                'connection_status' => array('type' => 'string',  'required' => false),
-                'connection_info'   => array('type' => 'string',  'required' => false),
-                'expires'           => array('type' => 'string',  'required' => false),
-                'owned_by'          => array('type' => 'string',  'required' => false),
-                'created_by'        => array('type' => 'string',  'required' => false)
+                'eid_status'        => array('type' => 'string', 'required' => false),
+                'alias'             => array('type' => 'alias',  'required' => false),
+                'name'              => array('type' => 'string', 'required' => false),
+                'description'       => array('type' => 'string', 'required' => false),
+                'connection_type'   => array('type' => 'string', 'required' => false),
+                'connection_status' => array('type' => 'string', 'required' => false),
+                'connection_info'   => array('type' => 'string', 'required' => false),
+                'expires'           => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'owned_by'          => array('type' => 'string', 'required' => false),
+                'created_by'        => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -134,40 +114,12 @@ class Connection extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
+        if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         // encrypt the connection info
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
-
-        // if the connection_status parameter is set, make sure the status is set
-        // to a valid value
-        if (isset($params['connection_status']))
-        {
-            $status = $process_arr['connection_status'];
-            switch ($status)
-            {
-                default:
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                case \Model::CONNECTION_STATUS_UNAVAILABLE:
-                case \Model::CONNECTION_STATUS_AVAILABLE:
-                case \Model::CONNECTION_STATUS_ERROR:
-                    break;
-            }
-        }
-
-        // if an identifier is non-zero-length identifier is specified, make sure
-        // it's valid; make sure it's not an eid to disambiguate lookups that rely
-        // on both an eid and an alias
-        if (isset($params['alias']) && $params['alias'] !== '')
-        {
-            $alias = $process_arr['alias'];
-            if (!is_string($alias))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Identifier::isValid($alias) === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-            if (\Flexio\Base\Eid::isValid($alias) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-        }
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -192,6 +144,7 @@ class Connection extends ModelBase
                 if ($owner_to_check !== false)
                 {
                     // we found an owner; see if the alias exists for the owner
+                    $alias = $params['alias'];
                     $qownedby = $db->quote($owner_to_check);
                     $qalias = $db->quote($alias);
                     $existing_eid = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
@@ -212,7 +165,7 @@ class Connection extends ModelBase
         catch (\Exception $e)
         {
             $db->rollback();
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, (IS_DEBUG() ? $e->getMessage() : null));
         }
     }
 
@@ -287,15 +240,11 @@ class Connection extends ModelBase
         $qowner = $db->quote($owner);
         $qalias = $db->quote($alias);
         $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where owned_by = $qowner and alias = $qalias");
+
         if ($result === false)
             return false;
 
         return $result;
-    }
-
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getOwner(string $eid) : string
@@ -312,6 +261,11 @@ class Connection extends ModelBase
         return $result;
     }
 
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
+    }
+
     public function getStatus(string $eid) : string
     {
         if (!\Flexio\Base\Eid::isValid($eid))
@@ -322,5 +276,18 @@ class Connection extends ModelBase
             return \Model::STATUS_UNDEFINED;
 
         return $result;
+    }
+
+    private static function isValidConnectionStatus(string $status) : bool
+    {
+        switch ($status)
+        {
+            case \Model::CONNECTION_STATUS_UNAVAILABLE:
+            case \Model::CONNECTION_STATUS_AVAILABLE:
+            case \Model::CONNECTION_STATUS_ERROR:
+                return true;
+        }
+
+        return false;
     }
 }

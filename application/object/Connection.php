@@ -74,7 +74,11 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Connection
     {
-        // connection info is stored as an encrypted json string, so this need to be encoded; encryption will happen elsewhere
+        if (!isset($properties))
+            $properties = array();
+
+        // connection info is stored as an encrypted json string, so this need to be encoded;
+        // encryption will happen elsewhere
         if (isset($properties) && isset($properties['connection_info']))
             $properties['connection_info'] = json_encode($properties['connection_info']);
 

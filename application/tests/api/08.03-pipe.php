@@ -25,10 +25,10 @@ class Test
 
         // SETUP
         $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
-        $password1 = \Flexio\Base\Util::generatePassword();
+        $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
-        $password2 = \Flexio\Base\Util::generatePassword();
+        $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 
@@ -188,7 +188,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/pipes/:objeid; make sure a pipe is deleted',  $actual, $expected, $results);
 
         // BEGIN
-        $unique_alias = \Flexio\Base\Util::generateHandle();
+        $unique_alias = \Flexio\Base\Identifier::generate();
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid1/pipes",

@@ -43,8 +43,8 @@ class System
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'username' => array('type' => 'string', 'required' => true),
-                'password' => array('type' => 'string', 'required' => true)
+                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/password
+                'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -147,9 +147,9 @@ class System
             // checks to see if a username is available
             $validator = \Flexio\Base\Validator::create();
             if (($validator->check($p, array(
-                    'key' => array('type' => 'string', 'required' => true),
-                    'value' => array('type' => 'string', 'required' => true),
-                    'type' => array('type' => 'string', 'required' => true),
+                    'key'      => array('type' => 'string', 'required' => true),
+                    'value'    => array('type' => 'string', 'required' => true),
+                    'type'     => array('type' => 'string', 'required' => true),
                     'eid_type' => array('type' => 'string', 'required' => false)
                 ))->hasErrors()) === true)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -178,6 +178,7 @@ class System
         {
             switch ($type)
             {
+                case 'task':
                 case 'javascript':
                 case 'python':
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
@@ -206,7 +207,7 @@ class System
 
             case 'password':
                 {
-                    if (\Flexio\Base\Util::isValidPassword($value) === false)
+                    if (\Flexio\Base\Password::isValid($value) === false)
                     {
                         // invalid password
                         $valid = false;
@@ -244,7 +245,7 @@ class System
             {
                 $task = $value;
                 $error_list = array();
-                $err = self::validateTask($task, $error_list);
+                $err = self::validateTask($requesting_user_eid, $task, $error_list);
 
                 if ($err === true)
                 {
@@ -372,12 +373,15 @@ class System
         return true;
     }
 
-    private static function validateTask(array $task, array &$errors) : bool
+    private static function validateTask(string $process_owner_eid, array $task, array &$errors) : bool
     {
         // returns true if the task is valid; false otherwise; sets the errors
         // parameter to an array of errors
 
-        $errors = \Flexio\Jobs\Process::create()->validate($t);
+        $process = \Flexio\Jobs\Process::create();
+        $process->setOwner($process_owner_eid);
+
+        $errors = $process->validate($t);
         if (count($errors) > 0)
             return false;
 

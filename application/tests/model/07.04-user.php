@@ -45,7 +45,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::MISSING_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
         \Flexio\Tests\Check::assertInArray('A.1', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
@@ -91,7 +91,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::MISSING_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
         \Flexio\Tests\Check::assertInArray('A.3', '\Model::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 

@@ -42,7 +42,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $columns = $job_params['columns'] ?? [];
 
-            $vfs = new \Flexio\Services\Vfs();
+            $vfs = new \Flexio\Services\Vfs($process->getOwner());
             $vfs->setProcess($process);
 
             $create_params = [];

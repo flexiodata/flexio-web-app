@@ -77,10 +77,11 @@ class Test
         $eid_type = \Model::TYPE_UNDEFINED;
         $handle1 = \Flexio\Base\Util::generateHandle();
         $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $handle3 = \Flexio\Base\Password::generate();
         $info = array(
             'username' => $handle1,
             'email' => $handle2,
-            'password' => $handle1
+            'password' => $handle3
         );
         $eid = $model->create($info);
         $info = $model->get($eid);
@@ -119,17 +120,23 @@ class Test
             'eid_type' => \Model::TYPE_USER,
             'eid_status' => \Model::STATUS_AVAILABLE,
             'username' => $handle1,
-            'verify_code' => '',
             'first_name' => '',
             'last_name' => '',
             'full_name' => '',
             'email' => $handle2,
             'phone' => '',
+            'location_city' => '',
+            'location_state' => '',
+            'location_country' => '',
+            'company_name' => '',
+            'company_url' => '',
             'locale_language' => 'en_US',
             'locale_decimal' => '.',
             'locale_thousands' => ',',
             'locale_dateformat' => 'm/d/Y',
             'timezone' => 'UTC',
+            'verify_code' => '',
+            'config' => '{}',
             'owned_by' => '',
             'created_by' => ''
         );

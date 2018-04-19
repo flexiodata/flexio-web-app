@@ -302,11 +302,6 @@ class System
         return $g_store->timestamp;
     }
 
-    public static function isLoggedIn() : bool
-    {
-        return (\Flexio\System\System::getCurrentUserEid() != '') ? true : false;
-    }
-
     public static function getBaseDirectory() : string
     {
         global $g_store;

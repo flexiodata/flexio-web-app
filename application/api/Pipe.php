@@ -37,9 +37,9 @@ class Pipe
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'copy_eid'        => array('type' => 'eid', 'required' => false),
+                'copy_eid'        => array('type' => 'eid',    'required' => false),
                 'eid_status'      => array('type' => 'string', 'required' => false),
-                'alias'           => array('type' => 'identifier', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
@@ -64,8 +64,7 @@ class Pipe
         $pipe_properties['created_by'] = $requesting_user_eid;
         $pipe = \Flexio\Object\Pipe::create($pipe_properties);
 
-        // grant default rights to the owner; TODO: also grant default rights
-        // to the requesting user?
+        // grant default rights to the owner
         $pipe->grant($owner_user_eid, \Model::ACCESS_CODE_TYPE_EID,
             array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
@@ -100,7 +99,7 @@ class Pipe
         // owner info
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'copy_eid'    => array('type' => 'eid', 'required' => true)
+                'copy_eid' => array('type' => 'eid', 'required' => true)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -195,7 +194,7 @@ class Pipe
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
                 'eid_status'      => array('type' => 'string', 'required' => false),
-                'alias'           => array('type' => 'identifier', 'required' => false),
+                'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
@@ -258,14 +257,13 @@ class Pipe
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -337,9 +335,8 @@ class Pipe
 
         if ($engine->hasError())
         {
-            header('Content-Type: application/json', true, 500);
-            $content = json_encode($engine->getError());
-            echo $content;
+            $error = $engine->getError();
+            \Flexio\Api\Response::sendError($error);
             exit(0);
         }
 

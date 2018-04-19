@@ -121,8 +121,57 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         return false;
     }
 
-    public function createFile(string $path, array $properties = []) : bool
+
+    private function internalCreateFile(string $path, array $properties = [])
     {
+        $title = trim($path, "/ \t\r\n");
+
+        $postdata = json_encode(array(
+            "properties" => [
+                "title" => $title
+            ]
+        ));
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://sheets.googleapis.com/v4/spreadsheets");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+
+        if ($http_response_code >= 400)
+        {
+            if ($http_response_code == 401)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
+                 else
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Unable to create sheet");
+        }
+
+        $result = @json_decode($result, true);
+
+        $spreadsheet_id = $result['spreadsheetId'] ?? '';
+        if (strlen($spreadsheet_id) == 0)
+            return false;
+
+        $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
+        $spreadsheet->access_token = $this->access_token;
+        $spreadsheet->title = "Sheet1";
+        $spreadsheet->spreadsheet_id = $spreadsheet_id;
+        $spreadsheet->getWorksheets();
+
+        return $spreadsheet;
+
+
+/*
+        $path = trim($path, "/ \t\r\n");
+
         // creates a new spreadsheet via the google docs v3 api
 
         $postdata = json_encode(array(
@@ -160,19 +209,20 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
         $spreadsheet = new \Flexio\Services\GoogleSpreadsheet;
         $spreadsheet->access_token = $this->access_token;
-        $spreadsheet->title = $name;
+        $spreadsheet->title = "Sheet1";
         $spreadsheet->spreadsheet_id = $spreadsheet_id;
         $spreadsheet->getWorksheets();
 
-        // if spreadsheets array is already populated, add it
-        if (count($this->spreadsheets) > 0)
-        {
-            $this->spreadsheets[] = $spreadsheet;
-        }
+        return $spreadsheet;
+*/
+    }
 
-        //$spreadsheet->worksheets[0]->setInfo(null, 10, 10);
 
-        return true;
+
+    public function createFile(string $path, array $properties = []) : bool
+    {
+        $spreadsheet = $this->internalCreateFile($path, $properties);
+        return $spreadsheet ? true : false;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
@@ -236,11 +286,118 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public function write(array $params, callable $callback)
     {
-        $path = $params['path'] ?? '';
-        $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        $spreadsheet = null;
+        $worksheet = null;
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (isset($params['spreadsheet_id']))
+        {
+            $spreadsheet_id = $params['spreadsheet_id'];
+
+            $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+            if (!$spreadsheet)
+                return; // throw
+
+            if (isset($params['worksheet_title']))
+            {
+                $worksheets = $spreadsheet->getWorksheets();
+                foreach ($worksheets as $w)
+                {
+                    if ($w->title == $params['worksheet_title'])
+                        $worksheet = $w;
+                }
+                if (!$worksheet)
+                    return; // throw
+            }
+
+        }
+         else if (isset($params['path']))
+        {
+            $path = $params['path'] ?? '';
+
+            $spreadsheet = $this->internalCreateFile($path);
+            if (!$spreadsheet)
+                return; // throw
+            $worksheets = $spreadsheet->getWorksheets();
+            if (count($worksheets) < 1)
+                return; // throw
+            $worksheet= $spreadsheet->worksheets[0];
+        }
+         else
+        {
+            // throw
+            return;
+        }
+
+        $worksheet->startInsert([]);
+
+        while (($row = $callback()) !== false)
+        {
+            $worksheet->insertRow($row);
+        }
+
+        $worksheet->finishInsert();
     }
+
+
+    public function insert(array $params, array $rows)  // $rows is an array of rows
+    {
+        $spreadsheet_id = null;
+        $worksheet_title = null;
+        $worksheet = null;
+
+        if (isset($params['spreadsheet_id']))
+        {
+            $spreadsheet_id = $params['spreadsheet_id'];
+            $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+            if (!$spreadsheet)
+                return; // throw
+            if (isset($params['worksheet_title']))
+            {
+                $worksheets = $spreadsheet->getWorksheets();
+                foreach ($worksheets as $w)
+                {
+                    if ($w->title == $params['worksheet_title'])
+                        $worksheet = $w;
+                }
+                if (!$worksheet)
+                    return; // throw
+            }
+        }
+         else
+        {
+            $path = $params['path'] ?? '';
+
+            $ids = $this->getIdsFromPath($path);
+            if (isset($ids['spreadsheet_id']))
+            {
+                $spreadsheet_id = $ids['spreadsheet_id'];
+                $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+                if (!$spreadsheet)
+                    return; // throw
+                $worksheets = $spreadsheet->getWorksheets();
+                if (count($worksheets) < 1)
+                    return; // throw
+                $worksheet = $spreadsheet->worksheets[0];
+            }
+        }
+
+        if (!$worksheet)
+        {
+            return; // throw
+        }
+
+        $worksheet->startInsert([]);
+
+        foreach ($rows as $row)
+        {
+            $worksheet->insertRow($row);
+        }
+
+        $worksheet->finishInsert();
+
+        return true;
+    }
+
 
     ////////////////////////////////////////////////////////////
     // Google Sheets API abstraction

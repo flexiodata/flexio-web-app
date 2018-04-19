@@ -93,6 +93,9 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Right
     {
+        if (!isset($properties))
+            $properties = array();
+
         // actions are stored as a json string, so this needs to be encoded
         if (isset($properties) && isset($properties['actions']))
             $properties['actions'] = json_encode($properties['actions']);

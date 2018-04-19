@@ -36,7 +36,7 @@ class Set extends \Flexio\Jobs\Base
         $job_params = $this->getJobParameters();
         $var = $job_params['var'];
         $value = $job_params['value'];
-        
+
         if (isset($value['op']) && isset($value['params']))
         {
             // right side of set is pipe code
@@ -47,6 +47,7 @@ class Set extends \Flexio\Jobs\Base
             $params = $process->getParams();
 
             $subprocess = \Flexio\Jobs\Process::create();
+            $subprocess->setOwner($process->getOwner());
             $subprocess->setParams($params);
             $subprocess->setStdin($process->getStdin());
             $subprocess->setStdout($valstream);
@@ -66,7 +67,7 @@ class Set extends \Flexio\Jobs\Base
 
             $outstream = $process->getStdout();
             $outstream->getWriter()->write($value);
-            
+
             $param_stream = \Flexio\Base\Stream::create();
             $param_stream->getWriter()->write($value);
 

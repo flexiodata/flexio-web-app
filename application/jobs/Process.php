@@ -93,6 +93,7 @@ class Process implements \Flexio\IFace\IProcess
         'validate'  => '\Flexio\Jobs\Validate'
     );
 
+    private $owner_eid;     // user eid of the owner of the process
     private $params;        // variables that are used in the processing (array of \Flexio\Base\Stream objects)
     private $stdin;
     private $stdout;
@@ -105,6 +106,7 @@ class Process implements \Flexio\IFace\IProcess
 
     public function __construct()
     {
+        $this->owner_eid = '';
         $this->params = array();
         $this->stdin = self::createStream();
         $this->stdout =  self::createStream();
@@ -126,16 +128,19 @@ class Process implements \Flexio\IFace\IProcess
     public static function createTask(array $task) : \Flexio\IFace\IJob
     {
         if (!isset($task['op']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing operation \'op\' task parameter'));
 
         $operation = $task['op'];
+
+        if (!is_string($operation))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid operation \'op\' task parameter'));
 
         // make sure the job is registered; note: this isn't strictly necessary,
         // but gives us a convenient way of limiting what jobs are available for
         // processing
         $job_class_name = self::$manifest[$operation] ?? false;
         if ($job_class_name === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid operation \'op\' task parameter'));
 
         // try to find the job file
         $class_name_parts = explode("\\", $job_class_name);
@@ -160,6 +165,17 @@ class Process implements \Flexio\IFace\IProcess
     {
         $this->handlers[] = $handler;
         return $this;
+    }
+
+    public function setOwner(string $owner_eid) : \Flexio\Jobs\Process
+    {
+        $this->owner_eid = $owner_eid;
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->owner_eid;
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\Process

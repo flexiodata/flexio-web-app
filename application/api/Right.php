@@ -37,7 +37,7 @@ class Right
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'rights' => array('type' => 'object', 'required' => true),
+                'rights'  => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -278,15 +278,14 @@ class Right
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
-        // TODO: add other query string params?
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
-                'objects' => array('type' => 'string', 'array' => true, 'required' => false),
-                'start'    => array('type' => 'integer', 'required' => false),
-                'tail'     => array('type' => 'integer', 'required' => false),
-                'limit'    => array('type' => 'integer', 'required' => false),
-                'created_min' => array('type' => 'date', 'required' => false),
-                'created_max' => array('type' => 'date', 'required' => false)
+                'objects'     => array('type' => 'string',  'required' => false, 'array' => true),
+                'start'       => array('type' => 'integer', 'required' => false),
+                'tail'        => array('type' => 'integer', 'required' => false),
+                'limit'       => array('type' => 'integer', 'required' => false),
+                'created_min' => array('type' => 'date',    'required' => false),
+                'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -303,8 +302,8 @@ class Right
     {
         // user doesn't exist; create a user
         $user_email = $identifier;
-        $username = \Flexio\Base\Util::generateHandle(); // default username
-        $password = \Flexio\Base\Util::generatePassword();
+        $username = \Flexio\Base\Identifier::generate(); // default username
+        $password = \Flexio\Base\Password::generate();
         $verify_code = \Flexio\Base\Util::generateHandle(); // code to verify user's email address
 
         $new_user_info = array('username' => $username,

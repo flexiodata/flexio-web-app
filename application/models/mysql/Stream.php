@@ -17,47 +17,44 @@ declare(strict_types=1);
 
 class Stream extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'     => array('type' => 'string',  'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'parent_eid'     => array('type' => 'string',  'required' => false, 'default' => ''), // validate with string instead of eid because of default
+                'stream_type'    => array('type' => 'string',  'required' => false, 'default' => ''),
+                'name'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'path'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'size'           => array('type' => 'integer', 'required' => false, 'default' => null, 'allow_null' => true),
+                'hash'           => array('type' => 'string',  'required' => false, 'default' => ''),
+                'mime_type'      => array('type' => 'string',  'required' => false, 'default' => ''),
+                'structure'      => array('type' => 'string',  'required' => false, 'default' => '[]'),
+                'file_created'   => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
+                'file_modified'  => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
+                'connection_eid' => array('type' => 'string',  'required' => false, 'default' => ''), // validate with string instead of eid because of default
+                'expires'        => array('type' => 'date',    'required' => false, 'default' => null, 'allow_null' => true),
+                'owned_by'       => array('type' => 'string',  'required' => false, 'default' => ''),
+                'created_by'     => array('type' => 'string',  'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
+        if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
         $db = $this->getDatabase();
         try
         {
-            // make sure the size is an integer or null
-            $size = null;
-            if (isset($params['size']))
-            {
-                if (!is_numeric($params['size']))
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-                $size = $params['size'];
-            }
-
-            // create the object base
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_STREAM, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'                  => $eid,
-                'eid_status'           => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'parent_eid'           => $params['parent_eid'] ?? '',
-                'stream_type'          => $params['stream_type'] ?? '',
-                'name'                 => $params['name'] ?? '',
-                'path'                 => $params['path'] ?? '',
-                'size'                 => $params['size'] ?? null,
-                'hash'                 => $params['hash'] ?? '',
-                'mime_type'            => $params['mime_type'] ?? '',
-                'structure'            => $params['structure'] ?? '[]',
-                'file_created'         => $params['file_created'] ?? null,
-                'file_modified'        => $params['file_modified'] ?? null,
-                'connection_eid'       => $params['connection_eid'] ?? '',
-                'expires'              => $params['expires'] ?? null,
-                'owned_by'             => $params['owned_by'] ?? '',
-                'created_by'           => $params['created_by'] ?? '',
-                'created'              => $timestamp,
-                'updated'              => $timestamp
-            );
 
-            // add the properties
-            if ($db->insert('tbl_stream', $process_arr) === false) // insert stream info
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
+
+            if ($db->insert('tbl_stream', $process_arr) === false)
                 throw new \Exception();
 
             return $eid;
@@ -80,21 +77,21 @@ class Stream extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'           => array('type' => 'string',  'required' => false),
-                'parent_eid'           => array('type' => 'eid',     'required' => false),
-                'stream_type'          => array('type' => 'string',  'required' => false),
-                'name'                 => array('type' => 'string',  'required' => false),
-                'path'                 => array('type' => 'string',  'required' => false),
-                'size'                 => array('type' => 'number',  'required' => false),
-                'hash'                 => array('type' => 'string',  'required' => false),
-                'mime_type'            => array('type' => 'string',  'required' => false),
-                'structure'            => array('type' => 'string',  'required' => false),
-                'file_created'         => array('type' => 'string',  'required' => false),
-                'file_modified'        => array('type' => 'string',  'required' => false),
-                'connection_eid'       => array('type' => 'eid',     'required' => false),
-                'expires'              => array('type' => 'any',     'required' => false), // TODO: workaround null problem; any = allow nulls
-                'owned_by'             => array('type' => 'string',  'required' => false),
-                'created_by'           => array('type' => 'string',  'required' => false)
+                'eid_status'     => array('type' => 'string',  'required' => false),
+                'parent_eid'     => array('type' => 'eid',     'required' => false),
+                'stream_type'    => array('type' => 'string',  'required' => false),
+                'name'           => array('type' => 'string',  'required' => false),
+                'path'           => array('type' => 'string',  'required' => false),
+                'size'           => array('type' => 'integer', 'required' => false, 'allow_null' => true),
+                'hash'           => array('type' => 'string',  'required' => false),
+                'mime_type'      => array('type' => 'string',  'required' => false),
+                'structure'      => array('type' => 'string',  'required' => false),
+                'file_created'   => array('type' => 'date',    'required' => false, 'allow_null' => true),
+                'file_modified'  => array('type' => 'date',    'required' => false, 'allow_null' => true),
+                'connection_eid' => array('type' => 'eid',     'required' => false),
+                'expires'        => array('type' => 'date',    'required' => false, 'allow_null' => true),
+                'owned_by'       => array('type' => 'string',  'required' => false),
+                'created_by'     => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -183,11 +180,6 @@ class Stream extends ModelBase
         return $rows[0];
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function getOwner(string $eid) : string
     {
         // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
@@ -200,6 +192,11 @@ class Stream extends ModelBase
             return '';
 
         return $result;
+    }
+
+    public function setStatus(string $eid, string $status) : bool
+    {
+        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function getStatus(string $eid) : string

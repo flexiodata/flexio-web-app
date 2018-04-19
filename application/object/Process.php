@@ -73,6 +73,9 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Process
     {
+        if (!isset($properties))
+            $properties = array();
+
         // if the task is set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['task']))
         {

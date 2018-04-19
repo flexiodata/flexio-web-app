@@ -45,7 +45,7 @@ class Vfs
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $result = $vfs->list($path);
 
         if (!is_array($result))
@@ -85,14 +85,14 @@ class Vfs
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $vfs->read($path, function($data) use (&$is_data, &$counter) {
             if ($counter == 0)
             {
                 if (is_array($data))
                 {
                     $is_data = true;
-                    header('Content-Type: application/json', true, 500);
+                    header('Content-Type: application/json', true, 200);
                     echo '[';
                 }
             }
@@ -134,15 +134,18 @@ class Vfs
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $path = $request_url;
-        if (substr($path,0,12) != '/api/v1/vfs/')
+
+        $pos = strpos($path, '/vfs/');
+        if ($pos === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
         // grab path, including preceding slash
-        $path = substr($path,11);
+        $path = substr($path, $pos+4);
+
 
         // TODO: need to patch through the owner info here
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($owner_user_eid);
 
         $headers = $request->getHeaderParams();
         $headers = array_change_key_case($headers, $case = CASE_LOWER);

@@ -67,6 +67,9 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\Action
     {
+        if (!isset($properties))
+            $properties = array();
+
         // if the params are set, make sure it's an object and then encode it as JSON for storage
         if (isset($properties) && isset($properties['request_params']))
         {

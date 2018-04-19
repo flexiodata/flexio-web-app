@@ -36,12 +36,12 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'host' => array('type' => 'string', 'required' => true),
-                'port' => array('type' => 'string', 'required' => true),
+                'host'     => array('type' => 'string', 'required' => true),
+                'port'     => array('type' => 'string', 'required' => true),
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true),
                 'database' => array('type' => 'string', 'required' => true),
-                'path' => array('type' => 'string', 'required' => false, 'default' => '')
+                'path'     => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -79,7 +79,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         if (!$this->authenticated())
             return array();
-        
+
         // get the tables in the database
 
         $path = trim($path, '/');
@@ -115,7 +115,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $structure = $this->describeTable($path);
         if ($structure === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-        
+
         return [
             'name' => $path,
             'path' => $path,
@@ -161,7 +161,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
         $path = trim($path, '/');
-        
+
         $iter = $this->queryAll($path);
 
         while (($row = $iter->fetchRow($iter)) !== false) {

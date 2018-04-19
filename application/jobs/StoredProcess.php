@@ -34,6 +34,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $object->engine = \Flexio\Jobs\Process::create();
         $object->procmode = $procobj->getMode();
         $object->current_log_eid = null;
+        $object->setOwner($procobj->getOwner());
         return $object;
     }
 
@@ -47,6 +48,17 @@ class StoredProcess implements \Flexio\IFace\IProcess
     {
         $this->engine->addEventHandler($handler);
         return $this;
+    }
+
+    public function setOwner(string $owner_eid) : \Flexio\Jobs\StoredProcess
+    {
+        $this->engine->setOwner($owner_eid);
+        return $this;
+    }
+
+    public function getOwner() : string
+    {
+        return $this->engine->getOwner();
     }
 
     public function setParams(array $arr) : \Flexio\Jobs\StoredProcess
@@ -347,7 +359,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $storable_stream;
     }
 
-    private static function getEnvironmentParams() : array
+    private function getEnvironmentParams() : array
     {
         // return a list of environment parameters;
         // TODO: determine list; for now, include current user information and time
@@ -355,23 +367,21 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // limited to alphanumeric, but maybe we want to do something like:
         // "flexio.user_firstname", "flexio.user_lastname", etc
 
-        $current_user_info = array();
+        $process_user_info = array();
         try
         {
-            // TODO: don't use current user info from session; use calling or owner
-            // user info
-            $current_user_eid = \Flexio\System\System::getCurrentUserEid();
-            $current_user = \Flexio\Object\User::load($current_user_eid);
-            $current_user_info = $current_user->get();
+            $process_user_eid = $this->getOwner();
+            $process_user = \Flexio\Object\User::load($process_user_eid);
+            $process_user_eid = $process_user->get();
         }
         catch (\Flexio\Base\Exception $e)
         {
         }
 
         $environment_params = array();
-        $environment_params['process.user.firstname'] = $current_user_info['first_name'] ?? '';
-        $environment_params['process.user.lastname'] = $current_user_info['last_name'] ?? '';
-        $environment_params['process.user.email'] = $current_user_info['email'] ?? '';
+        $environment_params['process.user.firstname'] = $process_user_info['first_name'] ?? '';
+        $environment_params['process.user.lastname'] = $process_user_info['last_name'] ?? '';
+        $environment_params['process.user.email'] = $process_user_info['email'] ?? '';
         $environment_params['process.time.started'] = \Flexio\System\System::getTimestamp();
         $environment_params['process.time.unix'] = (string)time();
 

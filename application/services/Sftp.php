@@ -50,9 +50,9 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'host' => array('type' => 'string', 'required' => true),
-                'username' => array('type' => 'string', 'required' => true),
-                'password' => array('type' => 'string', 'required' => true),
+                'host'      => array('type' => 'string', 'required' => true),
+                'username'  => array('type' => 'string', 'required' => true),
+                'password'  => array('type' => 'string', 'required' => true),
                 'base_path' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
@@ -282,12 +282,12 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         if (!$this->checkConnect())
             return false;
-        
+
         if (isset($params['structure']))
         {
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
-        
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 

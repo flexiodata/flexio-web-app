@@ -667,24 +667,6 @@ class Util
         return false;
     }
 
-    public static function isValidPassword($value) : bool
-    {
-        // make sure a password is a string that's a minimum
-        // of 8 characters
-        if (!is_string($value))
-            return false;
-
-        if (strlen($value) < 8)
-            return false;
-
-        // make sure we have at least one number
-        $regex = "/[0-9]/";
-        if (preg_match($regex, $value) === 0)
-            return false;
-
-        return true;
-    }
-
     public static function generateRandomString(int $length) : string
     {
         $result = '';
@@ -703,19 +685,6 @@ class Util
     public static function generateHandle() : string
     {
         return self::generateRandomString(20);
-    }
-
-    public static function generatePassword() : string
-    {
-        $pw = self::generateRandomString(10);
-        $pw[2] = ''.random_int(0, 9);
-        $pw[6] = ''.random_int(0, 9);
-        $i = random_int(0, 9);
-        if ($i == 2 || $i == 6)
-            $i--;
-        $pw[$i] = strtoupper($pw[$i]);
-
-        return $pw;
     }
 
     public static function encrypt(string $plaintext, string $key = null) // TODO: set function return type

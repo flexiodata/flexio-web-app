@@ -87,6 +87,7 @@ class Test
             'eid' => $eid,
             'eid_type' => \Model::TYPE_PIPE,
             'eid_status' => \Model::STATUS_AVAILABLE,
+            'alias' => '',
             'name' => '',
             'description'  => '',
             'input' => '{}',
@@ -215,7 +216,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::CREATE_FAILED
+            'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
         \Flexio\Tests\Check::assertInArray('C.10', '\Model::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
 

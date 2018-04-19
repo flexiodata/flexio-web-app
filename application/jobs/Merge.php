@@ -52,7 +52,7 @@ class Merge extends \Flexio\Jobs\Base
         if (count($paths) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Missing/empty 'files' array");
 
-        $vfs = new \Flexio\Services\Vfs();
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
         $streams = [];
@@ -121,7 +121,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream_properties = [
             'mime_type' => \Flexio\Base\ContentType::TEXT
         ];
-        
+
         $outstream->set($outstream_properties);
 
         // write to the output
@@ -149,7 +149,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream_properties = [
             'mime_type' => \Flexio\Base\ContentType::JSON
         ];
-        
+
         $outstream->set($outstream_properties);
 
         $result = null;
@@ -174,7 +174,7 @@ class Merge extends \Flexio\Jobs\Base
                 $reader = $stream->getReader();
                 while (($chunk = $reader->read(16384)) !== false)
                     $data .= $chunk;
-                
+
                 $json = @json_decode($data);
             }
 
@@ -209,7 +209,7 @@ class Merge extends \Flexio\Jobs\Base
                 {
                     $result .= $json;
                 }
-            }        
+            }
         }
 
         if ($result !== null)
@@ -218,7 +218,7 @@ class Merge extends \Flexio\Jobs\Base
             $outstream->setSize($streamwriter->getBytesWritten());
         }
     }
-    
+
     private function mergeTables(array $streams, \Flexio\Iface\IStream $outstream)
     {
         // create a merged structure and a row template for insertion

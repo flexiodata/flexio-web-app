@@ -93,13 +93,16 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public static function create(array $properties = null) : \Flexio\Object\User
     {
+        if (!isset($properties))
+            $properties = array();
+
         // config is stored as a json string, so it needs to be encoded
         if (isset($properties) && isset($properties['config']))
             $properties['config'] = json_encode($properties['config']);
 
         // a unique username is required for users; if a username
         // isn't specified, then supply a default
-        $username = \Flexio\Base\Util::generateHandle();
+        $username = \Flexio\Base\Identifier::generate();
         $email= $username.'@flex.io';
         if (!isset($properties))
         {

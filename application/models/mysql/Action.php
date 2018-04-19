@@ -17,38 +17,44 @@ declare(strict_types=1);
 
 class Action extends ModelBase
 {
-    public function create(array $params = null) : string
+    public function create(array $params) : string
     {
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($params, array(
+                'eid_status'          => array('type' => 'string', 'required' => false, 'default' => \Model::STATUS_AVAILABLE),
+                'action_type'         => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_ip'          => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_user_agent'  => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_type'        => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_method'      => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_route'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_created_by'  => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_created'     => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'request_access_code' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'request_params'      => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'target_eid'          => array('type' => 'string', 'required' => false, 'default' => ''),
+                'target_eid_type'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'target_owned_by'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'response_type'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'response_code'       => array('type' => 'string', 'required' => false, 'default' => ''),
+                'response_params'     => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'response_created'    => array('type' => 'date',   'required' => false, 'default' => null, 'allow_null' => true),
+                'owned_by'            => array('type' => 'string', 'required' => false, 'default' => ''),
+                'created_by'          => array('type' => 'string', 'required' => false, 'default' => '')
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $process_arr = $validator->getParams();
+
         $db = $this->getDatabase();
         try
         {
-            $eid = $this->getModel()->createObjectBase(\Model::TYPE_ACTION, $params);
+            $eid = $this->getModel()->createObjectBase(\Model::TYPE_ACTION, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
-            $process_arr = array(
-                'eid'                 => $eid,
-                'eid_status'          => $params['eid_status'] ?? \Model::STATUS_AVAILABLE,
-                'action_type'         => $params['action_type'] ?? '',
-                'request_ip'          => $params['request_ip'] ?? '',
-                'request_user_agent'  => $params['request_user_agent'] ?? '',
-                'request_type'        => $params['request_type'] ?? '',
-                'request_method'      => $params['request_method'] ?? '',
-                'request_route'       => $params['request_route'] ?? '',
-                'request_created_by'  => $params['request_created_by'] ?? '',
-                'request_created'     => $params['request_created'] ?? null,
-                'request_access_code' => $params['request_access_code'] ?? '',
-                'request_params'      => $params['request_params'] ?? '{}',
-                'target_eid'          => $params['target_eid'] ?? '',
-                'target_eid_type'     => $params['target_eid_type'] ?? '',
-                'target_owned_by'     => $params['target_owned_by'] ?? '',
-                'response_type'       => $params['response_type'] ?? '',
-                'response_code'       => $params['response_code'] ?? '',
-                'response_params'     => $params['response_params'] ?? '{}',
-                'response_created'    => $params['response_created'] ?? null,
-                'owned_by'            => $params['owned_by'] ?? '',
-                'created_by'          => $params['created_by'] ?? '',
-                'created'             => $timestamp,
-                'updated'             => $timestamp
-            );
+
+            $process_arr['eid'] = $eid;
+            $process_arr['created'] = $timestamp;
+            $process_arr['updated'] = $timestamp;
 
             if ($db->insert('tbl_action', $process_arr) === false)
                 throw new \Exception();
@@ -68,26 +74,26 @@ class Action extends ModelBase
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
-                'eid_status'          => array('type' => 'string',  'required' => false),
-                'action_type'         => array('type' => 'string',  'required' => false),
-                'request_ip'          => array('type' => 'string',  'required' => false),
-                'request_user_agent'  => array('type' => 'string',  'required' => false),
-                'request_type'        => array('type' => 'string',  'required' => false),
-                'request_method'      => array('type' => 'string',  'required' => false),
-                'request_route'       => array('type' => 'string',  'required' => false),
-                'request_created_by'  => array('type' => 'string',  'required' => false),
-                'request_created'     => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'request_access_code' => array('type' => 'string',  'required' => false),
-                'request_params'      => array('type' => 'string',  'required' => false),
-                'target_eid'          => array('type' => 'string',  'required' => false),
-                'target_eid_type'     => array('type' => 'string',  'required' => false),
-                'target_owned_by'     => array('type' => 'string',  'required' => false),
-                'response_type'       => array('type' => 'string',  'required' => false),
-                'response_code'       => array('type' => 'string',  'required' => false),
-                'response_params'     => array('type' => 'string',  'required' => false),
-                'response_created'    => array('type' => 'any',     'required' => false),    // TODO: workaround null problem; any = allow nulls
-                'owned_by'            => array('type' => 'string',  'required' => false),
-                'created_by'          => array('type' => 'string',  'required' => false)
+                'eid_status'          => array('type' => 'string', 'required' => false),
+                'action_type'         => array('type' => 'string', 'required' => false),
+                'request_ip'          => array('type' => 'string', 'required' => false),
+                'request_user_agent'  => array('type' => 'string', 'required' => false),
+                'request_type'        => array('type' => 'string', 'required' => false),
+                'request_method'      => array('type' => 'string', 'required' => false),
+                'request_route'       => array('type' => 'string', 'required' => false),
+                'request_created_by'  => array('type' => 'string', 'required' => false),
+                'request_created'     => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'request_access_code' => array('type' => 'string', 'required' => false),
+                'request_params'      => array('type' => 'string', 'required' => false),
+                'target_eid'          => array('type' => 'string', 'required' => false),
+                'target_eid_type'     => array('type' => 'string', 'required' => false),
+                'target_owned_by'     => array('type' => 'string', 'required' => false),
+                'response_type'       => array('type' => 'string', 'required' => false),
+                'response_code'       => array('type' => 'string', 'required' => false),
+                'response_params'     => array('type' => 'string', 'required' => false),
+                'response_created'    => array('type' => 'date',   'required' => false, 'allow_null' => true),
+                'owned_by'            => array('type' => 'string', 'required' => false),
+                'created_by'          => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
