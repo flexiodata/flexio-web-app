@@ -6,7 +6,7 @@
 
     <!-- number -->
     <div
-      class="flex-none pv4"
+      class="flex-none pv4 mt2"
       v-if="showNumbers"
     >
       {{index+1}}.
@@ -14,7 +14,7 @@
 
     <!-- icon -->
     <div
-      class="flex-none pv4 pl3 pr4 nt2"
+      class="flex-none pv4 pl3 pr4"
       v-if="showIcons"
     >
       <ServiceIcon
@@ -32,7 +32,7 @@
 
     <!-- vertical line and insert buttons -->
     <div
-      class="absolute h-100"
+      class="absolute h-100 mt2"
       v-if="(showLine || showInsertButtons) && showIcons"
     >
       <!-- vertical line w/o buttons -->
@@ -223,6 +223,10 @@
       is_next_allowed() {
         if (this.item.ui == 'connection-chooser') {
           return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+        }
+
+        if (this.item.ui == 'file-chooser') {
+          return _.get(this.item, 'files', []).length > 0
         }
 
         return true

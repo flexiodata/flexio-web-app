@@ -1,7 +1,10 @@
 <template>
   <div>
-    <div class="tc pb3">
-      <h3 class="fw6 f4 mid-gray mt2">Choose files</h3>
+    <div class="tl pb3">
+      <div class="dib" v-if="false">
+        <TaskIcon class="br1 square-4" icon="insert_drive_file" bg-color="#0ab5f3" />
+      </div>
+      <h3 class="fw6 f3 mid-gray mt0 mb2">Choose files</h3>
     </div>
     <div>
       <file-chooser
@@ -17,6 +20,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import TaskIcon from './TaskIcon.vue'
   import FileChooser from './FileChooser.vue'
 
   export default {
@@ -27,6 +31,7 @@
       },
     },
     components: {
+      TaskIcon,
       FileChooser
     },
     computed: {

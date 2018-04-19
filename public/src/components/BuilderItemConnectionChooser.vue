@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="tc pb3 bb b--light-gray">
-      <ServiceIcon class="square-4" :type="ctype" />
-      <h3 class="fw6 f4 mid-gray mv2">Connect to {{service_name}}</h3>
+    <div class="tl pb3 bb b--light-gray">
+      <ServiceIcon class="square-4" :type="ctype" v-if="false" />
+      <h3 class="fw6 f3 mid-gray mt0 mb2">Connect to {{service_name}}</h3>
     </div>
     <div>
       <ConnectionChooserList
