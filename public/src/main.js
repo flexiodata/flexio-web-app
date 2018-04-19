@@ -106,6 +106,8 @@ router.afterEach((to, from) => {
 })
 
 router.beforeEach((to, from, next) => {
+    console.log(to)
+
   // update the active document in the store
   store.commit(CHANGE_ACTIVE_DOCUMENT, to.params.eid || to.name)
 
@@ -121,6 +123,8 @@ router.beforeEach((to, from, next) => {
 
     if (store.state.user_fetching)
       return
+
+    console.log(to)
 
     // check if the user is signed in
     store.dispatch('fetchCurrentUser').then(response => {
