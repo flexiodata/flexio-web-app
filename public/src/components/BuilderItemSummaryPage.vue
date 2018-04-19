@@ -104,29 +104,6 @@
         pipe_fn.call(this, Flexio, (err, response) => {
           // TODO: error reporting?
         })
-
-        /*
-        this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok)
-          {
-            var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
-
-            this.$store.track('Created Pipe In Onboarding', analytics_payload)
-
-            this.pipe_name = _.get(pipe, 'name', '')
-            this.pipe_alias = _.get(pipe, 'alias', '')
-            this.pipe = _.cloneDeep(pipe)
-
-            this.$nextTick(() => { this.show_pipe_save_dialog = false })
-            this.show_pipe_deploy_dialog = true
-          }
-           else
-          {
-            this.$store.track('Created Pipe In Onboarding (Error)')
-          }
-        })
-        */
       }
     }
   }
