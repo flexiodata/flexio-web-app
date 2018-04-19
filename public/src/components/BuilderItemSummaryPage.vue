@@ -31,8 +31,9 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { ROUTE_HOME_PIPES } from '../constants/route'
+  import Flexio from 'flexio-sdk-js'
 
   export default {
     props: {
@@ -45,20 +46,87 @@
         required: true
       }
     },
+    watch: {
+      is_active() {
+        if (this.is_active) {
+          this.createPipe()
+        }
+      }
+    },
     computed: {
       ...mapState({
-        active_prompt_idx: state => state.builder.active_prompt_idx
+        def: state => state.builder.def,
+        active_prompt_idx: state => state.builder.active_prompt_idx,
+        code: state => state.builder.code
       }),
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
       is_shown() {
         return this.index <= this.active_prompt_idx
+      },
+      api_key() {
+        var tokens = this.getAllTokens()
+
+        if (tokens.length == 0)
+          return ''
+
+        return _.get(tokens, '[0].access_code', '')
+      },
+      sdk_options() {
+        if (window.location.hostname == 'www.flex.io')
+          return {}
+
+        return { baseUrl: 'https://' + window.location.host + '/api/v2' }
+      },
+      save_code() {
+        var name = _.get(this.def, 'title', 'Untitled Pipe')
+        return this.code + '.save({ name: "' + name + '" })'
       }
     },
     methods: {
+      ...mapGetters([
+        'getAllTokens'
+      ]),
       runPipe() {
         alert('Go to pipe builder and run it.')
       },
       goDashboard() {
         this.$router.push({ name: ROUTE_HOME_PIPES })
+      },
+      createPipe() {
+        var pipe_fn = (Flexio, callback) => {
+          eval(this.save_code)
+        }
+
+        Flexio.setup(this.api_key, this.sdk_options)
+
+        pipe_fn.call(this, Flexio, (err, response) => {
+          // TODO: error reporting?
+        })
+
+        /*
+        this.$store.dispatch('createPipe', { attrs }).then(response => {
+          if (response.ok)
+          {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+
+            this.$store.track('Created Pipe In Onboarding', analytics_payload)
+
+            this.pipe_name = _.get(pipe, 'name', '')
+            this.pipe_alias = _.get(pipe, 'alias', '')
+            this.pipe = _.cloneDeep(pipe)
+
+            this.$nextTick(() => { this.show_pipe_save_dialog = false })
+            this.show_pipe_deploy_dialog = true
+          }
+           else
+          {
+            this.$store.track('Created Pipe In Onboarding (Error)')
+          }
+        })
+        */
       }
     }
   }

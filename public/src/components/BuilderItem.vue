@@ -137,7 +137,6 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import Flexio from 'flexio-sdk-js'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
@@ -183,8 +182,7 @@
         def: state => state.builder.def,
         prompts: state => state.builder.prompts,
         active_prompt: state  => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx,
-        code: state => state.builder.code
+        active_prompt_idx: state => state.builder.active_prompt_idx
       }),
       ceid() {
         return _.get(this.item, 'connection_eid', null)
@@ -236,26 +234,11 @@
           case 'file-chooser': return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
-      },
-      api_key() {
-        var tokens = this.getAllTokens()
-
-        if (tokens.length == 0)
-          return ''
-
-        return _.get(tokens, '[0].access_code', '')
-      },
-      sdk_options() {
-        if (window.location.hostname == 'www.flex.io')
-          return {}
-
-        return { baseUrl: 'https://' + window.location.host + '/api/v2' }
-      },
+      }
     },
     methods: {
       ...mapGetters([
-        'getAllConnections',
-        'getAllTokens'
+        'getAllConnections'
       ])
     }
   }
