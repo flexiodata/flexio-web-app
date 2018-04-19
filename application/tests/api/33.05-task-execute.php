@@ -107,11 +107,12 @@ EOD;
             'method' => 'POST',
             'url' => "$apibase/$userid/pipes/$objeid/run",
             'token' => $token,
-            'params ' => array(
+            'content_type' => 'application/json',
+            'params' => json_encode(array(
                 'param1' => 'a',
                 'param2' => 'b',
                 'param3' => 'c'
-            )
+            ))
         ));
         $actual = $result;
         $expected = '{
