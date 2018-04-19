@@ -44,6 +44,10 @@
         type: String,
         required: false
       },
+      'connection': {
+        type: Object,
+        default: () => { return null }
+      },
       'list-type': {
         type: String,
         default: 'input'
@@ -95,6 +99,9 @@
       EmptyItem
     },
     watch: {
+      connection(val) {
+        this.onItemActivate(val)
+      },
       connectionType: function(val, old_val) {
         this.connection_type = val
       }
@@ -129,7 +136,7 @@
         return items
       },
       input_services() {
-        var items = [].concat(this.default_connections, this.getAllConnections())
+        var items = [].concat(this.default_connections, this.getAvailableConnections())
 
         if (this.connectionTypeFilter.length == 0)
           return items
@@ -148,7 +155,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)

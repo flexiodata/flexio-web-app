@@ -93,7 +93,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        var items = _.filter(this.getAllConnections(), this.isStorageConnection)
+        var items = _.filter(this.getAvailableConnections(), this.isStorageConnection)
         return [LOCAL_STORAGE_ITEM].concat(items)
       },
       ctype() {
@@ -111,7 +111,7 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       openAddModal() {
         this.show_connection_props_modal = true

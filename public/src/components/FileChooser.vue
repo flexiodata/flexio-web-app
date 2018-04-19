@@ -6,7 +6,7 @@
       :path="connection_path"
       @open-folder="openFolder"
       v-if="file_chooser_mode == 'filechooser'"
-    ></file-explorer-bar>
+    />
 
     <div class="flex-fill overflow-y-auto">
       <file-chooser-list
@@ -16,13 +16,13 @@
         @open-folder="openFolder"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'filechooser'"
-      ></file-chooser-list>
+      />
       <url-input-list
         ref="url-input-list"
         class="ba b--black-10 pa1 min-h5 max-h5"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'textentry'"
-      ></url-input-list>
+      />
     </div>
   </div>
 </template>
@@ -130,6 +130,7 @@
       },
       updateItems(items) {
         this.items = items
+        this.$emit('selection-change', this.items, this)
       }
     }
   }

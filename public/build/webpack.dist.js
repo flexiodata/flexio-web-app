@@ -14,6 +14,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const config = merge(base, {
+  // without this, webpack throws in a polyfill for node.js's Buffer class
+  node: {
+    Buffer: false,
+    process: false
+  },
+
   devtool: '#source-map',
 
   plugins: [

@@ -123,7 +123,8 @@
   import {
     PIPEHOME_VIEW_SDK_JS,
     PIPEHOME_VIEW_BUILDER,
-    PIPEHOME_STATUS_CONFIGURE
+    PIPEHOME_STATUS_CONFIGURE,
+    PIPEHOME_STATUS_RUN
   } from '../constants/pipehome'
   import Spinner from 'vue-simple-spinner'
   import PipeHomeHeader from './PipeHomeHeader.vue'
@@ -298,7 +299,7 @@
         return this.pipe_view == PIPEHOME_VIEW_BUILDER
       },
       connections() {
-        return this.getAllConnections()
+        return this.getAvailableConnections()
       }
     },
     created() {
@@ -315,11 +316,15 @@
         // if we're starting in configure mode, start the prompting
         if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_CONFIGURE)
           this.runPipe()
+
+        // if we're starting in run mode, run the pipe
+        if (_.get(this.$route, 'params.state') == PIPEHOME_STATUS_RUN)
+          this.runPipe()
       }
     },
     methods: {
       ...mapGetters([
-        'getAllConnections',
+        'getAvailableConnections',
         'getActiveDocumentProcesses',
         'getActiveUser'
       ]),

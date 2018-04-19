@@ -39,6 +39,17 @@ export const getAllConnections = state => {
   // as the 'return', otherwise JS will return without doing anything
   return _
     .chain(state.objects)
+    .filter({ eid_type: OBJECT_TYPE_CONNECTION })
+    .sortBy([ function(c) { return new Date(c.created) } ])
+    .reverse()
+    .value()
+}
+
+export const getAvailableConnections = state => {
+  // NOTE: it's really important to include the '_' on the same line
+  // as the 'return', otherwise JS will return without doing anything
+  return _
+    .chain(state.objects)
     .filter({ eid_type: OBJECT_TYPE_CONNECTION, eid_status: OBJECT_STATUS_AVAILABLE })
     .sortBy([ function(c) { return new Date(c.created) } ])
     .reverse()
@@ -122,5 +133,5 @@ export const hasPipes = state => {
 }
 
 export const hasConnections = state => {
-  return state.connections_fetched && _.size(getAllConnections(state)) > 0
+  return state.connections_fetched && _.size(getAvailableConnections(state)) > 0
 }

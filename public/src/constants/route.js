@@ -1,5 +1,6 @@
 export const ROUTE_ADMIN            = 'admin'
 export const ROUTE_ACCOUNT          = 'account'
+export const ROUTE_BUILDER          = 'builder'
 export const ROUTE_COPYPIPE         = 'copypipe'
 export const ROUTE_EMBED            = 'embed'
 export const ROUTE_FORGOTPASSWORD   = 'forgotpassword'
