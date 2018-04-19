@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-nearer-white pa5 overflow-y-auto" :id="id">
+  <div class="bg-nearer-white pa5 overflow-y-auto relative" :id="id">
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
@@ -12,6 +12,9 @@
       v-else-if="is_fetched"
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
+      <div class="fixed bg-white pv1 ph3 ba b--black-05" style="top: 70px; right: 30px">
+        <pre class="code f6">{{code}}</pre>
+      </div>
       <builder-list
         :container-id="id"
       />
@@ -50,7 +53,8 @@
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         active_prompt_idx: state => state.builder.active_prompt_idx,
-        title: state => state.builder.def.title
+        title: state => state.builder.def.title,
+        code: state => state.builder.code
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
