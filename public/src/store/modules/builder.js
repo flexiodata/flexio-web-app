@@ -4,6 +4,7 @@ import api from '../../api'
 const state = {
   def: {},
   code: '',
+  pipe: {},
   prompts: [],
   active_prompt: {},
   active_prompt_idx: null,
@@ -86,6 +87,10 @@ const mutations = {
     })
 
     state.code = code
+  },
+
+  BUILDER__CREATE_PIPE (state, attrs) {
+    state.pipe = attrs
   },
 
   BUILDER__GO_PREV_ITEM (state) {

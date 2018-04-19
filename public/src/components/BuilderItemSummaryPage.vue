@@ -12,18 +12,18 @@
       <div class="mt4">
         <el-button
           class="ttu b"
-          type="primary"
-          @click="runPipe"
+          type="plain"
+          @click="gotoPipe"
         >
-          Run now
+          View pipe
         </el-button>
         <span class="ph2">or</span>
         <el-button
           class="ttu b"
           type="primary"
-          @click="goDashboard"
+          @click="runPipe"
         >
-          View my dashboard
+          Run now
         </el-button>
       </div>
     </div>
@@ -32,7 +32,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_HOME_PIPES } from '../constants/route'
+  import { ROUTE_PIPES } from '../constants/route'
   import Flexio from 'flexio-sdk-js'
 
   export default {
@@ -57,7 +57,8 @@
       ...mapState({
         def: state => state.builder.def,
         active_prompt_idx: state => state.builder.active_prompt_idx,
-        code: state => state.builder.code
+        code: state => state.builder.code,
+        pipe: state => state.builder.pipe
       }),
       is_active() {
         return this.index == this.active_prompt_idx
@@ -81,18 +82,20 @@
       },
       save_code() {
         var name = _.get(this.def, 'title', 'Untitled Pipe')
-        return this.code + '.save({ name: "' + name + '" })'
+        return this.code + '.save({ name: "' + name + '" }, callback)'
       }
     },
     methods: {
       ...mapGetters([
         'getAllTokens'
       ]),
-      runPipe() {
-        alert('Go to pipe builder and run it.')
+      gotoPipe() {
+        var eid = this.pipe.eid
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
       },
-      goDashboard() {
-        this.$router.push({ name: ROUTE_HOME_PIPES })
+      runPipe() {
+        var eid = this.pipe.eid
+        this.$router.push({ name: ROUTE_PIPES, params: { eid, state: 'run' } })
       },
       createPipe() {
         var pipe_fn = (Flexio, callback) => {
@@ -103,6 +106,8 @@
 
         pipe_fn.call(this, Flexio, (err, response) => {
           // TODO: error reporting?
+          var pipe = response
+          this.$store.commit('BUILDER__CREATE_PIPE', pipe)
         })
       }
     }
