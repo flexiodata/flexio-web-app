@@ -8,16 +8,20 @@
     </div>
     <div
       class="center"
-      style="max-width: 1280px"
+      style="max-width: 1440px"
       v-else-if="is_fetched"
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
-      <div class="fixed bg-white pv1 ph3 ba b--black-05" style="top: 70px; right: 30px">
-        <pre class="code f6">{{code}}</pre>
+      <div class="flex flex-row">
+        <builder-list
+          class="flex-fill"
+          :container-id="id"
+        />
+        <div class="dn db-l ml4 pa3 bg-white overflow-auto css-dashboard-box br2" style="max-height: 30rem; min-width: 20rem; max-width: 33%">
+          <div class="ttu b silver f7 pb2 mb3 bb b--black-10">Output:</div>
+          <pre class="ma0 code f6">{{code}}</pre>
+        </div>
       </div>
-      <builder-list
-        :container-id="id"
-      />
     </div>
   </div>
 </template>
