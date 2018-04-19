@@ -56,7 +56,7 @@
       }
     ],
     "pipe_language": "javascript",
-    "pipe": "Flexio.pipe()\n  .echo('${input}')\n"
+    "pipe": "Flexio.pipe()\n  .echo('${input}')\n  .echo('${connection-chooser}')\n  .echo('${file-chooser}')\n"
   }
 
   export default {
@@ -69,7 +69,7 @@
         handler: 'loadTemplate',
         immediate: true
       },
-      active_prompt_idx: {
+      active_prompt: {
         handler: 'updateCode',
         immediate: true
       }
@@ -83,7 +83,7 @@
       ...mapState({
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
-        active_prompt_idx: state => state.builder.active_prompt_idx,
+        active_prompt: state => state.builder.active_prompt,
         title: state => state.builder.def.title,
         code: state => state.builder.code
       }),
