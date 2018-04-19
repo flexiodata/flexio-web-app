@@ -39,12 +39,14 @@
     methods: {
       scrollToItem(item_id) {
         if (_.isString(item_id) && _.isString(this.containerId)) {
-          this.$scrollTo('#'+item_id, {
-              container: '#'+this.containerId,
-              duration: 400,
-              easing: 'ease-out',
-              offset: -64
-          })
+          setTimeout(() => {
+            this.$scrollTo('#'+item_id, {
+                container: '#'+this.containerId,
+                duration: 400,
+                easing: 'ease-out',
+                offset: -64
+            })
+          }, 10)
         }
       },
       scrollToActive() {

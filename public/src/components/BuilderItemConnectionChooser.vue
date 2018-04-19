@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="tc">
+    <div class="tc pb3 bb b--light-gray">
       <ServiceIcon class="square-4" :type="ctype" />
-      <h3 class="fw6 f4 mid-gray mt2">Connect to {{service_name}}</h3>
+      <h3 class="fw6 f4 mid-gray mv2">Connect to {{service_name}}</h3>
     </div>
-    <div class="pa4 br2 ba b--black-05">
+    <div>
       <ConnectionChooserList
         class="mb3"
         style="max-height: 24rem"
@@ -16,13 +16,15 @@
         @item-activate="chooseConnection"
         v-if="connections_of_type.length > 0"
       />
-      <el-button
-        class="ttu b"
-        type="plain"
-        @click="createPendingConnection"
-      >
-        Set up a new connection
-      </el-button>
+      <div class="mt3">
+        <el-button
+          class="ttu b"
+          type="plain"
+          @click="createPendingConnection"
+        >
+          Set up a new connection
+        </el-button>
+      </div>
     </div>
 
     <!-- connect to storage dialog -->

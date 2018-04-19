@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div class="tc">
+    <div class="tc pb3">
       <h3 class="fw6 f4 mid-gray mt2">Choose files</h3>
     </div>
-    <div class="pa4 br2 ba b--black-05">
+    <div>
       <file-chooser
+        class="bb b--light-gray"
         style="max-height: 24rem"
         :connection="store_connection"
         @selection-change="updateFiles"

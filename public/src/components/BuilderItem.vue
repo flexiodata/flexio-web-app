@@ -101,7 +101,7 @@
           {{item.variable}}
         </div>
       </div>
-      <div class="flex-none mt3 flex flex-row justify-end" v-if="is_active">
+      <div class="flex-none mt4 flex flex-row justify-end" v-if="is_active">
         <el-button
           class="ttu b"
           type="plain"
