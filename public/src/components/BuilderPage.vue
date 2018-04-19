@@ -30,6 +30,10 @@
       slug: {
         handler: 'loadTemplate',
         immediate: true
+      },
+      active_prompt_idx: {
+        handler: 'updateCode',
+        immediate: true
       }
     },
     data() {
@@ -40,7 +44,8 @@
     computed: {
       ...mapState({
         is_fetching: state => state.builder.fetching,
-        is_fetched: state => state.builder.fetched
+        is_fetched: state => state.builder.fetched,
+        active_prompt_idx: state => state.builder.active_prompt_idx
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
@@ -57,6 +62,9 @@
         }).catch(error => {
           this.$store.commit('BUILDER__FETCHING_DEF', false)
         })
+      },
+      updateCode() {
+        this.$store.commit('BUILDER__UPDATE_CODE')
       }
     }
   }

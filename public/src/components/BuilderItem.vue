@@ -93,6 +93,12 @@
           :item="item"
           v-else-if="item.ui == 'file-chooser'"
         />
+        <div
+          v-else-if="item.ui == 'summary-page'"
+        >
+          <i class="el-icon-success v-mid dark-green f2"></i>
+
+        </div>
         <div v-else>
           <span class="silver">
             {{item.ui}}
@@ -136,6 +142,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import Flexio from 'flexio-sdk-js'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
@@ -176,9 +183,11 @@
     },
     computed: {
       ...mapState({
+        def: state => state.builder.def,
         prompts: state => state.builder.prompts,
         active_prompt: state  => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx
+        active_prompt_idx: state => state.builder.active_prompt_idx,
+        code: state => state.builder.code
       }),
       ceid() {
         return _.get(this.item, 'connection_eid', null)
@@ -197,6 +206,17 @@
       },
       is_active() {
         return this.index == this.active_prompt_idx
+      },
+      is_next_allowed() {
+        if (this.item.ui == 'connection-chooser') {
+          return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+        }
+
+        if (this.item.ui == 'file-chooser') {
+          return _.get(this.item, 'files', []).length > 0
+        }
+
+        return true
       },
       content_cls() {
         return {
@@ -220,24 +240,63 @@
           case 'summary-page': return '#009900'
         }
       },
-      is_next_allowed() {
-        if (this.item.ui == 'connection-chooser') {
-          return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
-        }
+      api_key() {
+        var tokens = this.getAllTokens()
 
-        if (this.item.ui == 'file-chooser') {
-          return _.get(this.item, 'files', []).length > 0
-        }
+        if (tokens.length == 0)
+          return ''
 
-        return true
-      }
+        return _.get(tokens, '[0].access_code', '')
+      },
+      sdk_options() {
+        if (window.location.hostname == 'www.flex.io')
+          return {}
+
+        return { baseUrl: 'https://' + window.location.host + '/api/v2' }
+      },
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAllConnections',
+        'getAllTokens'
       ]),
       finishClick() {
         alert('Finished!')
+
+        /*
+        var attrs = { name: _.get(this.def, 'title', 'Untitled Pipe') }
+
+        var pipe_fn = (Flexio, callback) => {
+          eval(this.code)
+        }
+
+        Flexio.setup(this.apiKey, this.sdkOptions)
+
+        pipe_fn.call(this, Flexio, (err, response) => {
+          debugger
+        })
+
+        this.$store.dispatch('createPipe', { attrs }).then(response => {
+          if (response.ok)
+          {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+
+            this.$store.track('Created Pipe In Onboarding', analytics_payload)
+
+            this.pipe_name = _.get(pipe, 'name', '')
+            this.pipe_alias = _.get(pipe, 'alias', '')
+            this.pipe = _.cloneDeep(pipe)
+
+            this.$nextTick(() => { this.show_pipe_save_dialog = false })
+            this.show_pipe_deploy_dialog = true
+          }
+           else
+          {
+            this.$store.track('Created Pipe In Onboarding (Error)')
+          }
+        })
+        */
       }
     }
   }

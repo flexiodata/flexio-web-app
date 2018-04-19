@@ -3,6 +3,7 @@ import api from '../../api'
 
 const state = {
   def: {},
+  code: '',
   prompts: [],
   active_prompt: {},
   active_prompt_idx: null,
@@ -24,8 +25,9 @@ const mutations = {
 
   BUILDER__INIT_DEF (state, def) {
     state.def = def
+    state.code = _.get(def, 'pipe', '').trim()
 
-    var prompts = _.get(state, 'def.prompts', [])
+    var prompts = _.get(def, 'prompts', [])
 
     state.fetched = true
     state.prompts = _.map(prompts, p => {
@@ -36,6 +38,7 @@ const mutations = {
 
       return p
     })
+
     state.active_prompt_idx = 0
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
@@ -51,11 +54,38 @@ const mutations = {
         // update any prompts that want to reference
         // the active prompt's connection
         if (p.connection == ap.variable) {
-          return _.assign(p, { connection_eid: ap.connection_eid })
+          return _.assign(p, {
+            connection_eid: ap.connection_eid,
+            files: []
+          })
         }
         return p
       }
     })
+  },
+
+  BUILDER__UPDATE_CODE (state) {
+    var code = state.def.pipe
+
+    _.each(state.prompts, p => {
+      var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
+
+      switch (p.ui) {
+        case 'connection-chooser':
+          if (!_.isNil(p.connection_eid)) {
+            code = code.replace(regex, p.connection_eid)
+          }
+          break
+        case 'file-chooser':
+          var path = _.get(p, 'files[0].path', null)
+          if (!_.isNil(path)) {
+            code = code.replace(regex, path)
+          }
+          break
+      }
+    })
+
+    state.code = code
   },
 
   BUILDER__GO_PREV_ITEM (state) {
