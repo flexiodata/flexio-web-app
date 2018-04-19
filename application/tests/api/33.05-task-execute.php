@@ -38,7 +38,7 @@ from collections import OrderedDict
 def flexio_handler(context):
     params = OrderedDict(sorted(context.form.items()))
     for p in params:
-        context.output.write(p + ":" + params[p] + ";")
+        context.output.write(str(p) + ":" + str(params[p]) + ";")
     context.output.content_type = "text/plain"
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
