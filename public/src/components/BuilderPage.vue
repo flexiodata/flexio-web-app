@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-nearer-white pa5 overflow-y-auto relative" :id="id">
+  <div class="bg-nearer-white pa4 overflow-y-auto relative" :id="id">
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
@@ -7,7 +7,7 @@
       <spinner size="large" message="Loading..." />
     </div>
     <div
-      class="center"
+      class="center mv4"
       style="max-width: 1440px"
       v-else-if="is_fetched"
     >
@@ -17,7 +17,10 @@
           class="flex-fill"
           :container-id="id"
         />
-        <div class="dn db-l ml4 pa3 bg-white overflow-auto css-dashboard-box br2" style="max-height: 30rem; min-width: 20rem; max-width: 33%">
+        <div
+          class="dn db-l ml4 pa3 bg-white br2 overflow-auto css-dashboard-box sticky"
+          style="max-height: 30rem; min-width: 20rem; max-width: 33%"
+        >
           <div class="ttu b silver f7 pb2 mb3 bb b--black-10">Output:</div>
           <pre class="ma0 code f6">{{code}}</pre>
         </div>
@@ -28,6 +31,7 @@
 
 <script>
   import axios from 'axios'
+  import stickybits from 'stickybits'
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
@@ -76,6 +80,9 @@
       active_prompt: {
         handler: 'updateCode',
         immediate: true
+      },
+      is_fetched() {
+        setTimeout(() => { stickybits('.sticky') }, 100)
       }
     },
     data() {
