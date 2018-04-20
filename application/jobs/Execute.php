@@ -464,27 +464,24 @@ class ScriptHost
         $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
-    public function func_getInputEnv()
+
+    public function func_debug($message)
     {
-        // TODO: need to save input environment variables for this work;
-        // however, can't these just be saved in the script before changing them?
-        //return $this->process->getParams();
+        die($message);
     }
 
-    public function func_getOutputEnv()
+    public function func_getEnv()
     {
-        // TODO: // rename this function? to func_getEnv() ?
         return $this->process->getParams();
     }
 
-    public function func_setOutputEnvValue($key, $value)
+    public function func_setEnvValue($key, $value)
     {
         $env = $this->process->getParams();
         $env[(string)$key] = (string)$value;
         $this->process->setParams($env);
         return true;
     }
-
 
 
     public $stream_cache = array();

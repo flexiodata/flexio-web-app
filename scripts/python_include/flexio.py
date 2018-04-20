@@ -123,84 +123,66 @@ proxy = StdinoutProxy()
 
 
 
-class InputEnv(object):
+class EnvVars(object):
 
     def __init__(self):
-        self.inited = False
-        self.env = {}
+        self.fx_inited = False
+        self.fx_env = {}
 
     def initialize(self):
-        self.env = proxy.invoke('getInputEnv', [])
-        self.inited = True
+        self.fx_env = proxy.invoke('getEnv', [])
+        self.fx_inited = True
 
     def __getitem__(self, key):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        return self.env[key]
+        return self.fx_env[key]
 
-    def __iter__(self):
-        if not self.inited:
+    def __getattr__(self, key):
+        if not self.fx_inited:
             self.initialize()
-        return iter(self.env)
-
-    def items(self):
-        if not self.inited:
-            self.initialize()
-        return self.env.items()
-
-    def keys(self):
-        if not self.inited:
-            self.initialize()
-        return self.env.keys()
-
-    def values(self):
-        if not self.inited:
-            self.initialize()
-        return self.env.values()
-
-class OutputEnv(object):
-
-    def __init__(self):
-        self.inited = False
-        self.env = {}
-
-    def initialize(self):
-        self.env = proxy.invoke('getOutputEnv', [])
-        self.inited = True
-
-    def __getitem__(self, key):
-        if not self.inited:
-            self.initialize()
-        return self.env[key]
+        if key in self.fx_env:
+            return self.fx_env[key]
+        else:
+            return None
 
     def __setitem__(self, key, value):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        if proxy.invoke('setOutputEnvValue', [key,value]) is True:
-            self.env[key] = value
+        if proxy.invoke('setEnvValue', [key,value]) is True:
+            self.fx_env[key] = value
+
+    def __setattr__(self, key, value):
+        if key[:3] == 'fx_':
+            return super().__setattr__(key, value)
+        if not self.fx_inited:
+            self.initialize()
+        if proxy.invoke('setEnvValue', [key,value]) is True:
+            self.fx_env[key] = value
 
     def __iter__(self):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        return iter(self.env)
+        return iter(self.fx_env)
 
     def items(self):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        return self.env.items()
+        return self.fx_env.items()
 
     def keys(self):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        return self.env.keys()
+        return self.fx_env.keys()
 
     def values(self):
-        if not self.inited:
+        if not self.fx_inited:
             self.initialize()
-        return self.env.values()
+        return self.fx_env.values()
 
-input_env = InputEnv()
-output_env = OutputEnv()
+env_vars = EnvVars()
+
+
 
 class Input(object):
 
@@ -231,10 +213,6 @@ class Input(object):
             self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
-
-    @property
-    def env(self):
-        return input_env
 
     @property
     def name(self):
@@ -393,10 +371,6 @@ class Output(object):
         self._content_type = value
         proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
 
-    @property
-    def env(self):
-        return output_env
-
     def create(self, name=None, content_type='text/plain', structure=None):
         properties = { 'content_type': content_type }
         if name:
@@ -452,6 +426,10 @@ class Context(object):
         if self._form is None:
             self._form = proxy.invoke('getFormParameters', [])
         return self._form
+
+    @property
+    def vars(self):
+        return env_vars
 
 def run(handler):
 
