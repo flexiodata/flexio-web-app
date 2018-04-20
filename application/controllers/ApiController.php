@@ -34,9 +34,8 @@ class ApiController extends \Flexio\System\FxControllerAction
 
         // see if we can find the api version
         $apiversion = '';
-        if ($request->getUrlPathPart(1) == 'v1') // v1 api path:  www.flex.io/api/v1
-            $apiversion = 'v1';
-        else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/v1; for now we have www.flex.io/api/v2
+
+        if ($request->getUrlPathPart(1) == 'v2') // support https://www.flex.io/api/v2; note, we have https://api.flex.io/v1 and https://www.flex.io/v1 through the V1Controller
             $apiversion = 'v2';
 
         if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
