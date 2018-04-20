@@ -1,8 +1,8 @@
 <template>
-  <main class="pa3 ph3-m pa5-ns black-60 overflow-auto">
-    <div class="measure-wide center">
+  <main class="pa3 ph3-m pa5-ns bg-nearer-white black-60 overflow-auto">
+    <div class="measure center">
       <sign-in-form
-        class="mh5-ns"
+        class="bg-white pa3 pa4-ns css-dashboard-box"
         @sign-up-click="onSignUpClick"
         @forgot-password-click="onForgotPasswordClick"
         @signed-in="onSignedIn"

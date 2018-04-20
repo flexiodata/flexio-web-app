@@ -1,7 +1,7 @@
 <template>
-  <main class="pa3 ph3-m pa5-ns black-60 overflow-auto">
-    <div class="measure-wide center">
-      <reset-password-form class="mh5-ns" />
+  <main class="pa3 ph3-m pa5-ns bg-nearer-white black-60 overflow-auto">
+    <div class="measure center">
+      <reset-password-form class="bg-white pa3 pa4-ns css-dashboard-box" />
     </div>
   </main>
 </template>
