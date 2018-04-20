@@ -21,6 +21,7 @@ module.exports = {
       'autosize',
       'filesize',
       'clipboard',
+      'stickybits',
       'marked',
       'moment',
       'flexio-sdk-js',
