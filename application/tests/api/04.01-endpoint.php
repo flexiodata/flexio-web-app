@@ -1,0 +1,87 @@
+<?php
+/**
+ *
+ * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
+ *
+ * Project:  Flex.io App
+ * Author:   Aaron L. Williams
+ * Created:  2018-04-20
+ *
+ * @package flexio
+ * @subpackage Tests
+ */
+
+
+declare(strict_types=1);
+namespace Flexio\Tests;
+
+
+class Test
+{
+    public function run(&$results)
+    {
+        // SETUP
+
+
+        // TEST: test invalid api endpoint
+
+        // BEGIN TEST
+        $endpoints = [
+            '/1',
+            '/api/v1',
+            '/api/v3'
+        ];
+        $idx = 1;
+        foreach ($endpoints as $e)
+        {
+            $apibase = \Flexio\Tests\Util::getTestHost() . $e;
+            $params = array(
+                'method' => 'GET',
+                'url' => "$apibase/about",
+                // 'token' => '', // no token included
+            );
+            $result = \Flexio\Tests\Util::callApi($params);
+            $response = json_decode($result['response'],true);
+            $actual = $result;
+            $actual['response'] = $response;
+            $expected = '{
+                "code": 404,
+                "content_type": "application/json",
+                "response": {
+                    "error": {
+                        "code": "invalid-version",
+                        "message": "Invalid version"
+                    }
+                }
+            }';
+            \Flexio\Tests\Check::assertInArray("A.$idx", 'GET /api/v2/about; test invalid api endpoints',  $actual, $expected, $results);
+        }
+
+
+        // TEST: test the allowed endpoints to access the api
+
+        // BEGIN TEST
+        $endpoints = [
+            '/v1',
+            '/api/v2'
+        ];
+        $idx = 1;
+        foreach ($endpoints as $e)
+        {
+            $apibase = \Flexio\Tests\Util::getTestHost() . $e;
+            $params = array(
+                'method' => 'GET',
+                'url' => "$apibase/about",
+                // 'token' => '', // no token included
+            );
+            $result = \Flexio\Tests\Util::callApi($params);
+            $actual = $result['response'];
+            $expected = '
+            {
+                "name": "flexio"
+            }
+            ';
+            \Flexio\Tests\Check::assertInArray("B.$idx", 'GET /api/v2/about; return basic about info using allowed endpoints',  $actual, $expected, $results);
+        }
+    }
+}
