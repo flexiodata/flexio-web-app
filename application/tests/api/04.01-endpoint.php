@@ -31,9 +31,10 @@ class Test
             '/api/v1',
             '/api/v3'
         ];
-        $idx = 1;
+        $idx = 0;
         foreach ($endpoints as $e)
         {
+            $idx++;
             $apibase = \Flexio\Tests\Util::getTestHost() . $e;
             $params = array(
                 'method' => 'GET',
@@ -54,7 +55,7 @@ class Test
                     }
                 }
             }';
-            \Flexio\Tests\Check::assertInArray("A.$idx", 'GET /api/v2/about; test invalid api endpoints',  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("A.$idx", "GET $e/about; test invalid api endpoint'",  $actual, $expected, $results);
         }
 
 
@@ -65,9 +66,10 @@ class Test
             '/v1',
             '/api/v2'
         ];
-        $idx = 1;
+        $idx = 0;
         foreach ($endpoints as $e)
         {
+            $idx++;
             $apibase = \Flexio\Tests\Util::getTestHost() . $e;
             $params = array(
                 'method' => 'GET',
@@ -81,7 +83,7 @@ class Test
                 "name": "flexio"
             }
             ';
-            \Flexio\Tests\Check::assertInArray("B.$idx", 'GET /api/v2/about; return basic about info using allowed endpoints',  $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("B.$idx", "GET $e/about; return basic about info using allowed endpoint",  $actual, $expected, $results);
         }
     }
 }
