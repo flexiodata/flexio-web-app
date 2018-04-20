@@ -36,37 +36,45 @@ class ApiController extends \Flexio\System\FxControllerAction
         $apiversion = '';
         if ($request->getUrlPathPart(1) == 'v1') // v1 api path:  www.flex.io/api/v1
             $apiversion = 'v1';
-        else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/1; for now we have www.flex.io/api/v2
+        else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/v1; for now we have www.flex.io/api/v2
             $apiversion = 'v2';
 
 
-
-        if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false)
-        {
-            header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-            header('Access-Control-Max-Age: 1000');
-            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
-            //header('Content-Type: application/json');  // this line absolutely can't be right, so it got commented out
-        }
-        else
-        {
-            if (0 == strncmp($request->REQUEST_URI, '/api/v1/connections', 19) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/pipes', 13) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/streams', 15))
+        if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
             {
-                header('Access-Control-Allow-Origin: *');
-                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-                header('Access-Control-Allow-Headers: authorization, content-type');
+                header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
+                header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN']??'*'));
+                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                header('Access-Control-Max-Age: 1000');
+                header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
+                //header('Content-Type: application/json');  // this line absolutely can't be right, so it got commented out
             }
-        }
+            else
+            {
+                $host = GET_HTTP_HOST();
+                if (substr($host, 0, 4) == 'api.' && substr($host, -8) == '.flex.io')
+                {
+                    header('Access-Control-Allow-Origin: *');
+                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                    header('Access-Control-Allow-Headers: authorization, content-type');
+                }
 
-        if ($method == 'OPTIONS')
-            return;
 
+                /*
+                if (0 == strncmp($request->REQUEST_URI, '/v1/connections', 19) ||
+                    0 == strncmp($request->REQUEST_URI, '/v1/processes', 17) ||
+                    0 == strncmp($request->REQUEST_URI, '/v1/pipes', 13) ||
+                    0 == strncmp($request->REQUEST_URI, '/v1/streams', 15))
+                {
+                    header('Access-Control-Allow-Origin: *');
+                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
+                    header('Access-Control-Allow-Headers: authorization, content-type');
+                }
+                */
+            }
 
+            if ($method == 'OPTIONS')
+                return;
 
 /*
         // for OPTIONS method, handle CORS (cross origin)...
