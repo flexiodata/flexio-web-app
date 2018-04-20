@@ -39,7 +39,6 @@ class Util
     }
 
     // $method = GET, POST, PUT, DELETE
-    // $path = /api/v1/... + GET parameters
     // $token = authentication token
     // $params = php array for normal post (files prefixed with @), or a string for a post buffer
     // $content_type = in the case the $params is a string, specify its content type here
@@ -121,7 +120,7 @@ class Util
     public static function getTestSDKSetup()
     {
         $default_user_token = \Flexio\Tests\Util::getDefaultTestUserToken();
-        $test_api_endpoint = \Flexio\Tests\Util::getTestHost() . '/api/v1';
+        $test_api_endpoint = \Flexio\Tests\Util::getTestHost() . '/v1';
 
         $script = <<<EOD
 
