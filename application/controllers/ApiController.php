@@ -39,7 +39,6 @@ class ApiController extends \Flexio\System\FxControllerAction
         else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/v1; for now we have www.flex.io/api/v2
             $apiversion = 'v2';
 
-
         if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
             {
                 header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
@@ -47,7 +46,6 @@ class ApiController extends \Flexio\System\FxControllerAction
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
                 header('Access-Control-Max-Age: 1000');
                 header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
-                //header('Content-Type: application/json');  // this line absolutely can't be right, so it got commented out
             }
             else
             {
@@ -58,19 +56,6 @@ class ApiController extends \Flexio\System\FxControllerAction
                     header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
                     header('Access-Control-Allow-Headers: authorization, content-type');
                 }
-
-
-                /*
-                if (0 == strncmp($request->REQUEST_URI, '/v1/connections', 19) ||
-                    0 == strncmp($request->REQUEST_URI, '/v1/processes', 17) ||
-                    0 == strncmp($request->REQUEST_URI, '/v1/pipes', 13) ||
-                    0 == strncmp($request->REQUEST_URI, '/v1/streams', 15))
-                {
-                    header('Access-Control-Allow-Origin: *');
-                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-                    header('Access-Control-Allow-Headers: authorization, content-type');
-                }
-                */
             }
 
             if ($method == 'OPTIONS')
@@ -109,7 +94,6 @@ class ApiController extends \Flexio\System\FxControllerAction
         // allow JSON to be sent as POST body; the check for enable_post_data_reading
         // is for calls that 'want' the json payload as their body, such as /pipe/:eid/run and
         // /process/:eid/run
-
 
         try
         {
