@@ -25,7 +25,7 @@ class Test
 
 
         // SETUP
-        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $username1 = \Flexio\Base\Identifier::generate();
         $email1 = \Flexio\Tests\Util::createEmailAddress();
         $password1 = \Flexio\Base\Password::generate();

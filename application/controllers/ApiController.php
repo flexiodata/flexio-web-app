@@ -34,74 +34,36 @@ class ApiController extends \Flexio\System\FxControllerAction
 
         // see if we can find the api version
         $apiversion = '';
-        if ($request->getUrlPathPart(1) == 'v1') // v1 api path:  www.flex.io/api/v1
-            $apiversion = 'v1';
-        else if ($request->getUrlPathPart(1) == 'v2')  // TODO: we want this to become:  api.flex.io/1; for now we have www.flex.io/api/v2
+
+        if ($request->getUrlPathPart(1) == 'v2') // support https://www.flex.io/api/v2; note, we have https://api.flex.io/v1 and https://www.flex.io/v1 through the V1Controller
             $apiversion = 'v2';
 
-
-
-        if (IS_DEBUG() && strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false)
-        {
-            header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
-            header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
-            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-            header('Access-Control-Max-Age: 1000');
-            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
-            //header('Content-Type: application/json');  // this line absolutely can't be right, so it got commented out
-        }
-        else
-        {
-            if (0 == strncmp($request->REQUEST_URI, '/api/v1/connections', 19) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/processes', 17) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/pipes', 13) ||
-                0 == strncmp($request->REQUEST_URI, '/api/v1/streams', 15))
+        if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
             {
-                header('Access-Control-Allow-Origin: *');
-                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-                header('Access-Control-Allow-Headers: authorization, content-type');
+                header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
+                header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN']??'*'));
+                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                header('Access-Control-Max-Age: 1000');
+                header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
             }
-        }
+            else
+            {
+                $host = GET_HTTP_HOST();
+                if (substr($host, 0, 4) == 'api.' && substr($host, -8) == '.flex.io')
+                {
+                    header('Access-Control-Allow-Origin: *');
+                    header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                    header('Access-Control-Allow-Headers: authorization, content-type');
+                }
+            }
 
-        if ($method == 'OPTIONS')
-            return;
+            if ($method == 'OPTIONS')
+                return;
 
-
-
-/*
-        // for OPTIONS method, handle CORS (cross origin)...
-        if ($method == 'OPTIONS' && IS_DEBUG())
-        {
-            // TODO: if we open up our REST API further, we'll need to figure this out...
-
-            // it seems like, for now, to dip our feet into these waters, we'll just test
-            // allowing cross-domain access from localhost:8080 so the hot-module-loading
-            // dev version works (even different ports are considered cross-domain)
-            header('Access-Control-Allow-Credentials: true');
-            //header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Origin: http://localhost:8080');
-            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, HEAD');
-            header('Access-Control-Max-Age: 1000');
-            // note that '*' is not valid for Access-Control-Allow-Headers
-            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept');
-            header('Content-Type: application/json');
-            return;
-        }
-
-        // handle non-options request
-        if (IS_DEBUG())
-        {
-            // TODO: if we open up our REST API further, we'll need to figure this out...
-            header('Access-Control-Allow-Credentials: true');
-            //header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Origin: http://localhost:8080');
-        }
-*/
 
         // allow JSON to be sent as POST body; the check for enable_post_data_reading
         // is for calls that 'want' the json payload as their body, such as /pipe/:eid/run and
         // /process/:eid/run
-
 
         try
         {

@@ -30,79 +30,16 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: execute task with remote code
-
-        // BEGIN TEST
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
-        $actual = $result;
-        $expected = '{
-            "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
-            "response": "Hello, World!"
-        }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py",
-                        "integrity": "sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
-        $actual = $result;
-        $expected = '{
-            "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
-            "response": "Hello, World!"
-        }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code and sha256 integrity check',  $actual, $expected, $results);
-
-
-        // TEST: execute task with remote code, but local override
+        // TEST: execute task default variable keys
 
         // BEGIN TEST
         $script = <<<EOD
+from collections import OrderedDict
 def flexio_handler(context):
+    vars = OrderedDict(sorted(context.vars.items()))
+    for v in vars:
+        context.output.write(str(v) + ";")
     context.output.content_type = "text/plain"
-    context.output.write("This is local.")
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -114,8 +51,7 @@ EOD;
                     "op": "execute",
                     "params": {
                         "lang": "python",
-                        "code": "'.base64_encode($script).'",
-                        "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
+                        "code": "'.base64_encode($script).'"
                     }
                 }
             }'
@@ -131,9 +67,134 @@ EOD;
         $expected = '{
             "code": 200,
             "content_type": "text\/plain;charset=UTF-8",
-            "response": "This is local."
+            "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid/run; (python) execute task with remote code, but local override',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task default variable keys',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = <<<EOD
+exports.flexio_handler = function(context) {
+    vars = context.vars;
+    keys = Object.keys(vars).sort();
+    for (k in keys) {
+        var p = keys[k];
+        context.output.write(p + ";");
+    }
+    context.output.content_type = "text/plain";
+}
+EOD;
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "task": {
+                    "op": "execute",
+                    "params": {
+                        "lang": "javascript",
+                        "code": "'.base64_encode($script).'"
+                    }
+                }
+            }'
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'token' => $token
+        ));
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text\/plain;charset=UTF-8",
+            "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task default variable keys',  $actual, $expected, $results);
+
+
+        // TEST: execute task basic variable assignment
+
+        // BEGIN TEST
+        $script = <<<EOD
+from collections import OrderedDict
+def flexio_handler(context):
+    context.vars['b'] = 'c'
+    context.vars['a'] = 'b'
+    result = context.vars['a'] + context.vars['b'] + context.vars.b + context.vars.a
+    context.output.write(result)
+    context.output.content_type = "text/plain"
+EOD;
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "task": {
+                    "op": "execute",
+                    "params": {
+                        "lang": "python",
+                        "code": "'.base64_encode($script).'"
+                    }
+                }
+            }'
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'token' => $token
+        ));
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text\/plain;charset=UTF-8",
+            "response": "bccb"
+        }';
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid/run; (python) execute task default variable keys',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = <<<EOD
+exports.flexio_handler = function(context) {
+    context.vars['b'] = 'c'
+    context.vars['a'] = 'b'
+    result = context.vars['a'] + context.vars['b'] + context.vars.b + context.vars.a
+    context.output.write(result)
+    context.output.content_type = "text/plain";
+}
+EOD;
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "task": {
+                    "op": "execute",
+                    "params": {
+                        "lang": "javascript",
+                        "code": "'.base64_encode($script).'"
+                    }
+                }
+            }'
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'token' => $token
+        ));
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text\/plain;charset=UTF-8",
+            "response": "bccb"
+        }';
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task default variable keys',  $actual, $expected, $results);
     }
 }
 

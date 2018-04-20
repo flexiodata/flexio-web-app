@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2015-10-23
+ * Created:  2016-05-09
  *
  * @package flexio
  * @subpackage Tests
@@ -20,11 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes
+        // ENDPOINT: POST /:userid/processes
 
 
         // SETUP
-        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
@@ -33,16 +33,16 @@ class Test
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 
 
-        // TEST: create a new pipe
+        // TEST: create a new process
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes",
+            'url' => "$apibase/$userid1/processes",
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe"
+                "name": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,16 +53,16 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes",
+            'url' => "$apibase/$userid1/processes",
             'token' => $token2, // token for another user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe"
+                "name": "Test Connection"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -73,70 +73,55 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes",
+            'url' => "$apibase/$userid1/processes",
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Pipe",
-                "alias": "",
-                "description": "Test Pipe Description",
+                "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
                 "task": {
                     "op": "echo",
                     "params": {
                         "msg": "finished"
                     }
                 },
-                "schedule": {
-                    "frequency": "",
-                    "timezone": "UTC",
-                    "days": ["mon","tue","wed","thu","fri"],
-                    "times": [
-                        {
-                            "hour": 5,
-                            "minute": 0
-                        }
-                    ]
-                },
-                "schedule_status": "I"
+                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
         $expected = '
         {
-            "eid_type": "PIP",
+            "eid_type": "PRC",
             "eid_status": "A",
-            "alias": "",
-            "name": "Test Pipe",
-            "description": "Test Pipe Description",
+            "parent": {
+                "eid": "",
+                "eid_type": "PIP"
+            },
+            "process_mode": "R",
             "task": {
                 "op": "echo",
                 "params": {
                     "msg": "finished"
                 }
             },
-            "schedule": {
-                "timezone": "UTC",
-                "days": ["mon","tue","wed","thu","fri"],
-                "times": [
-                    {
-                        "hour": 5,
-                        "minute": 0
-                    }
-                ]
+            "started_by": "",
+            "started": null,
+            "finished": null,
+            "duration": null,
+            "process_info": {
             },
-            "schedule_status": "I",
+            "process_status": "S",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes; create a new pipe',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2016, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2016-05-09
+ * Created:  2015-06-27
  *
  * @package flexio
  * @subpackage Tests
@@ -20,11 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/processes
+        // ENDPOINT: POST /:userid/connections
 
 
         // SETUP
-        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
@@ -33,12 +33,12 @@ class Test
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 
 
-        // TEST: create a new process
+        // TEST: create a new connection
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/processes",
+            'url' => "$apibase/$userid1/connections",
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
@@ -53,12 +53,12 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/processes",
+            'url' => "$apibase/$userid1/connections",
             'token' => $token2, // token for another user
             'content_type' => 'application/json',
             'params' => '{
@@ -73,55 +73,53 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/processes",
+            'url' => "$apibase/$userid1/connections",
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
-                "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                "name": "Test Connection",
+                "alias": "",
+                "description": "Test Connection Description",
+                "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
+                "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
+                "connection_info": {
+                    "host": "https://api.domain.com",
+                    "port": 443,
+                    "username": "default",
+                    "password": "default"
                 },
-                "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
+                "expires": null
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
         $expected = '
         {
-            "eid_type": "PRC",
+            "eid_type": "CTN",
             "eid_status": "A",
-            "parent": {
-                "eid": "",
-                "eid_type": "PIP"
+            "alias": "",
+            "name": "Test Connection",
+            "description": "Test Connection Description",
+            "connection_type": "http",
+            "connection_status": "A",
+            "connection_info": {
+                "host": "https://api.domain.com",
+                "port": 443,
+                "username": "default",
+                "password": "*****"
             },
-            "process_mode": "R",
-            "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
-            },
-            "started_by": "",
-            "started": null,
-            "finished": null,
-            "duration": null,
-            "process_info": {
-            },
-            "process_status": "S",
+            "expires": null,
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/processes; create a new process',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
     }
 }

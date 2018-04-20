@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2015-06-27
+ * Created:  2015-10-23
  *
  * @package flexio
  * @subpackage Tests
@@ -20,11 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/connections
+        // ENDPOINT: POST /:userid/pipes
 
 
         // SETUP
-        $apibase = \Flexio\Tests\Util::getTestHost() . '/api/v2';
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
         $password1 = \Flexio\Base\Password::generate();
         $userid1 = \Flexio\Tests\Util::createUser(null, null, $password1);
         $token1 = \Flexio\Tests\Util::createToken($userid1);
@@ -33,16 +33,16 @@ class Test
         $token2 = \Flexio\Tests\Util::createToken($userid2);
 
 
-        // TEST: create a new connection
+        // TEST: create a new pipe
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/connections",
+            'url' => "$apibase/$userid1/pipes",
             // 'token' => '', // no token included
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -53,16 +53,16 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/connections; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes; fail if requesting user doesn\'t have credentials',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/connections",
+            'url' => "$apibase/$userid1/pipes",
             'token' => $token2, // token for another user
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection"
+                "name": "Test Pipe"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -73,53 +73,70 @@ class Test
                 "code": "insufficient-rights"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/connections; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes; fail if requesting user doesn\'t have rights',  $actual, $expected, $results);
 
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/connections",
+            'url' => "$apibase/$userid1/pipes",
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
-                "name": "Test Connection",
+                "name": "Test Pipe",
                 "alias": "",
-                "description": "Test Connection Description",
-                "connection_type": "'.\Flexio\Services\Factory::TYPE_HTTP.'",
-                "connection_status": "'.\Model::CONNECTION_STATUS_AVAILABLE.'",
-                "connection_info": {
-                    "host": "https://api.domain.com",
-                    "port": 443,
-                    "username": "default",
-                    "password": "default"
+                "description": "Test Pipe Description",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "finished"
+                    }
                 },
-                "expires": null
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["mon","tue","wed","thu","fri"],
+                    "times": [
+                        {
+                            "hour": 5,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $actual = $result['response'];
         $expected = '
         {
-            "eid_type": "CTN",
+            "eid_type": "PIP",
             "eid_status": "A",
             "alias": "",
-            "name": "Test Connection",
-            "description": "Test Connection Description",
-            "connection_type": "http",
-            "connection_status": "A",
-            "connection_info": {
-                "host": "https://api.domain.com",
-                "port": 443,
-                "username": "default",
-                "password": "*****"
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "finished"
+                }
             },
-            "expires": null,
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["mon","tue","wed","thu","fri"],
+                "times": [
+                    {
+                        "hour": 5,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }
         ';
-        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/connections; create a new connection',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes; create a new pipe',  $actual, $expected, $results);
     }
 }
