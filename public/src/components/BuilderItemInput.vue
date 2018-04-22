@@ -3,9 +3,14 @@
     <div class="tl pb3">
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose value</h3>
     </div>
-    <div v-show="is_active || is_before_active">
+    <div v-show="is_active">
       <label class="db mb2">{{item.msg}}</label>
       <el-input v-model="input_val" />
+    </div>
+    <div v-show="is_before_active">
+      <div class="mb2 bt b--black-10"></div>
+      <span>{{item.variable}}:</span> <span class="b">{{input_val}}</span>
+      <div class="mt2 bt b--black-10"></div>
     </div>
   </div>
 </template>
