@@ -3,7 +3,7 @@
     <div class="tl pb3">
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose value</h3>
     </div>
-    <div v-show="is_shown">
+    <div v-show="is_active || is_before_active">
       <label class="db mb2">{{item.msg}}</label>
       <el-input v-model="input_val" />
     </div>
@@ -28,8 +28,11 @@
       ...mapState({
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
-      is_shown() {
-        return this.index <= this.active_prompt_idx
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
+      is_before_active() {
+        return this.index < this.active_prompt_idx
       },
       input_val: {
         get() {
