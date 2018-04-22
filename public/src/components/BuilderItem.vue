@@ -1,80 +1,83 @@
 <template>
   <div
-    class="flex flex-row relative"
+    class="flex flex-row"
     :id="item.id"
   >
-
-    <!-- number -->
-    <div
-      class="flex-none pv4 mt2"
-      v-if="showNumbers"
-    >
-      {{index+1}}.
-    </div>
-
-    <!-- icon -->
-    <div
-      class="flex-none pv4 pl3 pr4"
-      v-if="showIcons"
-    >
-      <ServiceIcon
-        class="br1 square-3"
-        :type="item.connection_type"
-        v-if="item.connection_type"
-      />
-      <TaskIcon
-        class="br1 square-3"
-        :icon="task_icon"
-        :bg-color="task_color"
-        v-else
-      />
-    </div>
-
-    <!-- vertical line and insert buttons -->
-    <div
-      class="absolute h-100 mt2"
-      v-if="(showLine || showInsertButtons) && showIcons"
-    >
-      <!-- vertical line w/o buttons -->
+    <!-- numbers, icons and vertical lines -->
+    <div class="flex flex-row relative">
+      <!-- number -->
       <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 61px; bottom: -19px; left: 44px"
-        v-if="!is_last && showLine && !showInsertButtons"
-      ></div>
-
-      <!-- vertical line (above icon) w/buttons -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 0; height: 19px; left: 44px"
-        v-if="!is_first && showLine && showInsertButtons"
-      ></div>
-
-      <!-- vertical line (below icon) w/buttons -->
-      <div
-        class="bl bw1 b--black-10 pl3 absolute"
-        style="top: 61px; bottom: 30px; left: 44px"
-        v-if="showLine && showInsertButtons"
-      ></div>
-
-      <!-- insert before button -->
-      <div
-        class="absolute"
-        style="top: -10px; left: 33px"
-        v-if="is_first && showInsertButtons"
+        class="flex-none pv4 mt2"
+        v-if="showNumbers"
       >
-        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-          <i class="db material-icons f3">add_circle</i>
-        </div>
+        {{index+1}}.
       </div>
 
-      <!-- insert after button -->
+      <!-- icon -->
       <div
-        class="absolute"
-        style="bottom: 0; left: 33px"
-        v-if="showInsertButtons"
+        class="flex-none pv4 pl3 pr4"
+        v-if="showIcons"
       >
-        <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-          <i class="db material-icons f3">add_circle</i>
+        <ServiceIcon
+          class="br1 square-3"
+          :type="item.connection_type"
+          v-if="item.connection_type"
+        />
+        <TaskIcon
+          class="br1 square-3"
+          :icon="task_icon"
+          :bg-color="task_color"
+          v-else
+        />
+      </div>
+
+      <!-- vertical line and insert buttons -->
+      <div
+        class="absolute h-100 mt2"
+        style="right: 60px"
+        v-if="(showLine || showInsertButtons) && showIcons"
+      >
+        <!-- vertical line w/o buttons -->
+        <div
+          class="bl bw1 b--black-10 pl3 absolute"
+          style="top: 61px; bottom: -19px; left: 11px"
+          v-if="!is_last && showLine && !showInsertButtons"
+        ></div>
+
+        <!-- vertical line (above icon) w/buttons -->
+        <div
+          class="bl bw1 b--black-10 pl3 absolute"
+          style="top: 0; height: 19px; left: 11px"
+          v-if="!is_first && showLine && showInsertButtons"
+        ></div>
+
+        <!-- vertical line (below icon) w/buttons -->
+        <div
+          class="bl bw1 b--black-10 pl3 absolute"
+          style="top: 61px; bottom: 30px; left: 11px"
+          v-if="showLine && showInsertButtons"
+        ></div>
+
+        <!-- insert before button -->
+        <div
+          class="absolute"
+          style="top: -10px; left: 0"
+          v-if="is_first && showInsertButtons"
+        >
+          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+            <i class="db material-icons f3">add_circle</i>
+          </div>
+        </div>
+
+        <!-- insert after button -->
+        <div
+          class="absolute"
+          style="bottom: 0; left: 0"
+          v-if="showInsertButtons"
+        >
+          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+            <i class="db material-icons f3">add_circle</i>
+          </div>
         </div>
       </div>
     </div>
@@ -159,11 +162,7 @@
         type: Number,
         required: true
       },
-      showLine: {
-        type: Boolean,
-        default: true
-      },
-      showInsertButtons: {
+      showNumbers: {
         type: Boolean,
         default: true
       },
@@ -171,7 +170,11 @@
         type: Boolean,
         default: true
       },
-      showNumbers: {
+      showInsertButtons: {
+        type: Boolean,
+        default: true
+      },
+      showLine: {
         type: Boolean,
         default: true
       }

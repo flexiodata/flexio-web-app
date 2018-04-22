@@ -5,7 +5,7 @@
       :item="item"
       :index="index"
       :key="item.id"
-      :show-insert-buttons="false"
+      v-bind="$attrs"
     />
   </div>
 </template>
@@ -15,6 +15,7 @@
   import BuilderItem from './BuilderItem.vue'
 
   export default {
+    inheritAttrs: false,
     props: {
       containerId: {
         type: String

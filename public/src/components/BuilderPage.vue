@@ -16,6 +16,7 @@
         <builder-list
           class="flex-fill"
           :container-id="id"
+          :show-insert-buttons="false"
         />
         <div
           class="dn db-l ml4 pa3 bg-white br2 overflow-auto css-dashboard-box sticky"
