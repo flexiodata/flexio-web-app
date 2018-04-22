@@ -83,7 +83,11 @@
         'getAllConnections'
       ]),
       updateFiles(files) {
-        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { files })
+        var store_files = _.map(files, (f) => {
+          return _.omit(f, ['is_selected'])
+        })
+
+        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { files: store_files })
       }
     }
   }
