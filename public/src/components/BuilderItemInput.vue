@@ -36,7 +36,7 @@
       },
       input_val: {
         get() {
-          return this.$store.state.builder.active_prompt.value
+          return _.get(this.$store, 'state.builder.prompts[' + this.index + '].value')
         },
         set(value) {
           this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { value })
