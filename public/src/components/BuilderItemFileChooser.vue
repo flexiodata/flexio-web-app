@@ -6,7 +6,7 @@
       </div>
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose files</h3>
     </div>
-    <div v-show="is_shown">
+    <div v-show="is_active">
       <file-chooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -15,6 +15,17 @@
         v-if="ceid"
       />
     </div>
+    <div v-show="is_before_active">
+      <table class="w-100">
+        <tbody>
+          <file-chooser-item
+            :item="file"
+            :index="file_index"
+            v-for="(file, file_index) in item.files"
+          />
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -22,6 +33,7 @@
   import { mapState, mapGetters } from 'vuex'
   import TaskIcon from './TaskIcon.vue'
   import FileChooser from './FileChooser.vue'
+  import FileChooserItem from './FileChooserItem.vue'
 
   export default {
     props: {
@@ -36,7 +48,8 @@
     },
     components: {
       TaskIcon,
-      FileChooser
+      FileChooser,
+      FileChooserItem
     },
     computed: {
       ...mapState({
@@ -58,8 +71,11 @@
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
       },
-      is_shown() {
-        return this.index <= this.active_prompt_idx
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
+      is_before_active() {
+        return this.index < this.active_prompt_idx
       }
     },
     methods: {
