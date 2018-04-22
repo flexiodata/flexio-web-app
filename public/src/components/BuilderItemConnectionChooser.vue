@@ -4,7 +4,7 @@
       <ServiceIcon class="square-4" :type="ctype" v-if="false" />
       <h3 class="fw6 f3 mid-gray mt0 mb2">Connect to {{service_name}}</h3>
     </div>
-    <div class="bt b--light-gray" v-show="is_shown">
+    <div class="bt b--light-gray" v-show="is_active || is_before_active">
       <ConnectionChooserList
         class="mb3"
         style="max-height: 24rem"
@@ -16,7 +16,7 @@
         @item-activate="chooseConnection"
         v-if="connections_of_type.length > 0"
       />
-      <div class="mt3">
+      <div class="mt3" v-show="is_active">
         <el-button
           class="ttu b"
           type="plain"
@@ -103,8 +103,11 @@
       service_name() {
         return this.getConnectionInfo(this.ctype, 'service_name')
       },
-      is_shown() {
-        return this.index <= this.active_prompt_idx
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
+      is_before_active() {
+        return this.index < this.active_prompt_idx
       }
     },
     methods: {
