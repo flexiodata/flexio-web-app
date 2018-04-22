@@ -4,7 +4,7 @@
       <ServiceIcon class="square-4" :type="ctype" v-if="false" />
       <h3 class="fw6 f3 mid-gray mt0 mb2">Connect to {{service_name}}</h3>
     </div>
-    <p class="ttu fw6 f6 moon-gray" v-if="is_active && connections_of_type.length > 0">Use an existing connection</p>
+    <p class="ttu fw6 f7 moon-gray" v-if="is_active && connections_of_type.length > 0">Use an existing connection</p>
     <div class="bt b--light-gray" v-show="is_active || is_before_active">
       <ConnectionChooserList
         class="mb3"
@@ -17,7 +17,7 @@
         @item-activate="chooseConnection"
         v-if="connections_of_type.length > 0"
       />
-      <p class="ttu fw6 f6 moon-gray" v-if="is_active && connections_of_type.length > 0">&mdash; or &mdash;</p>
+      <p class="ttu fw6 f7 moon-gray" v-if="is_active && connections_of_type.length > 0">&mdash; or &mdash;</p>
       <div class="mt3" v-show="is_active">
         <el-button
           class="ttu b"
