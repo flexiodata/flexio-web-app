@@ -16,6 +16,7 @@
       />
     </div>
     <div v-show="is_before_active">
+      <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
           <file-chooser-item
@@ -25,6 +26,7 @@
           />
         </tbody>
       </table>
+      <div class="mt2 bt b--black-10"></div>
     </div>
   </div>
 </template>
