@@ -34,10 +34,10 @@ const mutations = {
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
-      if (p.ui == 'connection-chooser')
+      if (p.element == 'connection-chooser')
         return _.assign(p, { connection_eid: null })
 
-      if (p.ui == 'file-chooser')
+      if (p.element == 'file-chooser')
         return _.assign(p, { connection_eid: null })
 
       return p
@@ -74,7 +74,7 @@ const mutations = {
     _.each(state.prompts, p => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
-      switch (p.ui) {
+      switch (p.element) {
         case 'connection-chooser':
           if (!_.isNil(p.connection_eid)) {
             code = code.replace(regex, p.connection_eid)

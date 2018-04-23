@@ -45,23 +45,57 @@
     "content": "# Test prompts\n\nExample template for rendering ar\n",
     "prompts": [
       {
+        "element": "form",
+        "items": [
+          {
+            "element": "input",
+            "type": "text",
+            "variable": "form_input1",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "email",
+            "variable": "form_input2",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "number",
+            "variable": "form_input3",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "date",
+            "variable": "form_input4",
+            "label": "Enter a value",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "element": "input",
+        "type": "text",
         "variable": "input",
-        "ui": "input",
-        "msg": "Enter a value",
+        "label": "Enter a value",
         "value": ""
       },
       {
+        "element": "connection-chooser",
         "variable": "connection-chooser",
-        "ui": "connection-chooser",
         "connection_type": "dropbox"
       },
       {
+        "element": "file-chooser",
         "variable": "file-chooser",
-        "ui": "file-chooser",
         "connection": "connection-chooser"
       },
       {
-        "ui": "summary-page"
+        "element": "summary-page"
       }
     ],
     "pipe_language": "javascript",
@@ -102,6 +136,9 @@
       slug() {
         return _.get(this.$route, 'params.template', undefined)
       }
+    },
+    mounted() {
+      setTimeout(() => { stickybits('.sticky') }, 100)
     },
     methods: {
       loadTemplate() {

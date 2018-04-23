@@ -4,12 +4,12 @@
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose value</h3>
     </div>
     <div v-show="is_active">
-      <label class="db mb2">{{item.msg}}</label>
-      <el-input v-model="input_val" />
+      <label class="db mb2" v-if="show_label">{{item.label}}</label>
+      <el-input v-model="val" />
     </div>
     <div v-show="is_before_active">
       <div class="mb2 bt b--black-10"></div>
-      <span>{{item.variable}}:</span> <span class="b">{{input_val}}</span>
+      <span>{{item.variable}}:</span> <span class="b">{{val}}</span>
       <div class="mt2 bt b--black-10"></div>
     </div>
   </div>
@@ -39,7 +39,11 @@
       is_before_active() {
         return this.index < this.active_prompt_idx
       },
-      input_val: {
+      show_label() {
+        var label = _.get(this.$store, 'state.builder.prompts[' + this.index + '].label', '')
+        return label.length > 0
+      },
+      val: {
         get() {
           return _.get(this.$store, 'state.builder.prompts[' + this.index + '].value')
         },

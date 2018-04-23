@@ -91,26 +91,26 @@
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
-          v-if="item.ui == 'connection-chooser'"
+          v-if="item.element == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
           :index="index"
-          v-else-if="item.ui == 'file-chooser'"
+          v-else-if="item.element == 'file-chooser'"
         />
         <BuilderItemInput
           :item="item"
           :index="index"
-          v-else-if="item.ui == 'input'"
+          v-else-if="item.element == 'input'"
         />
         <BuilderItemSummaryPage
           :item="item"
           :index="index"
-          v-else-if="item.ui == 'summary-page'"
+          v-else-if="item.element == 'summary-page'"
         />
         <div v-else>
           <span class="silver">
-            {{item.ui}}
+            {{item.element}}
             <span v-if="item.variable">:</span>
           </span>
           {{item.variable}}
@@ -213,15 +213,15 @@
         return this.index == this.active_prompt_idx
       },
       is_next_allowed() {
-        if (this.item.ui == 'connection-chooser') {
+        if (this.item.element == 'connection-chooser') {
           return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
         }
 
-        if (this.item.ui == 'file-chooser') {
+        if (this.item.element == 'file-chooser') {
           return _.get(this.item, 'files', []).length > 0
         }
 
-        if (this.item.ui == 'input') {
+        if (this.item.element == 'input') {
           return _.get(this.item, 'value', '').length > 0
         }
 
@@ -238,15 +238,17 @@
         }
       },
       task_icon() {
-        switch (this.item.ui) {
+        switch (this.item.element) {
           case 'file-chooser': return 'insert_drive_file'
+          case 'form':         return 'edit'
           case 'input':        return 'edit'
           case 'summary-page': return 'check'
         }
       },
       task_color() {
-        switch (this.item.ui) {
+        switch (this.item.element) {
           case 'file-chooser': return '#0ab5f3'
+          case 'form':         return '#0ab5f3'
           case 'input':        return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
