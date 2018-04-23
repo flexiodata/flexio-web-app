@@ -56,7 +56,6 @@ class Process implements \Flexio\IFace\IProcess
         'create'    => '\Flexio\Jobs\Create',
         'delete'    => '\Flexio\Jobs\Delete',
         'dump'      => '\Flexio\Jobs\Dump',
-        'duplicate' => '\Flexio\Jobs\Duplicate',
         'echo'      => '\Flexio\Jobs\Echo1',
         'email'     => '\Flexio\Jobs\Email',
         'request'   => '\Flexio\Jobs\Request',
