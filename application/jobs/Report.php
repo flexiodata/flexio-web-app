@@ -26,7 +26,6 @@ require_once __DIR__ . '/Execute.php';
 }
 */
 
-
 class ReportScriptHost extends ScriptHost
 {
     public $params = [];
