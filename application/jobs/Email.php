@@ -52,14 +52,14 @@ class Email extends \Flexio\Jobs\Base
     private function sendEmail(\Flexio\IFace\IProcess $process)
     {
         // get the parameters
-        $job_definition = $this->getProperties();
-        $to = $job_definition['params']['to'] ?? array();
+        $params = $this->getJobParameters();
+        $to = $params['to'] ?? array();
         if (is_string($to))
             $to = explode(',', $to);
 
-        $subject = isset($job_definition['params']['subject']) ? $job_definition['params']['subject'] : '';
-        $body_text = isset($job_definition['params']['body_text']) ? $job_definition['params']['body_text'] : '';
-        $body_html = isset($job_definition['params']['body_html']) ? $job_definition['params']['body_html'] : '';
+        $subject = isset($params['subject']) ? $params['subject'] : '';
+        $body_text = isset($params['body_text']) ? $params['body_text'] : '';
+        $body_html = isset($params['body_html']) ? $params['body_html'] : '';
 
         // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
         // an email at once; also, only allow one email notice a second; of course multiple
@@ -68,9 +68,6 @@ class Email extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
         sleep(self::EMAIL_WAIT_FREQUENCY);
 
-        // build the email
-        $instream_list = array($process->getStdin());
-        $attachments = self::getAttachmentsFromInput($instream_list);
 
         $email_params = array(
             'from' => "Flex.io <no-reply@flex.io>",
@@ -82,13 +79,16 @@ class Email extends \Flexio\Jobs\Base
         if (strlen($body_html) > 0)
             $email_params['msg_html'] = $body_html;
 
-        $data_mode = isset($job_definition['params']['data']) ? $job_definition['params']['data'] : self::DATA_MODE_ATTACHMENT;
+        $data_mode = isset($params['data']) ? $params['data'] : self::DATA_MODE_ATTACHMENT;
 
         $attachments = array();
 
-        if (isset($job_definition['params']['attachments']))
+        if (isset($params['attachments']))
         {
-            foreach ($job_definition['params']['attachments'] as $attachment)
+            if (!is_array($params['attachments']) || \Flexio\Base\Util::isAssociativeArray($params['attachments']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'attachments' parameter must be an array");
+
+            foreach ($params['attachments'] as $attachment)
             {
                 if (is_string($attachment))
                 {
@@ -102,6 +102,7 @@ class Email extends \Flexio\Jobs\Base
                     $name = $attachment['name'] ?? null;
                     $mime_type = $attachment['mime_type'] ?? null;
                 }
+
 
                 if ($name === null)
                 {
