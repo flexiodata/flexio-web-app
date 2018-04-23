@@ -18,7 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "type": "flexio.set",
+    "op": "set",
     "params": {
         "name": "myvar",
         "value": "new_value"

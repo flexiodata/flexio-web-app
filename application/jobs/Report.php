@@ -20,7 +20,7 @@ require_once __DIR__ . '/Execute.php';
 /*
 // EXAMPLE:
 {
-    "type": "flexio.report",
+    "op": "report",
     "params": {
     }
 }
@@ -38,7 +38,7 @@ class ReportScriptHost extends ScriptHost
 
         $params = $this->params;
         $cols = $params['columns'] ?? null;
-        
+
         //return "<html><body><h1>Hello world!</h1></body></html>";
         if ($content_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
@@ -48,7 +48,7 @@ class ReportScriptHost extends ScriptHost
             {
                 if ($cols !== null)
                     $row = \Flexio\Base\Util::filterArray($row, $cols);
-                
+
                 $rowstr = "<tr>";
                 foreach ($row as $col)
                     $rowstr .= "<td>$col</td>";
@@ -90,9 +90,9 @@ EOT;*/
         $code = <<<EOT
 
         const puppeteer = require('puppeteer');
-        
+
         exports.flexio_handler = function(context) {
-            
+
             var html = context.proxy.invokeSync('getReportPayload', [])
             //context.output.write(html)
            // return
@@ -103,7 +103,7 @@ EOT;*/
                 //await page.goto('https://www.flex.io', {waitUntil: 'networkidle2'});
                 await page.setContent(html)
                 await page.pdf({path: '/tmp/document.pdf', format: 'A4', landscape: true});
-                
+
                 await browser.close();
 
                 //var rs = require('fs').createReadStream('/tmp/document.pdf');
