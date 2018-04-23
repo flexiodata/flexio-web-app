@@ -519,7 +519,7 @@ class Email
 
         try
         {
-            $response = $ses->sendRawEmail($mail);
+            $response = @$ses->sendRawEmail($mail);
         }
         catch (\Exception $e)
         {
