@@ -50,28 +50,28 @@
           {
             "element": "input",
             "type": "text",
-            "variable": "val1",
+            "variable": "form_input1",
             "label": "Enter a value",
             "value": ""
           },
           {
             "element": "input",
             "type": "email",
-            "variable": "val2",
+            "variable": "form_input2",
             "label": "Enter a value",
             "value": ""
           },
           {
             "element": "input",
             "type": "number",
-            "variable": "val3",
+            "variable": "form_input3",
             "label": "Enter a value",
             "value": ""
           },
           {
             "element": "input",
             "type": "date",
-            "variable": "val4",
+            "variable": "form_input4",
             "label": "Enter a value",
             "value": ""
           }
@@ -79,7 +79,7 @@
       },
       {
         "element": "input",
-        "type": "type",
+        "type": "text",
         "variable": "input",
         "label": "Enter a value",
         "value": ""
@@ -136,6 +136,9 @@
       slug() {
         return _.get(this.$route, 'params.template', undefined)
       }
+    },
+    mounted() {
+      setTimeout(() => { stickybits('.sticky') }, 100)
     },
     methods: {
       loadTemplate() {
