@@ -503,7 +503,7 @@ class Email
         // create email array
 
         $destination = array();
-        $destination['ToAddresses'] = 'ben@flex.io';
+        $destination['ToAddresses'] = implode(',',$this->to_addresses);
         if (count($this->cc_addresses) > 0)
             $destination['CcAddresses'] = implode(',',$this->cc_addresses);
         if (count($this->bcc_addresses) > 0)
@@ -523,7 +523,7 @@ class Email
         }
         catch (\Exception $e)
         {
-            die($e->getMessage());
+            //die($e->getMessage());
             return false;
         }
 
