@@ -474,8 +474,6 @@ class Email
         // prevent "Non-static method PEAR::isError()" warning
         $old_error_settings = error_reporting(E_ALL ^ E_STRICT);
 
-        include_once 'Mail/mime.php';
-
         $mail_mime = new \Mail_mime(array('eol' => "\n"));
         $mail_mime->setTxtBody($this->msg_text);
         $mail_mime->setHTMLBody($this->msg_html);
@@ -505,7 +503,7 @@ class Email
         // create email array
 
         $destination = array();
-        $destination['ToAddresses'] = implode(',',$this->to_addresses);
+        $destination['ToAddresses'] = 'ben@flex.io';
         if (count($this->cc_addresses) > 0)
             $destination['CcAddresses'] = implode(',',$this->cc_addresses);
         if (count($this->bcc_addresses) > 0)
@@ -525,7 +523,7 @@ class Email
         }
         catch (\Exception $e)
         {
-            //die($e->getMessage());
+            die($e->getMessage());
             return false;
         }
 
