@@ -68,7 +68,6 @@ class Process implements \Flexio\IFace\IProcess
         'insert'    => '\Flexio\Jobs\Insert',
         'limit'     => '\Flexio\Jobs\Limit',
         'merge'     => '\Flexio\Jobs\Merge',
-        'nop'       => '\Flexio\Jobs\Nop',
         'fail'      => '\Flexio\Jobs\Fail',
         'execute'   => '\Flexio\Jobs\Execute',
         'exit'      => '\Flexio\Jobs\Exit1',
