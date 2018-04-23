@@ -189,7 +189,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 
         $val = null;
 
-        if ($folder == 'var' || $folder == 'params')
+        if ($folder == 'var' || $folder == 'vars' || $folder == 'params')
         {
             $params = $this->process->getParams();
             if (!isset($params[$file]))
