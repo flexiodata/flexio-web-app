@@ -45,23 +45,57 @@
     "content": "# Test prompts\n\nExample template for rendering ar\n",
     "prompts": [
       {
+        "element": "form",
+        "items": [
+          {
+            "element": "input",
+            "type": "text",
+            "variable": "val1",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "email",
+            "variable": "val2",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "number",
+            "variable": "val3",
+            "label": "Enter a value",
+            "value": ""
+          },
+          {
+            "element": "input",
+            "type": "date",
+            "variable": "val4",
+            "label": "Enter a value",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "element": "input",
+        "type": "type",
         "variable": "input",
-        "ui": "input",
-        "msg": "Enter a value",
+        "label": "Enter a value",
         "value": ""
       },
       {
+        "element": "connection-chooser",
         "variable": "connection-chooser",
-        "ui": "connection-chooser",
         "connection_type": "dropbox"
       },
       {
+        "element": "file-chooser",
         "variable": "file-chooser",
-        "ui": "file-chooser",
         "connection": "connection-chooser"
       },
       {
-        "ui": "summary-page"
+        "element": "summary-page"
       }
     ],
     "pipe_language": "javascript",
