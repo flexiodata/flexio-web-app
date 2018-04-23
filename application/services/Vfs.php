@@ -404,6 +404,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
             $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
         }
+
         $connection = \Flexio\Object\Connection::load($connection_identifier);
 
         // check the rights on the connection

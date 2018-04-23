@@ -3,6 +3,7 @@
         "phpseclib/phpseclib": "^2.0",
         "lusitanian/oauth": "^0.8.10",
         "aws/aws-sdk-php": "^3.52",
-        "zbateson/mail-mime-parser": "^0.4.8"
+        "zbateson/mail-mime-parser": "^0.4.8",
+        "pear/mail_mime": "^1.10"
     }
 }

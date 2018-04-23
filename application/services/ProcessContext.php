@@ -174,6 +174,12 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? (is_string($params) ? $params : '');
 
         $path = trim($path,'/');
+
+        if ($path == 'input' || $path == 'stdin')
+        {
+            return $this->process->getStdin();
+        }
+
         $parts = explode('/', $path);
         $folder = $parts[0] ?? '';
         $file = $parts[1] ?? '';
@@ -183,7 +189,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
 
         $val = null;
 
-        if ($folder == 'var' || $folder == 'params')
+        if ($folder == 'var' || $folder == 'vars' || $folder == 'params')
         {
             $params = $this->process->getParams();
             if (!isset($params[$file]))

@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2017, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2017-05-04
+ * Created:  2018-04-23
  *
  * @package flexio
  * @subpackage Jobs
@@ -18,13 +18,13 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "op": "comment",
+    "op": "connect",
     "params": {
     }
 }
 */
 
-class Comment extends \Flexio\Jobs\Base
+class Connect extends \Flexio\Jobs\Base
 {
     public function run(\Flexio\IFace\IProcess $process)
     {

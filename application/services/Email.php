@@ -474,8 +474,6 @@ class Email
         // prevent "Non-static method PEAR::isError()" warning
         $old_error_settings = error_reporting(E_ALL ^ E_STRICT);
 
-        include_once 'Mail/mime.php';
-
         $mail_mime = new \Mail_mime(array('eol' => "\n"));
         $mail_mime->setTxtBody($this->msg_text);
         $mail_mime->setHTMLBody($this->msg_html);
@@ -521,7 +519,7 @@ class Email
 
         try
         {
-            $response = $ses->sendRawEmail($mail);
+            $response = @$ses->sendRawEmail($mail);
         }
         catch (\Exception $e)
         {
