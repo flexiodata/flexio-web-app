@@ -2,9 +2,9 @@ import Vue from 'vue'
 import KeenUi from 'keen-ui'
 import {
   Button,
-  //Checkbox,
-  //CheckboxButton,
-  //CheckboxGroup,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
   DatePicker,
   Dialog,
   Dropdown,
@@ -16,11 +16,10 @@ import {
   Input,
   MessageBox,
   Option,
-  Select
-  //Radio,
-  //RadioGroup,
-  //Select,
-  //Switch,
+  Radio,
+  RadioGroup,
+  Select,
+  Switch
   //TimePicker
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
@@ -52,9 +51,9 @@ Vue.use(KeenUi)
 locale.use(lang)
 
 Vue.use(Button)
-//Vue.use(Checkbox)
-//Vue.use(CheckboxButton)
-//Vue.use(CheckboxGroup)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
 Vue.use(DatePicker)
 Vue.use(Dialog)
 Vue.use(Dropdown)
@@ -65,11 +64,10 @@ Vue.use(FormItem)
 Vue.use(Icon)
 Vue.use(Input)
 Vue.use(Option)
+Vue.use(Radio)
+Vue.use(RadioGroup)
 Vue.use(Select)
-//Vue.use(Radio)
-//Vue.use(RadioGroup)
-//Vue.use(Select)
-//Vue.use(Switch)
+Vue.use(Switch)
 //Vue.use(TimePicker)
 
 Vue.prototype.$msgbox = MessageBox

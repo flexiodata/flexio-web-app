@@ -77,22 +77,53 @@
             element: 'select',
             variable: 'input_select',
             label: 'Select',
-            placeholder: 'Date Input',
+            placeholder: 'Select',
             value: 'IL',
             options: [
               { label: 'California', value: 'CA' },
               { label: 'Illinois',   value: 'IL' },
-              { label: 'Washington', value: 'WA' }
+              { label: 'Wyoming',    value: 'WY' }
             ]
+          },
+          {
+            element: 'radio-group',
+            variable: 'radio_group',
+            label: 'Radio Group',
+            placeholder: 'Radio Group',
+            value: [],
+            options: [
+              { label: 'California', value: 'CA' },
+              { label: 'Illinois',   value: 'IL' },
+              { label: 'Wyoming',    value: 'WY' }
+            ]
+          },
+          {
+            element: 'checkbox-group',
+            variable: 'checkbox_group',
+            label: 'Checkbox Group',
+            placeholder: 'Checkbox Group',
+            value: [],
+            options: [
+              { label: 'California', value: 'CA' },
+              { label: 'Illinois',   value: 'IL' },
+              { label: 'Wyoming',    value: 'WY' }
+            ]
+          },
+          {
+            element: 'checkbox',
+            variable: 'checkbox',
+            label: 'Checkbox',
+            placeholder: 'Checkbox',
+            value: false
+          },
+          {
+            element: 'switch',
+            variable: 'switch',
+            label: 'Switch',
+            placeholder: 'Switch',
+            value: false
           }
         ]
-      },
-      {
-        element: 'input',
-        type: 'text',
-        variable: 'input',
-        label: 'Enter a value',
-        value: ''
       },
       {
         element: 'connection-chooser',
@@ -119,7 +150,7 @@
       if (p.element == 'form') {
         buildPipeCode(p.form_items)
       } else if (p.variable) {
-        var echo_str = "echo('${" + p.variable + "}')"
+        var echo_str = "echo('" + p.variable + ": ${" + p.variable + "}')"
         pipe_arr.push(echo_str)
       }
     })
