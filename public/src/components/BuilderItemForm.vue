@@ -36,6 +36,18 @@
             {{option.label}}
           </el-checkbox>
         </el-checkbox-group>
+        <el-radio-group
+          :placeholder="fi.placeholder"
+          v-model="form_values[fi.variable]"
+          v-else-if="fi.element == 'radio-group'"
+        >
+          <el-radio
+            :label="option.value"
+            v-for="option in fi.options"
+          >
+            {{option.label}}
+          </el-radio>
+        </el-radio-group>
         <el-select
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"

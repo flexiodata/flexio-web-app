@@ -86,6 +86,18 @@
             ]
           },
           {
+            element: 'radio-group',
+            variable: 'radio_group',
+            label: 'Radio Group',
+            placeholder: 'Radio Group',
+            value: [],
+            options: [
+              { label: 'California', value: 'CA' },
+              { label: 'Illinois',   value: 'IL' },
+              { label: 'Wyoming',    value: 'WY' }
+            ]
+          },
+          {
             element: 'checkbox-group',
             variable: 'checkbox_group',
             label: 'Checkbox Group',
