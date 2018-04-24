@@ -110,7 +110,7 @@
         days: [],
         times: [{ hour: 8, minute: 0 }]
       },
-      schedule_status: ''
+      schedule_status: schedule.SCHEDULE_STATUS_INACTIVE
     }
   }
 
