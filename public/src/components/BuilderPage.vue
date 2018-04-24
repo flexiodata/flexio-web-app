@@ -86,6 +86,18 @@
             ]
           },
           {
+            element: 'checkbox-group',
+            variable: 'checkbox_group',
+            label: 'Checkbox Group',
+            placeholder: 'Checkbox Group',
+            value: [],
+            options: [
+              { label: 'California', value: 'CA' },
+              { label: 'Illinois',   value: 'IL' },
+              { label: 'Wyoming',    value: 'WY' }
+            ]
+          },
+          {
             element: 'checkbox',
             variable: 'checkbox',
             label: 'Checkbox',

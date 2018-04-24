@@ -14,21 +14,38 @@
         :label="fi.label"
         :prop="fi.variable"
       >
+        <el-switch
+          v-model="form_values[fi.variable]"
+          v-if="fi.element == 'switch'"
+        />
         <el-checkbox
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'checkbox'"
+          v-else-if="fi.element == 'checkbox'"
         />
-        <el-switch
+        <el-checkbox-group
+          :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
-          v-else-if="fi.element == 'switch'"
-        />
+          v-else-if="fi.element == 'checkbox-group'"
+        >
+          <el-checkbox
+            :label="option.value"
+            :name="fi.variable"
+            v-for="option in fi.options"
+          >
+            {{option.label}}
+          </el-checkbox>
+        </el-checkbox-group>
         <el-select
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
           v-else-if="fi.element == 'select'"
         >
-          <el-option :label="option.label" :value="option.value" v-for="option in fi.options" />
+          <el-option
+            :label="option.label"
+            :value="option.value"
+            v-for="option in fi.options"
+          />
         </el-select>
         <el-date-picker
           type="date"
