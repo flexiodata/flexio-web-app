@@ -150,7 +150,7 @@
       if (p.element == 'form') {
         buildPipeCode(p.form_items)
       } else if (p.variable) {
-        var echo_str = "echo('${" + p.variable + "}')"
+        var echo_str = "echo('" + p.variable + ": ${" + p.variable + "}')"
         pipe_arr.push(echo_str)
       }
     })
