@@ -14,9 +14,14 @@
         :label="fi.label"
         :prop="fi.variable"
       >
+        <el-checkbox
+          :placeholder="fi.placeholder"
+          v-model="form_values[fi.variable]"
+          v-if="fi.element == 'checkbox'"
+        />
         <el-switch
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'switch'"
+          v-else-if="fi.element == 'switch'"
         />
         <el-select
           :placeholder="fi.placeholder"

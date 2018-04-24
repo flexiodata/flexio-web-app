@@ -86,6 +86,13 @@
             ]
           },
           {
+            element: 'checkbox',
+            variable: 'checkbox',
+            label: 'Checkbox',
+            placeholder: 'Checkbox',
+            value: false
+          },
+          {
             element: 'switch',
             variable: 'switch',
             label: 'Switch',

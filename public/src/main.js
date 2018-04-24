@@ -2,9 +2,9 @@ import Vue from 'vue'
 import KeenUi from 'keen-ui'
 import {
   Button,
-  //Checkbox,
-  //CheckboxButton,
-  //CheckboxGroup,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
   DatePicker,
   Dialog,
   Dropdown,
@@ -51,9 +51,9 @@ Vue.use(KeenUi)
 locale.use(lang)
 
 Vue.use(Button)
-//Vue.use(Checkbox)
-//Vue.use(CheckboxButton)
-//Vue.use(CheckboxGroup)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
 Vue.use(DatePicker)
 Vue.use(Dialog)
 Vue.use(Dropdown)
