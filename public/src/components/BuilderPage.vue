@@ -46,6 +46,8 @@
     prompts: [
       {
         element: 'form',
+        title: 'This is the title',
+        description: 'This is the description. Text is written in Markdown so it can be quite descriptive.',
         label_position: 'left',
         label_width: '9rem',
         form_items: [
@@ -127,13 +129,13 @@
       },
       {
         element: 'connection-chooser',
-        variable: 'connection-chooser',
+        variable: 'connection_chooser',
         connection_type: 'dropbox'
       },
       {
         element: 'file-chooser',
-        variable: 'file-chooser',
-        connection: 'connection-chooser'
+        variable: 'file_chooser',
+        connection: 'connection_chooser'
       },
       {
         element: 'summary-page'

@@ -1,7 +1,13 @@
 <template>
   <div>
     <div class="tl pb3">
-      <h3 class="fw6 f3 mid-gray mt0 mb2">Choose values</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
+    </div>
+    <div
+      class="pb3 mid-gray marked"
+      v-html="description"
+      v-if="description.length > 0"
+    >
     </div>
     <el-form
       :model="form_values"
@@ -86,6 +92,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import marked from 'marked'
 
   export default {
     props: {
@@ -122,6 +129,12 @@
       },
       prompt() {
         return _.get(this.$store, 'state.builder.prompts[' + this.index + ']')
+      },
+      title() {
+        return _.get(this.prompt, 'title', 'Choose values')
+      },
+      description() {
+        return marked(_.get(this.prompt, 'description', ''))
       },
       label_position() {
         return _.get(this.prompt, 'label_position', 'top')
