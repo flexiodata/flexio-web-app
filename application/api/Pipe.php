@@ -305,6 +305,11 @@ class Pipe
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
 
+/*
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_RUN);
+        $request->setRequestParams($post_params);
+*/
+
         // load the object; make sure the eid is associated with the owner
         // as an additional check
         $pipe = \Flexio\Object\Pipe::load($pipe_eid);
