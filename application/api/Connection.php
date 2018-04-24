@@ -25,8 +25,8 @@ class Connection
         $owner_user_eid = $request->getOwnerFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATE);
-        // TODO: don't store sensitive info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -116,8 +116,8 @@ class Connection
         $connection_eid = $request->getObjectFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATE);
-        // TODO: don't store sensitive info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -291,7 +291,7 @@ class Connection
         \Flexio\Api\Response::sendContent($result);
     }
 
-    private static function cleanProperties(array $properties)
+    private static function cleanProperties(array $properties) : array
     {
         if (!isset($properties['connection_info']))
             return $properties;
