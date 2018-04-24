@@ -4,11 +4,11 @@
       <spinner size="large" message="Loading pipes..."></spinner>
     </div>
   </div>
-  <empty-item v-else-if="pipes.length == 0 && filter.length > 0">
+  <empty-item class="flex-fill justify-center h-100" v-else-if="pipes.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes match the filter criteria</span>
   </empty-item>
-  <empty-item v-else-if="pipes.length == 0">
+  <empty-item class="flex-fill justify-center h-100" v-else-if="pipes.length == 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes to show</span>
   </empty-item>

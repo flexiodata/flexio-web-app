@@ -55,12 +55,10 @@
         />
       </div>
     </div>
-    <div class="flex flex-column justify-center h-100" v-else>
-      <empty-item>
-        <i slot="icon" class="material-icons">repeat</i>
-        <span slot="text">No connections to show</span>
-      </empty-item>
-    </div>
+    <empty-item class="flex flex-column justify-center h-100" v-else>
+      <i slot="icon" class="material-icons">repeat</i>
+      <span slot="text">No connections to show</span>
+    </empty-item>
 
     <!-- connection create dialog -->
     <el-dialog
