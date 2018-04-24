@@ -46,12 +46,14 @@
     prompts: [
       {
         element: 'form',
+        label_position: 'left',
+        label_width: '9rem',
         form_items: [
           {
             element: 'input',
             type: 'text',
             variable: 'input_text',
-            label: '',
+            label: 'Text Input',
             placeholder: 'Text Input',
             value: ''
           },
@@ -59,7 +61,7 @@
             element: 'input',
             type: 'textarea',
             variable: 'input_textarea',
-            label: '',
+            label: 'Textarea',
             placeholder: 'Textarea',
             value: ''
           },
@@ -67,9 +69,21 @@
             element: 'input',
             type: 'date',
             variable: 'input_date',
-            label: '',
+            label: 'Date Input',
             placeholder: 'Date Input',
             value: ''
+          },
+          {
+            element: 'select',
+            variable: 'input_select',
+            label: 'Select',
+            placeholder: 'Date Input',
+            value: 'IL',
+            options: [
+              { label: 'California', value: 'CA' },
+              { label: 'Illinois',   value: 'IL' },
+              { label: 'Washington', value: 'WA' }
+            ]
           }
         ]
       },
