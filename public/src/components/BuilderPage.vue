@@ -38,111 +38,111 @@
   import BuilderList from './BuilderList.vue'
 
   const test_def = {
-    title: 'Test Prompts',
-    description: '',
-    keywords: [],
-    connections: [],
-    content: '# Test prompts\n\nExample template for rendering all components',
-    prompts: [
+    "title": 'Test Prompts',
+    "description": '',
+    "keywords": [],
+    "connections": [],
+    "content": '# Test prompts\n\nExample template for rendering all components',
+    "prompts": [
       {
-        element: 'form',
-        title: 'This is the title',
-        description: 'This is the description. Text is written in Markdown so it can be quite descriptive.',
-        label_position: 'left',
-        label_width: '9rem',
-        form_items: [
+        "element": "form",
+        "title": "This is the title",
+        "description": "This is the description. Text is written in Markdown so it can be quite descriptive.",
+        "label_position": "left",
+        "label_width": "9rem",
+        "form_items": [
           {
-            element: 'input',
-            type: 'text',
-            variable: 'input_text',
-            label: 'Text Input',
-            placeholder: 'Text Input',
-            value: ''
+            "element": "input",
+            "type": "text",
+            "variable": "input_text",
+            "label": "Text Input",
+            "placeholder": "Text Input",
+            "value": ""
           },
           {
-            element: 'input',
-            type: 'textarea',
-            variable: 'input_textarea',
-            label: 'Textarea',
-            placeholder: 'Textarea',
-            value: ''
+            "element": "input",
+            "type": "textarea",
+            "variable": "input_textarea",
+            "label": "Textarea",
+            "placeholder": "Textarea",
+            "value": ""
           },
           {
-            element: 'input',
-            type: 'date',
-            variable: 'input_date',
-            label: 'Date Input',
-            placeholder: 'Date Input',
-            value: ''
+            "element": "input",
+            "type": "date",
+            "variable": "input_date",
+            "label": "Date Input",
+            "placeholder": "Date Input",
+            "value": ""
           },
           {
-            element: 'select',
-            variable: 'input_select',
-            label: 'Select',
-            placeholder: 'Select',
-            value: 'IL',
-            options: [
-              { label: 'California', value: 'CA' },
-              { label: 'Illinois',   value: 'IL' },
-              { label: 'Wyoming',    value: 'WY' }
+            "element": "select",
+            "variable": "input_select",
+            "label": "Select",
+            "placeholder": "Select",
+            "value": "IL",
+            "options": [
+              { "label": "California", "value": "CA" },
+              { "label": "Illinois",   "value": "IL" },
+              { "label": "Wyoming",    "value": "WY" }
             ]
           },
           {
-            element: 'radio-group',
-            variable: 'radio_group',
-            label: 'Radio Group',
-            placeholder: 'Radio Group',
-            value: [],
-            options: [
-              { label: 'California', value: 'CA' },
-              { label: 'Illinois',   value: 'IL' },
-              { label: 'Wyoming',    value: 'WY' }
+            "element": "radio-group",
+            "variable": "radio_group",
+            "label": "Radio Group",
+            "placeholder": "Radio Group",
+            "value": [],
+            "options": [
+              { "label": "California", "value": "CA" },
+              { "label": "Illinois",   "value": "IL" },
+              { "label": "Wyoming",    "value": "WY" }
             ]
           },
           {
-            element: 'checkbox-group',
-            variable: 'checkbox_group',
-            label: 'Checkbox Group',
-            placeholder: 'Checkbox Group',
-            value: [],
-            options: [
-              { label: 'California', value: 'CA' },
-              { label: 'Illinois',   value: 'IL' },
-              { label: 'Wyoming',    value: 'WY' }
+            "element": "checkbox-group",
+            "variable": "checkbox_group",
+            "label": "Checkbox Group",
+            "placeholder": "Checkbox Group",
+            "value": [],
+            "options": [
+              { "label": "California", "value": "CA" },
+              { "label": "Illinois",   "value": "IL" },
+              { "label": "Wyoming",    "value": "WY" }
             ]
           },
           {
-            element: 'checkbox',
-            variable: 'checkbox',
-            label: 'Checkbox',
-            placeholder: 'Checkbox',
-            value: false
+            "element": "checkbox",
+            "variable": "checkbox",
+            "label": "Checkbox",
+            "placeholder": "Checkbox",
+            "value": false
           },
           {
-            element: 'switch',
-            variable: 'switch',
-            label: 'Switch',
-            placeholder: 'Switch',
-            value: false
+            "element": "switch",
+            "variable": "switch",
+            "label": "Switch",
+            "placeholder": "Switch",
+            "value": false
           }
         ]
       },
       {
-        element: 'connection-chooser',
-        variable: 'connection_chooser',
-        connection_type: 'dropbox'
+        "element": "connection-chooser",
+        "variable": "connection_chooser",
+        "connection_type": "dropbox"
       },
       {
-        element: 'file-chooser',
-        variable: 'file_chooser',
-        connection: 'connection_chooser'
+        "element": "file-chooser",
+        "variable": "file_chooser",
+        "connection": "connection_chooser"
       },
       {
-        element: 'summary-page'
+        "element": "summary-page"
       }
     ],
-    pipe_language: 'javascript',
-    pipe: ''
+    "pipe_language": "javascript",
+    "pipe": ""
   }
 
   var pipe_arr = [ "Flexio.pipe()" ]
