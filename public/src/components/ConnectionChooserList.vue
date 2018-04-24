@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-row justify-center items-center min-h3" v-if="is_fetching">
-    <spinner size="medium"></spinner>
+    <Spinner size="medium" />
     <span class="ml2 f5">Loading...</span>
   </div>
   <div v-else>
-    <connection-chooser-item
+    <ConnectionChooserItem
       v-for="(input_service, ctype) in input_services"
       :key="ctype"
       :item="input_service"
@@ -16,7 +16,7 @@
       :show-selection="showSelection"
       :show-selection-checkmark="showSelectionCheckmark"
       @activate="onItemActivate"
-    ></connection-chooser-item>
+    />
     <article
       class="css-connection-ghost dib relative mw5 h4 w4 black-40 br2 pa1 mv2 mh1 v-top darken-10"
       @click="onAddClick"

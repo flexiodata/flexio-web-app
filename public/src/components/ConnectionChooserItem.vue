@@ -6,11 +6,11 @@
     <div class="flex flex-row items-center" v-if="layout == 'list'">
       <i class="material-icons mid-gray md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
-      <service-icon :type="ctype" class="br1 square-3 mr3"></service-icon>
+      <ServiceIcon :type="ctype" class="br1 square-3 mr3" />
       <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
     </div>
     <div class="tc css-valign" v-else>
-      <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
+      <ServiceIcon :type="ctype" class="dib v-mid br2 square-5" />
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.name}}</div>
     </div>
   </article>

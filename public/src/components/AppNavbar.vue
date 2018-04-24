@@ -5,11 +5,11 @@
         <router-link to="/home" class="dib link v-mid min-w3" title="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <app-breadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns" />
+        <AppBreadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns" />
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
-        <user-dropdown v-else-if="logged_in"></user-dropdown>
+        <UserDropdown v-else-if="logged_in" />
         <div v-else>
           <router-link to="/signin" class="link underline-hover dib f6 f6-ns ttu b black-60 ph2 pv1 mr1 mr2-ns">Sign in</router-link>
           <router-link to="/signup" class="link no-underline dib f6 f6-ns ttu b br1 white bg-orange darken-10 ph2 ph3-ns pv2 mv1">

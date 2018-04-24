@@ -13,7 +13,7 @@
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
       <div class="flex flex-row">
-        <builder-list
+        <BuilderList
           class="flex-fill"
           :container-id="id"
           :show-insert-buttons="false"

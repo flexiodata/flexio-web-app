@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <app-navbar class="flex-none" v-if="show_intercom_button && show_navbar"></app-navbar>
+    <AppNavbar class="flex-none" v-if="show_intercom_button && show_navbar" />
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding dialog -->
@@ -14,7 +14,7 @@
         :close-on-press-escape="false"
         :visible.sync="show_onboarding_modal"
       >
-        <onboarding-panel @close="onOnboardingClose" />
+        <OnboardingPanel @close="onOnboardingClose" />
       </el-dialog>
     </div>
 
@@ -43,7 +43,7 @@
   import OnboardingPanel from './OnboardingPanel.vue'
 
   export default {
-    name: 'app',
+    name: 'App',
     components: {
       AppNavbar,
       OnboardingPanel
