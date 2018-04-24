@@ -38,11 +38,11 @@
   import BuilderList from './BuilderList.vue'
 
   const test_def = {
-    "title": 'Test Prompts',
-    "description": '',
+    "title": "Test Prompts",
+    "description": "",
     "keywords": [],
     "connections": [],
-    "content": '# Test prompts\n\nExample template for rendering all components',
+    "content": "# Test prompts\n\nExample template for rendering all components",
     "prompts": [
       {
         "element": "form",
