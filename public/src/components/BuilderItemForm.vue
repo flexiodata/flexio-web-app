@@ -14,11 +14,18 @@
         :label="fi.label"
         :prop="fi.variable"
       >
+        <el-select
+          :placeholder="fi.placeholder"
+          v-model="form_values[fi.variable]"
+          v-if="fi.element == 'select'"
+        >
+          <el-option :label="option.label" :value="option.value" v-for="option in fi.options" />
+        </el-select>
         <el-date-picker
           type="date"
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'input' && fi.type == 'date'"
+          v-else-if="fi.element == 'input' && fi.type == 'date'"
         />
         <el-input
           type="textarea"
