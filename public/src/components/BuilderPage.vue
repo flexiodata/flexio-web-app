@@ -46,33 +46,29 @@
     "prompts": [
       {
         "element": "form",
-        "items": [
+        "form_items": [
           {
             "element": "input",
             "type": "text",
-            "variable": "form_input1",
-            "label": "Enter a value",
+            "variable": "input_text",
+            "label": "",
+            "placeholder": "Text Input",
             "value": ""
           },
           {
             "element": "input",
-            "type": "email",
-            "variable": "form_input2",
-            "label": "Enter a value",
-            "value": ""
-          },
-          {
-            "element": "input",
-            "type": "number",
-            "variable": "form_input3",
-            "label": "Enter a value",
+            "type": "textarea",
+            "variable": "input_textarea",
+            "label": "",
+            "placeholder": "Textarea",
             "value": ""
           },
           {
             "element": "input",
             "type": "date",
-            "variable": "form_input4",
-            "label": "Enter a value",
+            "variable": "input_date",
+            "label": "",
+            "placeholder": "Date Input",
             "value": ""
           }
         ]

@@ -98,6 +98,11 @@
           :index="index"
           v-else-if="item.element == 'file-chooser'"
         />
+        <BuilderItemForm
+          :item="item"
+          :index="index"
+          v-else-if="item.element == 'form'"
+        />
         <BuilderItemInput
           :item="item"
           :index="index"
@@ -149,6 +154,7 @@
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
+  import BuilderItemForm from './BuilderItemForm.vue'
   import BuilderItemInput from './BuilderItemInput.vue'
   import BuilderItemSummaryPage from './BuilderItemSummaryPage.vue'
 
@@ -184,6 +190,7 @@
       TaskIcon,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
+      BuilderItemForm,
       BuilderItemInput,
       BuilderItemSummaryPage
     },

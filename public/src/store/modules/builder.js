@@ -40,6 +40,12 @@ const mutations = {
       if (p.element == 'file-chooser')
         return _.assign(p, { connection_eid: null })
 
+      if (p.element == 'form') {
+        var form = {}
+        _.each(p.form_items, f => { form[f.variable] = f.value })
+        return _.assign(p, { form })
+      }
+
       return p
     })
 
@@ -85,6 +91,13 @@ const mutations = {
           if (!_.isNil(path)) {
             code = code.replace(regex, path)
           }
+          break
+        case 'form':
+          var form_val = _.get(p, 'form', {})
+          _.each(form_val, (k, v) => {
+            var regex = new RegExp("\\$\\{" + k + "\\}", "g")
+            code = code.replace(regex, v)
+          })
           break
         case 'input':
           var val = _.get(p, 'value', '')
