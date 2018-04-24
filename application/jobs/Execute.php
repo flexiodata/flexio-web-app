@@ -472,7 +472,13 @@ class ScriptHost
 
     public function func_getEnv()
     {
-        return $this->process->getParams();
+        $res = [];
+        $params = $this->process->getParams();
+        foreach ($params as $k => $v)
+        {
+            $res[$k] = $v->getReader()->read();
+        }
+        return (object)$res;
     }
 
     public function func_setEnvValue($key, $value)
