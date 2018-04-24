@@ -139,23 +139,19 @@
       TimeChooserList
     },
     watch: {
-      'pipe': function(val, old_val) {
-        this.edit_pipe = _.cloneDeep(val)
-        this.updatePipe(val)
+      pipe: {
+        handler: 'updatePipe',
+        immediate: true,
+        deep: true
       }
     },
     data() {
-      var edit_pipe = _.cloneDeep(this.pipe)
-
-      if (_.isNil(_.get(edit_pipe, 'schedule')))
-        _.assign(edit_pipe, defaultAttrs())
-
       return {
         day_options: day_options,
         month_options: month_options,
         timezone_options: timezones,
         frequency_options: frequency_options,
-        edit_pipe: edit_pipe
+        edit_pipe: defaultAttrs()
       }
     },
     computed: {
@@ -198,8 +194,13 @@
           this.pipe = _.assign({}, defaultAttrs())
         }
       },
-      updatePipe(attrs) {
-        this.edit_pipe = _.assign({}, this.edit_pipe, attrs)
+      updatePipe() {
+        var edit_pipe = _.cloneDeep(this.pipe)
+
+        if (_.isNil(_.get(edit_pipe, 'schedule')))
+          _.assign(edit_pipe, defaultAttrs())
+
+        this.edit_pipe = edit_pipe
       },
       getFrequency() {
         return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
