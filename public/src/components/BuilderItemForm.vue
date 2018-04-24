@@ -14,10 +14,14 @@
         :label="fi.label"
         :prop="fi.variable"
       >
+        <el-switch
+          v-model="form_values[fi.variable]"
+          v-if="fi.element == 'switch'"
+        />
         <el-select
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'select'"
+          v-else-if="fi.element == 'select'"
         >
           <el-option :label="option.label" :value="option.value" v-for="option in fi.options" />
         </el-select>

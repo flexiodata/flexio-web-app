@@ -16,11 +16,10 @@ import {
   Input,
   MessageBox,
   Option,
-  Select
+  Select,
+  Switch
   //Radio,
   //RadioGroup,
-  //Select,
-  //Switch,
   //TimePicker
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
@@ -66,10 +65,9 @@ Vue.use(Icon)
 Vue.use(Input)
 Vue.use(Option)
 Vue.use(Select)
+Vue.use(Switch)
 //Vue.use(Radio)
 //Vue.use(RadioGroup)
-//Vue.use(Select)
-//Vue.use(Switch)
 //Vue.use(TimePicker)
 
 Vue.prototype.$msgbox = MessageBox

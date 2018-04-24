@@ -77,22 +77,22 @@
             element: 'select',
             variable: 'input_select',
             label: 'Select',
-            placeholder: 'Date Input',
+            placeholder: 'Select',
             value: 'IL',
             options: [
               { label: 'California', value: 'CA' },
               { label: 'Illinois',   value: 'IL' },
-              { label: 'Washington', value: 'WA' }
+              { label: 'Wyoming',    value: 'WY' }
             ]
+          },
+          {
+            element: 'switch',
+            variable: 'switch',
+            label: 'Switch',
+            placeholder: 'Switch',
+            value: false
           }
         ]
-      },
-      {
-        element: 'input',
-        type: 'text',
-        variable: 'input',
-        label: 'Enter a value',
-        value: ''
       },
       {
         element: 'connection-chooser',
