@@ -40,6 +40,12 @@ const mutations = {
       if (p.element == 'file-chooser')
         return _.assign(p, { connection_eid: null })
 
+      if (p.element == 'form') {
+        var form_values = {}
+        _.each(p.form_items, f => { form_values[f.variable] = f.value })
+        return _.assign(p, { form_values })
+      }
+
       return p
     })
 
@@ -48,9 +54,10 @@ const mutations = {
   },
 
   BUILDER__UPDATE_ACTIVE_ITEM (state, attrs) {
-    state.active_prompt = _.assign({}, state.active_prompt, attrs)
+    var ap = _.assign({}, state.active_prompt, attrs)
+    ap = _.cloneDeep(ap)
+    state.active_prompt = ap
 
-    var ap = state.active_prompt
     state.prompts = _.map(state.prompts, p => {
       if (p.id == ap.id) {
         return ap
@@ -71,8 +78,11 @@ const mutations = {
   BUILDER__UPDATE_CODE (state) {
     var code = state.def.pipe
 
-    _.each(state.prompts, p => {
+    _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
+
+      if (idx > state.active_prompt_idx)
+        return
 
       switch (p.element) {
         case 'connection-chooser':
@@ -85,6 +95,13 @@ const mutations = {
           if (!_.isNil(path)) {
             code = code.replace(regex, path)
           }
+          break
+        case 'form':
+          var form_vals = _.get(p, 'form_values', {})
+          _.each(form_vals, (val, key) => {
+            var regex = new RegExp("\\$\\{" + key + "\\}", "g")
+            code = code.replace(regex, val)
+          })
           break
         case 'input':
           var val = _.get(p, 'value', '')
