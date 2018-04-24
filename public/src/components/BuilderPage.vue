@@ -38,65 +38,82 @@
   import BuilderList from './BuilderList.vue'
 
   const test_def = {
-    "title": "Test Prompts",
-    "description": "",
-    "keywords": [],
-    "connections": [],
-    "content": "# Test prompts\n\nExample template for rendering ar\n",
-    "prompts": [
+    title: 'Test Prompts',
+    description: '',
+    keywords: [],
+    connections: [],
+    content: '# Test prompts\n\nExample template for rendering all components',
+    prompts: [
       {
-        "element": "form",
-        "form_items": [
+        element: 'form',
+        form_items: [
           {
-            "element": "input",
-            "type": "text",
-            "variable": "input_text",
-            "label": "",
-            "placeholder": "Text Input",
-            "value": ""
+            element: 'input',
+            type: 'text',
+            variable: 'input_text',
+            label: '',
+            placeholder: 'Text Input',
+            value: ''
           },
           {
-            "element": "input",
-            "type": "textarea",
-            "variable": "input_textarea",
-            "label": "",
-            "placeholder": "Textarea",
-            "value": ""
+            element: 'input',
+            type: 'textarea',
+            variable: 'input_textarea',
+            label: '',
+            placeholder: 'Textarea',
+            value: ''
           },
           {
-            "element": "input",
-            "type": "date",
-            "variable": "input_date",
-            "label": "",
-            "placeholder": "Date Input",
-            "value": ""
+            element: 'input',
+            type: 'date',
+            variable: 'input_date',
+            label: '',
+            placeholder: 'Date Input',
+            value: ''
           }
         ]
       },
       {
-        "element": "input",
-        "type": "text",
-        "variable": "input",
-        "label": "Enter a value",
-        "value": ""
+        element: 'input',
+        type: 'text',
+        variable: 'input',
+        label: 'Enter a value',
+        value: ''
       },
       {
-        "element": "connection-chooser",
-        "variable": "connection-chooser",
-        "connection_type": "dropbox"
+        element: 'connection-chooser',
+        variable: 'connection-chooser',
+        connection_type: 'dropbox'
       },
       {
-        "element": "file-chooser",
-        "variable": "file-chooser",
-        "connection": "connection-chooser"
+        element: 'file-chooser',
+        variable: 'file-chooser',
+        connection: 'connection-chooser'
       },
       {
-        "element": "summary-page"
+        element: 'summary-page'
       }
     ],
-    "pipe_language": "javascript",
-    "pipe": "Flexio.pipe()\n  .echo('${input_text}')\n  .echo('${input_textarea}')\n  .echo('${input_date}')\n  .echo('${input}')\n  .echo('${connection-chooser}')\n  .echo('${file-chooser}')\n"
+    pipe_language: 'javascript',
+    pipe: ''
   }
+
+  var pipe_arr = [ "Flexio.pipe()" ]
+
+  var buildPipeCode = (arr) => {
+    _.each(arr, p => {
+      if (p.element == 'form') {
+        buildPipeCode(p.form_items)
+      } else if (p.variable) {
+        var echo_str = "echo('${" + p.variable + "}')"
+        pipe_arr.push(echo_str)
+      }
+    })
+  }
+
+  buildPipeCode(test_def.prompts)
+
+  test_def.pipe = pipe_arr.join('\n  .')
 
   export default {
     components: {
