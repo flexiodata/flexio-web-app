@@ -95,7 +95,7 @@
       }
     ],
     "pipe_language": "javascript",
-    "pipe": "Flexio.pipe()\n  .echo('${input}')\n  .echo('${connection-chooser}')\n  .echo('${file-chooser}')\n"
+    "pipe": "Flexio.pipe()\n  .echo('${input_text}')\n  .echo('${input_textarea}')\n  .echo('${input_date}')\n  .echo('${input}')\n  .echo('${connection-chooser}')\n  .echo('${file-chooser}')\n"
   }
 
   export default {
