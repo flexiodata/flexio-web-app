@@ -98,6 +98,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['schedule'] = json_encode($schedule);
         }
 
+        // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
+        if (isset($properties) && isset($properties['schedule_status']))
+        {
+            switch ($properties['schedule_status'])
+            {
+                default:
+                    $properties['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_STATUS_INACTIVE:
+                case \Model::PIPE_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
+        }
+
         $object = new static();
         $pipe_model = $object->getModel()->pipe;
         $local_eid = $pipe_model->create($properties);
@@ -139,6 +155,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
             $properties['schedule'] = json_encode($schedule);
+        }
+
+        // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
+        if (isset($properties) && isset($properties['schedule_status']))
+        {
+            switch ($properties['schedule_status'])
+            {
+                default:
+                    $properties['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_STATUS_INACTIVE:
+                case \Model::PIPE_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
         }
 
         $this->clearCache();
