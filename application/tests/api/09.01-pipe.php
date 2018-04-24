@@ -138,5 +138,220 @@ class Test
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/pipes; create a new pipe',  $actual, $expected, $results);
+
+
+        // TEST: create a new pipe; check variations in schedule and schedule status
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "alias": "",
+                "description": "Test Pipe Description",
+                "schedule": {
+                    "frequency": "daily",
+                    "timezone": "UTC",
+                    "days": [],
+                    "times": [
+                        {
+                            "hour": 8,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": ""
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "",
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "schedule": {
+                "frequency": "daily",
+                "timezone": "UTC",
+                "days": [],
+                "times": [
+                    {
+                        "hour": 8,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "alias": "",
+                "description": "Test Pipe Description",
+                "schedule": {
+                    "frequency": "daily",
+                    "timezone": "UTC",
+                    "days": [],
+                    "times": [
+                        {
+                            "hour": 8,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "bad"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "",
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "schedule": {
+                "frequency": "daily",
+                "timezone": "UTC",
+                "days": [],
+                "times": [
+                    {
+                        "hour": 8,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "alias": "",
+                "description": "Test Pipe Description",
+                "schedule": {
+                    "frequency": "daily",
+                    "timezone": "UTC",
+                    "days": [],
+                    "times": [
+                        {
+                            "hour": 8,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "I"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "",
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "schedule": {
+                "frequency": "daily",
+                "timezone": "UTC",
+                "days": [],
+                "times": [
+                    {
+                        "hour": 8,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "alias": "",
+                "description": "Test Pipe Description",
+                "schedule": {
+                    "frequency": "daily",
+                    "timezone": "UTC",
+                    "days": [],
+                    "times": [
+                        {
+                            "hour": 8,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "A"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "",
+            "name": "Test Pipe",
+            "description": "Test Pipe Description",
+            "schedule": {
+                "frequency": "daily",
+                "timezone": "UTC",
+                "days": [],
+                "times": [
+                    {
+                        "hour": 8,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "A",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }
+        ';
+        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:userid/pipes; create a new pipe; check variations in schedule and schedule status',  $actual, $expected, $results);
     }
 }

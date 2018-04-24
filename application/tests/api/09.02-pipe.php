@@ -285,5 +285,276 @@ class Test
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/pipes/:objeid; return updated pipe info',  $actual, $expected, $results);
+
+
+        // TEST: change pipe info; check variations in schedule and schedule status
+
+        // BEGIN TEST
+        $new_username = \Flexio\Base\Identifier::generate();
+        $new_password = \Flexio\Base\Password::generate();
+        $new_email = \Flexio\Tests\Util::createEmailAddress();
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1",
+            'token' => $token1, // valid token for user
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe Updated",
+                "alias": "alias1-updated",
+                "description": "Test Pipe Description Updated",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "finished"
+                    }
+                },
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["sat","sun"],
+                    "times": [
+                        {
+                            "hour": 0,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": ""
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid": "'.$objeid1.'",
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "alias1-updated",
+            "name": "Test Pipe Updated",
+            "description": "Test Pipe Description Updated",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "finished"
+                }
+            },
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["sat","sun"],
+                "times": [
+                    {
+                        "hour": 0,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $new_username = \Flexio\Base\Identifier::generate();
+        $new_password = \Flexio\Base\Password::generate();
+        $new_email = \Flexio\Tests\Util::createEmailAddress();
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1",
+            'token' => $token1, // valid token for user
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe Updated",
+                "alias": "alias1-updated",
+                "description": "Test Pipe Description Updated",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "finished"
+                    }
+                },
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["sat","sun"],
+                    "times": [
+                        {
+                            "hour": 0,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "bad"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid": "'.$objeid1.'",
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "alias1-updated",
+            "name": "Test Pipe Updated",
+            "description": "Test Pipe Description Updated",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "finished"
+                }
+            },
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["sat","sun"],
+                "times": [
+                    {
+                        "hour": 0,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $new_username = \Flexio\Base\Identifier::generate();
+        $new_password = \Flexio\Base\Password::generate();
+        $new_email = \Flexio\Tests\Util::createEmailAddress();
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1",
+            'token' => $token1, // valid token for user
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe Updated",
+                "alias": "alias1-updated",
+                "description": "Test Pipe Description Updated",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "finished"
+                    }
+                },
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["sat","sun"],
+                    "times": [
+                        {
+                            "hour": 0,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "I"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid": "'.$objeid1.'",
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "alias1-updated",
+            "name": "Test Pipe Updated",
+            "description": "Test Pipe Description Updated",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "finished"
+                }
+            },
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["sat","sun"],
+                "times": [
+                    {
+                        "hour": 0,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "I",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('B.3', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $new_username = \Flexio\Base\Identifier::generate();
+        $new_password = \Flexio\Base\Password::generate();
+        $new_email = \Flexio\Tests\Util::createEmailAddress();
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes/$objeid1",
+            'token' => $token1, // valid token for user
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe Updated",
+                "alias": "alias1-updated",
+                "description": "Test Pipe Description Updated",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "finished"
+                    }
+                },
+                "schedule": {
+                    "frequency": "",
+                    "timezone": "UTC",
+                    "days": ["sat","sun"],
+                    "times": [
+                        {
+                            "hour": 0,
+                            "minute": 0
+                        }
+                    ]
+                },
+                "schedule_status": "A"
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $actual = $result['response'];
+        $expected = '
+        {
+            "eid": "'.$objeid1.'",
+            "eid_type": "PIP",
+            "eid_status": "A",
+            "alias": "alias1-updated",
+            "name": "Test Pipe Updated",
+            "description": "Test Pipe Description Updated",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "finished"
+                }
+            },
+            "schedule": {
+                "timezone": "UTC",
+                "days": ["sat","sun"],
+                "times": [
+                    {
+                        "hour": 0,
+                        "minute": 0
+                    }
+                ]
+            },
+            "schedule_status": "A",
+            "owned_by": {
+                "eid": "'.$userid1.'",
+                "eid_type": "USR"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('B.4', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
     }
 }
