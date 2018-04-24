@@ -25,8 +25,8 @@ class Connection
         $owner_user_eid = $request->getOwnerFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_CREATE);
-        // TODO: don't store sensitive info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -68,7 +68,8 @@ class Connection
         );
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -99,7 +100,8 @@ class Connection
         $connection->delete();
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -114,8 +116,8 @@ class Connection
         $connection_eid = $request->getObjectFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_CONNECTION_UPDATE);
-        // TODO: don't store sensitive info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -147,7 +149,8 @@ class Connection
         $connection->set($validated_post_params);
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -173,7 +176,8 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
@@ -213,7 +217,8 @@ class Connection
             if ($c->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $result[] = self::get_internal($c);
+            $properties = $c->get();
+            $result[] = self::cleanProperties($properties);
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -246,7 +251,8 @@ class Connection
         $connection->connect();
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -277,21 +283,16 @@ class Connection
         $connection->disconnect();
 
         // return the result
-        $result = self::get_internal($connection);
+        $properties = $connection->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
         \Flexio\Api\Response::sendContent($result);
     }
 
-    private static function get_internal($object)
+    private static function cleanProperties(array $properties) : array
     {
-        // TODO: figure out a way to make public/private properties
-        // on the object so we can use the full object internally,
-        // but not expose these on the api
-
-        $properties = $object->get();
-
         if (!isset($properties['connection_info']))
             return $properties;
 
@@ -300,9 +301,15 @@ class Connection
 
         // remove tokens and passwords if they are set
         $connection_info = $properties['connection_info'];
-        $connection_info['password'] = "*****";
-        $connection_info['access_token'] = "*****";
-        $connection_info['refresh_token'] = "*****";
+
+        if (isset($connection_info['password']))
+            $connection_info['password'] = "*****";
+
+        if (isset($connection_info['access_token']))
+            $connection_info['access_token'] = "*****";
+
+        if (isset($connection_info['refresh_token']))
+            $connection_info['refresh_token'] = "*****";
 
         $properties['connection_info'] = $connection_info;
 

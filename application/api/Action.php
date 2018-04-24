@@ -36,6 +36,7 @@ class Action
     const TYPE_PIPE_CREATE            = 'action.pipe.create';
     const TYPE_PIPE_UPDATE            = 'action.pipe.update';
     const TYPE_PIPE_DELETE            = 'action.pipe.delete';
+    const TYPE_PIPE_RUN               = 'action.pipe.run';
 
     const TYPE_CONNECTION_CREATE      = 'action.connection.create';
     const TYPE_CONNECTION_UPDATE      = 'action.connection.update';

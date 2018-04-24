@@ -86,8 +86,8 @@ class User
         if ($user === false)
         {
             $request->track(\Flexio\Api\Action::TYPE_USER_CREATE);
-            // TODO: store placeholder for password info
-            // $request->setRequestParams($post_params);
+            $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+            $request->setRequestParams($cleaned_post_params);
 
             // determine the status and verify code based on whether or not we're requiring verification
             $eid_status = ($require_verification === true ? \Model::STATUS_PENDING : \Model::STATUS_AVAILABLE);
@@ -225,8 +225,8 @@ class User
         $owner_user_eid = $request->getOwnerFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_USER_UPDATE);
-        // TODO: store placeholder for password info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -307,8 +307,8 @@ class User
         $owner_user_eid = $request->getOwnerFromUrl();
 
         $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_UPDATE);
-        // TODO: store placeholder for password info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -348,8 +348,8 @@ class User
         $post_params = $request->getPostParams();
 
         $request->track(\Flexio\Api\Action::TYPE_USER_CREDENTIAL_RESET);
-        // TODO: store placeholder for password info
-        // $request->setRequestParams($post_params);
+        $cleaned_post_params = self::cleanProperties($post_params); // don't store sensitive info
+        $request->setRequestParams($cleaned_post_params);
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
@@ -659,5 +659,22 @@ class User
         );
 
         return $objects;
+    }
+
+    private static function cleanProperties(array $properties) : array
+    {
+        if (isset($properties['password']))
+            $properties['password'] = "*****";
+
+        if (isset($properties['old_password']))
+            $properties['old_password'] = "*****";
+
+        if (isset($properties['new_password']))
+            $properties['new_password'] = "*****";
+
+        if (isset($properties['verify_code']))
+            $properties['verify_code'] = "*****";
+
+        return $properties;
     }
 }

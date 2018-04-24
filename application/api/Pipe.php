@@ -77,7 +77,8 @@ class Pipe
         );
 
         // get the pipe properties
-        $result = self::get_internal($pipe);
+        $properties = $pipe->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -145,7 +146,8 @@ class Pipe
             )
         );
 
-        $result = self::get_internal($new_pipe);
+        $properties = $new_pipe->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -174,7 +176,8 @@ class Pipe
 
         $pipe->delete();
 
-        $result = self::get_internal($pipe);
+        $properties = $pipe->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -220,7 +223,8 @@ class Pipe
         // set the properties
         $pipe->set($validated_post_params);
 
-        $result = self::get_internal($pipe);
+        $properties = $pipe->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         $request->track();
@@ -246,7 +250,8 @@ class Pipe
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // get the properties
-        $result = self::get_internal($pipe);
+        $properties = $pipe->get();
+        $result = self::cleanProperties($properties);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
         \Flexio\Api\Response::sendContent($result);
     }
@@ -286,7 +291,8 @@ class Pipe
             if ($p->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
                 continue;
 
-            $result[] = self::get_internal($p);
+            $properties = $p->get();
+            $result[] = self::cleanProperties($properties);
         }
 
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -298,6 +304,11 @@ class Pipe
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $pipe_eid = $request->getObjectFromUrl();
+
+/*
+        $request->track(\Flexio\Api\Action::TYPE_PIPE_RUN);
+        $request->setRequestParams($post_params);
+*/
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check
@@ -367,15 +378,8 @@ class Pipe
         exit(0);
     }
 
-    private static function get_internal($object)
+    private static function cleanProperties(array $properties) : array
     {
-        // TODO: tasks are objects right now; and an empty task is returning as [];
-        // internally, we still look for tasks as arrays, so we can't do a full
-        // fix until we start handling objects as objects and not as arrays; this
-        // fix let's us return empty tasks as {} until we get a more general fix;
-        // similar to fixEmptyParams() for task params
-
-        $properties = $object->get();
         if (isset($properties['task']) && count($properties['task']) === 0)
             $properties['task'] = (object)$properties['task'];
 

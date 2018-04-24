@@ -20,6 +20,7 @@ namespace Flexio\Jobs;
     {
         "op": "create",
         "params": {
+            "path": "", // optional path
             "name": "test",
             "content_type": "text/csv",
             "content": ""
