@@ -300,7 +300,7 @@ class Cron
         $process_properties = array(
             'task' => $pipe_properties['task'],
             'owned_by' => $pipe_properties['owned_by']['eid'],
-            'created_by' => $pipe_properties['created_by']['eid'] // scheduled processes are created by the owner
+            'created_by' => $pipe_properties['owned_by']['eid'] // scheduled processes are created by the owner
         );
 
         // STEP 2: create the process
