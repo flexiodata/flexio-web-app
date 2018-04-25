@@ -551,6 +551,7 @@ class Context {
         var pThis = this
         this._query = null
         this._form = null
+        this._vars = null
 
         this.pipe = {}
         for (var task_name in Flexio.task) {
@@ -565,6 +566,24 @@ class Context {
               })(task_name, Flexio.task[task_name])
         }
 
+
+        var getter = function(obj, prop) {
+            if (pThis._vars === null) {
+                pThis._vars = proxy.invokeSync('getEnv', [])
+            }
+            return pThis._vars.hasOwnProperty(prop) ? pThis._vars[prop] : null
+        }
+
+        var setter = function(obj, prop, value) {
+            if (pThis._vars === null) {
+                pThis._vars = proxy.invokeSync('getEnv', [])
+            }
+            pThis._vars[prop] = value
+            proxy.invokeSync('setEnvValue', [prop,value])
+        }
+
+        var handler = { get: getter, set: setter }
+        this.vars = new Proxy({}, handler)
     }
 
     get query() {
@@ -580,6 +599,8 @@ class Context {
         }
         return this._form
     }
+
+
 }
 
 
