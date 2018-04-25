@@ -29,7 +29,12 @@ EXAMPLE:
         "subject": "",
         "body_text": "",
         "body_html": "",
-        "data": ""
+        "attachments": [
+            {"file": "<path>"},
+            {"file": "<path>"},
+            "<path>" // alternative format; string
+            ...
+        ]
     }
 }
 */
