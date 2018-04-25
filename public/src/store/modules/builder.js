@@ -87,25 +87,25 @@ const mutations = {
       switch (p.element) {
         case 'connection-chooser':
           if (!_.isNil(p.connection_eid)) {
-            code = code.replace(regex, p.connection_eid)
+            code = code.replace(regex, JSON.stringify(p.connection_eid))
           }
           break
         case 'file-chooser':
-          var path = _.get(p, 'files[0].path', null)
-          if (!_.isNil(path)) {
-            code = code.replace(regex, path)
-          }
+          var files = _.get(p, 'files', [])
+          var paths = _.map(files, (f) => { return _.get(f, 'path', null) })
+          paths = _.compact(paths)
+          code = code.replace(regex, JSON.stringify(paths))
           break
         case 'form':
           var form_vals = _.get(p, 'form_values', {})
           _.each(form_vals, (val, key) => {
             var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-            code = code.replace(regex, val)
+            code = code.replace(regex, JSON.stringify(val))
           })
           break
         case 'input':
           var val = _.get(p, 'value', '')
-          code = code.replace(regex, val)
+          code = code.replace(regex, JSON.stringify(val))
           break
       }
     })
