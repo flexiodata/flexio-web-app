@@ -66,10 +66,12 @@
           />
         </el-select>
         <el-date-picker
-          type="date"
+          format="MM/dd/yyyy"
+          :type="fi.type"
+          :editable="false"
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
-          v-else-if="fi.element == 'input' && fi.type == 'date'"
+          v-else-if="fi.element == 'input' && isDatePickerType(fi.type)"
         />
         <el-input
           type="textarea"
@@ -154,6 +156,9 @@
         } else {
           this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
         }
+      },
+      isDatePickerType(type) {
+        return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
       }
     }
   }

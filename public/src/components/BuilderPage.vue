@@ -76,6 +76,14 @@
             "value": ""
           },
           {
+            "element": "input",
+            "type": "daterange",
+            "variable": "input_daterange",
+            "label": "Date Range Input",
+            "placeholder": "Date Range Input",
+            "value": ""
+          },
+          {
             "element": "select",
             "variable": "input_select",
             "label": "Select",
