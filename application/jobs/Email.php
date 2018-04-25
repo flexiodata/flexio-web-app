@@ -36,9 +36,6 @@ EXAMPLE:
 
 class Email extends \Flexio\Jobs\Base
 {
-    const DATA_MODE_NONE       = 'none';
-    const DATA_MODE_BODY       = 'body';
-    const DATA_MODE_ATTACHMENT = 'attachment';
     const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
     const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
@@ -79,10 +76,7 @@ class Email extends \Flexio\Jobs\Base
         if (strlen($body_html) > 0)
             $email_params['msg_html'] = $body_html;
 
-        $data_mode = isset($params['data']) ? $params['data'] : self::DATA_MODE_ATTACHMENT;
-
         $attachments = array();
-
         if (isset($params['attachments']))
         {
             if (!is_array($params['attachments']) || \Flexio\Base\Util::isAssociativeArray($params['attachments']))
@@ -132,38 +126,6 @@ class Email extends \Flexio\Jobs\Base
 
             $email_params['attachments'] = $attachments;
         }
-
-        /*
-        foreach ($attachments as $a)
-        {
-            if ($data_mode === self::DATA_MODE_ATTACHMENT)
-            {
-                $email_params['attachments'][] = array(
-                    'name' => $a['name'],
-                    'file' => $a['file'],
-                    'mime_type' => $a['mime_type']
-                );
-            }
-
-            if ($data_mode === self::DATA_MODE_BODY)
-            {
-                // add blank lines if there's already some body text
-                if (strlen($body_text) > 0)
-                    $body_text .= "\n\n";
-
-                $body_txt .= $a['name'];
-                $body_txt .= '------------------------------';
-                $body_text .= file_get_contents($a['file']);
-            }
-
-            if ($data_mode === self::DATA_MODE_NONE)
-            {
-                // nothing
-            }
-
-            // everything else; equivalent for now to nothing
-        }
-        */
 
         $email = \Flexio\Services\Email::create($email_params);
         $res = $email->send();
