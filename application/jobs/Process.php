@@ -77,7 +77,6 @@ class Process implements \Flexio\IFace\IProcess
         'sequence'  => '\Flexio\Jobs\Sequence',
         'settype'   => '\Flexio\Jobs\SetType',
         'sleep'     => '\Flexio\Jobs\Sleep',
-        'sort'      => '\Flexio\Jobs\Sort',
         'task'      => '\Flexio\Jobs\Task',       // general task whose parameters are another task; for internal use only
         'transform' => '\Flexio\Jobs\Transform',
         'list'      => '\Flexio\Jobs\List1',
