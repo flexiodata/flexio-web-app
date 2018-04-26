@@ -103,11 +103,6 @@
           :index="index"
           v-else-if="item.element == 'form'"
         />
-        <BuilderItemInput
-          :item="item"
-          :index="index"
-          v-else-if="item.element == 'input'"
-        />
         <BuilderItemSummaryPage
           :item="item"
           :index="index"
@@ -155,7 +150,6 @@
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
-  import BuilderItemInput from './BuilderItemInput.vue'
   import BuilderItemSummaryPage from './BuilderItemSummaryPage.vue'
 
   export default {
@@ -191,7 +185,6 @@
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
-      BuilderItemInput,
       BuilderItemSummaryPage
     },
     computed: {
@@ -228,10 +221,6 @@
           return _.get(this.item, 'files', []).length > 0
         }
 
-        if (this.item.element == 'input') {
-          return _.get(this.item, 'value', '').length > 0
-        }
-
         return true
       },
       content_cls() {
@@ -248,7 +237,6 @@
         switch (this.item.element) {
           case 'file-chooser': return 'insert_drive_file'
           case 'form':         return 'edit'
-          case 'input':        return 'edit'
           case 'summary-page': return 'check'
         }
       },
@@ -256,7 +244,6 @@
         switch (this.item.element) {
           case 'file-chooser': return '#0ab5f3'
           case 'form':         return '#0ab5f3'
-          case 'input':        return '#0ab5f3'
           case 'summary-page': return '#009900'
         }
       }
