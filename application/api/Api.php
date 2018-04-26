@@ -171,6 +171,7 @@ class Api
         // INTERNAL ENDPOINTS
 
         // admin
+        'POS /admin/email/run'                        => '\Flexio\Api\Admin::email',
         'POS /admin/cron/run'                         => '\Flexio\Api\Admin::cron',
         'GET /admin/info/system'                      => '\Flexio\Api\Admin::system',
         'GET /admin/info/users'                       => '\Flexio\Api\Admin::users',
