@@ -20,7 +20,7 @@ namespace Flexio\Jobs;
 {
     "op": "set",
     "params": {
-        "name": "myvar",
+        "var": "myvar",
         "value": "new_value"
     }
 }
