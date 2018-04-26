@@ -86,15 +86,20 @@
   import AbstractList from './AbstractList.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import EmptyItem from './EmptyItem.vue'
-  import Btn from './Btn.vue'
 
   export default {
     components: {
       Spinner,
       AbstractList,
       ConnectionEditPanel,
-      EmptyItem,
-      Btn
+      EmptyItem
+    },
+    watch: {
+      connections(val, old_val) {
+        if (!this.has_connection) {
+          this.connection = _.first(this.connections)
+        }
+      }
     },
     data() {
       return {
@@ -136,11 +141,7 @@
       ]),
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
-        {
-          this.$store.dispatch('fetchConnections').then(response => {
-            this.connection = _.first(this.connections)
-          })
-        }
+          this.$store.dispatch('fetchConnections')
       },
       tryUpdateConnection(attrs) {
         var eid = attrs.eid
