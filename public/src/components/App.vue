@@ -30,6 +30,7 @@
 
 <script>
   import {
+    ROUTE_BUILDER,
     ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
@@ -48,6 +49,12 @@
       AppNavbar,
       OnboardingPanel
     },
+    watch: {
+      route_name: {
+        handler: 'checkRoute',
+        immediate: true
+      }
+    },
     data() {
       return {
         show_onboarding_modal: true
@@ -59,7 +66,6 @@
       ]),
       route_name() {
         return _.get(this.$route, 'name', '')
-
       },
       show_navbar() {
         return this.route_name == ROUTE_PIPES ? false : true
@@ -82,6 +88,10 @@
         return true
       },
       config_show_onboarding() {
+        // don't ever show the onboarding modal when the user enters via the builder
+        if (this.route_name == ROUTE_BUILDER)
+          return false
+
         // we have to do 'config_show_onboarding' as a computed value since
         // we need to wait to check if we have an active user or not
         if (this.active_user_eid.length == 0)
@@ -103,6 +113,12 @@
       ...mapGetters([
         'getActiveUser'
       ]),
+      checkRoute() {
+        if (this.route_name == ROUTE_BUILDER) {
+          this.show_onboarding_modal = false
+          this.updateOnboardingConfig()
+        }
+      },
       updateOnboardingConfig() {
         var cfg = _.get(this.getActiveUser(), 'config', {})
         if (_.isArray(cfg))
