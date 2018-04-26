@@ -10,7 +10,7 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4"></service-icon>
+        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" />
         <div class="flex-fill flex flex-column ml2">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
@@ -214,7 +214,8 @@
     watch: {
       connection: {
         handler: 'initConnection',
-        immediate: true
+        immediate: true,
+        deep: true
       },
       'edit_connection.alias': function(val, old_val) {
         var alias = val
@@ -229,7 +230,7 @@
     data() {
       return {
         ss_errors: {},
-        edit_connection: _.assign({}, defaultAttrs(), this.connection)
+        edit_connection: defaultAttrs()
       }
     },
     computed: {
@@ -328,6 +329,7 @@
       },
       createPendingConnection(item) {
         var attrs = _.assign({}, this.edit_connection, {
+          eid_status: OBJECT_STATUS_PENDING,
           name: item.service_name,
           connection_type: item.connection_type
         })
