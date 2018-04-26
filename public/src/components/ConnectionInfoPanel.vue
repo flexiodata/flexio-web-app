@@ -184,7 +184,7 @@
       KeypairItem
     },
     watch: {
-      'connection_info': function(val, old_val) {
+      connection_info() {
         this.$emit('update:connection', this.getConnection())
       }
     },

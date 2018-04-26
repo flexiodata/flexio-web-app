@@ -82,7 +82,9 @@
         </form>
 
         <div class="mt4" v-if="is_http">
-          <connection-info-panel :connection.sync="edit_connection" />
+          <connection-info-panel
+            :connection.sync="edit_connection"
+          />
         </div>
         <div class="mt4" v-else>
           <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy ttu fw6 f6">
