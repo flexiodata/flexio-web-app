@@ -103,10 +103,6 @@ const mutations = {
             code = code.replace(regex, JSON.stringify(val, null, 2))
           })
           break
-        case 'input':
-          var val = _.get(p, 'value', '')
-          code = code.replace(regex, JSON.stringify(val, null, 2))
-          break
       }
     })
 

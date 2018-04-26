@@ -7,6 +7,7 @@
       class="pb3 mid-gray marked"
       v-html="description"
       v-if="description.length > 0"
+      v-show="is_active"
     >
     </div>
     <el-form
@@ -87,7 +88,19 @@
       </el-form-item>
     </el-form>
     <div v-show="is_before_active">
-      TODO
+      <div class="mb2 bt b--black-10"></div>
+      <table>
+        <tbody>
+          <tr
+            v-for="(val, key) in form_values"
+            :key="key"
+          >
+            <td class="v-top pa1"><span class="fw6">{{key}}:</span></td>
+            <td class="v-top pa1">{{ JSON.stringify(val, null, 2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt2 bt b--black-10"></div>
     </div>
   </div>
 </template>
