@@ -339,6 +339,15 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function email(\Flexio\Api\Request $request)
+    {
+        $f = fopen('php://input', 'r');
+        \Flexio\Api\Trigger::handleEmail($f);
+
+        $result = array('success' => true);
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function cron(\Flexio\Api\Request $request)
     {
         $requesting_user_eid = $request->getRequestingUser();
