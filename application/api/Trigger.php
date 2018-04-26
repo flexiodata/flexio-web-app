@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Trigger
 {
-    public static function handleEmail($stream, string $pipe_eid = null) // TODO: add function parameter
+    public static function handleEmail($stream)
     {
         // if eid is specified, the pipe with the given eid will be
         // run, otherwise, the first part of the email subject will
@@ -43,18 +43,32 @@ class Trigger
         $parser = \Flexio\Services\Email::parseResource($stream);
 
         // STEP 3: determine where to route the email; the pipe to launch
-        // is the first part of the email; e.g. <pipe_eid>@email.flex.io
+        // is the first part of the email; e.g. <owner>/<pipe>@email.flex.io
 
-        if (!isset($pipe_eid))
+        $user_and_pipe = null;
+
+        $email_to_addresses = $parser->getTo();
+        if (count($email_to_addresses) > 0)
         {
-            $email_to_addresses = $parser->getTo();
-            if (count($email_to_addresses) > 0)
+            $primary_to_address = trim($email_to_addresses[0], " \t\n\r\0\x0B<>");
+            $email_to_parts = explode("@", $primary_to_address, 2);
+            if (count($email_to_parts) == 2)
             {
-                $primary_to_address = trim($email_to_addresses[0], " \t\n\r\0\x0B<>");
-                $email_to_parts = explode("@", $primary_to_address, 2);
-                $pipe_eid = $email_to_parts[0];
+                $to_part = $email_to_parts[0];
+
+                $user_and_pipe = explode("@", $primary_to_address, 2);
+                if (count($user_and_pipe) != 2)
+                    $user_and_pipe = null;
             }
         }
+
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Email address must specify user and pipe identifier");
+
+
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user_and_pipe[0], $user_and_pipe[1]);
+        if (!$pipe_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object could not be resolved/found");
 
         // STEP 4: trigger the appropriate process with the email as an input
         $process = false;
@@ -62,7 +76,7 @@ class Trigger
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object not found");
 
             $pipe_properties = $pipe->get();
             $process_properties = array(
@@ -84,6 +98,7 @@ class Trigger
                                               'email-from-display' => $from_addresses[0]['display']);
             }
 
+            /*
             // save the email attachments as streams, and if there
             // are any attachments, run the pipe with the attachments
             $streams = self::saveAttachmentsToStreams($parser, $process);
@@ -92,6 +107,7 @@ class Trigger
                 // TODO: add the streams to the process; stdin only allows
                 // one; use some other technique?
             }
+            */
 
 
             // run the pipe
