@@ -122,6 +122,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
+  import ConnectionInfo from './mixins/connection-info'
   import Validation from './mixins/validation'
 
   const defaultRights = () => {
@@ -206,7 +207,7 @@
         default: 'add'
       }
     },
-    mixins: [Validation],
+    mixins: [ConnectionInfo, Validation],
     components: {
       ServiceList,
       ServiceIcon,
@@ -354,8 +355,21 @@
         })
       },
       initConnection() {
-        this.edit_connection = _.cloneDeep(this.connection)
+        var connection = _.cloneDeep(this.connection)
+        this.edit_connection = connection
         this.updateConnection(this.edit_connection)
+
+        if (this.mode == 'add' && _.get(connection, 'alias', '').length == 0) {
+          var service_name = this.getConnectionServiceName(connection)
+          connection.alias = service_name.trim()
+          connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
+        }
+
+        // we have to do this to force watcher validation
+        this.$nextTick(() => {
+          this.edit_connection = connection
+          this.updateConnection(this.edit_connection)
+        })
       },
       updateConnection(attrs) {
         var connection_info = _.get(attrs, 'connection_info', {})
