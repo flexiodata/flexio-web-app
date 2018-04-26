@@ -306,6 +306,12 @@
         return ''
       }
     },
+    mounted() {
+      // TODO: this is crude, but it's the best way right now of getting the connection info
+      //       back to the connection edit panel (even if we never edit anything)
+      this.reset()
+      this.$nextTick(() => { this.emitChange() })
+    },
     methods: {
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
