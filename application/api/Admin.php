@@ -341,7 +341,7 @@ class Admin
 
     public static function email(\Flexio\Api\Request $request)
     {
-        $f = fopen('php://stdin', 'r');
+        $f = fopen('php://input', 'r');
         \Flexio\Api\Trigger::handleEmail($f);
 
         $result = array('success' => true);

@@ -1,16 +1,11 @@
 <template>
   <article
-    class="css-list-item mv3-l pv3 pv2a-l ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
+    class="css-list-item mv3-l pv3 ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
     :class="isTrash ? 'css-trash-item' : 'pointer'"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
-      <div class="flex-none mr2">
-        <service-icon :type="input_type" class="dib v-mid br2 square-3"></service-icon>
-        <i class="material-icons md-24 black-40 v-mid rotate-270" style="margin: 0 -4px" v-if="false">arrow_drop_down</i>
-        <service-icon :type="output_type" class="dib v-mid br2 square-3 ml2"></service-icon>
-      </div>
-      <div class="flex-fill mh2 fw6 f6 f5-ns">
+      <div class="flex-fill mr2 fw6 f6 f5-ns">
         <div class="flex flex-row items-center">
           <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 css-list-title">{{item.name}}</h3>
           <div class="dib f8 silver pv1 ph2 ml2 bg-black-05 br1" v-if="item.alias">{{item.alias}}</div>
@@ -19,22 +14,20 @@
           <h4 class="f6 fw4 mt1 mb0 mid-gray lh-copy">{{item.description}}</h4>
         </div>
       </div>
-      <div class="dn db-l flex-none mh3 f7 fw6 mid-gray" style="min-width: 160px" v-if="false">
-        <span
-          class="hint--bottom hint--multiline"
-          :aria-label="follower_tooltip"
-        >{{follower_str}} (@{{owner_username}})</span>
+      <div class="flex-none mr4 dn db-ns">
+        <ServiceIcon :type="input_type" class="dib v-mid br2 square-3 mr2" v-show="input_type.length > 0" />
+        <ServiceIcon :type="output_type" class="dib v-mid br2 square-3" v-show="output_type.length > 0" />
       </div>
-      <div class="flex-none mr2 nt3 nb3" v-if="!isTrash">
+      <div class="flex-none mr1 nt3 nb3" v-if="!isTrash">
         <div class="pv3" @click.stop="toggleScheduled">
-          <toggle-button
+          <ToggleButton
             class="hint--bottom"
             style="display: block"
             :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
             :checked="is_scheduled"
             :prevent-default="true"
             @click.stop="toggleScheduled"
-          ></toggle-button>
+          />
         </div>
       </div>
       <div class="flex-none pl2 nt3 nr3 nb3" @click.stop>
@@ -89,10 +82,10 @@
     },
     computed: {
       input_type() {
-        return this.getTaskConnectionType(TASK_OP_INPUT)
+        return ''
       },
       output_type() {
-        return this.getTaskConnectionType(TASK_OP_OUTPUT)
+        return ''
       },
       has_description() {
         return _.get(this.item, 'description', '').length > 0
@@ -128,10 +121,6 @@
       }
     },
     methods: {
-      getTaskConnectionType(task_op) {
-        var task = _.find(this.item.task, { op: task_op })
-        return _.get(task, 'metadata.connection_type')
-      },
       openPipe() {
         if (this.isTrash)
           return

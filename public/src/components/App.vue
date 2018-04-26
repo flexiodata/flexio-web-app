@@ -168,9 +168,17 @@
 
     &:hover {
       background-color: @bg-near-white;
-      border-color: rgba(0,0,0,0.1);
-      border-bottom-color: rgba(0,0,0,0.15);
+      border-color: rgba(0,0,0,0.025);
+      border-bottom-color: rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px -5px rgba(0,0,0,0.2)
     }
+    /*
+    &:hover {
+      background-color: #eef8ff;
+      border-color: #aad8ff;
+      box-shadow: 0 4px 8px -4px rgba(0,0,0,0.2)
+    }
+    */
   }
 
   .css-list-item:not(.css-trash-item):hover .css-list-title {
