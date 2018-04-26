@@ -56,17 +56,24 @@ class Trigger
             {
                 $to_part = $email_to_parts[0];
 
-                $user_and_pipe = explode("@", $primary_to_address, 2);
+                $user_and_pipe = explode("/", $to_part, 2);
                 if (count($user_and_pipe) != 2)
                     $user_and_pipe = null;
             }
         }
 
-        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+        if (!$user_and_pipe)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Email address must specify user and pipe identifier");
 
+        $user = $user_and_pipe[0];
+        $pipe = $user_and_pipe[1];
 
-        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user_and_pipe[0], $user_and_pipe[1]);
+        // if the user is a username, and not already a user eid, resolve it to an eid
+        $user_eid = \Flexio\Object\User::getEidFromUsername($user);
+        if ($user_eid)
+            $user = $user_eid;
+        
+        $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user, $pipe);
         if (!$pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object could not be resolved/found");
 
