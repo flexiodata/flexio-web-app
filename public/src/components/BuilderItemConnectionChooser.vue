@@ -1,16 +1,15 @@
 <template>
   <div>
     <div class="tl pb3">
-      <ServiceIcon class="square-4" :type="ctype" v-if="false" />
+      <service-icon class="square-4" :type="ctype" v-if="false" />
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="ctype.length > 0">Connect to {{service_name}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
     </div>
     <p class="ttu fw6 f7 moon-gray" v-if="is_active && has_connections">Use an existing connection</p>
     <div class="bt b--light-gray" v-show="is_active || is_before_active">
-      <ConnectionChooserList
+      <connection-chooser-list
         class="mb3 overflow-auto"
         style="max-height: 260px"
-        layout="list"
         :connection="store_connection"
         :connection-type-filter="ctype"
         :show-selection="true"
