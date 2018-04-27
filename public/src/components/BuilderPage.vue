@@ -19,11 +19,21 @@
           :show-insert-buttons="false"
         />
         <div
-          class="dn db-l ml4 pa3 bg-white br2 overflow-auto css-dashboard-box sticky"
+          class="dn db-l ml4 pa3 bg-white br2 css-dashboard-box sticky"
           style="max-height: 30rem; min-width: 20rem; max-width: 33%"
         >
-          <div class="ttu b silver f7 pb2 mb3 bb b--black-10">Output:</div>
-          <pre class="ma0 code f6">{{code}}</pre>
+          <div class="h-100 flex flex-column">
+            <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
+              <div class="flex-fill fw6 gray">Output</div>
+            </div>
+            <code-editor
+              class="flex-fill overflow-auto"
+              lang="javascript"
+              :options="{ lineNumbers: false, readOnly: true }"
+              :update-on-val-change="true"
+              :val="code"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -36,6 +46,7 @@
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   const test_def = {
     "title": "Test Prompts",
@@ -201,7 +212,8 @@
   export default {
     components: {
       Spinner,
-      BuilderList
+      BuilderList,
+      CodeEditor
     },
     watch: {
       slug: {

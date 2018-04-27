@@ -21,14 +21,26 @@
   export default {
     props: {
       'val': {
+        type: String,
         default: ''
       },
       'lang': {
+        type: String,
         default: 'python'
+      },
+      'update-on-val-change': {
+        type: Boolean,
+        default: false
       },
       'options': {
         type: Object,
         default: () => { return {} }
+      }
+    },
+    watch: {
+      val: {
+        handler: 'updateFromVal',
+        immediate: true
       }
     },
     data() {
@@ -86,11 +98,18 @@
       },
       setValue(val) {
         this.code_text = val
-        this.editor.setValue(val)
+        if (this.editor)
+          this.editor.setValue(val)
       },
       reset() {
         this.code_text = this.val
-        this.editor.setValue(this.val)
+        if (this.editor)
+          this.editor.setValue(this.val)
+      },
+      updateFromVal() {
+        if (this.updateOnValChange) {
+          this.setValue(this.val)
+        }
       }
     }
   }
