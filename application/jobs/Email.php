@@ -30,7 +30,7 @@ EXAMPLE:
         "body_text": "",
         "body_html": "",
         "attachments": [
-            {"file": "<path>"},
+            {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
             {"file": "<path>"},
             "<path>" // alternative format; string
             ...
