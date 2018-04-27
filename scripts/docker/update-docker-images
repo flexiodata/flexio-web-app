@@ -1,0 +1,15 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $DIR/fxruntime
+cp $DIR/../python_include/flexio.py ./
+cp $DIR/../nodejs_include/index.js ./
+cp $DIR/../nodejs_include/run.js ./
+cp $DIR/../nodejs_include/render.js ./
+cp $DIR/../nodejs_include/package.json ./
+docker build -t fxruntime .
+popd
+
+
+
