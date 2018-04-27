@@ -35,19 +35,9 @@
   } from '../constants/connection-type'
   import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import * as connections from '../constants/connection-info'
-  import Btn from './Btn.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import UrlInputList from './UrlInputList.vue'
-
-  const defaultAttrs = () => {
-    return {
-      eid: null,
-      name: 'New Pipe',
-      alias: '',
-      description: ''
-    }
-  }
 
   export default {
     props: {
@@ -57,7 +47,6 @@
       }
     },
     components: {
-      Btn,
       FileExplorerBar,
       FileChooserList,
       UrlInputList
