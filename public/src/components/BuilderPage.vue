@@ -46,8 +46,8 @@
     "prompts": [
       {
         "element": "form",
-        "title": "This is the title",
-        "description": "This is the description. Text is written in Markdown so it can be quite descriptive.",
+        "title": "Standard form",
+        "description": "This is the form description. Text is written in Markdown so it can be quite descriptive.",
         "label_position": "left",
         "label_width": "9rem",
         "form_items": [
@@ -136,27 +136,32 @@
         ]
       },
       {
+        "title": "Connection chooser with single connection type",
         "element": "connection-chooser",
         "variable": "connection_chooser",
         "connection_type": "dropbox"
       },
       {
+        "title": "Connection chooser with all connection",
         "element": "connection-chooser",
         "variable": "connection_chooser2",
         "connection_type": ""
       },
       {
+        "title": "Normal file chooser",
         "element": "file-chooser",
         "variable": "file_chooser",
         "connection": "connection_chooser"
       },
       {
+        "title": "File chooser (folders only)",
         "element": "file-chooser",
         "variable": "file_chooser2",
         "connection": "connection_chooser",
         "folders_only": true
       },
       {
+        "title": "File chooser (folders only, single select)",
         "element": "file-chooser",
         "variable": "file_chooser3",
         "connection": "connection_chooser",
@@ -164,6 +169,7 @@
         "allow_multiple": false
       },
       {
+        "title": "File chooser (single select, file selection only)",
         "element": "file-chooser",
         "variable": "file_chooser4",
         "connection": "connection_chooser",
