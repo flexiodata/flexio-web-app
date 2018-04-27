@@ -151,6 +151,26 @@
         "connection": "connection_chooser"
       },
       {
+        "element": "file-chooser",
+        "variable": "file_chooser2",
+        "connection": "connection_chooser",
+        "folders_only": true
+      },
+      {
+        "element": "file-chooser",
+        "variable": "file_chooser3",
+        "connection": "connection_chooser",
+        "folders_only": true,
+        "allow_multiple": false
+      },
+      {
+        "element": "file-chooser",
+        "variable": "file_chooser4",
+        "connection": "connection_chooser",
+        "allow_multiple": false,
+        "allow_folders": false
+      },
+      {
         "element": "summary-page"
       }
     ],

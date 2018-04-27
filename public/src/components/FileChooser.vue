@@ -13,6 +13,9 @@
         ref="file-chooser"
         :connection="connection"
         :path="connection_path"
+        :folders-only="foldersOnly"
+        :allow-multiple="allowMultiple"
+        :allow-folders="allowFolders"
         @open-folder="openFolder"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'filechooser'"
@@ -44,6 +47,18 @@
       'connection': {
         type: Object,
         required: true
+      },
+      'folders-only': {
+        type: Boolean,
+        default: false
+      },
+      'allow-multiple': {
+        type: Boolean,
+        default: true
+      },
+      'allow-folders': {
+        type: Boolean,
+        default: true
       }
     },
     components: {

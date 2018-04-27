@@ -12,6 +12,7 @@
         style="max-height: 24rem"
         :connection="store_connection"
         @selection-change="updateFiles"
+        v-bind="chooser_options"
         v-if="ceid"
       />
     </div>
@@ -58,11 +59,11 @@
         prompts: state => state.builder.prompts,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
-      id() {
+      prompt_id() {
         return _.get(this.item, 'id', '')
       },
       prompt() {
-        return _.find(this.prompts, { id: this.id }, {})
+        return _.find(this.prompts, { id: this.prompt_id }, {})
       },
       ceid() {
         return _.get(this.prompt, 'connection_eid', null)
@@ -78,6 +79,10 @@
       },
       is_before_active() {
         return this.index < this.active_prompt_idx
+      },
+      chooser_options() {
+        var opts = _.pick(this.prompt, ['folders_only', 'allow_multiple', 'allow_folders'])
+        return _.mapKeys(opts, (val, key) => { return _.kebabCase(key) })
       }
     },
     methods: {
