@@ -62,7 +62,7 @@
           sel_cls = 'bg-white'
 
         if (_.get(this, 'layout', '') == 'list')
-          return 'pointer pa3 bb b--light-gray darken-05 ' + sel_cls
+          return 'css-item pointer pa3 darken-05 ' + sel_cls
            else
           return 'pointer dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
       }
@@ -74,3 +74,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .css-item + .css-item {
+    border-top: 1px solid #eee;
+  }
+</style>

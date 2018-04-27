@@ -5,10 +5,18 @@
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="ctype.length > 0">Connect to {{service_name}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
     </div>
-    <p class="ttu fw6 f7 moon-gray" v-if="is_active && has_connections">Use an existing connection</p>
-    <div class="bt b--light-gray" v-show="is_active || is_before_active">
+    <div v-if="is_before_active">
+      <connection-chooser-item
+        class="mb3 bt bb b--black-10"
+        :item="store_connection"
+        :connection-eid="ceid"
+        :show-selection-checkmark="true"
+      />
+    </div>
+    <div v-if="is_active">
+      <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <connection-chooser-list
-        class="mb3 overflow-auto"
+        class="mb3 bt bb b--light-gray overflow-auto"
         style="max-height: 260px"
         :connection="store_connection"
         :connection-type-filter="ctype"
@@ -16,8 +24,8 @@
         @item-activate="chooseConnection"
         v-if="has_connections"
       />
-      <p class="ttu fw6 f7 moon-gray" v-if="is_active && has_connections">&mdash; or &mdash;</p>
-      <div class="mt3" v-show="is_active">
+      <p class="ttu fw6 f7 moon-gray" v-if="has_connections">&mdash; or &mdash;</p>
+      <div class="mt3">
         <el-button
           class="ttu b"
           type="plain"
@@ -54,6 +62,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
+  import ConnectionChooserItem from './ConnectionChooserItem.vue'
   import MixinConnectionInfo from './mixins/connection-info'
 
   export default {
@@ -71,7 +80,8 @@
     components: {
       ServiceIcon,
       ConnectionEditPanel,
-      ConnectionChooserList
+      ConnectionChooserList,
+      ConnectionChooserItem
     },
     data() {
       return {
