@@ -81,7 +81,7 @@
       selected_items() {
         var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
-          : this.last_selected_item
+          : [ this.last_selected_item ]
 
         return this.allowFolders ? items : _.reject(items, { type: VFS_TYPE_DIR })
       },
