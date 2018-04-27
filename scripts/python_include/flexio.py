@@ -398,7 +398,7 @@ class PipeFunctions(object):
 
     # general purpose task proxy for testing/debugging
     def task(self, definition):
-        proxy.invoke('runJob', [json.dumps(definition)])
+        return proxy.invoke('runJob', [json.dumps(definition)])
 
     # (mostly) standard task bindings
     def connect(self, params):

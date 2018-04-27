@@ -342,6 +342,9 @@ class Admin
     public static function email(\Flexio\Api\Request $request)
     {
         $f = fopen('php://input', 'r');
+        if ($f === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
         \Flexio\Api\Trigger::handleEmail($f);
 
         $result = array('success' => true);

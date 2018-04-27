@@ -20,63 +20,67 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: basic email handling
+        // ENDPOINT: POST /:userid/pipes
+
+
+        // SETUP
+        $apibase = \Flexio\Tests\Util::getTestHost() . '/v1';
+        $username = \Flexio\Base\Util::generateHandle();
+        $password = \Flexio\Base\Password::generate();
+        $userid = \Flexio\Tests\Util::createUser($username, null, $password);
+        $token = \Flexio\Tests\Util::createToken($userid);
+
+
+        // TEST: create a new pipe
 
         // BEGIN TEST
-        $username = \Flexio\Base\Util::generateHandle();
         $alias = \Flexio\Base\Util::generateHandle();
-        $user_eid = \Flexio\Tests\Util::createUser($username);
-        $pipe = \Flexio\Object\Pipe::create(json_decode('{
-            "alias": "'.$alias.'",
-            "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "${input}"
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "alias": "'.$alias.'",
+                "task": {
+                    "op": "echo",
+                    "params": {
+                        "msg": "From: ${email-from-display} <${email-from}>; Message: ${input}; Files: ${files}"
+                    }
                 }
-            }
-        }',true));
-        $pipe->setOwner($user_eid);
-        $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
-                \Flexio\Object\Right::TYPE_READ_RIGHTS,
-                \Flexio\Object\Right::TYPE_WRITE_RIGHTS,
-                \Flexio\Object\Right::TYPE_READ,
-                \Flexio\Object\Right::TYPE_WRITE,
-                \Flexio\Object\Right::TYPE_DELETE,
-                \Flexio\Object\Right::TYPE_EXECUTE
-            )
+            }'
         );
+        \Flexio\Tests\Util::callApi($params);
+
         $content = getSampleEmailWithAttachment($username, $alias);
         $path = \Flexio\Base\File::getTempFilename('txt');
         file_put_contents($path, $content);
         $handle = fopen($path, 'r');
-        $process_info = \Flexio\Api\Trigger::handleEmail($handle, $pipe->getEid());
+
+        ob_start();
+        \Flexio\Api\Trigger::handleEmail($handle, true);
+        $actual = ob_get_clean();
+
         fclose($handle);
         unlink($path);
-        $process_eid = $process_info['eid'];
-        $process = \Flexio\Object\Process::load($process_eid);
-        $output = \Flexio\Jobs\StoredProcess::create($process)->getStdout();
-        $actual = $output->getReader()->read(100);
-        $expected = '
-        [
-            ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],
-            ["53","CRUNCHIES","PO BOX 5800","","ATLANTA","GA","30320","A","","30","0","2013/01/13"]
-        ]';
-        \Flexio\Tests\Check::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results);
+
+        $expected = "From: Test User <test@flex.io>; Message: \nThis is an email with a CSV attachment.\n\n\n\n; Files: {\"Vend_mast.csv\":{\"name\":\"Vend_mast.csv\",\"extension\":\"csv\",\"size\":8695,\"content_type\":\"application\/octet-stream\"}}";
+        \Flexio\Tests\Check::assertString('A.1', 'EMAIL <username>/<alias>@pipes.flex.io; check for handling email input to a pipe',  $actual, $expected, $results);
     }
 }
 
 function getSampleEmailWithAttachment(string $username, string $alias)
 {
     // following is the raw text of an email with the following values:
-    // from: aaron@flex.io
+    // from: test@flex.io
     // to: $username/$alias@pipes.flex.io
     // subject: Attachment Test
     // body: This is an email with a CSV attachment.
     // attachment: Vend_mast.csv
 
     $data = <<<EOD
-From aaron@flex.io  Wed Aug  3 23:52:22 2016
-Return-Path: <aaron@flex.io>
+From test@flex.io  Wed Aug  3 23:52:22 2016
+Return-Path: <test@flex.io>
 X-Original-To: $username/$alias@pipes.flex.io
 Delivered-To: $username/$alias@pipes.flex.io
 Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on0052.outbound.protection.outlook.com [104.47.36.52])
@@ -94,7 +98,7 @@ Received: from BN6PR12MB1233.namprd12.prod.outlook.com (10.168.227.19) by
 Received: from BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) by
  BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) with mapi id
  15.01.0549.022; Wed, 3 Aug 2016 23:53:19 +0000
-From: Aaron Williams <aaron@flex.io>
+From: Test User <test@flex.io>
 To: "$username/$alias@pipes.flex.io" <$username/$alias@pipes.flex.io>
 Subject: Attachment Test
 Thread-Topic: Attachment Test
@@ -105,7 +109,7 @@ Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: yes
 X-MS-TNEF-Correlator:
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=aaron@flex.io;
+authentication-results: spf=none (sender IP is ) smtp.mailfrom=test@flex.io;
 x-originating-ip: [168.93.116.250]
 x-ms-office365-filtering-correlation-id: 8ae1131a-6f87-498c-b862-08d3bbf95838
 x-microsoft-exchange-diagnostics: 1;BN6PR12MB1233;6:xi+E9EQFCeoG4V8rRlWmsfsDhmdK/PxJAYRfNWt5KOiVp8PpZid2c/U7vDS2wrEXSY1Vf6SVyv4aP0MVHJHvG69i4an940i7JHrf+232nthIznK7F9gpMR8767P4ksdZjubxie6x0YzG90mRwGZ/QcI5k05oBxqDPdrItuIpQj/DCMfsK0UtQ0RT2r9QdaJVy3oRU5gNg4ejpiyEHXuLyLIeLqQfTaSkDNznq1OtRq8pSLXmoNNhQcMYfkyiBoAIpDih20lI0FYDS9P6CHBpDDW19P4OHv0XOeQ6KPtSUmko54blw2IPA6MDKsedU+o7;5:jkqqPbWAI53qk0XAFktwK4MX/fxjNJy8/OZL7wd7fRkWZQlOXSd/Op14agKyEZJKWUI99kB0DQLaGx8KMj/pLhPWZKU1xFkOsMZttqDwGSn5LWCSmPgnTT90mi7lQuukk76RkIGNVfoCQjsc9S4N7Q==;24:TL9klAIbAVn9SjfKlkHNjRL7i6j4No/+T4WW90cDQkNXUd66nKZUzlopA4Kd/AUOFpgPRLPfEbrjhSUpAl4Ljvv0LvvTdCiOkJQY4V6tZkg=;7:zq3arcxSlcUCuCWZ0dvLcoebOvAUv0xMP1lCUTqY8yFa4N9OFWHX/HenFkhAmtp1Pbi/aFCKurIfgcqpXeSvjjac//0Ww0e1PScGE/Bwj6wkHUnL+vMcE+ndr4fsbHbwYq3Uq32N+RVtzV+YxE4nWbdtg5YXDwo7GVMgv1p3uWldLb5iT0ps8pWq7+R2zmeBIPRrmgFlQb9HiI0EZnxJjFZ8WBe3OjVgrYxUJ0wi3pH3McfpRAXm10RzbDUOLlZd

@@ -346,16 +346,16 @@ class ScriptHost
     private $output_streams = [];
     private $output_writers = [];
 
-    
-    
+
+
     // I'd like to add these type checks back, but I was getting an error running this pipe:
     // Flexio.pipe()
     //   .javascript(function(ctx) {
     //        ctx.pipe.create("/google-sheets-bwilliams/BensNewSheet222")
     //        ctx.pipe.insert("/google-sheets-bwilliams/BensNewSheet222", [["a","b","c"]])
     //    })
-    
-    
+
+
     //public function setProcess(\Flexio\IFace\Process $process)
     public function setProcess($process)
     {

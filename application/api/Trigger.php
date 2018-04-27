@@ -18,9 +18,9 @@ namespace Flexio\Api;
 
 class Trigger
 {
-    public static function handleEmail($stream)
+    public static function handleEmail($stream, bool $echo_result = false) // echo_result is available for testing, but not normally necessary
     {
-        // STEP 21: parse the stream
+        // STEP 1: parse the stream
         $parser = \Flexio\Services\Email::parseResource($stream);
 
         // STEP 2: determine where to route the email; the pipe to launch
@@ -59,61 +59,85 @@ class Trigger
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object could not be resolved/found");
 
         // STEP 3: trigger the appropriate process with the email as an input
-        $process = false;
-        try
+        $pipe = \Flexio\Object\Pipe::load($pipe_eid);
+        if ($pipe->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object not found");
+
+        $pipe_properties = $pipe->get();
+        $process_properties = array(
+            'parent_eid' => $pipe_properties['eid'],
+            'task' => $pipe_properties['task'],
+            'owned_by' => $pipe_properties['owned_by']['eid'],
+            'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
+        );
+        $process = \Flexio\Object\Process::create($process_properties);
+        $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
+
+        // create the process
+        $engine = \Flexio\Jobs\StoredProcess::create($process);
+
+        // set an environment variable (parameter) with the "from" email address
+        $process_email_params = array();
+        $from_addresses = $parser->getFrom();
+        if (count($from_addresses) > 0)
         {
-            $pipe = \Flexio\Object\Pipe::load($pipe_eid);
-            if ($pipe->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object not found");
-
-            $pipe_properties = $pipe->get();
-            $process_properties = array(
-                'parent_eid' => $pipe_properties['eid'],
-                'task' => $pipe_properties['task'],
-                'owned_by' => $pipe_properties['owned_by']['eid'],
-                'created_by' => $pipe_properties['owned_by']['eid'] // TODO: we need to determine user based on email (e.g. owner, or public)
-            );
-            $process = \Flexio\Object\Process::create($process_properties);
-            $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
-
-            // create the process
-            $engine = \Flexio\Jobs\StoredProcess::create($process);
-
-            // set an environment variable (parameter) with the "from" email address
-            $process_email_params = array();
-            $from_addresses = $parser->getFrom();
-            if (count($from_addresses) > 0)
-            {
-                $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
-                $process_email_params = array('email-from' => $from_addresses[0]['email'],
-                                              'email-from-display' => $from_addresses[0]['display']);
-            }
-            $engine->setParams($process_email_params);
-
-            // set the process stdin with the email message body
-            $message = $parser->getMessageText();
-            $message_stream = self::createStreamFromMessage($message);
-            $engine->setStdin($message_stream); // set the body of the
-
-            // add any attachments to the process files array
-            $streams = self::saveAttachmentsToStreams($parser);
-            foreach ($streams as $s)
-            {
-                $engine->addFile($s->getName(), $s);
-            }
-
-            // run the process
-            $engine->run(false); // TODO: run in background?
+            $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
+            $process_email_params = array('email-from' => $from_addresses[0]['email'],
+                                            'email-from-display' => $from_addresses[0]['display']);
         }
-        catch (\Flexio\Base\Exception $e)
+        $engine->setParams($process_email_params);
+
+        // set the process stdin with the email message body
+        $message = $parser->getMessageText();
+        $message_stream = self::createStreamFromMessage($message);
+        $engine->setStdin($message_stream); // set the body of the
+
+        // add any attachments to the process files array
+        $streams = self::saveAttachmentsToStreams($parser);
+        foreach ($streams as $s)
         {
+            $engine->addFile($s->getName(), $s);
         }
 
-        // STEP 4: if the process ran, return the info
-        if ($process === false)
-            return false;
+        // run the process
+        $engine->run(false);
 
-        return $process->get();
+        // if the echo result flag is set, then return the result of hte process
+        if ($echo_result === true)
+        {
+            if ($engine->hasError())
+            {
+                $error = $engine->getError();
+                \Flexio\Api\Response::sendError($error);
+                return; // TODO: exit(0) in equivalent pipe run code; return here so we can call function directly in test suite
+            }
+
+            $stream = $engine->getStdout();
+            $stream_info = $stream->get();
+            if ($stream_info === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $mime_type = $stream_info['mime_type'];
+            $start = 0;
+            $limit = PHP_INT_MAX;
+            $content = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            $response_code = $engine->getResponseCode();
+
+            if ($mime_type !== \Flexio\Base\ContentType::FLEXIO_TABLE)
+            {
+                // return content as-is
+                header('Content-Type: ' . $mime_type, true, $response_code);
+            }
+            else
+            {
+                // flexio table; return application/json in place of internal mime
+                header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
+                $content = json_encode($content);
+            }
+
+            echo($content);
+            return; // TODO: exit(0) in equivalent pipe run code; return here so we can call function directly in test suite
+        }
     }
 
     private static function createStreamFromMessage(string $message) : \Flexio\Base\Stream
