@@ -10,7 +10,6 @@
       :item="item"
       :layout="layout"
       :connection-eid="connection_eid"
-      :show-selection="showSelection"
       :show-selection-checkmark="showSelectionCheckmark"
       @activate="onItemActivate"
     />
@@ -32,17 +31,13 @@
         type: String,
         default: ''
       },
-      'show-selection': {
-        type: Boolean,
-        default: false
+      'layout': {
+        type: String, // 'list' or 'grid'
+        default: 'list'
       },
       'show-selection-checkmark': {
         type: Boolean,
         default: false
-      },
-      'layout': {
-        type: String, // 'list' or 'grid'
-        default: 'list'
       }
     },
     components: {

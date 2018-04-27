@@ -30,10 +30,6 @@
         type: String,
         required: false
       },
-      'show-selection': {
-        type: Boolean,
-        default: false
-      },
       'show-selection-checkmark': {
         type: Boolean,
         default: false
