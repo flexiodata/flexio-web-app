@@ -83,7 +83,7 @@ class Trigger
         {
             $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
             $process_email_params = array('email-from' => $from_addresses[0]['email'],
-                                            'email-from-display' => $from_addresses[0]['display']);
+                                          'email-from-display' => $from_addresses[0]['display']);
         }
         $engine->setParams($process_email_params);
 
