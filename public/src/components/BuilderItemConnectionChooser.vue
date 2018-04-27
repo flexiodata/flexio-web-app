@@ -1,9 +1,15 @@
 <template>
   <div>
     <div class="tl pb3">
-      <service-icon class="square-4" :type="ctype" v-if="false" />
-      <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="ctype.length > 0">Connect to {{service_name}}</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="title.length > 0">{{title}}</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2" v-else-if="ctype.length > 0">Connect to {{service_name}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
+    </div>
+    <div
+      class="pb3 mid-gray marked"
+      v-html="description"
+      v-show="is_active && description.length > 0"
+    >
     </div>
     <div v-if="is_active">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
@@ -56,6 +62,7 @@
 </template>
 
 <script>
+  import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
@@ -93,6 +100,18 @@
       ...mapState({
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
+      is_before_active() {
+        return this.index < this.active_prompt_idx
+      },
+      title() {
+        return _.get(this.item, 'title', '')
+      },
+      description() {
+        return marked(_.get(this.item, 'description', ''))
+      },
       ceid() {
         return _.get(this.item, 'connection_eid', null)
       },
@@ -117,12 +136,6 @@
       service_name() {
         return this.getConnectionInfo(this.ctype, 'service_name')
       },
-      is_active() {
-        return this.index == this.active_prompt_idx
-      },
-      is_before_active() {
-        return this.index < this.active_prompt_idx
-      }
     },
     methods: {
       ...mapGetters([

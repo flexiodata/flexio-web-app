@@ -169,9 +169,6 @@
         "connection": "connection_chooser",
         "allow_multiple": false,
         "allow_folders": false
-      },
-      {
-        "element": "summary-page"
       }
     ],
     "pipe_language": "javascript",

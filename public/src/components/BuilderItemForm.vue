@@ -105,8 +105,8 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import marked from 'marked'
+  import { mapState } from 'vuex'
 
   export default {
     props: {
@@ -141,23 +141,20 @@
       is_before_active() {
         return this.index < this.active_prompt_idx
       },
-      prompt() {
-        return _.get(this.$store, 'state.builder.prompts[' + this.index + ']')
-      },
       title() {
-        return _.get(this.prompt, 'title', 'Choose values')
+        return _.get(this.item, 'title', 'Choose values')
       },
       description() {
-        return marked(_.get(this.prompt, 'description', ''))
+        return marked(_.get(this.item, 'description', ''))
       },
       label_position() {
-        return _.get(this.prompt, 'label_position', 'top')
+        return _.get(this.item, 'label_position', 'top')
       },
       label_width() {
-        return _.get(this.prompt, 'label_width', '10rem')
+        return _.get(this.item, 'label_width', '10rem')
       },
       form_items() {
-        return _.get(this.prompt, 'form_items', [])
+        return _.get(this.item, 'form_items', [])
       }
     },
     methods: {

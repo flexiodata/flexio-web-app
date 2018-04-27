@@ -1,10 +1,13 @@
 <template>
   <div>
     <div class="tl pb3">
-      <div class="dib" v-if="false">
-        <TaskIcon class="br1 square-4" icon="insert_drive_file" bg-color="#0ab5f3" />
-      </div>
-      <h3 class="fw6 f3 mid-gray mt0 mb2">Choose files</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
+    </div>
+    <div
+      class="pb3 mid-gray marked"
+      v-html="description"
+      v-show="is_active && description.length > 0"
+    >
     </div>
     <div v-if="is_active">
       <file-chooser
@@ -33,6 +36,7 @@
 </template>
 
 <script>
+  import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
   import TaskIcon from './TaskIcon.vue'
   import FileChooser from './FileChooser.vue'
@@ -59,14 +63,20 @@
         prompts: state => state.builder.prompts,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
-      prompt_id() {
-        return _.get(this.item, 'id', '')
+      is_active() {
+        return this.index == this.active_prompt_idx
       },
-      prompt() {
-        return _.find(this.prompts, { id: this.prompt_id }, {})
+      is_before_active() {
+        return this.index < this.active_prompt_idx
+      },
+      title() {
+        return _.get(this.item, 'title', 'Choose files')
+      },
+      description() {
+        return marked(_.get(this.item, 'description', ''))
       },
       ceid() {
-        return _.get(this.prompt, 'connection_eid', null)
+        return _.get(this.item, 'connection_eid', null)
       },
       connections() {
         return this.getAllConnections()
@@ -74,14 +84,8 @@
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
       },
-      is_active() {
-        return this.index == this.active_prompt_idx
-      },
-      is_before_active() {
-        return this.index < this.active_prompt_idx
-      },
       chooser_options() {
-        var opts = _.pick(this.prompt, ['folders_only', 'allow_multiple', 'allow_folders'])
+        var opts = _.pick(this.item, ['folders_only', 'allow_multiple', 'allow_folders'])
         return _.mapKeys(opts, (val, key) => { return _.kebabCase(key) })
       }
     },
