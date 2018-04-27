@@ -87,10 +87,6 @@
       'override-item-cls': {
         type: Boolean,
         default: false
-      },
-      'auto-select-first-item': {
-        type: Boolean,
-        default: false
       }
     },
     components: {
@@ -149,9 +145,6 @@
     },
     created() {
       this.tryFetchConnections()
-
-      if (this.autoSelectFirstItem === true)
-        this.trySelectFirstItem()
     },
     methods: {
       ...mapGetters([
@@ -160,16 +153,6 @@
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
-      },
-      trySelectFirstItem() {
-        if (this.input_services.length == 0)
-        {
-          setTimeout(() => { this.trySelectFirstItem() }, 500)
-        }
-         else
-        {
-          this.onItemActivate(_.first(this.input_services))
-        }
       },
       onAddClick() {
         this.$emit('add')
