@@ -20,29 +20,10 @@ class Trigger
 {
     public static function handleEmail($stream)
     {
-        // if eid is specified, the pipe with the given eid will be
-        // run, otherwise, the first part of the email subject will
-        // be used
-/*
-        // STEP 1: save the email to a temporary file
-        $emailfile = \Flexio\Base\File::getTempFilename('txt');
-
-        $instream = fopen($stream, 'rb');
-        $outstream = fopen($emailfile, 'w');
-
-        while (!feof($instream))
-        {
-            fwrite($outstream, fread($instream, 4096));
-        }
-
-        fclose($instream);
-        fclose($outstream);
-        */
-
-        // STEP 2: parse the temporary file
+        // STEP 21: parse the stream
         $parser = \Flexio\Services\Email::parseResource($stream);
 
-        // STEP 3: determine where to route the email; the pipe to launch
+        // STEP 2: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <owner>/<pipe>@email.flex.io
 
         $user_and_pipe = null;
@@ -72,12 +53,12 @@ class Trigger
         $user_eid = \Flexio\Object\User::getEidFromUsername($user);
         if ($user_eid)
             $user = $user_eid;
-        
+
         $pipe_eid = \Flexio\Object\Pipe::getEidFromName($user, $pipe);
         if (!$pipe_eid)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Pipe object could not be resolved/found");
 
-        // STEP 4: trigger the appropriate process with the email as an input
+        // STEP 3: trigger the appropriate process with the email as an input
         $process = false;
         try
         {
@@ -95,6 +76,9 @@ class Trigger
             $process = \Flexio\Object\Process::create($process_properties);
             $process->setRights($pipe->getRights()); // processes inherit rights from the pipe
 
+            // create the process
+            $engine = \Flexio\Jobs\StoredProcess::create($process);
+
             // set an environment variable (parameter) with the "from" email address
             $process_email_params = array();
             $from_addresses = $parser->getFrom();
@@ -104,36 +88,39 @@ class Trigger
                 $process_email_params = array('email-from' => $from_addresses[0]['email'],
                                               'email-from-display' => $from_addresses[0]['display']);
             }
+            $engine->setParams($process_email_params);
 
-            /*
-            // save the email attachments as streams, and if there
-            // are any attachments, run the pipe with the attachments
-            $streams = self::saveAttachmentsToStreams($parser, $process);
+            // set the process stdin with the email message body
+            $message = $parser->getMessageText();
+            $message_stream = self::createStreamFromMessage($message);
+            $engine->setStdin($message_stream); // set the body of the
+
+            // add any attachments to the process files array
+            $streams = self::saveAttachmentsToStreams($parser);
             foreach ($streams as $s)
             {
-                // TODO: add the streams to the process; stdin only allows
-                // one; use some other technique?
+                $engine->addFile($s->getName(), $s);
             }
-            */
 
-
-            // run the pipe
-            $engine = \Flexio\Jobs\StoredProcess::create($process);
-            $engine->setParams($process_email_params);
-            $engine->run(false); // handleEmail should be run in background from email processing script
+            // run the process
+            $engine->run(false); // TODO: run in background?
         }
         catch (\Flexio\Base\Exception $e)
         {
         }
 
-        // STEP 5: delete the temporary file
-        //unlink($emailfile);
-
-        // if the process ran, return the info
+        // STEP 4: if the process ran, return the info
         if ($process === false)
             return false;
 
         return $process->get();
+    }
+
+    private static function createStreamFromMessage(string $message) : \Flexio\Base\Stream
+    {
+        $stream = \Flexio\Base\Stream::create();
+        $stream->buffer = (string)$message;     // shortcut to speed it up -- can also use getWriter()->write((string)$v)
+        return $stream;
     }
 
     private static function saveAttachmentsToStreams(\Flexio\Services\Email $email) : array
@@ -144,15 +131,18 @@ class Trigger
         $email_attachments = $email->getAttachments();
         foreach ($email_attachments as $attachment)
         {
+            $content = $attachment['content'] ?? '';
+
             // create the stream
             $outstream_properties = array(
                 'name' => $attachment['name'] ?? 'content.dat',
-                'mime_type' => $attachment['mime_type'] ?? 'application/octet-stream'
+                'mime_type' => $attachment['mime_type'] ?? 'application/octet-stream',
+                'size' => strlen($content)
             );
 
-            $outstream = \Flexio\Object\Stream::create($outstream_properties);
+            $outstream = \Flexio\Base\Stream::create($outstream_properties);
             $streamwriter = $outstream->getWriter();
-            $streamwriter->write($attachment['content']);
+            $streamwriter->write($content);
             $streams[] = $outstream;
         }
 
