@@ -12,7 +12,6 @@
         style="max-height: 260px"
         :connection="store_connection"
         :connection-type-filter="ctype"
-        :show-selection="true"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
         v-if="has_connections"
