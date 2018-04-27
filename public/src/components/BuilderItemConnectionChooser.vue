@@ -2,22 +2,23 @@
   <div>
     <div class="tl pb3">
       <ServiceIcon class="square-4" :type="ctype" v-if="false" />
-      <h3 class="fw6 f3 mid-gray mt0 mb2">Connect to {{service_name}}</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="ctype.length > 0">Connect to {{service_name}}</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
     </div>
-    <p class="ttu fw6 f7 moon-gray" v-if="is_active && connections_of_type.length > 0">Use an existing connection</p>
+    <p class="ttu fw6 f7 moon-gray" v-if="is_active && has_connections">Use an existing connection</p>
     <div class="bt b--light-gray" v-show="is_active || is_before_active">
       <ConnectionChooserList
-        class="mb3"
-        style="max-height: 24rem"
+        class="mb3 overflow-auto"
+        style="max-height: 260px"
         layout="list"
         :connection="store_connection"
         :connection-type-filter="ctype"
         :show-selection="true"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
-        v-if="connections_of_type.length > 0"
+        v-if="has_connections"
       />
-      <p class="ttu fw6 f7 moon-gray" v-if="is_active && connections_of_type.length > 0">&mdash; or &mdash;</p>
+      <p class="ttu fw6 f7 moon-gray" v-if="is_active && has_connections">&mdash; or &mdash;</p>
       <div class="mt3" v-show="is_active">
         <el-button
           class="ttu b"
@@ -76,7 +77,7 @@
     },
     data() {
       return {
-        edit_connection: null,
+        edit_connection: undefined,
         show_connection_dialog: false
       }
     },
@@ -91,16 +92,19 @@
         return _.get(this.item, 'connection_type', '')
       },
       connections() {
-        return this.getAllConnections()
+        return this.getAvailableConnections()
       },
       connections_of_type() {
         return _.filter(this.connections, { connection_type: this.ctype })
       },
+      has_connections() {
+        if (this.ctype.length > 0)
+          return this.connections_of_type.length > 0
+
+        return this.connections.length > 0
+      },
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
-      },
-      store_connection_status_available() {
-        return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
       },
       service_name() {
         return this.getConnectionInfo(this.ctype, 'service_name')
@@ -114,23 +118,27 @@
     },
     methods: {
       ...mapGetters([
-        'getAllConnections'
+        'getAvailableConnections'
       ]),
       chooseConnection(connection) {
         this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
       },
       createPendingConnection() {
-        var attrs = {
-          eid_status: OBJECT_STATUS_PENDING,
-          name: this.service_name,
-          connection_type: this.ctype
-        }
+        if (this.ctype.length > 0) {
+          var attrs = {
+            eid_status: OBJECT_STATUS_PENDING,
+            name: this.service_name,
+            connection_type: this.ctype
+          }
 
-        this.$store.dispatch('createConnection', { attrs }).then(response => {
-          var connection = response.body
-          this.edit_connection = connection
+          this.$store.dispatch('createConnection', { attrs }).then(response => {
+            var connection = response.body
+            this.edit_connection = connection
+            this.show_connection_dialog = true
+          })
+        } else {
           this.show_connection_dialog = true
-        })
+        }
       },
       tryUpdateConnection(attrs) {
         var eid = attrs.eid
