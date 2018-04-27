@@ -30,12 +30,20 @@
         immediate: true
       }
     },
+    data() {
+      return {
+        do_initial_scroll: false
+      }
+    },
     computed: {
       ...mapState({
         prompts: state => state.builder.prompts,
         active_prompt: state => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       })
+    },
+    mounted() {
+      setTimeout(() => { this.do_initial_scroll = true }, 500)
     },
     methods: {
       scrollToItem(item_id) {
@@ -44,13 +52,15 @@
             this.$scrollTo('#'+item_id, {
                 container: '#'+this.containerId,
                 duration: 400,
-                easing: 'ease-out',
-                offset: -132
+                offset: -32
             })
           }, 10)
         }
       },
       scrollToActive() {
+        if (!this.do_initial_scroll)
+          return
+
         var item_id = _.get(this.active_prompt, 'id', null)
         this.scrollToItem(item_id)
       }

@@ -7,8 +7,8 @@
       <spinner size="large" message="Loading..." />
     </div>
     <div
-      class="center mv4"
-      style="max-width: 1440px"
+      class="center"
+      style="max-width: 1440px; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
