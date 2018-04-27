@@ -6,15 +6,14 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-if="description.length > 0"
-      v-show="is_active"
+      v-show="is_active && description.length > 0"
     >
     </div>
     <el-form
       :model="form_values"
       :label-position="label_position"
       :label-width="label_width"
-      v-show="is_active"
+      v-if="is_active"
     >
       <el-form-item
         v-for="fi in form_items"
@@ -87,7 +86,7 @@
         />
       </el-form-item>
     </el-form>
-    <div v-show="is_before_active">
+    <div v-else if="is_before_active">
       <div class="mb2 bt b--black-10"></div>
       <table>
         <tbody>

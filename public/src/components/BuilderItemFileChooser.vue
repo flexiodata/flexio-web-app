@@ -6,7 +6,7 @@
       </div>
       <h3 class="fw6 f3 mid-gray mt0 mb2">Choose files</h3>
     </div>
-    <div v-show="is_active">
+    <div v-if="is_active">
       <file-chooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -15,7 +15,7 @@
         v-if="ceid"
       />
     </div>
-    <div v-show="is_before_active">
+    <div v-else-if="is_before_active">
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>

@@ -5,14 +5,6 @@
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="ctype.length > 0">Connect to {{service_name}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
     </div>
-    <div v-if="is_before_active">
-      <connection-chooser-item
-        class="mb3 bt bb b--black-10"
-        :item="store_connection"
-        :connection-eid="ceid"
-        :show-selection-checkmark="true"
-      />
-    </div>
     <div v-if="is_active">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <connection-chooser-list
@@ -34,6 +26,14 @@
           Set up a new connection
         </el-button>
       </div>
+    </div>
+    <div v-else-if="is_before_active">
+      <connection-chooser-item
+        class="mb3 bt bb b--black-10"
+        :item="store_connection"
+        :connection-eid="ceid"
+        :show-selection-checkmark="true"
+      />
     </div>
 
     <!-- connect to storage dialog -->
