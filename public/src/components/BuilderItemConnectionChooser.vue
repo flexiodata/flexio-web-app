@@ -15,7 +15,7 @@
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <connection-chooser-list
         class="mb3 bt bb b--light-gray overflow-auto"
-        style="max-height: 260px"
+        style="max-height: 277px"
         :connection="store_connection"
         :connection-type-filter="ctype"
         :show-selection-checkmark="true"
