@@ -141,6 +141,11 @@
         "connection_type": "dropbox"
       },
       {
+        "element": "connection-chooser",
+        "variable": "connection_chooser",
+        "connection_type": ""
+      },
+      {
         "element": "file-chooser",
         "variable": "file_chooser",
         "connection": "connection_chooser"
