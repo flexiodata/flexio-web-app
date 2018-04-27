@@ -81,7 +81,7 @@
       selected_items() {
         var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
-          : this.last_selected_item
+          : [ this.last_selected_item ]
 
         return this.allowFolders ? items : _.reject(items, { type: VFS_TYPE_DIR })
       },
@@ -105,7 +105,14 @@
       fireSelectionChangeEvent() {
         this.$emit('selection-change', this.selected_items)
       },
+      isFolderItem(item) {
+        return _.get(item, 'type') == VFS_TYPE_DIR
+      },
       itemClick(item, evt) {
+        // don't allow folders to be selected
+        if (!this.allowFolders && this.isFolderItem(item))
+          return
+
         // handled below
         if (evt.ctrlKey || evt.shiftKey)
           return
@@ -154,8 +161,7 @@
         this.fireSelectionChangeEvent()
       },
       itemDblClick(item) {
-        if (_.get(item, 'type') == VFS_TYPE_DIR)
-        {
+        if (this.isFolderItem(item)) {
           this.$emit('open-folder', _.defaultTo(item.path, '/'))
           this.last_selected_item = null
         }
@@ -173,7 +179,7 @@
 
           // only show folders
           if (this.foldersOnly)
-            items = _.filter(items, (item) => { return _.get(item, 'type') == VFS_TYPE_DIR })
+            items = _.filter(items, (item) => { return this.isFolderItem(item) })
 
           this.is_fetching = false
           this.items = [].concat(items)

@@ -23,10 +23,18 @@ class Test
         // TEST: basic email handling
 
         // BEGIN TEST
-        $properties = array();
-        $properties['task'] = json_decode('{}', true);
-        $user_eid = \Flexio\Tests\Util::createUser();
-        $pipe = \Flexio\Object\Pipe::create($properties);
+        $username = \Flexio\Base\Util::generateHandle();
+        $alias = \Flexio\Base\Util::generateHandle();
+        $user_eid = \Flexio\Tests\Util::createUser($username);
+        $pipe = \Flexio\Object\Pipe::create(json_decode('{
+            "alias": "'.$alias.'",
+            "task": {
+                "op": "echo",
+                "params": {
+                    "msg": "${input}"
+                }
+            }
+        }',true));
         $pipe->setOwner($user_eid);
         $pipe->grant($user_eid, \Model::ACCESS_CODE_TYPE_EID, array(
                 \Flexio\Object\Right::TYPE_READ_RIGHTS,
@@ -37,29 +45,31 @@ class Test
                 \Flexio\Object\Right::TYPE_EXECUTE
             )
         );
-        $content = getSampleEmailWithAttachment();
-        $file = \Flexio\Base\File::getTempFilename('txt');
-        file_put_contents($file, $content);
-        $process_info = \Flexio\Api\Trigger::handleEmail($file, $pipe->getEid());
-        unlink($file);
+        $content = getSampleEmailWithAttachment($username, $alias);
+        $path = \Flexio\Base\File::getTempFilename('txt');
+        file_put_contents($path, $content);
+        $handle = fopen($path, 'r');
+        $process_info = \Flexio\Api\Trigger::handleEmail($handle, $pipe->getEid());
+        fclose($handle);
+        unlink($path);
         $process_eid = $process_info['eid'];
         $process = \Flexio\Object\Process::load($process_eid);
         $output = \Flexio\Jobs\StoredProcess::create($process)->getStdout();
-        $actual = \Flexio\Tests\Content::getRows($output);
+        $actual = $output->getReader()->read(100);
         $expected = '
         [
             ["31","BOISE FIELDS","699 JACKSON","#500","NAMPA","ID","83686","","","30","0","2013/03/07"],
             ["53","CRUNCHIES","PO BOX 5800","","ATLANTA","GA","30320","A","","30","0","2013/01/13"]
         ]';
-        \Flexio\Tests\Check::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
+        \Flexio\Tests\Check::assertArray('A.1', 'Trigger::handleEmail(); test to see if an email is inserted into a process when it runs', $actual, $expected, $results);
     }
 }
 
-function getSampleEmailWithAttachment()
+function getSampleEmailWithAttachment(string $username, string $alias)
 {
     // following is the raw text of an email with the following values:
     // from: aaron@flex.io
-    // to: test@email.flex.io
+    // to: $username/$alias@pipes.flex.io
     // subject: Attachment Test
     // body: This is an email with a CSV attachment.
     // attachment: Vend_mast.csv
@@ -67,11 +77,11 @@ function getSampleEmailWithAttachment()
     $data = <<<EOD
 From aaron@flex.io  Wed Aug  3 23:52:22 2016
 Return-Path: <aaron@flex.io>
-X-Original-To: test@email.flex.io
-Delivered-To: pipes@email.flex.io
+X-Original-To: $username/$alias@pipes.flex.io
+Delivered-To: $username/$alias@pipes.flex.io
 Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on0052.outbound.protection.outlook.com [104.47.36.52])
-        by email.flex.io (Postfix) with ESMTPS id 6DD0B805B6
-        for <test@email.flex.io>; Wed,  3 Aug 2016 23:52:22 +0000 (UTC)
+        by pipes.flex.io (Postfix) with ESMTPS id 6DD0B805B6
+        for <$username/$alias@pipes.flex.io>; Wed,  3 Aug 2016 23:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=flexio.onmicrosoft.com; s=selector1-flex-io;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
@@ -85,7 +95,7 @@ Received: from BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) by
  BN6PR12MB1233.namprd12.prod.outlook.com ([10.168.227.19]) with mapi id
  15.01.0549.022; Wed, 3 Aug 2016 23:53:19 +0000
 From: Aaron Williams <aaron@flex.io>
-To: "test@email.flex.io" <test@email.flex.io>
+To: "$username/$alias@pipes.flex.io" <$username/$alias@pipes.flex.io>
 Subject: Attachment Test
 Thread-Topic: Attachment Test
 Thread-Index: AdHt4e012cGejNcTRqasix1Acbd9mA==

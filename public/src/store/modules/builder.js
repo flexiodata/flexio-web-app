@@ -30,6 +30,9 @@ const mutations = {
 
     var prompts = _.get(def, 'prompts', [])
 
+    // always include the summary item
+    prompts.push({ element: 'summary-page' })
+
     state.fetched = true
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })

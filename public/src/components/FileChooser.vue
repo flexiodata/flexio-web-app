@@ -13,6 +13,9 @@
         ref="file-chooser"
         :connection="connection"
         :path="connection_path"
+        :folders-only="foldersOnly"
+        :allow-multiple="allowMultiple"
+        :allow-folders="allowFolders"
         @open-folder="openFolder"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'filechooser'"
@@ -35,29 +38,30 @@
   } from '../constants/connection-type'
   import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import * as connections from '../constants/connection-info'
-  import Btn from './Btn.vue'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
   import UrlInputList from './UrlInputList.vue'
-
-  const defaultAttrs = () => {
-    return {
-      eid: null,
-      name: 'New Pipe',
-      alias: '',
-      description: ''
-    }
-  }
 
   export default {
     props: {
       'connection': {
         type: Object,
         required: true
+      },
+      'folders-only': {
+        type: Boolean,
+        default: false
+      },
+      'allow-multiple': {
+        type: Boolean,
+        default: true
+      },
+      'allow-folders': {
+        type: Boolean,
+        default: true
       }
     },
     components: {
-      Btn,
       FileExplorerBar,
       FileChooserList,
       UrlInputList
