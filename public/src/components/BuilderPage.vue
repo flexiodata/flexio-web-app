@@ -13,7 +13,7 @@
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
       <div class="flex flex-row">
-        <BuilderList
+        <builder-list
           class="flex-fill"
           :container-id="id"
           :show-insert-buttons="false"
@@ -142,7 +142,7 @@
       },
       {
         "element": "connection-chooser",
-        "variable": "connection_chooser",
+        "variable": "connection_chooser2",
         "connection_type": ""
       },
       {
