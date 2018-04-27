@@ -230,7 +230,7 @@
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
           'relative z-1 css-active': this.is_active,
-          'o-40 no-pointer-events': !this.is_active
+          'o-40 no-pointer-events no-select': !this.is_active
         }
       },
       task_icon() {
