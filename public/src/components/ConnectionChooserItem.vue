@@ -8,7 +8,10 @@
       <i class="material-icons mid-gray md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
       <service-icon :type="ctype" class="br1 square-3 mr3" />
-      <div class="mid-gray f5 fw6 cursor-default">{{item.name}}</div>
+      <div class="flex-fill flex flex-column">
+        <div class="mid-gray f5 fw6">{{item.name}}</div>
+        <div class="light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
+      </div>
     </div>
   </article>
 </template>
@@ -45,16 +48,23 @@
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
+      identifier() {
+        var cid = _.get(this.item, 'alias', '')
+        return cid.length > 0 ? cid : this.eid
+      },
       is_selected() {
         return this.eid.length > 0 ? this.connectionEid == this.eid : false
       },
       cls() {
         var sel_cls = this.is_selected ? 'bg-light-gray' : 'bg-white'
 
+        if (this.showSelectionCheckmark)
+          sel_cls = 'bg-white'
+
         if (_.get(this, 'layout', '') == 'list')
-          return 'bg-white pa3 bb b--light-gray darken-05 ' + sel_cls
+          return 'pointer pa3 bb b--light-gray darken-05 ' + sel_cls
            else
-          return 'dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
+          return 'pointer dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
       }
     },
     methods: {
