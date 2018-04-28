@@ -9,7 +9,7 @@
       v-show="is_active && description.length > 0"
     >
     </div>
-    <div v-if="is_active">
+    <div v-show="is_active">
       <file-chooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -19,7 +19,7 @@
         v-if="ceid"
       />
     </div>
-    <div v-else-if="is_before_active">
+    <div v-if="is_before_active">
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
@@ -75,8 +75,12 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
+      prompt() {
+        var prompt_id = _.get(this.item, 'id', '')
+        return _.find(this.prompts, { id: prompt_id }, {})
+      },
       ceid() {
-        return _.get(this.item, 'connection_eid', null)
+        return _.get(this.prompt, 'connection_eid', null)
       },
       connections() {
         return this.getAllConnections()
