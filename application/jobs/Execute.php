@@ -345,7 +345,7 @@ class ScriptHost
     private $output_map = [];
     private $output_streams = [];
     private $output_writers = [];
-
+    private $context_files = null;
 
 
     // I'd like to add these type checks back, but I was getting an error running this pipe:
@@ -445,7 +445,19 @@ class ScriptHost
 
     public function func_getFilesParameters()
     {
-        return (object)$this->process->getFiles();
+        if ($this->context_files)
+        {
+            return $this->context_files;
+        }
+
+        $files = $this->process->getFiles();
+        foreach ($files as $k => $file)
+        {
+            $res[$k] = $file['properties'];
+        }
+        
+        $this->context_files = (object)$files;
+        return $this->context_files;
     }
 
     private $runjob_stdin = null;
