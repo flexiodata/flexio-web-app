@@ -1,11 +1,11 @@
 <template>
   <div>
     <BuilderItem
-      v-for="(item, index) in prompts"
       :item="item"
       :index="index"
       :key="item.id"
       v-bind="$attrs"
+      v-for="(item, index) in prompts"
     />
   </div>
 </template>
