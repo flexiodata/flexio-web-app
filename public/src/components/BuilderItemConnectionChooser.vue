@@ -11,7 +11,7 @@
       v-show="is_active && description.length > 0"
     >
     </div>
-    <div v-if="is_active">
+    <div v-show="is_active">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <connection-chooser-list
         class="mb3 bt bb b--light-gray overflow-auto"
@@ -33,7 +33,7 @@
         </el-button>
       </div>
     </div>
-    <div v-else-if="is_before_active">
+    <div v-if="is_before_active">
       <connection-chooser-item
         class="mb3 bt bb b--black-10"
         :item="store_connection"
