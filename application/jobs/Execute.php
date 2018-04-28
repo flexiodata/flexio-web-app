@@ -524,7 +524,20 @@ class ScriptHost
         }
         else
         {
-            return null;
+            $files = $this->process->getFiles();
+            if (isset($files[$name]))
+            {
+                $stream = $files[$name];
+                $this->input_streams[] = $stream;
+                return array('handle' => count($this->input_streams)-1,
+                             'name' => $name,
+                             'size' => $stream->getSize(),
+                             'content_type' => $stream->getMimeType());
+            }
+             else
+            {
+                return null;
+            }
         }
     }
 

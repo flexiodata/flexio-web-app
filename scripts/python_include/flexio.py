@@ -559,7 +559,11 @@ class Context(object):
     @property
     def files(self):
         if self._files is None:
-            self._files = proxy.invoke('getFilesParameters', [])
+            self._files = {}
+            fileinfo = proxy.invoke('getFilesParameters', [])
+            for key, value in fileinfo:
+                info  = proxy.invoke('getInputStreamInfo', [key])
+                self.files[key] = Input(info)
         return self._files
     
     @property
