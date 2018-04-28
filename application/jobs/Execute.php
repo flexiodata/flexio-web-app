@@ -453,7 +453,7 @@ class ScriptHost
         $files = $this->process->getFiles();
         foreach ($files as $k => $file)
         {
-            $res[$k] = $file['properties'];
+            $files[$k] = $file['properties'];
         }
         
         $this->context_files = (object)$files;
