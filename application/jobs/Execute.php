@@ -451,9 +451,11 @@ class ScriptHost
         }
 
         $files = $this->process->getFiles();
-        foreach ($files as $k => $file)
+        foreach ($files as $k => $stream)
         {
-            $files[$k] = $file['properties'];
+            $files[$k] = [ 'name' => $stream->getName(),
+                           'size' => $stream->getSize(),
+                           'mime_type' => $stream->getMimeType() ]
         }
         
         $this->context_files = (object)$files;
