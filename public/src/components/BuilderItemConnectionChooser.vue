@@ -142,7 +142,7 @@
         'getAvailableConnections'
       ]),
       chooseConnection(connection) {
-        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
+        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
       },
       createPendingConnection() {
         if (this.ctype.length > 0) {

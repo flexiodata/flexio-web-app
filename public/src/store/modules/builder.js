@@ -13,7 +13,7 @@ const state = {
 }
 
 const mutations = {
-  BUILDER__FETCHING_DEF (state, fetching) {
+  FETCHING_DEF (state, fetching) {
     state.fetching = fetching
 
     if (fetching === true)
@@ -24,7 +24,7 @@ const mutations = {
     }
   },
 
-  BUILDER__INIT_DEF (state, def) {
+  INIT_DEF (state, def) {
     state.def = def
     state.code = _.get(def, 'pipe', '').trim()
 
@@ -56,7 +56,7 @@ const mutations = {
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
-  BUILDER__UPDATE_ACTIVE_ITEM (state, attrs) {
+  UPDATE_ACTIVE_ITEM (state, attrs) {
     var ap = _.assign({}, state.active_prompt, attrs)
     ap = _.cloneDeep(ap)
     state.active_prompt = ap
@@ -78,7 +78,7 @@ const mutations = {
     })
   },
 
-  BUILDER__UPDATE_CODE (state) {
+  UPDATE_CODE (state) {
     var code = state.def.pipe
 
     _.each(state.prompts, (p, idx) => {
@@ -112,16 +112,16 @@ const mutations = {
     state.code = code
   },
 
-  BUILDER__CREATE_PIPE (state, attrs) {
+  CREATE_PIPE (state, attrs) {
     state.pipe = attrs
   },
 
-  BUILDER__GO_PREV_ITEM (state) {
+  GO_PREV_ITEM (state) {
     state.active_prompt_idx--
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
-  BUILDER__GO_NEXT_ITEM (state) {
+  GO_NEXT_ITEM (state) {
     state.active_prompt_idx++
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   }
@@ -132,6 +132,7 @@ const actions = {}
 const getters = {}
 
 export default {
+  namespaced: true,
   state,
   mutations,
   actions,

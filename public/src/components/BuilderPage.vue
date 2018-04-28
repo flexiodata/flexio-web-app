@@ -250,23 +250,23 @@
     },
     methods: {
       loadTemplate() {
-        this.$store.commit('BUILDER__FETCHING_DEF', true)
+        this.$store.commit('builder/FETCHING_DEF', true)
 
         if (this.slug == 'test') {
-          this.$store.commit('BUILDER__INIT_DEF', test_def)
-          this.$store.commit('BUILDER__FETCHING_DEF', false)
+          this.$store.commit('builder/INIT_DEF', test_def)
+          this.$store.commit('builder/FETCHING_DEF', false)
         } else {
           axios.get('/def/templates/' + this.slug + '.json').then(response => {
             var def = response.data
-            this.$store.commit('BUILDER__INIT_DEF', def)
-            this.$store.commit('BUILDER__FETCHING_DEF', false)
+            this.$store.commit('builder/INIT_DEF', def)
+            this.$store.commit('builder/FETCHING_DEF', false)
           }).catch(error => {
-            this.$store.commit('BUILDER__FETCHING_DEF', false)
+            this.$store.commit('builder/FETCHING_DEF', false)
           })
         }
       },
       updateCode() {
-        this.$store.commit('BUILDER__UPDATE_CODE')
+        this.$store.commit('builder/UPDATE_CODE')
       }
     }
   }

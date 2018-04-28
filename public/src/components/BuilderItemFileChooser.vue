@@ -98,7 +98,7 @@
           return _.omit(f, ['is_selected'])
         })
 
-        this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { files: store_files })
+        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: store_files })
       }
     }
   }

@@ -163,7 +163,7 @@
           var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
           this.form_values = _.cloneDeep(form_values)
         } else {
-          this.$store.commit('BUILDER__UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
+          this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
         }
       },
       isDatePickerType(type) {

@@ -110,7 +110,7 @@
         pipe_fn.call(this, Flexio, (err, response) => {
           // TODO: error reporting?
           var pipe = response
-          this.$store.commit('BUILDER__CREATE_PIPE', pipe)
+          this.$store.commit('builder/CREATE_PIPE', pipe)
         })
       }
     }

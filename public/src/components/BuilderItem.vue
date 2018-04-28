@@ -123,7 +123,7 @@
         <el-button
           class="ttu b"
           type="plain"
-          @click="$store.commit('BUILDER__GO_PREV_ITEM')"
+          @click="$store.commit('builder/GO_PREV_ITEM')"
           v-show="!is_first"
         >
           Back
@@ -132,7 +132,7 @@
           class="ttu b"
           type="primary"
           :disabled="!is_next_allowed"
-          @click="$store.commit('BUILDER__GO_NEXT_ITEM')"
+          @click="$store.commit('builder/GO_NEXT_ITEM')"
         >
           Next
         </el-button>
