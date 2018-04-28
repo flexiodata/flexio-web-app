@@ -561,7 +561,7 @@ class Context(object):
         if self._files is None:
             self._files = {}
             fileinfo = proxy.invoke('getFilesParameters', [])
-            for key, value in fileinfo:
+            for key, value in fileinfo.items():
                 info  = proxy.invoke('getInputStreamInfo', [key])
                 self.files[key] = Input(info)
         return self._files
