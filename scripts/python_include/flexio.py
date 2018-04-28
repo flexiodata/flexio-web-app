@@ -541,6 +541,7 @@ class Context(object):
         self.output = output
         self._query = None
         self._form = None
+        self._files = None
         self.pipe = PipeFunctions()
 
     @property
@@ -555,6 +556,12 @@ class Context(object):
             self._form = proxy.invoke('getFormParameters', [])
         return self._form
 
+    @property
+    def files(self):
+        if self._files is None:
+            self._files = proxy.invoke('getFilesParameters', [])
+        return self._files
+    
     @property
     def vars(self):
         return env_vars

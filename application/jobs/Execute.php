@@ -443,6 +443,11 @@ class ScriptHost
         return (object)$form;
     }
 
+    public function func_getFilesParameters()
+    {
+        return (object)$this->process->getFiles();
+    }
+
     private $runjob_stdin = null;
 
     public function func_runJob($json)
