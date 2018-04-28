@@ -10,6 +10,7 @@
     >
     </div>
     <el-form
+      ref="form"
       :model="form_values"
       :label-position="label_position"
       :label-width="label_width"
@@ -19,7 +20,7 @@
         :key="fi.variable"
         :label="fi.label"
         :prop="fi.variable"
-        v-for="(fi, fi_idx) in form_items"
+        v-for="fi in form_items"
       >
         <el-switch
           v-model="form_values[fi.variable]"
@@ -124,6 +125,10 @@
       }
     },
     watch: {
+      is_active: {
+        handler: 'autoFocus',
+        immediate: true
+      },
       form_values: {
         handler: 'updateForm',
         immediate: true,
@@ -161,7 +166,24 @@
         return _.get(this.item, 'form_items', [])
       }
     },
+    mounted() {
+      this.autoFocus()
+    },
     methods: {
+      autoFocus() {
+        if (!this.is_active)
+          return
+
+        this.$nextTick(() => {
+          var form = this.$refs['form']
+          if (form) {
+            var first_comp = _.get(form, '$children[0].$children[0]', null)
+            if (first_comp && first_comp.focus) {
+              first_comp.focus()
+            }
+          }
+        })
+      },
       updateForm() {
         if (this.form_values === null) {
           var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
