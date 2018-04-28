@@ -16,9 +16,10 @@
       v-if="is_active"
     >
       <el-form-item
-        v-for="fi in form_items"
+        :key="fi.variable"
         :label="fi.label"
         :prop="fi.variable"
+        v-for="(fi, fi_idx) in form_items"
       >
         <el-switch
           v-model="form_values[fi.variable]"
@@ -35,6 +36,7 @@
           v-else-if="fi.element == 'checkbox-group'"
         >
           <el-checkbox
+            :key="option.value"
             :label="option.value"
             :name="fi.variable"
             v-for="option in fi.options"
@@ -48,6 +50,7 @@
           v-else-if="fi.element == 'radio-group'"
         >
           <el-radio
+            :key="option.value"
             :label="option.value"
             v-for="option in fi.options"
           >
@@ -60,6 +63,7 @@
           v-else-if="fi.element == 'select'"
         >
           <el-option
+            :key="option.value"
             :label="option.label"
             :value="option.value"
             v-for="option in fi.options"
@@ -91,8 +95,8 @@
       <table>
         <tbody>
           <tr
-            v-for="(val, key) in form_values"
             :key="key"
+            v-for="(val, key) in form_values"
           >
             <td class="v-top pa1"><span class="fw6">{{key}}:</span></td>
             <td class="v-top pa1">{{ JSON.stringify(val, null, 2) }}</td>
