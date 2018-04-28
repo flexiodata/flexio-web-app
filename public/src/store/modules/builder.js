@@ -89,8 +89,13 @@ const mutations = {
 
       switch (p.element) {
         case 'connection-chooser':
-          if (!_.isNil(p.connection_eid)) {
-            code = code.replace(regex, JSON.stringify(p.connection_eid, null, 2))
+          var eid = p.connection_eid
+
+          if (!_.isNil(eid)) {
+            var root_state = this.state
+            var connection = _.get(root_state, 'objects[' + eid + ']', null)
+            var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+            code = code.replace(regex, JSON.stringify(identifier, null, 2))
           }
           break
         case 'file-chooser':
