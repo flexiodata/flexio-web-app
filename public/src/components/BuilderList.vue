@@ -52,7 +52,7 @@
             this.$scrollTo('#'+item_id, {
                 container: '#'+this.containerId,
                 duration: 400,
-                offset: -32
+                offset: this.active_prompt_idx == 0 ? -100 : -32
             })
           }, 10)
         }

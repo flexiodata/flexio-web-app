@@ -263,6 +263,6 @@
     border-radius: 4px;
     border-color: #fff;
     box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
-    transition: all 0.4s ease;
+    transition: all 0.2s ease;
   }
 </style>
