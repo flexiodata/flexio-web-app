@@ -90,7 +90,6 @@ const mutations = {
       switch (p.element) {
         case 'connection-chooser':
           var eid = p.connection_eid
-
           if (!_.isNil(eid)) {
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
