@@ -96,6 +96,7 @@ class Process implements \Flexio\IFace\IProcess
     private $files;        // array of streams of files (similar to php's $_FILES)
     private $stop;
     private $first_execute;
+    private $local_connections = [];   // map from connection identifier to connection_properties...e.g. [ 'connection_type' => ''. 'connection_properties' => [...]]
 
     public function __construct()
     {
@@ -202,6 +203,21 @@ class Process implements \Flexio\IFace\IProcess
     {
         return $this->files;
     }
+
+
+    public function addLocalConnection(string $identifier, array $connection_properties)
+    {
+        $this->local_connections[$identifier] = $connection_properties;
+    }
+
+    public function getLocalConnection(string $identifier) // : ?array   TODO: add return type
+    {
+        return ($this->local_connections[$identifier] ?? null);
+    }
+
+    
+
+
 
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {

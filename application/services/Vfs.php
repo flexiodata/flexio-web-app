@@ -21,6 +21,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     private $owner_eid = ''; // the user to use when evaluating vfs paths
     private $process_context_service = null;
     private $store_service = null;
+    private $process = null;
 
     public function __construct(string $owner_eid)
     {
@@ -29,6 +30,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
     public function setProcess(\Flexio\IFace\IProcess $process)
     {
+        $this->process = $process;
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
     }
 
@@ -395,6 +397,23 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $this->service_map[$connection_identifier] = $this->store_service;
             return $this->store_service;
         }
+
+
+        if ($process)
+        {
+            // first, check the process's local connections for a hit
+            $connection_properties = $process->getLocalConnection($connection_identifier);
+            if ($connection_properties)
+            {
+                $service = \Flexio\Services\Factory::create($connection_properties);
+                if (!$service)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
+
+                $this->service_map[$connection_identifier] = $service;
+                return $service;
+            }
+        }
+
 
         $owner_user_eid = $this->getOwner();
 
