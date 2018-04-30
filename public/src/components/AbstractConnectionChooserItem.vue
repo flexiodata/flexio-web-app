@@ -11,7 +11,14 @@
     <div class="flex flex-row items-center cursor-default" v-else>
       <i class="material-icons mid-gray md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
-      <service-icon class="br1 square-3 mr3" :url="url" :type="ctype" :empty-cls="''" />
+      <div class="flex flex-row items-center relative mr3">
+        <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
+        <div class="absolute z-1" style="top: -7px; right: -7px" v-if="showStatus">
+          <i class="material-icons dark-green bg-white br-100 f7" v-if="is_available">check_circle</i>
+          <i class="material-icons dark-red bg-white br-100 f7" v-else>cancel</i>
+        </div>
+      </div>
+
       <div class="flex-fill flex flex-column">
         <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
         <div class="light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
@@ -38,6 +45,7 @@
 </template>
 
 <script>
+  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { CONNECTION_TYPE_HOME } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
 
@@ -66,6 +74,10 @@
       'selected-cls': {
         type: String,
         default: 'bg-light-gray'
+      },
+      'show-status': {
+        type: Boolean,
+        default: true
       },
       'show-identifier': {
         type: Boolean,
@@ -107,6 +119,9 @@
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
+      cstatus() {
+        return _.get(this.item, 'connection_status', '')
+      },
       url() {
         return _.get(this.item, 'connection_info.url', '')
       },
@@ -121,6 +136,9 @@
         return this.eid.length > 0
           ? _.get(this.selectedItem, 'eid') === this.eid
           : _.get(this.selectedItem, 'connection_type') === this.ctype
+      },
+      is_available() {
+        return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       cls() {
         var sel_cls = this.is_selected ? this.selectedCls : ''
