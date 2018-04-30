@@ -20,7 +20,7 @@ namespace Flexio\Jobs;
 {
     "op": "connect",
     "params": {
-        "handle": <string>,
+        "alias": <string>,
         "type": <string>, // connection type; required to specify type or full connection identifier
         "connection": <connection identifier>, required to specify type or full connection identifier
         <additional connection parameters here>
@@ -36,8 +36,8 @@ class Connect extends \Flexio\Jobs\Base
 
         $params = $this->getJobParameters();
 
-        $handle = $params['handle'] ?? false;
-        unset($params['handle']);
+        $alias = $params['alias'] ?? false;
+        unset($params['alias']);
 
         $connection_type = $params['type'] ?? false;
         unset($params['type']);
@@ -45,14 +45,14 @@ class Connect extends \Flexio\Jobs\Base
         $connection_identifier = $params['connection'] ?? false;
         unset($params['connection']);
 
-        // get the handle to use to reference the connection; must be a valid identifier (no strictly necessary
+        // get the alias to use to reference the connection; must be a valid identifier (no strictly necessary
         // here, but enforced to parallel the requirements of 'alias')
-        if ($handle === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'handle' parameter.");
+        if ($alias === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'alias' parameter.");
         if ($connection_identifier === false && $connection_type === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'connection' or 'type' parameter.");
-        if (\Flexio\Base\Identifier::isValid($handle) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid connection 'handle' parameter; 'handle' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
+        if (\Flexio\Base\Identifier::isValid($alias) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid connection 'alias' parameter; 'alias' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
 
         $connection_properties = array();
 
@@ -94,6 +94,6 @@ class Connect extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not create connection");
 
         // add the connection to the process
-        $process->addLocalConnection($handle, $connection_properties);
+        $process->addLocalConnection($alias, $connection_properties);
     }
 }
