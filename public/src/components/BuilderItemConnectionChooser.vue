@@ -20,6 +20,7 @@
         :connection-type-filter="ctype"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
+        @item-fix="fixConnection"
         v-if="has_connections"
       />
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">&mdash; or &mdash;</p>
@@ -50,8 +51,9 @@
       :modal-append-to-body="false"
       :visible.sync="show_connection_dialog"
     >
-      <ConnectionEditPanel
+      <connection-edit-panel
         :connection="edit_connection"
+        :mode="edit_mode"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
         @submit="tryUpdateConnection"
@@ -92,6 +94,7 @@
     },
     data() {
       return {
+        edit_mode: 'add',
         edit_connection: undefined,
         show_connection_dialog: false
       }
@@ -144,6 +147,12 @@
       chooseConnection(connection) {
         this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
       },
+      fixConnection(connection) {
+        this.chooseConnection(connection)
+        this.edit_mode = 'edit'
+        this.edit_connection = connection
+        this.show_connection_dialog = true
+      },
       createPendingConnection() {
         if (this.ctype.length > 0) {
           var attrs = {
@@ -154,6 +163,7 @@
 
           this.$store.dispatch('createConnection', { attrs }).then(response => {
             var connection = response.body
+            this.edit_mode = 'add'
             this.edit_connection = connection
             this.show_connection_dialog = true
           })

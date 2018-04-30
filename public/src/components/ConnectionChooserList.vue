@@ -11,7 +11,8 @@
       :layout="layout"
       :connection-eid="connection_eid"
       :show-selection-checkmark="showSelectionCheckmark"
-      @activate="onItemActivate"
+      @item-activate="onItemActivate"
+      v-on="$listeners"
     />
   </div>
 </template>
