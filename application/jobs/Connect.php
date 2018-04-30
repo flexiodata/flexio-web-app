@@ -20,6 +20,10 @@ namespace Flexio\Jobs;
 {
     "op": "connect",
     "params": {
+        "handle": <string>,
+        "type": <string>, // connection type; required to specify type or full connection identifier
+        "connection": <connection identifier>, required to specify type or full connection identifier
+        <additional connection parameters here>
     }
 }
 */
@@ -38,17 +42,51 @@ class Connect extends \Flexio\Jobs\Base
         $connection_type = $params['type'] ?? false;
         unset($params['type']);
 
-        $connection_properties = [ 'connection_type' => $connection_type, 'connection_info' => $params ];
+        $connection_identifier = $params['connection'] ?? false;
+        unset($params['connection']);
 
         // get the handle to use to reference the connection; must be a valid identifier (no strictly necessary
         // here, but enforced to parallel the requirements of 'alias')
         if ($handle === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'handle' parameter.");
-        if ($type === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'type' parameter.");
-
+        if ($connection_identifier === false && $connection_type === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'connection' or 'type' parameter.");
         if (\Flexio\Base\Identifier::isValid($handle) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid connection 'handle' parameter; 'handle' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
+
+        $connection_properties = array();
+
+        if ($connection_identifier === false)
+        {
+            // if a connection isn't specified, use the connection type and supplied params to
+            // create the connection
+            $connection_properties = array(
+                'connection_type' => $connection_type,
+                'connection_info' => $params
+            );
+        }
+         else
+        {
+            // if the connection identifier is specified, use that to try to use it to get the
+            // connection type and params
+
+            $owner_user_eid = $process->getOwner();
+
+            // load the connection
+            if (\Flexio\Base\Eid::isValid($connection_identifier) === false)
+            {
+                $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $connection_identifier);
+                $connection_identifier = $eid_from_identifier !== false ? $eid_from_identifier : '';
+            }
+
+            $connection = \Flexio\Object\Connection::load($connection_identifier);
+            $connection_properties = $connection->get();
+
+            $connection_properties = array(
+                'connection_type' => $connection_properties['connection_type'],
+                'connection_info' => $connection_properties['connection_info']
+            );
+        }
 
         // attempt to connect to the service; throw an exception if we can't connect
         $service = \Flexio\Services\Factory::create($connection_properties);
