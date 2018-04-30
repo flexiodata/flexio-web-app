@@ -399,10 +399,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
 
 
-        if ($process)
+        if ($this->process)
         {
             // first, check the process's local connections for a hit
-            $connection_properties = $process->getLocalConnection($connection_identifier);
+            $connection_properties = $this->process->getLocalConnection($connection_identifier);
             if ($connection_properties)
             {
                 $service = \Flexio\Services\Factory::create($connection_properties);

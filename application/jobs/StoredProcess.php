@@ -83,6 +83,18 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getFiles();
     }
 
+    public function addLocalConnection(string $identifier, array $connection_properties)
+    {
+        $this->engine->addLocalConnection($identifier, $connection_properties);
+    }
+
+    public function getLocalConnection(string $identifier) // : ?array   TODO: add return type
+    {
+        return $this->engine->getLocalConnection($identifier);
+    }
+
+    
+
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\StoredProcess
     {
         $this->engine->setStdin($stream);
