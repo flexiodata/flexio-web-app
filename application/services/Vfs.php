@@ -403,15 +403,15 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             // first, check the process's local connections for a hit
             $connection_properties = $this->process->getLocalConnection($connection_identifier);
-            if (!$connection_properties)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Service not found");
+            if ($connection_properties)
+            {
+                $service = \Flexio\Services\Factory::create($connection_properties);
+                if (!$service)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
 
-            $service = \Flexio\Services\Factory::create($connection_properties);
-            if (!$service)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED, "Could not create connection");
-
-            $this->service_map[$connection_identifier] = $service;
-            return $service;
+                $this->service_map[$connection_identifier] = $service;
+                return $service;
+            }
         }
 
 
