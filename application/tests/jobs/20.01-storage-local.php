@@ -23,7 +23,7 @@ class Test
         // TODO: writing with bad info (e.g. malformed paths, no file extension, bad file characters)
 
         // SETUP
-        $process_owner = \Flexio\System\System::getCurrentUserEid();
+        $process_owner = \Flexio\Tests\Base::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataFiles();
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_LOCAL . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
