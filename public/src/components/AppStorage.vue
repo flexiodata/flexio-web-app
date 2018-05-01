@@ -28,14 +28,11 @@
         :item-options="{
           'item-cls': 'min-w5 pa3 pr2 darken-05',
           'item-style': 'margin: 0.125rem',
-          'show-dropdown': true,
+          'show-dropdown': false,
           'show-identifier': true,
           'show-url': false
         }"
         @item-activate="onConnectionActivate"
-        @item-edit="openEditModal"
-        @item-delete="tryDeleteConnection"
-        v-if="false"
       />
       <div class="flex-fill">
         <file-chooser
@@ -117,10 +114,6 @@
         this.show_connection_props_modal = true
         this.$nextTick(() => { this.$refs['modal-connection-props'].open() })
       },
-      openEditModal(item) {
-        this.show_connection_props_modal = true
-        this.$nextTick(() => { this.$refs['modal-connection-props'].open(item, 'edit') })
-      },
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
@@ -152,12 +145,6 @@
           {
             // TODO: add error handling
           }
-        })
-      },
-      tryDeleteConnection(attrs) {
-        this.$store.dispatch('deleteConnection', { attrs }).then(response => {
-          if (response.ok)
-            this.$nextTick(() => { this.connection = this.$refs['list'].getSelectedItem() })
         })
       },
       onConnectionActivate(item) {
