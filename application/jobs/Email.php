@@ -48,11 +48,6 @@ class Email extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $this->sendEmail($process);
-    }
-
-    private function sendEmail(\Flexio\IFace\IProcess $process)
-    {
         // get the parameters
         $params = $this->getJobParameters();
         $to = $params['to'] ?? array();
@@ -132,7 +127,7 @@ class Email extends \Flexio\Jobs\Base
             $email_params['attachments'] = $attachments;
         }
 
-        $email = \Flexio\Services\Email::create($email_params);
+        $email = \Flexio\Services\NoticeEmail::create($email_params);
         $res = $email->send();
 
         // delete the temporary attachments
@@ -184,48 +179,6 @@ class Email extends \Flexio\Jobs\Base
             $attachment['file'] = $fname;
         }
 
-    }
-
-
-    private function getAttachmentsFromInput(array $instream_list)
-    {
-        $attachments = array();
-
-        foreach ($instream_list as $instream)
-        {
-            $mime_type = $instream->getMimeType();
-            $name = $instream->getName();
-
-            if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
-            {
-                $extension_to_add = 'csv';
-                $filename = \Flexio\Base\File::getFilename($name);
-                $name = "$filename.$extension_to_add";
-
-                $mime_type = \Flexio\Base\ContentType::CSV;
-                $attachment_file = \Flexio\Base\File::getTempFilename($extension_to_add);
-                if (!$this->saveDataToCsv($instream, $attachment_file, -1, 20000000))
-                    continue; // TODO: fail?
-            }
-             else
-            {
-                $extension = \Flexio\Base\File::getFileExtension($name);
-                $attachment_file = \Flexio\Base\File::getTempFilename($extension);
-                if (!$this->saveDataToFile($instream, $attachment_file))
-                    continue; // TODO: fail?
-            }
-
-            if (strlen($name) === 0)
-                $name = $attachment_file;
-
-            $attachments[] = array(
-                'name' => $name,
-                'mime_type' => $mime_type,
-                'file' => $attachment_file
-            );
-        }
-
-        return $attachments;
     }
 
     private function saveDataToFile(\Flexio\IFace\IStream $stream, string $filename)

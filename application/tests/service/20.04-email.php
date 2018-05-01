@@ -26,15 +26,15 @@ class Test
         // TEST: email creation
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create();
+        $email = \Flexio\Services\NoticeEmail::create();
         $actual = get_class($email);
-        $expected = 'Flexio\Services\Email';
-        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        $expected = 'Flexio\Services\NoticeEmail';
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
         try
         {
-            $email = \Flexio\Services\Email::create(false);
+            $email = \Flexio\Services\NoticeEmail::create(false);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -42,10 +42,10 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(array(
+        $email = \Flexio\Services\NoticeEmail::create(array(
             'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
@@ -54,10 +54,10 @@ class Test
         ));
         $actual = $email->getTo();
         $expected = '["user@flex.io"]';
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(array(
+        $email = \Flexio\Services\NoticeEmail::create(array(
             'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
@@ -66,10 +66,10 @@ class Test
         ));
         $actual = $email->getFrom();
         $expected = '["User via Flex.io <no-reply@flex.io>"]';
-        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(array(
+        $email = \Flexio\Services\NoticeEmail::create(array(
             'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
@@ -78,10 +78,10 @@ class Test
         ));
         $actual = $email->getSubject();
         $expected = 'A user wants to share something with you';
-        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(array(
+        $email = \Flexio\Services\NoticeEmail::create(array(
             'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
@@ -90,10 +90,10 @@ class Test
         ));
         $actual = $email->getMessageText();
         $expected = 'Please join my project';
-        \Flexio\Tests\Check::assertString('A.6', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
 
         // BEGIN TEST
-        $email = \Flexio\Services\Email::create(array(
+        $email = \Flexio\Services\NoticeEmail::create(array(
             'to' => "user@flex.io",
             'from' => "User via Flex.io <no-reply@flex.io>",
             'subject' => "A user wants to share something with you",
@@ -102,6 +102,6 @@ class Test
         ));
         $actual = $email->getMessageHtml();
         $expected = '<br>Please join my project<br>';
-        \Flexio\Tests\Check::assertString('A.7', '\Flexio\Services\Email::create(); basic test', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', '\Flexio\Services\NoticeEmail::create(); basic test', $actual, $expected, $results);
     }
 }

@@ -21,7 +21,7 @@ class Trigger
     public static function handleEmail($stream, bool $echo_result = false) // echo_result is available for testing, but not normally necessary
     {
         // STEP 1: parse the stream
-        $parser = \Flexio\Services\Email::parseResource($stream);
+        $parser = \Flexio\Services\NoticeEmail::parseResource($stream);
 
         // STEP 2: determine where to route the email; the pipe to launch
         // is the first part of the email; e.g. <owner>/<pipe>@email.flex.io
@@ -81,7 +81,7 @@ class Trigger
         $from_addresses = $parser->getFrom();
         if (count($from_addresses) > 0)
         {
-            $from_addresses = \Flexio\Services\Email::splitAddressList($from_addresses);
+            $from_addresses = \Flexio\Services\NoticeEmail::splitAddressList($from_addresses);
             $process_email_params = array('email-from' => $from_addresses[0]['email'],
                                           'email-from-display' => $from_addresses[0]['display']);
         }
@@ -147,7 +147,7 @@ class Trigger
         return $stream;
     }
 
-    private static function saveAttachmentsToStreams(\Flexio\Services\Email $email) : array
+    private static function saveAttachmentsToStreams(\Flexio\Services\NoticeEmail $email) : array
     {
         // create a new stream for each attachment; return an array of stream eids
         $streams = array();
