@@ -99,8 +99,16 @@ const mutations = {
           break
         case 'file-chooser':
           var files = _.get(p, 'files', [])
+          var connection_alias = _.get(p, 'connection_alias', false)
           var paths = _.map(files, (f) => { return _.get(f, 'path', null) })
           paths = _.compact(paths)
+
+          // '.connect()' alias is specified; use it instead of the connection eid/alias
+          if (connection_alias) {
+            paths = _.map(files, (f) => { return _.get(f, 'remote_path', null) })
+            paths = _.compact(paths)
+            paths = _.map(paths, (p) => { return '/' + connection_alias + p })
+          }
 
           // for single-select file choosers, don't output an array
           if (p.allow_multiple === false) {

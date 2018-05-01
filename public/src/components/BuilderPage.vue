@@ -165,27 +165,34 @@
         "connection": "connection_chooser"
       },
       {
-        "title": "File chooser (folders only)",
+        "title": "File chooser (with connect alias)",
         "element": "file-chooser",
         "variable": "file_chooser2",
+        "connection": "connection_chooser",
+        "connection_alias": "my-foo-alias"
+      },
+      {
+        "title": "File chooser (single select, file selection only)",
+        "element": "file-chooser",
+        "variable": "file_chooser3",
+        "connection": "connection_chooser",
+        "allow_multiple": false,
+        "allow_folders": false
+      },
+      {
+        "title": "File chooser (folders only)",
+        "element": "file-chooser",
+        "variable": "folder_chooser1",
         "connection": "connection_chooser",
         "folders_only": true
       },
       {
         "title": "File chooser (folders only, single select)",
         "element": "file-chooser",
-        "variable": "file_chooser3",
+        "variable": "folder_chooser2",
         "connection": "connection_chooser",
         "folders_only": true,
         "allow_multiple": false
-      },
-      {
-        "title": "File chooser (single select, file selection only)",
-        "element": "file-chooser",
-        "variable": "file_chooser4",
-        "connection": "connection_chooser",
-        "allow_multiple": false,
-        "allow_folders": false
       }
     ],
     "pipe_language": "javascript",
