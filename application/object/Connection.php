@@ -176,16 +176,24 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
 
-        $service = $this->getService();
+        try
+        {
+            $service = $this->getService();
 
-        if ($service instanceof \Flexio\IFace\IConnection)
-        {
-            if ($service->authenticated())
+            if ($service instanceof \Flexio\IFace\IConnection)
+            {
+                if ($service->authenticated())
+                    $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            }
+            else
+            {
                 $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            }
         }
-         else
+        catch(\Flexio\Base\Exception $e)
         {
-            $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            // service couldn't be created, perhaps because of invalid credentials;
+            // connection is unavailable
         }
 
         $this->set($properties);
