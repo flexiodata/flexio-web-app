@@ -65,9 +65,8 @@ const mutations = {
       if (p.id == ap.id) {
         return ap
       } else {
-        // update any prompts that want to reference
-        // the active prompt's connection
-        if (p.connection == ap.variable) {
+        // update file chooser connections with the active prompt's connection if they match
+        if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
           return _.assign(p, {
             connection_eid: ap.connection_eid,
             files: []
