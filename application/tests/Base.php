@@ -37,15 +37,15 @@ class Base
     const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
     const STORAGE_SFTP = 'testsuite-sftp';
 
-    private static $storage_list = [
-        STORAGE_LOCAL,
-        STORAGE_AMAZONS3,
-        STORAGE_BOX,
-        STORAGE_DROPBOX,
-        STORAGE_GITHUB,
-        STORAGE_GOOGLEDRIVE,
-        STORAGE_SFTP
-    ];
+    private static $storage_list = array(
+        self::STORAGE_LOCAL,
+        self::STORAGE_AMAZONS3,
+        self::STORAGE_BOX,
+        self::STORAGE_DROPBOX,
+        self::STORAGE_GITHUB,
+        self::STORAGE_GOOGLEDRIVE,
+        self::STORAGE_SFTP
+    );
 
     public static function testsAllowed()
     {
@@ -186,7 +186,7 @@ class Base
 
     public static function getTestStorageAliases()
     {
-        return self::storage_list;
+        return self::$storage_list;
     }
 
     public static function getTestStorageOwner()
