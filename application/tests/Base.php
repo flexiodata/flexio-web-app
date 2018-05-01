@@ -18,14 +18,6 @@ namespace Flexio\Tests;
 
 class Base
 {
-    const STORAGE_LOCAL = 'home';
-    const STORAGE_AMAZONS3 = 'testsuite-amazons3';
-    const STORAGE_BOX = 'testsuite-box';
-    const STORAGE_DROPBOX = 'testsuite-dropbox';
-    const STORAGE_GITHUB = 'testsuite-github';
-    const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
-    const STORAGE_SFTP = 'testsuite-sftp';
-
     const ERROR_EXCEPTION = 'error-exception';
     const ERROR_NO_EXCEPTION = 'error-no-exception';
     const ERROR_BAD_PARSE = 'error-bad-parse';
@@ -36,6 +28,24 @@ class Base
 
     const FLAG_NONE = '';
     const FLAG_ERROR_SUPPRESS = 'flag-error-suppress';
+
+    const STORAGE_LOCAL = 'home';
+    const STORAGE_AMAZONS3 = 'testsuite-amazons3';
+    const STORAGE_BOX = 'testsuite-box';
+    const STORAGE_DROPBOX = 'testsuite-dropbox';
+    const STORAGE_GITHUB = 'testsuite-github';
+    const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
+    const STORAGE_SFTP = 'testsuite-sftp';
+
+    private static $storage_list = [
+        STORAGE_LOCAL,
+        STORAGE_AMAZONS3,
+        STORAGE_BOX,
+        STORAGE_DROPBOX,
+        STORAGE_GITHUB,
+        STORAGE_GOOGLEDRIVE,
+        STORAGE_SFTP
+    ];
 
     public static function testsAllowed()
     {
@@ -172,6 +182,19 @@ class Base
 
         \Flexio\Api\Response::sendContent($r);
         return;
+    }
+
+    public static function getTestStorageAliases()
+    {
+        return self::storage_list;
+    }
+
+    public static function getTestStorageOwner()
+    {
+        // right now, the test storage owner is the user running the
+        // test suite that's set up the connections; so the the current
+        // user; this wrapped allows us to easily set up something else
+        return \Flexio\System\System::getCurrentUserEid();
     }
 
     private static function addTests($subfolder, &$tests)
