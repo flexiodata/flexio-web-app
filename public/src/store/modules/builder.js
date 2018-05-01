@@ -101,6 +101,12 @@ const mutations = {
           var files = _.get(p, 'files', [])
           var paths = _.map(files, (f) => { return _.get(f, 'path', null) })
           paths = _.compact(paths)
+
+          // for single-select file choosers, don't output an array
+          if (p.allow_multiple === false) {
+            paths = _.get(paths, '[0]', '')
+          }
+
           code = code.replace(regex, JSON.stringify(paths, null, 2))
           break
         case 'form':
