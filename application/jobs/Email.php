@@ -127,7 +127,7 @@ class Email extends \Flexio\Jobs\Base
             $email_params['attachments'] = $attachments;
         }
 
-        $email = \Flexio\Services\Email::create($email_params);
+        $email = \Flexio\Services\NoticeEmail::create($email_params);
         $res = $email->send();
 
         // delete the temporary attachments
