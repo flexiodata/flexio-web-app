@@ -21,15 +21,16 @@
           </div>
         </div>
 
-        <i class="material-icons md-24 black-20 rotate-270 na1" v-if="!item.is_connection">arrow_drop_down</i>
-        <span
+        <i class="material-icons md-18 black-20 rotate-270" style="margin: 0 -2px" v-if="!item.is_connection">expand_more</i>
+
+        <div
           class="f7 darken-05"
           style="padding: 0.3125rem 0.375rem"
           @click="openFolder(item.path)"
           v-if="!item.is_connection"
         >
           {{item.name}}
-        </span>
+        </div>
       </div>
     </div>
   </div>
