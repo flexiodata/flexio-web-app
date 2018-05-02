@@ -4,6 +4,7 @@
         "lusitanian/oauth": "^0.8.10",
         "aws/aws-sdk-php": "^3.52",
         "zbateson/mail-mime-parser": "^0.4.8",
-        "pear/mail_mime": "^1.10"
+        "pear/mail_mime": "^1.10",
+        "nette/mail": "^2.4"
     }
 }
