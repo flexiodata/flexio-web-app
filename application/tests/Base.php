@@ -37,16 +37,6 @@ class Base
     const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
     const STORAGE_SFTP = 'testsuite-sftp';
 
-    private static $storage_list = array(
-        self::STORAGE_LOCAL,
-        self::STORAGE_AMAZONS3,
-        self::STORAGE_BOX,
-        self::STORAGE_DROPBOX,
-        self::STORAGE_GITHUB,
-        self::STORAGE_GOOGLEDRIVE,
-        self::STORAGE_SFTP
-    );
-
     public static function testsAllowed()
     {
         return (isset($GLOBALS['g_config']->tests_allowed) ? $GLOBALS['g_config']->tests_allowed : false);
@@ -182,11 +172,6 @@ class Base
 
         \Flexio\Api\Response::sendContent($r);
         return;
-    }
-
-    public static function getTestStorageAliases()
-    {
-        return self::$storage_list;
     }
 
     public static function getTestStorageOwner()
