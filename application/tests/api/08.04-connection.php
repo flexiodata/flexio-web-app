@@ -221,10 +221,14 @@ class Test
                 'token' => $token1
             );
             $result = \Flexio\Tests\Util::callApi($params);
-            $response = json_decode($result['response'],true);
-            $actual = $response['connection_status'] ?? '';
-            $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
-            \Flexio\Tests\Check::assertString("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+            $actual = json_decode($result['response'],true);
+            $expected = '
+            {
+                "error" : {
+                    "code": "connection-failed"
+                }
+            }';
+            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
         }
     }
 }
