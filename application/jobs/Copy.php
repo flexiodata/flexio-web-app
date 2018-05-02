@@ -48,7 +48,9 @@ class Copy extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'from'");
         if (is_null($to))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'to'");
-        if (strlen($from) == 0)
+        if (is_string($from) && strlen($from) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+        if (is_array($from) && count($from) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
         if (strlen($to) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'to'");
@@ -56,7 +58,21 @@ class Copy extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
-        $this->copyFiles($process->getOwner(), $vfs, $from, $to);
+        if (is_string($from))
+        {
+            $this->copyFiles($process->getOwner(), $vfs, $from, $to);
+        }
+         else if (is_array($from))
+        {
+            foreach ($from as $f)
+            {
+                $this->copyFiles($process->getOwner(), $vfs, $f, $to);
+            }
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+        }
     }
 
     private function copyFiles(string $process_owner_eid, \Flexio\Services\Vfs $vfs, string $from, string $to)
