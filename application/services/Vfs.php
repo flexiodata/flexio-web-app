@@ -97,6 +97,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $results[] = array(
                 'name' => 'home',
                 'path' => '/home',
+                'remote_path' => '/',
                 'size' => null,
                 'modified' => "2017-01-20T10:00:01+0000",
                 'type' => 'DIR',
@@ -122,6 +123,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
                 $entry = array(
                     'name' => $name,
                     'path' => '/'.$name,
+                    'remote_path' => '/',
                     'size' => null,
                     'modified' => $info['updated'],
                     'type' => 'DIR'
@@ -144,17 +146,36 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $rpath = rtrim(trim($arr[1]), '/');
 
         $service = $this->getService($connection_identifier);
+        $service_list = $service->list($rpath);
 
-        $results = $service->list($rpath);
-        if (is_array($results))
+        $results = array();
+        if ($service_list === false)
+            return $results;
+
+        foreach ($service_list as $entry)
         {
+            $results[] = array(
+                'name' => $entry['name'],
+                'path' =>  '/' . $connection_identifier . $entry['path'],
+                'remote_path' =>  $entry['path'],
+                'size' => $entry['size'],
+                'modified' => $entry['modified'],
+                'type' => $entry['type']
+            );
+        }
+
+        return $results;
+/*
             foreach ($results as &$v)
             {
-                $v['path'] = '/' . $connection_identifier . $v['path'];
+                $remote_path = $v['path'];
+                $v['path'] = '/' . $connection_identifier . $remote_path;
+                $v['remote_path'] = $remote_path;
             }
             unset($v);
         }
         return $results;
+*/
     }
 
     public function getFileInfo(string $path) : array

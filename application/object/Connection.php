@@ -100,6 +100,16 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
+    public function resetConnection()
+    {
+        // TODO: test function
+        $properties = json_encode(array('connection_info' => array()));
+        $this->clearCache();
+        $connection_model = $this->getModel()->connection;
+        $connection_model->set($this->getEid(), $properties);
+        return $this;
+    }
+
     public function set(array $properties) : \Flexio\Object\Connection
     {
         // TODO: add properties check
@@ -166,16 +176,24 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
 
-        $service = $this->getService();
+        try
+        {
+            $service = $this->getService();
 
-        if ($service instanceof \Flexio\IFace\IConnection)
-        {
-            if ($service->authenticated())
+            if ($service instanceof \Flexio\IFace\IConnection)
+            {
+                if ($service->authenticated())
+                    $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            }
+            else
+            {
                 $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            }
         }
-         else
+        catch(\Flexio\Base\Exception $e)
         {
-            $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+            // service couldn't be created, perhaps because of invalid credentials;
+            // connection is unavailable
         }
 
         $this->set($properties);
@@ -189,7 +207,9 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // TODO: what values do we want to use to reset the params?
         // if we want to reset anything within the connection_info, we need
         // to feed the info into the service, which should be responsible for
-        // returning us valid initializated params
+        // returning us valid initializated params;
+        // see 08.04-connecxtion.php: "TODO: we need a better way of resetting credentials"
+
         $properties = array();
         $properties['connection_status'] = \Model::CONNECTION_STATUS_UNAVAILABLE;
         $properties['expires'] = \Flexio\System\System::getTimestamp(); // set the expiration to the current time
@@ -370,7 +390,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
             if ($key !== 'connection_info')
             {
-                // if we're not on the the connection object, simply update the value
+                // if we're not on the connection object, simply update the value
                 $connection_properties_to_update[$key] = $value;
             }
              else

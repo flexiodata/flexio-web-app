@@ -25,7 +25,7 @@ class Test
         // TEST: service creation
 
         // BEGIN TEST
-        $test_user_eid = \Flexio\System\System::getCurrentUserEid();  // TODO: depends on running the user that has the various test connection setup
+        $test_user_eid = \Flexio\Tests\Base::getTestStorageOwner();
         $service = new \Flexio\Services\Vfs($test_user_eid);
         $actual = get_class($service);
         $expected = 'Flexio\Services\Vfs';
@@ -36,15 +36,7 @@ class Test
         // TEST: basic service functions
 
         // BEGIN TEST
-
-        $services = [
-            \Flexio\Tests\Base::STORAGE_LOCAL,
-            \Flexio\Tests\Base::STORAGE_DROPBOX,
-            \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
-            \Flexio\Tests\Base::STORAGE_AMAZONS3,
-            \Flexio\Tests\Base::STORAGE_BOX,
-            //\Flexio\Tests\Base::STORAGE_SFTP
-        ];
+        $services = \Flexio\Tests\Base::getTestStorageAliases();
 
         $idx = 0;
         foreach ($services as $s)

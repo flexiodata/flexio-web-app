@@ -615,7 +615,18 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->s3)
             return false;
 
-        $this->authenticated = true;
-        return true;
+        try
+        {
+            $result = $this->s3->headBucket([
+                'Bucket' => $bucket,
+            ]);
+            $this->authenticated = true;
+            return true;
+        }
+        catch (\Aws\Exception\AwsException $e)
+        {
+        }
+
+        return false;
    }
 }

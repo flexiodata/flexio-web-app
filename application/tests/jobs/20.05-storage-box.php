@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $process_owner = \Flexio\System\System::getCurrentUserEid();
+        $process_owner = \Flexio\Tests\Base::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataFiles();
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_BOX . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 

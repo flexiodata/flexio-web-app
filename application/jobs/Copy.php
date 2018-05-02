@@ -48,7 +48,9 @@ class Copy extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'from'");
         if (is_null($to))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'to'");
-        if (strlen($from) == 0)
+        if (is_string($from) && strlen($from) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+        if (is_array($from) && count($from) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
         if (strlen($to) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'to'");
@@ -56,10 +58,24 @@ class Copy extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
-        $this->copyFiles($process->getOwner(), $vfs, $from, $to);
+        if (is_string($from))
+        {
+            $this->copyFiles($process, $vfs, $from, $to);
+        }
+         else if (is_array($from))
+        {
+            foreach ($from as $f)
+            {
+                $this->copyFiles($process, $vfs, $f, $to);
+            }
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+        }
     }
 
-    private function copyFiles(string $process_owner_eid, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyFiles(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
     {
 
         $arr = \Flexio\Base\File::splitBasePathAndName($from);
@@ -116,24 +132,37 @@ class Copy extends \Flexio\Jobs\Base
             $full_to_path = $destination_is_directory ? \Flexio\Base\File::appendPath($to, $file['name']) : $to;
 
             if ($file['type'] == 'FILE')
-                $this->copyFile($process_owner_eid, $vfs, $full_from_path, $full_to_path);
+                $this->copyFile($process, $vfs, $full_from_path, $full_to_path);
                  else
-                $this->copyDirectory($process_owner_eid, $vfs, $full_from_path, $full_to_path);
+                $this->copyDirectory($process, $vfs, $full_from_path, $full_to_path);
         }
     }
 
-
-    private function copyDirectory(string $process_owner_eid, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyDirectory(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
     {
         if (!$this->recursive) // if recursive mode is off (which is the default), then directory copying is disabled
             return;
 
         $vfs->createDirectory($to);
-        $this->copyFiles($process_owner_eid, $vfs, $from . '/*', $to);
+        $this->copyFiles($process, $vfs, $from . '/*', $to);
     }
 
-    private function copyFile(string $process_owner_eid, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyFile(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
     {
+        $subprocess = \Flexio\Jobs\Process::create();
+
+        // proxy the local connections
+        $local_connections = $process->getLocalConnections();
+        foreach ($local_connections as $key => $value)
+        {
+            $subprocess->addLocalConnection($key, $value);
+        }
+
+        $process_owner_eid = $process->getOwner();
+        $subprocess->setOwner($process_owner_eid);
+        $subprocess->execute([ 'op' => 'read', 'params' => [ 'path' => $from ] ]);
+        $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);  // executes can be chained; stdout of previous execute becomes stdin of next
+/*
         $data = \Flexio\Base\Stream::create();
 
         $subprocess = \Flexio\Jobs\Process::create();
@@ -145,5 +174,6 @@ class Copy extends \Flexio\Jobs\Base
         $subprocess->setOwner($process_owner_eid);
         $subprocess->setStdin($data);
         $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);
+*/
     }
 }

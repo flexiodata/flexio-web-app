@@ -70,7 +70,16 @@
         return this.index < this.active_prompt_idx
       },
       title() {
-        return _.get(this.item, 'title', 'Choose files')
+        var def_title = ''
+        var item = this.item
+
+        if (item.folders_only === true) {
+          def_title = item.allow_multiple !== false ? 'Choose folders' : 'Choose a folder'
+        } else {
+          def_title = item.allow_multiple !== false ? 'Choose files' : 'Choose a file'
+        }
+
+        return _.get(this.item, 'title', def_title)
       },
       description() {
         return marked(_.get(this.item, 'description', ''))

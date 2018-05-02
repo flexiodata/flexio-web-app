@@ -24,7 +24,8 @@ class Test
         $files = \Flexio\Tests\Util::getTestDataFiles();
         $test_folder = 'tests' . \Flexio\Tests\Util::getTimestampName();
         $source_directory = '/home/' . $test_folder . '/';
-        $target_directory = '/testsuite-dropbox/' . $test_folder . '/';
+        $target_directory = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . $test_folder . '/';
+
 
         foreach ($files as $filename) // copy files into home directory
         {
