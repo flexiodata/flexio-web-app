@@ -204,7 +204,6 @@ class Process implements \Flexio\IFace\IProcess
         return $this->files;
     }
 
-
     public function addLocalConnection(string $identifier, array $connection_properties)
     {
         $this->local_connections[$identifier] = $connection_properties;
@@ -215,9 +214,10 @@ class Process implements \Flexio\IFace\IProcess
         return ($this->local_connections[$identifier] ?? null);
     }
 
-    
-
-
+    public function getLocalConnections() : array
+    {
+        return $this->local_connections;
+    }
 
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
