@@ -73,7 +73,7 @@
       }
     },
     watch: {
-      path(val, old_val) {
+      path() {
         this.refreshList()
       }
     },
@@ -102,8 +102,10 @@
       getSelectedItems() {
         return this.selected_items
       },
-      fireSelectionChangeEvent() {
-        this.$emit('selection-change', this.selected_items)
+      fireSelectionChangeEvent(path) {
+        // `path` is filled out if the selection change
+        // happens from a refresh (when opening a new folder)
+        this.$emit('selection-change', this.selected_items, path)
       },
       isFolderItem(item) {
         return _.get(item, 'type') == VFS_TYPE_DIR
@@ -186,7 +188,7 @@
           this.error_message = ''
 
           if (this.is_inited)
-            this.fireSelectionChangeEvent()
+            this.fireSelectionChangeEvent(path)
 
           this.is_inited = true
         }, response => {

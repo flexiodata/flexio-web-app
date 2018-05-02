@@ -14,6 +14,7 @@
         class="bb b--light-gray"
         style="max-height: 24rem"
         :connection="store_connection"
+        @open-folder="updateFolder"
         @selection-change="updateFiles"
         v-bind="chooser_options"
         v-if="ceid"
@@ -41,6 +42,8 @@
   import TaskIcon from './TaskIcon.vue'
   import FileChooser from './FileChooser.vue'
   import FileChooserItem from './FileChooserItem.vue'
+
+  const VFS_TYPE_DIR = 'DIR'
 
   export default {
     props: {
@@ -106,7 +109,35 @@
       ...mapGetters([
         'getAllConnections'
       ]),
-      updateFiles(files) {
+      updateFolder(path) {
+        if (this.item.folders_only !== true)
+          return
+
+        var afterFirst = function(str, char, cnt) {
+          if (!_.isNumber(cnt)) { cnt = 1 }
+          var retval = str.substr(str.indexOf('/') + 1)
+          return cnt <= 1 ? retval : afterFirst(retval, char, cnt-1)
+        }
+
+        var name = path.substr(path.lastIndexOf('/') + 1)
+        var remote_path = '/' + afterFirst(path, '/', 2)
+
+        var folder = {
+          name,
+          path,
+          remote_path,
+          size: null,
+          modified: '',
+          type: VFS_TYPE_DIR
+        }
+
+        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: [ folder ] })
+      },
+      updateFiles(files, path) {
+        if (this.item.folders_only === true && this.item.allow_multiple === false && !_.isNil(path)) {
+          return
+        }
+
         var store_files = _.map(files, (f) => {
           return _.omit(f, ['is_selected'])
         })

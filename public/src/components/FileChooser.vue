@@ -106,7 +106,7 @@
         if (!_.isNil(url_list))
           url_list.finishEdit()
 
-        this.$emit('submit', this.items, this)
+        this.$emit('submit', this.items)
       },
       reset(attrs) {
         this.connection_path = '/'
@@ -122,6 +122,7 @@
       openFolder(path) {
         this.connection_path = _.defaultTo(path, this.getConnectionBasePath())
         this.items = []
+        this.$emit('open-folder', this.connection_path)
       },
       getConnectionIdentifier() {
         var cid = _.get(this.connection, 'alias', '')
@@ -132,9 +133,9 @@
           return '/home'
         return '/' + this.getConnectionIdentifier()
       },
-      updateItems(items) {
+      updateItems(items, path) {
         this.items = items
-        this.$emit('selection-change', this.items, this)
+        this.$emit('selection-change', this.items, path)
       }
     }
   }
