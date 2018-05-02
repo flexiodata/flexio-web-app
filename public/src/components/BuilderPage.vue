@@ -159,20 +159,23 @@
         "connection_type": ""
       },
       {
-        "title": "Normal file chooser",
+        "title": "Default file chooser",
+        "description": "This is the default file chooser. Multiple files and folder can be selected at the same time.",
         "element": "file-chooser",
         "variable": "file_chooser",
         "connection": "connection_chooser"
       },
       {
-        "title": "File chooser (with connect alias)",
+        "title": "File chooser with a connection alias",
+        "description": "This file chooser uses a connection alias (`my-foo-alias`).",
         "element": "file-chooser",
         "variable": "file_chooser2",
         "connection": "connection_chooser",
         "connection_alias": "my-foo-alias"
       },
       {
-        "title": "File chooser (single select, file selection only)",
+        "title": "Single file selection file chooser",
+        "description": "This file chooser only allows a single file to be selected.",
         "element": "file-chooser",
         "variable": "file_chooser3",
         "connection": "connection_chooser",
@@ -180,14 +183,14 @@
         "allow_folders": false
       },
       {
-        "title": "File chooser (folders only)",
+        "description": "Folder only file chooser",
         "element": "file-chooser",
         "variable": "folder_chooser1",
         "connection": "connection_chooser",
         "folders_only": true
       },
       {
-        "title": "File chooser (folders only, single select)",
+        "description": "Single folder selection file chooser",
         "element": "file-chooser",
         "variable": "folder_chooser2",
         "connection": "connection_chooser",
