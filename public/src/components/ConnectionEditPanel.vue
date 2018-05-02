@@ -343,7 +343,7 @@
             var connection = _.cloneDeep(response.body)
 
             // create a default alias
-            connection.alias = item.service_name.trim()
+            connection.alias = 'my-' + item.service_name.trim()
             connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
 
             this.updateConnection(connection)
@@ -361,7 +361,9 @@
 
         if (this.mode == 'add' && _.get(connection, 'alias', '').length == 0) {
           var service_name = this.getConnectionServiceName(connection)
-          connection.alias = service_name.trim()
+
+          // create a default alias
+          connection.alias = 'my-' + service_name.trim()
           connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
         }
 
