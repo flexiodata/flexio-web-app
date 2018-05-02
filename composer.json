@@ -5,6 +5,8 @@
         "aws/aws-sdk-php": "^3.52",
         "zbateson/mail-mime-parser": "^0.4.8",
         "pear/mail_mime": "^1.10",
-        "nette/mail": "^2.4"
+        "phpmailer/phpmailer": "^6.0",
+        "league/oauth2-google": "^2.2",
+        "stevenmaguire/oauth2-microsoft": "^2.2"
     }
 }
