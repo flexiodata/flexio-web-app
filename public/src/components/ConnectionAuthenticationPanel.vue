@@ -379,6 +379,7 @@
           this.$store.dispatch('fetchConnection', { eid }).then(response => {
             if (response.ok)
             {
+              this.error_msg = ''
               this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
             }
              else
@@ -404,6 +405,7 @@
             this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
+                this.error_msg = ''
                 this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
               }
                else
