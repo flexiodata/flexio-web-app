@@ -11,7 +11,6 @@
     <div class="flex-fill overflow-y-auto">
       <file-chooser-list
         ref="file-chooser"
-        :connection="connection"
         :path="connection_path"
         @open-folder="openFolder"
         @selection-change="updateItems"
@@ -54,8 +53,9 @@
       UrlInputList
     },
     watch: {
-      connection() {
-        this.openFolder()
+      connection: {
+        handler: 'refreshFromConnection',
+        deep: true
       }
     },
     data() {
@@ -119,6 +119,11 @@
         if (_.get(this.connection, 'connection_type', '') == CONNECTION_TYPE_HOME)
           return '/home'
         return '/' + this.getConnectionIdentifier()
+      },
+      refreshFromConnection(connection) {
+        // do a hard refresh of the file list
+        this.connection_path = false
+        this.$nextTick(() => { this.openFolder() })
       },
       updateItems(items, path) {
         this.items = items

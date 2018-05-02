@@ -39,7 +39,7 @@
   export default {
     props: {
       'path': {
-        type: String,
+        type: [String, Boolean],
         default: '/'
       },
       'empty-message': {
@@ -173,6 +173,9 @@
         }
       },
       refreshList() {
+        if (this.path === false)
+          return
+
         var path = _.defaultTo(this.path, '/')
 
         this.is_fetching = true
