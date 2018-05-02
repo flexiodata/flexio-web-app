@@ -588,6 +588,8 @@ class User
         $call_params['alias'] = $definition['alias'] ?? '';
         $call_params['description'] = $definition['description'] ?? '';
 
+        if (isset($definition['connection_status']))
+            $call_params['connection_status'] = $definition['connection_status'];
         if (isset($definition['connection_type']))
             $call_params['connection_type'] = $definition['connection_type'];
         if (isset($definition['connection_info']))
