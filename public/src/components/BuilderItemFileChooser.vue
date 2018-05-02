@@ -20,8 +20,9 @@
         v-if="ceid"
       />
 
-      <div class="flex flex-row items-center mt2 f7" v-if="is_single_folder_select">
-        <div class="mr2">Folder:</div>
+      <div class="flex flex-row items-center mt2 f7" v-if="is_single_folder_select || is_single_file_select">
+        <div class="mr2" v-if="is_single_folder_select">Folder:</div>
+        <div class="mr2" v-else-if="is_single_file_select">File name:</div>
         <div class="flex-fill ba b--black-10 silver bg-near-white cursor-not-allowed" style="padding: 7px">
           {{folder_path}}
         </div>
@@ -82,6 +83,9 @@
       is_single_folder_select() {
         return this.item.folders_only === true && this.item.allow_multiple === false
       },
+      is_single_file_select() {
+        return this.item.folders_only !== true && this.item.allow_multiple === false
+      },
       title() {
         var def_title = ''
         var item = this.item
@@ -102,10 +106,10 @@
         return _.find(this.prompts, { id: prompt_id }, {})
       },
       folder_path() {
-        if (!this.is_single_folder_select)
-          return ''
+        if (this.is_single_folder_select || this.is_single_file_select)
+          return _.get(this.prompt, 'files[0].path', '')
 
-        return _.get(this.prompt, 'files[0].path', '')
+        return ''
       },
       ceid() {
         return _.get(this.prompt, 'connection_eid', null)
