@@ -14,7 +14,6 @@
         class="bb b--light-gray"
         style="max-height: 24rem"
         :connection="store_connection"
-        :fire-selection-change-on-init="is_single_folder_select"
         @open-folder="updateFolder"
         @selection-change="updateFiles"
         v-bind="chooser_options"
@@ -156,9 +155,6 @@
       },
       updateFiles(files, path) {
         if (this.is_single_folder_select && !_.isNil(path)) {
-          // this will update the active item, but will be called when this item
-          // is not the active item, so we have to hold off on doing this for now
-          //this.updateFolder(path)
           return
         }
 
