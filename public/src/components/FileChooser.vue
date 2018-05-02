@@ -13,11 +13,9 @@
         ref="file-chooser"
         :connection="connection"
         :path="connection_path"
-        :folders-only="foldersOnly"
-        :allow-multiple="allowMultiple"
-        :allow-folders="allowFolders"
         @open-folder="openFolder"
         @selection-change="updateItems"
+        v-bind="$attrs"
         v-if="file_chooser_mode == 'filechooser'"
       />
       <url-input-list
@@ -43,22 +41,11 @@
   import UrlInputList from './UrlInputList.vue'
 
   export default {
+    inheritAttrs: false,
     props: {
-      'connection': {
+      connection: {
         type: Object,
         required: true
-      },
-      'folders-only': {
-        type: Boolean,
-        default: false
-      },
-      'allow-multiple': {
-        type: Boolean,
-        default: true
-      },
-      'allow-folders': {
-        type: Boolean,
-        default: true
       }
     },
     components: {

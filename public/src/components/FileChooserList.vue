@@ -57,6 +57,10 @@
       'allow-folders': {
         type: Boolean,
         default: true
+      },
+      'fire-selection-change-on-init': {
+        type: Boolean,
+        default: false
       }
     },
     components: {
@@ -187,8 +191,9 @@
           this.items = [].concat(items)
           this.error_message = ''
 
-          if (this.is_inited)
+          if (this.is_inited || this.fireSelectionChangeOnInit) {
             this.fireSelectionChangeEvent(path)
+          }
 
           this.is_inited = true
         }, response => {

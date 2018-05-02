@@ -167,7 +167,7 @@
       },
       {
         "title": "File chooser with a connection alias",
-        "description": "This file chooser uses a connection alias (`my-foo-alias`).",
+        "description": "This file chooser uses a connection alias `my-foo-alias`.",
         "element": "file-chooser",
         "variable": "file_chooser2",
         "connection": "connection_chooser",
