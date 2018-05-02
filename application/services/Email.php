@@ -35,8 +35,7 @@ class Email
     private $msg_htmlembedded;
     private $attachments;
 
-    private $_aws = null;
-    private $_ses = null;
+    private $smtp;
 
     public static function isValid(string $email) : bool
     {
@@ -46,39 +45,10 @@ class Email
 
     public static function create(array $params = null) : \Flexio\Services\Email
     {
-        $email = new self;
-        $email->initialize();
-
         if (!isset($params))
-            return $email;
+            return new self;
 
-        if (isset($params['from']))
-            $email->setFrom($params['from']);
-        if (isset($params['to']))
-            $email->setTo($params['to']);
-        if (isset($params['cc']))
-            $email->setCC($params['cc']);
-        if (isset($params['bcc']))
-            $email->setBCC($params['bcc']);
-        if (isset($params['reply_to']))
-            $email->setReplyTo($params['reply_to']);
-        if (isset($params['subject']))
-            $email->setSubject($params['subject']);
-        if (isset($params['msg_text']))
-            $email->setMessageText($params['msg_text']);
-        if (isset($params['msg_html']))
-            $email->setMessageHtml($params['msg_html']);
-
-        if (isset($params['attachments']) && is_array($params['attachments']))
-        {
-            $attachments = $params['attachments'];
-            foreach ($attachments as $a)
-            {
-                $email->addAttachment($a);
-            }
-        }
-
-        return $email;
+        return self::initialize($params);
     }
 
     public static function parseText(string $content) : \Flexio\Services\Email
@@ -154,13 +124,38 @@ class Email
         return $ret;
     }
 
-    public function send() : bool
+
+    public static function setEmail(array $params = null)
     {
-        if (count($this->attachments) > 0)
-            return $this->sendWithAttachments();
-             else
-            return $this->sendWithoutAttachments();
+        if (isset($params['from']))
+            $this->setFrom($params['from']);
+        if (isset($params['to']))
+            $this->setTo($params['to']);
+        if (isset($params['cc']))
+            $this->setCC($params['cc']);
+        if (isset($params['bcc']))
+            $this->setBCC($params['bcc']);
+        if (isset($params['reply_to']))
+            $this->setReplyTo($params['reply_to']);
+        if (isset($params['subject']))
+            $this->setSubject($params['subject']);
+        if (isset($params['msg_text']))
+            $this->setMessageText($params['msg_text']);
+        if (isset($params['msg_html']))
+            $this->setMessageHtml($params['msg_html']);
+
+        if (isset($params['attachments']) && is_array($params['attachments']))
+        {
+            $attachments = $params['attachments'];
+            foreach ($attachments as $a)
+            {
+                $this->addAttachment($a);
+            }
+        }
+
+        return $this;
     }
+
 
     public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
@@ -331,6 +326,12 @@ class Email
         $this->msg_html = '';
         $this->msg_htmlembedded = '';
         $this->attachments = array();
+
+        $this->smtp = [ 'port' => 465,
+                        'security' => 'ssltls',       // none, ssltls, starttls
+                        'authentication' => 'oauth2', // none, password, encpassword, kerberos, ntlm, oauth2
+                        'username' => '',
+                        'password' => '' ];
     }
 
     private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message)
@@ -403,6 +404,14 @@ class Email
 
             $this->addAttachment($att);
         }
+    }
+
+    public function send() : bool
+    {
+        if (count($this->attachments) > 0)
+            return $this->sendWithAttachments();
+             else
+            return $this->sendWithoutAttachments();
     }
 
     private function sendWithoutAttachments() : bool
