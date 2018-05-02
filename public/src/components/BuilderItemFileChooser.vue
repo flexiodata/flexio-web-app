@@ -19,6 +19,13 @@
         v-bind="chooser_options"
         v-if="ceid"
       />
+
+      <div class="flex flex-row items-center mt2 f7" v-if="is_single_folder_select">
+        <div class="mr2">Folder:</div>
+        <div class="flex-fill ba b--black-10 silver bg-near-white cursor-not-allowed" style="padding: 7px">
+          {{folder_path}}
+        </div>
+      </div>
     </div>
     <div v-if="is_before_active">
       <div class="mb2 bt b--black-10"></div>
@@ -72,6 +79,9 @@
       is_before_active() {
         return this.index < this.active_prompt_idx
       },
+      is_single_folder_select() {
+        return this.item.folders_only === true && this.item.allow_multiple === false
+      },
       title() {
         var def_title = ''
         var item = this.item
@@ -90,6 +100,12 @@
       prompt() {
         var prompt_id = _.get(this.item, 'id', '')
         return _.find(this.prompts, { id: prompt_id }, {})
+      },
+      folder_path() {
+        if (!this.is_single_folder_select)
+          return ''
+
+        return _.get(this.prompt, 'files[0].path', '')
       },
       ceid() {
         return _.get(this.prompt, 'connection_eid', null)
@@ -134,7 +150,7 @@
         this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: [ folder ] })
       },
       updateFiles(files, path) {
-        if (this.item.folders_only === true && this.item.allow_multiple === false && !_.isNil(path)) {
+        if (this.is_single_folder_select && !_.isNil(path)) {
           return
         }
 
