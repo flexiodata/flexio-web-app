@@ -328,7 +328,7 @@ class Email
         $this->attachments = array();
 
         $this->smtp = [ 'port' => 465,
-                        'security' => 'ssltls',       // none, ssltls, starttls
+                        'security' => 'ssltls',       // none, ssl, starttls
                         'authentication' => 'oauth2', // none, password, encpassword, kerberos, ntlm, oauth2
                         'username' => '',
                         'password' => '' ];
