@@ -44,7 +44,7 @@ class Email
         return \Flexio\Base\Util::isValidEmail($email);
     }
 
-    public static function create(array $params = null) : Flexio\Services\Email
+    public static function create(array $params = null) : \Flexio\Services\Email
     {
         $email = new self;
         $email->initialize();
@@ -81,7 +81,7 @@ class Email
         return $email;
     }
 
-    public static function parseText(string $content) : Flexio\Services\Email
+    public static function parseText(string $content) : \Flexio\Services\Email
     {
         // parse the string content
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
@@ -94,7 +94,7 @@ class Email
         return $email;
     }
 
-    public static function parseFile(string $path) : Flexio\Services\Email
+    public static function parseFile(string $path) : \Flexio\Services\Email
     {
         $email = new self;
 
@@ -118,7 +118,7 @@ class Email
         return $email;
     }
 
-    public static function parseResource($handle) : Flexio\Services\Email
+    public static function parseResource($handle) : \Flexio\Services\Email
     {
         // parse the stream
         $parser = new \ZBateson\MailMimeParser\MailMimeParser;
@@ -162,7 +162,7 @@ class Email
             return $this->sendWithoutAttachments();
     }
 
-    public function setFrom($addresses) : Flexio\Services\Email // TODO: set parameter type
+    public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -180,7 +180,7 @@ class Email
         return $this->from_addresses;
     }
 
-    public function setTo($addresses) : Flexio\Services\Email // TODO: set parameter type
+    public function setTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -198,7 +198,7 @@ class Email
         return $this->to_addresses;
     }
 
-    public function setCC($addresses) : Flexio\Services\Email // TODO: set parameter type
+    public function setCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -216,7 +216,7 @@ class Email
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses) : Flexio\Services\Email // TODO: set parameter type
+    public function setBCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -234,7 +234,7 @@ class Email
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses) : Flexio\Services\Email // TODO: set parameter type
+    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -252,7 +252,7 @@ class Email
         return $this->replyto_addresses;
     }
 
-    public function setSubject(string $subject) : Flexio\Services\Email
+    public function setSubject(string $subject) : \Flexio\Services\Email
     {
         $this->subject = $subject;
         return $this;
@@ -263,7 +263,7 @@ class Email
         return $this->subject;
     }
 
-    public function setMessageText(string $message) : Flexio\Services\Email
+    public function setMessageText(string $message) : \Flexio\Services\Email
     {
 	    $this->msg_text = $message;
         return $this;
@@ -274,7 +274,7 @@ class Email
         return $this->msg_text;
     }
 
-    public function setMessageHtml(string $message) : Flexio\Services\Email
+    public function setMessageHtml(string $message) : \Flexio\Services\Email
     {
         $this->msg_html = $message;
         return $this;
@@ -285,7 +285,7 @@ class Email
         return $this->msg_html;
     }
 
-    public function setMessageHtmlEmbedded(string $message) : Flexio\Services\Email
+    public function setMessageHtmlEmbedded(string $message) : \Flexio\Services\Email
     {
         $this->msg_htmlembedded = $message;
         return $this;
@@ -296,7 +296,7 @@ class Email
         return $this->msg_htmlembedded;
     }
 
-    public function addAttachment(array $attachment) : Flexio\Services\Email
+    public function addAttachment(array $attachment) : \Flexio\Services\Email
     {
         $a = array();
         $a['name'] = $attachment['name'] ?? '';
@@ -313,7 +313,7 @@ class Email
         return $this->attachments;
     }
 
-    public function clearAttachments() : Flexio\Services\Email
+    public function clearAttachments() : \Flexio\Services\Email
     {
         $this->attachments = array();
         return $this;
