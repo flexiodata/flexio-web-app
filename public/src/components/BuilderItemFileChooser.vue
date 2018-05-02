@@ -24,7 +24,7 @@
         <div class="mr2" v-if="is_single_folder_select">Folder:</div>
         <div class="mr2" v-else-if="is_single_file_select">File name:</div>
         <div class="flex-fill ba b--black-10 silver bg-near-white cursor-not-allowed" style="padding: 7px">
-          {{folder_path}}
+          <span v-if="folder_path.length > 0">{{folder_path}}</span><span v-else>(None selected)</span>
         </div>
       </div>
     </div>
