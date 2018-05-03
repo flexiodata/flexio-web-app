@@ -27,8 +27,8 @@ EXAMPLE:
     "params": {
         "to": "",
         "subject": "",
-        "body_text": "",
-        "body_html": "",
+        "body": "",
+        "html": "",
         "attachments": [
             {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
             {"file": "<path>"},
@@ -54,10 +54,23 @@ class Email extends \Flexio\Jobs\Base
         if (is_string($to))
             $to = explode(',', $to);
 
-        $subject = isset($params['subject']) ? $params['subject'] : '';
-        $body_text = isset($params['body_text']) ? $params['body_text'] : '';
-        $body_html = isset($params['body_html']) ? $params['body_html'] : '';
+        $connection = ($params['connection'] ?? null);
+        $subject = ($params['subject'] ?? '');
+        $body_text = ($params['body'] ?? ($params['body_text'] ?? ''));
+        $body_html = ($params['html'] ?? ($params['body_html'] ?? ''));
 
+        $connection_info = $process->getConnection($connection);
+
+
+        $email = \Flexio\Services\Email::create($connection_info);
+
+        $email->setSubject($subject);
+        $email->setMessageText($body_text);
+        $email->setMessageHtml($body_html);
+
+        $email->send();
+
+    /*
         // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
         // an email at once; also, only allow one email notice a second; of course multiple
         // jobs could be fired, but this at least helps throttle emails used within a loop
@@ -138,6 +151,7 @@ class Email extends \Flexio\Jobs\Base
             if (strlen($file) > 0)
                 @unlink($file);
         }
+*/
     }
 
     private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment)
