@@ -22,6 +22,7 @@ namespace Flexio\Services;
 
 class Email
 {
+<<<<<<< HEAD
     const EMAIL_ADDRESS_NO_REPLY = 'no-reply@flex.io';
 
     private $from_addresses;
@@ -49,6 +50,20 @@ class Email
     {
         // checks if an email address is valid
         return \Flexio\Base\Util::isValidEmail($email);
+=======
+    "op": "email",
+    "params": {
+        "to": "",
+        "subject": "",
+        "body": "",
+        "html": "",
+        "attachments": [
+            {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
+            {"file": "<path>"},
+            "<path>" // alternative format; string
+            ...
+        ]
+>>>>>>> d191d710f56d5ba1247d3b74cb2bb5ddb43e59bb
     }
 
     public static function create(array $params = null) : \Flexio\Services\Email

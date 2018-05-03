@@ -28,7 +28,11 @@ EXAMPLE:
         "to": "",
         "subject": "",
         "body": "",
+<<<<<<< HEAD
         "html": "",
+=======
+        "html": "",s
+>>>>>>> d191d710f56d5ba1247d3b74cb2bb5ddb43e59bb
         "attachments": [
             {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
             {"file": "<path>"},
