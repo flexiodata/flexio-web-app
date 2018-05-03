@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $process_owner = \Flexio\Tests\Base::getTestStorageOwner();
+        $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataFiles();
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 

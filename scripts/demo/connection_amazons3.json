@@ -3,13 +3,14 @@
     "name": "Flexio Public S3",
     "alias": "flexio-public-s3",
     "description": "",
-    "connection_type" : "amazons3",
-    "connection_info" : {
+    "connection_status": "A",
+    "connection_type": "amazons3",
+    "connection_info": {
         "region": "us-east-1",
         "bucket": "flexio-public-s3",
         "accesskey": "",
         "secretkey": ""
     },
-    "expires" : null
+    "expires": null
 }
 

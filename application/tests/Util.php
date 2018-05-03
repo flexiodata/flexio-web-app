@@ -107,6 +107,34 @@ class Util
         return [ 'code' => $http_code, 'content_type' => $content_type, 'response' => $response ];
     }
 
+    public static function runTasks(string $apibase, string $userid, string $token, array $tasks)
+    {
+        // wraps up the creation of a pipe and the running of that pipe
+
+        $result = self::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => '{
+                "task": {
+                    "op": "sequence",
+                    "params": {
+                        "items": '.json_encode($tasks).'
+                    }
+                }
+            }'
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = self::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'token' => $token
+        ));
+        return $result;
+    }
+
     public static function evalExpression($expr)
     {
         $retval = null;
@@ -158,6 +186,31 @@ EOD;
     {
         // returns an api token for the default test user
         $user_eid = self::getDefaultTestUser();
+
+        // get the tokens
+        $filter = array('owned_by' => $user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $tokens = \Flexio\Object\Token::list($filter);
+
+        if (count($tokens) === 0)
+            $tokens[] = \Flexio\Object\Token::create(array('owned_by' => $user_eid));
+
+        // return the first token
+        $token_info = $tokens[0]->get();
+        return $token_info['access_code'];
+    }
+
+    public static function getTestStorageOwner()
+    {
+        // right now, the test storage owner is the user running the
+        // test suite that's set up the connections; so the the current
+        // user; this wrapped allows us to easily set up something else
+        return \Flexio\System\System::getCurrentUserEid();
+    }
+
+    public static function getTestStorageOwnerToken()
+    {
+        // returns an api token for the owner of the storage
+        $user_eid = self::getTestStorageOwner();
 
         // get the tokens
         $filter = array('owned_by' => $user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);

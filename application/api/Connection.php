@@ -248,10 +248,20 @@ class Connection
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         // try to connect
-        $connection->connect();
+        try
+        {
+            $connection->connect();
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+        }
 
-        // return the result
+        // make sure the connection status is active, or else throw an exception
         $properties = $connection->get();
+        $connection_status = $properties['connection_status'];
+        if ($connection_status !== \Model::CONNECTION_STATUS_AVAILABLE)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
+
         $result = self::cleanProperties($properties);
         $request->setResponseParams($result);
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());

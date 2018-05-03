@@ -32,6 +32,15 @@ class Test
         $password2 = \Flexio\Base\Password::generate();
         $userid2 = \Flexio\Tests\Util::createUser(null, null, $password2);
         $token2 = \Flexio\Tests\Util::createToken($userid2);
+        $storage_items = [
+            \Flexio\Tests\Base::STORAGE_LOCAL,
+            \Flexio\Tests\Base::STORAGE_AMAZONS3,
+            \Flexio\Tests\Base::STORAGE_BOX,
+            \Flexio\Tests\Base::STORAGE_DROPBOX,
+            \Flexio\Tests\Base::STORAGE_GITHUB,
+            \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
+            \Flexio\Tests\Base::STORAGE_SFTP
+        ];
         $test_connection_eids = array();
 
         $params = array(
@@ -64,9 +73,8 @@ class Test
 
         // create a copy of each of the non-local storage types; these
         // contain the credentials we need to test connecting to the services
-        $storage_owner = \Flexio\Tests\Base::getTestStorageOwner();
-        $storage_list = \Flexio\Tests\Base::getTestStorageAliases();
-        foreach ($storage_list as $s)
+        $storage_owner = \Flexio\Tests\Util::getTestStorageOwner();
+        foreach ($storage_items as $s)
         {
             // don't test local storage; no connection exists
             if ($s === \Flexio\Tests\Base::STORAGE_LOCAL)
@@ -213,10 +221,14 @@ class Test
                 'token' => $token1
             );
             $result = \Flexio\Tests\Util::callApi($params);
-            $response = json_decode($result['response'],true);
-            $actual = $response['connection_status'] ?? '';
-            $expected = \Model::CONNECTION_STATUS_UNAVAILABLE;
-            \Flexio\Tests\Check::assertString("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
+            $actual = json_decode($result['response'],true);
+            $expected = '
+            {
+                "error" : {
+                    "code": "connection-failed"
+                }
+            }';
+            \Flexio\Tests\Check::assertInArray("D.$idx", "POST /:userid/connections/:objeid/connect; copy of $type: test connecting within invalid info",  $actual, $expected, $results);
         }
     }
 }

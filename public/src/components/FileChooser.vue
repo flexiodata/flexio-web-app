@@ -11,13 +11,10 @@
     <div class="flex-fill overflow-y-auto">
       <file-chooser-list
         ref="file-chooser"
-        :connection="connection"
         :path="connection_path"
-        :folders-only="foldersOnly"
-        :allow-multiple="allowMultiple"
-        :allow-folders="allowFolders"
         @open-folder="openFolder"
         @selection-change="updateItems"
+        v-bind="$attrs"
         v-if="file_chooser_mode == 'filechooser'"
       />
       <url-input-list
@@ -43,22 +40,11 @@
   import UrlInputList from './UrlInputList.vue'
 
   export default {
+    inheritAttrs: false,
     props: {
-      'connection': {
+      connection: {
         type: Object,
         required: true
-      },
-      'folders-only': {
-        type: Boolean,
-        default: false
-      },
-      'allow-multiple': {
-        type: Boolean,
-        default: true
-      },
-      'allow-folders': {
-        type: Boolean,
-        default: true
       }
     },
     components: {
@@ -67,8 +53,9 @@
       UrlInputList
     },
     watch: {
-      connection() {
-        this.openFolder()
+      connection: {
+        handler: 'refreshFromConnection',
+        deep: true
       }
     },
     data() {
@@ -133,9 +120,14 @@
           return '/home'
         return '/' + this.getConnectionIdentifier()
       },
+      refreshFromConnection(connection) {
+        // do a hard refresh of the file list
+        this.connection_path = false
+        this.$nextTick(() => { this.openFolder() })
+      },
       updateItems(items, path) {
         this.items = items
-        this.$emit('selection-change', this.items, path)
+        this.$emit('selection-change', items, path)
       }
     }
   }
