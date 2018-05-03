@@ -219,6 +219,36 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_connections;
     }
 
+    public function getConnection(string $identifier)
+    {
+        $local = $this->getLocalConnection($identifier);
+        if ($local !== null)
+            return $local;
+        
+        $owner_user_eid = $this->getOwner();
+
+        try
+        {
+            $connection = \Flexio\Object\Connection::load($identifier);
+        }
+        catch (\Exception $e)
+        {
+            $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $identifier);
+            if ($eid_from_identifier === false)
+                throw $e;
+
+            $connection = \Flexio\Object\Connection::load($eid_from_identifier);
+        }
+
+        // check the rights on the connection
+        if ($connection->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($connection->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        return $connection->get();
+    }
+
     public function setStdin(\Flexio\IFace\IStream $stream) : \Flexio\Jobs\Process
     {
         $this->stdin = $stream;
