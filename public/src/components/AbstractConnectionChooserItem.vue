@@ -13,7 +13,7 @@
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
         <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
-        <div class="absolute z-1" style="top: -7px; right: -7px" v-if="showStatus">
+        <div class="absolute z-1" style="top: -7px; right: -7px" v-if="showStatus && !is_home">
           <i class="material-icons dark-green bg-white br-100 f7" v-if="is_available">check_circle</i>
           <i class="material-icons dark-red bg-white br-100 f7" v-else>cancel</i>
         </div>
