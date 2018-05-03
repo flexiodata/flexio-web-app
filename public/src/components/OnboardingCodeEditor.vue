@@ -135,10 +135,11 @@
       'sdk-options': {
         type: Object,
         default: () => {
-          if (window.location.hostname == 'www.flex.io')
-            return {}
+          if (window.location.hostname == 'www.flex.io') {
+            return { host: 'www.flex.io' }
+          }
 
-          return { baseUrl: 'https://test.flex.io/api/v2' }
+          return { host: 'test.flex.io' }
         }
       },
       'response-type': {

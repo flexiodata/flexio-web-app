@@ -78,10 +78,11 @@
         return _.get(tokens, '[0].access_code', '')
       },
       sdk_options() {
-        if (window.location.hostname == 'www.flex.io')
-          return {}
+        if (window.location.hostname == 'www.flex.io') {
+          return { host: 'www.flex.io' }
+        }
 
-        return { baseUrl: 'https://' + window.location.host + '/api/v2' }
+        return { host: 'test.flex.io' }
       },
       save_code() {
         var name = _.get(this.def, 'title', 'Untitled Pipe')
