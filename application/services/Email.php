@@ -455,7 +455,7 @@ class Email
             $mail->Password = $this->password;    // SMTP password
             $mail->SMTPSecure = $this->security;  // '', 'ssl', or 'tls'
             $mail->Port = $port;
-            $mail->Timeout = 30;                  // timeout in seconds
+            $mail->Timeout = 60;                  // timeout in seconds
 
             $from = count($this->from_addresses) > 0 ? $this->from_addresses[0] : '';
             $mail->setFrom($from);
