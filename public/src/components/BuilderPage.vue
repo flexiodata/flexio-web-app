@@ -149,51 +149,51 @@
       {
         "title": "Connection chooser with single connection type",
         "element": "connection-chooser",
-        "variable": "connection_chooser",
+        "variable": "connection_dropbox",
         "connection_type": "dropbox"
       },
       {
         "title": "Connection chooser with all connection",
         "element": "connection-chooser",
-        "variable": "connection_chooser2",
+        "variable": "connection_any",
         "connection_type": ""
       },
       {
         "title": "Default file chooser",
         "description": "This is the default file chooser. Multiple files and folder can be selected at the same time.",
         "element": "file-chooser",
-        "variable": "file_chooser",
-        "connection": "connection_chooser"
+        "variable": "file_chooser_default",
+        "connection": "connection_dropbox"
       },
       {
         "title": "File chooser with a connection alias",
         "description": "This file chooser uses a connection alias `my-foo-alias`.",
         "element": "file-chooser",
-        "variable": "file_chooser2",
-        "connection": "connection_chooser",
+        "variable": "file_chooser_alias",
+        "connection": "connection_dropbox",
         "connection_alias": "my-foo-alias"
       },
       {
         "title": "Single file selection file chooser",
         "description": "This file chooser only allows a single file to be selected.",
         "element": "file-chooser",
-        "variable": "file_chooser3",
-        "connection": "connection_chooser",
+        "variable": "file_chooser_single_file",
+        "connection": "connection_dropbox",
         "allow_multiple": false,
         "allow_folders": false
       },
       {
         "description": "Folder only file chooser",
         "element": "file-chooser",
-        "variable": "folder_chooser1",
-        "connection": "connection_chooser",
+        "variable": "folder_chooser_folders_only",
+        "connection": "connection_dropbox",
         "folders_only": true
       },
       {
         "description": "Single folder selection file chooser",
         "element": "file-chooser",
-        "variable": "folder_chooser2",
-        "connection": "connection_chooser",
+        "variable": "folder_chooser_single_folder",
+        "connection": "connection_dropbox",
         "folders_only": true,
         "allow_multiple": false
       }
