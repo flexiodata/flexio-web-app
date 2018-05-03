@@ -172,6 +172,10 @@ class Factory
                 $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
+            case self::TYPE_EMAIL:
+                $service = \Flexio\Services\Email::create($connection_info);
+                break;
+
             case self::TYPE_AMAZONS3:
                     $auth_params = array(
                         'region' => $connection_info['region'] ?? '',
