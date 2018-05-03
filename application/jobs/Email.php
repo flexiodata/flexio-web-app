@@ -27,8 +27,8 @@ EXAMPLE:
     "params": {
         "to": "",
         "subject": "",
-        "body_text": "",
-        "body_html": "",
+        "body": "",
+        "html": "",s
         "attachments": [
             {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
             {"file": "<path>"},
