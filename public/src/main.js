@@ -133,6 +133,7 @@ router.beforeEach((to, from, next) => {
   {
     // user is signed in; move to the next route
     store.dispatch('fetchConnections')
+    store.dispatch('fetchTokens')
     next()
   }
    else if (to.matched.some(record => record.meta.requiresAuth))
@@ -150,6 +151,7 @@ router.beforeEach((to, from, next) => {
       {
         // user is signed in; move to the next route
         store.dispatch('fetchConnections')
+        store.dispatch('fetchTokens')
         next()
       }
        else
