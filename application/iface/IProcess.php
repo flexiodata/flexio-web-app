@@ -26,6 +26,7 @@ interface IProcess
     public function addLocalConnection(string $identifier, array $connection_properties);
     public function getLocalConnection(string $identifier);
     public function getLocalConnections();
+    public function getConnection(string $identifier);
     public function setStdin(\Flexio\IFace\IStream $stream);
     public function getStdin();
     public function setStdout(\Flexio\IFace\IStream $stream);
