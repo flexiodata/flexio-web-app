@@ -440,14 +440,14 @@ class Email
             if (!$port)
             {
                 if ($this->security == 'tls')
-                    $this->port = 587;
+                    $port = 587;
                 else if ($this->security == 'ssl')
-                    $this->port = 465;
+                    $port = 465;
                 else
-                    $this->port = 25;
+                    $port = 25;
             }
 
-            $mail->SMTPDebug = 2;                // enable verbose debug output
+            //$mail->SMTPDebug = 2;                // enable verbose debug output
             $mail->isSMTP();                     // set mailer to use SMTP
             $mail->Host = $this->host;           // specify main and backup SMTP servers
             $mail->SMTPAuth = strlen($this->username) > 0 ? true:false; // Enable SMTP authentication
