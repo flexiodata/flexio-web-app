@@ -127,7 +127,7 @@
       },
       updateItems(items, path) {
         this.items = items
-        this.$emit('selection-change', this.items, path)
+        this.$emit('selection-change', items, path)
       }
     }
   }

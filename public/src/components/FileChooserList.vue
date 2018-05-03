@@ -77,8 +77,9 @@
       }
     },
     watch: {
-      path() {
-        this.refreshList()
+      path: {
+        handler: 'refreshList',
+        immediate: true
       }
     },
     computed: {
@@ -86,6 +87,8 @@
         var items = this.allowMultiple
           ? _.filter(this.items, { is_selected: true })
           : [ this.last_selected_item ]
+
+        items = _.compact(items)
 
         return this.allowFolders ? items : _.reject(items, { type: VFS_TYPE_DIR })
       },
@@ -98,9 +101,6 @@
 
         return 'This folder is empty'
       }
-    },
-    mounted() {
-      this.refreshList()
     },
     methods: {
       getSelectedItems() {
@@ -176,9 +176,16 @@
         if (this.path === false)
           return
 
+        this.items = []
+        this.last_selected_item = null
+        this.is_fetching = true
+
+        if (this.is_inited || this.fireSelectionChangeOnInit) {
+          this.fireSelectionChangeEvent(this.path)
+        }
+
         var path = _.defaultTo(this.path, '/')
 
-        this.is_fetching = true
         api.vfsListFiles({ path }).then(response => {
           var items = _
             .chain(_.defaultTo(response.body, []))
@@ -201,7 +208,7 @@
           this.is_inited = true
         }, response => {
           this.is_fetching = false
-          this.items = [].concat([])
+          this.items = []
           this.error_message = _.get(response.body, 'error.message', '')
         })
       }
