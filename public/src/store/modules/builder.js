@@ -80,6 +80,8 @@ const mutations = {
   UPDATE_CODE (state) {
     var code = state.def.pipe
 
+    const VFS_TYPE_DIR = 'DIR'
+
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
@@ -99,14 +101,26 @@ const mutations = {
         case 'file-chooser':
           var files = _.get(p, 'files', [])
           var connection_alias = _.get(p, 'connection_alias', false)
-          var paths = _.map(files, (f) => { return _.get(f, 'path', null) })
-          paths = _.compact(paths)
+          var paths = []
 
-          // '.connect()' alias is specified; use it instead of the connection eid/alias
+          // for file selection file choosers, append '/*' to any folders that are selected
+          if (p.folders_only !== true) {
+            files = _.map(files, (f) => {
+              var path = f.type === VFS_TYPE_DIR ? f.path + '/*' : f.path
+              var remote_path = f.type === VFS_TYPE_DIR ? f.remote_path + '/*' : f.remote_path
+              return _.assign({}, f, { path, remote_path })
+            })
+          }
+
           if (connection_alias) {
+            // '.connect()' alias is specified; use it instead of the connection eid/alias
             paths = _.map(files, (f) => { return _.get(f, 'remote_path', null) })
             paths = _.compact(paths)
             paths = _.map(paths, (p) => { return '/' + connection_alias + p })
+          } else {
+            // no connection alias specified; convert array of file objects into an array of paths
+            paths = _.map(files, (f) => { return _.get(f, 'path', null) })
+            paths = _.compact(paths)
           }
 
           // for single-select file choosers, don't output an array
