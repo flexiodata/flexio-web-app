@@ -447,7 +447,7 @@ class Email
                     $this->port = 25;
             }
 
-            //$mail->SMTPDebug = 2;              // enable verbose debug output
+            $mail->SMTPDebug = 2;                // enable verbose debug output
             $mail->isSMTP();                     // set mailer to use SMTP
             $mail->Host = $this->host;           // specify main and backup SMTP servers
             $mail->SMTPAuth = strlen($this->username) > 0 ? true:false; // Enable SMTP authentication
@@ -455,7 +455,8 @@ class Email
             $mail->Password = $this->password;    // SMTP password
             $mail->SMTPSecure = $this->security;  // '', 'ssl', or 'tls'
             $mail->Port = $port;
-        
+            $mail->Timeout = 30;                  // timeout in seconds
+
             $from = count($this->from_addresses) > 0 ? $this->from_addresses[0] : '';
             $mail->setFrom($from);
 
@@ -463,10 +464,10 @@ class Email
             {
                 $mail->addAddress($email);     // add a recipient
             }
-        
+
             $mail->Subject = $this->subject;
             $mail->Body = $this->msg_text;
-        
+
             $mail->send();
         }
         catch (Exception $e)
