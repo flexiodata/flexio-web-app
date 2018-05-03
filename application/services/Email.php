@@ -447,7 +447,7 @@ class Email
                     $this->port = 25;
             }
 
-            $mail->SMTPDebug = 2;              // enable verbose debug output
+            //$mail->SMTPDebug = 2;              // enable verbose debug output
             $mail->isSMTP();                     // set mailer to use SMTP
             $mail->Host = $this->host;           // specify main and backup SMTP servers
             $mail->SMTPAuth = strlen($this->username) > 0 ? true:false; // Enable SMTP authentication
