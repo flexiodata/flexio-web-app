@@ -36,6 +36,10 @@
   const VFS_TYPE_DIR  = 'DIR'
   const VFS_TYPE_FILE = 'FILE'
 
+  const endsWith = (str, suffix) => {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1
+  }
+
   export default {
     props: {
       'path': {
@@ -57,6 +61,10 @@
       'allow-folders': {
         type: Boolean,
         default: true
+      },
+      'filetype-filter': {
+        type: Array,
+        default: () => { return [] }
       },
       'fire-selection-change-on-init': {
         type: Boolean,
@@ -196,6 +204,28 @@
           // only show folders
           if (this.foldersOnly)
             items = _.filter(items, (item) => { return this.isFolderItem(item) })
+
+          // filter by filetype
+          if (this.filetypeFilter.length > 0) {
+            var filetypes = _.map(this.filetypeFilter, (ft) => { return '.' + ft.toLowerCase() })
+            items = _.filter(items, (item) => {
+              // don't filter out folders
+              if (this.isFolderItem(item)) {
+                return true
+              }
+
+              var filename = item.path.toLowerCase()
+
+              var found = false
+              _.each(filetypes, (ft) => {
+                if (endsWith(filename, ft)) {
+                  found = true
+                }
+              })
+
+              return found
+            })
+          }
 
           this.is_fetching = false
           this.items = [].concat(items)

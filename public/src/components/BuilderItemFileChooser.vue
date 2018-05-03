@@ -121,7 +121,7 @@
         return _.find(this.connections, { eid: this.ceid }, null)
       },
       chooser_options() {
-        var opts = _.pick(this.item, ['folders_only', 'allow_multiple', 'allow_folders'])
+        var opts = _.pick(this.item, ['allow_multiple', 'allow_folders', 'folders_only', 'filetype_filter'])
         return _.mapKeys(opts, (val, key) => { return _.kebabCase(key) })
       }
     },

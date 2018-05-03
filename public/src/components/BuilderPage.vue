@@ -166,6 +166,14 @@
         "connection": "connection_dropbox"
       },
       {
+        "title": "File chooser with CSVs only",
+        "description": "This file chooser only allows CSV files to be selected.",
+        "element": "file-chooser",
+        "variable": "file_chooser_default",
+        "connection": "connection_dropbox",
+        "filetype_filter": ['csv']
+      },
+      {
         "title": "File chooser with a connection alias",
         "description": "This file chooser uses a connection alias `my-foo-alias`.",
         "element": "file-chooser",
