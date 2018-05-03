@@ -55,8 +55,8 @@ class Email extends \Flexio\Jobs\Base
             $to = explode(',', $to);
 
         $subject = isset($params['subject']) ? $params['subject'] : '';
-        $body_text = isset($params['body_text']) ? $params['body_text'] : '';
-        $body_html = isset($params['body_html']) ? $params['body_html'] : '';
+        $body_text = isset($params['body']) ? $params['body'] : '';
+        $body_html = isset($params['html']) ? $params['html'] : '';
 
         // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
         // an email at once; also, only allow one email notice a second; of course multiple
