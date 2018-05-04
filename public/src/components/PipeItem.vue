@@ -1,7 +1,6 @@
 <template>
   <article
-    class="css-list-item mv3-l pv3 ph3 bb ba-l br2-l no-select shadow-sui-segment-l trans-pm"
-    :class="isTrash ? 'css-trash-item' : 'pointer'"
+    class="css-list-item mv3-l pv3 ph3 bb ba-l br2-l pointer no-select shadow-sui-segment-l trans-pm"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -18,15 +17,13 @@
         <ServiceIcon :type="input_type" class="dib v-mid br2 square-3 mr2" v-show="input_type.length > 0" />
         <ServiceIcon :type="output_type" class="dib v-mid br2 square-3" v-show="output_type.length > 0" />
       </div>
-      <div class="flex-none mr1 nt3 nb3" v-if="!isTrash">
-        <div class="pv3" @click.stop="toggleScheduled">
-          <ToggleButton
+      <div class="flex-none nt3 nb3">
+        <div class="pv3" @click.stop>
+          <el-switch
             class="hint--bottom"
-            style="display: block"
+            active-color="#009900"
             :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-            :checked="is_scheduled"
-            :prevent-default="true"
-            @click.stop="toggleScheduled"
+            v-model="is_scheduled"
           />
         </div>
       </div>
@@ -57,28 +54,16 @@
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import util from '../utils'
   import ServiceIcon from './ServiceIcon.vue'
-  import ToggleButton from './ToggleButton.vue'
 
   export default {
     props: {
       'item': {
         type: Object,
         required: true
-      },
-      'index': {
-        type: Number
-      },
-      'menu-items': {
-        type: Array
-      },
-      'is-trash': {
-        type: Boolean,
-        default: false
       }
     },
     components: {
-      ServiceIcon,
-      ToggleButton
+      ServiceIcon
     },
     computed: {
       input_type() {
@@ -90,8 +75,30 @@
       has_description() {
         return _.get(this.item, 'description', '').length > 0
       },
-      is_scheduled() {
-        return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+      is_scheduled: {
+        get() {
+          return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+        },
+        set(val) {
+          var attrs = {
+            schedule_status: this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
+          }
+
+          // if we don't have a schedule object, default to scheduling the pipe daily at 8am
+          if (!_.isObject(_.get(this.item, 'schedule')))
+          {
+            _.assign(attrs, {
+              schedule: {
+                frequency: SCHEDULE_FREQUENCY_DAILY,
+                timezone: TIMEZONE_UTC,
+                days: [],
+                times: [{ hour: 8, minute: 0 }]
+              }
+            })
+          }
+
+          this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+        }
       },
       owner_username() {
         return _.get(this.item, 'owned_by.username', '')
@@ -122,9 +129,6 @@
     },
     methods: {
       openPipe() {
-        if (this.isTrash)
-          return
-
         this.$router.push(this.pipe_route)
       },
       trashPipe() {
@@ -147,26 +151,6 @@
           case 'delete':    return this.$emit('delete', this.item)
           case 'trash':     return this.trashPipe()
         }
-      },
-      toggleScheduled() {
-        var attrs = {
-          schedule_status: this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
-        }
-
-        // if we don't have a schedule object, default to scheduling the pipe daily at 8am
-        if (!_.isObject(_.get(this.item, 'schedule')))
-        {
-          _.assign(attrs, {
-            schedule: {
-              frequency: SCHEDULE_FREQUENCY_DAILY,
-              timezone: TIMEZONE_UTC,
-              days: [],
-              times: [{ hour: 8, minute: 0 }]
-            }
-          })
-        }
-
-        this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
       }
     }
   }
