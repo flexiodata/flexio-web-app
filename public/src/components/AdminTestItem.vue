@@ -1,9 +1,9 @@
 <template>
   <article class="pa1 ma1 ba b--black-05" :class="cls">
-    <div class="flex flex-row items-center">
-      <span class="black-30 mr1" @click="toggleDetails">
+    <div class="flex flex-row items-center pointer na1 pa1" @click="toggleDetails">
+      <span class="black-30 mr1">
         <i
-          class="material-icons db v-mid pointer"
+          class="material-icons db v-mid"
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
@@ -19,7 +19,7 @@
     <div class="pt2 pl2 f6" v-if="is_xhr_ok===false">
       <pre class="ma0">{{item.error_text}}</pre>
     </div>
-    <div class="pt1" v-if="item.details" v-show="!show_details">
+    <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
         <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
