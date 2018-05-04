@@ -20,6 +20,37 @@ class Test
 {
     public function run(&$results)
     {
+// TODO: add test for following:
+
+/*
+    // BEGIN TEST
+    $foldername = 'empty_folder1';
+    $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername . '/'); // folder path with path terminator
+    $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
+    $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+    $expected = [$foldername];
+    \Flexio\Tests\Check::assertInArray("B.1", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+    // BEGIN TEST
+    $foldername = 'empty_folder2';
+    $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername); // folder path without path terminator
+    $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
+    $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
+    $expected = [$foldername];
+    \Flexio\Tests\Check::assertInArray("B.2", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+
+    // BEGIN TEST
+    $foldername = 'empty_folder3';
+    $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
+    $has_error_after_first_attempt = $process_create->hasError();
+    $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
+    $has_error_after_second_attempt = $process_create->hasError();
+    $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
+    $expected = true;
+    \Flexio\Tests\Check::assertBoolean("B.3", 'Process Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
+*/
+
+
         // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
@@ -83,34 +114,6 @@ class Test
                 "type":"DIR"
             }]';
             \Flexio\Tests\Check::assertInArray("B.$idx", 'Process Mkdir; ('.$storage_location.') creating an empty folder (trailing slash after folder name); folder should be ' . $folderpath, $actual, $expected, $results);
-
-/*
-        // BEGIN TEST
-        $foldername = 'empty_folder1';
-        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername . '/'); // folder path with path terminator
-        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
-        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
-        $expected = [$foldername];
-        \Flexio\Tests\Check::assertInArray("B.1", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
-
-        // BEGIN TEST
-        $foldername = 'empty_folder2';
-        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername); // folder path without path terminator
-        $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
-        $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
-        $expected = [$foldername];
-        \Flexio\Tests\Check::assertInArray("B.2", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
-
-        // BEGIN TEST
-        $foldername = 'empty_folder3';
-        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
-        $has_error_after_first_attempt = $process_create->hasError();
-        $process_create = \Flexio\Tests\Process::mkdir($process_owner, $folderpath . '/' . $foldername);
-        $has_error_after_second_attempt = $process_create->hasError();
-        $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean("B.3", 'Process Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
-*/
         }
     }
 }

@@ -30,11 +30,11 @@ class Test
         $storage_items = [
             \Flexio\Tests\Base::STORAGE_LOCAL,
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
-            //\Flexio\Tests\Base::STORAGE_BOX,
-            //\Flexio\Tests\Base::STORAGE_DROPBOX,
-            //\Flexio\Tests\Base::STORAGE_GITHUB,
-            //\Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
-            //\Flexio\Tests\Base::STORAGE_SFTP
+            \Flexio\Tests\Base::STORAGE_BOX,
+            \Flexio\Tests\Base::STORAGE_DROPBOX,
+            \Flexio\Tests\Base::STORAGE_GITHUB,
+            \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
+            \Flexio\Tests\Base::STORAGE_SFTP
         ];
 
 
