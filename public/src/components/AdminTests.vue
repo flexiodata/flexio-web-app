@@ -5,7 +5,7 @@
       <div class="flex flex-row items-center">
         <el-input
           class="w-100 mw5 mr2"
-          size="medium"
+          size="small"
           placeholder="Filter tests..."
           :disabled="is_running"
           @keydown.esc.native="filter = ''"
@@ -13,7 +13,7 @@
         />
         <el-button
           type="primary"
-          size="medium"
+          size="small"
           class="ttu b"
           @click="runTests"
           v-if="!is_running"
@@ -22,7 +22,7 @@
         </el-button>
         <el-button
           type="danger"
-          size="medium"
+          size="small"
           class="ttu b"
           :disabled="is_canceled"
           @click="cancelTests"
@@ -43,13 +43,13 @@
           Only show errors
         </span>
         <div class="flex-fill">&nbsp;</div>
-        <div class="f5 b pv2 ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
+        <div class="f6 ttu b ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
         <span class="moon-gray" v-show="ajax_fail_cnt > 0">/</span>
-        <div class="f5 b pv2 ph2 dark-green">Passed: {{pass_cnt}}</div>
+        <div class="f6 ttu b ph2 dark-green">Passed: {{pass_cnt}}</div>
         <span class="moon-gray">/</span>
-        <div class="f5 b pv2 ph2 dark-red">Failed: {{fail_cnt}}</div>
+        <div class="f6 ttu b ph2 dark-red">Failed: {{fail_cnt}}</div>
         <span class="moon-gray">/</span>
-        <div class="f5 b pv2 ph2">Total: {{total_cnt}}</div>
+        <div class="f6 ttu b ph2">Total: {{total_cnt}}</div>
       </div>
     </div>
     <div class="flex-fill overflow-auto">
