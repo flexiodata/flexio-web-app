@@ -4,7 +4,7 @@
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
     >
-      <spinner size="large" message="Loading..." />
+      <Spinner size="large" message="Loading..." />
     </div>
     <div
       class="center"
@@ -13,7 +13,7 @@
     >
       <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
       <div class="flex flex-row">
-        <builder-list
+        <BuilderList
           class="flex-fill"
           :container-id="id"
           :show-insert-buttons="false"
@@ -26,7 +26,7 @@
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
               <div class="flex-fill fw6 gray">Output</div>
             </div>
-            <code-editor
+            <CodeEditor
               class="flex-fill overflow-auto"
               lang="javascript"
               :options="{ lineNumbers: false, readOnly: true }"

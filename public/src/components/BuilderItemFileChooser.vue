@@ -10,7 +10,7 @@
     >
     </div>
     <div v-show="is_active">
-      <file-chooser
+      <FileChooser
         class="bb b--light-gray"
         style="max-height: 24rem"
         :connection="store_connection"
@@ -32,7 +32,7 @@
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
-          <file-chooser-item
+          <FileChooserItem
             :item="file"
             :index="file_index"
             v-for="(file, file_index) in item.files"
@@ -47,7 +47,6 @@
 <script>
   import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
-  import TaskIcon from './TaskIcon.vue'
   import FileChooser from './FileChooser.vue'
   import FileChooserItem from './FileChooserItem.vue'
 
@@ -65,7 +64,6 @@
       }
     },
     components: {
-      TaskIcon,
       FileChooser,
       FileChooserItem
     },

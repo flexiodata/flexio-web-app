@@ -13,7 +13,7 @@
     </div>
     <div v-show="is_active">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
-      <connection-chooser-list
+      <ConnectionChooserList
         class="mb3 bt bb b--light-gray overflow-auto"
         style="max-height: 277px"
         :connection="store_connection"
@@ -35,7 +35,7 @@
       </div>
     </div>
     <div v-if="is_before_active">
-      <connection-chooser-item
+      <ConnectionChooserItem
         class="mb3 bt bb b--black-10"
         :item="store_connection"
         :connection-eid="ceid"
@@ -51,7 +51,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_connection_dialog"
     >
-      <connection-edit-panel
+      <ConnectionEditPanel
         :connection="edit_connection"
         :mode="edit_mode"
         @close="show_connection_dialog = false"
@@ -68,7 +68,6 @@
   import { mapState, mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ServiceIcon from './ServiceIcon.vue'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
@@ -87,7 +86,6 @@
     },
     mixins: [MixinConnectionInfo],
     components: {
-      ServiceIcon,
       ConnectionEditPanel,
       ConnectionChooserList,
       ConnectionChooserItem
