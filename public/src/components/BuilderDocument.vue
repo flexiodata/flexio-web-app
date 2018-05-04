@@ -248,7 +248,7 @@
     },
     data() {
       return {
-        id: _.uniqueId('builder-page-')
+        id: _.uniqueId('builder-doc-')
       }
     },
     computed: {
