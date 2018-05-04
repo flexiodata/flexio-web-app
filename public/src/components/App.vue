@@ -36,7 +36,6 @@
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
-    ROUTE_PIPES,
     ROUTE_HOME_LEARN
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
@@ -68,7 +67,7 @@
         return _.get(this.$route, 'name', '')
       },
       show_navbar() {
-        return this.route_name == ROUTE_PIPES ? false : true
+        return true
       },
       show_intercom_button() {
         switch (this.route_name)
