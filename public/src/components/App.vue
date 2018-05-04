@@ -34,6 +34,7 @@
     ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
+    ROUTE_PIPES,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
     ROUTE_HOME_LEARN
@@ -67,7 +68,7 @@
         return _.get(this.$route, 'name', '')
       },
       show_navbar() {
-        return true
+        return this.route_name == ROUTE_PIPES ? false : true
       },
       show_intercom_button() {
         switch (this.route_name)
