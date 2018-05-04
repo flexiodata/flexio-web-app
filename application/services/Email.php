@@ -465,6 +465,11 @@ class Email
                 $mail->addAddress($email);     // add a recipient
             }
 
+            foreach ($this->attachments as $attachment)
+            {
+                $mail->addAttachment($attachment['file'], $attachment['name'], 'base64', $attachment['mime_type']);
+            }
+            
             $mail->Subject = $this->subject;
             $mail->Body = $this->msg_text;
 

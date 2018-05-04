@@ -28,11 +28,7 @@ EXAMPLE:
         "to": "",
         "subject": "",
         "body": "",
-<<<<<<< HEAD
         "html": "",
-=======
-        "html": "",s
->>>>>>> d191d710f56d5ba1247d3b74cb2bb5ddb43e59bb
         "attachments": [
             {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
             {"file": "<path>"},
@@ -78,6 +74,69 @@ class Email extends \Flexio\Jobs\Base
         $email->setSubject($subject);
         $email->setMessageText($body_text);
         $email->setMessageHtml($body_html);
+
+
+
+
+        $attachments = array();
+        if (isset($params['attachments']))
+        {
+            if (!is_array($params['attachments']) || \Flexio\Base\Util::isAssociativeArray($params['attachments']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'attachments' parameter must be an array");
+
+            foreach ($params['attachments'] as $attachment)
+            {
+                if (is_string($attachment))
+                {
+                    $file = $attachment;
+                    $name = null;
+                    $mime_type = null;
+                }
+                else if (isset($attachment['file']))
+                {
+                    $file = $attachment['file'];
+                    $name = $attachment['name'] ?? null;
+                    $mime_type = $attachment['mime_type'] ?? null;
+                }
+
+
+                if ($name === null)
+                {
+                    $name = substr($file, strrpos($file, '/') + 1);
+                }
+
+                if ($mime_type === null)
+                {
+                    $mime_type = \Flexio\Base\ContentType::getMimeTypeFromExtension($name);
+                }
+
+                $attachments[] = [
+                    'name' => $name,
+                    'file' => $file,
+                    'mime_type' => $mime_type
+                ];
+            }
+        }
+
+
+        if (count($attachments) > 0)
+        {
+            foreach ($attachments as &$attachment)
+            {
+                self::convertToDiskFile($process, $attachment);
+
+                $email->addAttachment($attachment);
+            }
+
+            
+        }
+
+
+
+
+
+
+
 
         $email->send();
 
