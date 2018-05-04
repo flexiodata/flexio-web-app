@@ -1,0 +1,7 @@
+.DS_Store
+public/node_modules/
+public/npm-debug.log
+public/dist/fonts
+scripts/docker/
+config
+vendor
