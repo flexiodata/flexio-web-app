@@ -69,7 +69,7 @@
         return true
       },
       show_intercom_button() {
-        switch (this.route_name)
+        switch (this.$route.name)
         {
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
@@ -86,7 +86,7 @@
       },
       config_show_onboarding() {
         // don't ever show the onboarding modal when the user enters via the builder
-        if (this.route_name == ROUTE_BUILDER)
+        if (this.$route.name == ROUTE_BUILDER)
           return false
 
         // we have to do 'config_show_onboarding' as a computed value since
@@ -111,7 +111,7 @@
         'getActiveUser'
       ]),
       checkRoute() {
-        if (this.route_name == ROUTE_BUILDER) {
+        if (this.$route.name == ROUTE_BUILDER) {
           this.show_onboarding_modal = false
           this.updateOnboardingConfig()
         }

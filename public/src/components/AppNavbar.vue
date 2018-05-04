@@ -1,8 +1,8 @@
 <template>
   <nav class="z-2" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
     <div class="flex flex-row items-center bg-white pa1 ph3-ns" style="min-height: 54px">
-      <div class="flex-fill flex flex-row items-center truncate">
-        <router-link to="/home" class="dib link v-mid min-w3" title="Home">
+      <div class="flex-fill flex flex-row items-center">
+        <router-link to="/home" class="dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
         <AppBreadcrumbs class="flex flex-row items-center lh-title f6 fw6 f4-ns fw4-ns" />
