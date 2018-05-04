@@ -1,9 +1,9 @@
 import { ROUTE_PIPES } from '../constants/route'
-import PipeHome from '../components/PipeHome.vue'
+import PipeDocument from '../components/PipeDocument.vue'
 
 export default {
   path: '/pipes/:eid/:view?/:state?',
   name: ROUTE_PIPES,
-  component: PipeHome,
+  component: PipeDocument,
   meta: { requiresAuth: true }
 }

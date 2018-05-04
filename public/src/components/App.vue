@@ -31,10 +31,8 @@
 <script>
   import {
     ROUTE_BUILDER,
-    ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
-    ROUTE_PIPES,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
     ROUTE_HOME_LEARN
@@ -68,12 +66,11 @@
         return _.get(this.$route, 'name', '')
       },
       show_navbar() {
-        return this.route_name == ROUTE_PIPES ? false : true
+        return true
       },
       show_intercom_button() {
         switch (this.route_name)
         {
-          case ROUTE_EMBED:
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:
@@ -131,8 +128,11 @@
         this.show_onboarding_modal = false
 
         setTimeout(() => {
-          if (this.$route.name != ROUTE_HOME_LEARN)
+          // redirect to the app learning if the user
+          // just signed up and saw the onboarding dialog
+          if (this.$route.name != ROUTE_HOME_LEARN) {
             this.$router.push({ name: ROUTE_HOME_LEARN })
+          }
 
           this.updateOnboardingConfig()
         }, 10)
