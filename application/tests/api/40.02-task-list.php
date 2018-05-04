@@ -55,7 +55,7 @@ class Test
                 {"op": "write", "params": {"path": "'.$filepath2.'"}},
                 {"op": "list", "params": {"path": "'.$filepath1.'"}}
             ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$filename1.'",

@@ -51,7 +51,7 @@ class Test
                 {"op": "mkdir", "params": {"path": "'.$folderpath.'"}},
                 {"op": "list", "params": {"path": "'.$folderpath.'"}}
             ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$foldername.'",
@@ -75,7 +75,7 @@ class Test
                 {"op": "mkdir", "params": {"path": "'.$folderpath.'"}},
                 {"op": "list", "params": {"path": "'.$folderpath.'"}}
             ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$foldername.'",
