@@ -276,8 +276,14 @@
         } else {
           axios.get('/def/templates/' + this.slug + '.json').then(response => {
             var def = response.data
+            _.assign(def, { slug: this.slug })
+
             this.$store.commit('builder/INIT_DEF', def)
             this.$store.commit('builder/FETCHING_DEF', false)
+            this.$store.track('Started Template', {
+              title: def.title,
+              slug: def.slug
+            })
           }).catch(error => {
             this.$store.commit('builder/FETCHING_DEF', false)
           })
