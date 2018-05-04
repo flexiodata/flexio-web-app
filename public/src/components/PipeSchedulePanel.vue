@@ -8,14 +8,18 @@
     </div>
 
     <div class="flex flex-row items-center mb3">
-      <toggle-button
-        :checked="is_scheduled"
-        @click="toggleScheduled"
+      <el-switch
+        class="hint--bottom"
+        active-color="#009900"
+        :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+        v-model="is_scheduled"
       />
       <span
         class="f5 pl2 pointer"
         @click.stop="toggleScheduled"
-      >{{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}</span>
+      >
+        {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+      </span>
     </div>
     <div class="flex flex-row">
       <div class="flex-fill mr5">
@@ -74,7 +78,6 @@
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { timezones } from '../constants/timezone'
   import * as schedule from '../constants/schedule'
-  import ToggleButton from './ToggleButton.vue'
   import ValueSelect from './ValueSelect.vue'
   import TimeChooserList from './TimeChooserList.vue'
 
@@ -134,7 +137,6 @@
       }
     },
     components: {
-      ToggleButton,
       ValueSelect,
       TimeChooserList
     },
@@ -168,8 +170,14 @@
           schedule.SCHEDULE_FREQUENCY_MONTHLY
         ], this.getFrequency())
       },
-      is_scheduled() {
-        return _.get(this.edit_pipe, 'schedule_status') == schedule.SCHEDULE_STATUS_ACTIVE ? true : false
+      is_scheduled: {
+        get() {
+          return _.get(this.edit_pipe, 'schedule_status') == schedule.SCHEDULE_STATUS_ACTIVE ? true : false
+        },
+        set() {
+          var status = this.is_scheduled ? schedule.SCHEDULE_STATUS_INACTIVE : schedule.SCHEDULE_STATUS_ACTIVE
+          _.set(this.edit_pipe, 'schedule_status', status)
+        }
       }
     },
     methods: {
