@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -59,7 +59,7 @@ class Test
                 "path":"'.$folderpath.$filename.'",
                 "type":"FILE"
             }]';
-            \Flexio\Tests\Check::assertInArray("A.$idx", 'List; ('.$storage_location.') listing of folder with single file ' . $folderpath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("A.$idx", 'Process List; ('.$storage_location.') listing of folder with single file ' . $folderpath, $actual, $expected, $results);
         }
     }
 }

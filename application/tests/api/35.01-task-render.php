@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -31,31 +31,15 @@ class Test
 
 
         // TEST: render task basic functionality
-
-        // BEGIN TEST
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "render",
-                    "params": {
-                        "url": "https://www.flex.io",
-                        "width": 50,
-                        "height": 50
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
+        $tasks = json_decode('[{
+            "op": "render",
+            "params": {
+                "url": "https://www.flex.io",
+                "width": 50,
+                "height": 50
+            }
+        }]',true);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
         $response = $result['response'] ?? '';
         $mime_type = '';
         $content_type = '';
@@ -72,7 +56,7 @@ class Test
             "response_mime_type" => "image/png",
             "response_content_type" => "charset=binary"
         );
-        \Flexio\Tests\Check::assertArray('A.1', 'POST /:userid/pipes/:objeid/run; render task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Process Render; basic functionality',  $actual, $expected, $results);
     }
 }
 

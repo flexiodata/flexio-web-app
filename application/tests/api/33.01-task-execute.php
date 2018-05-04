@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -38,35 +38,21 @@ def flexio_handler(context):
     context.output.content_type = "text/plain"
     context.output.write("Hello, World!")
 EOD;
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
+        $tasks = json_decode('[{
+            "op": "execute",
+            "params": {
+                "lang": "python",
+                "code": "'.base64_encode($script).'"
+            }
+        }]',true);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
         $actual = $result;
         $expected = '{
             "code": 200,
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task basic functionality',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -75,35 +61,21 @@ exports.flexio_handler = function(context) {
     context.output.write('Hello, World!')
 }
 EOD;
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "javascript",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
+        $tasks = json_decode('[{
+            "op": "execute",
+            "params": {
+                "lang": "javascript",
+                "code": "'.base64_encode($script).'"
+            }
+        }]',true);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
         $actual = $result;
         $expected = '{
             "code": 200,
             "content_type": "text\/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task basic functionality',  $actual, $expected, $results);
     }
 }
 

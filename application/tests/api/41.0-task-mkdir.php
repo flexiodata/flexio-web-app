@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -58,7 +58,7 @@ class Test
                 "path":"'.$folderpath.'",
                 "type":"DIR"
             }]';
-            \Flexio\Tests\Check::assertInArray("A.$idx", 'Mkdir; ('.$storage_location.') creating an empty folder (no trailing slash after folder name); folder should be ' . $folderpath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("A.$idx", 'Process Mkdir; ('.$storage_location.') creating an empty folder (no trailing slash after folder name); folder should be ' . $folderpath, $actual, $expected, $results);
         }
 
 
@@ -82,7 +82,7 @@ class Test
                 "path":"'.$folderpath.'",
                 "type":"DIR"
             }]';
-            \Flexio\Tests\Check::assertInArray("B.$idx", 'Mkdir; ('.$storage_location.') creating an empty folder (trailing slash after folder name); folder should be ' . $folderpath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("B.$idx", 'Process Mkdir; ('.$storage_location.') creating an empty folder (trailing slash after folder name); folder should be ' . $folderpath, $actual, $expected, $results);
 
 /*
         // BEGIN TEST
@@ -91,7 +91,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
-        \Flexio\Tests\Check::assertInArray("B.1", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray("B.1", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder2';
@@ -99,7 +99,7 @@ class Test
         $process_list = \Flexio\Tests\Process::list($process_owner, $folderpath);
         $actual = \Flexio\Tests\Content::getValues($process_list->getStdout(), 'name');
         $expected = [$foldername];
-        \Flexio\Tests\Check::assertInArray("B.2", 'Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray("B.2", 'Process Mkdir; create an empty folder; folder should be ' . $foldername, $actual, $expected, $results);
 
         // BEGIN TEST
         $foldername = 'empty_folder3';
@@ -109,7 +109,7 @@ class Test
         $has_error_after_second_attempt = $process_create->hasError();
         $actual = ($has_error_after_first_attempt === false && $has_error_after_second_attempt === true);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean("B.3", 'Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean("B.3", 'Process Mkdir; throw an exception when attempting to create a folder that already exists', $actual, $expected, $results);
 */
         }
     }
