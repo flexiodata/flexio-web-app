@@ -16,7 +16,7 @@
       />
       <span
         class="f5 pl2 pointer"
-        @click.stop="toggleScheduled"
+        @click.stop="is_scheduled = !is_scheduled"
       >
         {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
       </span>
@@ -212,11 +212,6 @@
       },
       getFrequency() {
         return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
-      },
-      toggleScheduled() {
-        this.edit_pipe.schedule_status = this.is_scheduled
-          ? schedule.SCHEDULE_STATUS_INACTIVE
-          : schedule.SCHEDULE_STATUS_ACTIVE
       },
       updateTime(item, index) {
         var times = _.get(this.edit_pipe, 'schedule.times', [])

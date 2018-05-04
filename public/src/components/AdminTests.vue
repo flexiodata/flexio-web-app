@@ -31,15 +31,20 @@
           <span v-if="is_canceled">Canceling...</span>
           <span v-else>Cancel</span>
         </el-button>
-        <toggle-button
+        <el-switch
           class="ml3 mr1"
-          :checked="show_errors_only"
-          @click="toggleErrorsOnly"
+          active-color="#009900"
+          v-model="show_errors_only"
         />
-        <span class="f5 fw6 pointer black-60" @click.stop="toggleErrorsOnly">Only show errors</span>
+        <span
+          class="f5 pl2 pointer"
+          @click="show_errors_only = !show_errors_only"
+        >
+          Only show errors
+        </span>
         <div class="flex-fill">&nbsp;</div>
         <div class="f5 b pv2 ph2 yellow" v-show="ajax_fail_cnt > 0">AJAX Errors: {{ajax_fail_cnt}}</div>
-        <span class="moon-gray">/</span>
+        <span class="moon-gray" v-show="ajax_fail_cnt > 0">/</span>
         <div class="f5 b pv2 ph2 dark-green">Passed: {{pass_cnt}}</div>
         <span class="moon-gray">/</span>
         <div class="f5 b pv2 ph2 dark-red">Failed: {{fail_cnt}}</div>
@@ -59,15 +64,13 @@
 
 <script>
   import api from '../api'
-  import ToggleButton from './ToggleButton.vue'
   import AdminTestItem from './AdminTestItem.vue'
-  import CommonFilter from './mixins/common-filter'
-  import GetResponseText from './mixins/get-response-text'
+  import MixinCommonFilter from './mixins/common-filter'
+  import MixinGetResponseText from './mixins/get-response-text'
 
   export default {
-    mixins: [CommonFilter, GetResponseText],
+    mixins: [MixinCommonFilter, MixinGetResponseText],
     components: {
-      ToggleButton,
       AdminTestItem
     },
     data() {
@@ -191,9 +194,6 @@
       },
       cancelTests() {
         this.is_canceled = true
-      },
-      toggleErrorsOnly() {
-        this.show_errors_only = !this.show_errors_only
       }
     }
   }
