@@ -26,7 +26,6 @@
     "marked": "^0.3.6",
     "moment": "^2.17.1",
     "stickybits": "^3.2.3",
-    "tachyons": "^4.6.1",
     "vee-validate": "2.0.0-beta.18",
     "vue": "^2.5.13",
     "vue-chartjs": "^3.0.2",
