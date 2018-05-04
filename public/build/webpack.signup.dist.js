@@ -80,7 +80,9 @@ config.module.rules = (config.module.rules || [])
 config.plugins = (config.plugins || []).concat([
   // Set the production environment
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production')
+    'process.env': {
+      NODE_ENV: JSON.stringify('production')
+    }
   }),
 
   new webpack.ProvidePlugin({
