@@ -103,7 +103,7 @@
           :index="index"
           v-else-if="item.element == 'form'"
         />
-        <BuilderItemSummaryPage
+        <BuilderItemSummary
           :item="item"
           :index="index"
           v-else-if="item.element == 'summary-page'"
@@ -150,7 +150,7 @@
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
-  import BuilderItemSummaryPage from './BuilderItemSummaryPage.vue'
+  import BuilderItemSummary from './BuilderItemSummary.vue'
 
   export default {
     props: {
@@ -185,7 +185,7 @@
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
-      BuilderItemSummaryPage
+      BuilderItemSummary
     },
     computed: {
       ...mapState({
