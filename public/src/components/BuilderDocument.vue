@@ -163,7 +163,7 @@
         "description": "This is the default file chooser. Multiple files and folder can be selected at the same time.",
         "element": "file-chooser",
         "variable": "file_chooser_default",
-        "connection": "connection_dropbox"
+        "connection": "connection_any"
       },
       {
         "title": "File chooser with CSVs only",

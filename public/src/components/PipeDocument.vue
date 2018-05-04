@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-nearer-white pa4 overflow-y-auto relative" :id="doc_id">
+  <div class="bg-nearer-white ph4 pb4 overflow-y-auto relative" :id="doc_id">
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
@@ -11,9 +11,11 @@
       style="max-width: 60rem; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
-      <h1 class="db mv0 pb4 fw6 mid-gray">{{title}}</h1>
+      <div class="sticky bg-nearer-white relative z-1">
+        <h1 class="db mv0 pv4 fw6 mid-gray">{{title}}</h1>
+      </div>
       <div>
-        <h3 class="fw6 mid-gray">Properties</h3>
+        <h3 class="mv4 fw6 mid-gray">Properties</h3>
         <el-form
           ref="form"
           style="max-width: 40rem"
@@ -32,6 +34,16 @@
             />
           </el-form-item>
           <el-form-item
+            key="alias"
+            label="Alias"
+            prop="alias"
+          >
+            <el-input
+              placeholder="Enter alias"
+              v-model="form_values.alias"
+            />
+          </el-form-item>
+          <el-form-item
             key="description"
             label="Description"
             prop="description"
@@ -44,13 +56,16 @@
           </el-form-item>
         </el-form>
 
-        <h3 class="fw6 mid-gray">Configuration</h3>
+        <h3 class="mv4 fw6 mid-gray">Configuration</h3>
+
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
 
@@ -71,7 +86,8 @@
     },
     data() {
       return {
-        form_values: null
+        form_values: null,
+        stickybits_instance: null
       }
     },
     computed: {
@@ -105,7 +121,16 @@
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)
           }
+
+          setTimeout(() => { this.initSticky() }, 100)
         })
+      },
+      initSticky() {
+        if (!_.isNil(this.stickybits_instance)) {
+          this.stickybits_instance.cleanup()
+        }
+
+        this.stickybits_instance = stickybits('.sticky')
       },
       updateForm() {
         if (this.form_values === null) {
