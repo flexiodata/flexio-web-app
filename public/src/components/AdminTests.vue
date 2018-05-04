@@ -37,7 +37,7 @@
           v-model="show_errors_only"
         />
         <span
-          class="f5 pl2 pointer"
+          class="f5 pl1 pointer"
           @click="show_errors_only = !show_errors_only"
         >
           Only show errors
