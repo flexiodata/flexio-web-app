@@ -22,6 +22,10 @@ const mutations = {
     state.edit_pipe = _.cloneDeep(pipe)
     state.fetched = true
   },
+
+  UPDATE_EDIT_PIPE (state, attrs) {
+    state.edit_pipe = _.cloneDeep(attrs)
+  }
 }
 
 const actions = {}
