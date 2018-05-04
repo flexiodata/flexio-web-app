@@ -113,8 +113,7 @@
           var pipe = response
           this.$store.commit('builder/CREATE_PIPE', pipe)
           this.$store.track('Finished Template', {
-            title: this.def.title,
-            slug: this.def.slug
+            title: this.def.title
           })
         })
       }
