@@ -35,13 +35,15 @@
           </el-form-item>
           <el-form-item
             key="alias"
-            label="Alias"
+            label="Path"
             prop="alias"
           >
             <el-input
               placeholder="Enter alias"
               v-model="form_values.alias"
-            />
+            >
+              <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
+            </el-input>
           </el-form-item>
           <el-form-item
             key="description"
