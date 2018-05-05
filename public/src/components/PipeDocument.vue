@@ -1,5 +1,8 @@
 <template>
-  <div class="bg-nearer-white ph4 pb4 overflow-y-auto relative" :id="doc_id">
+  <div
+    class="bg-nearer-white ph4 pb4 overflow-y-auto relative"
+    :id="doc_id"
+  >
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
