@@ -13,7 +13,7 @@
       <el-input
         style="max-width: 32rem"
         placeholder="Enter name"
-        autofocus
+        :autofocus="true"
         v-model="form_values.name"
       />
     </el-form-item>
