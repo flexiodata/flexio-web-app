@@ -14,14 +14,27 @@
       style="max-width: 60rem; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
-      <div class="sticky bg-nearer-white mv3 relative z-1">
-        <h1 class="db mv0 pv3 fw6 mid-gray">{{title}}</h1>
+      <div class="flex flex-row items-center bg-nearer-white mv3 relative z-1 sticky">
+        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+
+        <el-button
+          class="ttu b"
+          type="plain"
+          size="medium"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          size="medium"
+        >
+          Save
+        </el-button>
       </div>
       <div>
         <h3 class="mv4 fw6 mid-gray">Properties</h3>
-        <PipeDocumentForm
-          style="max-width: 48rem"
-        />
+        <PipeDocumentForm />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
       </div>
     </div>
