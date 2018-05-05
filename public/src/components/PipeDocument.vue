@@ -23,8 +23,6 @@
           style="max-width: 48rem"
         />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
-
-        </div>
       </div>
     </div>
   </div>
