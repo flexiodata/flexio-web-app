@@ -243,6 +243,9 @@
         immediate: true
       },
       is_fetched() {
+        if (!this.is_fetched)
+          return
+
         setTimeout(() => { stickybits('.sticky') }, 100)
       }
     },
