@@ -19,7 +19,7 @@
       </div>
       <div>
         <h3 class="mv4 fw6 mid-gray">Properties</h3>
-        <PipeEditForm
+        <PipeDocumentForm
           style="max-width: 48rem"
         />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
@@ -34,12 +34,12 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
-  import PipeEditForm from './PipeEditForm.vue'
+  import PipeDocumentForm from './PipeDocumentForm.vue'
 
   export default {
     components: {
       Spinner,
-      PipeEditForm
+      PipeDocumentForm
     },
     watch: {
       eid: {
