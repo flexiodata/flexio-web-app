@@ -11,6 +11,7 @@
       prop="name"
     >
       <el-input
+        style="max-width: 32rem"
         placeholder="Enter name"
         autofocus
         v-model="form_values.name"
@@ -22,6 +23,7 @@
       prop="alias"
     >
       <el-input
+        style="max-width: 32rem"
         placeholder="Enter alias"
         v-model="form_values.alias"
       >
@@ -47,7 +49,7 @@
       <el-input
         type="textarea"
         placeholder="Enter description"
-        rows="3"
+        :rows="3"
         v-model="form_values.description"
       />
     </el-form-item>
