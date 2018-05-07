@@ -48,11 +48,11 @@ class Test
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . '/' . $filename;
-            $tasks = json_decode('[
-                {"op": "write", "params": {"path": "'.$filepath.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.'"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "write", "path" => $filepath],
+                ["op" => "list", "path" => $folderpath]
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$filename.'",

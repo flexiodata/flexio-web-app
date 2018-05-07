@@ -86,10 +86,7 @@ class Test
                 "alias": "",
                 "description": "Test Pipe Description",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -115,10 +112,7 @@ class Test
             "name": "Test Pipe",
             "description": "Test Pipe Description",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",

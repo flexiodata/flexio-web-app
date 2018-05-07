@@ -53,18 +53,18 @@ class Test
 
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-            $tasks = json_decode('[
-                {"op": "create", "params": {"path": "'.$folderpath.$filename.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.$filename.'"}}
-            ]',true);
-            $result1 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "create", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
+            ]);
+            $result1 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $result1 = json_decode($result1['response'], true);
             $result1 = array_column($result1, 'name');
-            $tasks = json_decode('[
-                {"op": "delete", "params": {"path": "'.$folderpath.$filename.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.$filename.'"}}
-            ]',true);
-            $result2 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "delete", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
+            ]);
+            $result2 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $result2 = json_decode($result2['response'], true);
             $result2 = array_column($result2, 'name');
             $actual = array_values(array_diff($result1, $result2));

@@ -101,6 +101,17 @@ const GITHUB = {
   is_storage: true
 }
 
+const GMAIL = {
+  service_name: 'Gmail',
+  service_description: 'Free email service developed by Google.',
+  connection_type: types.CONNECTION_TYPE_GMAIL,
+  icon: require('../assets/icon/icon-gmail-128.png'),
+  is_service: true,
+  is_input: true,
+  is_output: true,
+  is_storage: true
+}
+
 const GOOGLEDRIVE = {
   service_name: 'Google Drive',
   service_description: 'Online document and file storage',
@@ -272,7 +283,6 @@ const UPLOAD = {
 //export const CONNECTION_INFO_STDIN         = STDIN
 //export const CONNECTION_INFO_STDOUT        = STDOUT
 //export const CONNECTION_INFO_UPLOAD        = UPLOAD
-//export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 //export const CONNECTION_INFO_FIREBASE      = FIREBASE
 //export const CONNECTION_INFO_HTTP          = HTTP
@@ -287,7 +297,9 @@ export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
+export const CONNECTION_INFO_EMAIL         = EMAIL
 export const CONNECTION_INFO_GITHUB        = GITHUB
+export const CONNECTION_INFO_GMAIL         = GMAIL
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HOME          = HOME

@@ -41,20 +41,15 @@ def flexio_handler(context):
         context.output.write(str(p) + ":" + str(params[p]) + ";")
     context.output.content_type = "text/plain"
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';
@@ -88,20 +83,15 @@ exports.flexio_handler = function(context) {
     context.output.content_type = "text/plain";
 }
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "javascript",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';
@@ -133,20 +123,15 @@ def flexio_handler(context):
     for row in context.input:
         context.output.write(row)
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';
@@ -179,20 +164,15 @@ exports.flexio_handler = function(context) {
     }
 }
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "javascript",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';

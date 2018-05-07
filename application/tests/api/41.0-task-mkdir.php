@@ -78,11 +78,11 @@ class Test
             $idx++;
             $foldername = 'empty_folder1';
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/$foldername"; // folder path without trailing slash
-            $tasks = json_decode('[
-                {"op": "mkdir", "params": {"path": "'.$folderpath.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.'"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "mkdir", "path" => $folderpath],
+                ["op" => "list", "path" => $folderpath]
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$foldername.'",
@@ -102,11 +102,11 @@ class Test
             $idx++;
             $foldername = 'empty_folder1';
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/$foldername/"; // folder path with trailing slash
-            $tasks = json_decode('[
-                {"op": "mkdir", "params": {"path": "'.$folderpath.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.'"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "mkdir", "path" => $folderpath],
+                ["op" => "list", "path" => $folderpath]
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$foldername.'",

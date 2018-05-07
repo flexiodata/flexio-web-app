@@ -33,13 +33,10 @@ class Test
         // TEST: echo task basic functionality
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "echo",
-            "params": {
-                "msg": "Hello, World!"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "echo", "msg" => "Hello, World!"]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result['response'];
         $expected = 'Hello, World!';
         \Flexio\Tests\Check::assertString('A.1', 'Process Echo; basic functionality',  $actual, $expected, $results);

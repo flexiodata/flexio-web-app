@@ -22,42 +22,32 @@ class Test
     {
         // TODO: placeholder job to test basic functionality; fill out tests
 
-        // SETUP
-        $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "field1", "type": "character", "width": 3, "scale": 0 },
-                        { "name": "field2", "type": "character", "width": 3, "scale": 0 }
-                    ],
-                    "content": [
-                        ["a","b"],
-                        ["b","B"],
-                        ["c","b"]
-                    ]
-                }
-            },
-            {
-                "op": "rename",
-                "params": {
-                    "columns": [
-                        { "name": "field1", "new_name": "field4" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-
-
 
         // TEST: Rename Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "field1", "type" => "character", "width" => 3, "scale" => 0],
+                    ["name" => "field2", "type" => "character", "width" => 3, "scale" => 0]
+                ],
+                "content" => [
+                    ["a","b"],
+                    ["b","B"],
+                    ["c","b"]
+                ]
+            ],
+            [
+                "op" => "rename",
+                "columns" => [
+                    ["name" => "field1", "new_name" => "field4"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getStructure()->get();
         $expected = '
         [

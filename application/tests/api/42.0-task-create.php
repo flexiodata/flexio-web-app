@@ -47,11 +47,11 @@ class Test
             $idx++;
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-            $tasks = json_decode('[
-                {"op": "create", "params": {"path": "'.$folderpath.$filename.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.$filename.'"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "create", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $result = json_decode($result['response'],true);
             $actual = array_column($result, 'name');
             sort($actual);
@@ -69,17 +69,17 @@ class Test
             $idx++;
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/test_folder/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-            $tasks = json_decode('[
-                {"op": "create", "params": {"path": "'.$folderpath.$filename.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.$filename.'"}}
-            ]',true);
-            $result1 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "create", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
+            ]);
+            $result1 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual1 = $result1['code'];
-            $tasks = json_decode('[
-                {"op": "create", "params": {"path": "'.$folderpath.'"}},
-                {"op": "list", "params": {"path": "'.$folderpath.'"}}
-            ]',true);
-            $result2 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "create", "path" => $folderpath],
+                ["op" => "list", "path" => $folderpath]
+            ]);
+            $result2 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual2 = $result2['code'];
             $actual = $actual1 === 200 && $actual2 === 422;
             $expected = true;

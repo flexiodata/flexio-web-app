@@ -50,12 +50,12 @@ class Test
             $filename2 = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath1 = $folderpath . '/' . $filename1;
             $filepath2 = $folderpath . '/' . $filename2;
-            $tasks = json_decode('[
-                {"op": "write", "params": {"path": "'.$filepath1.'"}},
-                {"op": "write", "params": {"path": "'.$filepath2.'"}},
-                {"op": "list", "params": {"path": "'.$filepath1.'"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "write", "path" => $filepath1],
+                ["op" => "write", "path" => $filepath2],
+                ["op" => "list", "path" => $filepath1]
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$filename1.'",

@@ -33,14 +33,14 @@ class Test
         // TEST: execute task with remote code
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "execute",
-            "params": {
-                "lang": "python",
-                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "execute",
+                "lang" => "python",
+                "path" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
             "code": 200,
@@ -50,15 +50,15 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task with remote code',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "execute",
-            "params": {
-                "lang": "python",
-                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py",
-                "integrity": "sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "execute",
+                "lang" => "python",
+                "path" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py",
+                "integrity" => "sha256:891568494dfb8fce562955b1509aee5a1ce0ce05ae210da6556517dd3986de36"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
             "code": 200,
@@ -76,15 +76,15 @@ def flexio_handler(context):
     context.output.content_type = "text/plain"
     context.output.write("This is local.")
 EOD;
-        $tasks = json_decode('[{
-            "op": "execute",
-            "params": {
-                "lang": "python",
-                "code": "'.base64_encode($script).'",
-                "path": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "execute",
+                "lang" => "python",
+                "code" => base64_encode($script),
+                "path" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
             "code": 200,

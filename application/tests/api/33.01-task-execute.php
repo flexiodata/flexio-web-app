@@ -38,14 +38,10 @@ def flexio_handler(context):
     context.output.content_type = "text/plain"
     context.output.write("Hello, World!")
 EOD;
-        $tasks = json_decode('[{
-            "op": "execute",
-            "params": {
-                "lang": "python",
-                "code": "'.base64_encode($script).'"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
             "code": 200,
@@ -61,14 +57,10 @@ exports.flexio_handler = function(context) {
     context.output.write('Hello, World!')
 }
 EOD;
-        $tasks = json_decode('[{
-            "op": "execute",
-            "params": {
-                "lang": "javascript",
-                "code": "'.base64_encode($script).'"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = '{
             "code": 200,

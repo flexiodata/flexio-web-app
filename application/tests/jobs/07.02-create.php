@@ -23,22 +23,20 @@ class Test
         // TEST: Create; basic test with single column and row creation
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "c1", "type": "character", "width": 3 }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"c1", "type" => "character", "width" => 3]
                 ],
-                "content": [
-                    {"c1" : ""},
-                    {"c1" : null}
+                "content" => [
+                    ["c1" => ""],
+                    ["c1" => null]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -55,25 +53,23 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "c1", "type": "character", "width": 3 }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"c1", "type" => "character", "width" => 3]
                 ],
-                "content": [
-                    {"c1" : "aBC"},
-                    {"c1" : "c a"},
-                    {"c1" : " -1"},
-                    {"c1" : "0% "},
-                    {"c1" : null}
+                "content" => [
+                    ["c1" => "aBC"],
+                    ["c1" => "c a"],
+                    ["c1" => " -1"],
+                    ["c1" => "0% "],
+                    ["c1" => null]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -93,25 +89,23 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "c2", "type": "character", "width": 20 }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"c2", "type" => "character", "width" => 20]
                 ],
-                "content": [
-                    {"c2" : "()[]{}<>"},
-                    {"c2" : "| \\/"},
-                    {"c2" : " -1"},
-                    {"c2" : "0% "},
-                    {"c2" : null}
+                "content" => [
+                    ["c2" => "()[]{}<>"],
+                    ["c2" => "| /"],
+                    ["c2" => " -1"],
+                    ["c2" => "0% "],
+                    ["c2" => null]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -131,25 +125,23 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'Create Job; character field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "n1", "type": "numeric", "width": 2, "scale": 0 }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"n1", "type" => "numeric", "width" => 2, "scale" => 0]
                 ],
-                "content": [
-                    {"n1" : "-1"},
-                    {"n1" : null},
-                    {"n1" : "0"},
-                    {"n1" : "1"},
-                    {"n1" : "2"}
+                "content" => [
+                    ["n1" => "-1"],
+                    ["n1" => null],
+                    ["n1" => "0"],
+                    ["n1" => "1"],
+                    ["n1" => "2"]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -169,28 +161,25 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.4', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "n2", "type": "numeric", "width": 10, "scale": 2 }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"n2", "type" => "numeric", "width" => 10, "scale" => 2]
                 ],
-                "content": [
-                    {"n2" : "-1.23"},
-                    {"n2" : "0.00"},
-                    {"n2" : "0.99"},
-                    {"n2" : "4.56"},
-                    {"n2" : "2"}
+                "content" => [
+                    ["n2" => "-1.23"],
+                    ["n2" => "0.00"],
+                    ["n2" => "0.99"],
+                    ["n2" => "4.56"],
+                    ["n2" => "2"]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
-
         $expected = array(
             'columns' => array(
                 array("name"=>"n2", "type"=>"numeric", "width"=>10, "scale"=>2)
@@ -206,25 +195,23 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.5', 'Create Job; numeric field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "d1", "type": "date" }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"d1", "type" => "date"]
                 ],
-                "content": [
-                    {"d1" : "1776-07-04"},
-                    {"d1" : "1970-11-22"},
-                    {"d1" : "1999-12-31"},
-                    {"d1" : "2000-01-01"},
-                    {"d1" : null}
+                "content" => [
+                    ["d1" => "1776-07-04"],
+                    ["d1" => "1970-11-22"],
+                    ["d1" => "1999-12-31"],
+                    ["d1" => "2000-01-01"],
+                    ["d1" => null]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -244,25 +231,23 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.6', 'Create Job; date field creation with row creation',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "b1", "type": "boolean" }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" =>"b1", "type" => "boolean"]
                 ],
-                "content": [
-                    {"b1" : true},
-                    {"b1" : false},
-                    {"b1" : null},
-                    {"b1" : false},
-                    {"b1" : true}
+                "content" => [
+                    ["b1" => true],
+                    ["b1" => false],
+                    ["b1" => null],
+                    ["b1" => false],
+                    ["b1" => true]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '
@@ -286,30 +271,28 @@ class Test
         // TEST: Create; basic test with multiple column and row creation
 
         // BEGIN TEST
-        $task = json_decode('
-        {
-            "op": "create",
-            "params": {
-                "name": "table",
-                "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                "columns": [
-                    { "name": "c1", "type": "character", "width": 3 },
-                    { "name": "c2", "type": "character", "width": 20 },
-                    { "name": "n1", "type": "numeric", "width": 2, "scale": 0 },
-                    { "name": "n2", "type": "numeric", "width": 10, "scale": 2 },
-                    { "name": "d1", "type": "date" },
-                    { "name": "b1", "type": "boolean" }
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "name" => "table",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "c1", "type" => "character", "width" => 3],
+                    ["name" => "c2", "type" => "character", "width" => 20],
+                    ["name" => "n1", "type" => "numeric", "width" => 2, "scale" => 0],
+                    ["name" => "n2", "type" => "numeric", "width" => 10, "scale" => 2],
+                    ["name" => "d1", "type" => "date"],
+                    ["name" => "b1", "type" => "boolean"]
                 ],
-                "content": [
-                    { "c1": "aBC", "c2": "()[]{}<>", "n1": "-1", "n2": "-1.23", "d1": "1776-07-04", "b1": true },
-                    { "c1": "c a", "c2": "| \\/", "n1": null, "n2": "0.00", "d1": "1970-11-22", "b1": null },
-                    { "c1": " -1", "c2": ":;\"\'", "n1": "0", "n2": "0.99", "d1": "1999-12-31", "b1": false },
-                    { "c1": "0% ", "c2": ",.?", "n1": "1", "n2": "4.56", "d1": "2000-01-01", "b1": null },
-                    { "c1": null,  "c2": "~`!@#$%^&*-+_=", "n1": "2.00", "n2": null, "d1": null, "b1": true }
+                "content" => [
+                    ["c1" => "aBC", "c2" => "()[]{}<>", "n1" => "-1", "n2" => "-1.23", "d1" => "1776-07-04", "b1" => true],
+                    ["c1" => "c a", "c2" => "| /", "n1" => null, "n2" => "0.00", "d1" => "1970-11-22", "b1" => null],
+                    ["c1" => " -1", "c2" => ":;\"'", "n1" => "0", "n2" => "0.99", "d1" => "1999-12-31", "b1" => false],
+                    ["c1" => "0% ", "c2" => ",.?", "n1" => "1", "n2" => "4.56", "d1" => "2000-01-01", "b1" => null],
+                    ["c1" => null,  "c2" => "~`!@#$%^&*-+_=", "n1" => "2.00", "n2" => null, "d1" => null, "b1" => true]
                 ]
-            }
-        }
-        ',true);
+            ]
+        ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
         $expected = '

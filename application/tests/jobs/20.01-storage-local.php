@@ -26,7 +26,6 @@ class Test
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_LOCAL . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
-
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
@@ -52,7 +51,6 @@ class Test
             $expected = md5($expected_contents);
             \Flexio\Tests\Check::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
-
 
 
         // TEST: Write/Read Job; Overwrite
