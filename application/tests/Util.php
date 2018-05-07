@@ -110,20 +110,13 @@ class Util
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
         // wraps up the creation of a process and the running of that process
-
+        $params = json_encode(['task' => $tasks]);
         $result = self::callApi(array(
             'method' => 'POST',
             'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "sequence",
-                    "params": {
-                        "items": '.json_encode($tasks).'
-                    }
-                }
-            }'
+            'params' => $params
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';

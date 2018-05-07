@@ -31,15 +31,16 @@ class Test
 
 
         // TEST: render task basic functionality
-        $tasks = json_decode('[{
-            "op": "render",
-            "params": {
-                "url": "https://www.flex.io",
-                "width": 50,
-                "height": 50
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "render",
+                "method" => "get",
+                "url" => "https://www.flex.io",
+                "width" => 50,
+                "height" => 50
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = $result['response'] ?? '';
         $mime_type = '';
         $content_type = '';

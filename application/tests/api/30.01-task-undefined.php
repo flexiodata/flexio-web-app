@@ -33,9 +33,10 @@ class Test
         // TEST: undefined task
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([[
+            "a" => "b"
+        ]]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
         $actual['response'] = $response;
@@ -52,10 +53,10 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/processes/:objeid/run; return error for missing \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": true
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            ["op" => true]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
         $actual['response'] = $response;
@@ -72,10 +73,10 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/processes/:objeid/run; return error for invalid \'op\' task parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "undefined"
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "undefined"]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $response = json_decode($result['response'],true);
         $actual = $result;
         $actual['response'] = $response;

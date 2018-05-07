@@ -33,14 +33,14 @@ class Test
         // TEST: request task basic functionality
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "request",
-            "params": {
-                "method": "get",
-                "url": "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "get",
+                "url" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = substr($result['response'],0,27);
         $expected = 'def flexio_handler(context)';
         \Flexio\Tests\Check::assertString('A.1', 'Process Render; basic functionality',  $actual, $expected, $results);

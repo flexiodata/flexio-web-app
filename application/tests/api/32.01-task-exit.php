@@ -33,17 +33,17 @@ class Test
         // TEST: exit task basic task functionality
 
         // BEGIN TEST
-        $tasks = json_decode('[{
-            "op": "exit",
-            "params": {
-                "code": 404,
-                "response": {
-                    "error": "item-not-found",
-                    "message": "The item you requested was not found."
-                }
-            }
-        }]',true);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "exit",
+                "code" => 404,
+                "response" => [
+                    "error" => "item-not-found",
+                    "message" => "The item you requested was not found."
+                ]
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = array(
             "code" => 404,

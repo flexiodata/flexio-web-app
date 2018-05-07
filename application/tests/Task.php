@@ -28,11 +28,14 @@ class Task
         {
             // put the operation in the "op" parameter and everything else
             // in the "params" parameter
-            $op = $t['op'];
+            $op = $t['op'] ?? false;
             unset($t['op']);
 
             $item = array();
-            $item['op'] = $op;
+
+            if ($op !== false)
+                $item['op'] = $op;
+
             $item['params'] = $t;
 
             $sequence[] = $item;

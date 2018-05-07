@@ -106,8 +106,8 @@ class Test
         ',true);
         $filename = \Flexio\Base\Util::generateHandle() . '.csv';
         $filepath = $folderpath . '/' . $filename;
-        $read = json_decode('{"op": "read", "params": {"path": "'. $filepath . '"}}',true);
-        $write = json_decode('{"op": "write", "params": { "path": "'. $filepath . '"}}',true);
+        $read = \Flexio\Tests\Task::create([["op" => "read", "path" => $filepath]]);
+        $write = \Flexio\Tests\Task::create([["op" => "write", "path" => $filepath]]);
         $process_write = \Flexio\Jobs\Process::create()->execute($create)->execute($write);
         $process_read = \Flexio\Jobs\Process::create()->execute($read);
         $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
