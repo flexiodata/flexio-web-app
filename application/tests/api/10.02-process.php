@@ -79,10 +79,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 }
             }'
         );
@@ -104,10 +101,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 }
             }'
         );
@@ -129,10 +123,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 }
             }'
         );
@@ -157,10 +148,7 @@ class Test
             'content_type' => 'application/json',
             'params' => '{
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 }
             }'
         );
@@ -172,10 +160,7 @@ class Test
             "eid_type": "PRC",
             "eid_status": "A",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "owned_by": {
                 "eid": "'.$userid1.'",
