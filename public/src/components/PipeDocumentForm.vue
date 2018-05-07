@@ -1,7 +1,8 @@
 <template>
   <el-form
     ref="form"
-    label-width="9rem"
+    label-width="7rem"
+    label-position="left"
     :model="form_values"
     v-if="form_values"
   >
@@ -11,7 +12,7 @@
       prop="name"
     >
       <el-input
-        style="max-width: 32rem"
+        style="max-width: 36rem"
         placeholder="Enter name"
         :autofocus="true"
         v-model="form_values.name"
@@ -23,7 +24,7 @@
       prop="alias"
     >
       <el-input
-        style="max-width: 32rem"
+        style="max-width: 36rem"
         placeholder="Enter alias"
         v-model="form_values.alias"
       >
@@ -32,12 +33,10 @@
           <el-button
             slot="append"
             class="hint--top"
-            aria-label="Copy"
+            aria-label="Copy to Clipboard"
             size="small"
-            icon="el-icon-document"
             :data-clipboard-text="path"
-
-          />
+          ><span class="ttu">Copy</span></el-button>
         </template>
       </el-input>
     </el-form-item>

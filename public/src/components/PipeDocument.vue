@@ -36,6 +36,10 @@
         <h3 class="mv4 fw6 mid-gray">Properties</h3>
         <PipeDocumentForm />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
+        <CodeEditor2
+          class="ba b--black-10"
+          v-model="code"
+        />
       </div>
     </div>
   </div>
@@ -46,11 +50,13 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeDocumentForm from './PipeDocumentForm.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
 
   export default {
     components: {
       Spinner,
-      PipeDocumentForm
+      PipeDocumentForm,
+      CodeEditor2
     },
     watch: {
       eid: {
@@ -62,6 +68,11 @@
           return
 
         setTimeout(() => { stickybits('.sticky') }, 100)
+      }
+    },
+    data() {
+      return {
+        code: 'function() {\n  var test = "it works!"\n}'
       }
     },
     computed: {

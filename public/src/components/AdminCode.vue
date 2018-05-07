@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-column">
     <div class="flex-fill flex flex-row items-stretch relative">
-      <code-editor
-        lang="python"
-        :val="code_text"
-      ></code-editor>
+      <CodeEditor2
+        :options="{ mode: 'python' }"
+        v-model="code"
+      />
     </div>
   </div>
 </template>
 
 <script>
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
 
   var default_text = "\
 def greet(name):\n\
@@ -22,11 +22,16 @@ greet('Bob')\n\
 
   export default {
     components: {
-      CodeEditor
+      CodeEditor2
+    },
+    watch: {
+      code() {
+        this.$nextTick(() => { console.log(this.code) })
+      }
     },
     data() {
       return {
-        code_text: default_text
+        code: default_text
       }
     }
   }
