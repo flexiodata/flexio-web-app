@@ -15,7 +15,7 @@
       v-else-if="is_fetched"
     >
       <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-      <div class="flex flex-row items-center mv3 relative z-7 sticky">
+      <div class="flex flex-row items-center mv3 relative z-7 bg-white sticky">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
 
         <el-button
@@ -75,11 +75,6 @@
         setTimeout(() => { stickybits('.sticky') }, 100)
       }
     },
-    data() {
-      return {
-        code: 'function() {\n  var test = "it works!"\n}'
-      }
-    },
     computed: {
       ...mapState({
         edit_pipe: state => state.pipe.edit_pipe,
@@ -97,6 +92,14 @@
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
+      },
+      code: {
+        get () {
+          return this.$store.state.pipe.edit_code
+        },
+        set (value) {
+          this.$store.commit('pipe/UPDATE_CODE', value)
+        }
       }
     },
     mounted() {
