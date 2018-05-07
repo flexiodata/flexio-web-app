@@ -23,75 +23,57 @@ class Test
         // TEST: Transform Job: standardize text with capitalization (none, lowercase, uppercase, proper, first letter)
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "unknown" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "case", "case" => "unknown"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		\Flexio\Tests\Check::assertBoolean('A.1', 'Transform Job; if capitalization mode is set to bad parameter, job should fail',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "upper" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "case", "case" => "upper"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -109,38 +91,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('A.2', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "lower" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "case", "case" => "lower"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -158,38 +131,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('A.3', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "proper" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "case", "case" => "proper"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -207,38 +171,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('A.4', 'Transform Job; standardize text with capitalization',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "case", "case": "first-letter" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "case", "case" => "first-letter"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -260,75 +215,57 @@ class Test
         // TEST: Transform Job; standardize text with pad (left, right)
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "unknown", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "unknown", "length" => 7, "value" => 0]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		\Flexio\Tests\Check::assertString('B.1', 'Transform Job; standardize text with pad; don\'t do anything if the location isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "left", "length" => 7, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -346,38 +283,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.2', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 1, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "left", "length" => 1, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -395,38 +323,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.3', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 12, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "left", "length" => 12, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -444,38 +363,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.4', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "left", "length": 7, "value": "*" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "left", "length" => 7, "value" => "*"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -493,40 +403,31 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.5', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":0}
-                	],
-                	"content": [
-                		["1"],
-                        [null],
-                		["0"],
-                		["-1"],
-                		["987"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "left", "length": 5, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["1"],
+                    [null],
+                    ["0"],
+                    ["-1"],
+                    ["987"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"],
+                    ["operation" => "pad", "location" => "left", "length" => 5, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -545,41 +446,31 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.6', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":2}
-                	],
-                	"content": [
-                		["1.23"],
-                        [null],
-                		["0"],
-                		["-1.0"],
-                		["987.6"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "type": "character",
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "left", "length": 8, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["1"],
+                    [null],
+                    ["0"],
+                    ["-1"],
+                    ["987"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"],
+                    ["operation" => "pad", "location" => "left", "length" => 8, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -598,38 +489,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.7', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 7, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "right", "length" => 7, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -647,38 +529,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.8', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 1, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "right", "length" => 1, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -696,38 +569,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.9', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 12, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "right", "length" => 12, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -745,38 +609,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.10', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":10,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["Abc"],
-                		["aa Bb CC"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "pad", "location": "right", "length": 7, "value": "*" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["Abc"],
+                    ["aa Bb CC"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "pad", "location" => "right", "length" => 7, "value" => "*"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -794,40 +649,31 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.11', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":0}
-                	],
-                	"content": [
-                		["1"],
-                        [null],
-                		["0"],
-                		["-1"],
-                		["987"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "right", "length": 5, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 0]
+                ],
+                "content" => [
+                    ["1"],
+                    [null],
+                    ["0"],
+                    ["-1"],
+                    ["987"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"],
+                    ["operation" => "pad", "location" => "right", "length" => 5, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -846,40 +692,31 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.12', 'Transform Job; standardize text with pad',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":10,"scale":2}
-                	],
-                	"content": [
-                		["1.23"],
-                        [null],
-                		["0"],
-                		["-1.0"],
-                		["987.6"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "pad", "location": "right", "length": 8, "value": "0" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 2]
+                ],
+                "content" => [
+                    ["1.23"],
+                    [null],
+                    ["0"],
+                    ["-1.0"],
+                    ["987.6"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"],
+                    ["operation" => "pad", "location" => "right", "length" => 8, "value" => "0"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -902,75 +739,57 @@ class Test
         // TEST: Transform Job; standardize text with trim spaces (leading, trailing, leading and trailing)
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"content": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "unknown" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 15, "scale" => 2]
+                ],
+                "content" => [
+                    [" a"],
+                    [null],
+                    ["A "],
+                    ["  aa Bb CC  "]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "trim", "location" => "unknown"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->hasError();
         $expected = true;
 		\Flexio\Tests\Check::assertString('C.1', 'Transform Job; standardize text with trim spaces; don\'t do anything if the type isn\'t recognized',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"content": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "leading" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 15, "scale" => 2]
+                ],
+                "content" => [
+                    [" a"],
+                    [null],
+                    ["A "],
+                    ["  aa Bb CC  "]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "trim", "location" => "leading"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -988,38 +807,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('C.2', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"content": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "trailing" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 15, "scale" => 2]
+                ],
+                "content" => [
+                    [" a"],
+                    [null],
+                    ["A "],
+                    ["  aa Bb CC  "]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "trim", "location" => "trailing"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -1037,38 +847,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('C.3', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":15,"scale":0}
-                	],
-                	"content": [
-                		[" a"],
-                		[null],
-                		["A "],
-                		["  aa Bb CC  "]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "trim", "location": "leading-trailing" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 15, "scale" => 2]
+                ],
+                "content" => [
+                    [" a"],
+                    [null],
+                    ["A "],
+                    ["  aa Bb CC  "]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "trim", "location" => "leading-trailing"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -1086,39 +887,30 @@ class Test
 		\Flexio\Tests\Check::assertInArray('C.4', 'Transform Job; standardize text with trim spaces',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":5,"scale":0}
-                	],
-                	"content": [
-                		["1"],
-                		[null],
-                		["2"],
-                		["123"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" },
-                        { "operation": "trim", "location": "leading-trailing" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 5, "scale" => 2]
+                ],
+                "content" => [
+                    ["1"],
+                    [null],
+                    ["2"],
+                    ["123"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"],
+                    ["operation" => "trim", "location" => "leading-trailing"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
