@@ -34,9 +34,6 @@ const mutations = {
   UPDATE_CODE (state, code) {
     state.edit_code = code
 
-    var api_key = this.getters.getSdkKey
-    var sdk_options = this.getters.getSdkOptions
-
     try {
       // create a function to create the JS SDK code to call
       var fn = (Flexio, callback) => { return eval(code) }
