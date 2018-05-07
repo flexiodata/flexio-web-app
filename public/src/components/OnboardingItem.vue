@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="flex-fill mb3 order-0 order-1-l">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           ref="code"
           cls="relative"
           :title="item.name"

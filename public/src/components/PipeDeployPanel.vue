@@ -18,7 +18,7 @@
     <div class="lh-copy">
       <h3>Deploy as an API endpoint:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="HTTP"
           cls="relative"
           copy-prefix=""
@@ -28,7 +28,7 @@
         />
       </div>
       <div class="mh3 mt3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="cURL"
           cls="relative"
           copy-prefix=""
@@ -39,7 +39,7 @@
       </div>
       <h3>Deploy in Javascript:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="Javascript"
           cls="relative"
           copy-prefix=""
@@ -51,12 +51,12 @@
       <h3>Schedule from the app:</h3>
       <p class="mh3">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       <hr class="mv4 bb-0 b--black-10">
-      <help-items
+      <HelpItems
         class="mv3"
         help-message="I need help getting started with Flex.io..."
         :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
         :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
-      ></help-items>
+      />
     </div>
   </div>
 </template>

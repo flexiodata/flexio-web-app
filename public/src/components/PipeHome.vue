@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
-    <spinner size="large" message="Loading pipe..." />
+    <Spinner size="large" message="Loading pipe..." />
   </div>
 
   <div class="flex flex-column bg-nearer-white" v-else>
@@ -45,7 +45,7 @@
       </div>
 
       <div class="flex flex-column justify-center h-100" v-if="is_process_running">
-        <spinner size="large" message="Running pipe..." />
+        <Spinner size="large" message="Running pipe..." />
       </div>
 
       <!--
@@ -63,7 +63,7 @@
       />
       -->
 
-      <pipe-code-editor
+      <PipeCodeEditor
         ref="code"
         class="mv3 ph4 center"
         style="max-width: 1440px"
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <help-items class="mv3" />
+      <HelpItems class="mv3" />
     </div>
 
     <ui-snackbar-container

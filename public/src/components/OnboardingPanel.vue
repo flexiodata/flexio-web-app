@@ -17,7 +17,7 @@
       </div>
       <h3>This is your API key:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           copy-prefix=""
           cls="relative"
           :is-editable="false"
@@ -27,7 +27,7 @@
       </div>
       <h3>Here's a simple pipe we created for you:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           copy-prefix=""
           cls="relative"
           :is-editable="false"
@@ -37,7 +37,7 @@
       </div>
       <h3>Try running it:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="HTTP"
           copy-prefix=""
           cls="relative"
@@ -47,7 +47,7 @@
         />
       </div>
       <div class="mh3 mt3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="cURL"
           copy-prefix=""
           cls="relative"

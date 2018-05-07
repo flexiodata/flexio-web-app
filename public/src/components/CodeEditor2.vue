@@ -1,5 +1,6 @@
 <template>
   <CodeMirror
+    ref="editor"
     :value="value"
     :options="opts"
     @input="onChange"
@@ -59,7 +60,22 @@
         return _.assign({}, this.default_opts, this.options)
       }
     },
+    mounted() {
+      this.updateMinHeight()
+    },
     methods: {
+      updateMinHeight() {
+        var min_height = this.opts.minHeight
+
+        // default to pixels if only a number is provided
+        if (_.isNumber(min_height))
+          min_height = min_height + 'px'
+
+        // set minimum height
+        if (!_.isNil(min_height)) {
+          this.$refs.editor.codemirror.getScrollerElement().style.minHeight = min_height
+        }
+      },
       onChange(value) {
         this.$emit('input', value)
       }
