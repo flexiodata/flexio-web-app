@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -43,7 +43,7 @@ def flexio_handler(context):
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
@@ -60,7 +60,7 @@ EOD;
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
         $actual = $result;
@@ -69,7 +69,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task default variable keys',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -85,7 +85,7 @@ exports.flexio_handler = function(context) {
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
@@ -102,7 +102,7 @@ EOD;
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
         $actual = $result;
@@ -111,7 +111,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);
 
 
         // TEST: execute task basic variable assignment
@@ -128,7 +128,7 @@ def flexio_handler(context):
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
@@ -145,7 +145,7 @@ EOD;
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
         $actual = $result;
@@ -154,7 +154,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "bccb"
         }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid/run; (python) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (python) execute task default variable keys',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -168,7 +168,7 @@ exports.flexio_handler = function(context) {
 EOD;
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
@@ -185,7 +185,7 @@ EOD;
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
         $actual = $result;
@@ -194,7 +194,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "bccb"
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);
     }
 }
 

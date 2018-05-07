@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -52,7 +52,7 @@ class Test
                 {"op": "write", "params": {"path": "'.$folderpath.'file4.jpg"}},
                 {"op": "write", "params": {"path": "'.$folderpath.'file5.csv"}}
             ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
         }
 
         $tests = [
@@ -82,12 +82,12 @@ class Test
                 $tasks = json_decode('[
                     {"op": "list", "params": {"path": "'.$folderpath.$t['pattern'].'"}}
                 ]',true);
-                $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+                $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
                 $result = json_decode($result['response'],true);
                 $actual = array_column($result, 'name');
                 sort($actual);
                 $expected = $t['expected'];
-                \Flexio\Tests\Check::assertArray("A.$idx", 'List; ('.$storage_location.') listing of files using wildcards' . $folderpath, $actual, $expected, $results);
+                \Flexio\Tests\Check::assertArray("A.$idx", 'Process List; ('.$storage_location.') listing of files using wildcards' . $folderpath, $actual, $expected, $results);
             }
         }
     }

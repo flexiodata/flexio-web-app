@@ -107,13 +107,13 @@ class Util
         return [ 'code' => $http_code, 'content_type' => $content_type, 'response' => $response ];
     }
 
-    public static function runTasks(string $apibase, string $userid, string $token, array $tasks)
+    public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
-        // wraps up the creation of a pipe and the running of that pipe
+        // wraps up the creation of a process and the running of that process
 
         $result = self::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
             'params' => '{
@@ -129,7 +129,7 @@ class Util
         $objeid = $response['eid'] ?? '';
         $result = self::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
+            'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
         return $result;

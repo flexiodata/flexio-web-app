@@ -1,25 +1,25 @@
 <template>
-  <article class="pa2 ma1 ba b--black-05" :class="cls">
-    <div class="flex flex-row items-center">
-      <span class="black-30 mr2" @click="toggleDetails">
+  <article class="pa1 ma1 ba b--black-05" :class="cls">
+    <div class="flex flex-row items-center pointer na1 pa1" @click="toggleDetails">
+      <span class="black-30 mr1">
         <i
-          class="material-icons db v-mid pointer"
+          class="material-icons db v-mid"
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
       </span>
-      <span class="f4 mr2">{{item.id}}</span>
+      <span class="f6 fw6 mr2">{{item.id}}</span>
       <spinner :size="24" v-if="item.is_running"></spinner>
       <div class="flex-fill">&nbsp;</div>
-      <div class="tr pl3 f6 fw6">{{item.message}}</div>
-      <div class="f3 pl3 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
-      <div class="f3 pl3 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
-      <div class="f3 pl3 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
+      <div class="tr pl3 f7 fw6">{{item.message}}</div>
+      <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
+      <div class="f4 pl3 pr1 tr monospace ttu b dark-red" v-if="has_details && !is_passed===true">Failed</div>
+      <div class="f4 pl3 pr1 tr monospace ttu b yellow" v-if="is_xhr_ok===false">&nbsp;Error</div>
     </div>
     <div class="pt2 pl2 f6" v-if="is_xhr_ok===false">
       <pre class="ma0">{{item.error_text}}</pre>
     </div>
-    <div class="pt2" v-if="item.details" v-show="!show_details">
+    <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
       <table class="w-100 css-test-table">
         <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>

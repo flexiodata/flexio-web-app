@@ -1,10 +1,10 @@
 import store from '../store'
 import { ROUTE_BUILDER } from '../constants/route'
-import BuilderPage from '../components/BuilderPage.vue'
+import BuilderDocument from '../components/BuilderDocument.vue'
 
 export default {
   path: '/builder/:template',
   name: ROUTE_BUILDER,
-  component: BuilderPage,
+  component: BuilderDocument,
   meta: { requiresAuth: true }
 }

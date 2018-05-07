@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-nearer-white pa4 overflow-y-auto relative" :id="id">
+  <div class="bg-nearer-white pa4 overflow-y-auto relative" :id="doc_id">
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
@@ -15,7 +15,7 @@
       <div class="flex flex-row">
         <BuilderList
           class="flex-fill"
-          :container-id="id"
+          :container-id="doc_id"
           :show-insert-buttons="false"
         />
         <div
@@ -248,7 +248,7 @@
     },
     data() {
       return {
-        id: _.uniqueId('builder-page-')
+        doc_id: _.uniqueId('builder-doc-')
       }
     },
     computed: {

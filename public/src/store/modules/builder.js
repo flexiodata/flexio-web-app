@@ -16,8 +16,7 @@ const mutations = {
   FETCHING_DEF (state, fetching) {
     state.fetching = fetching
 
-    if (fetching === true)
-    {
+    if (fetching === true) {
       state.fetched = false
       state.active_prompt_idx = null
       state.active_prompt = {}
@@ -37,11 +36,13 @@ const mutations = {
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
-      if (p.element == 'connection-chooser')
+      if (p.element == 'connection-chooser') {
         return _.assign(p, { connection_eid: null })
+      }
 
-      if (p.element == 'file-chooser')
+      if (p.element == 'file-chooser') {
         return _.assign(p, { connection_eid: null })
+      }
 
       if (p.element == 'form') {
         var form_values = {}

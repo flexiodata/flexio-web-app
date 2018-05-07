@@ -34,9 +34,9 @@
     ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
+    ROUTE_PIPES,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
-    ROUTE_PIPES,
     ROUTE_HOME_LEARN
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'

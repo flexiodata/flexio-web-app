@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -55,14 +55,14 @@ class Test
                 {"op": "write", "params": {"path": "'.$filepath2.'"}},
                 {"op": "list", "params": {"path": "'.$filepath1.'"}}
             ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $tasks);
             $actual = json_decode($result['response'],true);
             $expected = '[{
                 "name":"'.$filename1.'",
                 "path":"'.$folderpath.$filename1.'",
                 "type":"FILE"
             }]';
-            \Flexio\Tests\Check::assertInArray("B.$idx", 'List; ('.$storage_location.') listing of a file within a folder with multiple files' . $folderpath, $actual, $expected, $results);
+            \Flexio\Tests\Check::assertInArray("B.$idx", 'Process List; ('.$storage_location.') listing of a file within a folder with multiple files' . $folderpath, $actual, $expected, $results);
         }
     }
 }
