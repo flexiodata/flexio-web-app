@@ -43,12 +43,12 @@
       },
       default_opts() {
         return {
+          minRows: 16,
+          maxRows: -1,
           /*
           minHeight: number|string, // overrides minRows
           maxHeight: number|string, // overrides maxRows
           */
-          minRows: 16,
-          maxRows: 30,
           lineNumbers: true,
           mode: this.mode,
           extraKeys: {
@@ -78,6 +78,9 @@
         return _.isNumber(min_h) ? min_h + 'px' : min_h
       },
       getMaxHeight() {
+        if (!_.isNil(this.opts.maxHeight) && this.opts.maxRows < 0)
+          return undefined
+
         // `maxHeight` overrides `maxRows`
         var max_h = this.opts.maxHeight || (this.opts.maxRows * 14) + 7
 
