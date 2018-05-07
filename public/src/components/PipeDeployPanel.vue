@@ -88,12 +88,8 @@
         'active_user_eid'
       ]),
       api_key() {
-        var tokens = this.getAllTokens()
-
-        if (tokens.length == 0)
-          return ''
-
-        return _.get(tokens, '[0].access_code', '')
+        var key = this.getSdkKey()
+        return key.length > 0 ? key : '[INSERT API KEY]'
       },
       pipe_name() {
         return _.get(this.pipe, 'name', '')
@@ -102,7 +98,7 @@
         return _.get(this.pipe, 'alias', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
-        var code = "Flexio.setup('"+this.api_key+"')\n\n"
+        var code = "Flexio.setup('" + this.api_key + "')\n\n"
         code += Flexio.pipe(this.pipe.task).toCode()
         code += '\n  .run()'
         return code
@@ -111,7 +107,7 @@
         return 'https://api.flex.io/v1/me/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
       },
       example_curl() {
-        return "curl -X POST 'https://api.flex.io/v1/me/pipes/" + this.active_user_eid + "/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
+        return "curl -X POST 'https://api.flex.io/v1/me/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
       }
     },
     mounted() {
@@ -119,7 +115,7 @@
     },
     methods: {
       ...mapGetters([,
-        'getAllTokens'
+        'getSdkKey'
       ]),
       tryFetchTokens() {
         this.$store.dispatch('fetchTokens')
