@@ -336,7 +336,7 @@
             // check the content type of our response; if the content type
             // exists, it's a Pipe API response, otherwise, it's simply a
             // JSON response (patched through from the Flex.io backend)
-            if (typeof response == 'object' && typeof response.contentType == 'string')
+            if (_.isPlainObject(response) && typeof response.contentType == 'string')
               content_type = response.contentType
 
             if (content_type.substr(0,6) == 'image/') {
