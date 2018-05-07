@@ -1,6 +1,6 @@
 <template>
   <div
-    class="ph4 pb4 overflow-y-auto relative"
+    class="bg-nearer-white ph4 pb4 overflow-y-auto relative"
     :id="doc_id"
   >
     <div
@@ -11,12 +11,12 @@
     </div>
     <div
       class="center"
-      style="max-width: 60rem; margin-bottom: 6rem"
+      style="max-width: 1024px; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
       <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-      <div class="flex flex-row items-center mv3 relative z-7 bg-white sticky">
-        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+      <div class="flex flex-row items-center mv3 relative z-7 bg-nearer-white sticky">
+        <h1 class="flex-fill mv0 pv3 fw6 mid-gray tc">{{title}}</h1>
 
         <el-button
           class="ttu b"
@@ -35,8 +35,8 @@
           Save
         </el-button>
       </div>
-      <div>
-        <h3 class="mv4 fw6 mid-gray">Properties</h3>
+      <div class="pa4 bg-white br2 css-dashboard-box">
+        <h3 class="mt0 mb4 fw6 mid-gray">Properties</h3>
         <PipeDocumentForm />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
         <CodeEditor2
