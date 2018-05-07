@@ -9,12 +9,7 @@
       </div>
     </div>
 
-    <div>
-      <div class="tc dn">
-        <div class="dib">
-          <h2 class="f3 mt0 mb3">Welcome to Flex.io, {{first_name}}!</h2>
-        </div>
-      </div>
+    <div v-if="api_key.length > 0">
       <h3>This is your API key:</h3>
       <div class="mh3">
         <OnboardingCodeEditor
@@ -78,9 +73,16 @@
     components: {
       OnboardingCodeEditor
     },
+    watch: {
+      tokens_fetched: {
+        handler: 'checkCreateApiKey',
+        immediate: true
+      }
+    },
     computed: {
       ...mapState([
-        'active_user_eid'
+        'active_user_eid',
+        'tokens_fetched'
       ]),
       pipe() {
         return _.find(this.getAllPipes(), (p) => { return _.includes(_.get(p, 'alias'), 'convert-csv-to-json') })
@@ -98,35 +100,31 @@
         return _.get(this.getActiveUser(), 'first_name', '')
       },
       api_key() {
-        var tokens = this.getAllTokens()
-
-        if (tokens.length == 0)
-          return ''
-
-        return _.get(tokens, '[0].access_code', '')
+        return this.getSdkKey()
       },
       example_href() {
-        return 'https://' + location.hostname + '/api/v2/' + this.active_user_eid + '/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
+        return 'https://api.flex.io/v1/me/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
       },
       example_curl() {
-        return "curl -X POST 'https://" + location.hostname + "/api/v2/" + this.active_user_eid + "/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
+        return "curl -X POST 'https://api.flex.io/v1/me/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
       }
     },
     mounted() {
-      this.tryFetchTokens()
       this.tryFetchPipes()
     },
     methods: {
       ...mapGetters([
         'getActiveUser',
         'getAllPipes',
-        'getAllTokens'
+        'getSdkKey'
       ]),
-      tryFetchTokens() {
-        this.$store.dispatch('fetchTokens')
-      },
       tryFetchPipes() {
         this.$store.dispatch('fetchPipes')
+      },
+      checkCreateApiKey() {
+        if (this.tokens_fetched && this.api_key.length == 0) {
+          this.$store.dispatch('createToken')
+        }
       }
     }
   }
