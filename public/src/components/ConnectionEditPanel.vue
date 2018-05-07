@@ -359,7 +359,7 @@
         this.edit_connection = connection
         this.updateConnection(this.edit_connection)
 
-        if (this.mode == 'add' && _.get(connection, 'alias', '').length == 0) {
+        if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.getConnectionServiceName(connection)
 
           // create a default alias
