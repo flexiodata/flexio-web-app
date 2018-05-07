@@ -26,7 +26,6 @@ class Test
         $source_directory = '/home/' . $test_folder . '/';
         $target_directory = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . $test_folder . '/';
 
-
         foreach ($files as $filename) // copy files into home directory
         {
             $source_filepath = \Flexio\Tests\Util::getOutputFilePath($source_directory, $filename);
@@ -40,7 +39,6 @@ class Test
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
         }
-
 
 
         // TEST: Copy Job; Basic Copy

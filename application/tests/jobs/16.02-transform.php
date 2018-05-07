@@ -27,26 +27,20 @@ class Test
         // TEST: Transform Job: standardize text with capitalization (none, lowercase, uppercase, proper, first letter)
 
         // BEGIN TEST
-        $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "content_type": "'.\Flexio\Base\ContentType::TEXT.'",
-                    "content": "'. base64_encode(trim('some content')) . '"
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "operations": [
-                        { "operation": "case", "case": "upper" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::TEXT,
+                "content" => base64_encode(trim('some content'))
+            ],
+            [
+                "op" => "transform",
+                "operations" => [
+                    ["operation" => "case", "case" => "upper"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->read();
         $expected = 'SOME CONTENT';
         \Flexio\Tests\Check::assertString('A.1', 'Transform Job; basic transformation on stream content',  $actual, $expected, $results);
