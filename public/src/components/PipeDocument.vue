@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-nearer-white ph4 pb4 overflow-y-auto relative"
+    class="ph4 pb4 overflow-y-auto relative"
     :id="doc_id"
   >
     <div
@@ -15,7 +15,7 @@
       v-else-if="is_fetched"
     >
       <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-      <div class="flex flex-row items-center bg-nearer-white mv3 relative z-7 sticky">
+      <div class="flex flex-row items-center mv3 relative z-7 sticky">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
 
         <el-button
@@ -42,6 +42,7 @@
         <CodeEditor2
           class="ba b--black-10 overflow-y-auto"
           lang="javascript"
+          :options="{ minRows: 24, maxRows: 24 }"
           v-model="code"
         />
       </div>
