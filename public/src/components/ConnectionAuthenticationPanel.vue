@@ -25,7 +25,106 @@
         {{error_msg}}
       </ui-alert>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="flex flex-column w-50-ns center mt3">
+      <div
+        class="w-two-thirds-ns center mt4"
+        v-if="is_email"
+      >
+        <el-form
+          ref="form"
+          label-width="8rem"
+          label-position="left"
+          :model="form_values"
+        >
+          <el-form-item
+            key="account_type"
+            label="Account Type"
+            prop="account_type"
+          >
+            <el-select
+              placeholder="Account Type"
+              :disabled="true"
+              v-model="form_values.account_type"
+            >
+              <el-option label="SMTP" value="smtp" />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            key="email"
+            label="Email address"
+            prop="email"
+            v-show="!is_gmail"
+          >
+            <el-input
+              placeholder="Email address"
+              :autofocus="true"
+              v-model="form_values.email"
+            />
+          </el-form-item>
+          <el-form-item
+            key="username"
+            label="Username"
+            prop="username"
+            v-show="!is_gmail"
+          >
+            <el-input
+              placeholder="Username"
+              v-model="form_values.username"
+            />
+          </el-form-item>
+          <el-form-item
+            key="password"
+            label="Password"
+            prop="password"
+            v-show="!is_gmail"
+          >
+            <el-input
+              placeholder="Password"
+              v-model="form_values.password"
+            />
+          </el-form-item>
+          <el-form-item
+            key="host"
+            label="Host"
+            prop="host"
+            v-show="!is_gmail"
+          >
+            <el-input
+              placeholder="Host"
+              v-model="form_values.host"
+            />
+          </el-form-item>
+          <el-form-item
+            key="port"
+            label="Port"
+            prop="port"
+            v-show="!is_gmail"
+          >
+            <el-input
+              placeholder="Port"
+              v-model="form_values.port"
+            />
+          </el-form-item>
+          <el-form-item
+            key="security"
+            label="Security"
+            prop="security"
+            v-show="!is_gmail"
+          >
+            <el-select
+              placeholder="Security"
+              v-model="form_values.security"
+            >
+              <el-option label="None" value="" />
+              <el-option label="TLS" value="tls" />
+              <el-option label="SSL" value="ssl" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div
+        class="flex flex-column w-50-ns center mt3"
+        v-else
+      >
         <ui-textbox
           autocomplete="off"
           spellcheck="false"
@@ -234,7 +333,18 @@
         aws_key: _.get(c, 'aws_key', ''),
         aws_secret: _.get(c, 'aws_secret', ''),
         bucket: _.get(c, 'bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion()
+        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion(),
+
+        // email
+        form_values: {
+          account_type: 'smtp',
+          email: '',
+          username: '',
+          password: '',
+          host: '',
+          port: '',
+          security: ''
+        }
       }
     },
     computed: {
@@ -276,7 +386,15 @@
         return this.is_connected ? 'b--dark-green' : 'b--blue'
       },
       service_name() {
-        return _.result(this, 'cinfo.service_name', '')
+        return this.is_gmail ? 'Gmail' :
+          this.is_email ? 'your email account' :
+          _.result(this, 'cinfo.service_name', '')
+      },
+      is_email() {
+        return this.ctype == ctypes.CONNECTION_TYPE_EMAIL
+      },
+      is_gmail() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
       },
       is_oauth() {
         switch (this.ctype)
@@ -284,6 +402,7 @@
           case ctypes.CONNECTION_TYPE_BOX:
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
+          case ctypes.CONNECTION_TYPE_GMAIL:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
             return true
