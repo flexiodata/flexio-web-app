@@ -341,10 +341,13 @@
           if (response.ok)
           {
             var connection = _.cloneDeep(response.body)
+            var service_slug = item.service_name.trim()
+            service_slug = service_slug.replace(/\W/g, '')
+            service_slug = service_slug.replace(/\s/g, '-')
+            service_slug = service_slug.toLowerCase()
 
             // create a default alias
-            connection.alias = 'my-' + item.service_name.trim()
-            connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
+            connection.alias = 'my-' + service_slug
 
             this.updateConnection(connection)
           }
@@ -362,9 +365,13 @@
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.getConnectionServiceName(connection)
 
+          var service_slug = service_name.trim()
+          service_slug = service_slug.replace(/\W/g, '')
+          service_slug = service_slug.replace(/\s/g, '-')
+          service_slug = service_slug.toLowerCase()
+
           // create a default alias
-          connection.alias = 'my-' + service_name.trim()
-          connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
+          connection.alias = 'my-' + service_slug
         }
 
         // we have to do this to force watcher validation
