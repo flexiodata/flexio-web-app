@@ -342,7 +342,8 @@
           {
             var connection = _.cloneDeep(response.body)
             var service_slug = item.service_name.trim()
-            service_slug = service_slug.replace(/\W/g, '')
+            service_slug = service_slug.replace(/\W/g, '-')
+            service_slug = service_slug.replace(/-./g, '-')
             service_slug = service_slug.replace(/\s/g, '-')
             service_slug = service_slug.toLowerCase()
 
@@ -366,7 +367,8 @@
           var service_name = this.getConnectionServiceName(connection)
 
           var service_slug = service_name.trim()
-          service_slug = service_slug.replace(/\W/g, '')
+          service_slug = service_slug.replace(/\W/g, '-')
+          service_slug = service_slug.replace(/-./g, '-')
           service_slug = service_slug.replace(/\s/g, '-')
           service_slug = service_slug.toLowerCase()
 
