@@ -20,31 +20,31 @@ class Process
 {
     public static function list(string $owner, string $path) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "list", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "list", "path" => $path]]);
         return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
     public static function mkdir(string $owner, string $path) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "list", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "list", "path" => $path]]);
         return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
     public static function create(string $owner, string $path) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "create", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "create", "path" => $path]]);
         return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
     public static function delete(string $owner, string $path) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "delete", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "delete", "path" => $path]]);
         return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 
     public static function write(string $owner, string $path, \Flexio\Base\Stream $stream = null) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "write", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "write", "path" => $path]]);
         $process = \Flexio\Jobs\Process::create();
         $process->setOwner($owner);
 
