@@ -24,11 +24,10 @@
     v-else-if="isJson"
   />
   <pre
-    v-else class="monospace ma0 pa2 h-100 overflow-auto"
+    class="monospace ma0 pa2 h-100 overflow-auto"
     @scroll="onScroll"
-  >
-    {{state.text}}
-  </pre>
+    v-else
+  >{{state.text}}</pre>
 </template>
 
 <script>

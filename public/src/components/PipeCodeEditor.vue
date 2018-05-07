@@ -1,14 +1,11 @@
 <template>
   <div>
-
     <!-- code editor -->
-    <div class="relative bg-white b--white-box ba lh-title" style="box-shadow: 0 1px 4px rgba(0,0,0,0.125)">
-      <code-editor
-        ref="code"
+    <div class="relative bg-white ba b--black-10 lh-title">
+      <CodeEditor2
         lang="javascript"
-        :val="edit_code"
         :options="{ minHeight: 300 }"
-        @change="updateCode"
+        v-model="edit_code"
       />
     </div>
 
@@ -26,19 +23,18 @@
     </transition>
 
     <!-- preview -->
-    <pipe-content
-      class="mt2 relative"
+    <PipeContent
+      class="mt3 relative"
       :stream-eid="last_stream_eid"
       v-if="last_stream_eid.length > 0 && !is_process_failed"
     />
-
   </div>
 </template>
 
 <script>
   import { PROCESS_STATUS_FAILED } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
   import PipeContent from './PipeContent.vue'
 
   export default {
@@ -59,10 +55,15 @@
       }
     },
     components: {
-      CodeEditor,
+      CodeEditor2,
       PipeContent
     },
     inject: ['pipeEid'],
+    watch: {
+      edit_code() {
+        this.syntax_msg = ''
+      }
+    },
     data() {
       return {
         edit_code: Flexio.pipe({ op: 'sequence', params: { items: this.tasks } }).toCode(),
@@ -104,10 +105,6 @@
       }
     },
     methods: {
-      updateCode(code) {
-        this.edit_code = code
-        this.syntax_msg = ''
-      },
       getEditCode() {
         return this.edit_code
       },
