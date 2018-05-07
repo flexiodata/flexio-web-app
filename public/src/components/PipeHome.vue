@@ -79,11 +79,12 @@
       >
         <div class="bg-white ba b--black-10">
           <CodeEditor2
-            class="h-100 overflow-y-auto"
+            class="overflow-y-auto"
+            style="max-height: 24rem"
+            lang="application/json"
             :options="{
               lineNumbers: false,
-              readOnly: true,
-              mode: 'application/json'
+              readOnly: true
             }"
             v-model="active_process_info_str"
           />

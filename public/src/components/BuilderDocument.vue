@@ -28,10 +28,10 @@
             </div>
             <CodeEditor2
               class="flex-fill"
+              lang="javascript"
               :options="{
                 lineNumbers: false,
-                readOnly: true,
-                mode: 'javascript'
+                readOnly: true
               }"
               v-model="code"
             />

@@ -2,7 +2,8 @@
   <div class="flex flex-column">
     <div class="flex-fill flex flex-row items-stretch relative">
       <CodeEditor2
-        :options="{ mode: 'python' }"
+        class="flex-fill"
+        lang="python"
         v-model="code"
       />
     </div>

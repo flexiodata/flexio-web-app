@@ -6,19 +6,19 @@
     <Spinner :message="state.loading_text" />
   </div>
   <CodeEditor2
+    lang="text/html"
     :options="{
       lineNumbers: false,
-      readOnly: true,
-      mode: 'text/html'
+      readOnly: true
     }"
     v-model="state.text"
     v-else-if="isHtml"
   />
   <CodeEditor2
+    lang="application/json"
     :options="{
       lineNumbers: false,
-      readOnly: true,
-      mode: 'application/json'
+      readOnly: true
     }"
     v-model="state.text"
     v-else-if="isJson"

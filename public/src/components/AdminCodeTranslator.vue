@@ -4,15 +4,15 @@
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK</div>
       <CodeEditor2
         class="flex-fill"
+        lang="javascript"
         v-model="sdk_str"
-        @change="updateJSON"
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK to JSON</div>
       <CodeEditor2
         class="flex-fill"
-        :options="{ mode: 'application/json' }"
+        lang="application/json"
         v-model="json_str"
       />
     </div>
@@ -20,6 +20,7 @@
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
       <CodeEditor2
         class="flex-fill"
+        lang="javascript"
         v-model="reverse_sdk_str"
       />
     </div>

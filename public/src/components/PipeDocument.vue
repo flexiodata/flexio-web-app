@@ -21,6 +21,7 @@
           class="ttu b"
           type="plain"
           size="medium"
+          v-if="false"
         >
           Cancel
         </el-button>
@@ -28,6 +29,7 @@
           class="ttu b"
           type="primary"
           size="medium"
+          v-if="false"
         >
           Save
         </el-button>
@@ -37,7 +39,9 @@
         <PipeDocumentForm />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
         <CodeEditor2
-          class="ba b--black-10"
+          class="ba b--black-10 overflow-y-auto"
+          style="max-height: 24rem"
+          lang="javascript"
           v-model="code"
         />
       </div>
