@@ -18,12 +18,28 @@ namespace Flexio\Tests;
 
 class Test
 {
+    private static function buildTask(string $data) : array
+    {
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::CSV,
+                "content" => base64_encode(trim($data))
+            ],
+            [
+                "op" => "convert",
+                "input" => [
+                    "delimiter" => "{comma}",
+                    "header_row" => "true",
+                    "text_qualifier" => "{double_quote}"
+                ]
+            ]
+        ]);
+        return $task;
+    }
+
     public function run(&$results)
     {
-        // SETUP
-
-
-
         // TEST: Convert; default format behavior
 
         // BEGIN TEST
@@ -32,28 +48,7 @@ class Test
 "a1", "b1"
 "a2", "b2"
 EOD;
-        $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "content_type": "'.\Flexio\Base\ContentType::CSV.'",
-                    "content": "'. base64_encode(trim($data)) .'"
-                }
-            },
-            {
-                "op": "convert",
-                "params": {
-                    "input": {
-                        "delimiter": "{comma}",
-                        "header_row": "true",
-                        "text_qualifier": "{double_quote}"
-                    }
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+$process = \Flexio\Jobs\Process::create()->execute(self::buildTask($data));
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
 
         // note: this line uses excel's rules
