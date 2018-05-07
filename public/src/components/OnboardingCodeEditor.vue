@@ -48,7 +48,7 @@
     </div>
     <div
       class="relative pv2 ph3 bg-near-white br2 overflow-x-auto"
-      style="padding-top: 20px"
+      :style="label.length > 0 ? 'padding-top: 20px' : ''"
       v-else
     >
       <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{edit_code}}</code></pre>
