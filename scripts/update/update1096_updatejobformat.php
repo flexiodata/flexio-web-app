@@ -126,11 +126,11 @@ function updateProcessTable($db, $remove_old_params_key)
 function updateProcessLogTable($db, $remove_old_params_key)
 {
     // STEP 1: get a list of process log entries
-    $query_sql = 'select eid, task_type, task from tbl_processlog';
+    $query_sql = 'select eid, task from tbl_processlog';
     $result = $db->query($query_sql);
 
-    // STEP 2: for each process log entry, get the task_type and task,
-    // change the type and save the process with the new task
+    // STEP 2: for each process log entry, get the task, and save
+    // the process with the new task
     $objects = array();
     while ($result && ($row = $result->fetch()))
     {
