@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "copy",
-    "params": {
-        "from": "",
-        "to": ""
-    }
+    "from": "",
+    "to": ""
 }
 */
 

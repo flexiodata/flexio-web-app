@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "dump",
-    "params": {
-        "msg": ""
-    }
+    "msg": ""
 }
 */
 

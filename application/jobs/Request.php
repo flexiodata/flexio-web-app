@@ -19,11 +19,9 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "request",
-    "params": {
-        "method": "head|get|put|post|patch|delete|options",
-        "url": "https://www.flex.io",
-        "headers": []
-    }
+    "method": "head|get|put|post|patch|delete|options",
+    "url": "https://www.flex.io",
+    "headers": []
 }
 */
 

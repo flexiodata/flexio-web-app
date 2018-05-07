@@ -19,8 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "render",
-    "params": {
-    }
+    "url": ""
 }
 */
 
@@ -30,8 +29,7 @@ class Render extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $params =  $job_definition['params'] ?? [];
+        $params = $this->getJobParameters();
 
         $items = $params['items'] ?? null;
         $url = $params['url'] ?? null;

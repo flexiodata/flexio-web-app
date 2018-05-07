@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "list",
-    "params": {
-        "path": ""
-    }
+    "path": ""
 }
 */
 
@@ -33,8 +31,8 @@ class List1 extends \Flexio\Jobs\Base
 
         // process buffer
         $outstream = $process->getStdout();
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $params = $this->getJobParameters();
+        $path = $params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");

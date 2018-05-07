@@ -42,9 +42,7 @@ class Test
                 "alias": "alias1",
                 "task": {
                     "op": "echo",
-                    "params": {
-                        "msg": "${form.msg}"
-                    }
+                    "msg": "${form.msg}"
                 }
             }'
         );
@@ -62,9 +60,7 @@ class Test
                 "alias": "alias2",
                 "task": {
                     "op": "echo",
-                    "params": {
-                        "msg": "${form.msg}"
-                    }
+                    "msg": "${form.msg}"
                 }
             }'
         );
@@ -82,9 +78,7 @@ class Test
                 "alias": "alias3",
                 "task": {
                     "op": "echo",
-                    "params": {
-                        "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
-                    }
+                    "msg": "Hello, ${form.noun}. Would you like to ${form.verb}?"
                 }
             }'
         );

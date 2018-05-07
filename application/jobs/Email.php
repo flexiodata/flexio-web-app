@@ -24,18 +24,16 @@ EXAMPLE:
 // if 'link' the data file
 {
     "op": "email",
-    "params": {
-        "to": "",
-        "subject": "",
-        "body": "",
-        "html": "",
-        "attachments": [
-            {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
-            {"file": "<path>"},
-            "<path>" // alternative format; string
-            ...
-        ]
-    }
+    "to": "",
+    "subject": "",
+    "body": "",
+    "html": "",
+    "attachments": [
+        {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
+        {"file": "<path>"},
+        "<path>" // alternative format; string
+        ...
+    ]
 }
 */
 
@@ -67,14 +65,14 @@ class Email extends \Flexio\Jobs\Base
         {
             // for now, we will temporarily allow messages to be sent with noreply@flex.io
 
- 
+
             $email_params = array(
                 'from' => "Flex.io <no-reply@flex.io>",
                 'to' => $to,
                 'subject' => $subject,
                 'msg_text' => $body_text
             );
-    
+
             $email = \Flexio\Services\NoticeEmail::create($email_params);
 
         }

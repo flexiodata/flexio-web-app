@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "sleep",
-    "params": {
-        "value": 1
-    }
+    "value": 1
 }
 */
 
@@ -32,8 +30,8 @@ class Sleep extends \Flexio\Jobs\Base
         parent::run($process);
 
         // get the duration
-        $job_definition = $this->getProperties();
-        $milliseconds_to_wait = $job_definition['params']['value'];
+        $job_params = $this->getJobParameters();
+        $milliseconds_to_wait = $job_params['value'];
         $milliseconds_to_update_status = 100;
 
         $milliseconds_waited = 0;

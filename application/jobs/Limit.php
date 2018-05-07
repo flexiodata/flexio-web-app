@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "limit",
-    "params": {
-        "rows": 10
-    }
+    "rows": 10
 }
 */
 
@@ -68,8 +66,8 @@ class Limit extends \Flexio\Jobs\Base
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // get the number of rows to return
-        $job_definition = $this->getProperties();
-        $rows = intval(($job_definition['params']['value'] ?? 0));
+        $params = $this->getJobParameters();
+        $rows = intval((['value'] ?? 0));
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
         // create the reader/writer

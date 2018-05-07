@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "read",
-    "params": {
-        "path": ""
-    }
+    "path": ""
 }
 */
 

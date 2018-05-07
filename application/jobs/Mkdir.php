@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
     {
         "op": "mkdir",
-        "params": {
-            "path": "new_directory"
-        }
+        "path": "new_directory"
     }
 */
 
@@ -31,8 +29,8 @@ class Mkdir extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $params = $this->getJobParameters();
+        $path = $params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");

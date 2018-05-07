@@ -26,8 +26,10 @@ class Task
         $sequence = array();
         foreach ($tasks as $t)
         {
-            // put the operation in the "op" parameter and everything else
-            // in the "params" parameter
+            $sequence[] = $t;
+/*
+// TODO: new job format has parameters on the same level as "op"; remove when tests are confirmed
+
             $op = $t['op'] ?? false;
             unset($t['op']);
 
@@ -39,12 +41,13 @@ class Task
             $item['params'] = $t;
 
             $sequence[] = $item;
+*/
         }
 
         // wrap all the tasks in a sequence operation
         $result = array();
         $result['op'] = 'sequence';
-        $result['params']['items'] = $sequence;
+        $result['items'] = $sequence;
 
         return $result;
     }

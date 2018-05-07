@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 EXAMPLE:
 {
     "op": "merge",
-    "params": {
-        "matching_filenames": true,
-        "matching_columnames": true
-    }
+    "matching_filenames": true,
+    "matching_columnames": true
 }
 */
 
@@ -46,8 +44,8 @@ class Merge extends \Flexio\Jobs\Base
             break;
         }
 */
-        $job_definition = $this->getProperties();
-        $paths = $job_definition['params']['files'] ?? [];
+        $params = $this->getJobParameters();
+        $paths = $params['files'] ?? [];
 
         if (count($paths) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Missing/empty 'files' array");

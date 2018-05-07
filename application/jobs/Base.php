@@ -172,7 +172,7 @@ class Base implements \Flexio\IFace\IJob
                 $ext = pathinfo($name, PATHINFO_EXTENSION);
                 $size = $file->getSize();
                 $content_type = $file->getMimeType();
-                $stream[$k] = [ 'name' => $name, 'extension' => $ext, 'size' => $size, 'content_type' => $content_type ]; 
+                $stream[$k] = [ 'name' => $name, 'extension' => $ext, 'size' => $size, 'content_type' => $content_type ];
             }
         }
         else if (isset($variables[$varname]))
@@ -204,7 +204,7 @@ class Base implements \Flexio\IFace\IJob
             $streamreader = $stream->getReader();
             while (($chunk = $streamreader->read()) !== false)
                 $data .= $chunk;
-            $data = @json_decode($data, true); 
+            $data = @json_decode($data, true);
         }
 
 
@@ -360,6 +360,38 @@ class Base implements \Flexio\IFace\IJob
                 continue;
 
             $value = self::fixEmptyParams($value);
+        }
+
+        return $task;
+    }
+
+    public static function flattenParams($task)
+    {
+        // helper function for iterating through a task and moving all key
+        // values from the params node to the top-level; used currently to
+        // convert tasks coming in through the old format into the new format
+        // until the tasks are migrated to the new format in the SDK, etc
+
+        if (isset($task['params']))
+        {
+            if (is_array($task['params']))
+            {
+                foreach ($task['params'] as $key => $value)
+                {
+                    $task[$key] = $value;
+                }
+            }
+        }
+
+        if (is_array($task))
+        {
+            foreach ($task as $key => &$value)
+            {
+                if (!is_array($value))
+                    continue;
+
+                $value = flattenParams($value);
+            }
         }
 
         return $task;

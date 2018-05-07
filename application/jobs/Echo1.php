@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "echo",
-    "params": {
-        "msg": ""
-    }
+    "msg": ""
 }
 */
 
@@ -34,8 +32,8 @@ class Echo1 extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $job_definition = $this->getProperties();
-        $msg = $job_definition['params']['msg'] ?? '';
+        $params = $this->getJobParameters();
+        $msg = $params['msg'] ?? '';
 
 
         if (is_array($msg) || is_object($msg))

@@ -19,12 +19,10 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "select",
-    "params": {
-        "files" : [
-        ],
-        "columns": [
-        ]
-    }
+    "files" : [
+    ],
+    "columns": [
+    ]
 }
 */
 
@@ -48,7 +46,7 @@ class Select extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::JSON:
                 $this->processJson($instream, $outstream);
                 return;
-            
+
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->processTable($instream, $outstream);

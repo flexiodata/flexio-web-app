@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "sequence",
-    "params": {
-        "items": []
-    }
+    "items": []
 }
 */
 
@@ -33,9 +31,8 @@ class Sequence extends \Flexio\Jobs\Base
         // the entire sequence before any variables are set/evaluated
         //parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $job_task = $job_definition['params'];
-        $job_sequence_tasks = $job_task['items'] ?? false;
+        $job_params = $this->getJobParameters();
+        $job_sequence_tasks = $job_params['items'] ?? false;
 
         if ($job_sequence_tasks === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);

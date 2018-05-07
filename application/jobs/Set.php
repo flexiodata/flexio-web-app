@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "set",
-    "params": {
-        "var": "myvar",
-        "value": "new_value"
-    }
+    "var": "myvar",
+    "value": "new_value"
 }
 */
 
@@ -37,7 +35,7 @@ class Set extends \Flexio\Jobs\Base
         $var = $job_params['var'];
         $value = $job_params['value'];
 
-        if (isset($value['op']) && isset($value['params']))
+        if (isset($value['op']))
         {
             // right side of set is pipe code
 

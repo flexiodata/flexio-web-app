@@ -19,9 +19,7 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "write",
-    "params": {
-        "path": ""
-    }
+    "path": ""
 }
 */
 
@@ -34,8 +32,8 @@ class Write extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $job_params = $this->getJobParameters();
+        $path = $job_params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");

@@ -19,17 +19,15 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "transform",
-    "params": {
-        "columns": [],
-        "operations": [
-            { "operation":"pad", "value":"0", "length":7,"location":"left" },
-            { "operation":"trim", "location":"leading" },
-            { "operation":"type": "character" },
-            { "operation":"remove", "location":"any","character_class":"alpha" },
-            { "operation":"substring", "length":7, "location":"left" },
-            { "operation":"case", "case":"lower" }
-        ]
-    }
+    "columns": [],
+    "operations": [
+        { "operation":"pad", "value":"0", "length":7,"location":"left" },
+        { "operation":"trim", "location":"leading" },
+        { "operation":"type": "character" },
+        { "operation":"remove", "location":"any","character_class":"alpha" },
+        { "operation":"substring", "length":7, "location":"left" },
+        { "operation":"case", "case":"lower" }
+    ]
 }
 */
 

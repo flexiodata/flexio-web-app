@@ -18,9 +18,7 @@ namespace Flexio\Jobs;
 /*
 // EXAMPLE:
 {
-    "op": "foreach",
-    "params": [
-    ]
+    "op": "foreach"
 }
 */
 

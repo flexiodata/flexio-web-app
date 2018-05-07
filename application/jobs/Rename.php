@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "rename",
-    "params": {
-        "columns": [],
-        "files": []
-    }
+    "columns": [],
+    "files": []
 }
 */
 
@@ -45,17 +43,17 @@ class Rename extends \Flexio\Jobs\Base
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
-        $job_definition = $this->getProperties();
+        $job_params = $this->getJobParameters();
         $mime_type = $outstream->getMimeType();
 
         // rename the output stream if appropriate
-        if (isset($job_definition['params']['files']))
+        if (isset($job_params['files']))
             $this->renameStream($outstream, $env);
 
         // if we have a table, rename any columns if specified; note: this may
         // works in conjunction with renaming the file, so a file that's renamed
         // may also have columns renamed
-        if (isset($job_definition['params']['columns']))
+        if (isset($job_params['columns']))
         {
             if ($mime_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
                 $this->renameColumns($outstream);
@@ -65,9 +63,8 @@ class Rename extends \Flexio\Jobs\Base
     private function renameStream(\Flexio\IFace\IStream $outstream, array $env)
     {
         // get the files to rename
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
-        $job_file_renames = $params['files'];
+        $job_params = $this->getJobParameters();
+        $job_file_renames = $job_params['files'];
         $stream_name = $outstream->getName();
 
         foreach ($job_file_renames as $f)
@@ -106,9 +103,8 @@ class Rename extends \Flexio\Jobs\Base
     private function renameColumns(\Flexio\IFace\IStream $outstream)
     {
         // get the columns to rename
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
-        $job_columns = $params['columns'];
+        $job_params = $this->getJobParameters();
+        $job_columns = $job_params['columns'];
 
         // get the original names
         $original_structure = $outstream->getStructure();

@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "fail",
-    "params": {
-        "code": "string",
-        "message": "string"
-    }
+    "code": "string",
+    "message": "string"
 }
 */
 
@@ -32,9 +30,9 @@ class Fail extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $code = $job_definition['params']['code'] ?? '';
-        $message = $job_definition['params']['message'] ?? '';
+        $params = $this->getJobParameters();
+        $code = $params['code'] ?? '';
+        $message = $params['message'] ?? '';
 
         switch ($code)
         {

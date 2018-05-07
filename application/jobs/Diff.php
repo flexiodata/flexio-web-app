@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "diff",
-    "params": {
-        "file1": "",
-        "file2": ""
-    }
+    "file1": "",
+    "file2": ""
 }
 */
 
@@ -64,5 +62,5 @@ EOT;
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
     }
-    
+
 }

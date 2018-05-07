@@ -19,15 +19,13 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "validate",
-    "params": {
-        "path": ""
-        "validator": {
-            "type": "object",
-            "properties": {
-                "mime_type": {
-                    "type": "string",
-                    "enum": ["image/png", "image/jpeg", "image/gif", "image/tiff"]
-                }
+    "path": ""
+    "validator": {
+        "type": "object",
+        "properties": {
+            "mime_type": {
+                "type": "string",
+                "enum": ["image/png", "image/jpeg", "image/gif", "image/tiff"]
             }
         }
     }

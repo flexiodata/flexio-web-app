@@ -19,16 +19,14 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "convert",
-    "params": {
-        "input": {
-            "format": "delimited_text",
-            "delimiter": "{comma}",
-            "header": true,
-            "qualifier": "{none}"
-        },
-        "output": {
-            "format": ""
-        }
+    "input": {
+        "format": "delimited_text",
+        "delimiter": "{comma}",
+        "header": true,
+        "qualifier": "{none}"
+    },
+    "output": {
+        "format": ""
     }
 }
 */

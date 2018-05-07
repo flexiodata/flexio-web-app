@@ -19,12 +19,10 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "calc",
-    "params": {
-        "name": "",
-        "type": "",
-        "decimals": "",
-        "expression": ""
-    }
+    "name": "",
+    "type": "",
+    "decimals": "",
+    "expression": ""
 }
 */
 

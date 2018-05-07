@@ -19,10 +19,8 @@ namespace Flexio\Jobs;
 // EXAMPLE:
     {
         "op": "insert",
-        "params": {
-            "path": "test",
-            "values": [ { "field": "value"}, ... ]
-        }
+        "path": "test",
+        "values": [ { "field": "value"}, ... ]
     }
 */
 
@@ -33,9 +31,7 @@ class Insert extends \Flexio\Jobs\Base
         parent::run($process);
 
         // create job adds new streams; don't clear existing streams
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'] ?? [];
-
+        $params = $this->getJobParameters();
         $path = $params['path'] ?? '';
         $values = $params['values'] ?? [];
 

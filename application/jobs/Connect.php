@@ -19,12 +19,10 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "connect",
-    "params": {
-        "alias": <string>,
-        "type": <string>, // connection type; required to specify type or full connection identifier
-        "connection": <connection identifier>, required to specify type or full connection identifier
-        <additional connection parameters here>
-    }
+    "alias": <string>,
+    "type": <string>, // connection type; required to specify type or full connection identifier
+    "connection": <connection identifier>, required to specify type or full connection identifier
+    <additional connection parameters here>
 }
 */
 

@@ -20,9 +20,7 @@ require_once __DIR__ . '/Execute.php';
 /*
 // EXAMPLE:
 {
-    "op": "report",
-    "params": {
-    }
+    "op": "report"
 }
 */
 
@@ -73,8 +71,7 @@ class Report extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $params =  $job_definition['params'] ?? [];
+        $params = $this->getJobParameters();
 /*
         $code = <<<EOT
 

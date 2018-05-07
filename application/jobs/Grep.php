@@ -19,8 +19,6 @@ namespace Flexio\Jobs;
 // EXAMPLE:
 {
     "op": "grep",
-    "params": {
-    }
 }
 */
 
@@ -60,8 +58,8 @@ class Grep extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
 
         // get the code from the template
-        $job_definition = $this->getProperties();
-        $grepexpr = $job_definition['params']['expression'] ?? '';
+        $params = $this->getJobParameters();
+        $grepexpr = $params['expression'] ?? '';
         if (strlen($grepexpr) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
