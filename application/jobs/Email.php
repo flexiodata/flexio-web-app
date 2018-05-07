@@ -142,6 +142,9 @@ class Email extends \Flexio\Jobs\Base
             foreach ($attachments as &$attachment)
             {
                 self::convertToDiskFile($process, $attachment);
+
+                register_shutdown_function('unlink', $attachment['file']);
+                
                 $email->addAttachment($attachment);
             }
         }
