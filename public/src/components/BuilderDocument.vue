@@ -26,12 +26,14 @@
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
               <div class="flex-fill fw6 gray">Output</div>
             </div>
-            <CodeEditor
-              class="flex-fill overflow-auto"
-              lang="javascript"
-              :options="{ lineNumbers: false, readOnly: true }"
-              :update-on-val-change="true"
-              :val="code"
+            <CodeEditor2
+              class="flex-fill"
+              :options="{
+                lineNumbers: false,
+                readOnly: true,
+                mode: 'javascript'
+              }"
+              v-model="code"
             />
           </div>
         </div>
@@ -46,7 +48,7 @@
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
 
   const test_def = {
     "title": "Test Prompts",
@@ -231,7 +233,7 @@
     components: {
       Spinner,
       BuilderList,
-      CodeEditor
+      CodeEditor2
     },
     watch: {
       slug: {
