@@ -30,7 +30,10 @@ const mutations = {
     var prompts = _.get(def, 'prompts', [])
 
     // always include the summary item
-    prompts.push({ element: 'summary-page' })
+    var existing_summary = _.find(prompts, { element: 'summary-page' })
+    if (!existing_summary) {
+      prompts.push({ element: 'summary-page' })
+    }
 
     state.fetched = true
     state.prompts = _.map(prompts, p => {
