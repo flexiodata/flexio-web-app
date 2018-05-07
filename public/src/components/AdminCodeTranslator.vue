@@ -2,31 +2,25 @@
   <div class="flex flex-row items-stretch relative">
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK</div>
-      <code-editor
-        ref="sdk"
+      <CodeEditor2
         class="flex-fill"
-        lang="javascript"
-        :val="sdk_str"
+        v-model="sdk_str"
         @change="updateJSON"
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK to JSON</div>
-      <code-editor
-        ref="json"
+      <CodeEditor2
         class="flex-fill"
-        lang="application/json"
-        :val="json_str"
-        @change="updateReverseSdk"
+        :options="{ mode: 'application/json' }"
+        v-model="json_str"
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
-      <code-editor
-        ref="reverse-sdk"
+      <CodeEditor2
         class="flex-fill"
-        lang="javascript"
-        :val="reverse_sdk_str"
+        v-model="reverse_sdk_str"
       />
     </div>
   </div>
@@ -34,11 +28,21 @@
 
 <script>
   import Flexio from 'flexio-sdk-js'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
 
   export default {
     components: {
-      CodeEditor
+      CodeEditor2
+    },
+    watch: {
+      sdk_str: {
+        handler: 'updateJSON',
+        immediate: true
+      },
+      json_str: {
+        handler: 'updateReverseSDK',
+        immediate: true
+      }
     },
     data() {
       return {
@@ -46,9 +50,6 @@
         json_str: '',
         reverse_sdk_str: ''
       }
-    },
-    mounted() {
-      this.updateJSON(this.sdk_str)
     },
     methods: {
       updateJSON(code) {
@@ -71,18 +72,15 @@
 
           this.json_str = task_str
           this.reverse_sdk_str = Flexio.pipe(task).toCode()
-          this.$refs['json'].setValue(this.json_str)
-          this.$refs['reverse-sdk'].setValue(this.reverse_sdk_str)
         }
         catch(e)
         {
           // TODO: add error handling
         }
       },
-      updateReverseSdk(json) {
+      updateReverseSDK(json) {
         try {
           this.reverse_sdk_str = Flexio.pipe(JSON.parse(json)).toCode()
-          this.$refs['reverse-sdk'].setValue(this.reverse_sdk_str)
         }
         catch(e)
         {
