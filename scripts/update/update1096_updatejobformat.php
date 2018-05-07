@@ -171,7 +171,6 @@ function writeProcess($db, $process_eid, $task)
 
 function writeProcessLog($db, $processlog_eid, $task)
 {
-    $task_type = $db->quote($task_type);
     $task = $db->quote($task);
 
     $sql = "update tbl_processlog ".
