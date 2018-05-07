@@ -390,7 +390,7 @@ class Base implements \Flexio\IFace\IJob
                 if (!is_array($value))
                     continue;
 
-                $value = flattenParams($value);
+                $value = self::flattenParams($value);
             }
         }
 
