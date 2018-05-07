@@ -76,6 +76,25 @@ export const getAllTokens = state => {
     .value()
 }
 
+export const getSdkKey = state => {
+  var tokens = getAllTokens(state)
+
+  if (tokens.length == 0)
+    return ''
+
+  return _.get(tokens, '[0].access_code', '')
+}
+
+export const getSdkOptions = state => {
+  switch (window.location.hostname) {
+    case 'localhost':    return { host: 'localhost', insecure: true }
+    case 'test.flex.io': return { host: 'test.flex.io' }
+    case 'www.flex.io':  return { host: 'www.flex.io' }
+  }
+
+  return {}
+}
+
 export const getAllRights = state => {
   return _.filter(state.objects, { eid_type: OBJECT_TYPE_RIGHT })
 }
