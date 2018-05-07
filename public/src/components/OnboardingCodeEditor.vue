@@ -126,11 +126,13 @@
       'sdk-options': {
         type: Object,
         default: () => {
-          if (window.location.hostname == 'www.flex.io') {
-            return { host: 'www.flex.io' }
+          switch (window.location.hostname) {
+            case 'localhost':    return { host: 'localhost', insecure: true }
+            case 'test.flex.io': return { host: 'test.flex.io' }
+            case 'www.flex.io':  return { host: 'www.flex.io' }
           }
 
-          return { host: 'test.flex.io' }
+          return {}
         }
       },
       'response-type': {
