@@ -43,6 +43,12 @@
       },
       default_opts() {
         return {
+          /*
+          minHeight: number|string, // overrides minRows
+          maxHeight: number|string, // overrides maxRows
+          */
+          minRows: 16,
+          maxRows: 30,
           lineNumbers: true,
           mode: this.mode,
           extraKeys: {
@@ -61,20 +67,27 @@
       }
     },
     mounted() {
-      this.updateMinHeight()
+      this.updateMinMaxHeight()
     },
     methods: {
-      updateMinHeight() {
-        var min_height = this.opts.minHeight
+      getMinHeight() {
+        // `minHeight` overrides `minRows`
+        var min_h = this.opts.minHeight || (this.opts.minRows * 14) + 8
 
         // default to pixels if only a number is provided
-        if (_.isNumber(min_height))
-          min_height = min_height + 'px'
+        return _.isNumber(min_h) ? min_h + 'px' : min_h
+      },
+      getMaxHeight() {
+        // `maxHeight` overrides `maxRows`
+        var max_h = this.opts.maxHeight || (this.opts.maxRows * 14) + 7
 
-        // set minimum height
-        if (!_.isNil(min_height)) {
-          this.$refs.editor.codemirror.getScrollerElement().style.minHeight = min_height
-        }
+        // default to pixels if only a number is provided
+        return _.isNumber(max_h) ? max_h + 'px' : max_h
+      },
+      updateMinMaxHeight() {
+        var scroller = this.$refs.editor.codemirror.getScrollerElement()
+        scroller.style.minHeight = this.getMinHeight()
+        scroller.style.maxHeight = this.getMaxHeight()
       },
       onChange(value) {
         this.$emit('input', value)

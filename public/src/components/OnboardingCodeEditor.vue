@@ -42,7 +42,6 @@
     >
       <CodeEditor2
         lang="javascript"
-        :options="{ minHeight: 300 }"
         v-model="edit_code"
         v-if="is_inited"
       />

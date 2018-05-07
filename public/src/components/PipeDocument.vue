@@ -14,7 +14,8 @@
       style="max-width: 60rem; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
-      <div class="flex flex-row items-center bg-nearer-white mv3 relative z-1 sticky">
+      <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
+      <div class="flex flex-row items-center bg-nearer-white mv3 relative z-7 sticky">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
 
         <el-button
@@ -40,7 +41,6 @@
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
         <CodeEditor2
           class="ba b--black-10 overflow-y-auto"
-          style="max-height: 24rem"
           lang="javascript"
           v-model="code"
         />

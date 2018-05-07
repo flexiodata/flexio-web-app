@@ -20,7 +20,7 @@
         />
         <div
           class="dn db-l ml4 pa3 bg-white br2 css-dashboard-box sticky"
-          style="max-height: 30rem; min-width: 20rem; max-width: 33%"
+          style="min-width: 20rem; max-width: 33%; max-height: 30rem"
         >
           <div class="h-100 flex flex-column">
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">

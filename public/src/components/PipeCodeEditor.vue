@@ -4,7 +4,6 @@
     <div class="relative bg-white ba b--black-10 lh-title">
       <CodeEditor2
         lang="javascript"
-        :options="{ minHeight: 300 }"
         v-model="edit_code"
       />
     </div>
