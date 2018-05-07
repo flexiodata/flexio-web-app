@@ -57,7 +57,7 @@ class Process
 
     public static function read(string $owner, string $path) : \Flexio\Jobs\Process
     {
-        \Flexio\Tests\Task::create([["op" => "read", "path" => $path]]);
+        $task = \Flexio\Tests\Task::create([["op" => "read", "path" => $path]]);
         return \Flexio\Jobs\Process::create()->setOwner($owner)->execute($task);
     }
 }
