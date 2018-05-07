@@ -5,29 +5,21 @@
     "description": "Create a chart using Python Matplotlib",
     "task": {
         "op": "sequence",
-        "params": {
-            "items": [
-                {
-                    "op": "request",
-                    "params": {
-                        "url": "https://api.iextrading.com/1.0/stock/AAPL/chart/1y"
-                    }
-                },
-                {
-                    "op": "convert",
-                    "params": {
-                        "input": "json",
-                        "output": "table"
-                    }
-                },
-                {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "code": "aW1wb3J0IGlvDQppbXBvcnQganNvbg0KaW1wb3J0IG1hdHBsb3RsaWINCm1hdHBsb3RsaWIudXNlKCdBR0cnKQ0KaW1wb3J0IG1hdHBsb3RsaWIucHlwbG90IGFzIHBsdA0KDQpkZWYgZmxleGlvX2hhbmRsZXIoY29udGV4dCk6DQoNCiAgICB2YWx1ZXMgPSBbXQ0KICAgIGZvciByb3cgaW4gY29udGV4dC5pbnB1dDoNCiAgICAgICAgdmFsdWVzLmFwcGVuZChmbG9hdChyb3dbJ2hpZ2gnXSkpDQoNCiAgICAjIHBsdC5maWd1cmUoZmlnc2l6ZT0oOC4wLCAyLjApKSAjIHJlc2l6ZSB0aGUgaW1hZ2UgaWYgZGVzaXJlZA0KICAgIHBsdC5wbG90KHZhbHVlcykNCiAgICBidWYgPSBpby5CeXRlc0lPKCkNCiAgICBwbHQuc2F2ZWZpZyhidWYsIGZvcm1hdD0ncG5nJykNCiAgICBidWYuc2VlaygwKQ0KDQogICAgY29udGV4dC5vdXRwdXQuY29udGVudF90eXBlID0gJ2ltYWdlL3BuZycNCiAgICBjb250ZXh0Lm91dHB1dC53cml0ZShidWYucmVhZCgpKQ=="
-                    }
-                }
-            ]
-        }
+        "items": [
+            {
+                "op": "request",
+                "url": "https://api.iextrading.com/1.0/stock/AAPL/chart/1y"
+            },
+            {
+                "op": "convert",
+                "input": "json",
+                "output": "table"
+            },
+            {
+                "op": "execute",
+                "lang": "python",
+                "code": "aW1wb3J0IGlvDQppbXBvcnQganNvbg0KaW1wb3J0IG1hdHBsb3RsaWINCm1hdHBsb3RsaWIudXNlKCdBR0cnKQ0KaW1wb3J0IG1hdHBsb3RsaWIucHlwbG90IGFzIHBsdA0KDQpkZWYgZmxleGlvX2hhbmRsZXIoY29udGV4dCk6DQoNCiAgICB2YWx1ZXMgPSBbXQ0KICAgIGZvciByb3cgaW4gY29udGV4dC5pbnB1dDoNCiAgICAgICAgdmFsdWVzLmFwcGVuZChmbG9hdChyb3dbJ2hpZ2gnXSkpDQoNCiAgICAjIHBsdC5maWd1cmUoZmlnc2l6ZT0oOC4wLCAyLjApKSAjIHJlc2l6ZSB0aGUgaW1hZ2UgaWYgZGVzaXJlZA0KICAgIHBsdC5wbG90KHZhbHVlcykNCiAgICBidWYgPSBpby5CeXRlc0lPKCkNCiAgICBwbHQuc2F2ZWZpZyhidWYsIGZvcm1hdD0ncG5nJykNCiAgICBidWYuc2VlaygwKQ0KDQogICAgY29udGV4dC5vdXRwdXQuY29udGVudF90eXBlID0gJ2ltYWdlL3BuZycNCiAgICBjb250ZXh0Lm91dHB1dC53cml0ZShidWYucmVhZCgpKQ=="
+            }
+        ]
     }
 }

@@ -397,142 +397,85 @@ class PipeFunctions(object):
         pass
 
     # general purpose task proxy for testing/debugging
-    def task(self, definition):
-        return proxy.invoke('runJob', [json.dumps(definition)])
+    def task(self, params):
+        return proxy.invoke('runJob', [json.dumps(params)])
 
     # (mostly) standard task bindings
     def connect(self, params):
-        definition = {
-            "op": "connect",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'connect'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def convert(self, params):
-        definition = {
-            "op": "convert",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'convert'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def copy(self, params):
-        definition = {
-            "op": "copy",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'copy'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def create(self, params):
-        definition = {
-            "op": "create",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'create'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def delete(self, params):
-        definition = {
-            "op": "delete",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'delete'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def echo(self, params):
-        definition = {
-            "op": "echo",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'echo'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def email(self, params):
-        definition = {
-            "op": "email",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'email'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def execute(self, params):
-        definition = {
-            "op": "execute",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'execute'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def exit(self, params):
-        definition = {
-            "op": "exit",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'exit'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def filter(self, params):
-        definition = {
-            "op": "filter",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'filter'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def insert(self, params):
-        definition = {
-            "op": "insert",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'insert'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def list(self, params):
-        definition = {
-            "op": "list",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'list'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def mkdir(self, params):
-        definition = {
-            "op": "mkdir",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'mkdir'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def read(self, params):
-        definition = {
-            "op": "read",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'read'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def render(self, params):
-        definition = {
-            "op": "render",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'render'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def rename(self, params):
-        definition = {
-            "op": "rename",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'rename'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def request(self, params):
-        definition = {
-            "op": "request",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'request'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def select(self, params):
-        definition = {
-            "op": "select",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'select'
+        proxy.invoke('runJob', [json.dumps(params)])
 
     def write(self, params):
-        definition = {
-            "op": "write",
-            "params": params
-        }
-        proxy.invoke('runJob', [json.dumps(definition)])
+        params['op'] = 'write'
+        proxy.invoke('runJob', [json.dumps(params)])
 
 
 class Context(object):
@@ -565,7 +508,7 @@ class Context(object):
                 info  = proxy.invoke('getInputStreamInfo', [key])
                 self.files[key] = Input(info)
         return self._files
-    
+
     @property
     def vars(self):
         return env_vars

@@ -5,33 +5,25 @@
     "description": "Clean a CSV by removing some columns",
     "task": {
         "op": "sequence",
-        "params": {
-            "items": [
-                {
-                    "op": "request",
-                    "params": {
-                        "url": "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd1.csv"
-                    }
-                },
-                {
-                    "op": "convert",
-                    "params": {
-                        "input": "csv",
-                        "output": "table"
-                    }
-                },
-                {
-                    "op": "select",
-                    "params": {
-                        "columns": [
-                            "streetaddress",
-                            "city",
-                            "state",
-                            "zipcode"
-                        ]
-                    }
-                }
-            ]
-        }
+        "items": [
+            {
+                "op": "request",
+                "url": "https://raw.githubusercontent.com/flexiodata/data/master/contact-samples/contacts-ltd1.csv"
+            },
+            {
+                "op": "convert",
+                "input": "csv",
+                "output": "table"
+            },
+            {
+                "op": "select",
+                "columns": [
+                    "streetaddress",
+                    "city",
+                    "state",
+                    "zipcode"
+                ]
+            }
+        ]
     }
 }
