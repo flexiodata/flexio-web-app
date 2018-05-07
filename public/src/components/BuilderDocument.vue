@@ -212,6 +212,9 @@
     "pipe": ""
   }
 
+  // easy way to get rid of a bunch of elements for quick testing
+  //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
+
   var pipe_arr = [ "Flexio.pipe()" ]
 
   var buildPipeCode = (arr) => {
