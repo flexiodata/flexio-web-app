@@ -78,11 +78,14 @@
         v-if="is_process_failed && is_superuser"
       >
         <div class="bg-white ba b--black-10">
-          <code-editor
+          <CodeEditor2
             class="h-100 overflow-y-auto"
-            lang="application/json"
-            :val="active_process_info_str"
-            :options="{ lineNumbers: false, readOnly: true }"
+            :options="{
+              lineNumbers: false,
+              readOnly: true,
+              mode: 'application/json'
+            }"
+            v-model="active_process_info_str"
           />
         </div>
       </div>
@@ -130,7 +133,7 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   //import PipeBuilderList from './PipeBuilderList.vue'
-  import CodeEditor from './CodeEditor.vue'
+  import CodeEditor2 from './CodeEditor2.vue'
   import HelpItems from './HelpItems.vue'
 
   export default {
@@ -139,7 +142,7 @@
       PipeHomeHeader,
       PipeCodeEditor,
       //PipeBuilderList,
-      CodeEditor,
+      CodeEditor2,
       HelpItems
     },
     provide() {

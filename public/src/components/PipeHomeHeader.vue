@@ -6,6 +6,7 @@
           <i class="material-icons md-24 hint--bottom-right" aria-label="Back to pipe list">home</i>
         </router-link>
         <i class="material-icons md-24 black-20 rotate-270" v-if="is_signed_in && !pipeOptions.fetchError">expand_more</i>
+        <!--
         <inline-edit-text
           class="dib lh-title f6 fw6 f4-ns fw4-ns mid-gray hover-black mr3-l"
           input-key="name"
@@ -15,8 +16,10 @@
           @save="editPipeName"
           v-if="is_signed_in && !pipeOptions.fetchError"
         />
+        -->
         <div v-if="is_signed_in && !pipeOptions.fetchError">
           <div class="flex flex-row items-center">
+            <!--
             <inline-edit-text
               class="dib f7 silver pv1 ph2 mr1 bg-black-05"
               placeholder="Add an alias"
@@ -28,6 +31,7 @@
               @cancel="cancelEditPipeAlias"
               @save="editPipeAlias"
             />
+            -->
             <div
               class="hint--bottom hint--large cursor-default"
               aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
@@ -63,7 +67,7 @@
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import { PIPEHOME_VIEW_SDK_JS, PIPEHOME_VIEW_BUILDER } from '../constants/pipehome'
   import { TASK_OP_INPUT } from '../constants/task-op'
-  import InlineEditText from './InlineEditText.vue'
+  //import InlineEditText from './InlineEditText.vue'
   import UserDropdown from './UserDropdown.vue'
   import Validation from './mixins/validation'
 
@@ -97,7 +101,7 @@
     },
     mixins: [Validation],
     components: {
-      InlineEditText,
+      //InlineEditText,
       UserDropdown
     },
     inject: ['pipeEid'],
