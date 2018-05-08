@@ -18,7 +18,7 @@
     </div>
 
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
-      <abstract-list
+      <AbstractList
         ref="list"
         class="br b--black-05 overflow-y-auto"
         layout="list"
@@ -43,7 +43,7 @@
           There was a problem updating the connection.
         </ui-alert>
 
-        <connection-edit-panel
+        <ConnectionEditPanel
           class="pa3 pa4-l"
           style="max-width: 60rem"
           mode="edit"
@@ -55,10 +55,10 @@
         />
       </div>
     </div>
-    <empty-item class="flex flex-column justify-center h-100" v-else>
+    <EmptyItem class="flex flex-column justify-center h-100" v-else>
       <i slot="icon" class="material-icons">repeat</i>
       <span slot="text">No connections to show</span>
-    </empty-item>
+    </EmptyItem>
 
     <!-- connection create dialog -->
     <el-dialog
@@ -68,7 +68,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_connection_new_dialog"
     >
-      <connection-edit-panel
+      <ConnectionEditPanel
         @close="show_connection_new_dialog = false"
         @cancel="show_connection_new_dialog = false"
         @submit="tryUpdateConnection"
@@ -97,7 +97,7 @@
     watch: {
       connections(val, old_val) {
         if (!this.has_connection) {
-          this.connection = _.first(this.connections)
+          this.selectConnection(_.first(this.connections))
         }
       }
     },
@@ -133,7 +133,7 @@
       this.tryFetchConnections()
     },
     mounted() {
-      this.connection = _.first(this.connections)
+      this.selectConnection(_.first(this.connections))
     },
     methods: {
       ...mapGetters([

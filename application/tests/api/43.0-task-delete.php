@@ -38,28 +38,38 @@ class Test
         ];
 
 
-        // TEST: listing of a folder with a single file
+        // TODO: try to delete a file that doesn't exist
+        // TODO: delete an empty folder
+        // TODO: delete a populated folder
+
+
+        // TEST: Delete Job; Basic Delete
 
         // BEGIN TEST
         $idx = 0;
         foreach ($storage_items as $storage_location)
         {
             $idx++;
+
             $folderpath = "/$storage_location/job-tests-" . \Flexio\Tests\Util::getTimestampName() . "/";
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
-            $filepath = $folderpath . '/' . $filename;
             $task = \Flexio\Tests\Task::create([
-                ["op" => "write", "path" => $filepath],
-                ["op" => "list", "path" => $folderpath]
+                ["op" => "create", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
             ]);
-            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
-            $actual = json_decode($result['response'],true);
-            $expected = '[{
-                "name":"'.$filename.'",
-                "path":"'.$folderpath.$filename.'",
-                "type":"FILE"
-            }]';
-            \Flexio\Tests\Check::assertInArray("A.$idx", 'Process List; ('.$storage_location.') listing of folder with single file ' . $folderpath, $actual, $expected, $results);
+            $result1 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+            $result1 = json_decode($result1['response'], true);
+            $result1 = array_column($result1, 'name');
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "delete", "path" => $folderpath.$filename],
+                ["op" => "list", "path" => $folderpath.$filename]
+            ]);
+            $result2 = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+            $result2 = json_decode($result2['response'], true);
+            $result2 = array_column($result2, 'name');
+            $actual = array_values(array_diff($result1, $result2));
+            $expected = [$filename];
+            \Flexio\Tests\Check::assertArray("G.1", 'Delete; delete a file that exists; file is ' . $folderpath.$filename, $actual, $expected, $results);
         }
     }
 }

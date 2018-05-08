@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -33,31 +33,17 @@ class Test
         // TEST: exit task basic task functionality
 
         // BEGIN TEST
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "exit",
-                    "params": {
-                        "code": 404,
-                        "response": {
-                            "error": "item-not-found",
-                            "message": "The item you requested was not found."
-                        }
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "exit",
+                "code" => 404,
+                "response" => [
+                    "error" => "item-not-found",
+                    "message" => "The item you requested was not found."
+                ]
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
         $expected = array(
             "code" => 404,
@@ -66,7 +52,7 @@ class Test
                 "message" => "The item you requested was not found."
             ))
         );
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; exit task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Exit; basic functionality',  $actual, $expected, $results);
     }
 }
 

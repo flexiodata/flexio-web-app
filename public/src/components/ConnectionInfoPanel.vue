@@ -26,81 +26,119 @@
       <ui-tabs>
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
-            <value-select
-              placeholder="Authorization Type"
-              label="Authorization Type"
-              floating-label
-              :options="auth_options"
-              v-model="auth"
-            />
-            <ui-textbox
-              autocomplete="off"
-              placeholder="Username"
-              label="Username"
-              floating-label
-              help=" "
-              v-model="username"
-              v-if="auth == 'basic'"
-            />
-            <ui-textbox
-              type="password"
-              autocomplete="off"
-              placeholder="Password"
-              label="Password"
-              floating-label
-              help=" "
-              v-model="password"
-              v-if="auth == 'basic'"
-            />
-            <ui-textbox
-              type="password"
-              autocomplete="off"
-              placeholder="Token"
-              label="Token"
-              floating-label
-              help=" "
-              v-model="token"
-              v-if="auth == 'bearer'"
-            />
-            <ui-textbox
-              type="password"
-              autocomplete="off"
-              placeholder="Access Token"
-              label="Access Token"
-              floating-label
-              help=" "
-              v-model="access_token"
-              v-if="auth == 'oauth2'"
-            />
-            <ui-textbox
-              type="password"
-              autocomplete="off"
-              placeholder="Refresh Token"
-              label="Refresh Token"
-              help=" "
-              v-model="refresh_token"
-              v-if="auth == 'oauth2'"
-            />
-            <ui-textbox
-              autocomplete="off"
-              placeholder="Expires"
-              label="Expires"
-              floating-label
-              help=" "
-              v-model="expires"
-              v-if="auth == 'oauth2'"
-            />
+            <el-form
+              class="el-form-cozy"
+              label-width="10rem"
+              :model="$data"
+              :rules="rules"
+              :status-icon="true"
+            >
+              <el-form-item
+                label="Authorization Type"
+                key="auth"
+                prop="auth"
+              >
+                <el-select
+                  placeholder="Authorization Type"
+                  v-model="auth"
+                >
+                  <el-option
+                    :label="option.label"
+                    :value="option.val"
+                    :key="option.val"
+                    v-for="option in auth_options"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                label="Username"
+                key="username"
+                prop="username"
+                v-if="auth == 'basic'"
+              >
+                <el-input
+                  placeholder="Username"
+                  spellcheck="false"
+                  v-model="username"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Password"
+                key="password"
+                prop="password"
+                v-if="auth == 'basic'"
+              >
+                <el-input
+                  type="password"
+                  placeholder="Password"
+                  spellcheck="false"
+                  v-model="password"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Token"
+                key="token"
+                prop="token"
+                v-if="auth == 'bearer'"
+              >
+                <el-input
+                  type="password"
+                  placeholder="Token"
+                  spellcheck="false"
+                  v-model="token"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Access Token"
+                key="access_token"
+                prop="access_token"
+                v-if="auth == 'oauth2'"
+              >
+                <el-input
+                  type="password"
+                  placeholder="Access Token"
+                  spellcheck="false"
+                  v-model="access_token"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Refresh Token"
+                key="refresh_token"
+                prop="refresh_token"
+                v-if="auth == 'oauth2'"
+              >
+                <el-input
+                  type="password"
+                  placeholder="Refresh Token"
+                  spellcheck="false"
+                  v-model="refresh_token"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Expires"
+                key="expires"
+                prop="expires"
+                v-if="auth == 'oauth2'"
+              >
+                <el-input
+                  type="password"
+                  placeholder="Expires"
+                  spellcheck="false"
+                  v-model="expires"
+                />
+              </el-form-item>
+            </el-form>
           </div>
         </ui-tab>
 
         <ui-tab id="form-data" title="Form Data">
           <div class="ma3">
-            <keypair-item
+            <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
               v-if="false"
             />
-            <keypair-item
+            <KeypairItem
               v-for="(item, index) in data"
               :key="index"
               :item="item"
@@ -114,12 +152,12 @@
 
         <ui-tab id="headers" title="Headers">
           <div class="ma3">
-            <keypair-item
+            <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
               v-if="false"
             />
-            <keypair-item
+            <KeypairItem
               v-for="(item, index) in headers"
               :key="index"
               :item="item"

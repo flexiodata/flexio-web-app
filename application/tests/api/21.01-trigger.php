@@ -35,20 +35,18 @@ class Test
 
         // BEGIN TEST
         $alias = \Flexio\Base\Util::generateHandle();
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "echo",
+                "msg" => 'From: ${email-from-display} <${email-from}>; Message: ${input}; Files: ${files}'
+            ]
+        ]);
         $params = array(
             'method' => 'POST',
             'url' => "$apibase/$userid/pipes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "alias": "'.$alias.'",
-                "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "From: ${email-from-display} <${email-from}>; Message: ${input}; Files: ${files}"
-                    }
-                }
-            }'
+            'params' => json_encode(["alias" => $alias, "task" => $task])
         );
         \Flexio\Tests\Util::callApi($params);
 

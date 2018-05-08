@@ -61,20 +61,39 @@ class Email extends \Flexio\Jobs\Base
         $body_text = ($params['body'] ?? ($params['body_text'] ?? ''));
         $body_html = ($params['html'] ?? ($params['body_html'] ?? ''));
 
-        $connection = $process->getConnection($connection);
 
-        $email = \Flexio\Services\Email::create($connection['connection_info'] ?? []);
 
-        if (strlen($from) > 0)
+        if ($connection === null)
         {
-            $email->setFrom($from);
+            // for now, we will temporarily allow messages to be sent with noreply@flex.io
+
+ 
+            $email_params = array(
+                'from' => "Flex.io <no-reply@flex.io>",
+                'to' => $to,
+                'subject' => $subject,
+                'msg_text' => $body_text
+            );
+    
+            $email = \Flexio\Services\NoticeEmail::create($email_params);
+
         }
+         else
+        {
+            $connection = $process->getConnection($connection);
 
-        $email->setTo($to);
-        $email->setSubject($subject);
-        $email->setMessageText($body_text);
-        $email->setMessageHtml($body_html);
+            $email = \Flexio\Services\Email::create($connection['connection_info'] ?? []);
 
+            if (strlen($from) > 0)
+            {
+                $email->setFrom($from);
+            }
+
+            $email->setTo($to);
+            $email->setSubject($subject);
+            $email->setMessageText($body_text);
+            $email->setMessageHtml($body_html);
+        }
 
 
 
@@ -118,110 +137,16 @@ class Email extends \Flexio\Jobs\Base
             }
         }
 
-
         if (count($attachments) > 0)
         {
             foreach ($attachments as &$attachment)
             {
                 self::convertToDiskFile($process, $attachment);
-
                 $email->addAttachment($attachment);
             }
-
-            
         }
-
-
-
-
-
-
-
 
         $email->send();
-
-    /*
-        // enforce basic rate limits to prevent spam; only allow a max of 25 people to get
-        // an email at once; also, only allow one email notice a second; of course multiple
-        // jobs could be fired, but this at least helps throttle emails used within a loop
-        if (count($to) > self::EMAIL_TO_ADDRESS_MAX_SIZE)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::SIZE_LIMIT_EXCEEDED);
-        sleep(self::EMAIL_WAIT_FREQUENCY);
-
-
-        $email_params = array(
-            'from' => "Flex.io <no-reply@flex.io>",
-            'to' => $to,
-            'subject' => $subject,
-            'msg_text' => $body_text
-        );
-
-        if (strlen($body_html) > 0)
-            $email_params['msg_html'] = $body_html;
-
-        $attachments = array();
-        if (isset($params['attachments']))
-        {
-            if (!is_array($params['attachments']) || \Flexio\Base\Util::isAssociativeArray($params['attachments']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'attachments' parameter must be an array");
-
-            foreach ($params['attachments'] as $attachment)
-            {
-                if (is_string($attachment))
-                {
-                    $file = $attachment;
-                    $name = null;
-                    $mime_type = null;
-                }
-                else if (isset($attachment['file']))
-                {
-                    $file = $attachment['file'];
-                    $name = $attachment['name'] ?? null;
-                    $mime_type = $attachment['mime_type'] ?? null;
-                }
-
-
-                if ($name === null)
-                {
-                    $name = substr($file, strrpos($file, '/') + 1);
-                }
-
-                if ($mime_type === null)
-                {
-                    $mime_type = \Flexio\Base\ContentType::getMimeTypeFromExtension($name);
-                }
-
-                $attachments[] = [
-                    'name' => $name,
-                    'file' => $file,
-                    'mime_type' => $mime_type
-                ];
-            }
-        }
-
-
-        if (count($attachments) > 0)
-        {
-            foreach ($attachments as &$attachment)
-            {
-                self::convertToDiskFile($process, $attachment);
-            }
-
-            $email_params['attachments'] = $attachments;
-        }
-
-        $email = \Flexio\Services\NoticeEmail::create($email_params);
-        $res = $email->send();
-
-        // delete the temporary attachments
-
-        foreach ($attachments as $a)
-        {
-            $file = $a['file'];
-            if (strlen($file) > 0)
-                @unlink($file);
-        }
-*/
     }
 
     private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment)

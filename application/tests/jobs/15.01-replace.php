@@ -22,43 +22,34 @@ class Test
     {
         // TODO: placeholder job to test basic functionality; fill out tests
 
-        // SETUP
-        $task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                    "columns": [
-                        { "name": "field1", "type": "character", "width": 3, "scale": 0 },
-                        { "name": "field2", "type": "character", "width": 3, "scale": 0 }
-                    ],
-                    "content": [
-                        ["a","b"],
-                        ["b","B"],
-                        ["c","b"]
-                    ]
-                }
-            },
-            {
-                "op": "replace",
-                "params": {
-                    "columns": [ "field1", "field2" ],
-                    "find": "b",
-                    "replace": "D",
-                    "location": "any",
-                    "match_case": true
-                }
-            }
-        ]
-        ',true);
-
-
 
         // TEST: Replace Job
 
         // BEGIN TEST
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "field1", "type" => "character", "width" => 3, "scale" => 0],
+                    ["name" => "field2", "type" => "character", "width" => 3, "scale" => 0]
+                ],
+                "content" => [
+                    ["a","b"],
+                    ["b","B"],
+                    ["c","b"]
+                ]
+            ],
+            [
+                "op" => "replace",
+                "columns" => [ "field1", "field2" ],
+                "find" => "b",
+                "replace" => "D",
+                "location" => "any",
+                "match_case" => true
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["a","D"],["D","B"],["c","D"]];
         \Flexio\Tests\Check::assertString('A.1', 'Replace Job; check basic functionality',  $actual, $expected, $results);

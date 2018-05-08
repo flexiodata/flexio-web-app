@@ -26,13 +26,11 @@ class Test
         $source_directory = '/home/' . $test_folder . '/';
         $target_directory = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . $test_folder . '/';
 
-
         foreach ($files as $filename) // copy files into home directory
         {
             $source_filepath = \Flexio\Tests\Util::getOutputFilePath($source_directory, $filename);
-            $read = json_decode('{"op": "read", "params": {"path": "'. $source_filepath . '"}}',true);
-            $write = json_decode('{"op": "write", "params": { "path": "'. $source_filepath . '"}}',true);
-
+            $read = \Flexio\Tests\Task::create([["op" => "read", "path" => $source_filepath]]);
+            $write = \Flexio\Tests\Task::create([["op" => "write", "path" => $source_filepath]]);
             $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
             $process_write = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($write);
             $process_read = \Flexio\Jobs\Process::create()->execute($read);
@@ -43,11 +41,10 @@ class Test
         }
 
 
-
         // TEST: Copy Job; Basic Copy
-        $copy = json_decode('{"op": "copy", "params": {"from": "'. $source_directory . '", "to": "'. $target_directory . '"}}',true);
-        $list_source = json_decode('{"op": "list", "params": {"path": "'. $source_directory . '"}}',true);
-        $list_target = json_decode('{"op": "list", "params": {"path": "'. $target_directory . '"}}',true);
+        $copy = \Flexio\Tests\Task::create([["op" => "copy", "from" => $source_directory, "to" => $target_directory]]);
+        $list_source = \Flexio\Tests\Task::create([["op" => "list", "path" => $source_directory]]);
+        $list_target = \Flexio\Tests\Task::create([["op" => "list", "path" => $target_directory]]);
         $process_copy = \Flexio\Jobs\Process::create()->execute($copy);
         $process_list_source = \Flexio\Jobs\Process::create()->execute($list_source);
         $process_list_target = \Flexio\Jobs\Process::create()->execute($list_target);

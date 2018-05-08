@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -33,30 +33,13 @@ class Test
         // TEST: echo task basic functionality
 
         // BEGIN TEST
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "Hello, World!"
-                    }
-                }
-            }'
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run",
-            'token' => $token
-        ));
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "echo", "msg" => "Hello, World!"]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result['response'];
         $expected = 'Hello, World!';
-        \Flexio\Tests\Check::assertString('A.1', 'POST /:userid/pipes/:objeid/run; echo task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', 'Process Echo; basic functionality',  $actual, $expected, $results);
     }
 }
 

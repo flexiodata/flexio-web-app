@@ -233,10 +233,7 @@ class Test
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -263,10 +260,7 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",
@@ -303,10 +297,7 @@ class Test
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -333,10 +324,7 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",
@@ -370,10 +358,7 @@ class Test
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -400,10 +385,7 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",
@@ -437,10 +419,7 @@ class Test
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -467,10 +446,7 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",
@@ -504,10 +480,7 @@ class Test
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "schedule": {
                     "frequency": "",
@@ -534,10 +507,7 @@ class Test
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "schedule": {
                 "timezone": "UTC",

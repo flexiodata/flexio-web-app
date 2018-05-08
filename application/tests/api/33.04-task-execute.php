@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -41,26 +41,21 @@ def flexio_handler(context):
         context.output.write(p + ":" + params[p] + ";")
     context.output.content_type = "text/plain"
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "python",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run?param1=d&param3=c&param2=b&param1=a",
+            'url' => "$apibase/$userid/processes/$objeid/run?param1=d&param3=c&param2=b&param1=a",
             'token' => $token
         ));
         $actual = $result;
@@ -69,8 +64,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'POST /:userid/pipes/:objeid/run; (python) execute task context query parameters',  $actual, $expected, $results);
-
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task context query parameters',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -84,26 +78,21 @@ exports.flexio_handler = function(context) {
     context.output.content_type = "text/plain";
 }
 EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+        ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes",
+            'url' => "$apibase/$userid/processes",
             'token' => $token,
             'content_type' => 'application/json',
-            'params' => '{
-                "task": {
-                    "op": "execute",
-                    "params": {
-                        "lang": "javascript",
-                        "code": "'.base64_encode($script).'"
-                    }
-                }
-            }'
+            'params' => json_encode(["task" => $task])
         ));
         $response = json_decode($result['response'],true);
         $objeid = $response['eid'] ?? '';
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
-            'url' => "$apibase/$userid/pipes/$objeid/run?param1=d&param3=c&param2=b&param1=a",
+            'url' => "$apibase/$userid/processes/$objeid/run?param1=d&param3=c&param2=b&param1=a",
             'token' => $token
         ));
         $actual = $result;
@@ -112,7 +101,7 @@ EOD;
             "content_type": "text\/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; (javascript) execute task context query parameters',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task context query parameters',  $actual, $expected, $results);
     }
 }
 

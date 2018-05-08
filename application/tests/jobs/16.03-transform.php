@@ -64,36 +64,27 @@ class Test
         // TEST: Transform Job; conversion to character type from character type (identity)
 
         // BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":6,"scale":0}
-                	],
-                	"content": [
-                		["a"],
-                		[null],
-                		["A"],
-                		["a B C"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "type": "character",
-                    "columns": [
-                        "f"
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 6, "scale" => 0]
+                ],
+                "content" => [
+                    ["a"],
+                    [null],
+                    ["A"],
+                    ["a B C"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "type" => "character",
+                "columns" => ["f"]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -115,40 +106,31 @@ class Test
         // TEST: Transform Job; conversion to character type from numeric type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":2,"scale":0}
-                	],
-                	"content": [
-                		["0"],
-                		[null],
-                		["1"],
-                		["-1"],
-                		["21"],
-                		["-23"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 2, "scale" => 0]
+                ],
+                "content" => [
+                    ["0"],
+                    [null],
+                    ["1"],
+                    ["-1"],
+                    ["21"],
+                    ["-23"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -168,38 +150,29 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.1', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":14,"scale":0}
-                	],
-                	"content": [
-                		["0"],
-                		[null],
-                		["99999999999999"],
-                		["-99999999999999"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 14, "scale" => 0]
+                ],
+                "content" => [
+                    ["0"],
+                    [null],
+                    ["99999999999999"],
+                    ["-99999999999999"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -217,39 +190,30 @@ class Test
 		\Flexio\Tests\Check::assertInArray('B.2', 'Transform Job; conversion from numeric to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":4,"scale":2}
-                	],
-                	"content": [
-                		["0.00"],
-                		[null],
-                		["1.23"],
-                		["-1.0"],
-                		["21.99"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 4, "scale" => 2]
+                ],
+                "content" => [
+                    ["0.00"],
+                    [null],
+                    ["1.23"],
+                    ["-1.0"],
+                    ["21.99"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -272,40 +236,31 @@ class Test
         // TEST: Transform Job; conversion to character type from double type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"double","width":2,"scale":0}
-                	],
-                	"content": [
-                		["0"],
-                		[null],
-                		["1"],
-                		["-1"],
-                		["21"],
-                		["-23"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "double", "width" => 2, "scale" => 2]
+                ],
+                "content" => [
+                    ["0"],
+                    [null],
+                    ["1"],
+                    ["-1"],
+                    ["21"],
+                    ["-23"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -325,39 +280,30 @@ class Test
 		\Flexio\Tests\Check::assertInArray('C.1', 'Transform Job; conversion from double to character',  $actual, $expected, $results);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"double","width":4,"scale":2}
-                	],
-                	"content": [
-                		["0.00"],
-                		[null],
-                		["1.23"],
-                		["-1.0"],
-                		["21.99"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "double", "width" => 2, "scale" => 2]
+                ],
+                "content" => [
+                    ["0.00"],
+                    [null],
+                    ["1.23"],
+                    ["-1.0"],
+                    ["21.99"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -380,40 +326,31 @@ class Test
         // TEST: Transform Job; conversion to character type from integer type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"integer","width":2,"scale":0}
-                	],
-                	"content": [
-                		["0"],
-                		[null],
-                		["1"],
-                		["-1"],
-                		["21"],
-                		["-23"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "integer", "width" => 2, "scale" => 0]
+                ],
+                "content" => [
+                    ["0"],
+                    [null],
+                    ["1"],
+                    ["-1"],
+                    ["21"],
+                    ["-23"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -437,38 +374,29 @@ class Test
         // TEST: Transform Job; conversion to character type from date type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"date","width":8,"scale":0}
-                	],
-                	"content": [
-                		["2001-02-03"],
-                		[null],
-                		["1970-01-01"],
-                		["1999-12-31"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "date", "width" => 8, "scale" => 0]
+                ],
+                "content" => [
+                    ["2001-02-03"],
+                    [null],
+                    ["1970-01-01"],
+                    ["1999-12-31"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -490,38 +418,29 @@ class Test
         // TEST: Transform Job; conversion to character type from datetime type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"datetime","width":8,"scale":0}
-                	],
-                	"content": [
-                		["2001-02-03 00:00:00"],
-                		[null],
-                		["1970-01-01 01:02:03"],
-                		["1999-12-31 23:59:59"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "date", "width" => 8, "scale" => 0]
+                ],
+                "content" => [
+                    ["2001-02-03 00:00:00"],
+                    [null],
+                    ["1970-01-01 01:02:03"],
+                    ["1999-12-31 23:59:59"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -543,37 +462,28 @@ class Test
         // TEST: Transform Job; conversion to character type from boolean type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"boolean","width":1,"scale":0}
-                	],
-                	"content": [
-                		[true],
-                		[null],
-                		[false]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "character" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "boolean", "width" => 1, "scale" => 0]
+                ],
+                "content" => [
+                    [true],
+                    [null],
+                    [false]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "character"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -593,48 +503,39 @@ class Test
         // TEST: Transform Job; conversion to boolean type from character type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"character","width":5,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                        ["a"],
-                		["0"],
-                		["1"],
-                		["-1"],
-                		["2.1"],
-                		["true"],
-                		["false"],
-                		["True"],
-                		["False"],
-                		["TRUE"],
-                		["FALSE"],
-                		["T"],
-                        ["F"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "character", "width" => 5, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    ["a"],
+                    ["0"],
+                    ["1"],
+                    ["-1"],
+                    ["2.1"],
+                    ["true"],
+                    ["false"],
+                    ["True"],
+                    ["False"],
+                    ["TRUE"],
+                    ["FALSE"],
+                    ["T"],
+                    ["F"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -666,39 +567,30 @@ class Test
         // TEST: Transform Job; conversion to boolean type from numeric type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":8,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                		["0"],
-                		["1"],
-                		["-1"],
-                		["2"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 8, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    ["0"],
+                    ["1"],
+                    ["-1"],
+                    ["2"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -717,39 +609,30 @@ class Test
 		\Flexio\Tests\Check::assertInArray('I.1', 'Transform Job; conversion from numeric to boolean',  $actual, $expected, $results, \Flexio\Tests\Base::FLAG_ERROR_SUPPRESS);
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"numeric","width":8,"scale":2}
-                	],
-                	"content": [
-                		[null],
-                		["0"],
-                		["1.1"],
-                		["-1"],
-                		["2.1"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "numeric", "width" => 8, "scale" => 2]
+                ],
+                "content" => [
+                    [null],
+                    ["0"],
+                    ["1.1"],
+                    ["-1"],
+                    ["2.1"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -772,39 +655,30 @@ class Test
         // TEST: Transform Job; conversion to boolean type from double type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"double","width":4,"scale":2}
-                	],
-                	"content": [
-                		[null],
-                		["0"],
-                		["1.1"],
-                		["-1"],
-                		["2.1"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "double", "width" => 4, "scale" => 2]
+                ],
+                "content" => [
+                    [null],
+                    ["0"],
+                    ["1.1"],
+                    ["-1"],
+                    ["2.1"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -827,39 +701,30 @@ class Test
         // TEST: Transform Job; conversion to boolean type from integer type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"integer","width":4,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                		["0"],
-                		["1"],
-                		["-1"],
-                		["2"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "integer", "width" => 4, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    ["0"],
+                    ["1"],
+                    ["-1"],
+                    ["2"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -882,37 +747,28 @@ class Test
         // TEST: Transform Job; conversion to boolean type from date type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"date","width":4,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                		["2001-01-01"],
-                		["1999-12-31"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "date", "width" => 4, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    ["2001-01-01"],
+                    ["1999-12-31"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -933,37 +789,28 @@ class Test
         // TEST: Transform Job; conversion to boolean type from datetime type
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"datetime","width":8,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                		["2001-01-01 01:02:03"],
-                		["1999-12-31 23:59:59"]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "datetime", "width" => 8, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    ["2001-01-01 01:02:03"],
+                    ["1999-12-31 23:59:59"]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {
@@ -984,37 +831,28 @@ class Test
         // TEST: Transform Job; conversion to boolean type from boolean type (identity)
 
 		// BEGIN TEST
-		$task = json_decode('
-        [
-            {
-                "op": "create",
-                "params": {
-                    "name": "table",
-                    "content_type": "'.\Flexio\Base\ContentType::FLEXIO_TABLE.'",
-                	"columns": [
-                		{"name":"f","type":"boolean","width":1,"scale":0}
-                	],
-                	"content": [
-                		[null],
-                		[true],
-                		[false]
-                	]
-                }
-            },
-            {
-                "op": "transform",
-                "params": {
-                    "columns": [
-                        "f"
-                    ],
-                    "operations": [
-                        { "operation": "type", "type": "boolean" }
-                    ]
-                }
-            }
-        ]
-        ',true);
-        $process = \Flexio\Jobs\Process::create()->execute($task[0])->execute($task[1]);
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "create",
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    ["name" => "f", "type" => "boolean", "width" => 1, "scale" => 0]
+                ],
+                "content" => [
+                    [null],
+                    [true],
+                    [false]
+                ]
+            ],
+            [
+                "op" => "transform",
+                "columns" => ["f"],
+                "operations" => [
+                    ["operation" => "type", "type" => "boolean"]
+                ]
+            ]
+        ]);
+        $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Tests\Content::getTable($process->getStdout());
 		$expected = '
         {

@@ -68,17 +68,6 @@ const ELASTICSEARCH = {
   is_storage: true
 }
 
-const EMAIL = {
-  service_name: 'Email',
-  service_description: '',
-  connection_type: types.CONNECTION_TYPE_EMAIL,
-  icon: require('../assets/icon/icon-email-128.png'),
-  is_service: false,
-  is_input: true,
-  is_output: true,
-  is_storage: false
-}
-
 const FIREBASE = {
   service_name: 'Firebase',
   service_description: 'Mobile and web application development platform',
@@ -95,6 +84,17 @@ const GITHUB = {
   service_description: 'Source control and code management',
   connection_type: types.CONNECTION_TYPE_GITHUB,
   icon: require('../assets/icon/icon-github-128.png'),
+  is_service: true,
+  is_input: true,
+  is_output: true,
+  is_storage: true
+}
+
+const GMAIL = {
+  service_name: 'Gmail',
+  service_description: "Google's free email service.",
+  connection_type: types.CONNECTION_TYPE_GMAIL,
+  icon: require('../assets/icon/icon-gmail-128.png'),
   is_service: true,
   is_input: true,
   is_output: true,
@@ -200,6 +200,17 @@ const RSS = {
   is_storage: false
 }
 
+const SMTP = {
+  service_name: 'Email (SMTP)',
+  service_description: '',
+  connection_type: types.CONNECTION_TYPE_SMTP,
+  icon: require('../assets/icon/icon-email-128.png'),
+  is_service: false,
+  is_input: true,
+  is_output: true,
+  is_storage: false
+}
+
 const SFTP = {
   service_name: 'SFTP',
   service_description: 'Secure File Transfer Protocol',
@@ -272,7 +283,6 @@ const UPLOAD = {
 //export const CONNECTION_INFO_STDIN         = STDIN
 //export const CONNECTION_INFO_STDOUT        = STDOUT
 //export const CONNECTION_INFO_UPLOAD        = UPLOAD
-//export const CONNECTION_INFO_EMAIL         = EMAIL
 //export const CONNECTION_INFO_DOWNLOAD      = DOWNLOAD
 //export const CONNECTION_INFO_FIREBASE      = FIREBASE
 //export const CONNECTION_INFO_HTTP          = HTTP
@@ -287,7 +297,9 @@ export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
 export const CONNECTION_INFO_BOX           = BOX
 export const CONNECTION_INFO_DROPBOX       = DROPBOX
 export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
+export const CONNECTION_INFO_SMTP          = SMTP
 export const CONNECTION_INFO_GITHUB        = GITHUB
+export const CONNECTION_INFO_GMAIL         = GMAIL
 export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
 export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
 export const CONNECTION_INFO_HOME          = HOME

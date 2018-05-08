@@ -84,10 +84,7 @@ class Test
             'params' => '{
                 "process_mode": "'.\Flexio\Jobs\Process::MODE_RUN.'",
                 "task": {
-                    "op": "echo",
-                    "params": {
-                        "msg": "finished"
-                    }
+                    "op": "echo"
                 },
                 "process_status": "'.\Flexio\Jobs\Process::STATUS_PENDING.'"
             }'
@@ -104,10 +101,7 @@ class Test
             },
             "process_mode": "R",
             "task": {
-                "op": "echo",
-                "params": {
-                    "msg": "finished"
-                }
+                "op": "echo"
             },
             "started_by": "",
             "started": null,

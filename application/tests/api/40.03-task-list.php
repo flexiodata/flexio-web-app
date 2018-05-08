@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // ENDPOINT: POST /:userid/pipes/:objeid/run
+        // ENDPOINT: POST /:userid/processes/:objeid/run
 
 
         // SETUP
@@ -45,14 +45,14 @@ class Test
         foreach ($storage_items as $storage_location)
         {
             $folderpath = "/$storage_location/job-tests-$timestamp/";
-            $tasks = json_decode('[
-                {"op": "write", "params": {"path": "'.$folderpath.'file1.txt"}},
-                {"op": "write", "params": {"path": "'.$folderpath.'file2.csv"}},
-                {"op": "write", "params": {"path": "'.$folderpath.'file3.png"}},
-                {"op": "write", "params": {"path": "'.$folderpath.'file4.jpg"}},
-                {"op": "write", "params": {"path": "'.$folderpath.'file5.csv"}}
-            ]',true);
-            $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+            $task = \Flexio\Tests\Task::create([
+                ["op" => "write", "path" => $folderpath."file1.txt"],
+                ["op" => "write", "path" => $folderpath."file2.csv"],
+                ["op" => "write", "path" => $folderpath."file3.png"],
+                ["op" => "write", "path" => $folderpath."file4.jpg"],
+                ["op" => "write", "path" => $folderpath."file5.csv"],
+            ]);
+            $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         }
 
         $tests = [
@@ -79,15 +79,15 @@ class Test
             {
                 $idx++;
                 $folderpath = "/$storage_location/job-tests-$timestamp/";
-                $tasks = json_decode('[
-                    {"op": "list", "params": {"path": "'.$folderpath.$t['pattern'].'"}}
-                ]',true);
-                $result = \Flexio\Tests\Util::runTasks($apibase, $userid, $token, $tasks);
+                $task = \Flexio\Tests\Task::create([
+                    ["op" => "list", "path" => $folderpath.$t['pattern']]
+                ]);
+                $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
                 $result = json_decode($result['response'],true);
                 $actual = array_column($result, 'name');
                 sort($actual);
                 $expected = $t['expected'];
-                \Flexio\Tests\Check::assertArray("A.$idx", 'List; ('.$storage_location.') listing of files using wildcards' . $folderpath, $actual, $expected, $results);
+                \Flexio\Tests\Check::assertArray("A.$idx", 'Process List; ('.$storage_location.') listing of files using wildcards' . $folderpath, $actual, $expected, $results);
             }
         }
     }

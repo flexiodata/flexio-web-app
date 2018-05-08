@@ -233,7 +233,7 @@
     data() {
       return {
         ss_errors: {},
-        edit_connection: defaultAttrs()
+        edit_connection: _.assign({}, defaultAttrs(), this.connection)
       }
     },
     computed: {
@@ -341,10 +341,14 @@
           if (response.ok)
           {
             var connection = _.cloneDeep(response.body)
+            var service_slug = item.service_name.trim()
+            service_slug = service_slug.replace(/\W/g, '-')
+            service_slug = service_slug.replace(/-./g, '-')
+            service_slug = service_slug.replace(/\s/g, '-')
+            service_slug = service_slug.toLowerCase()
 
             // create a default alias
-            connection.alias = 'my-' + item.service_name.trim()
-            connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
+            connection.alias = 'my-' + service_slug
 
             this.updateConnection(connection)
           }
@@ -356,21 +360,23 @@
       },
       initConnection() {
         var connection = _.cloneDeep(this.connection)
-        this.edit_connection = connection
-        this.updateConnection(this.edit_connection)
 
-        if (this.mode == 'add' && _.get(connection, 'alias', '').length == 0) {
+        if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.getConnectionServiceName(connection)
 
+          var service_slug = service_name.trim()
+          service_slug = service_slug.replace(/\W/g, '-')
+          service_slug = service_slug.replace(/-./g, '-')
+          service_slug = service_slug.replace(/\s/g, '-')
+          service_slug = service_slug.toLowerCase()
+
           // create a default alias
-          connection.alias = 'my-' + service_name.trim()
-          connection.alias = connection.alias.toLowerCase().replace(/\s/g, '-')
+          connection.alias = 'my-' + service_slug
         }
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {
-          this.edit_connection = connection
-          this.updateConnection(this.edit_connection)
+          this.edit_connection = _.assign({}, connection)
         })
       },
       updateConnection(attrs) {

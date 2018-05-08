@@ -22,23 +22,11 @@ class Test
     {
         // TODO: placeholder job to test basic functionality; fill out tests
 
-        // SETUP
-        $task = json_decode('
-        {
-            "op": "email",
-            "params": {
-                "to": "",
-                "subject": "Test",
-                "body_text": "This is a test"
-            }
-        }
-        ',true);
-
-
 
         // TEST: Email Job
 
         // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([["email" => "read", "to" => "", "subject" => "Test", "body" => "This is a test"]]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = \Flexio\Base\Util::getStreamContents($process->getStdout());
         $expected = '';
