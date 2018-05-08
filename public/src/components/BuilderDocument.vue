@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-nearer-white pa4 overflow-y-auto relative"
+    class="bg-nearer-white pb4 overflow-y-auto relative"
     :id="doc_id"
   >
     <div
@@ -9,12 +9,23 @@
     >
       <Spinner size="large" message="Loading..." />
     </div>
+    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="center"
-      style="max-width: 1440px; margin-bottom: 6rem"
-      v-else-if="is_fetched"
+      class="mv3 relative z-7 bg-nearer-white"
+      v-if="is_fetched"
     >
-      <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
+      <div
+        class="flex flex-row items-center center tc ph4"
+        style="max-width: 1440px"
+      >
+        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+      </div>
+    </div>
+    <div
+      class="center ph4 pb5"
+      style="max-width: 1440px"
+      v-if="is_fetched"
+    >
       <div class="flex flex-row">
         <BuilderList
           class="flex-fill"
@@ -251,10 +262,9 @@
         immediate: true
       },
       is_fetched() {
-        if (!this.is_fetched)
-          return
-
-        setTimeout(() => { stickybits('.sticky') }, 100)
+        if (this.is_fetched) {
+          this.initSticky()
+        }
       }
     },
     data() {
@@ -274,9 +284,6 @@
         return _.get(this.$route, 'params.template', undefined)
       }
     },
-    mounted() {
-      setTimeout(() => { stickybits('.sticky') }, 100)
-    },
     methods: {
       loadTemplate() {
         this.$store.commit('builder/FETCHING_DEF', true)
@@ -284,6 +291,7 @@
         if (this.slug == 'test') {
           this.$store.commit('builder/INIT_DEF', test_def)
           this.$store.commit('builder/FETCHING_DEF', false)
+          this.initSticky()
         } else {
           axios.get('/def/templates/' + this.slug + '.json').then(response => {
             var def = response.data
@@ -299,6 +307,15 @@
       },
       updateCode() {
         this.$store.commit('builder/UPDATE_CODE')
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.doc_id,
+            useStickyClasses: true,
+            stickyBitStickyOffset: 32
+          })
+        }, 100)
       }
     }
   }

@@ -22,8 +22,8 @@
       </div>
     </div>
     <div
-      class="center ph4"
-      style="max-width: 1440px; margin-bottom: 6rem"
+      class="center ph4 pb5"
+      style="max-width: 1440px"
       v-if="is_fetched"
     >
       <div class="pa4 bg-white br2 css-dashboard-box">
