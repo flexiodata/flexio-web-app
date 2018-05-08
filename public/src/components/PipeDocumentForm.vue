@@ -1,6 +1,6 @@
 <template>
   <el-form
-    ref="form"
+    class="el-form-cozy"
     label-width="7rem"
     label-position="left"
     :model="form_values"
