@@ -10,23 +10,22 @@
     </div>
     </div>
   </div>
-  <div class="flex flex-column flex-row-ns hide-child" v-else>
-    <ui-textbox
-      class="mr3-ns w-30-ns"
-      autocomplete="off"
-      :placeholder="keyPlaceholder"
-      help=" "
-      v-model="key"
-      @input="onInputChange"
-    />
-    <ui-textbox
-      class="mr2-ns w-70-ns"
-      autocomplete="off"
-      :placeholder="valPlaceholder"
-      help=" "
-      v-model="val"
-      @input="onInputChange"
-    />
+  <div class="flex flex-column flex-row-ns hide-child mb2" v-else>
+    <div class="mr2-ns w-30-ns">
+      <el-input
+        :placeholder="keyPlaceholder"
+        @input="onInputChange"
+        v-model="key"
+      />
+    </div>
+    <div class="mr2-ns w-70-ns">
+      <el-input
+        :placeholder="valPlaceholder"
+        @input="onInputChange"
+        v-model="val"
+      />
+    </div>
+
     <div
       class="dn db-ns"
       :class="index >= count-1 ? 'o-0 no-pointer-events' : ''"

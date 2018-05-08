@@ -92,7 +92,7 @@ const GITHUB = {
 
 const GMAIL = {
   service_name: 'Gmail',
-  service_description: "Google's free email service.",
+  service_description: "Google's free email service",
   connection_type: types.CONNECTION_TYPE_GMAIL,
   icon: require('../assets/icon/icon-gmail-128.png'),
   is_service: true,

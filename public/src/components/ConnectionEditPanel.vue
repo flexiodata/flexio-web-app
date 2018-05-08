@@ -13,7 +13,7 @@
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" />
         <div class="flex-fill flex flex-column ml2">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
-          <div class="f6 fw4 mt1">{{service_description}}</div>
+          <div class="f6 fw4">{{service_description}}</div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
           <i class="material-icons v-mid nr1">chevron_left</i>
@@ -118,6 +118,7 @@
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import api from '../api'
+  import util from '../utils'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
@@ -341,11 +342,7 @@
           if (response.ok)
           {
             var connection = _.cloneDeep(response.body)
-            var service_slug = item.service_name.trim()
-            service_slug = service_slug.replace(/\W/g, '-')
-            service_slug = service_slug.replace(/-./g, '-')
-            service_slug = service_slug.replace(/\s/g, '-')
-            service_slug = service_slug.toLowerCase()
+            var service_slug = util.slugify(item.service_name)
 
             // create a default alias
             connection.alias = 'my-' + service_slug
@@ -363,12 +360,7 @@
 
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.getConnectionServiceName(connection)
-
-          var service_slug = service_name.trim()
-          service_slug = service_slug.replace(/\W/g, '-')
-          service_slug = service_slug.replace(/-./g, '-')
-          service_slug = service_slug.replace(/\s/g, '-')
-          service_slug = service_slug.toLowerCase()
+          var service_slug = util.slugify(service_name)
 
           // create a default alias
           connection.alias = 'my-' + service_slug
