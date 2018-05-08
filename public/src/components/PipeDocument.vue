@@ -24,7 +24,7 @@
             type="text"
             @click="show_pipe_schedule_dialog = true"
           >
-            <div class="hint--top" aria-label="Configure schedule">
+            <div class="hint--top" aria-label="Scheduling options">
               <div class="flex flex-row items-center ph2 gray hover-black">
                 <i class="material-icons mr1">date_range</i> <span>Schedule</span>
               </div>
