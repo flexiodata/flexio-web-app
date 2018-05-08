@@ -1,3 +1,6 @@
+
+/* -- el-dialog -- */
+
 .el-dialog {
   max-width: 100vw;
 }
@@ -21,6 +24,45 @@
     display: none
   }
 }
+
+/* -- el-form -- */
+
+.el-form.el-form-cozy {
+  .el-form-item {
+    transition: margin 0.2s ease;
+    margin-bottom: 15px;
+    &.is-error {
+      margin-bottom: 22px;
+    }
+  }
+}
+
+.el-form.el-form-compact {
+  .el-form-item {
+    transition: margin 0.2s ease;
+    margin-bottom: 8px;
+    &.is-error {
+      margin-bottom: 22px;
+    }
+  }
+}
+
+/* -- el-collapse -- */
+
+.el-collapse.el-collapse-plain {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+
+  .el-collapse-item__wrap {
+    border-bottom-color: transparent;
+  }
+}
+
+.el-collapse-item__content {
+  line-height: inherit;
+}
+
+/* -- el-button -- */
 
 /*
 .el-button--micro, .el-button--micro.is-round {
@@ -55,6 +97,11 @@
   border-radius: 5px;
 }
 
+.el-button {
+  &.b   { font-weight: bold; }
+  &.fw6 { font-weight: 600;  }
+}
+
 .el-input.f5,
 .el-select.f5 {
   .el-input__inner {
@@ -62,32 +109,15 @@
   }
 }
 
-.el-button {
-  &.b   { font-weight: bold; }
-  &.fw6 { font-weight: 600;  }
-}
+/* -- el-icon -- */
+
 
 [class*=" el-icon-"], [class^=el-icon-] {
   &.b   { font-weight: bold; }
   &.fw6 { font-weight: 600;  }
-}
 
-.el-form.el-form-cozy {
-  .el-form-item {
-    transition: margin 0.2s ease;
-    margin-bottom: 15px;
-    &.is-error {
-      margin-bottom: 22px;
-    }
-  }
-}
-
-.el-form.el-form-compact {
-  .el-form-item {
-    transition: margin 0.2s ease;
-    margin-bottom: 8px;
-    &.is-error {
-      margin-bottom: 22px;
-    }
+  &.el-collapse-item__arrow {
+    line-height: 48px;
+    font-weight: 700;
   }
 }

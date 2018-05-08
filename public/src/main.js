@@ -5,6 +5,8 @@ import {
   Checkbox,
   CheckboxButton,
   CheckboxGroup,
+  Collapse,
+  CollapseItem,
   DatePicker,
   Dialog,
   Dropdown,
@@ -54,6 +56,8 @@ Vue.use(Button)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)
 Vue.use(CheckboxGroup)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 Vue.use(DatePicker)
 Vue.use(Dialog)
 Vue.use(Dropdown)

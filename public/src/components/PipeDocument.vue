@@ -31,48 +31,42 @@
           <Spinner size="large" message="Running pipe..." />
         </div>
         <div v-else>
-          <!-- header form -->
-          <h3 class="mt0 mb3 fw6 mid-gray">Properties</h3>
-          <PipeDocumentForm />
-
-          <!-- code editor -->
-          <h3 class="mt4 mb3 fw6 mid-gray">Configuration</h3>
-          <CodeEditor
-            class="ba b--black-10 overflow-y-auto"
-            lang="javascript"
-            :options="{ minRows: 12, maxRows: 24 }"
-            v-model="code"
-          />
-
-          <!-- error -->
-          <div
-            class="mt3"
-            v-if="is_process_failed && is_superuser"
-          >
-            <h3 class="mt4 mb3 fw6 mid-gray">Output</h3>
-            <div class="bg-white ba b--black-10">
+          <el-collapse class="nt3 el-collapse-plain" v-model="active_panels">
+            <el-collapse-item name="properties">
+              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Properties</h3></template>
+              <PipeDocumentForm class="mt2" />
+            </el-collapse-item>
+            <el-collapse-item name="configuration">
+              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Configuration</h3></template>
               <CodeEditor
-                class="overflow-y-auto"
+                class="mt2 bg-white ba b--black-10 overflow-y-auto"
                 style="max-height: 24rem"
+                lang="javascript"
+                :options="{ minRows: 12, maxRows: 24 }"
+                v-model="code"
+              />
+            </el-collapse-item>
+            <el-collapse-item name="output-error" v-if="is_process_failed && is_superuser">
+              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output Error</h3></template>
+              <CodeEditor
+                class="mt2 bg-white ba b--black-10 overflow-y-auto"
                 lang="application/json"
                 :options="{
+                  minRows: 12,
+                  maxRows: 24,
                   lineNumbers: false,
                   readOnly: true
                 }"
                 v-model="active_process_info_str"
               />
-            </div>
-          </div>
-
-          <!-- preview -->
-          <div
-            class="mt3 relative"
-            v-if="last_stream_eid.length > 0 && !is_process_failed"
-          >
-            <PipeContent
-              :stream-eid="last_stream_eid"
-            />
-          </div>
+            </el-collapse-item>
+            <el-collapse-item name="output" v-if="last_stream_eid.length > 0 && !is_process_failed">
+              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output</h3></template>
+              <PipeContent
+                :stream-eid="last_stream_eid"
+              />
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </div>
     </div>
@@ -110,6 +104,11 @@
           return
 
         setTimeout(() => { stickybits('.sticky') }, 100)
+      }
+    },
+    data() {
+      return {
+        active_panels: ['properties', 'configuration', 'output-error', 'output']
       }
     },
     computed: {
