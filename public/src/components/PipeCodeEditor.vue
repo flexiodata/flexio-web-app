@@ -16,8 +16,21 @@
             <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code" v-if="syntax_msg.length > 0">{{syntax_msg}}</div>
           </transition>
         </div>
-        <el-button size="mini" type="plain" class="ttu b" @click="cancelEdit">Cancel</el-button>
-        <el-button size="mini" type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
+        <el-button
+          size="mini"
+          class="ttu b"
+          @click="cancelEdit"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          size="mini"
+          type="primary"
+          class="ttu b"
+          @click="saveChanges"
+        >
+          Save Changes
+        </el-button>
       </div>
     </transition>
 

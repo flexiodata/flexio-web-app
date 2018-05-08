@@ -58,8 +58,20 @@
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
-      <el-button class="ttu b" type="plain" @click="$emit('cancel')">Cancel</el-button>
-      <el-button class="ttu b" type="primary" @click="submit" :disabled="has_errors">{{submit_label}}</el-button>
+      <el-button
+        class="ttu b"
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu b"
+        type="primary"
+        @click="submit"
+        :disabled="has_errors"
+      >
+        {{submit_label}}
+      </el-button>
     </div>
   </div>
 </template>

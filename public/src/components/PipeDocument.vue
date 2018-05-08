@@ -33,7 +33,6 @@
           <transition name="el-zoom-in-center">
             <div v-if="is_changed">
               <el-button
-                type="plain"
                 class="ttu b"
               >
                 Cancel

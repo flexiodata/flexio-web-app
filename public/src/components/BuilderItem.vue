@@ -123,7 +123,6 @@
       >
         <el-button
           class="ttu b"
-          type="plain"
           @click="$store.commit('builder/GO_PREV_ITEM')"
           v-show="!is_first"
         >

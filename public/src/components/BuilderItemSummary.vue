@@ -12,7 +12,6 @@
       <div class="mt4">
         <el-button
           class="ttu b"
-          type="plain"
           @click="gotoPipe"
         >
           View pipe
