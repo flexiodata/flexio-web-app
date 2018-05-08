@@ -37,8 +37,8 @@
           v-else-if="fi.element == 'checkbox-group'"
         >
           <el-checkbox
-            :key="option.value"
             :label="option.value"
+            :key="option.value"
             :name="fi.variable"
             v-for="option in fi.options"
           >
@@ -51,8 +51,8 @@
           v-else-if="fi.element == 'radio-group'"
         >
           <el-radio
-            :key="option.value"
             :label="option.value"
+            :key="option.value"
             v-for="option in fi.options"
           >
             {{option.label}}
@@ -64,9 +64,9 @@
           v-else-if="fi.element == 'select'"
         >
           <el-option
-            :key="option.value"
             :label="option.label"
             :value="option.value"
+            :key="option.value"
             v-for="option in fi.options"
           />
         </el-select>
