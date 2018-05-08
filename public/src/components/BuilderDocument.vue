@@ -11,7 +11,7 @@
     </div>
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="mv3 relative z-7 bg-nearer-white"
+      class="mt4 mb3 relative z-7 bg-nearer-white"
       v-if="is_fetched"
     >
       <div
@@ -261,10 +261,9 @@
         handler: 'updateCode',
         immediate: true
       },
-      is_fetched() {
-        if (this.is_fetched) {
-          this.initSticky()
-        }
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
       }
     },
     data() {

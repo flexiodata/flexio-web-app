@@ -11,7 +11,7 @@
     </div>
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="mv3 relative z-7 bg-nearer-white sticky"
+      class="mt4 mb3 relative z-7 bg-nearer-white sticky"
       v-if="is_fetched"
     >
       <div
@@ -112,11 +112,9 @@
         handler: 'loadPipe',
         immediate: true
       },
-      is_fetched() {
-        if (!this.is_fetched)
-          return
-
-        setTimeout(() => { stickybits('.sticky') }, 100)
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
       }
     },
     data() {
@@ -181,9 +179,6 @@
         return _.includes(user_email, '@flex.io')
       },
     },
-    mounted() {
-      setTimeout(() => { stickybits('.sticky') }, 100)
-    },
     methods: {
       ...mapGetters('pipe', [
         'getOriginalPipe',
@@ -224,7 +219,25 @@
             this.$nextTick(() => { this.is_running = false })
           }
         })
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.doc_id,
+            useStickyClasses: true
+          })
+        }, 100)
       }
     }
   }
 </script>
+
+<style scoped>
+  .sticky {
+    transition: all 0.2s ease;
+  }
+
+  .sticky.js-is-sticky {
+    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2);
+  }
+</style>
