@@ -45,6 +45,7 @@
               <el-button
                 size="medium"
                 class="ttu b"
+                @click="cancelChanges"
               >
                 Cancel
               </el-button>
@@ -52,6 +53,7 @@
                 size="medium"
                 type="primary"
                 class="ttu b"
+                @click="saveChanges"
               >
                 Save Changes
               </el-button>
@@ -308,6 +310,25 @@
         this.$store.dispatch('createProcess', { attrs }).then(response => {
           if (response.ok) {
             this.$nextTick(() => { this.is_running = false })
+          }
+        })
+      },
+      cancelChanges() {
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.orig_pipe)
+      },
+      saveChanges() {
+        var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task']
+        var eid = _.get(this.edit_pipe, 'eid', '')
+        var attrs = _.pick(this.edit_pipe, keys)
+
+        // don't POST null values
+        attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
+
+        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok) {
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', response.body)
+          } else {
+            // TODO: add error handling
           }
         })
       },
