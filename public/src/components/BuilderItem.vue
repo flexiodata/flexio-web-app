@@ -7,7 +7,8 @@
     <div class="flex flex-row relative">
       <!-- number -->
       <div
-        class="flex-none pv4 mt2"
+        class="flex-none pv4 mt2 tr"
+        style="width: 24px"
         v-if="showNumbers"
       >
         {{index+1}}.

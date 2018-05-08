@@ -11,7 +11,7 @@
     </div>
     <div
       class="center"
-      style="max-width: 1024px; margin-bottom: 6rem"
+      style="max-width: 1440px; margin-bottom: 6rem"
       v-else-if="is_fetched"
     >
       <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->

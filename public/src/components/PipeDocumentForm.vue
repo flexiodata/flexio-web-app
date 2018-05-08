@@ -36,7 +36,7 @@
             aria-label="Copy to Clipboard"
             size="small"
             :data-clipboard-text="path"
-          ><span class="ttu">Copy</span></el-button>
+          ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
     </el-form-item>
