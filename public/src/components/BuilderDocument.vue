@@ -27,7 +27,7 @@
         >
           <div class="h-100 flex flex-column">
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
-              <div class="flex-fill fw6 gray">Output</div>
+              <div class="flex-fill fw6 mid-gray">Output</div>
             </div>
             <CodeEditor
               class="flex-fill"

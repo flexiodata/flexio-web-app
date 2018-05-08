@@ -17,15 +17,6 @@
       <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
       <div class="flex flex-row items-center mv3 relative z-7 bg-nearer-white sticky">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
-
-        <el-button
-          class="ttu b"
-          type="plain"
-          size="medium"
-          v-if="false"
-        >
-          Cancel
-        </el-button>
         <el-button
           class="ttu b"
           type="primary"

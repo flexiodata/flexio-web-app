@@ -1,6 +1,7 @@
 <template>
   <el-form
     class="el-form-cozy"
+    size="small"
     label-width="7rem"
     label-position="left"
     :model="form_values"
@@ -12,8 +13,8 @@
       prop="name"
     >
       <el-input
-        style="max-width: 36rem"
         placeholder="Enter name"
+        style="max-width: 36rem"
         :autofocus="true"
         v-model="form_values.name"
       />
@@ -24,8 +25,8 @@
       prop="alias"
     >
       <el-input
-        style="max-width: 36rem"
         placeholder="Enter alias"
+        style="max-width: 36rem"
         v-model="form_values.alias"
       >
         <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
@@ -48,6 +49,7 @@
       <el-input
         type="textarea"
         placeholder="Enter description"
+        style="max-width: 48rem"
         :rows="3"
         v-model="form_values.description"
       />
