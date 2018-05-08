@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-nearer-white ph4 pb4 overflow-y-auto relative"
+    class="bg-nearer-white pb4 overflow-y-auto relative"
     :id="doc_id"
   >
     <div
@@ -9,23 +9,22 @@
     >
       <Spinner size="large" message="Loading..." />
     </div>
+    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="center"
-      style="max-width: 1440px; margin-bottom: 6rem"
-      v-else-if="is_fetched"
+      class="mv3 relative z-7 bg-nearer-white sticky"
     >
-      <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-      <div class="flex flex-row items-center mv3 relative z-7 bg-nearer-white sticky">
+      <div
+        class="flex flex-row items-center center ph4"
+        style="max-width: 1440px"
+      >
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
-        <el-button
-          class="ttu b"
-          type="primary"
-          size="medium"
-          @click="runPipe"
-        >
-          Run
-        </el-button>
       </div>
+    </div>
+    <div
+      class="center ph4"
+      style="max-width: 1440px; margin-bottom: 6rem"
+      v-if="is_fetched"
+    >
       <div class="pa4 bg-white br2 css-dashboard-box">
         <div class="flex flex-column justify-center mv5" v-if="is_process_running">
           <Spinner size="large" message="Running pipe..." />
@@ -40,14 +39,26 @@
               <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Configuration</h3></template>
               <CodeEditor
                 class="mt2 bg-white ba b--black-10 overflow-y-auto"
-                style="max-height: 24rem"
                 lang="javascript"
                 :options="{ minRows: 12, maxRows: 24 }"
                 v-model="code"
               />
+              <div class="mt2">
+                <div class="mw4">
+                  <el-button
+                    class="ttu b w-100"
+                    type="primary"
+                    plain
+                    size="medium"
+                    @click="runPipe"
+                  >
+                    Test
+                  </el-button>
+                </div>
+              </div>
             </el-collapse-item>
             <el-collapse-item name="output-error" v-if="is_process_failed && is_superuser">
-              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output Error</h3></template>
+              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output (Error)</h3></template>
               <CodeEditor
                 class="mt2 bg-white ba b--black-10 overflow-y-auto"
                 lang="application/json"
@@ -63,6 +74,7 @@
             <el-collapse-item name="output" v-if="last_stream_eid.length > 0 && !is_process_failed">
               <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output</h3></template>
               <PipeContent
+                class="mt2"
                 :stream-eid="last_stream_eid"
               />
             </el-collapse-item>

@@ -82,7 +82,7 @@
           return undefined
 
         // `maxHeight` overrides `maxRows`
-        var max_h = this.opts.maxHeight || (this.opts.maxRows * 14) + 7
+        var max_h = this.opts.maxHeight || (this.opts.maxRows * 14) + 8
 
         // default to pixels if only a number is provided
         return _.isNumber(max_h) ? max_h + 'px' : max_h
