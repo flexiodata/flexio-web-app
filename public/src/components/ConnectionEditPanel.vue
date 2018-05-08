@@ -233,7 +233,7 @@
     data() {
       return {
         ss_errors: {},
-        edit_connection: defaultAttrs()
+        edit_connection: _.assign({}, defaultAttrs(), this.connection)
       }
     },
     computed: {
@@ -360,8 +360,6 @@
       },
       initConnection() {
         var connection = _.cloneDeep(this.connection)
-        this.edit_connection = connection
-        this.updateConnection(this.edit_connection)
 
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
           var service_name = this.getConnectionServiceName(connection)
@@ -378,8 +376,7 @@
 
         // we have to do this to force watcher validation
         this.$nextTick(() => {
-          this.edit_connection = connection
-          this.updateConnection(this.edit_connection)
+          this.edit_connection = _.assign({}, connection)
         })
       },
       updateConnection(attrs) {

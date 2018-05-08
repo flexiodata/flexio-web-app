@@ -1,20 +1,18 @@
 <template>
   <div>
-    <div v-if="is_oauth">
-      <div v-if="is_connected">
-        <div class="flex flex-row items-center lh-copy">
-          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-          <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-        </div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
-        </div>
+    <div v-if="is_oauth && is_connected">
+      <div class="flex flex-row items-center lh-copy">
+        <i class="el-icon-success v-mid dark-green f3 mr2"></i>
+        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
       </div>
-      <div v-else>
-        <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
-        </div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
+      </div>
+    </div>
+    <div v-else-if="is_oauth && !is_connected">
+      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
       </div>
     </div>
     <div v-else>
@@ -33,7 +31,7 @@
           ref="form"
           label-width="8rem"
           label-position="left"
-          :model="email_values"
+          :model="$data"
         >
           <el-form-item
             key="email"
@@ -43,7 +41,7 @@
             <el-input
               placeholder="Email address"
               :autofocus="true"
-              v-model="email_values.email"
+              v-model="email"
             />
           </el-form-item>
           <el-form-item
@@ -53,7 +51,7 @@
           >
             <el-input
               placeholder="Username"
-              v-model="email_values.username"
+              v-model="username"
             />
           </el-form-item>
           <el-form-item
@@ -62,8 +60,9 @@
             prop="password"
           >
             <el-input
+              type="password"
               placeholder="Password"
-              v-model="email_values.password"
+              v-model="password"
             />
           </el-form-item>
           <el-form-item
@@ -73,7 +72,7 @@
           >
             <el-input
               placeholder="Host"
-              v-model="email_values.host"
+              v-model="host"
             />
           </el-form-item>
           <el-form-item
@@ -83,7 +82,7 @@
           >
             <el-input
               placeholder="Port"
-              v-model="email_values.port"
+              v-model="port"
             />
           </el-form-item>
           <el-form-item
@@ -93,12 +92,15 @@
           >
             <el-select
               placeholder="Security"
-              v-model="email_values.security"
+              v-model="security"
             >
               <el-option label="None" value="" />
               <el-option label="TLS" value="tls" />
               <el-option label="SSL" value="ssl" />
             </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -240,7 +242,11 @@
       aws_key: '',
       aws_secret: '',
       bucket: '',
-      region: ''
+      region: '',
+
+      // smtp
+      email: '',
+      security: 'ssl'
     }
   }
 
@@ -288,15 +294,15 @@
       database()   { this.emitChange() },
       base_path()  { this.emitChange() },
 
+      // aws
       aws_key()    { this.emitChange() },
       aws_secret() { this.emitChange() },
       bucket()     { this.emitChange() },
       region()     { this.emitChange() },
 
-      email_values: {
-        handler: 'emitChange',
-        deep: true
-      }
+      // smtp
+      email()      { this.emitChange() },
+      security()   { this.emitChange() }
     },
     data() {
       var c = _.get(this.connection, 'connection_info', {})
@@ -319,17 +325,11 @@
         aws_key: _.get(c, 'aws_key', ''),
         aws_secret: _.get(c, 'aws_secret', ''),
         bucket: _.get(c, 'bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion(),
+        region: this.mode == 'edit' ? _.get(c, 'region', '') : 'us-east-1',
 
         // email
-        email_values: {
-          email: _.get(c, 'email', ''),
-          username: _.get(c, 'username', ''),
-          password: _.get(c, 'password', ''),
-          host: _.get(c, 'host', ''),
-          port: _.get(c, 'port', ''),
-          security: _.get(c, 'security', 'ssl')
-        }
+        email: _.get(c, 'email', ''),
+        security: this.mode == 'edit' ? _.get(c, 'security', '') : 'ssl',
       }
     },
     computed: {
@@ -343,7 +343,7 @@
         return _.get(this, 'connection.connection_status', '')
       },
       connection_info() {
-        return this.is_smtp ? this.email_values : _.pick(this.$data, this.key_values)
+        return _.pick(this.$data, this.key_values)
       },
       key_values() {
         switch (this.getConnectionType())
@@ -352,6 +352,8 @@
             return ['host', 'port', 'username', 'password', 'database']
           case ctypes.CONNECTION_TYPE_SFTP:
             return ['host', 'port', 'username', 'password', 'base_path']
+          case ctypes.CONNECTION_TYPE_SMTP:
+            return ['email', 'username', 'password', 'host', 'port', 'security']
           case ctypes.CONNECTION_TYPE_ELASTICSEARCH:
             return ['host', 'port', 'username', 'password']
           case ctypes.CONNECTION_TYPE_AMAZONS3:
@@ -431,9 +433,6 @@
       },
       getConnectionType() {
         return _.get(this, 'connection.connection_type', '')
-      },
-      getDefaultRegion() {
-        return 'us-east-1'
       },
       getDefaultPort() {
         // we use a method here since we can't use computed values in the data()
