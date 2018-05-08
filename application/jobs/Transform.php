@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "transform",
     "columns": [],
@@ -28,7 +28,15 @@ namespace Flexio\Jobs;
         { "operation":"substring", "length":7, "location":"left" },
         { "operation":"case", "case":"lower" }
     ]
+    // TODO: fill out? or deprecated?
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Transform extends \Flexio\Jobs\Base

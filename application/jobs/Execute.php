@@ -16,14 +16,25 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "execute",
-    "lang": "python",
-    "code": "<base64 encoded>",
-    "path": "",
-    "integrity": ""
+    "op": "execute",  // string, required
+    "lang": "",       // string, required, enum: python|javascript
+    "code": "",       // string (base64 encoded string of code to run); either "code" or "path" is required
+    "path": "",       // string (url to remote code to execute); either "code" or "path" is required
+    "integrity": ""   // string (integrity check; sha256, sha384, sha512 allowed with format: <sha-type>:<integrity-check>
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'lang'       => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'string',     'required' => false),
+        'path'       => array('type' => 'string',     'required' => false),
+        'integrity'  => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class BinaryData

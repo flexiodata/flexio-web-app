@@ -16,12 +16,18 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
-    {
-        "op": "insert",
-        "path": "test",
-        "values": [ { "field": "value"}, ... ]
-    }
+// DESCRIPTION:
+{
+    "op": "insert"
+    // TODO: fill out
+}
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Insert extends \Flexio\Jobs\Base

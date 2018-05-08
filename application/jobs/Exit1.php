@@ -16,12 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "exit",
-    "code": "",
-    "response": ""
+    "op": "exit",   // string, required
+    "code": "",     // integer
+    "response": ""  // string
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'integer',    'required' => false),
+        'response'   => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Exit1 extends \Flexio\Jobs\Base

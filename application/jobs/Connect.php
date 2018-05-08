@@ -16,14 +16,25 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "connect",
-    "alias": <string>,
-    "type": <string>, // connection type; required to specify type or full connection identifier
-    "connection": <connection identifier>, required to specify type or full connection identifier
-    <additional connection parameters here>
+    "op": "connect",        // string, required
+    "alias": "",            // string, required
+    "connection": "",       // string (either connection or connection_type is required; if connection is specified, it's an alias to an existing connection)
+    "connection_type": "",  // string (either connection or connection_type is required; if connection_type is specified, additional connection_info properties specify the connection params)
+    "connection_info": {}   // object (key/values with connection-specific parameters)
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'              => array('type' => 'string',     'required' => true),
+        'alias'           => array('type' => 'identifier', 'required' => true),
+        'connection'      => array('type' => 'string',     'required' => false), // either 'connection' or 'connection_type' is required
+        'connection_type' => array('type' => 'string',     'required' => false), // either 'connection' or 'connection_type' is required
+        'connection_info' => array('type' => 'object',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Connect extends \Flexio\Jobs\Base

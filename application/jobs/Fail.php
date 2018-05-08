@@ -16,12 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "fail",
-    "code": "string",
-    "message": "string"
+    "op": "fail",  // string, required
+    "code": "",    // string
+    "message": ""  // string
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'string',     'required' => false),
+        'message'    => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Fail extends \Flexio\Jobs\Base

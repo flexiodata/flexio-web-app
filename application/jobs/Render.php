@@ -16,11 +16,29 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "render",
-    "url": ""
+    "op": "render",      // string, required
+    "url": "",           // string, required
+    "format": "",        // string, enum: png|jpg|jpeg|pdf, default: png
+    "paper": "",         // string, enum: paper|letter, default: letter
+    "width": 0,          // integer
+    "height": 0,         // integer
+    "scrollbars": false  // boolean
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'url'        => array('type' => 'string',     'required' => true),
+        'format'     => array('type' => 'string',     'required' => false),
+        'paper'      => array('type' => 'string',     'required' => false),
+        'width'      => array('type' => 'integer',    'required' => false),
+        'height'     => array('type' => 'integer',    'required' => false),
+        'scrollbars' => array('type' => 'boolean',    'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Render extends \Flexio\Jobs\Base

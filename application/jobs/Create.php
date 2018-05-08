@@ -16,14 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
-    {
-        "op": "create",
-        "path": "", // optional path
-        "name": "test",
-        "content_type": "text/csv",
-        "content": ""
-    }
+// DESCRIPTION:
+{
+    "op": "create",     // string, required
+    "path": "",         // string
+    "name": "",         // string
+    "content_type": ""  // string
+    // ...              // note: additional properties specify items related to tables, etc
+}
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Create extends \Flexio\Jobs\Base
@@ -76,7 +83,6 @@ class Create extends \Flexio\Jobs\Base
                     break;
             }
         }
-
     }
 
     private function createFile(\Flexio\IFace\IStream &$outstream)
