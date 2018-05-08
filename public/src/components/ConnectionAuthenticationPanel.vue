@@ -1,20 +1,18 @@
 <template>
   <div>
-    <div v-if="is_oauth">
-      <div v-if="is_connected">
-        <div class="flex flex-row items-center lh-copy">
-          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-          <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-        </div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
-        </div>
+    <div v-if="is_oauth && is_connected">
+      <div class="flex flex-row items-center lh-copy">
+        <i class="el-icon-success v-mid dark-green f3 mr2"></i>
+        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
       </div>
-      <div v-else>
-        <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
-        </div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
+      </div>
+    </div>
+    <div v-else-if="is_oauth && !is_connected">
+      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
       </div>
     </div>
     <div v-else>
@@ -27,207 +25,241 @@
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div
         class="w-two-thirds-ns center mt4"
-        v-if="is_email"
+        v-if="is_smtp"
       >
         <el-form
-          ref="form"
+          class="el-form-cozy"
           label-width="8rem"
-          label-position="left"
-          :model="form_values"
+          :model="$data"
+          :rules="rules"
+          :status-icon="true"
         >
           <el-form-item
-            key="account_type"
-            label="Account Type"
-            prop="account_type"
-          >
-            <el-select
-              placeholder="Account Type"
-              :disabled="true"
-              v-model="form_values.account_type"
-            >
-              <el-option label="SMTP" value="smtp" />
-            </el-select>
-          </el-form-item>
-          <el-form-item
-            key="email"
             label="Email address"
+            key="email"
             prop="email"
-            v-show="!is_gmail"
+            spellcheck="false"
           >
             <el-input
               placeholder="Email address"
               :autofocus="true"
-              v-model="form_values.email"
+              v-model="email"
             />
           </el-form-item>
           <el-form-item
-            key="username"
             label="Username"
+            key="username"
             prop="username"
-            v-show="!is_gmail"
           >
             <el-input
               placeholder="Username"
-              v-model="form_values.username"
+              v-model="username"
             />
           </el-form-item>
           <el-form-item
-            key="password"
             label="Password"
+            key="password"
             prop="password"
-            v-show="!is_gmail"
           >
             <el-input
+              type="password"
               placeholder="Password"
-              v-model="form_values.password"
+              v-model="password"
             />
           </el-form-item>
           <el-form-item
-            key="host"
             label="Host"
+            key="host"
             prop="host"
-            v-show="!is_gmail"
           >
             <el-input
               placeholder="Host"
-              v-model="form_values.host"
+              v-model="host"
             />
           </el-form-item>
           <el-form-item
-            key="port"
             label="Port"
+            key="port"
             prop="port"
-            v-show="!is_gmail"
           >
             <el-input
               placeholder="Port"
-              v-model="form_values.port"
+              v-model="port"
             />
           </el-form-item>
           <el-form-item
-            key="security"
             label="Security"
+            key="security"
             prop="security"
-            v-show="!is_gmail"
           >
             <el-select
               placeholder="Security"
-              v-model="form_values.security"
+              v-model="security"
             >
               <el-option label="None" value="" />
               <el-option label="TLS" value="tls" />
               <el-option label="SSL" value="ssl" />
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
+          </el-form-item>
         </el-form>
       </div>
       <div
-        class="flex flex-column w-50-ns center mt3"
+        class="w-two-thirds-ns center mt4"
         v-else
       >
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="AWS Access Key"
-          floating-label
-          help=" "
-          v-model.trim="aws_key"
-          v-if="showInput('aws_key')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="AWS Secret Key"
-          floating-label
-          help=" "
-          v-model.trim="aws_secret"
-          v-if="showInput('aws_secret')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="Bucket"
-          floating-label
-          help=" "
-          v-model.trim="bucket"
-          v-if="showInput('bucket')"
-        />
-        <value-select
-          autocomplete="off"
-          label="Region"
-          floating-label
-          help=" "
-          :options="region_options"
-          v-model.trim="region"
-          v-if="showInput('region')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="Token"
-          floating-label
-          help=" "
-          v-model.trim="token"
-          v-if="showInput('token')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          floating-label
-          help=" "
-          label="Host"
-          v-model.trim="host"
-          v-if="showInput('host')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="Port"
-          floating-label
-          help=" "
-          v-model.trim.number="port"
-          v-if="showInput('port')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          floating-label
-          help=" "
-          label="Username"
-          v-model.trim="username"
-          v-if="showInput('username')"
-        />
-        <ui-textbox
-          type="password"
-          spellcheck="false"
-          autocomplete="off"
-          label="Password"
-          floating-label
-          help=" "
-          v-model.trim="password"
-          v-if="showInput('password')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="Database"
-          floating-label
-          help=" "
-          v-model.trim="database"
-          v-if="showInput('database')"
-        />
-        <ui-textbox
-          autocomplete="off"
-          spellcheck="false"
-          label="Base Path"
-          floating-label
-          help=" "
-          v-model.trim="base_path"
-          v-if="showInput('base_path')"
-        />
-        <div class="mt3">
-          <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
-        </div>
+        <el-form
+          class="el-form-cozy"
+          label-width="8rem"
+          :model="$data"
+          :status-icon="true"
+        >
+          <el-form-item
+            label="AWS Access Key"
+            key="aws_key"
+            prop="aws_key"
+            v-if="showInput('aws_key')"
+          >
+            <el-input
+              placeholder="AWS Access Key"
+              spellcheck="false"
+              :autofocus="true"
+              v-model="aws_key"
+            />
+          </el-form-item>
+          <el-form-item
+            label="AWS Secret Key"
+            key="aws_secret"
+            prop="aws_secret"
+            v-if="showInput('aws_secret')"
+          >
+            <el-input
+              placeholder="AWS Secret Key"
+              spellcheck="false"
+              v-model="aws_secret"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Bucket"
+            key="bucket"
+            prop="bucket"
+            v-if="showInput('bucket')"
+          >
+            <el-input
+              placeholder="Bucket"
+              spellcheck="false"
+              v-model="bucket"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Region"
+            key="region"
+            prop="region"
+            v-if="showInput('region')"
+          >
+            <el-select
+              placeholder="Region"
+              v-model="region"
+            >
+              <el-option
+                :label="option.label"
+                :value="option.val"
+                :key="option.val"
+                v-for="option in region_options"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            label="Token"
+            key="token"
+            prop="token"
+            v-if="showInput('token')"
+          >
+            <el-input
+              placeholder="Token"
+              spellcheck="false"
+              v-model="token"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Host"
+            key="host"
+            prop="host"
+            v-if="showInput('host')"
+          >
+            <el-input
+              placeholder="Host"
+              spellcheck="false"
+              v-model="host"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Post"
+            key="port"
+            prop="port"
+            v-if="showInput('port')"
+          >
+            <el-input
+              placeholder="Post"
+              spellcheck="false"
+              v-model="port"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Username"
+            key="username"
+            prop="username"
+            v-if="showInput('username')"
+          >
+            <el-input
+              placeholder="Username"
+              spellcheck="false"
+              v-model="username"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Password"
+            key="password"
+            prop="password"
+            v-if="showInput('password')"
+          >
+            <el-input
+              type="password"
+              placeholder="Password"
+              spellcheck="false"
+              v-model="password"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Database"
+            key="database"
+            prop="database"
+            v-if="showInput('database')"
+          >
+            <el-input
+              placeholder="Database"
+              spellcheck="false"
+              v-model="database"
+            />
+          </el-form-item>
+          <el-form-item
+            label="Base Path"
+            key="base_path"
+            prop="base_path"
+            v-if="showInput('base_path')"
+          >
+            <el-input
+              placeholder="Base Path"
+              spellcheck="false"
+              v-model="base_path"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
   </div>
@@ -259,7 +291,11 @@
       aws_key: '',
       aws_secret: '',
       bucket: '',
-      region: ''
+      region: '',
+
+      // smtp
+      email: '',
+      security: 'ssl'
     }
   }
 
@@ -307,10 +343,15 @@
       database()   { this.emitChange() },
       base_path()  { this.emitChange() },
 
+      // aws
       aws_key()    { this.emitChange() },
       aws_secret() { this.emitChange() },
       bucket()     { this.emitChange() },
-      region()     { this.emitChange() }
+      region()     { this.emitChange() },
+
+      // smtp
+      email()      { this.emitChange() },
+      security()   { this.emitChange() }
     },
     data() {
       var c = _.get(this.connection, 'connection_info', {})
@@ -333,17 +374,17 @@
         aws_key: _.get(c, 'aws_key', ''),
         aws_secret: _.get(c, 'aws_secret', ''),
         bucket: _.get(c, 'bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion(),
+        region: this.mode == 'edit' ? _.get(c, 'region', '') : 'us-east-1',
 
         // email
-        form_values: {
-          account_type: 'smtp',
-          email: '',
-          username: '',
-          password: '',
-          host: '',
-          port: '',
-          security: ''
+        email: _.get(c, 'email', ''),
+        security: this.mode == 'edit' ? _.get(c, 'security', '') : 'ssl',
+
+        rules: {
+          email: [
+            { required: true, message: 'Please input an email address', trigger: 'blur' },
+            { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+          ]
         }
       }
     },
@@ -367,6 +408,8 @@
             return ['host', 'port', 'username', 'password', 'database']
           case ctypes.CONNECTION_TYPE_SFTP:
             return ['host', 'port', 'username', 'password', 'base_path']
+          case ctypes.CONNECTION_TYPE_SMTP:
+            return ['email', 'username', 'password', 'host', 'port', 'security']
           case ctypes.CONNECTION_TYPE_ELASTICSEARCH:
             return ['host', 'port', 'username', 'password']
           case ctypes.CONNECTION_TYPE_AMAZONS3:
@@ -387,11 +430,11 @@
       },
       service_name() {
         return this.is_gmail ? 'Gmail' :
-          this.is_email ? 'your email account' :
+          this.is_smtp ? 'your email account' :
           _.result(this, 'cinfo.service_name', '')
       },
-      is_email() {
-        return this.ctype == ctypes.CONNECTION_TYPE_EMAIL
+      is_smtp() {
+        return this.ctype == ctypes.CONNECTION_TYPE_SMTP
       },
       is_gmail() {
         return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
@@ -418,6 +461,7 @@
           case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
           case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
           case ctypes.CONNECTION_TYPE_GITHUB:       return base_url+'?service=github&eid='+eid
+          case ctypes.CONNECTION_TYPE_GMAIL:        return base_url+'?service=gmail&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
         }
@@ -445,9 +489,6 @@
       },
       getConnectionType() {
         return _.get(this, 'connection.connection_type', '')
-      },
-      getDefaultRegion() {
-        return 'us-east-1'
       },
       getDefaultPort() {
         // we use a method here since we can't use computed values in the data()

@@ -97,7 +97,7 @@
     watch: {
       connections(val, old_val) {
         if (!this.has_connection) {
-          this.connection = _.first(this.connections)
+          this.selectConnection(_.first(this.connections))
         }
       }
     },
@@ -133,7 +133,7 @@
       this.tryFetchConnections()
     },
     mounted() {
-      this.connection = _.first(this.connections)
+      this.selectConnection(_.first(this.connections))
     },
     methods: {
       ...mapGetters([
