@@ -25,7 +25,87 @@
         {{error_msg}}
       </ui-alert>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="flex flex-column w-50-ns center mt3">
+      <div
+        class="w-two-thirds-ns center mt4"
+        v-if="is_smtp"
+      >
+        <el-form
+          ref="form"
+          label-width="8rem"
+          label-position="left"
+          :model="email_values"
+        >
+          <el-form-item
+            key="email"
+            label="Email address"
+            prop="email"
+          >
+            <el-input
+              placeholder="Email address"
+              :autofocus="true"
+              v-model="email_values.email"
+            />
+          </el-form-item>
+          <el-form-item
+            key="username"
+            label="Username"
+            prop="username"
+          >
+            <el-input
+              placeholder="Username"
+              v-model="email_values.username"
+            />
+          </el-form-item>
+          <el-form-item
+            key="password"
+            label="Password"
+            prop="password"
+          >
+            <el-input
+              placeholder="Password"
+              v-model="email_values.password"
+            />
+          </el-form-item>
+          <el-form-item
+            key="host"
+            label="Host"
+            prop="host"
+          >
+            <el-input
+              placeholder="Host"
+              v-model="email_values.host"
+            />
+          </el-form-item>
+          <el-form-item
+            key="port"
+            label="Port"
+            prop="port"
+          >
+            <el-input
+              placeholder="Port"
+              v-model="email_values.port"
+            />
+          </el-form-item>
+          <el-form-item
+            key="security"
+            label="Security"
+            prop="security"
+          >
+            <el-select
+              placeholder="Security"
+              v-model="email_values.security"
+            >
+              <el-option label="None" value="" />
+              <el-option label="TLS" value="tls" />
+              <el-option label="SSL" value="ssl" />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div
+        class="flex flex-column w-50-ns center mt3"
+        v-else
+      >
         <ui-textbox
           autocomplete="off"
           spellcheck="false"
@@ -211,7 +291,12 @@
       aws_key()    { this.emitChange() },
       aws_secret() { this.emitChange() },
       bucket()     { this.emitChange() },
-      region()     { this.emitChange() }
+      region()     { this.emitChange() },
+
+      email_values: {
+        handler: 'emitChange',
+        deep: true
+      }
     },
     data() {
       var c = _.get(this.connection, 'connection_info', {})
@@ -234,7 +319,17 @@
         aws_key: _.get(c, 'aws_key', ''),
         aws_secret: _.get(c, 'aws_secret', ''),
         bucket: _.get(c, 'bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion()
+        region: this.mode == 'edit' ? _.get(c, 'region', '') : this.getDefaultRegion(),
+
+        // email
+        email_values: {
+          email: _.get(c, 'email', ''),
+          username: _.get(c, 'username', ''),
+          password: _.get(c, 'password', ''),
+          host: _.get(c, 'host', ''),
+          port: _.get(c, 'port', ''),
+          security: _.get(c, 'security', 'ssl')
+        }
       }
     },
     computed: {
@@ -248,7 +343,7 @@
         return _.get(this, 'connection.connection_status', '')
       },
       connection_info() {
-        return _.pick(this.$data, this.key_values)
+        return this.is_smtp ? this.email_values : _.pick(this.$data, this.key_values)
       },
       key_values() {
         switch (this.getConnectionType())
@@ -276,7 +371,15 @@
         return this.is_connected ? 'b--dark-green' : 'b--blue'
       },
       service_name() {
-        return _.result(this, 'cinfo.service_name', '')
+        return this.is_gmail ? 'Gmail' :
+          this.is_smtp ? 'your email account' :
+          _.result(this, 'cinfo.service_name', '')
+      },
+      is_smtp() {
+        return this.ctype == ctypes.CONNECTION_TYPE_SMTP
+      },
+      is_gmail() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
       },
       is_oauth() {
         switch (this.ctype)
@@ -284,6 +387,7 @@
           case ctypes.CONNECTION_TYPE_BOX:
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
+          case ctypes.CONNECTION_TYPE_GMAIL:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
             return true
@@ -299,6 +403,7 @@
           case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
           case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
           case ctypes.CONNECTION_TYPE_GITHUB:       return base_url+'?service=github&eid='+eid
+          case ctypes.CONNECTION_TYPE_GMAIL:        return base_url+'?service=gmail&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
         }
