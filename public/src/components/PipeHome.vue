@@ -78,7 +78,7 @@
         v-if="is_process_failed && is_superuser"
       >
         <div class="bg-white ba b--black-10">
-          <CodeEditor2
+          <CodeEditor
             class="overflow-y-auto"
             style="max-height: 24rem"
             lang="application/json"
@@ -134,7 +134,7 @@
   import PipeHomeHeader from './PipeHomeHeader.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   //import PipeBuilderList from './PipeBuilderList.vue'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
   import HelpItems from './HelpItems.vue'
 
   export default {
@@ -143,7 +143,7 @@
       PipeHomeHeader,
       PipeCodeEditor,
       //PipeBuilderList,
-      CodeEditor2,
+      CodeEditor,
       HelpItems
     },
     provide() {

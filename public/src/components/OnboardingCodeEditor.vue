@@ -40,7 +40,7 @@
       class="relative bg-white css-dashboard-box lh-title"
       v-if="isEditable"
     >
-      <CodeEditor2
+      <CodeEditor
         lang="javascript"
         v-model="edit_code"
         v-if="is_inited"
@@ -89,7 +89,7 @@
 
 <script>
   import Flexio from 'flexio-sdk-js'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   export default {
     props: {
@@ -174,7 +174,7 @@
       }
     },
     components: {
-      CodeEditor2
+      CodeEditor
     },
     watch: {
       code() {

@@ -29,7 +29,7 @@
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
               <div class="flex-fill fw6 gray">Output</div>
             </div>
-            <CodeEditor2
+            <CodeEditor
               class="flex-fill"
               lang="javascript"
               :options="{
@@ -51,7 +51,7 @@
   import { mapState } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   const test_def = {
     "title": "Test Prompts",
@@ -239,7 +239,7 @@
     components: {
       Spinner,
       BuilderList,
-      CodeEditor2
+      CodeEditor
     },
     watch: {
       slug: {

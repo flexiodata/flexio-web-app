@@ -39,7 +39,7 @@
         <h3 class="mt0 mb4 fw6 mid-gray">Properties</h3>
         <PipeDocumentForm />
         <h3 class="mv4 fw6 mid-gray">Configuration</h3>
-        <CodeEditor2
+        <CodeEditor
           class="ba b--black-10 overflow-y-auto"
           lang="javascript"
           :options="{ minRows: 24, maxRows: 24 }"
@@ -55,13 +55,13 @@
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
   import PipeDocumentForm from './PipeDocumentForm.vue'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   export default {
     components: {
       Spinner,
       PipeDocumentForm,
-      CodeEditor2
+      CodeEditor
     },
     watch: {
       eid: {

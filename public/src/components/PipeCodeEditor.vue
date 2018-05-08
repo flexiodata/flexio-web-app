@@ -2,7 +2,7 @@
   <div>
     <!-- code editor -->
     <div class="relative bg-white ba b--black-10 lh-title">
-      <CodeEditor2
+      <CodeEditor
         lang="javascript"
         v-model="edit_code"
       />
@@ -33,7 +33,7 @@
 <script>
   import { PROCESS_STATUS_FAILED } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
   import PipeContent from './PipeContent.vue'
 
   export default {
@@ -54,7 +54,7 @@
       }
     },
     components: {
-      CodeEditor2,
+      CodeEditor,
       PipeContent
     },
     inject: ['pipeEid'],

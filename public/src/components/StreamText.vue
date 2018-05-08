@@ -5,7 +5,7 @@
   >
     <Spinner :message="state.loading_text" />
   </div>
-  <CodeEditor2
+  <CodeEditor
     lang="text/html"
     :options="{
       lineNumbers: false,
@@ -14,7 +14,7 @@
     v-model="state.text"
     v-else-if="isHtml"
   />
-  <CodeEditor2
+  <CodeEditor
     lang="application/json"
     :options="{
       lineNumbers: false,
@@ -33,7 +33,7 @@
 <script>
   import axios from 'axios'
   import Spinner from 'vue-simple-spinner'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   const INITIAL_DATA = {
     is_fetching: false,
@@ -70,7 +70,7 @@
     },
     components: {
       Spinner,
-      CodeEditor2
+      CodeEditor
     },
     data() {
       return {

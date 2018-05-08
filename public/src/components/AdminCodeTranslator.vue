@@ -2,7 +2,7 @@
   <div class="flex flex-row items-stretch relative">
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK</div>
-      <CodeEditor2
+      <CodeEditor
         class="flex-fill"
         lang="javascript"
         v-model="sdk_str"
@@ -10,7 +10,7 @@
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK to JSON</div>
-      <CodeEditor2
+      <CodeEditor
         class="flex-fill"
         lang="application/json"
         v-model="json_str"
@@ -18,7 +18,7 @@
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
-      <CodeEditor2
+      <CodeEditor
         class="flex-fill"
         lang="javascript"
         v-model="reverse_sdk_str"
@@ -29,11 +29,11 @@
 
 <script>
   import Flexio from 'flexio-sdk-js'
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   export default {
     components: {
-      CodeEditor2
+      CodeEditor
     },
     watch: {
       sdk_str: {

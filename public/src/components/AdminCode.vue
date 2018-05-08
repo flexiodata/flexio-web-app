@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-column">
     <div class="flex-fill flex flex-row items-stretch relative">
-      <CodeEditor2
+      <CodeEditor
         class="flex-fill"
         lang="python"
         v-model="code"
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import CodeEditor2 from './CodeEditor2.vue'
+  import CodeEditor from './CodeEditor.vue'
 
   var default_text = "\
 def greet(name):\n\
@@ -23,7 +23,7 @@ greet('Bob')\n\
 
   export default {
     components: {
-      CodeEditor2
+      CodeEditor
     },
     watch: {
       code() {
