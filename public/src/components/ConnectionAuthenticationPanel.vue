@@ -1,20 +1,18 @@
 <template>
   <div>
-    <div v-if="is_oauth">
-      <div v-if="is_connected">
-        <div class="flex flex-row items-center lh-copy">
-          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-          <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
-        </div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
-        </div>
+    <div v-if="is_oauth && is_connected">
+      <div class="flex flex-row items-center lh-copy">
+        <i class="el-icon-success v-mid dark-green f3 mr2"></i>
+        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
       </div>
-      <div v-else>
-        <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-        <div class="mt3 tc">
-          <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
-        </div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
+      </div>
+    </div>
+    <div v-else-if="is_oauth && !is_connected">
+      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+      <div class="mt3 tc">
+        <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
       </div>
     </div>
     <div v-else>
