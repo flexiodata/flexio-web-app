@@ -12,6 +12,7 @@
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
       class="mv3 relative z-7 bg-nearer-white sticky"
+      v-if="is_fetched"
     >
       <div
         class="flex flex-row items-center center ph4"
