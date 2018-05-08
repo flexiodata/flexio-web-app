@@ -22,26 +22,28 @@
         <div class="flex-none flex flex-row items-center pl2" @click.stop>
           <el-button type="text">
             <div class="flex flex-row items-center ph2 gray hover-black">
-              <i class="material-icons mr2">date_range</i> <span>Schedule</span>
+              <i class="material-icons mr1">date_range</i> <span>Schedule</span>
             </div>
           </el-button>
           <el-button type="text">
             <div class="flex flex-row items-center ph2 gray hover-black">
-              <i class="material-icons mr2">archive</i> <span>Deploy</span>
+              <i class="material-icons mr1">archive</i> <span>Deploy</span>
             </div>
           </el-button>
-          <transition name="el-zoom-in-center">
-            <div v-if="is_changed">
+          <transition name="el-zoom-in-top">
+            <div class="flex flex-row pl3" v-if="is_changed">
               <el-button
+                size="medium"
                 class="ttu b"
               >
                 Cancel
               </el-button>
               <el-button
+                size="medium"
                 type="primary"
                 class="ttu b"
               >
-                Save
+                Save Changes
               </el-button>
             </div>
           </transition>
@@ -76,7 +78,6 @@
                   <el-button
                     class="ttu b w-100"
                     type="primary"
-                    plain
                     size="medium"
                     @click="runPipe"
                   >
@@ -206,7 +207,10 @@
         return _.includes(user_email, '@flex.io')
       },
       is_changed() {
-        return _.isEqual(this.edit_pipe, this.orig_pipe)
+        var keys = ['name', 'alias', 'description']
+        var pipe1 = _.pick(this.edit_pipe, keys)
+        var pipe2 = _.pick(this.orig_pipe, keys)
+        return !_.isEqual(pipe1, pipe2)
       }
     },
     methods: {
