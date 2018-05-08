@@ -349,7 +349,11 @@ class Email
         $this->msg_htmlembedded = '';
         $this->attachments = array();
 
-        $this->setFrom(($params['from'] ?? ''));
+        $from = ($params['from'] ?? '');
+        if (strlen($from) == 0)
+            $from = ($params['email'] ?? '');
+        
+        $this->setFrom($from);
         $this->protocol = ($params['protocol'] ?? '');              // none, smtp
         $this->security = ($params['security'] ?? '');              // none, ssl, tls
         $this->authentication = ($params['authentication'] ?? '');  // none, password, encpassword, kerberos, ntlm, oauth2
