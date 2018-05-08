@@ -17,8 +17,8 @@
       v-if="is_active"
     >
       <el-form-item
-        :key="fi.variable"
         :label="fi.label"
+        :key="fi.variable"
         :prop="fi.variable"
         v-for="fi in form_items"
       >
