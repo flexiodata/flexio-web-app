@@ -188,6 +188,16 @@
       is_fetched: {
         handler: 'initSticky',
         immediate: true
+      },
+      is_process_running(val, old_val) {
+        if (val === false && old_val === true) {
+          this.fetchProcessLog()
+        }
+      },
+      active_process(val, old_val) {
+        if (_.get(val, 'eid', '') != _.get(old_val, 'eid', '')) {
+          this.fetchProcessLog()
+        }
       }
     },
     data() {
@@ -300,6 +310,12 @@
             this.$nextTick(() => { this.is_running = false })
           }
         })
+      },
+      fetchProcessLog() {
+        var eid = _.get(this.active_process, 'eid', '')
+        if (eid.length > 0) {
+          this.$store.dispatch('fetchProcessLog', { eid })
+        }
       },
       updatePipeSchedule(attrs) {
         attrs = _.pick(attrs, ['schedule', 'schedule_status'])
