@@ -27,11 +27,13 @@ class Factory
     const TYPE_ELASTICSEARCH = 'elasticsearch';
     const TYPE_DROPBOX       = 'dropbox';
     const TYPE_BOX           = 'box';
+    const TYPE_GMAIL         = 'gmail';
     const TYPE_GOOGLEDRIVE   = 'googledrive';
     const TYPE_GOOGLESHEETS  = 'googlesheets';
     const TYPE_GITHUB        = 'github';
     const TYPE_AMAZONS3      = 'amazons3';
     const TYPE_EMAIL         = 'email';
+    const TYPE_SMTP          = 'smtp';
     const TYPE_HTTP          = 'http';
     const TYPE_RSS           = 'rss';
     const TYPE_SOCRATA       = 'socrata';
@@ -172,6 +174,7 @@ class Factory
                 $service = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
+            case self::TYPE_SMTP:
             case self::TYPE_EMAIL:
                 $service = \Flexio\Services\Email::create($connection_info);
                 break;

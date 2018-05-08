@@ -7,6 +7,14 @@ var pluralize = (cnt, many_str, one_str, zero_str) => {
   return ''
 }
 
+var slugify = (str) => {
+  str = str.replace(/\W/g, ' ')
+  str = str.trim()
+  str = str.replace(/\s+/g, '-')
+  str = str.toLowerCase()
+  return str
+}
+
 var isHidden = (el) => {
   return (el.offsetParent === null)
 }
@@ -41,6 +49,7 @@ var sanitizeMasked = (obj) => {
 
 export default {
   pluralize: pluralize,
+  slugify: slugify,
   fallbackCss: fallbackCss,
   sanitizeMasked: sanitizeMasked
 }

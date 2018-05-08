@@ -61,8 +61,6 @@ class Email extends \Flexio\Jobs\Base
         $body_text = ($params['body'] ?? ($params['body_text'] ?? ''));
         $body_html = ($params['html'] ?? ($params['body_html'] ?? ''));
 
-
-
         if ($connection === null)
         {
             // for now, we will temporarily allow messages to be sent with noreply@flex.io
@@ -83,6 +81,10 @@ class Email extends \Flexio\Jobs\Base
             $connection = $process->getConnection($connection);
 
             $email = \Flexio\Services\Email::create($connection['connection_info'] ?? []);
+
+            $from_addresses = $email->getFrom();
+            if (count($from_addresses) == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'from' address must be specified");
 
             if (strlen($from) > 0)
             {
@@ -142,6 +144,9 @@ class Email extends \Flexio\Jobs\Base
             foreach ($attachments as &$attachment)
             {
                 self::convertToDiskFile($process, $attachment);
+
+                register_shutdown_function('unlink', $attachment['file']);
+                
                 $email->addAttachment($attachment);
             }
         }
