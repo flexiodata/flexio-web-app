@@ -133,12 +133,12 @@
 
         <ui-tab id="form-data" title="Form Data">
           <div class="ma3">
-            <keypair-item
+            <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
               v-if="false"
             />
-            <keypair-item
+            <KeypairItem
               v-for="(item, index) in data"
               :key="index"
               :item="item"
@@ -152,12 +152,12 @@
 
         <ui-tab id="headers" title="Headers">
           <div class="ma3">
-            <keypair-item
+            <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
               v-if="false"
             />
-            <keypair-item
+            <KeypairItem
               v-for="(item, index) in headers"
               :key="index"
               :item="item"
