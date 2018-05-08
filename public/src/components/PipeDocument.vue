@@ -83,7 +83,7 @@
                 class="mt2 bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
                 :options="{ minRows: 12, maxRows: 24 }"
-                v-model="code"
+                v-model="edit_code"
               />
               <div class="mt2">
                 <div class="mw4">
@@ -159,6 +159,7 @@
 
 <script>
   import stickybits from 'stickybits'
+  import Flexio from 'flexio-sdk-js'
   import { mapState, mapGetters } from 'vuex'
   import {
     PROCESS_STATUS_RUNNING,
@@ -224,16 +225,19 @@
       orig_pipe() {
         return this.getOriginalPipe()
       },
-      title() {
-        return _.get(this.orig_pipe, 'name', '')
+      orig_code() {
+        return Flexio.pipe(_.get(this.orig_pipe, 'task', {})).toCode()
       },
-      code: {
+      edit_code: {
         get () {
           return this.$store.state.pipe.edit_code
         },
         set (value) {
           this.$store.commit('pipe/UPDATE_CODE', value)
         }
+      },
+      title() {
+        return _.get(this.orig_pipe, 'name', '')
       },
       active_process() {
         return _.last(this.getActiveDocumentProcesses())
@@ -253,12 +257,12 @@
       is_process_failed() {
         return this.active_process_status == PROCESS_STATUS_FAILED
       },
-      last_subprocess() {
+      last_process_log() {
         var log = _.get(this.active_process, 'log', [])
         return _.last(log)
       },
       last_stream_eid() {
-        return _.get(this.last_subprocess, 'output.stdout.eid', '')
+        return _.get(this.last_process_log, 'output.stdout.eid', '')
       },
       is_superuser() {
         // limit to @flex.io users for now
@@ -266,10 +270,10 @@
         return _.includes(user_email, '@flex.io')
       },
       is_changed() {
-        var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status']
+        var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
         var pipe1 = _.pick(this.edit_pipe, keys)
         var pipe2 = _.pick(this.orig_pipe, keys)
-        return !_.isEqual(pipe1, pipe2)
+        return /*this.edit_code != this.orig_code ||*/ !_.isEqual(pipe1, pipe2)
       }
     },
     methods: {
@@ -296,7 +300,7 @@
       runPipe() {
         this.$store.track('Ran Pipe', {
           title: this.title,
-          code: this.code
+          code: this.edit_code
         })
 
         var attrs = _.pick(this.edit_pipe, ['task'])

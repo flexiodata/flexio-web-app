@@ -1,7 +1,6 @@
 <template>
   <el-form
     class="el-form-cozy"
-    size="small"
     label-width="7rem"
     label-position="left"
     :model="form_values"
@@ -79,11 +78,14 @@
     methods: {
       updateForm() {
         if (this.form_values === null) {
-          var form_values = _.get(this.$store, 'state.pipe.edit_pipe')
-          this.form_values = _.cloneDeep(form_values)
+          this.resetForm()
         } else {
           this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
         }
+      },
+      resetForm() {
+        var form_values = _.get(this.$store, 'state.pipe.edit_pipe')
+        this.form_values = _.cloneDeep(form_values)
       }
     }
   }
