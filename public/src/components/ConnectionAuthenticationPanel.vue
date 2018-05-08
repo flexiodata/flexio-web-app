@@ -28,15 +28,17 @@
         v-if="is_smtp"
       >
         <el-form
-          ref="form"
+          class="el-form-cozy"
           label-width="8rem"
-          label-position="left"
           :model="$data"
+          :rules="rules"
+          :status-icon="true"
         >
           <el-form-item
-            key="email"
             label="Email address"
+            key="email"
             prop="email"
+            spellcheck="false"
           >
             <el-input
               placeholder="Email address"
@@ -45,8 +47,8 @@
             />
           </el-form-item>
           <el-form-item
-            key="username"
             label="Username"
+            key="username"
             prop="username"
           >
             <el-input
@@ -55,8 +57,8 @@
             />
           </el-form-item>
           <el-form-item
-            key="password"
             label="Password"
+            key="password"
             prop="password"
           >
             <el-input
@@ -66,8 +68,8 @@
             />
           </el-form-item>
           <el-form-item
-            key="host"
             label="Host"
+            key="host"
             prop="host"
           >
             <el-input
@@ -76,8 +78,8 @@
             />
           </el-form-item>
           <el-form-item
-            key="port"
             label="Port"
+            key="port"
             prop="port"
           >
             <el-input
@@ -86,8 +88,8 @@
             />
           </el-form-item>
           <el-form-item
-            key="security"
             label="Security"
+            key="security"
             prop="security"
           >
             <el-select
@@ -330,6 +332,13 @@
         // email
         email: _.get(c, 'email', ''),
         security: this.mode == 'edit' ? _.get(c, 'security', '') : 'ssl',
+
+        rules: {
+          email: [
+            { required: true, message: 'Please input an email address', trigger: 'blur' },
+            { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+          ]
+        }
       }
     },
     computed: {
