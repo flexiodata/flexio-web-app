@@ -20,14 +20,20 @@
       >
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
         <div class="flex-none flex flex-row items-center pl2" @click.stop>
-          <el-button type="text">
+          <el-button
+            type="text"
+            @click="show_pipe_schedule_dialog = true"
+          >
             <div class="hint--top" aria-label="Configure schedule">
               <div class="flex flex-row items-center ph2 gray hover-black">
                 <i class="material-icons mr1">date_range</i> <span>Schedule</span>
               </div>
             </div>
           </el-button>
-          <el-button type="text">
+          <el-button
+            type="text"
+            @click="show_pipe_deploy_dialog = true"
+          >
             <div class="hint--top" aria-label="Deployment options">
               <div class="flex flex-row items-center ph2 gray hover-black">
                 <i class="material-icons mr1">archive</i> <span>Deploy</span>
@@ -115,6 +121,37 @@
         </div>
       </div>
     </div>
+
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_schedule_dialog"
+    >
+      <PipeSchedulePanel
+        :pipe="edit_pipe"
+        @close="show_pipe_schedule_dialog = false"
+        @cancel="show_pipe_schedule_dialog = false"
+        @submit="updatePipeSchedule"
+      />
+    </el-dialog>
+
+    <!-- pipe deploy dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_deploy_dialog"
+    >
+      <PipeDeployPanel
+        :pipe="edit_pipe"
+        @close="show_pipe_deploy_dialog = false"
+      />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -130,6 +167,8 @@
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
+  import PipeSchedulePanel from './PipeSchedulePanel.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
 
   export default {
@@ -137,6 +176,8 @@
       Spinner,
       CodeEditor,
       PipeDocumentForm,
+      PipeSchedulePanel,
+      PipeDeployPanel,
       PipeContent
     },
     watch: {
@@ -151,6 +192,8 @@
     },
     data() {
       return {
+        show_pipe_schedule_dialog: false,
+        show_pipe_deploy_dialog: false,
         active_panels: ['properties', 'configuration', 'output-error', 'output']
       }
     },
@@ -257,6 +300,15 @@
             this.$nextTick(() => { this.is_running = false })
           }
         })
+      },
+      updatePipeSchedule(attrs) {
+        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.show_pipe_schedule_dialog = false
       },
       initSticky() {
         setTimeout(() => {
