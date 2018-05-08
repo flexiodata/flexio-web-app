@@ -254,7 +254,7 @@
         return _.includes(user_email, '@flex.io')
       },
       is_changed() {
-        var keys = ['name', 'alias', 'description']
+        var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status']
         var pipe1 = _.pick(this.edit_pipe, keys)
         var pipe2 = _.pick(this.orig_pipe, keys)
         return !_.isEqual(pipe1, pipe2)
