@@ -21,13 +21,17 @@
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
         <div class="flex-none flex flex-row items-center pl2" @click.stop>
           <el-button type="text">
-            <div class="flex flex-row items-center ph2 gray hover-black">
-              <i class="material-icons mr1">date_range</i> <span>Schedule</span>
+            <div class="hint--top" aria-label="Configure schedule">
+              <div class="flex flex-row items-center ph2 gray hover-black">
+                <i class="material-icons mr1">date_range</i> <span>Schedule</span>
+              </div>
             </div>
           </el-button>
           <el-button type="text">
-            <div class="flex flex-row items-center ph2 gray hover-black">
-              <i class="material-icons mr1">archive</i> <span>Deploy</span>
+            <div class="hint--top" aria-label="Deployment options">
+              <div class="flex flex-row items-center ph2 gray hover-black">
+                <i class="material-icons mr1">archive</i> <span>Deploy</span>
+              </div>
             </div>
           </el-button>
           <transition name="el-zoom-in-top">
