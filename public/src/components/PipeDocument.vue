@@ -19,6 +19,34 @@
         style="max-width: 1440px"
       >
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+        <div class="flex-none flex flex-row items-center pl2" @click.stop>
+          <el-button type="text">
+            <div class="flex flex-row items-center ph2 gray hover-black">
+              <i class="material-icons mr2">date_range</i> <span>Schedule</span>
+            </div>
+          </el-button>
+          <el-button type="text">
+            <div class="flex flex-row items-center ph2 gray hover-black">
+              <i class="material-icons mr2">archive</i> <span>Deploy</span>
+            </div>
+          </el-button>
+          <transition name="el-zoom-in-center">
+            <div v-if="is_changed">
+              <el-button
+                type="plain"
+                class="ttu b"
+              >
+                Cancel
+              </el-button>
+              <el-button
+                type="primary"
+                class="ttu b"
+              >
+                Save
+              </el-button>
+            </div>
+          </transition>
+        </div>
       </div>
     </div>
     <div
@@ -178,6 +206,9 @@
         var user_email = _.get(this.getActiveUser(), 'email', '')
         return _.includes(user_email, '@flex.io')
       },
+      is_changed() {
+        return _.isEqual(this.edit_pipe, this.orig_pipe)
+      }
     },
     methods: {
       ...mapGetters('pipe', [
