@@ -9,7 +9,7 @@
         >chevron_right</i>
       </span>
       <span class="f6 fw6 mr2">{{item.id}}</span>
-      <spinner :size="24" v-if="item.is_running"></spinner>
+      <Spinner :size="16" :line-size="2" v-if="item.is_running" />
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f7 fw6">{{item.message}}</div>
       <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
@@ -20,7 +20,7 @@
       <pre class="ma0">{{item.error_text}}</pre>
     </div>
     <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
-      <table class="w-100 css-test-table">
+      <table class="w-100 test-table">
         <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
@@ -79,9 +79,9 @@
       },
       cls() {
         return {
-          'css-test-error': this.is_xhr_ok === false,
-          'css-test-success': this.is_passed === true,
-          'css-test-failure': this.is_passed === false,
+          'test-error': this.is_xhr_ok === false,
+          'test-success': this.is_passed === true,
+          'test-failure': this.is_passed === false,
           'bg-nearer-white': true
         }
       }
@@ -94,22 +94,19 @@
   }
 </script>
 
-<style lang="less">
-  .css-test-success {
+<style lang="stylus" scoped>
+  .test-success
     background-color: rgba(0,255,0,0.1)
-  }
-  .css-test-failure {
+
+  .test-failure
     background-color: rgba(255,0,0,0.1)
-  }
-  .css-test-error {
+
+  .test-error
     background-color: rgba(255,255,0,0.1)
-  }
-  .css-test-table {
-    tr:hover {
-      background-color: rgba(0,0,0,0.1);
-    }
-    td {
+
+  .test-table
+    tr:hover
+      background-color: rgba(0,0,0,0.1)
+    td
       padding: 0 0 0 3px;
-    }
-  }
 </style>
