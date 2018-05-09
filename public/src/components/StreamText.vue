@@ -175,8 +175,7 @@
   }
 </script>
 
-<style lang="less" scoped>
-  pre {
-    line-height: 1.3;
-  }
+<style lang="stylus" scoped>
+  pre
+    line-height: 1.3
 </style>
