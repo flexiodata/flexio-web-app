@@ -66,6 +66,10 @@ module.exports = {
         exclude: /node_modules/
       },
       {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader'
+      },
+      {
         test: /\.yml$/,
         loader: 'yaml-loader',
         exclude: /node_modules/

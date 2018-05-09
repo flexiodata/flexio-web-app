@@ -1,0 +1,106 @@
+@import "variables.styl"
+
+/*
+  SQUARE
+
+  Media Query Extensions:
+   -ns = not-small
+   -m  = medium
+   -l  = large
+*/
+
+size($width, $height)
+  width: $width
+  height: $height
+
+square($size)
+  size($size, $size)
+
+$wa = auto
+$w1 = 1rem
+$w2 = 1.5rem
+$w3 = 2rem
+$w4 = 3rem
+$w5 = 4rem
+$w6 = 6rem
+$w7 = 7rem
+$w8 = 8rem
+
+.square-auto
+  square($wa)
+.square-1
+  square($w1)
+.square-2
+  square($w2)
+.square-3
+  square($w3)
+.square-4
+  square($w4)
+.square-5
+  square($w5)
+.square-6
+  square($w6)
+.square-7
+  square($w7)
+.square-8
+  square($w8)
+
+@media $breakpoint-not-small
+  .square-auto-ns
+    square($wa)
+  .square-1-ns
+    square($w1)
+  .square-2-ns
+    square($w2)
+  .square-3-ns
+    square($w3)
+  .square-4-ns
+    square($w4)
+  .square-5-ns
+    square($w5)
+  .square-6-ns
+    square($w6)
+  .square-7-ns
+    square($w7)
+  .square-8-ns
+    square($w8)
+
+@media $breakpoint-medium
+  .square-auto-m
+    square($wa)
+  .square-1-m
+    square($w1)
+  .square-2-m
+    square($w2)
+  .square-3-m
+    square($w3)
+  .square-4-m
+    square($w4)
+  .square-5-m
+    square($w5)
+  .square-6-m
+    square($w6)
+  .square-7-m
+    square($w7)
+  .square-8-m
+    square($w8)
+
+@media $breakpoint-large
+  .square-auto-l
+    square($wa)
+  .square-1-l
+    square($w1)
+  .square-2-l
+    square($w2)
+  .square-3-l
+    square($w3)
+  .square-4-l
+    square($w4)
+  .square-5-l
+    square($w5)
+  .square-6-l
+    square($w6)
+  .square-7-l
+    square($w7)
+  .square-8-l
+    square($w8)

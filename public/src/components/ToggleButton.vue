@@ -42,7 +42,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   // iOS Checkbox Toggle Switch
   // ref. https://proto.io/freebies/onoff/
 
