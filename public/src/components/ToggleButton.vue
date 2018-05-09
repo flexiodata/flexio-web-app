@@ -42,111 +42,94 @@
   }
 </script>
 
-<style lang="less">
+<style lang="stylus">
   // iOS Checkbox Toggle Switch
   // ref. https://proto.io/freebies/onoff/
 
-  @size: 1.5rem;
-  @size-sm: 1.25rem;
-  @size-lg: 2rem;
+  $size-md = 1.5rem
+  $size-sm = 1.25rem
+  $size-lg = 2rem
 
-  @bw: 2px;
+  $width-md = 2.75em
+  $width-sm = 2.25rem
+  $width-lg = 3.75rem
 
-  @bg-color: #fff;
-  @off-color: #ddd;
-  @on-color: #009900;
+  $border-width = 2px
 
-  .css-ios-toggle {
-    @s: @size;
-    @w: 2.75em;
+  $bg-color = #fff
+  $off-color = #ddd
+  $on-color = #009900
 
-    box-sizing: border-box;
-    position: relative;
-    width: @w;
-    user-select: none;
+  .css-ios-toggle
 
-    input[type="checkbox"] {
-      display: none;
-    }
+    box-sizing: border-box
+    position: relative
+    width: $width-md
+    user-select: none
 
-    label {
-      display: block;
-      overflow: hidden;
-      cursor: pointer;
-      padding: 0;
-      height: @s;
-      line-height: @s;
-      border-radius: @s;
-      border: @bw solid @off-color;
-      background-color: @bg-color;
-      transition: background-color 0.15s linear;
-    }
+    input[type="checkbox"]
+      display: none
 
-    label:before {
-      content: "";
-      display: block;
-      margin: 0px;
-      background: @bg-color;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: @s;
-      right: @w - @s;
-      border-radius: @s;
-      border: @bw solid @off-color;
-      transition: all 0.15s linear;
-    }
+    label
+      display: block
+      overflow: hidden
+      cursor: pointer
+      padding: 0
+      height: $size-md
+      line-height: $size-md
+      border-radius: $size-md
+      border: $border-width solid $off-color
+      background-color: $bg-color
+      transition: background-color 0.15s linear
 
-    input[type="checkbox"]:checked + label {
-      background-color: @on-color;
-    }
+    label:before
+      content: ""
+      display: block
+      margin: 0px
+      background: $bg-color
+      position: absolute
+      top: 0
+      bottom: 0
+      width: $size-md
+      right: $width-md - $size-md
+      border-radius: $size-md
+      border: $border-width solid $off-color
+      transition: all 0.15s linear
+
+    input[type="checkbox"]:checked + label
+      background-color: $on-color
 
     input[type="checkbox"]:checked + label,
-    input[type="checkbox"]:checked + label:before {
-      border-color: @on-color;
-    }
+    input[type="checkbox"]:checked + label:before
+      border-color: $on-color
 
-    input[type="checkbox"]:checked + label:before {
-      right: 0;
-      margin: 0;
-    }
-  }
+    input[type="checkbox"]:checked + label:before
+      right: 0
+      margin: 0
 
-  .css-ios-toggle.css-ios-toggle-sm {
-    @s: @size-sm;
-    @w: 2.25rem;
+  .css-ios-toggle.css-ios-toggle-sm
+    width: $width-sm
 
-    width: @w;
+    label
+      height: $size-sm
+      line-height: $size-sm
+      border-radius: $size-sm
 
-    label {
-      height: @s;
-      line-height: @s;
-      border-radius: @s;
-    }
+    label:before
+      width: $size-sm
+      right: $width-sm - $size-sm
+      border-radius: $size-sm
 
-    label:before {
-      width: @s;
-      right: @w - @s;
-      border-radius: @s;
-    }
-  }
+  .css-ios-toggle.css-ios-toggle-lg
+    width: $width-lg
 
-  .css-ios-toggle.css-ios-toggle-lg {
-    @s: @size-lg;
-    @w: 3.75rem;
+    label
+      height: $size-lg
+      line-height: $size-lg
+      border-radius: $size-lg
 
-    width: @w;
-
-    label {
-      height: @s;
-      line-height: @s;
-      border-radius: @s;
-    }
-
-    label:before {
-      width: @s;
-      right: @w - @s;
-      border-radius: @s;
-    }
-  }
+    label:before
+      width: $size-lg
+      right: $width-lg - $size-lg
+      border-radius: $size-lg
 </style>
