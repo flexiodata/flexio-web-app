@@ -43,6 +43,14 @@ config.module.rules = (config.module.rules || []).concat([
       use: 'css-loader!autoprefixer-loader'
     })
   },
+  // extract stylus files
+  {
+    test: /\.styl$/,
+    loader: ExtractTextPlugin.extract({
+      fallback: 'style-loader',
+      use: 'css-loader!stylus-loader'
+    })
+  },
   // extract less files
   {
     test: /\.less$/,

@@ -383,13 +383,10 @@
   }
 </script>
 
-<style scoped>
-  .sticky {
-    transition: all 0.2s ease;
-  }
+<style lang="stylus" scoped>
+  .sticky
+    transition: all 0.2s ease
 
-  .sticky.js-is-sticky {
-    /*background-color: rgba(249,249,249,0.875);*/
-    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2);
-  }
+  .sticky.js-is-sticky
+    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2)
 </style>
