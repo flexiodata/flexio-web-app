@@ -93,8 +93,7 @@
   }
 </script>
 
-<style lang="less">
-  .css-help-item {
-    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.05), inset -1px 0 0 rgba(0,0,0,0.05), 0 2px 1px -1px rgba(0,0,0,0.25);
-  }
+<style lang="stylus" scoped>
+  .css-help-item
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,0.05), inset -1px 0 0 rgba(0,0,0,0.05), 0 2px 1px -1px rgba(0,0,0,0.25)
 </style>
