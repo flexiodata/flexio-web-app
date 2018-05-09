@@ -67,41 +67,61 @@
       style="max-width: 1440px"
       v-if="is_fetched"
     >
-      <div class="pa4 bg-white br2 css-dashboard-box">
-        <div class="flex flex-column justify-center mv5" v-if="is_process_running">
-          <Spinner size="large" message="Running pipe..." />
-        </div>
-        <div v-else>
-          <el-collapse class="nt3 el-collapse-plain" v-model="active_panels">
-            <el-collapse-item name="properties">
-              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Properties</h3></template>
-              <PipeDocumentForm class="mt2" />
-            </el-collapse-item>
-            <el-collapse-item name="configuration">
-              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Configuration</h3></template>
-              <CodeEditor
-                class="mt2 bg-white ba b--black-10 overflow-y-auto"
-                lang="javascript"
-                :options="{ minRows: 12, maxRows: 24 }"
-                v-model="edit_code"
-              />
-              <div class="mt2">
-                <div class="mw4">
+      <div class="mb4 ph4 pv2 bg-white br2 css-dashboard-box">
+        <el-collapse class="el-collapse-plain" v-model="collapse_properties">
+          <el-collapse-item name="properties">
+            <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Properties</h3></template>
+            <PipeDocumentForm class="mt3" />
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+
+      <div class="mb4 ph4 pv2 bg-white br2 css-dashboard-box">
+        <el-collapse class="el-collapse-plain" v-model="collapse_configuration">
+          <el-collapse-item name="configuration">
+            <template slot="title">
+              <div class="flex flex-row items-center">
+                <h3 class="flex-fill mv0 fw6 f4 mid-gray">Configuration</h3>
+                <div class="flex flex-row items-center mr3">
                   <el-button
-                    class="ttu b w-100"
+                    class="ttu b"
+                    style="width: 5rem"
                     type="primary"
-                    size="medium"
-                    @click="runPipe"
+                    size="small"
+                    @click.stop="runPipe"
                   >
                     Test
                   </el-button>
                 </div>
               </div>
-            </el-collapse-item>
-            <el-collapse-item name="output-error" v-if="is_process_failed && is_superuser">
-              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output (Error)</h3></template>
+            </template>
+            <CodeEditor
+              class="mt3 bg-white ba b--black-10 overflow-y-auto"
+              lang="javascript"
+              :options="{ minRows: 12, maxRows: 24 }"
+              v-model="edit_code"
+            />
+            <div
+              class="mt3 bg-white ba b--black-10 flex flex-column justify-center"
+              style="height: 300px"
+              v-if="is_process_running"
+            >
+              <Spinner size="large" message="Running pipe..." />
+            </div>
+            <div
+              v-else-if="last_stream_eid.length > 0 && !is_process_failed"
+            >
+              <PipeContent
+                class="mt3"
+                :height="300"
+                :stream-eid="last_stream_eid"
+              />
+            </div>
+            <div
+              v-else-if="is_process_failed && is_superuser"
+            >
               <CodeEditor
-                class="mt2 bg-white ba b--black-10 overflow-y-auto"
+                class="mt3 bg-white ba b--black-10 overflow-y-auto"
                 lang="application/json"
                 :options="{
                   minRows: 12,
@@ -111,16 +131,9 @@
                 }"
                 v-model="active_process_info_str"
               />
-            </el-collapse-item>
-            <el-collapse-item name="output" v-if="last_stream_eid.length > 0 && !is_process_failed">
-              <template slot="title"><h3 class="mt0 mb3 fw6 f4 mid-gray">Output</h3></template>
-              <PipeContent
-                class="mt2"
-                :stream-eid="last_stream_eid"
-              />
-            </el-collapse-item>
-          </el-collapse>
-        </div>
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </div>
     </div>
 
@@ -207,7 +220,8 @@
       return {
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
-        active_panels: ['properties', 'configuration', 'output-error', 'output']
+        collapse_properties: ['properties'],
+        collapse_configuration: ['configuration']
       }
     },
     computed: {
@@ -369,6 +383,7 @@
   }
 
   .sticky.js-is-sticky {
+    /*background-color: rgba(249,249,249,0.875);*/
     box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2);
   }
 </style>
