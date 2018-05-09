@@ -1,0 +1,33 @@
+@import "../variables.styl"
+
+/*
+  FLEXBOX
+
+  Media Query Extensions:
+   -ns = not-small
+   -m  = medium
+   -l  = large
+*/
+
+.flex-fill
+  flex: 1 1
+  min-width: 0; /* 1 */
+  min-height: 0; /* 1 */
+
+@media $breakpoint-not-small
+  .flex-fill-ns
+    flex: 1 1
+    min-width: 0; /* 1 */
+    min-height: 0; /* 1 */
+
+@media $breakpoint-medium
+  .flex-fill-m
+    flex: 1 1
+    min-width: 0; /* 1 */
+    min-height: 0; /* 1 */
+
+@media $breakpoint-large
+  .flex-fill-l
+    flex: 1 1
+    min-width: 0; /* 1 */
+    min-height: 0; /* 1 */

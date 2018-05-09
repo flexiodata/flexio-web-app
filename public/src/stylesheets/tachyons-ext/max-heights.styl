@@ -1,0 +1,129 @@
+@import "../variables.styl"
+
+/*
+   MAX HEIGHTS
+     Docs: http://tachyons.io/docs/layout/heights/
+
+   Base:
+     max-h = max-height
+
+   Modifiers
+     1 = 1st step in max-height scale
+     2 = 2nd step in max-height scale
+     3 = 3rd step in max-height scale
+     4 = 4th step in max-height scale
+     5 = 5th step in max-height scale
+
+     -25   = literal value 25%
+     -50   = literal value 50%
+     -75   = literal value 75%
+     -100  = literal value 100%
+
+     -auto = string value of auto
+     -inherit = string value of inherit
+
+   Media Query Extensions:
+     -ns = not-small
+     -m  = medium
+     -l  = large
+*/
+
+/* Height Scale */
+.max-h1
+  max-height: 1rem
+.max-h2
+  max-height: 2rem
+.max-h3
+  max-height: 4rem
+.max-h4
+  max-height: 8rem
+.max-h5
+  max-height: 16rem
+
+/* Height Percentages - Based off of height of parent */
+.max-h-25
+  max-height:  25%
+.max-h-50
+  max-height:  50%
+.max-h-75
+  max-height:  75%
+.max-h-100
+  max-height: 100%
+
+/* String Properties */
+.max-h-auto
+  max-height: auto
+.max-h-inherit
+  max-height: inherit
+
+@media $breakpoint-not-small
+  .max-h1-ns
+    max-height: 1rem
+  .max-h2-ns
+    max-height: 2rem
+  .max-h3-ns
+    max-height: 4rem
+  .max-h4-ns
+    max-height: 8rem
+  .max-h5-ns
+    max-height: 16rem
+  .max-h-25-ns
+    max-height: 25%
+  .max-h-50-ns
+    max-height: 50%
+  .max-h-75-ns
+    max-height: 75%
+  .max-h-100-ns
+    max-height: 100%
+  .max-h-auto-ns
+    max-height: auto
+  .max-h-inherit-ns
+    max-height: inherit
+
+@media $breakpoint-medium
+  .max-h1-m
+    max-height: 1rem
+  .max-h2-m
+    max-height: 2rem
+  .max-h3-m
+    max-height: 4rem
+  .max-h4-m
+    max-height: 8rem
+  .max-h5-m
+    max-height: 16rem
+  .max-h-25-m
+    max-height: 25%
+  .max-h-50-m
+    max-height: 50%
+  .max-h-75-m
+    max-height: 75%
+  .max-h-100-m
+    max-height: 100%
+  .max-h-auto-m
+    max-height: auto
+  .max-h-inherit-m
+    max-height: inherit
+
+@media $breakpoint-large
+  .max-h1-l
+    max-height: 1rem
+  .max-h2-l
+    max-height: 2rem
+  .max-h3-l
+    max-height: 4rem
+  .max-h4-l
+    max-height: 8rem
+  .max-h5-l
+    max-height: 16rem
+  .max-h-25-l
+    max-height: 25%
+  .max-h-50-l
+    max-height: 50%
+  .max-h-75-l
+    max-height: 75%
+  .max-h-100-l
+    max-height: 100%
+  .max-h-auto-l
+    max-height: auto
+  .max-h-inherit-l
+    max-height: inherit

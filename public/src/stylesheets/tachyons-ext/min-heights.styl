@@ -1,0 +1,129 @@
+@import "../variables.styl"
+
+/*
+   MIN HEIGHTS
+     Docs: http://tachyons.io/docs/layout/heights/
+
+   Base:
+     min-h = min-height
+
+   Modifiers
+     1 = 1st step in min-height scale
+     2 = 2nd step in min-height scale
+     3 = 3rd step in min-height scale
+     4 = 4th step in min-height scale
+     5 = 5th step in min-height scale
+
+     -25   = literal value 25%
+     -50   = literal value 50%
+     -75   = literal value 75%
+     -100  = literal value 100%
+
+     -auto = string value of auto
+     -inherit = string value of inherit
+
+   Media Query Extensions:
+     -ns = not-small
+     -m  = medium
+     -l  = large
+*/
+
+/* Height Scale */
+.min-h1
+  min-height: 1rem
+.min-h2
+  min-height: 2rem
+.min-h3
+  min-height: 4rem
+.min-h4
+  min-height: 8rem
+.min-h5
+  min-height: 16rem
+
+/* Height Percentages - Based off of height of parent */
+.min-h-25
+  min-height:  25%
+.min-h-50
+  min-height:  50%
+.min-h-75
+  min-height:  75%
+.min-h-100
+  min-height: 100%
+
+/* String Properties */
+.min-h-auto
+  min-height: auto
+.min-h-inherit
+  min-height: inherit
+
+@media $breakpoint-not-small
+  .min-h1-ns
+    min-height: 1rem
+  .min-h2-ns
+    min-height: 2rem
+  .min-h3-ns
+    min-height: 4rem
+  .min-h4-ns
+    min-height: 8rem
+  .min-h5-ns
+    min-height: 16rem
+  .min-h-25-ns
+    min-height: 25%
+  .min-h-50-ns
+    min-height: 50%
+  .min-h-75-ns
+    min-height: 75%
+  .min-h-100-ns
+    min-height: 100%
+  .min-h-auto-ns
+    min-height: auto
+  .min-h-inherit-ns
+    min-height: inherit
+
+@media $breakpoint-medium
+  .min-h1-m
+    min-height: 1rem
+  .min-h2-m
+    min-height: 2rem
+  .min-h3-m
+    min-height: 4rem
+  .min-h4-m
+    min-height: 8rem
+  .min-h5-m
+    min-height: 16rem
+  .min-h-25-m
+    min-height: 25%
+  .min-h-50-m
+    min-height: 50%
+  .min-h-75-m
+    min-height: 75%
+  .min-h-100-m
+    min-height: 100%
+  .min-h-auto-m
+    min-height: auto
+  .min-h-inherit-m
+    min-height: inherit
+
+@media $breakpoint-large
+  .min-h1-l
+    min-height: 1rem
+  .min-h2-l
+    min-height: 2rem
+  .min-h3-l
+    min-height: 4rem
+  .min-h4-l
+    min-height: 8rem
+  .min-h5-l
+    min-height: 16rem
+  .min-h-25-l
+    min-height: 25%
+  .min-h-50-l
+    min-height: 50%
+  .min-h-75-l
+    min-height: 75%
+  .min-h-100-l
+    min-height: 100%
+  .min-h-auto-l
+    min-height: auto
+  .min-h-inherit-l
+    min-height: inherit

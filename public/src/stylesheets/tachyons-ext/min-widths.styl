@@ -1,0 +1,123 @@
+@import "../variables.styl"
+
+/*
+   MIN HEIGHTS
+     Docs: TBD
+
+   Base:
+     min-w = min-width
+
+   Modifiers
+     1 = 1st step in min-width scale
+     2 = 2nd step in min-width scale
+     3 = 3rd step in min-width scale
+     4 = 4th step in min-width scale
+     5 = 5th step in min-width scale
+
+     -25   = literal value 25%
+     -50   = literal value 50%
+     -75   = literal value 75%
+     -100  = literal value 100%
+
+     -auto = string value of auto
+     -inherit = string value of inherit
+
+   Media Query Extensions:
+     -ns = not-small
+     -m  = medium
+     -l  = large
+*/
+
+/* Height Scale */
+.min-w1
+  min-width: 1rem
+.min-w2
+  min-width: 2rem
+.min-w3
+  min-width: 4rem
+.min-w4
+  min-width: 8rem
+.min-w5
+  min-width: 16rem
+.min-w5a
+  min-width: 24rem
+.min-w6
+  min-width: 32rem
+.min-w7
+  min-width: 48rem
+.min-w8
+  min-width: 64rem
+.min-w9
+  min-width: 96rem
+
+/* String Properties */
+.min-w-auto
+  min-width: auto
+.min-w-inherit
+  min-width: inherit
+
+@media $breakpoint-not-small
+  .min-w1-ns
+    min-width: 1rem
+  .min-w2-ns
+    min-width: 2rem
+  .min-w3-ns
+    min-width: 4rem
+  .min-w4-ns
+    min-width: 8rem
+  .min-w5-ns
+    min-width: 16rem
+  .min-w5a-n
+    min-width: 24rem
+  .min-w6-ns
+    min-width: 32rem
+  .min-w7-ns
+    min-width: 48rem
+  .min-w8-ns
+    min-width: 64rem
+  .min-w9-ns
+    min-width: 96rem
+
+@media $breakpoint-medium
+  .min-w1-m
+    min-width: 1rem
+  .min-w2-m
+    min-width: 2rem
+  .min-w3-m
+    min-width: 4rem
+  .min-w4-m
+    min-width: 8rem
+  .min-w5-m
+    min-width: 16rem
+  .min-w5a-m
+    min-width: 24rem
+  .min-w6-m
+    min-width: 32rem
+  .min-w7-m
+    min-width: 48rem
+  .min-w8-m
+    min-width: 64rem
+  .min-w9-m
+    min-width: 96rem
+
+@media $breakpoint-large
+  .min-w1-l
+    min-width: 1rem
+  .min-w2-l
+    min-width: 2rem
+  .min-w3-l
+    min-width: 4rem
+  .min-w4-l
+    min-width: 8rem
+  .min-w5-l
+    min-width: 16rem
+  .min-w5a-l
+    min-width: 24rem
+  .min-w6-l
+    min-width: 32rem
+  .min-w7-l
+    min-width: 48rem
+  .min-w8-l
+    min-width: 64rem
+  .min-w9-l
+    min-width: 96rem

@@ -1,10 +1,14 @@
 <template>
-  <div class="flex flex-row justify-center items-center min-h3" v-if="is_fetching">
-    <spinner size="medium" />
+  <div
+    class="flex flex-row justify-center items-center"
+    style="min-height: 4rem"
+    v-if="is_fetching"
+  >
+    <Spinner size="medium" />
     <span class="ml2 f5">Loading...</span>
   </div>
   <div v-else>
-    <connection-chooser-item
+    <ConnectionChooserItem
       v-for="(item, idx) in items"
       :key="item.eid"
       :item="item"

@@ -19,7 +19,8 @@
       />
       <url-input-list
         ref="url-input-list"
-        class="ba b--black-10 pa1 min-h5 max-h5"
+        class="ba b--black-10 pa1"
+        style="min-height: 16rem; max-height: 16rem"
         @selection-change="updateItems"
         v-if="file_chooser_mode == 'textentry'"
       />
