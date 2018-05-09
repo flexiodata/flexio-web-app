@@ -77,8 +77,13 @@
   }
 </script>
 
-<style scoped>
-  .dim-less { opacity: 1; transition: opacity .15s ease-in; }
-  .dim-less:hover, .dim-less:focus { opacity: .7; transition: opacity .15s ease-in; }
-  .dim-less:active { opacity: .85; transition: opacity .15s ease-out; }
+<style lang="stylus" scoped>
+  .dim-less
+    opacity: 1; transition: opacity .15s ease-in
+
+  .dim-less:hover, .dim-less:focus
+    opacity: .7; transition: opacity .15s ease-in
+
+  .dim-less:active
+    opacity: .85
 </style>
