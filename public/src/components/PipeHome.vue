@@ -264,6 +264,11 @@
         if (_.isPlainObject(tasks))
           tasks = []
 
+        // don't show the 'eid' in the tasks
+        tasks = _.map(tasks, (t) => {
+          return _.omit(t, 'eid')
+        })
+
         return tasks
       },
       empty_tasks() {
