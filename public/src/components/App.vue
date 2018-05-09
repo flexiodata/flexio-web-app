@@ -144,7 +144,7 @@
 <style lang="stylus">
   // match .blue color to Material Design's 'Blue A600' color
   $blue = #1e88e5
-  $black-60 = rgba(0, 0, 0, 0.6)
+  $black-60 = rgba(0,0,0,0.6)
   $bg-color = #eee
   $bg-near-white = #f4f4f4
 
@@ -163,24 +163,24 @@
   /*
   // matched selection style from template items on website
   .css-list-item
-    border-color: rgba(0, 0, 0, 0.1)
+    border-color: rgba(0,0,0,0.1)
     transition: all 0.2s ease
 
     &:hover
       background-color: #eef8ff
       border-color: #aad8ff
-      box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.4)
+      box-shadow: 0 4px 20px -8px rgba(0,0,0,0.4)
   */
 
   .css-list-item
-    border-color: rgba(0, 0, 0, 0.1)
+    border-color: rgba(0,0,0,0.1)
     transition: all 0.2s ease
 
     &:hover
       background-color: $bg-near-white
-      border-color: rgba(0, 0, 0, 0.1)
-      border-bottom-color: rgba(0, 0, 0, 0.15)
-      box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.2)
+      border-color: rgba(0,0,0,0.1)
+      border-bottom-color: rgba(0,0,0,0.15)
+      box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)
 
   .css-list-item:not(.css-trash-item):hover .css-list-title
     color: $blue

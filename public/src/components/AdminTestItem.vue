@@ -20,7 +20,7 @@
       <pre class="ma0">{{item.error_text}}</pre>
     </div>
     <div class="pt1" v-if="item.details && item.details.length > 0" v-show="!show_details">
-      <table class="w-100 test-table">
+      <table class="w-100 css-test-table">
         <tr :class="!detail.passed ? 'bg-black-05' : ''" v-for="(detail, index) in item.details">
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
@@ -79,9 +79,9 @@
       },
       cls() {
         return {
-          'test-error': this.is_xhr_ok === false,
-          'test-success': this.is_passed === true,
-          'test-failure': this.is_passed === false,
+          'css-test-error': this.is_xhr_ok === false,
+          'css-test-success': this.is_passed === true,
+          'css-test-failure': this.is_passed === false,
           'bg-nearer-white': true
         }
       }
@@ -95,16 +95,16 @@
 </script>
 
 <style lang="stylus" scoped>
-  .test-success
+  .css-test-success
     background-color: rgba(0,255,0,0.1)
 
-  .test-failure
+  .css-test-failure
     background-color: rgba(255,0,0,0.1)
 
-  .test-error
+  .css-test-error
     background-color: rgba(255,255,0,0.1)
 
-  .test-table
+  .css-test-table
     tr:hover
       background-color: rgba(0,0,0,0.1)
     td
