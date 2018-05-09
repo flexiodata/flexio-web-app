@@ -100,8 +100,7 @@
   }
 </script>
 
-<style scoped>
-  .css-item + .css-item {
-    border-top: 1px solid #eee;
-  }
+<style lang="stylus" scoped>
+  .css-item + .css-item
+    border-top: 1px solid #eee
 </style>
