@@ -141,55 +141,47 @@
   }
 </script>
 
-<style lang="less">
+<style lang="stylus">
   // match .blue color to Material Design's 'Blue A600' color
-  @blue: #1e88e5;
-  @black-60: rgba(0,0,0,0.6);
-  @bg-color: #eee;
-  @bg-near-white: #f4f4f4;
+  $blue = #1e88e5
+  $black-60 = rgba(0, 0, 0, 0.6)
+  $bg-color = #eee
+  $bg-near-white = #f4f4f4
 
-  .css-nav-item {
-    border-color: transparent;
-    color: @black-60;
+  .css-nav-item
+    border-color: transparent
+    color: $black-60
 
-    &:hover {
-      border-color: @black-60;
-      color: #222;
-    }
+    &:hover
+      border-color: $black-60
+      color: #222
 
-    &.router-link-active {
-      border-color: @blue;
-      color: @blue;
-    }
-  }
+    &.router-link-active
+      border-color: $blue
+      color: $blue
 
   /*
   // matched selection style from template items on website
-  .css-list-item {
-    border-color: rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
+  .css-list-item
+    border-color: rgba(0, 0, 0, 0.1)
+    transition: all 0.2s ease
 
-    &:hover {
-      background-color: #eef8ff;
-      border-color: #aad8ff;
-      box-shadow: 0 4px 20px -8px rgba(0,0,0,0.4);
-    }
-  }
+    &:hover
+      background-color: #eef8ff
+      border-color: #aad8ff
+      box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.4)
   */
 
-  .css-list-item {
-    border-color: rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
+  .css-list-item
+    border-color: rgba(0, 0, 0, 0.1)
+    transition: all 0.2s ease
 
-    &:hover {
-      background-color: @bg-near-white;
-      border-color: rgba(0,0,0,0.1);
-      border-bottom-color: rgba(0,0,0,0.15);
-      box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)
-    }
-  }
+    &:hover
+      background-color: $bg-near-white
+      border-color: rgba(0, 0, 0, 0.1)
+      border-bottom-color: rgba(0, 0, 0, 0.15)
+      box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.2)
 
-  .css-list-item:not(.css-trash-item):hover .css-list-title {
-    color: @blue;
-  }
+  .css-list-item:not(.css-trash-item):hover .css-list-title
+    color: $blue
 </style>
