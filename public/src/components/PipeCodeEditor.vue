@@ -77,14 +77,18 @@
       }
     },
     data() {
+      var items = _.cloneDeep(this.tasks)
+      var edit_code = Flexio.pipe({ op: 'sequence', items }).toCode()
+
       return {
-        edit_code: Flexio.pipe({ op: 'sequence', items: this.tasks }).toCode(),
+        edit_code,
         syntax_msg: ''
       }
     },
     computed: {
       orig_code() {
-        return Flexio.pipe({ op: 'sequence', items: this.tasks }).toCode()
+        var items = _.cloneDeep(this.tasks)
+        return Flexio.pipe({ op: 'sequence', items }).toCode()
       },
       is_changed() {
         return this.orig_code != this.edit_code

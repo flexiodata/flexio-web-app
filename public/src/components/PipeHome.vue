@@ -268,6 +268,11 @@
         if (_.isPlainObject(tasks))
           tasks = []
 
+        // don't show the 'eid' in the tasks
+        tasks = _.map(tasks, (t) => {
+          return _.omit(t, 'eid')
+        })
+
         return tasks
       },
       empty_tasks() {
@@ -358,6 +363,9 @@
       },
 
       getPromptTasks() {
+        return []
+
+        /*
         var task_idx = 0
         var variable_idx = 0
         var variable_set_key = ''
@@ -450,13 +458,14 @@
         }, TASK_INFO_COMMENT))
 
         return prompts
+        */
       },
 
       runPipe(attrs) {
         this.prompt_tasks = [].concat(this.getPromptTasks())
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true })
 
-        if (this.has_empty_tasks)
+        if (false /* don't prompt anymore (for now) */ && this.has_empty_tasks)
         {
           var first_empty_task = _.head(this.empty_tasks)
           var eid = _.get(first_empty_task, 'eid')
