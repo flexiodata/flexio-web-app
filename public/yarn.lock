@@ -2487,9 +2487,9 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
-flexio-sdk-js@^1.27.0:
-  version "1.27.0"
-  resolved "https://registry.yarnpkg.com/flexio-sdk-js/-/flexio-sdk-js-1.27.0.tgz#109676fe569808609a3736833213ba56999e3aa7"
+flexio-sdk-js@^1.27.1:
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/flexio-sdk-js/-/flexio-sdk-js-1.27.1.tgz#107d97cfa0c46dc31f69987077950658605df69c"
 
 follow-redirects@^1.2.3:
   version "1.2.3"
