@@ -16,27 +16,33 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-EXAMPLE:
-// 'data' can be one of the following: "none" / "body" / "attachment"
-// if 'body' the file will be appended to your body_text
-// if 'none' the data file will be ignored and you'll just be sending an email
-// if 'attachment' the data file will be attached to the email
-// if 'link' the data file
+// DESCRIPTION:
 {
-    "op": "email",
-    "params": {
-        "to": "",
-        "subject": "",
-        "body": "",
-        "html": "",
-        "attachments": [
-            {"file": "<path>", "name": "<name>", "mime_type": "<mime_type>"},
-            {"file": "<path>"},
-            "<path>" // alternative format; string
-            ...
-        ]
-    }
+    "op": "email",  // string, required
+    "to": "",       // string|array, required
+    "subject": "",  // string
+    "body": "",     // string
+    "html": "",     // string
+    "attachments": [
+        {
+            "file": "<path>",           // string
+            "name": "<name>",           // string
+            "mime_type": "<mime_type>"  // string
+        },
+        {
+            "file": "<path>"            // string
+        },
+        "<path>"                        // string
+        ...
+    ]
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Email extends \Flexio\Jobs\Base
@@ -65,14 +71,14 @@ class Email extends \Flexio\Jobs\Base
         {
             // for now, we will temporarily allow messages to be sent with noreply@flex.io
 
- 
+
             $email_params = array(
                 'from' => "Flex.io <no-reply@flex.io>",
                 'to' => $to,
                 'subject' => $subject,
                 'msg_text' => $body_text
             );
-    
+
             $email = \Flexio\Services\NoticeEmail::create($email_params);
 
         }
@@ -146,7 +152,7 @@ class Email extends \Flexio\Jobs\Base
                 self::convertToDiskFile($process, $attachment);
 
                 register_shutdown_function('unlink', $attachment['file']);
-                
+
                 $email->addAttachment($attachment);
             }
         }

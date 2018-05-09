@@ -16,12 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "filter",
-    "params": {
-    }
+    "op": "filter", // string, required
+    "where": ""     // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'where'      => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Filter extends \Flexio\Jobs\Base
@@ -58,13 +65,13 @@ class Filter extends \Flexio\Jobs\Base
     private function getOutputFromJson(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // get the job properties
-        $job_definition = $this->getProperties();
-        $exclude = $job_definition['params']['exclude'] ?? false;
+        $params = $this->getJobParameters();
+        $exclude = $params['exclude'] ?? false;
 
-        if (isset($job_definition['params']['where']))
-            $filter_expression = $job_definition['params']['where'];
-        else if (isset($job_definition['params']['on']))
-            $filter_expression = $job_definition['params']['on'];
+        if (isset($params['where']))
+            $filter_expression = $params['where'];
+        else if (isset($params['on']))
+            $filter_expression = $params['on'];
         else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
@@ -112,7 +119,7 @@ class Filter extends \Flexio\Jobs\Base
         if ($success === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
-        
+
         $results = [];
         foreach ($data as $row)
         {
@@ -137,13 +144,13 @@ class Filter extends \Flexio\Jobs\Base
     private function getOutputFromTable(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // get the job properties
-        $job_definition = $this->getProperties();
-        $exclude = $job_definition['params']['exclude'] ?? false;
+        $params = $this->getJobParameters();
+        $exclude = $params['exclude'] ?? false;
 
-        if (isset($job_definition['params']['where']))
-            $filter_expression = $job_definition['params']['where'];
-        else if (isset($job_definition['params']['on']))
-            $filter_expression = $job_definition['params']['on'];
+        if (isset($params['where']))
+            $filter_expression = $params['where'];
+        else if (isset($params['on']))
+            $filter_expression = $params['on'];
         else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 

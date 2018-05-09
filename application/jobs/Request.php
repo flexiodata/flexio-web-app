@@ -16,15 +16,24 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "request",
-    "params": {
-        "method": "head|get|put|post|patch|delete|options",
-        "url": "https://www.flex.io",
-        "headers": []
-    }
+    "op": "request", // string, required
+    "method": ""     // string, required, enum: get|post (TODO: support additional request types)
+    "url": "",       // string, required
+    "headers": []    // array,
+    "params": []     // array (GET parameters; TODO: different name)
+    "data": ""       // string (POST parameters; TODO: correct?)
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'method'     => array('type' => 'string',     'required' => true),
+        'url'        => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Request extends \Flexio\Jobs\Base

@@ -16,13 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "limit",
-    "params": {
-        "rows": 10
-    }
+    "op": "limit",  // string, required
+    "rows": 0       // integer, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'rows'       => array('type' => 'integer',    'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Limit extends \Flexio\Jobs\Base
@@ -68,8 +74,8 @@ class Limit extends \Flexio\Jobs\Base
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
 
         // get the number of rows to return
-        $job_definition = $this->getProperties();
-        $rows = intval(($job_definition['params']['value'] ?? 0));
+        $params = $this->getJobParameters();
+        $rows = intval((['value'] ?? 0));
         $rows_to_output = ($rows > 0 ? $rows : 0);
 
         // create the reader/writer

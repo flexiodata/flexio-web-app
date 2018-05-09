@@ -16,16 +16,27 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "calc",
-    "params": {
-        "name": "",
-        "type": "",
-        "decimals": "",
-        "expression": ""
-    }
+    "op": "calc",     // string, required
+    "name": "",       // string, required
+    "type": "",       // string, required
+    "width": 0,       // integer
+    "decimals": 0,    // integer
+    "expression": ""  // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',  'required' => true),
+        'name'       => array('type' => 'string',  'required' => true),
+        'type'       => array('type' => 'string',  'required' => true),
+        'width'      => array('type' => 'integer', 'required' => false),
+        'decimals'   => array('type' => 'integer', 'required' => false),
+        'expression' => array('type' => 'string',  'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class CalcField extends \Flexio\Jobs\Base

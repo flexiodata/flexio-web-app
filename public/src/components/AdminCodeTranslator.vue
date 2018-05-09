@@ -66,7 +66,7 @@
             throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
 
           // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
+          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
 
           // stringify JSON; indent 2 spaces
           var task_str = JSON.stringify(task, null, 2)

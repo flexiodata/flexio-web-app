@@ -5,22 +5,16 @@
     "description": "Create a JSON data feed from a CSV",
     "task": {
         "op": "sequence",
-        "params": {
-            "items": [
-                {
-                    "op": "request",
-                    "params": {
-                        "url": "https://api.iextrading.com/1.0/stock/AAPL/chart/1y?format=csv"
-                    }
-                },
-                {
-                    "op": "convert",
-                    "params": {
-                        "input": "csv",
-                        "output": "json"
-                    }
-                }
-            ]
-        }
+        "items": [
+            {
+                "op": "request",
+                "url": "https://api.iextrading.com/1.0/stock/AAPL/chart/1y?format=csv"
+            },
+            {
+                "op": "convert",
+                "input": "csv",
+                "output": "json"
+            }
+        ]
     }
 }

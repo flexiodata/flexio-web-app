@@ -16,12 +16,18 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "grep",
-    "params": {
-    }
+    "op": "grep"
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Grep extends \Flexio\Jobs\Base
@@ -60,8 +66,8 @@ class Grep extends \Flexio\Jobs\Base
         $streamwriter = $outstream->getWriter();
 
         // get the code from the template
-        $job_definition = $this->getProperties();
-        $grepexpr = $job_definition['params']['expression'] ?? '';
+        $params = $this->getJobParameters();
+        $grepexpr = $params['expression'] ?? '';
         if (strlen($grepexpr) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 

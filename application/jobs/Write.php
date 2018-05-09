@@ -16,13 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "write",
-    "params": {
-        "path": ""
-    }
+    "op": "write",  // string, required
+    "path": ""      // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'path'       => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Write extends \Flexio\Jobs\Base
@@ -34,8 +40,8 @@ class Write extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $job_params = $this->getJobParameters();
+        $path = $job_params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");

@@ -224,7 +224,7 @@ class Process implements \Flexio\IFace\IProcess
         $local = $this->getLocalConnection($identifier);
         if ($local !== null)
             return $local;
-        
+
         $owner_user_eid = $this->getOwner();
 
         try
@@ -490,19 +490,10 @@ class Process implements \Flexio\IFace\IProcess
         if (strlen($implementation_version) < 40)
             return '';
 
-        // make sure have a valid task
-        $task_operation = $task['op'] ?? false;
-        $task_parameters = $task['params'] ?? false;
-
-        // make sure we have the params we need
-        if (is_string($task_operation) === false || is_array($task_parameters) === false)
-            return '';
-
-        $encoded_task_parameters = json_encode($task_parameters);
+        $encoded_task = json_encode($task);
         $hash = md5(
             $implementation_version .
-            $task_operation .
-            $encoded_task_parameters
+            $encoded_task
         );
 
         return $hash;

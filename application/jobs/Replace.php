@@ -16,17 +16,23 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "replace",
-    "params": {
-        "columns": [],
-        "find": "",
-        "replace": "",
-        "location": "any",
-        "match_case": false
-    }
+    "columns": [],
+    "find": "",
+    "replace": "",
+    "location": "any",
+    "match_case": false
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Replace extends \Flexio\Jobs\Base
@@ -113,8 +119,7 @@ class Replace extends \Flexio\Jobs\Base
         // object that can be used for performing the replace
 
         // properties
-        $job_definition = $this->getProperties();
-        $params = $job_definition['params'];
+        $params = $this->getJobParameters();
 
         // determine the list of columns to perform replace on
         $specified_column_names = $params['columns'];

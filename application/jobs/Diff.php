@@ -16,14 +16,18 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "diff",
-    "params": {
-        "file1": "",
-        "file2": ""
-    }
+    "op": "diff"
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Diff extends \Flexio\Jobs\Base
@@ -64,5 +68,5 @@ EOT;
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
     }
-    
+
 }

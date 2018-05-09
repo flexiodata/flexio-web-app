@@ -37,9 +37,7 @@ class Test
         $params['task'] = json_decode('[
             {
                 "op": "sleep",
-                "params": {
-                    "value": 4000
-                }
+                "value": 4000
             }
         ]',true);
         $request = \Flexio\Api\Request::create();
@@ -60,9 +58,7 @@ class Test
         $params['task'] = json_decode('[
             {
                 "op": "sleep",
-                "params": {
-                    "value": 4000
-                }
+                "value": 4000
             }
         ]',true);
         $user_eid = \Flexio\Tests\Util::createUser();

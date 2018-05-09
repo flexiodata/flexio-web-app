@@ -16,16 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "select",
-    "params": {
-        "files" : [
-        ],
-        "columns": [
-        ]
-    }
+    "op": "select",  // string, required
+    "columns": [     // array, required; array of strings of the columns to select
+    ]
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Select extends \Flexio\Jobs\Base
@@ -48,7 +51,7 @@ class Select extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::JSON:
                 $this->processJson($instream, $outstream);
                 return;
-            
+
             // if we have a table input, perform additional column selection
             case \Flexio\Base\ContentType::FLEXIO_TABLE:
                 $this->processTable($instream, $outstream);

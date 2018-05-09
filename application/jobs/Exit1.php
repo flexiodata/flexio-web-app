@@ -16,14 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "exit",
-    "params": {
-        "code": "",
-        "response": ""
-    }
+    "op": "exit",   // string, required
+    "code": "",     // integer
+    "response": ""  // string
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'integer',    'required' => false),
+        'response'   => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Exit1 extends \Flexio\Jobs\Base
@@ -35,9 +42,9 @@ class Exit1 extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $job_definition = $this->getProperties();
-        $code = $job_definition['params']['code'] ?? \Flexio\Jobs\Process::RESPONSE_NORMAL;
-        $response = $job_definition['params']['response'] ?? '';
+        $params = $this->getJobParameters();
+        $code = $params['code'] ?? \Flexio\Jobs\Process::RESPONSE_NORMAL;
+        $response = $params['response'] ?? '';
 
         if (is_array($response) || is_object($response))
         {

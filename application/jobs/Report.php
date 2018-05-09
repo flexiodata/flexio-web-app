@@ -18,12 +18,18 @@ namespace Flexio\Jobs;
 require_once __DIR__ . '/Execute.php';
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "report",
-    "params": {
-    }
+    "op": "report"
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class ReportScriptHost extends ScriptHost
@@ -73,8 +79,7 @@ class Report extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $params =  $job_definition['params'] ?? [];
+        $params = $this->getJobParameters();
 /*
         $code = <<<EOT
 

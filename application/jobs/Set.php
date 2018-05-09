@@ -16,14 +16,20 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "set",
-    "params": {
-        "var": "myvar",
-        "value": "new_value"
-    }
+    "var": "myvar",
+    "value": "new_value"
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Set extends \Flexio\Jobs\Base
@@ -37,7 +43,7 @@ class Set extends \Flexio\Jobs\Base
         $var = $job_params['var'];
         $value = $job_params['value'];
 
-        if (isset($value['op']) && isset($value['params']))
+        if (isset($value['op']))
         {
             // right side of set is pipe code
 

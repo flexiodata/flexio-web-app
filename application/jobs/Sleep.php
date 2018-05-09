@@ -16,13 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "sleep",
-    "params": {
-        "value": 1
-    }
+    "value": 1,
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Sleep extends \Flexio\Jobs\Base
@@ -32,8 +38,8 @@ class Sleep extends \Flexio\Jobs\Base
         parent::run($process);
 
         // get the duration
-        $job_definition = $this->getProperties();
-        $milliseconds_to_wait = $job_definition['params']['value'];
+        $job_params = $this->getJobParameters();
+        $milliseconds_to_wait = $job_params['value'];
         $milliseconds_to_update_status = 100;
 
         $milliseconds_waited = 0;

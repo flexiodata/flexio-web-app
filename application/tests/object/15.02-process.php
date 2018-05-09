@@ -58,8 +58,7 @@ class Test
         $task =
         [
             [
-                "op" => "application/bad-job-definition",
-                "params" => (object)[]
+                "op" => "application/bad-job-definition"
             ]
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);
@@ -73,13 +72,11 @@ class Test
         [
             [
                 "op" => "create",
-                "params" => [
-                    "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                    "columns" => [
-                        [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
-                    ],
-                    "content" => "bad content"
-                ]
+                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                "columns" => [
+                    [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
+                ],
+                "content" => "bad content"
             ]
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);
@@ -92,9 +89,7 @@ class Test
         $task =
         [
             [
-                "op" => "nop",
-                "params" => (object)[
-                ]
+                "op" => "nop"
             ]
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);

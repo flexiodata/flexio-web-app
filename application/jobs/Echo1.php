@@ -16,13 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "echo",
-    "params": {
-        "msg": ""
-    }
+    "op": "echo",  // string, required
+    "msg": ""      // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+        'msg'        => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Echo1 extends \Flexio\Jobs\Base
@@ -34,8 +40,8 @@ class Echo1 extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $job_definition = $this->getProperties();
-        $msg = $job_definition['params']['msg'] ?? '';
+        $params = $this->getJobParameters();
+        $msg = $params['msg'] ?? '';
 
 
         if (is_array($msg) || is_object($msg))

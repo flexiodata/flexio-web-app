@@ -256,7 +256,7 @@
         return _.get(this.pipe, 'processes_fetched', false)
       },
       tasks() {
-        var tasks = _.get(this.pipe, 'task.params.items', [])
+        var tasks = _.get(this.pipe, 'task.items', [])
 
         // take into account the old pipe syntax with the task array (for now)
         if (tasks.length == 0)
@@ -365,7 +365,7 @@
 
         var prompts = _.map(this.tasks, (task) => {
           var task_eid = _.get(task, 'eid')
-          var params = _.get(task, 'params', {})
+          var params = _.omit(task, ['op'])
 
           var matched_vars = []
 
@@ -415,7 +415,7 @@
           }
 
           // start traversing the task params object
-          getChildVariables(params, 'task['+task_idx+'].params')
+          getChildVariables(params, 'task['+task_idx+']')
 
           // increment our task index
           task_idx++

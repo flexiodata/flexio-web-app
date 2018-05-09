@@ -16,13 +16,19 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "delete",
-    "params": {
-        "path": ""
-    }
+    "op": "delete",  // string, required
+    "path": ""       // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'path'       => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Delete extends \Flexio\Jobs\Base
@@ -31,8 +37,8 @@ class Delete extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $path = $job_definition['params']['path'] ?? null;
+        $params = $this->getJobParameters();
+        $path = $params['path'] ?? null;
 
         if (is_null($path))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");

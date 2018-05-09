@@ -16,14 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "fail",
-    "params": {
-        "code": "string",
-        "message": "string"
-    }
+    "op": "fail",  // string, required
+    "code": "",    // string
+    "message": ""  // string
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'string',     'required' => false),
+        'message'    => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Fail extends \Flexio\Jobs\Base
@@ -32,9 +39,9 @@ class Fail extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $job_definition = $this->getProperties();
-        $code = $job_definition['params']['code'] ?? '';
-        $message = $job_definition['params']['message'] ?? '';
+        $params = $this->getJobParameters();
+        $code = $params['code'] ?? '';
+        $message = $params['message'] ?? '';
 
         switch ($code)
         {

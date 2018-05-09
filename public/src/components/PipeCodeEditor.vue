@@ -78,13 +78,13 @@
     },
     data() {
       return {
-        edit_code: Flexio.pipe({ op: 'sequence', params: { items: this.tasks } }).toCode(),
+        edit_code: Flexio.pipe({ op: 'sequence', items: this.tasks }).toCode(),
         syntax_msg: ''
       }
     },
     computed: {
       orig_code() {
-        return Flexio.pipe({ op: 'sequence', params: { items: this.tasks } }).toCode()
+        return Flexio.pipe({ op: 'sequence', items: this.tasks }).toCode()
       },
       is_changed() {
         return this.orig_code != this.edit_code
@@ -146,7 +146,7 @@
             throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
 
           // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
+          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
 
           var eid = this.pipeEid
           var attrs = { task }

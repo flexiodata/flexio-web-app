@@ -16,16 +16,22 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "settype",
-    "params": {
-        "name": "",
-        "type": "",
-        "decimals": "",
-        "expression": ""
-    }
+    "name": "",
+    "type": "",
+    "decimals": "",
+    "expression": ""
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class SetType extends \Flexio\Jobs\Base
@@ -58,11 +64,11 @@ class SetType extends \Flexio\Jobs\Base
     private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
     {
         // get the job properties
-        $job_definition = $this->getProperties();
-        $columns = $job_definition['params']['columns'];
-        $type = $job_definition['params']['type'] ?? 'character';
-        $width = $job_definition['params']['width'] ?? null;
-        $scale = $job_definition['params']['decimals'] ?? null;
+        $job_params = $this->getJobParameters();
+        $columns = $job_params['columns'];
+        $type = $job_params['type'] ?? 'character';
+        $width = $job_params['width'] ?? null;
+        $scale = $job_params['decimals'] ?? null;
 
         if (!isset($columns) || !is_array($columns))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);

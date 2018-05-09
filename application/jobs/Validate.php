@@ -16,22 +16,28 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
     "op": "validate",
-    "params": {
-        "path": ""
-        "validator": {
-            "type": "object",
-            "properties": {
-                "mime_type": {
-                    "type": "string",
-                    "enum": ["image/png", "image/jpeg", "image/gif", "image/tiff"]
-                }
+    "path": ""
+    "validator": {
+        "type": "object",
+        "properties": {
+            "mime_type": {
+                "type": "string",
+                "enum": ["image/png", "image/jpeg", "image/gif", "image/tiff"]
             }
         }
     }
+    // TODO: fill out
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 

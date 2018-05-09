@@ -16,16 +16,25 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "execute",
-    "params": {
-        "lang": "python",
-        "code": "<base64 encoded>",
-        "path": "",
-        "integrity": ""
-    }
+    "op": "execute",  // string, required
+    "lang": "",       // string, required, enum: python|javascript
+    "code": "",       // string (base64 encoded string of code to run); either "code" or "path" is required
+    "path": "",       // string (url to remote code to execute); either "code" or "path" is required
+    "integrity": ""   // string (integrity check; sha256, sha384, sha512 allowed with format: <sha-type>:<integrity-check>
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'lang'       => array('type' => 'string',     'required' => true),
+        'code'       => array('type' => 'string',     'required' => false),
+        'path'       => array('type' => 'string',     'required' => false),
+        'integrity'  => array('type' => 'string',     'required' => false)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class BinaryData
@@ -457,7 +466,7 @@ class ScriptHost
                            'size' => $stream->getSize(),
                            'mime_type' => $stream->getMimeType() ];
         }
-        
+
         $this->context_files = (object)$files;
         return $this->context_files;
     }
@@ -800,12 +809,9 @@ class Execute extends \Flexio\Jobs\Base
     public function validate() : array
     {
         $errors = array();
-        $properties = $this->getProperties();
+        $jobs_params = $this->getJobParameters();
 
-        if (!isset($properties['op']))
-            $errors[] = array('code' => \Flexio\Base\Error::INVALID_PARAMETER, 'message' => '');
-
-        if (!isset($properties['params']))
+        if (!isset($jobs_params['op']))
             $errors[] = array('code' => \Flexio\Base\Error::INVALID_PARAMETER, 'message' => '');
 
         if (count($errors) > 0)
@@ -813,8 +819,6 @@ class Execute extends \Flexio\Jobs\Base
 
         try
         {
-            $job_params = $properties['params'];
-
             $lang = $job_params['lang'] ?? '';
             $code = base64_decode($job_params['code'] ?? '');
             $code = is_null($code) ? '' : $code;
@@ -846,23 +850,23 @@ class Execute extends \Flexio\Jobs\Base
         $this->process = $process;
 
         // properties
-        $job_definition = $this->getProperties();
+        $jobs_params = $this->getJobParameters();
 
         // get the language
-        $this->lang = $job_definition['params']['lang'];
+        $this->lang = $jobs_params['lang'];
 
         // if code is specified, get the contents from the supplied code
-        $code = $job_definition['params']['code'] ?? false;
+        $code = $jobs_params['code'] ?? false;
         if ($code !== false)
         {
-            $this->code_base64 = $job_definition['params']['code'];
+            $this->code_base64 = $jobs_params['code'];
             $this->code = base64_decode($this->code_base64);
         }
          else
         {
             // if the code isn't specified in a file location, see if it's specified
             // in a remote location
-            $file = $job_definition['params']['path'] ?? false;
+            $file = $jobs_params['path'] ?? false;
             if ($file === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
 
@@ -870,7 +874,7 @@ class Execute extends \Flexio\Jobs\Base
             $this->code_base64 = base64_encode($this->code);
         }
 
-        $integrity = $job_definition['params']['integrity'] ?? false;
+        $integrity = $jobs_params['integrity'] ?? false;
         if ($integrity !== false)
         {
             // an integrity parameter is specified; use a subresource integrity check

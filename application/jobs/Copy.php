@@ -16,14 +16,21 @@ declare(strict_types=1);
 namespace Flexio\Jobs;
 
 /*
-// EXAMPLE:
+// DESCRIPTION:
 {
-    "op": "copy",
-    "params": {
-        "from": "",
-        "to": ""
-    }
+    "op": "copy",  // string, required
+    "from": "",    // string, required
+    "to": ""       // string, required
 }
+
+// VALIDATOR:
+$validator = \Flexio\Base\Validator::create();
+if (($validator->check($params, array(
+        'op'         => array('type' => 'string',     'required' => true),
+        'path'       => array('type' => 'string',     'required' => true),
+        'to'         => array('type' => 'string',     'required' => true)
+    ))->hasErrors()) === true)
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
 
 class Copy extends \Flexio\Jobs\Base
