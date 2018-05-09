@@ -90,7 +90,7 @@
                     size="small"
                     @click.stop="runPipe"
                   >
-                    Test
+                    Run
                   </el-button>
                 </div>
               </div>
@@ -118,7 +118,7 @@
               />
             </div>
             <div
-              v-else-if="is_process_failed && is_superuser"
+              v-else-if="is_superuser && is_process_failed"
             >
               <CodeEditor
                 class="mt3 bg-white ba b--black-10 overflow-y-auto"
@@ -253,6 +253,23 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
+      is_superuser() {
+        // limit to @flex.io users for now
+        var user_email = _.get(this.getActiveUser(), 'email', '')
+        return _.includes(user_email, '@flex.io')
+      },
+      is_code_changed() {
+        return this.edit_code != this.orig_code
+      },
+      is_changed() {
+        var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
+        var pipe1 = _.pick(this.edit_pipe, keys)
+        var pipe2 = _.pick(this.orig_pipe, keys)
+        return this.is_code_changed || !_.isEqual(pipe1, pipe2)
+      },
+
+      // -- all of the below computed values pertain to getting the preview --
+
       active_process() {
         return _.last(this.getActiveDocumentProcesses())
       },
@@ -277,17 +294,6 @@
       },
       last_stream_eid() {
         return _.get(this.last_process_log, 'output.stdout.eid', '')
-      },
-      is_superuser() {
-        // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
-        return _.includes(user_email, '@flex.io')
-      },
-      is_changed() {
-        var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
-        var pipe1 = _.pick(this.edit_pipe, keys)
-        var pipe2 = _.pick(this.orig_pipe, keys)
-        return /*this.edit_code != this.orig_code ||*/ !_.isEqual(pipe1, pipe2)
       }
     },
     methods: {
