@@ -116,11 +116,3 @@
     }
   }
 </script>
-
-<style lang="less" scoped>
-  .md-input-container.css-condensed {
-    padding-top: 0;
-    margin-bottom: 0.75rem;
-    min-height: 32px;
-  }
-</style>
