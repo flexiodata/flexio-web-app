@@ -92,15 +92,18 @@
               <div class="flex flex-row items-center">
                 <h3 class="flex-fill mv0 fw6 f4 mid-gray">Configuration</h3>
                 <div class="flex flex-row items-center mr3">
-                  <el-button
-                    class="ttu b"
-                    style="width: 5rem"
-                    type="primary"
-                    size="small"
-                    @click.stop="runPipe"
-                  >
-                    Run
-                  </el-button>
+                  <transition name="el-zoom-in-center">
+                    <el-button
+                      class="ttu b"
+                      style="width: 5rem"
+                      type="primary"
+                      size="small"
+                      @click.stop="runPipe"
+                      v-if="is_configure_expanded"
+                    >
+                      Run
+                    </el-button>
+                  </transition>
                 </div>
               </div>
             </template>
@@ -249,6 +252,9 @@
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
+      },
+      is_configure_expanded() {
+        return this.collapse_configuration.indexOf('configuration') != -1
       },
       is_code_changed() {
         return this.edit_code != this.orig_code
