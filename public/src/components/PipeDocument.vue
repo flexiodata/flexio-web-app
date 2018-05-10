@@ -192,6 +192,9 @@
         handler: 'loadPipe',
         immediate: true
       },
+      orig_pipe: {
+        handler: 'initPipe'
+      },
       is_fetched: {
         handler: 'initSticky',
         immediate: true
@@ -310,6 +313,9 @@
             this.$store.commit('pipe/FETCHING_PIPE', false)
           }
         })
+      },
+      initPipe(pipe) {
+        this.$store.commit('pipe/INIT_PIPE', pipe)
       },
       runPipe() {
         this.$store.track('Ran Pipe', {

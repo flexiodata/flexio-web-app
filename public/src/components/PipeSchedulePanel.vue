@@ -219,9 +219,10 @@
       },
       updatePipe() {
         var edit_pipe = _.cloneDeep(this.pipe)
+        var default_schedule = _.get(defaultAttrs(), 'schedule')
 
         if (_.isNil(_.get(edit_pipe, 'schedule')))
-          _.assign(edit_pipe, defaultAttrs())
+          _.set(edit_pipe, 'schedule', default_schedule)
 
         this.edit_pipe = edit_pipe
       },
