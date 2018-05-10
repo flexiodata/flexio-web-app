@@ -3,6 +3,7 @@ import Flexio from 'flexio-sdk-js'
 
 const state = {
   eid: '',
+  orig_pipe: {},
   edit_pipe: {},
   edit_code: '',
   syntax_error: '',
@@ -25,6 +26,7 @@ const mutations = {
     task_obj = _.cloneDeep(task_obj)
 
     state.eid = _.get(pipe, 'eid', '')
+    state.orig_pipe = _.cloneDeep(pipe)
     state.edit_pipe = _.cloneDeep(pipe)
     state.edit_code = Flexio.pipe(task_obj).toCode()
     state.fetched = true

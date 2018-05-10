@@ -338,7 +338,7 @@
         })
       },
       cancelChanges() {
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.orig_pipe)
+        this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
       },
       saveChanges() {
         var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task']

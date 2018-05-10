@@ -110,9 +110,13 @@
       PipeSchedulePanel
     },
     watch: {
+      orig_pipe: {
+        handler: 'resetForm',
+        immedate: true,
+        deep: true
+      },
       form_values: {
-        handler: 'updateForm',
-        immediate: true,
+        handler: 'updateStore',
         deep: true
       }
     },
@@ -129,6 +133,7 @@
     },
     computed: {
       ...mapState({
+        orig_pipe: state => state.pipe.orig_pipe,
         edit_pipe: state => state.pipe.edit_pipe
       }),
       path() {
@@ -145,15 +150,10 @@
       }
     },
     methods: {
-      updateForm() {
-        if (this.form_values === null) {
-          this.resetForm()
-        } else {
-          this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
-        }
+      updateStore() {
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
       },
-      resetForm() {
-        var form_values = _.get(this.$store, 'state.pipe.edit_pipe')
+      resetForm(form_values) {
         this.form_values = _.cloneDeep(form_values)
       },
       updatePipeSchedule(attrs) {
