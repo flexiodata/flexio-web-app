@@ -48,6 +48,14 @@
         active-color="#009900"
         v-model="is_scheduled"
       />
+      <span class="ml1">
+        <el-button
+          type="text"
+          @click="show_pipe_schedule_dialog = true"
+        >
+          Options...
+        </el-button>
+      </span>
     </el-form-item>
     <el-form-item
       key="description"
@@ -62,6 +70,22 @@
         v-model="form_values.description"
       />
     </el-form-item>
+
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_schedule_dialog"
+    >
+      <PipeSchedulePanel
+        :pipe="edit_pipe"
+        @close="show_pipe_schedule_dialog = false"
+        @cancel="show_pipe_schedule_dialog = false"
+        @submit="updatePipeSchedule"
+      />
+    </el-dialog>
   </el-form>
 </template>
 
@@ -71,8 +95,12 @@
     SCHEDULE_STATUS_ACTIVE,
     SCHEDULE_STATUS_INACTIVE
   } from '../constants/schedule'
+  import PipeSchedulePanel from './PipeSchedulePanel.vue'
 
   export default {
+    components: {
+      PipeSchedulePanel
+    },
     watch: {
       form_values: {
         handler: 'updateForm',
@@ -82,6 +110,7 @@
     },
     data() {
       return {
+        show_pipe_schedule_dialog: false,
         form_values: null,
         rules: {
           name: [
@@ -118,6 +147,15 @@
       resetForm() {
         var form_values = _.get(this.$store, 'state.pipe.edit_pipe')
         this.form_values = _.cloneDeep(form_values)
+      },
+      updatePipeSchedule(attrs) {
+        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.show_pipe_schedule_dialog = false
       }
     }
   }

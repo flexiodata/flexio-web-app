@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row items-center mb3">
+    <div class="flex flex-row items-center nt3 mb3">
       <el-switch
         class="hint--bottom"
         active-color="#009900"
