@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-nearer-white pb4 overflow-y-auto relative"
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    style="padding-bottom: 8rem"
     :id="doc_id"
   >
     <div
@@ -11,59 +12,61 @@
     </div>
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="mt4 mb3 relative z-7 bg-nearer-white sticky"
+      class="mt4 mb3 nl4 nr4 relative z-7 bg-nearer-white sticky"
       v-if="is_fetched"
     >
-      <div
-        class="flex flex-row items-center center ph4"
-        style="max-width: 1440px"
-      >
-        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
-        <div class="flex-none flex flex-row items-center pl2" @click.stop>
-          <el-button
-            type="text"
-            @click="show_pipe_schedule_dialog = true"
-          >
-            <div class="hint--top" aria-label="Scheduling options">
-              <div class="flex flex-row items-center ph2 gray hover-black">
-                <i class="material-icons mr1">date_range</i> <span>Schedule</span>
+      <div class="ph4">
+        <div
+          class="flex flex-row items-center center"
+          style="max-width: 1440px"
+        >
+          <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+          <div class="flex-none flex flex-row items-center pl2" @click.stop>
+            <el-button
+              type="text"
+              @click="show_pipe_schedule_dialog = true"
+            >
+              <div class="hint--top" aria-label="Scheduling options">
+                <div class="flex flex-row items-center ph2 gray hover-black">
+                  <i class="material-icons mr1">date_range</i> <span>Schedule</span>
+                </div>
               </div>
-            </div>
-          </el-button>
-          <el-button
-            type="text"
-            @click="show_pipe_deploy_dialog = true"
-          >
-            <div class="hint--top" aria-label="Deployment options">
-              <div class="flex flex-row items-center ph2 gray hover-black">
-                <i class="material-icons mr1">archive</i> <span>Deploy</span>
+            </el-button>
+            <el-button
+              type="text"
+              @click="show_pipe_deploy_dialog = true"
+            >
+              <div class="hint--top" aria-label="Deployment options">
+                <div class="flex flex-row items-center ph2 gray hover-black">
+                  <i class="material-icons mr1">archive</i> <span>Deploy</span>
+                </div>
               </div>
-            </div>
-          </el-button>
-          <transition name="el-zoom-in-top">
-            <div class="flex flex-row pl3" v-if="is_changed">
-              <el-button
-                size="medium"
-                class="ttu b"
-                @click="cancelChanges"
-              >
-                Cancel
-              </el-button>
-              <el-button
-                size="medium"
-                type="primary"
-                class="ttu b"
-                @click="saveChanges"
-              >
-                Save Changes
-              </el-button>
-            </div>
-          </transition>
+            </el-button>
+            <transition name="el-zoom-in-top">
+              <div class="flex flex-row pl3" v-if="is_changed">
+                <el-button
+                  size="medium"
+                  class="ttu b"
+                  @click="cancelChanges"
+                >
+                  Cancel
+                </el-button>
+                <el-button
+                  size="medium"
+                  type="primary"
+                  class="ttu b"
+                  @click="saveChanges"
+                >
+                  Save Changes
+                </el-button>
+              </div>
+            </transition>
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="center ph4 pb5"
+      class="center"
       style="max-width: 1440px"
       v-if="is_fetched"
     >

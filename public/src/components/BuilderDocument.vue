@@ -1,6 +1,7 @@
 <template>
   <div
-    class="bg-nearer-white pb4 overflow-y-auto relative"
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    style="padding-bottom: 8rem"
     :id="doc_id"
   >
     <div
@@ -15,14 +16,14 @@
       v-if="is_fetched"
     >
       <div
-        class="flex flex-row items-center center tc ph4"
+        class="flex flex-row items-center center tc"
         style="max-width: 1440px"
       >
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
       </div>
     </div>
     <div
-      class="center ph4 pb5"
+      class="center"
       style="max-width: 1440px"
       v-if="is_fetched"
     >
