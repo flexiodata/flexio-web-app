@@ -32,7 +32,7 @@ const mutations = {
 
   UPDATE_EDIT_PIPE (state, attrs) {
     // do this until we fix the object ref issue in the Flex.io JS SDK
-    var task_obj = _.get(pipe, 'task', {})
+    var task_obj = _.get(attrs, 'task', {})
     task_obj = _.cloneDeep(task_obj)
 
     state.edit_pipe = _.cloneDeep(attrs)
