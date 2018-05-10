@@ -1,7 +1,8 @@
 <template>
   <el-form
-    class="el-form-cozy"
+    class="el-form-compact"
     label-width="7rem"
+    size="small"
     :model="form_values"
     :rules="rules"
     v-if="form_values"
@@ -41,6 +42,14 @@
       </el-input>
     </el-form-item>
     <el-form-item
+      label="Scheduled"
+    >
+      <el-switch
+        active-color="#009900"
+        v-model="is_scheduled"
+      />
+    </el-form-item>
+    <el-form-item
       key="description"
       label="Description"
       prop="description"
@@ -57,6 +66,12 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+  import {
+    SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_STATUS_INACTIVE
+  } from '../constants/schedule'
+
   export default {
     watch: {
       form_values: {
@@ -76,8 +91,20 @@
       }
     },
     computed: {
+      ...mapState({
+        edit_pipe: state => state.pipe.edit_pipe
+      }),
       path() {
         return 'https://api.flex.io/v1/me/pipes/' + this.form_values.alias
+      },
+      is_scheduled: {
+        get() {
+          return _.get(this.edit_pipe, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+        },
+        set() {
+          var status = this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
+          _.set(this.form_values, 'schedule_status', status)
+        }
       }
     },
     methods: {

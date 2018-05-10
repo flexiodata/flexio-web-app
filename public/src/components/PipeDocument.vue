@@ -22,14 +22,6 @@
         >
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
           <div class="flex-none flex flex-row items-center pl2" @click.stop>
-            <div class="mh2" v-if="false">
-              <el-switch
-                class="hint--bottom"
-                active-color="#009900"
-                :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-                v-model="is_scheduled"
-              />
-            </div>
             <div class="mh2">
               <el-button
                 type="text"
@@ -192,10 +184,6 @@
   import Flexio from 'flexio-sdk-js'
   import { mapState, mapGetters } from 'vuex'
   import {
-    SCHEDULE_STATUS_ACTIVE,
-    SCHEDULE_STATUS_INACTIVE
-  } from '../constants/schedule'
-  import {
     PROCESS_STATUS_RUNNING,
     PROCESS_STATUS_FAILED,
     PROCESS_STATUS_COMPLETED,
@@ -279,15 +267,6 @@
       },
       is_code_changed() {
         return this.edit_code != this.orig_code
-      },
-      is_scheduled: {
-        get() {
-          return _.get(this.edit_pipe, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
-        },
-        set() {
-          var status = this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
-          _.set(this.edit_pipe, 'schedule_status', status)
-        }
       },
       is_changed() {
         var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
