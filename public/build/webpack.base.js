@@ -44,7 +44,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue'
+      'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue'
     }
   },
 
