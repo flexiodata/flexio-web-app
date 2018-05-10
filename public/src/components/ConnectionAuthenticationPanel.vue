@@ -43,7 +43,6 @@
           label-width="8rem"
           :model="$data"
           :rules="rules"
-          :status-icon="true"
         >
           <el-form-item
             label="Email address"
@@ -405,7 +404,7 @@
 
         rules: {
           email: [
-            { required: true, message: 'Please input an email address', trigger: 'blur' },
+            { required: true, message: 'Please input an email address' },
             { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
           ]
         }

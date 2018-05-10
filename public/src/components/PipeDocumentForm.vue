@@ -40,6 +40,14 @@
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
+      <span class="ml1">
+        <el-button
+          type="text"
+          @click="show_pipe_schedule_dialog = true"
+        >
+          Options...
+        </el-button>
+      </span>
     </el-form-item>
     <el-form-item
       label="Scheduled"
@@ -114,7 +122,7 @@
         form_values: null,
         rules: {
           name: [
-            { required: true, message: 'Please input a name', trigger: 'blur' }
+            { required: true, message: 'Please input a name' }
           ]
         }
       }
