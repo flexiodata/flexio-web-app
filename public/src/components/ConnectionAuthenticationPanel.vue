@@ -39,6 +39,7 @@
         v-if="is_smtp"
       >
         <el-form
+          ref="form"
           class="el-form-cozy"
           label-width="8rem"
           :model="$data"
@@ -505,6 +506,10 @@
         _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
           this[key] = val
         })
+
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
+        }
       },
       emitChange() {
         this.$emit('change', { connection_info: this.connection_info })
