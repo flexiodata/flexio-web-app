@@ -15,10 +15,14 @@
         v-model="is_scheduled"
       />
       <span
-        class="f5 pl2 pointer"
+        class="fw6 f5 pl2 pointer"
         @click.stop="is_scheduled = !is_scheduled"
       >
-        {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+        <transition name="el-zoom-in-center" mode="out-in">
+          <span v-bind:key="is_scheduled">
+            {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+          </span>
+        </transition>
       </span>
     </div>
     <div class="flex flex-row">
