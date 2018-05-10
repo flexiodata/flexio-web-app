@@ -21,7 +21,7 @@
     </el-form-item>
     <el-form-item
       key="alias"
-      label="Path"
+      label="API Endpoint"
       prop="alias"
     >
       <el-input
@@ -40,14 +40,12 @@
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
-      <span class="ml1">
-        <el-button
-          type="text"
-          @click="show_pipe_schedule_dialog = true"
-        >
-          Options...
-        </el-button>
-      </span>
+      <div
+        class="hint--bottom hint--large cursor-default"
+        :aria-label="path_tooltip"
+      >
+        <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
+      </div>
     </el-form-item>
     <el-form-item
       label="Scheduled"
@@ -136,8 +134,15 @@
         orig_pipe: state => state.pipe.orig_pipe,
         edit_pipe: state => state.pipe.edit_pipe
       }),
+      identifier() {
+        var alias = this.form_values.alias
+        return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
+      },
       path() {
-        return 'https://api.flex.io/v1/me/pipes/' + this.form_values.alias
+        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
+      path_tooltip() {
+        return 'This is the API endpoint for this pipe. To run this pipe via our REST API, append "/run" to this endpoint.'
       },
       is_scheduled: {
         get() {
