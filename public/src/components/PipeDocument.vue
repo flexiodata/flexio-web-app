@@ -22,26 +22,40 @@
         >
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
           <div class="flex-none flex flex-row items-center pl2" @click.stop>
-            <el-button
-              type="text"
-              @click="show_pipe_schedule_dialog = true"
-            >
-              <div class="hint--top" aria-label="Scheduling options">
-                <div class="flex flex-row items-center ph2-l gray hover-black">
-                  <i class="material-icons mr1">date_range</i> <span class="ttu fw6 f7 dn db-l">Schedule</span>
+            <div class="mh2" v-if="false">
+              <el-switch
+                class="hint--bottom"
+                active-color="#009900"
+                :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+                v-model="is_scheduled"
+              />
+            </div>
+            <div class="mh2">
+              <el-button
+                type="text"
+                class="ml4"
+                @click="show_pipe_schedule_dialog = true"
+              >
+                <div class="hint--bottom" aria-label="Scheduling options">
+                  <div class="flex flex-row items-center gray hover-black">
+                    <i class="material-icons mr1">date_range</i> <span class="ttu fw6 f7 dn db-l">Schedule</span>
+                  </div>
                 </div>
-              </div>
-            </el-button>
-            <el-button
-              type="text"
-              @click="show_pipe_deploy_dialog = true"
-            >
-              <div class="hint--top" aria-label="Deployment options">
-                <div class="flex flex-row items-center ph2-l gray hover-black">
-                  <i class="material-icons mr1">archive</i> <span class="ttu fw6 f7 dn db-l">Deploy</span>
+              </el-button>
+            </div>
+            <div class="mh2">
+              <el-button
+                type="text"
+                class="ml4"
+                @click="show_pipe_deploy_dialog = true"
+              >
+                <div class="hint--bottom" aria-label="Deployment options">
+                  <div class="flex flex-row items-center gray hover-black">
+                    <i class="material-icons mr1">archive</i> <span class="ttu fw6 f7 dn db-l">Deploy</span>
+                  </div>
                 </div>
-              </div>
-            </el-button>
+              </el-button>
+            </div>
             <transition name="el-zoom-in-top">
               <div class="flex flex-row pl3" v-if="is_changed">
                 <el-button
@@ -178,6 +192,10 @@
   import Flexio from 'flexio-sdk-js'
   import { mapState, mapGetters } from 'vuex'
   import {
+    SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_STATUS_INACTIVE
+  } from '../constants/schedule'
+  import {
     PROCESS_STATUS_RUNNING,
     PROCESS_STATUS_FAILED,
     PROCESS_STATUS_COMPLETED,
@@ -261,6 +279,15 @@
       },
       is_code_changed() {
         return this.edit_code != this.orig_code
+      },
+      is_scheduled: {
+        get() {
+          return _.get(this.edit_pipe, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+        },
+        set() {
+          var status = this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
+          _.set(this.edit_pipe, 'schedule_status', status)
+        }
       },
       is_changed() {
         var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
