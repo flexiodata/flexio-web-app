@@ -48,11 +48,11 @@
                 </div>
               </el-button>
             </div>
-            <transition name="el-zoom-in-top">
-              <div class="flex flex-row pl3" v-if="is_changed">
+              <div class="flex flex-row pl3">
                 <el-button
                   size="medium"
                   class="ttu b"
+                  :disabled="!is_changed"
                   @click="cancelChanges"
                 >
                   Cancel
@@ -61,12 +61,12 @@
                   size="medium"
                   type="primary"
                   class="ttu b"
+                  :disabled="!is_changed"
                   @click="saveChanges"
                 >
                   Save
                 </el-button>
               </div>
-            </transition>
           </div>
         </div>
       </div>
@@ -379,5 +379,6 @@
     transition: all 0.2s ease
 
   .sticky.js-is-sticky
+  .sticky.js-is-stuck
     box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2)
 </style>
