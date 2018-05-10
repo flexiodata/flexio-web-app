@@ -27,8 +27,8 @@
               @click="show_pipe_schedule_dialog = true"
             >
               <div class="hint--top" aria-label="Scheduling options">
-                <div class="flex flex-row items-center ph2 gray hover-black">
-                  <i class="material-icons mr1">date_range</i> <span>Schedule</span>
+                <div class="flex flex-row items-center ph2-l gray hover-black">
+                  <i class="material-icons mr1">date_range</i> <span class="ttu fw6 f7 dn db-l">Schedule</span>
                 </div>
               </div>
             </el-button>
@@ -37,8 +37,8 @@
               @click="show_pipe_deploy_dialog = true"
             >
               <div class="hint--top" aria-label="Deployment options">
-                <div class="flex flex-row items-center ph2 gray hover-black">
-                  <i class="material-icons mr1">archive</i> <span>Deploy</span>
+                <div class="flex flex-row items-center ph2-l gray hover-black">
+                  <i class="material-icons mr1">archive</i> <span class="ttu fw6 f7 dn db-l">Deploy</span>
                 </div>
               </div>
             </el-button>
@@ -57,7 +57,7 @@
                   class="ttu b"
                   @click="saveChanges"
                 >
-                  Save Changes
+                  Save
                 </el-button>
               </div>
             </transition>
@@ -259,11 +259,6 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
-      is_superuser() {
-        // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
-        return _.includes(user_email, '@flex.io')
-      },
       is_code_changed() {
         return this.edit_code != this.orig_code
       },
@@ -276,6 +271,11 @@
 
       // -- all of the below computed values pertain to getting the preview --
 
+      is_superuser() {
+        // limit to @flex.io users for now
+        var user_email = _.get(this.getActiveUser(), 'email', '')
+        return _.includes(user_email, '@flex.io')
+      },
       active_process() {
         return _.last(this.getActiveDocumentProcesses())
       },

@@ -2,8 +2,8 @@
   <el-form
     class="el-form-cozy"
     label-width="7rem"
-    label-position="left"
     :model="form_values"
+    :rules="rules"
     v-if="form_values"
   >
     <el-form-item
@@ -67,7 +67,12 @@
     },
     data() {
       return {
-        form_values: null
+        form_values: null,
+        rules: {
+          name: [
+            { required: true, message: 'Please input a name', trigger: 'blur' }
+          ]
+        }
       }
     },
     computed: {
