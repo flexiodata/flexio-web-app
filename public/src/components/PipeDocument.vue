@@ -149,6 +149,22 @@
       </div>
     </div>
 
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_schedule_dialog"
+    >
+      <PipeSchedulePanel
+        :pipe="edit_pipe"
+        @close="show_pipe_schedule_dialog = false"
+        @cancel="show_pipe_schedule_dialog = false"
+        @submit="updatePipeSchedule"
+      />
+    </el-dialog>
+
     <!-- pipe deploy dialog -->
     <el-dialog
       custom-class="no-header no-footer"
@@ -179,6 +195,7 @@
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
+  import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
 
@@ -187,6 +204,7 @@
       Spinner,
       CodeEditor,
       PipeDocumentForm,
+      PipeSchedulePanel,
       PipeDeployPanel,
       PipeContent
     },
@@ -342,6 +360,15 @@
             this.$nextTick(() => { this.is_running = false })
           }
         })
+      },
+      updatePipeSchedule(attrs) {
+        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.show_pipe_schedule_dialog = false
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
