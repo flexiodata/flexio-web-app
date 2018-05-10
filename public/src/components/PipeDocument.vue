@@ -21,8 +21,8 @@
           style="max-width: 1440px"
         >
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
-          <div class="flex-none flex flex-row items-center pl2" v-if="false">
-            <div class="mh2">
+          <div class="flex-none flex flex-row items-center pl2">
+            <div class="mh2" v-if="false">
               <el-button
                 type="text"
                 class="ml4"
@@ -35,7 +35,7 @@
                 </div>
               </el-button>
             </div>
-            <div class="mh2">
+            <div class="mh2" v-if="false">
               <el-button
                 type="text"
                 class="ml4"
