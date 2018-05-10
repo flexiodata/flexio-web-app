@@ -20,15 +20,23 @@ const mutations = {
   },
 
   INIT_PIPE (state, pipe) {
+    // do this until we fix the object ref issue in the Flex.io JS SDK
+    var task_obj = _.get(pipe, 'task', {})
+    task_obj = _.cloneDeep(task_obj)
+
     state.eid = _.get(pipe, 'eid', '')
     state.edit_pipe = _.cloneDeep(pipe)
-    state.edit_code = Flexio.pipe(_.get(pipe, 'task', {})).toCode()
+    state.edit_code = Flexio.pipe(task_obj).toCode()
     state.fetched = true
   },
 
   UPDATE_EDIT_PIPE (state, attrs) {
+    // do this until we fix the object ref issue in the Flex.io JS SDK
+    var task_obj = _.get(pipe, 'task', {})
+    task_obj = _.cloneDeep(task_obj)
+
     state.edit_pipe = _.cloneDeep(attrs)
-    state.edit_code = Flexio.pipe(_.get(attrs, 'task', {})).toCode()
+    state.edit_code = Flexio.pipe(task_obj).toCode()
   },
 
   UPDATE_CODE (state, code) {

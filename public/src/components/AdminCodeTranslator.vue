@@ -72,7 +72,10 @@
           var task_str = JSON.stringify(task, null, 2)
 
           this.json_str = task_str
-          this.reverse_sdk_str = Flexio.pipe(task).toCode()
+
+          // do this until we fix the object ref issue in the Flex.io JS SDK
+          var task_obj = _.cloneDeep(task)
+          this.reverse_sdk_str = Flexio.pipe(task_obj).toCode()
         }
         catch(e)
         {

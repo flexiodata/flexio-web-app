@@ -189,7 +189,9 @@
         })
       },
       getAnalyticsPayload(pipe) {
-        var edit_code = Flexio.pipe(pipe.task).toCode()
+        // do this until we fix the object ref issue in the Flex.io JS SDK
+        var task_obj = _.cloneDeep(pipe.task)
+        var edit_code = Flexio.pipe(task_obj).toCode()
         var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias'])
 
         _.assign(analytics_payload, {

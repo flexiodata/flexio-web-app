@@ -98,8 +98,10 @@
         return _.get(this.pipe, 'alias', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
+        // do this until we fix the object ref issue in the Flex.io JS SDK
+        var task_obj = _.cloneDeep(this.pipe.task)
         var code = "Flexio.setup('" + this.api_key + "')\n\n"
-        code += Flexio.pipe(this.pipe.task).toCode()
+        code += Flexio.pipe(task_obj).toCode()
         code += '\n  .run()'
         return code
       },

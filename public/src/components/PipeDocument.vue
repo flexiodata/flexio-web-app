@@ -240,7 +240,10 @@
         return this.getOriginalPipe()
       },
       orig_code() {
-        return Flexio.pipe(_.get(this.orig_pipe, 'task', {})).toCode()
+        // do this until we fix the object ref issue in the Flex.io JS SDK
+        var task_obj = _.get(this.orig_pipe, 'task', {})
+        task_obj = _.cloneDeep(task_obj)
+        return Flexio.pipe(task_obj).toCode()
       },
       edit_code: {
         get () {

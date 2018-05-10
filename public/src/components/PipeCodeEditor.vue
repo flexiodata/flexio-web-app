@@ -77,6 +77,7 @@
       }
     },
     data() {
+      // do this until we fix the object ref issue in the Flex.io JS SDK
       var items = _.cloneDeep(this.tasks)
       var edit_code = Flexio.pipe({ op: 'sequence', items }).toCode()
 
@@ -87,6 +88,7 @@
     },
     computed: {
       orig_code() {
+        // do this until we fix the object ref issue in the Flex.io JS SDK
         var items = _.cloneDeep(this.tasks)
         return Flexio.pipe({ op: 'sequence', items }).toCode()
       },
