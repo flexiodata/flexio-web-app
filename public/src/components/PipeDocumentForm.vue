@@ -35,17 +35,18 @@
             slot="append"
             class="hint--top"
             aria-label="Copy to Clipboard"
-            size="small"
             :data-clipboard-text="path"
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
-      <div
-        class="hint--bottom hint--large cursor-default"
-        :aria-label="path_tooltip"
-      >
-        <i class="material-icons blue v-mid" style="font-size: 21px">info</i>
-      </div>
+      <span class="ml1">
+        <el-button
+          type="text"
+          @click="show_pipe_deploy_dialog = true"
+        >
+          How do I deploy this pipe?
+        </el-button>
+      </span>
     </el-form-item>
     <el-form-item
       label="Scheduled"
@@ -92,6 +93,21 @@
         @submit="updatePipeSchedule"
       />
     </el-dialog>
+
+    <!-- pipe deploy dialog -->
+    <el-dialog
+      custom-class="no-header no-footer"
+      width="56rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_deploy_dialog"
+    >
+      <PipeDeployPanel
+        :pipe="edit_pipe"
+        @close="show_pipe_deploy_dialog = false"
+      />
+    </el-dialog>
+
   </el-form>
 </template>
 
@@ -102,10 +118,12 @@
     SCHEDULE_STATUS_INACTIVE
   } from '../constants/schedule'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
 
   export default {
     components: {
-      PipeSchedulePanel
+      PipeSchedulePanel,
+      PipeDeployPanel
     },
     watch: {
       orig_pipe: {
@@ -121,6 +139,7 @@
     data() {
       return {
         show_pipe_schedule_dialog: false,
+        show_pipe_deploy_dialog: false,
         form_values: null,
         rules: {
           name: [
