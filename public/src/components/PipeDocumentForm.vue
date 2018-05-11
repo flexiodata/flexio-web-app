@@ -113,14 +113,14 @@
 
 <script>
   import { mapState } from 'vuex'
-  import {
-    SCHEDULE_STATUS_ACTIVE,
-    SCHEDULE_STATUS_INACTIVE
-  } from '../constants/schedule'
+  import { SCHEDULE_STATUS_ACTIVE, SCHEDULE_STATUS_INACTIVE } from '../constants/schedule'
+  import { OBJECT_TYPE_PIPE } from '../constants/object-type'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
+  import Validation from './mixins/validation'
 
   export default {
+    mixins: [Validation],
     components: {
       PipeSchedulePanel,
       PipeDeployPanel
@@ -144,6 +144,9 @@
         rules: {
           name: [
             { required: true, message: 'Please input a name' }
+          ],
+          alias: [
+            { validator: this.formValidateAlias }
           ]
         }
       }
@@ -191,6 +194,17 @@
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
 
         this.show_pipe_schedule_dialog = false
+      },
+      formValidateAlias(rule, value, callback) {
+        if (value.length == 0)
+          return
+
+        this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
+          var message = _.get(errors, 'alias.message', '')
+          if (message.length > 0) {
+            callback(new Error(message))
+          }
+        })
       }
     }
   }
