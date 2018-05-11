@@ -4,9 +4,11 @@ import Flexio from 'flexio-sdk-js'
 const state = {
   eid: '',
   orig_pipe: {},
+  orig_code: '',
   edit_pipe: {},
   edit_code: '',
   syntax_error: '',
+  edit_keys: ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task'],
   fetching: false,
   fetched: false
 }
@@ -21,24 +23,24 @@ const mutations = {
   },
 
   INIT_PIPE (state, pipe) {
-    // do this until we fix the object ref issue in the Flex.io JS SDK
-    var task_obj = _.get(pipe, 'task', {})
-    task_obj = _.cloneDeep(task_obj)
-
     state.eid = _.get(pipe, 'eid', '')
-    state.orig_pipe = _.cloneDeep(pipe)
-    state.edit_pipe = _.cloneDeep(pipe)
-    state.edit_code = Flexio.pipe(task_obj).toCode()
+
+    var pipe = _.pick(pipe, state.edit_keys)
+    var task = _.get(pipe, 'task', {})
+
+    state.orig_pipe = pipe
+    state.orig_code = Flexio.pipe(task).toCode()
+    state.edit_pipe = pipe
+    state.edit_code = Flexio.pipe(task).toCode()
     state.fetched = true
   },
 
-  UPDATE_EDIT_PIPE (state, attrs) {
-    // do this until we fix the object ref issue in the Flex.io JS SDK
-    var task_obj = _.get(attrs, 'task', {})
-    task_obj = _.cloneDeep(task_obj)
+  UPDATE_EDIT_PIPE (state, pipe) {
+    var pipe = _.pick(pipe, state.edit_keys)
+    var task = _.get(pipe, 'task', {})
 
-    state.edit_pipe = _.cloneDeep(attrs)
-    state.edit_code = Flexio.pipe(task_obj).toCode()
+    state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
+    state.edit_code = Flexio.pipe(task).toCode()
   },
 
   UPDATE_CODE (state, code) {
@@ -72,8 +74,16 @@ const mutations = {
 const actions = {}
 
 const getters = {
-  getOriginalPipe (state, getters, root_state) {
+  getStorePipe (state, getters, root_state) {
     return _.get(root_state, 'objects.' + state.eid, null)
+  },
+  isCodeChanged (state, getters, root_state) {
+    return state.edit_code != state.orig_code
+  },
+  isChanged (state, getters, root_state) {
+    var pipe1 = _.omit(state.edit_pipe, ['task'])
+    var pipe2 = _.omit(state.orig_pipe, ['task'])
+    return state.edit_code != state.orig_code || !_.isEqual(pipe1, pipe2)
   }
 }
 

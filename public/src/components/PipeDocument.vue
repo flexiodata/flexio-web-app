@@ -241,7 +241,9 @@
     },
     computed: {
       ...mapState({
+        orig_pipe: state => state.pipe.orig_pipe,
         edit_pipe: state => state.pipe.edit_pipe,
+        edit_keys: state => state.pipe.edit_keys,
         is_fetching: state => state.pipe.fetching,
         is_fetched: state => state.pipe.fetched
       }),
@@ -252,36 +254,27 @@
         return 'pipe-doc-' + this.eid
       },
       store_pipe() {
-        return this.getOriginalPipe()
-      },
-      orig_code() {
-        // do this until we fix the object ref issue in the Flex.io JS SDK
-        var task_obj = _.get(this.store_pipe, 'task', {})
-        task_obj = _.cloneDeep(task_obj)
-        return Flexio.pipe(task_obj).toCode()
+        return this.getStorePipe()
       },
       edit_code: {
-        get () {
+        get() {
           return this.$store.state.pipe.edit_code
         },
-        set (value) {
+        set(value) {
           this.$store.commit('pipe/UPDATE_CODE', value)
         }
       },
       title() {
-        return _.get(this.store_pipe, 'name', '')
+        return _.get(this.orig_pipe, 'name', '')
       },
       is_configure_expanded() {
         return this.collapse_configuration.indexOf('configuration') != -1
       },
       is_code_changed() {
-        return this.edit_code != this.orig_code
+        return this.isCodeChanged()
       },
       is_changed() {
-        var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
-        var pipe1 = _.pick(this.edit_pipe, keys)
-        var pipe2 = _.pick(this.store_pipe, keys)
-        return this.is_code_changed || !_.isEqual(pipe1, pipe2)
+        return this.isChanged()
       },
 
       // -- all of the below computed values pertain to getting the preview --
@@ -319,7 +312,9 @@
     },
     methods: {
       ...mapGetters('pipe', [
-        'getOriginalPipe',
+        'getStorePipe',
+        'isCodeChanged',
+        'isChanged'
       ]),
       ...mapGetters([
         'getActiveDocumentProcesses',
@@ -374,9 +369,8 @@
         this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
       },
       saveChanges() {
-        var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task']
-        var eid = _.get(this.edit_pipe, 'eid', '')
-        var attrs = _.pick(this.edit_pipe, keys)
+        var eid = this.eid
+        var attrs = _.pick(this.edit_pipe, this.edit_keys)
 
         // don't POST null values
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
