@@ -100,6 +100,7 @@
                       style="width: 5rem"
                       type="primary"
                       size="small"
+                      :disabled="has_errors"
                       @click.stop="runPipe"
                       v-if="is_configure_expanded"
                     >
@@ -117,7 +118,7 @@
                 v-model="edit_code"
               />
               <transition name="el-zoom-in-top">
-                <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
             <div
