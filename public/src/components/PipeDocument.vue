@@ -61,7 +61,7 @@
                   size="medium"
                   type="primary"
                   class="ttu b"
-                  :disabled="!is_changed"
+                  :disabled="!is_changed || has_errors"
                   @click="saveChanges"
                 >
                   Save
@@ -107,12 +107,17 @@
                 </div>
               </div>
             </template>
-            <CodeEditor
-              class="mt3 bg-white ba b--black-10 overflow-y-auto"
-              lang="javascript"
-              :options="{ minRows: 12, maxRows: 24 }"
-              v-model="edit_code"
-            />
+            <div>
+              <CodeEditor
+                class="mt3 bg-white ba b--black-10 overflow-y-auto"
+                lang="javascript"
+                :options="{ minRows: 12, maxRows: 24 }"
+                v-model="edit_code"
+              />
+              <transition name="el-zoom-in-top">
+                <div class="f7 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
+              </transition>
+            </div>
             <div
               class="mt3 bg-white ba b--black-10 flex flex-column justify-center"
               style="height: 300px"
@@ -241,6 +246,7 @@
         orig_pipe: state => state.pipe.orig_pipe,
         edit_pipe: state => state.pipe.edit_pipe,
         edit_keys: state => state.pipe.edit_keys,
+        syntax_error: state => state.pipe.syntax_error,
         is_fetching: state => state.pipe.fetching,
         is_fetched: state => state.pipe.fetched
       }),
@@ -272,6 +278,9 @@
       },
       is_changed() {
         return this.isChanged()
+      },
+      has_errors() {
+        return this.syntax_error.length > 0
       },
 
       // -- all of the below computed values pertain to getting the preview --
