@@ -410,7 +410,7 @@
   .sticky
   .sticky h1
   .sticky .el-button
-    transition: all 0.2s ease
+    transition: all 0.15s ease
 
   .sticky.js-is-sticky
   .sticky.js-is-stuck
