@@ -32,6 +32,7 @@ const mutations = {
     state.orig_code = Flexio.pipe(task).toCode()
     state.edit_pipe = pipe
     state.edit_code = Flexio.pipe(task).toCode()
+    state.syntax_error = ''
     state.fetched = true
   },
 
