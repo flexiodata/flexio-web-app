@@ -213,9 +213,6 @@
         handler: 'loadPipe',
         immediate: true
       },
-      store_pipe: {
-        handler: 'initPipe'
-      },
       is_fetched: {
         handler: 'initSticky',
         immediate: true
@@ -333,9 +330,6 @@
           }
         })
       },
-      initPipe(pipe) {
-        this.$store.commit('pipe/INIT_PIPE', pipe)
-      },
       runPipe() {
         this.$store.track('Ran Pipe', {
           title: this.title,
@@ -377,7 +371,7 @@
 
         return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
           if (response.ok) {
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', response.body)
+            this.$store.commit('pipe/INIT_PIPE', response.body)
           } else {
             // TODO: add error handling
           }
