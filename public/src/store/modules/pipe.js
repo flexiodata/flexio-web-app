@@ -8,7 +8,7 @@ const state = {
   edit_pipe: {},
   edit_code: '',
   syntax_error: '',
-  edit_keys: ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task'],
+  edit_keys: ['eid', 'name', 'alias', 'description', 'schedule', 'schedule_status', 'task'],
   fetching: false,
   fetched: false
 }
