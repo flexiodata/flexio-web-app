@@ -20,10 +20,10 @@ class Keyword
 {
     public static function exists(string $word) : bool
     {
-        if (array_key_exists($word, self::$reserved_words))
+        if (isset(self::$reserved_words[$word]))
             return true;
 
-        if (array_key_exists($word, self::$illegal_words))
+        if (isset(self::$illegal_words[$word]))
             return true;
 
         return false;
