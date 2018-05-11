@@ -277,11 +277,18 @@
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         active_prompt: state => state.builder.active_prompt,
-        title: state => state.builder.def.title,
-        code: state => state.builder.code
+        title: state => state.builder.def.title
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
+      },
+      code: {
+        get() {
+          return this.$store.state.builder.code
+        },
+        set(value) {
+          // read only
+        }
       }
     },
     methods: {
