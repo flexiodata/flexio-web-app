@@ -48,7 +48,8 @@
                 </div>
               </el-button>
             </div>
-              <div class="flex flex-row pl3">
+            <transition name="el-zoom-in-top">
+              <div class="flex flex-row pl3" v-if="is_changed">
                 <el-button
                   size="medium"
                   class="ttu b"
@@ -67,6 +68,7 @@
                   Save
                 </el-button>
               </div>
+            </transition>
           </div>
         </div>
       </div>
