@@ -278,23 +278,17 @@ class System
 
     private static function validateIdentifier(string $type, string $value, string &$message = '') : bool
     {
-        // check for valid identifier
-        if (\Flexio\Base\Identifier::isValid($value, $message) === false)
-        {
-            /*
-            switch ($type)
-            {
-                case 'identifier':
-                    $message = _('An identifier must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
-                    break;
-                case 'username':
-                    $message = _('A username must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
-                    break;
-            }
-            */
+        $prefix = 'An identifier';
 
-            return false;
+        switch ($type)
+        {
+            case 'identifier': $prefix = 'An identifier';  break;
+            case 'username':   $prefix = 'A username';     break;
         }
+
+        // check for valid identifier
+        if (\Flexio\Base\Identifier::isValid($value, $message, $prefix) === false)
+            return false;
 
         // check if identifier already exists
         if (\Flexio\Object\User::getEidFromUsername($value) !== false)
@@ -338,12 +332,11 @@ class System
     {
         try
         {
-            if (\Flexio\Base\Identifier::isValid($value, $message) === false)
-            {
-                // invalid identifier
-                //$message = _('An alias must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+            $prefix = 'An alias';
+
+            // check for valid identifier
+            if (\Flexio\Base\Identifier::isValid($value, $message, $prefix) === false)
                 return false;
-            }
 
             // an alias can only be specific for a valid user; if the user doesn't load
             // an exception will be thrown

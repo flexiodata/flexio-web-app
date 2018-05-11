@@ -23,7 +23,7 @@ class Identifier
         return \Flexio\Base\Util::generateHandle();
     }
 
-    public static function isValid($identifier, &$message = '') : bool
+    public static function isValid($identifier, &$message = '', $prefix = 'An identifier') : bool
     {
         // identifiers (e.g. usernames, or other 'named handles') must
         // follow the following rules:
@@ -41,13 +41,13 @@ class Identifier
             return false;
         if ($identifier !== strtolower($identifier))
         {
-            $message = _('An identifier must be lowercase');
+            $message = _("$prefix must be lowercase");
             return false;
         }
 
         if (\Flexio\Base\Eid::isValid($identifier))
         {
-            $message = _('An identifier must not be an eid');
+            $message = _("$prefix must not be an eid");
             return false;
         }
 
@@ -57,7 +57,7 @@ class Identifier
         $identifier_length = strlen($identifier);
         if ($identifier_length < $identifier_minlength || $identifier_length > $identifier_maxlength)
         {
-            $message = _('An identifier must be between 3 and 80 characters');
+            $message = _("$prefix must be between 3 and 80 characters");
             return false;
         }
 
@@ -66,13 +66,13 @@ class Identifier
         // or hyphen
         if (!preg_match('/^[a-z][a-z0-9_-]{2,79}$/', $identifier))
         {
-            $message = _('An identifier may only contain letters, numbers, hyphens and underscores');
+            $message = _("$prefix may only contain letters, numbers, hyphens and underscores");
             return false;
         }
 
         if (self::isKeyWord($identifier))
         {
-            $message = _('An identifier must not be a reserved or illegal word');
+            $message = _("$prefix must not be a reserved or illegal word");
             return false;
         }
 
