@@ -279,8 +279,9 @@ class System
     private static function validateIdentifier(string $type, string $value, string &$message = '') : bool
     {
         // check for valid identifier
-        if (\Flexio\Base\Identifier::isValid($value) === false)
+        if (\Flexio\Base\Identifier::isValid($value, $message) === false)
         {
+            /*
             switch ($type)
             {
                 case 'identifier':
@@ -290,6 +291,7 @@ class System
                     $message = _('A username must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
                     break;
             }
+            */
 
             return false;
         }
@@ -336,11 +338,11 @@ class System
     {
         try
         {
-            if (\Flexio\Base\Identifier::isValid($value) === false)
+            if (\Flexio\Base\Identifier::isValid($value, $message) === false)
             {
                 // invalid identifier
-                $valid = false;
-                $message = _('An alias must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+                //$message = _('An alias must be lowercase, start with a letter, and contain between 3 and 80 characters that are either letters, numbers, underscores or hyphens');
+                return false;
             }
 
             // an alias can only be specific for a valid user; if the user doesn't load
@@ -351,18 +353,17 @@ class System
                 \Flexio\Object\Pipe::getEidFromName($user->getEid(), $value) !== false)
             {
                 // identifier already exists
-                $valid = false;
                 $message = _('This alias is already taken.');
+                return false;
             }
 
             if (($eid_type == \Model::TYPE_CONNECTION || $eid_type == \Model::TYPE_UNDEFINED) &&
                 \Flexio\Object\Connection::getEidFromName($user->getEid(), $value) !== false)
             {
                 // identifier already exists
-                $valid = false;
                 $message = _('This alias is already taken.');
+                return false;
             }
-
         }
         catch (\Flexio\Base\Exception $e)
         {
