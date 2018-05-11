@@ -1,17 +1,17 @@
 <template>
-  <div class="cursor-default" v-if="show_breadcrumbs">
+  <div class="cursor-default lh-title f7" v-if="show_breadcrumbs">
     <router-link
-      class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns link b--black-10 bl mid-gray hover-black"
+      class="flex flex-row items-center link mid-gray hover-black"
       :to="home_link"
     >
       <i
-        class="material-icons hint--bottom"
+        class="material-icons md-18 hint--bottom"
         :aria-label="home_title"
       >
         home
       </i>
     </router-link>
-    <i class="material-icons md-24 black-20 rotate-270">expand_more</i>
+    <i class="material-icons md-18 black-20 rotate-270">expand_more</i>
     <div class="dib mid-gray truncate">{{doc_name}}</div>
   </div>
 </template>
