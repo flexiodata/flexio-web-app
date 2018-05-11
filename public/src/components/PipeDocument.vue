@@ -408,9 +408,16 @@
 
 <style lang="stylus" scoped>
   .sticky
+  .sticky h1
+  .sticky .el-button
     transition: all 0.2s ease
 
   .sticky.js-is-sticky
   .sticky.js-is-stuck
     box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2)
+    h1
+      font-size: 1.25em
+    .el-button
+      padding: 9px 15px
+
 </style>
