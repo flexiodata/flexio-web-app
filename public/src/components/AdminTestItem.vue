@@ -9,7 +9,7 @@
         >chevron_right</i>
       </span>
       <span class="f6 fw6 mr2">{{item.id}}</span>
-      <spinner :size="24" v-if="item.is_running"></spinner>
+      <Spinner :size="16" :line-size="2" v-if="item.is_running" />
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f7 fw6">{{item.message}}</div>
       <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
@@ -25,7 +25,7 @@
           <td class="v-top f6 b w3">{{detail.name}}</td>
           <td class="v-top f6 min-w6 mw6">
             <div>{{detail.description}}</div>
-            <div class="flex flex-row mr3 max-h4" style="margin: 2px 0" v-if="!detail.passed && detail.message && detail.message.length > 0">
+            <div class="flex flex-row mr3" style="margin: 2px 0; max-height: 8rem" v-if="!detail.passed && detail.message && detail.message.length > 0">
               <div class="f6 monospace overflow-auto ba b--black-40 bg-white-60" style="padding: 2px 3px">
                 {{detail.message}}
               </div>
@@ -94,22 +94,19 @@
   }
 </script>
 
-<style lang="less">
-  .css-test-success {
+<style lang="stylus" scoped>
+  .css-test-success
     background-color: rgba(0,255,0,0.1)
-  }
-  .css-test-failure {
+
+  .css-test-failure
     background-color: rgba(255,0,0,0.1)
-  }
-  .css-test-error {
+
+  .css-test-error
     background-color: rgba(255,255,0,0.1)
-  }
-  .css-test-table {
-    tr:hover {
-      background-color: rgba(0,0,0,0.1);
-    }
-    td {
+
+  .css-test-table
+    tr:hover
+      background-color: rgba(0,0,0,0.1)
+    td
       padding: 0 0 0 3px;
-    }
-  }
 </style>

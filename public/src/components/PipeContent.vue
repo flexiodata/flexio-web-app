@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-column justify-center bg-white ba b--black-10" style="height: 200px" v-if="is_fetching">
-    <spinner message="Loading preview..." />
+  <div class="flex flex-column justify-center bg-white ba b--black-10" :style="inner_style" v-if="is_fetching">
+    <Spinner size="large" message="Loading preview..." />
   </div>
   <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" :style="inner_style" class="dib">
@@ -12,7 +12,7 @@
     <iframe :stream-eid="streamEid" :src="stream_content_url" class="absolute top-0 left-0 w-100 h-100" height="100%" width="100%" frameborder="0" allowfullscreen></iframe>
   </div>
   <div v-else-if="is_json || is_html || is_text" :style="inner_style" class="bg-white ba b--black-10">
-    <stream-text
+    <StreamText
       :stream-eid="streamEid"
       :content-url="stream_content_url"
       :query-params="stream_query_params"
@@ -21,7 +21,7 @@
     />
   </div>
   <div v-else-if="is_table" :style="inner_style" class="bg-white ba b--black-10">
-    <grid
+    <Grid
       :data-url="stream_content_url"
       :live-scroll="false"
     />

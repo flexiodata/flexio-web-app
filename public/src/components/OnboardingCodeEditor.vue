@@ -5,7 +5,7 @@
       <button
         type="button"
         class="btn border-box no-select pointer lh-copy white bg-black-20 hover-bg-blue darken-10"
-        style="padding: 1px 12px"
+        style="padding: 1px 12px 2px"
         @click="$emit('save')"
         v-if="show_save_button"
       ><span class="f6 ttu b">Save &amp; Deploy</span></button>
@@ -13,7 +13,7 @@
         type="button"
         aria-label="Copy to Clipboard"
         class="btn border-box no-select pointer lh-copy white bg-black-20 hover-bg-blue darken-10 hint--top clipboardjs"
-        style="padding: 1px 12px"
+        style="padding: 1px 12px 2px"
         :class="show_run_button || show_see_it_work_button ? '' : 'br2 br--top br--right'"
         :data-clipboard-target="'#'+textarea_id"
         @click="copy"
@@ -22,41 +22,41 @@
       <button
         type="button"
         class="border-box no-select pointer lh-copy white bg-blue darken-10"
-        style="padding: 1px 12px"
+        style="padding: 1px 12px 2px"
         :class="show_see_it_work_button ? '' : 'br2 br--top br--right'"
         @click="run"
         v-if="show_run_button"
       ><span class="f6 ttu b">Run</span></button>
       <a
         class="border-box no-select pointer lh-copy br2 br--top br--right white bg-blue darken-10"
-        style="padding: 1px 12px"
+        style="padding: 1px 12px 2px"
         target="_blank"
         :href="externalLink"
         v-if="show_see_it_work_button"
       ><span class="f6 ttu b">See It Work</span></a>
     </div>
     <h4 class="mt0" v-if="showTitle && title.length > 0">{{title}}</h4>
-    <div v-if="showDescription && description.length > 0">
-      <pre><code class="db ph3">{{description}}</code></pre>
-      <div class="mv3 bb b--black-10"></div>
-    </div>
-    <div class="relative bg-white b--white-box ba lh-title" :style="cstyle" v-if="isEditable">
-      <code-editor
-        ref="code"
+    <div
+      class="relative bg-white css-dashboard-box lh-title"
+      v-if="isEditable"
+    >
+      <CodeEditor
         lang="javascript"
-        :val="edit_code"
-        :options="{ minHeight: 300 }"
-        @change="updateCode"
+        v-model="edit_code"
         v-if="is_inited"
       />
     </div>
-    <div class="relative pv2 ph3 bg-near-white br2 overflow-x-auto" :style="cstyle" v-else>
+    <div
+      class="relative pv2 ph3 bg-near-white br2 overflow-x-auto"
+      :style="label.length > 0 ? 'padding-top: 20px' : ''"
+      v-else
+    >
       <pre class="f7 lh-title"><code class="db" style="white-space: pre-wrap" spellcheck="false">{{edit_code}}</code></pre>
     </div>
-    <div class="mt3 pa3 bg-white ba b--black-10" v-if="is_loading">
+    <div class="mt3 pa3 bg-white css-dashboard-box" v-if="is_loading">
       <div class="v-mid fw6 dark-gray"><span class="fa fa-spin fa-spinner"></span> Running...</div>
     </div>
-    <div class="mt3 pa3 bg-white ba b--black-10" v-else-if="has_text_result || has_img_src || has_pdf_src">
+    <div class="mt3 pa3 bg-white css-dashboard-box" v-else-if="has_text_result || has_img_src || has_pdf_src">
       <div class="flex flex-row mb2">
         <h4 class="flex-fill mv0">Output</h4>
         <div>
@@ -97,10 +97,6 @@
         type: String,
         default: ''
       },
-      'description': {
-        type: String,
-        default: ''
-      },
       'label': {
         type: String,
         default: ''
@@ -108,10 +104,6 @@
       'cls': {
         type: String,
         default: 'relative pa3 bg-near-white br2 box-shadow'
-      },
-      'sty': {
-        type: String,
-        default: ''
       },
       'code': {
         type: String,
@@ -135,11 +127,13 @@
       'sdk-options': {
         type: Object,
         default: () => {
-          if (window.location.hostname == 'www.flex.io') {
-            return { host: 'www.flex.io' }
+          switch (window.location.hostname) {
+            case 'localhost':    return { host: 'localhost', insecure: true }
+            case 'test.flex.io': return { host: 'test.flex.io' }
+            case 'www.flex.io':  return { host: 'www.flex.io' }
           }
 
-          return { host: 'test.flex.io' }
+          return {}
         }
       },
       'response-type': {
@@ -183,9 +177,8 @@
       CodeEditor
     },
     watch: {
-      code(val, old_val) {
-        this.updateCode(val)
-        this.updateEditor(val)
+      code() {
+        this.syntax_msg = ''
       }
     },
     data() {
@@ -222,12 +215,6 @@
       },
       show_see_it_work_button() {
         return this.buttons.indexOf('see-it-work') != -1
-      },
-      cstyle() {
-        if (this.sty.length > 0)
-          return this.sty
-
-        return this.isEditable ? 'box-shadow: 0 1px 4px rgba(0,0,0,0.125)' : this.showButtons && this.buttons.length > 0 ? 'padding-top: 20px' : ''
       },
       save_code() {
         // TODO: we need to give this code editor quite a bit of love...
@@ -291,23 +278,11 @@
       this.$nextTick(() => {
         this.is_inited = true
         this.edit_code = this.code_to_show
-
-        this.updateEditor(this.edit_code)
       })
     },
     methods: {
       toggleOutput() {
         this.show_output = !this.show_output
-      },
-      updateCode(code) {
-        this.edit_code = code
-        this.syntax_msg = ''
-      },
-      updateEditor(code) {
-        // set the code in the code editor
-        var code_editor = this.$refs['code']
-        if (!_.isNil(code_editor))
-          code_editor.setValue(code)
       },
       getEditCode() {
         return this.edit_code
@@ -325,13 +300,13 @@
             throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
 
           // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
+          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
 
           return task
         }
         catch(e)
         {
-          return { op: 'sequence', params: {} }
+          return { op: 'sequence', items: [] }
         }
       },
       copy() {
@@ -362,7 +337,7 @@
             // check the content type of our response; if the content type
             // exists, it's a Pipe API response, otherwise, it's simply a
             // JSON response (patched through from the Flex.io backend)
-            if (typeof response == 'object' && typeof response.contentType == 'string')
+            if (_.isPlainObject(response) && typeof response.contentType == 'string')
               content_type = response.contentType
 
             if (content_type.substr(0,6) == 'image/') {

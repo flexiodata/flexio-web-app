@@ -7,7 +7,7 @@
       </div>
     </div>
 
-    <div class="flex flex-row items-center mb3">
+    <div class="flex flex-row items-center nt3 mb3">
       <el-switch
         class="hint--bottom"
         active-color="#009900"
@@ -15,10 +15,14 @@
         v-model="is_scheduled"
       />
       <span
-        class="f5 pl2 pointer"
+        class="fw6 f5 pl2 pointer"
         @click.stop="is_scheduled = !is_scheduled"
       >
-        {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+        <transition name="el-zoom-in-center" mode="out-in">
+          <span v-bind:key="is_scheduled">
+            {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+          </span>
+        </transition>
       </span>
     </div>
     <div class="flex flex-row">
@@ -68,8 +72,19 @@
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
-      <el-button class="ttu b" type="plain" @click="$emit('cancel')">Cancel</el-button>
-      <el-button class="ttu b" type="primary" @click="submit">Save changes</el-button>
+      <el-button
+        class="ttu b"
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu b"
+        type="primary"
+        @click="submit"
+      >
+        Save changes
+      </el-button>
     </div>
   </div>
 </template>
@@ -204,9 +219,10 @@
       },
       updatePipe() {
         var edit_pipe = _.cloneDeep(this.pipe)
+        var default_schedule = _.get(defaultAttrs(), 'schedule')
 
         if (_.isNil(_.get(edit_pipe, 'schedule')))
-          _.assign(edit_pipe, defaultAttrs())
+          _.set(edit_pipe, 'schedule', default_schedule)
 
         this.edit_pipe = edit_pipe
       },

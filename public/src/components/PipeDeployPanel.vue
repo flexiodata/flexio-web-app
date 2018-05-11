@@ -18,7 +18,7 @@
     <div class="lh-copy">
       <h3>Deploy as an API endpoint:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="HTTP"
           cls="relative"
           copy-prefix=""
@@ -28,7 +28,7 @@
         />
       </div>
       <div class="mh3 mt3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="cURL"
           cls="relative"
           copy-prefix=""
@@ -39,7 +39,7 @@
       </div>
       <h3>Deploy in Javascript:</h3>
       <div class="mh3">
-        <onboarding-code-editor
+        <OnboardingCodeEditor
           label="Javascript"
           cls="relative"
           copy-prefix=""
@@ -51,12 +51,12 @@
       <h3>Schedule from the app:</h3>
       <p class="mh3">You may schedule your pipe to run as desired from the drop-down menu in the pipe list.</p>
       <hr class="mv4 bb-0 b--black-10">
-      <help-items
+      <HelpItems
         class="mv3"
         help-message="I need help getting started with Flex.io..."
         :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
         :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
-      ></help-items>
+      />
     </div>
   </div>
 </template>
@@ -88,12 +88,8 @@
         'active_user_eid'
       ]),
       api_key() {
-        var tokens = this.getAllTokens()
-
-        if (tokens.length == 0)
-          return ''
-
-        return _.get(tokens, '[0].access_code', '')
+        var key = this.getSdkKey()
+        return key.length > 0 ? key : '[INSERT API KEY]'
       },
       pipe_name() {
         return _.get(this.pipe, 'name', '')
@@ -102,16 +98,18 @@
         return _.get(this.pipe, 'alias', '') || _.get(this.pipe, 'eid', '')
       },
       pipe_code() {
-        var code = "Flexio.setup('"+this.api_key+"')\n\n"
-        code += Flexio.pipe(this.pipe.task).toCode()
+        // do this until we fix the object ref issue in the Flex.io JS SDK
+        var task_obj = _.cloneDeep(this.pipe.task)
+        var code = "Flexio.setup('" + this.api_key + "')\n\n"
+        code += Flexio.pipe(task_obj).toCode()
         code += '\n  .run()'
         return code
       },
       example_href() {
-        return 'https://' + location.hostname + '/api/v2/' + this.active_user_eid + '/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
+        return 'https://api.flex.io/v1/me/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
       },
       example_curl() {
-        return "curl -X POST 'https://" + location.hostname + "/api/v2/" + this.active_user_eid + "/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
+        return "curl -X POST 'https://api.flex.io/v1/me/pipes/" + this.pipe_identifier + "/run' -H 'Authorization: Bearer " + this.api_key + "'"
       }
     },
     mounted() {
@@ -119,7 +117,7 @@
     },
     methods: {
       ...mapGetters([,
-        'getAllTokens'
+        'getSdkKey'
       ]),
       tryFetchTokens() {
         this.$store.dispatch('fetchTokens')

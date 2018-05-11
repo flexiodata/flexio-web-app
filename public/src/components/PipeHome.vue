@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center h-100" v-if="is_fetching">
-    <spinner size="large" message="Loading pipe..." />
+    <Spinner size="large" message="Loading pipe..." />
   </div>
 
   <div class="flex flex-column bg-nearer-white" v-else>
@@ -45,7 +45,7 @@
       </div>
 
       <div class="flex flex-column justify-center h-100" v-if="is_process_running">
-        <spinner size="large" message="Running pipe..." />
+        <Spinner size="large" message="Running pipe..." />
       </div>
 
       <!--
@@ -63,7 +63,7 @@
       />
       -->
 
-      <pipe-code-editor
+      <PipeCodeEditor
         ref="code"
         class="mv3 ph4 center"
         style="max-width: 1440px"
@@ -78,16 +78,20 @@
         v-if="is_process_failed && is_superuser"
       >
         <div class="bg-white ba b--black-10">
-          <code-editor
-            class="h-100 overflow-y-auto"
+          <CodeEditor
+            class="overflow-y-auto"
+            style="max-height: 24rem"
             lang="application/json"
-            :val="active_process_info_str"
-            :options="{ lineNumbers: false, readOnly: true }"
+            :options="{
+              lineNumbers: false,
+              readOnly: true
+            }"
+            v-model="active_process_info_str"
           />
         </div>
       </div>
 
-      <help-items class="mv3" />
+      <HelpItems class="mv3" />
     </div>
 
     <ui-snackbar-container
@@ -252,7 +256,7 @@
         return _.get(this.pipe, 'processes_fetched', false)
       },
       tasks() {
-        var tasks = _.get(this.pipe, 'task.params.items', [])
+        var tasks = _.get(this.pipe, 'task.items', [])
 
         // take into account the old pipe syntax with the task array (for now)
         if (tasks.length == 0)
@@ -263,6 +267,11 @@
         // in this scenario, use an empty array (for now)
         if (_.isPlainObject(tasks))
           tasks = []
+
+        // don't show the 'eid' in the tasks
+        tasks = _.map(tasks, (t) => {
+          return _.omit(t, 'eid')
+        })
 
         return tasks
       },
@@ -354,6 +363,9 @@
       },
 
       getPromptTasks() {
+        return []
+
+        /*
         var task_idx = 0
         var variable_idx = 0
         var variable_set_key = ''
@@ -361,7 +373,7 @@
 
         var prompts = _.map(this.tasks, (task) => {
           var task_eid = _.get(task, 'eid')
-          var params = _.get(task, 'params', {})
+          var params = _.omit(task, ['op'])
 
           var matched_vars = []
 
@@ -411,7 +423,7 @@
           }
 
           // start traversing the task params object
-          getChildVariables(params, 'task['+task_idx+'].params')
+          getChildVariables(params, 'task['+task_idx+']')
 
           // increment our task index
           task_idx++
@@ -446,13 +458,14 @@
         }, TASK_INFO_COMMENT))
 
         return prompts
+        */
       },
 
       runPipe(attrs) {
         this.prompt_tasks = [].concat(this.getPromptTasks())
         this.active_prompt_idx = _.findIndex(this.prompt_tasks, { is_prompt: true })
 
-        if (this.has_empty_tasks)
+        if (false /* don't prompt anymore (for now) */ && this.has_empty_tasks)
         {
           var first_empty_task = _.head(this.empty_tasks)
           var eid = _.get(first_empty_task, 'eid')

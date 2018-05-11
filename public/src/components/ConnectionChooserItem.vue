@@ -19,7 +19,6 @@
         <div class="light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
       </div>
       <el-button
-        type="plain"
         size="tiny"
         class="ttu b"
         @click="$emit('item-fix', item)"
@@ -101,8 +100,7 @@
   }
 </script>
 
-<style scoped>
-  .css-item + .css-item {
-    border-top: 1px solid #eee;
-  }
+<style lang="stylus" scoped>
+  .css-item + .css-item
+    border-top: 1px solid #eee
 </style>

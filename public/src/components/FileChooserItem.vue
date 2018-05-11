@@ -91,8 +91,7 @@
   }
 </script>
 
-<style scoped>
-  .css-item {
-    padding: 0.125rem 0.25rem;
-  }
+<style lang="stylus" scoped>
+  .css-item
+    padding: 0.125rem 0.25rem
 </style>

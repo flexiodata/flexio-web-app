@@ -1,22 +1,33 @@
 <template>
-  <div class="flex flex-column justify-center h-100" v-if="state.is_fetching && !state.has_fetched">
-    <spinner :message="state.loading_text" />
+  <div
+    class="flex flex-column justify-center h-100"
+    v-if="state.is_fetching && !state.has_fetched"
+  >
+    <Spinner :message="state.loading_text" />
   </div>
-  <code-editor
-    class="h-100 overflow-y-auto"
+  <CodeEditor
     lang="text/html"
-    :val="state.text"
-    :options="{ lineNumbers: false, readOnly: true }"
+    :options="{
+      lineNumbers: false,
+      readOnly: true
+    }"
+    v-model="state.text"
     v-else-if="isHtml"
   />
-  <code-editor
-    class="h-100 overflow-y-auto"
+  <CodeEditor
     lang="application/json"
-    :val="state.text"
-    :options="{ lineNumbers: false, readOnly: true }"
+    :options="{
+      lineNumbers: false,
+      readOnly: true
+    }"
+    v-model="state.text"
     v-else-if="isJson"
   />
-  <pre v-else class="monospace ma0 pa2 h-100 overflow-auto" @scroll="onScroll">{{state.text}}</pre>
+  <pre
+    class="monospace ma0 pa2 h-100 overflow-auto"
+    @scroll="onScroll"
+    v-else
+  >{{state.text}}</pre>
 </template>
 
 <script>
@@ -24,7 +35,7 @@
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
 
-  var initial_data = {
+  const INITIAL_DATA = {
     is_fetching: false,
     has_fetched: false,
     loading_text: 'Loading text...',
@@ -63,7 +74,7 @@
     },
     data() {
       return {
-        state: _.assign({}, initial_data)
+        state: _.assign({}, INITIAL_DATA)
       }
     },
     watch: {
@@ -76,7 +87,7 @@
     },
     methods: {
       initialFetch() {
-        this.state = _.assign({}, initial_data)
+        this.state = _.assign({}, INITIAL_DATA)
 
         if (this.isJson)
           this.fetchAll()
@@ -164,8 +175,7 @@
   }
 </script>
 
-<style lang="less" scoped>
-  pre {
-    line-height: 1.3;
-  }
+<style lang="stylus" scoped>
+  pre
+    line-height: 1.3
 </style>

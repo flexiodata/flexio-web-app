@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-column">
     <div class="flex-fill flex flex-row items-stretch relative">
-      <code-editor
+      <CodeEditor
+        class="flex-fill"
         lang="python"
-        :val="code_text"
-      ></code-editor>
+        v-model="code"
+      />
     </div>
   </div>
 </template>
@@ -24,9 +25,14 @@ greet('Bob')\n\
     components: {
       CodeEditor
     },
+    watch: {
+      code() {
+        this.$nextTick(() => { console.log(this.code) })
+      }
+    },
     data() {
       return {
-        code_text: default_text
+        code: default_text
       }
     }
   }

@@ -6,13 +6,24 @@
         <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
       </div>
       <div class="mt3 tc">
-        <el-button class="ttu b" type="plain" @click="onDisconnectClick">Disconnect from your {{service_name}} account</el-button>
+        <el-button
+          class="ttu b"
+          @click="onDisconnectClick"
+        >
+          Disconnect from your {{service_name}} account
+        </el-button>
       </div>
     </div>
     <div v-else-if="is_oauth && !is_connected">
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div class="mt3 tc">
-        <el-button class="ttu b" type="primary" @click="onConnectClick">Authenticate your {{service_name}} account</el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click="onConnectClick"
+        >
+          Authenticate your {{service_name}} account
+        </el-button>
       </div>
     </div>
     <div v-else>
@@ -28,11 +39,11 @@
         v-if="is_smtp"
       >
         <el-form
+          ref="form"
           class="el-form-cozy"
           label-width="8rem"
           :model="$data"
           :rules="rules"
-          :status-icon="true"
         >
           <el-form-item
             label="Email address"
@@ -102,7 +113,13 @@
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
+            <el-button
+              class="ttu b"
+              type="primary"
+              @click="onTestClick"
+            >
+              Test connection
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -257,7 +274,13 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button class="ttu b" type="primary" @click="onTestClick">Test connection</el-button>
+            <el-button
+              class="ttu b"
+              type="primary"
+              @click="onTestClick"
+            >
+              Test connection
+            </el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -382,7 +405,7 @@
 
         rules: {
           email: [
-            { required: true, message: 'Please input an email address', trigger: 'blur' },
+            { required: true, message: 'Please input an email address' },
             { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
           ]
         }
@@ -483,6 +506,10 @@
         _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
           this[key] = val
         })
+
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
+        }
       },
       emitChange() {
         this.$emit('change', { connection_info: this.connection_info })

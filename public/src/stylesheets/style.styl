@@ -1,0 +1,136 @@
+@import "../../node_modules/keen-ui/dist/keen-ui.css"
+@import "../../node_modules/vue-grid2/dist/vue-grid.css"
+@import "variables.styl"
+@import "core.styl"
+@import "size.styl"
+@import "./tachyons-ext/style.styl"
+@import "./material-design-ext/style.styl"
+@import "./keen-ui-ext/style.styl"
+@import "./element-ui-ext/style.styl"
+@import "./codemirror-ext/style.styl"
+
+// -- Vue.js transition classes --
+
+.slide-fade-enter-active,
+.slide-fade-leave-active
+  transition: all .3s ease
+
+.slide-fade-enter,
+.slide-fade-leave-to
+  transform: translateY(-20px)
+  opacity: 0
+
+// -- hint.css --
+
+// turn off transitions for all hint.css tooltips
+[class*=hint--]:after,
+[class*=hint--]:before
+  transition-duration: 0ms !important
+
+[class*=hint--multiline]:after
+  white-space: pre
+
+// [class*=hint--] is position: relative and needs to be overriden
+.static[class*=hint--]
+  position: static
+.absolute[class*=hint--]
+  position: absolute
+.fixed[class*=hint--]
+  position: fixed
+
+// -- markdown --
+
+.marked
+  > :first-child
+    margin-top: 0
+    padding-top: 0
+
+  h1
+    font-weight: normal
+
+  h2,
+  h3,
+  h4
+    font-weight: 600
+
+  p
+    line-height: 1.5
+
+  p + h3,
+  ul + h3
+    margin-top: 3rem
+
+  ul > li,
+  ol > li
+    line-height: 1.5
+
+  code
+    padding: 0
+    padding-top: 0.2rem
+    padding-bottom: 0.2rem
+    margin: 0
+    font-size: 85%
+    background-color: rgba(27, 31, 35, 0.05)
+    border-radius: 3px
+
+    &::before,
+    &::after
+      letter-spacing: -0.2em
+      content: "\00a0"
+
+  pre > code
+    display: block
+    padding: 6px
+
+// -- other --
+
+.visible
+  visibility: visible
+
+.invisible
+  visibility: hidden
+
+.css-dashboard-box
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2)
+
+.css-valign
+  position: relative
+  top: 50%
+  transform: translateY(-50%)
+
+.css-nav-item
+  border-color: transparent
+  color: $black-60
+
+  &:hover
+    border-color: $black-60
+    color: #222
+
+  &.router-link-active
+    border-color: $blue
+    color: $blue
+
+/*
+// matched selection style from template items on website
+.css-list-item
+  border-color: rgba(0,0,0,0.1)
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: #eef8ff
+    border-color: #aad8ff
+    box-shadow: 0 4px 20px -8px rgba(0,0,0,0.4)
+*/
+
+.css-list-item
+  border-color: rgba(0,0,0,0.1)
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: $bg-near-white
+    border-color: rgba(0,0,0,0.1)
+    border-bottom-color: rgba(0,0,0,0.15)
+    box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)
+
+.css-list-item:not(.css-trash-item):hover .css-list-title
+  color: $blue

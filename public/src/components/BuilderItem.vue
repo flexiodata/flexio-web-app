@@ -7,7 +7,8 @@
     <div class="flex flex-row relative">
       <!-- number -->
       <div
-        class="flex-none pv4 mt2"
+        class="flex-none pv4 mt2 tr"
+        style="width: 24px"
         v-if="showNumbers"
       >
         {{index+1}}.
@@ -15,7 +16,7 @@
 
       <!-- icon -->
       <div
-        class="flex-none pv4 pl3 pr4"
+        class="flex-none pv4 pl1 pl3-l pr3 pr4-l"
         v-if="showIcons"
       >
         <ServiceIcon
@@ -33,35 +34,34 @@
 
       <!-- vertical line and insert buttons -->
       <div
-        class="absolute h-100 mt2"
-        style="right: 60px"
+        class="absolute w-100 h-100"
         v-if="(showLine || showInsertButtons) && showIcons"
       >
         <!-- vertical line w/o buttons -->
         <div
-          class="bl bw1 b--black-10 pl3 absolute"
-          style="top: 61px; bottom: -19px; left: 11px"
+          class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
+          style="top: 69px; bottom: -27px; right: -1px"
           v-if="!is_last && showLine && !showInsertButtons"
         ></div>
 
         <!-- vertical line (above icon) w/buttons -->
         <div
-          class="bl bw1 b--black-10 pl3 absolute"
-          style="top: 0; height: 19px; left: 11px"
+          class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
+          style="top: 4px; height: 23px; right: -1px"
           v-if="!is_first && showLine && showInsertButtons"
         ></div>
 
         <!-- vertical line (below icon) w/buttons -->
         <div
-          class="bl bw1 b--black-10 pl3 absolute"
-          style="top: 61px; bottom: 30px; left: 11px"
+          class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
+          style="top: 69px; bottom: 26px; right: -1px"
           v-if="showLine && showInsertButtons"
         ></div>
 
         <!-- insert before button -->
         <div
-          class="absolute"
-          style="top: -10px; left: 0"
+          class="absolute cursor-default pr3 pr4-l"
+          style="top: -2px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
           <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
@@ -71,8 +71,8 @@
 
         <!-- insert after button -->
         <div
-          class="absolute"
-          style="bottom: 0; left: 0"
+          class="absolute cursor-default pr3 pr4-l"
+          style="bottom: -4px; right: 4px"
           v-if="showInsertButtons"
         >
           <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
@@ -122,7 +122,6 @@
       >
         <el-button
           class="ttu b"
-          type="plain"
           @click="$store.commit('builder/GO_PREV_ITEM')"
           v-show="!is_first"
         >
@@ -256,13 +255,12 @@
   }
 </script>
 
-<style scoped>
-  .css-active {
-    margin-left: -4px;
-    margin-right: -4px;
-    border-radius: 4px;
-    border-color: #fff;
-    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
-  }
+<style lang="stylus" scoped>
+  .css-active
+    margin-left: -4px
+    margin-right: -4px
+    border-radius: 4px
+    border-color: #fff
+    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)
+    transition: all 0.2s ease
 </style>

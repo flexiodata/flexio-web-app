@@ -1,17 +1,32 @@
 <template>
-  <div class="bg-nearer-white pa4 overflow-y-auto relative" :id="doc_id">
+  <div
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    style="padding-bottom: 8rem"
+    :id="doc_id"
+  >
     <div
       class="h-100 flex flex-row items-center justify-center"
       v-if="is_fetching"
     >
       <Spinner size="large" message="Loading..." />
     </div>
+    <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
+    <div
+      class="mt4 mb3 relative z-7 bg-nearer-white"
+      v-if="is_fetched"
+    >
+      <div
+        class="flex flex-row items-center center tc"
+        style="max-width: 1440px"
+      >
+        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+      </div>
+    </div>
     <div
       class="center"
-      style="max-width: 1440px; margin-bottom: 6rem"
-      v-else-if="is_fetched"
+      style="max-width: 1440px"
+      v-if="is_fetched"
     >
-      <h1 class="db mv0 pb4 fw6 mid-gray tc">{{title}}</h1>
       <div class="flex flex-row">
         <BuilderList
           class="flex-fill"
@@ -20,18 +35,20 @@
         />
         <div
           class="dn db-l ml4 pa3 bg-white br2 css-dashboard-box sticky"
-          style="max-height: 30rem; min-width: 20rem; max-width: 33%"
+          style="min-width: 20rem; max-width: 33%; max-height: 30rem"
         >
           <div class="h-100 flex flex-column">
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
-              <div class="flex-fill fw6 gray">Output</div>
+              <div class="flex-fill fw6 mid-gray">Output</div>
             </div>
             <CodeEditor
-              class="flex-fill overflow-auto"
+              class="flex-fill"
               lang="javascript"
-              :options="{ lineNumbers: false, readOnly: true }"
-              :update-on-val-change="true"
-              :val="code"
+              :options="{
+                lineNumbers: false,
+                readOnly: true
+              }"
+              v-model="code"
             />
           </div>
         </div>
@@ -163,7 +180,7 @@
         "description": "This is the default file chooser. Multiple files and folder can be selected at the same time.",
         "element": "file-chooser",
         "variable": "file_chooser_default",
-        "connection": "connection_dropbox"
+        "connection": "connection_any"
       },
       {
         "title": "File chooser with CSVs only",
@@ -210,6 +227,9 @@
     "pipe": ""
   }
 
+  // easy way to get rid of a bunch of elements for quick testing
+  //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
+
   var pipe_arr = [ "Flexio.pipe()" ]
 
   var buildPipeCode = (arr) => {
@@ -242,8 +262,9 @@
         handler: 'updateCode',
         immediate: true
       },
-      is_fetched() {
-        setTimeout(() => { stickybits('.sticky') }, 100)
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
       }
     },
     data() {
@@ -256,15 +277,19 @@
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         active_prompt: state => state.builder.active_prompt,
-        title: state => state.builder.def.title,
-        code: state => state.builder.code
+        title: state => state.builder.def.title
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
+      },
+      code: {
+        get() {
+          return this.$store.state.builder.code
+        },
+        set(value) {
+          // read only
+        }
       }
-    },
-    mounted() {
-      setTimeout(() => { stickybits('.sticky') }, 100)
     },
     methods: {
       loadTemplate() {
@@ -273,6 +298,7 @@
         if (this.slug == 'test') {
           this.$store.commit('builder/INIT_DEF', test_def)
           this.$store.commit('builder/FETCHING_DEF', false)
+          this.initSticky()
         } else {
           axios.get('/def/templates/' + this.slug + '.json').then(response => {
             var def = response.data
@@ -288,6 +314,15 @@
       },
       updateCode() {
         this.$store.commit('builder/UPDATE_CODE')
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.doc_id,
+            useStickyClasses: true,
+            stickyBitStickyOffset: 32
+          })
+        }, 100)
       }
     }
   }

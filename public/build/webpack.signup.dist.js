@@ -76,7 +76,7 @@ config.module.rules = (config.module.rules || [])
 
 /* load plugins */
 
-// http://vue-loader.vuejs.org/en/workflow/production.html
+// https://vuejs.org/v2/guide/deployment.html
 config.plugins = (config.plugins || []).concat([
   // Set the production environment
   new webpack.DefinePlugin({

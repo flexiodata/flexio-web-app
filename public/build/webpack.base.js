@@ -18,22 +18,20 @@ module.exports = {
       'vue-chartjs',
       'keen-ui',
       'axios',
-      'autosize',
       'filesize',
       'clipboard',
       'stickybits',
       'marked',
       'moment',
       'flexio-sdk-js',
-      'codemirror',
+      /*
       'codemirror/mode/css/css',
       'codemirror/mode/javascript/javascript',
       'codemirror/mode/xml/xml',
       'codemirror/mode/htmlmixed/htmlmixed',
       'codemirror/mode/python/python',
-      'codemirror/addon/hint/show-hint',
-      'codemirror/addon/display/placeholder',
-      'codemirror/addon/lint/lint'
+      */
+      'vue-codemirror'
     ],
     app: options.paths.resolve('src/main.js')
   },
@@ -46,7 +44,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue'
+      'vue$': options.isProduction ? 'vue/dist/vue.min' : 'vue/dist/vue'
     }
   },
 
@@ -66,6 +64,10 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
+      },
+      {
+        test: /\.styl$/,
+        loader: 'style-loader!css-loader!stylus-loader'
       },
       {
         test: /\.yml$/,

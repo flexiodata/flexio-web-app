@@ -27,7 +27,6 @@
       <div class="mt3">
         <el-button
           class="ttu b"
-          type="plain"
           @click="createPendingConnection"
         >
           Set up a new connection

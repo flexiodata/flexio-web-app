@@ -102,8 +102,20 @@
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-show="showFooter && has_connection">
-      <el-button class="ttu b" type="plain" @click="$emit('cancel')">Cancel</el-button>
-      <el-button class="ttu b" type="primary" @click="submit" :disabled="mode == 'add' && (has_errors || (is_oauth && !is_connected))">{{submit_label}}</el-button>
+      <el-button
+        class="ttu b"
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu b"
+        type="primary"
+        @click="submit"
+        :disabled="mode == 'add' && (has_errors || (is_oauth && !is_connected))"
+      >
+        {{submit_label}}
+      </el-button>
     </div>
   </div>
 </template>

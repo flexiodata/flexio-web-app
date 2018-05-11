@@ -2,31 +2,26 @@
   <div class="flex flex-row items-stretch relative">
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK</div>
-      <code-editor
-        ref="sdk"
+      <CodeEditor
         class="flex-fill"
         lang="javascript"
-        :val="sdk_str"
-        @change="updateJSON"
+        v-model="sdk_str"
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK to JSON</div>
-      <code-editor
-        ref="json"
+      <CodeEditor
         class="flex-fill"
         lang="application/json"
-        :val="json_str"
-        @change="updateReverseSdk"
+        v-model="json_str"
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
-      <code-editor
-        ref="reverse-sdk"
+      <CodeEditor
         class="flex-fill"
         lang="javascript"
-        :val="reverse_sdk_str"
+        v-model="reverse_sdk_str"
       />
     </div>
   </div>
@@ -40,15 +35,22 @@
     components: {
       CodeEditor
     },
+    watch: {
+      sdk_str: {
+        handler: 'updateJSON',
+        immediate: true
+      },
+      json_str: {
+        handler: 'updateReverseSDK',
+        immediate: true
+      }
+    },
     data() {
       return {
         sdk_str: 'Flexio.pipe()\n  .request("https://httpbin.org/ip")',
         json_str: '',
         reverse_sdk_str: ''
       }
-    },
-    mounted() {
-      this.updateJSON(this.sdk_str)
     },
     methods: {
       updateJSON(code) {
@@ -64,25 +66,25 @@
             throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
 
           // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
+          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
 
           // stringify JSON; indent 2 spaces
           var task_str = JSON.stringify(task, null, 2)
 
           this.json_str = task_str
-          this.reverse_sdk_str = Flexio.pipe(task).toCode()
-          this.$refs['json'].setValue(this.json_str)
-          this.$refs['reverse-sdk'].setValue(this.reverse_sdk_str)
+
+          // do this until we fix the object ref issue in the Flex.io JS SDK
+          var task_obj = _.cloneDeep(task)
+          this.reverse_sdk_str = Flexio.pipe(task_obj).toCode()
         }
         catch(e)
         {
           // TODO: add error handling
         }
       },
-      updateReverseSdk(json) {
+      updateReverseSDK(json) {
         try {
           this.reverse_sdk_str = Flexio.pipe(JSON.parse(json)).toCode()
-          this.$refs['reverse-sdk'].setValue(this.reverse_sdk_str)
         }
         catch(e)
         {

@@ -9,12 +9,13 @@
   </div>
 </template>
 
-<style lang="less" scoped>
-  @import "../stylesheets/variables.less";
+<style lang="stylus" scoped>
+  @import '../stylesheets/variables.styl'
 
-  .overlay-icon .material-icons { font-size: 64px; }
+  .overlay-icon .material-icons
+    font-size: 64px
 
-  @media @breakpoint-not-small {
-    .overlay-icon .material-icons { font-size: 96px; }
-  }
+  @media $breakpoint-large
+    .overlay-icon .material-icons
+      font-size: 96px
 </style>

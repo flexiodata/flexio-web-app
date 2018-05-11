@@ -31,10 +31,8 @@
 <script>
   import {
     ROUTE_BUILDER,
-    ROUTE_EMBED,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
-    ROUTE_PIPES,
     ROUTE_FORGOTPASSWORD,
     ROUTE_RESETPASSWORD,
     ROUTE_HOME_LEARN
@@ -68,12 +66,11 @@
         return _.get(this.$route, 'name', '')
       },
       show_navbar() {
-        return this.route_name == ROUTE_PIPES ? false : true
+        return true
       },
       show_intercom_button() {
-        switch (this.route_name)
+        switch (this.$route.name)
         {
-          case ROUTE_EMBED:
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:
@@ -89,7 +86,7 @@
       },
       config_show_onboarding() {
         // don't ever show the onboarding modal when the user enters via the builder
-        if (this.route_name == ROUTE_BUILDER)
+        if (this.$route.name == ROUTE_BUILDER)
           return false
 
         // we have to do 'config_show_onboarding' as a computed value since
@@ -114,7 +111,7 @@
         'getActiveUser'
       ]),
       checkRoute() {
-        if (this.route_name == ROUTE_BUILDER) {
+        if (this.$route.name == ROUTE_BUILDER) {
           this.show_onboarding_modal = false
           this.updateOnboardingConfig()
         }
@@ -131,8 +128,11 @@
         this.show_onboarding_modal = false
 
         setTimeout(() => {
-          if (this.$route.name != ROUTE_HOME_LEARN)
+          // redirect to the app learning if the user
+          // just signed up and saw the onboarding dialog
+          if (this.$route.name != ROUTE_HOME_LEARN) {
             this.$router.push({ name: ROUTE_HOME_LEARN })
+          }
 
           this.updateOnboardingConfig()
         }, 10)
@@ -140,48 +140,3 @@
     }
   }
 </script>
-
-<style lang="less">
-  // match .blue color to Material Design's 'Blue A600' color
-  @blue: #1e88e5;
-  @black-60: rgba(0,0,0,0.6);
-  @bg-color: #eee;
-  @bg-near-white: #f4f4f4;
-
-  .css-nav-item {
-    border-color: transparent;
-    color: @black-60;
-
-    &:hover {
-      border-color: @black-60;
-      color: #222;
-    }
-
-    &.router-link-active {
-      border-color: @blue;
-      color: @blue;
-    }
-  }
-
-  .css-list-item {
-    border-color: rgba(0,0,0,0.1);
-
-    &:hover {
-      background-color: @bg-near-white;
-      border-color: rgba(0,0,0,0.025);
-      border-bottom-color: rgba(0,0,0,0.1);
-      box-shadow: 0 4px 8px -5px rgba(0,0,0,0.2)
-    }
-    /*
-    &:hover {
-      background-color: #eef8ff;
-      border-color: #aad8ff;
-      box-shadow: 0 4px 8px -4px rgba(0,0,0,0.2)
-    }
-    */
-  }
-
-  .css-list-item:not(.css-trash-item):hover .css-list-title {
-    color: @blue;
-  }
-</style>

@@ -12,7 +12,6 @@
       <div class="mt4">
         <el-button
           class="ttu b"
-          type="plain"
           @click="gotoPipe"
         >
           View pipe
@@ -70,19 +69,10 @@
         return this.index > this.active_prompt_idx
       },
       api_key() {
-        var tokens = this.getAllTokens()
-
-        if (tokens.length == 0)
-          return ''
-
-        return _.get(tokens, '[0].access_code', '')
+        return this.getSdkKey()
       },
       sdk_options() {
-        if (window.location.hostname == 'www.flex.io') {
-          return { host: 'www.flex.io' }
-        }
-
-        return { host: 'test.flex.io' }
+        return this.getSdkOptions()
       },
       save_code() {
         var name = _.get(this.def, 'title', 'Untitled Pipe')
@@ -91,7 +81,9 @@
     },
     methods: {
       ...mapGetters([
-        'getAllTokens'
+        'getAllTokens',
+        'getSdkKey',
+        'getSdkOptions'
       ]),
       gotoPipe() {
         var eid = this.pipe.eid

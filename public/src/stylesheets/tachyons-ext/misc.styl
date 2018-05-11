@@ -1,0 +1,231 @@
+@import "../variables.styl"
+
+// -- more z-index values --
+
+.z-6
+  z-index: 6
+.z-7
+  z-index: 7
+.z-8
+  z-index: 8
+.z-9
+  z-index: 9
+.z-10
+  z-index: 10
+
+// -- color overrides --
+
+.dark-green
+  color: #009900
+.bg-dark-green
+  background-color: #009900
+.b--dark-green
+  border-color: #009900
+.blue
+  color: $blue
+.hover-blue:hover
+  color: $blue
+.hover-blue:focus
+  color: $blue
+.bg-blue
+  background-color: $blue
+.b--blue
+  border-color: $blue
+.hover-dark-blue:hover
+  color: darken($blue, 10%)
+.hover-dark-blue:focus
+  color: darken($blue, 10%)
+.transparent
+  color: transparent
+
+// -- other colors --
+
+.b--white-box
+  border-color: #e5e6e9 #dfe0e4 #d0d1d5
+.bg-nearer-white
+  background-color: #f9f9f9
+
+// -- task colors --
+
+.bg-task-gray
+  background-color: $task-gray
+.bg-task-blue
+  background-color: $task-blue
+.bg-task-green
+  background-color: $task-green
+.bg-task-orange
+  background-color: $task-orange
+.bg-task-purple
+  background-color: $task-purple
+
+// -- hover effects --
+
+.hover-b--blue:hover
+  border-color: $blue
+
+// -- darken (for button hover, etc.) --
+
+.darken-05:hover,
+.darken-05:focus
+  box-shadow: inset 9999px 9999px rgba(0, 0, 0, 0.05)
+
+.darken-05:active
+  box-shadow: inset 9999px 9999px rgba(0, 0, 0, 0.10)
+
+.darken-10:hover,
+.darken-10:focus
+  box-shadow: inset 9999px 9999px rgba(0, 0, 0, 0.10)
+
+.darken-10:active
+  box-shadow: inset 9999px 9999px rgba(0, 0, 0, 0.20)
+
+// -- font family, sizing and letter spacing --
+
+.font-default
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif
+
+.lh-inherit
+  line-height: inherit
+
+.lh-1
+  line-height: 1
+
+.monospace
+  font-family: monospace
+
+.f7
+  font-size: .8125rem
+.f8
+  font-size: .75rem
+
+// -- focus styles --
+
+:focus
+  .focus-outline&
+    outline: 1px solid !important
+  .focus-outline-transparent&
+    outline: 1px solid transparent !important
+  .focus-ow1&
+    outline-width: .125rem !important
+  .focus-o--blue&
+    outline-color: $blue !important
+  .focus-b--transparent&
+    border-color: transparent
+
+// -- selection --
+
+.no-select
+  user-select: none
+
+// -- pointer events --
+
+.no-pointer-events
+  pointer-events: none
+
+// -- resize (textarea) --
+
+.resize-horizontal
+  resize: horizontal
+.resize-vertical
+  resize: vertical
+.resize-both
+  resize: both
+.resize-none
+  resize: none
+
+// -- positioning --
+
+// TODO: these styles *CANNOT* be responsive; since their CSS
+// specificity is the same as the fonts in tachyons.min.css,
+// even their media queries would override those styles
+.top-auto
+  top: auto
+.right-auto
+  right: auto
+.bottom-auto
+  bottom: auto
+.left-auto
+  left: auto
+
+// -- cursors --
+
+.cursor-default
+  cursor: default
+.cursor-text
+  cursor: text
+.cursor-resize-ew
+  cursor: ew-resize
+.cursor-not-allowed
+  cursor: not-allowed
+
+// -- inverse hide --
+
+.swap-child .child
+  display: inherit
+
+.swap-child:hover  .child,
+.swap-child:focus  .child,
+.swap-child:active .child
+  display: none
+
+.swap-child .other-child
+  display: none
+
+.swap-child:hover  .other-child,
+.swap-child:focus  .other-child,
+.swap-child:active .other-child
+  display: inherit
+
+// -- transitions --
+
+.trans-a
+  transition: all .15s linear
+.trans-p
+  transition: padding .15s linear
+.trans-m
+  transition: margin .15s linear
+.trans-pm
+  transition: padding .15s linear, margin .15s linear
+.trans-w
+  transition: width .15s linear
+.trans-h
+  transition: height .15s linear
+.trans-wh
+  transition: width .15s linear, height .15s linear
+.trans-t
+  transition: transform .15s linear
+
+// -- spacing --
+
+.pv2a
+  padding-top: .75rem; padding-bottom: .75rem
+
+@media $breakpoint-not-small
+  .pv2a-ns
+    padding-top: .75rem; padding-bottom: .75rem
+
+@media $breakpoint-medium
+  .pv2a-m
+    padding-top: .75rem; padding-bottom: .75rem
+
+@media $breakpoint-large
+  .pv2a-l
+    padding-top: .75rem; padding-bottom: .75rem
+
+// -- semantic ui --
+
+.shadow-sui-segment
+  box-shadow: 0 4px 8px -6px rgba(0, 0, 0, .2)
+
+@media $breakpoint-not-small
+  .shadow-sui-segment-ns
+    box-shadow: 0 4px 8px -6px rgba(0, 0, 0, .2)
+
+@media $breakpoint-medium
+  .shadow-sui-segment-m
+    box-shadow: 0 4px 8px -6px rgba(0, 0, 0, .2)
+
+@media $breakpoint-large
+  .shadow-sui-segment-l
+    box-shadow: 0 4px 8px -6px rgba(0, 0, 0, .2)
+

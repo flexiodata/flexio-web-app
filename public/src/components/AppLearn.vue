@@ -65,11 +65,13 @@
         return _.get(tokens, '[0].access_code', '')
       },
       sdk_options() {
-        if (window.location.hostname == 'www.flex.io') {
-          return { host: 'www.flex.io' }
+        switch (window.location.hostname) {
+          case 'localhost':    return { host: 'localhost', insecure: true }
+          case 'test.flex.io': return { host: 'test.flex.io' }
+          case 'www.flex.io':  return { host: 'www.flex.io' }
         }
 
-        return { host: 'test.flex.io' }
+        return {}
       },
       active_item() {
         var item = _.find(this.items, { id: this.active_item_id })

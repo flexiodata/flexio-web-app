@@ -5,6 +5,8 @@ import {
   Checkbox,
   CheckboxButton,
   CheckboxGroup,
+  Collapse,
+  CollapseItem,
   DatePicker,
   Dialog,
   Dropdown,
@@ -32,7 +34,7 @@ import store from './store' // Vuex store
 import util from './utils'
 import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
-import './stylesheets/style.less' // common styles
+import './stylesheets/style.styl' // common styles
 
 // fallback css (if there's no Internet connection)
 
@@ -54,6 +56,8 @@ Vue.use(Button)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)
 Vue.use(CheckboxGroup)
+Vue.use(Collapse)
+Vue.use(CollapseItem)
 Vue.use(DatePicker)
 Vue.use(Dialog)
 Vue.use(Dropdown)
