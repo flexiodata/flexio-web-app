@@ -154,6 +154,9 @@
         }
       }
     },
+    mounted() {
+      this.resetForm(this.orig_pipe)
+    },
     methods: {
       updateStore() {
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
