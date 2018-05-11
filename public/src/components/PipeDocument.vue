@@ -213,7 +213,7 @@
         handler: 'loadPipe',
         immediate: true
       },
-      orig_pipe: {
+      store_pipe: {
         handler: 'initPipe'
       },
       is_fetched: {
@@ -251,12 +251,12 @@
       doc_id() {
         return 'pipe-doc-' + this.eid
       },
-      orig_pipe() {
+      store_pipe() {
         return this.getOriginalPipe()
       },
       orig_code() {
         // do this until we fix the object ref issue in the Flex.io JS SDK
-        var task_obj = _.get(this.orig_pipe, 'task', {})
+        var task_obj = _.get(this.store_pipe, 'task', {})
         task_obj = _.cloneDeep(task_obj)
         return Flexio.pipe(task_obj).toCode()
       },
@@ -269,7 +269,7 @@
         }
       },
       title() {
-        return _.get(this.orig_pipe, 'name', '')
+        return _.get(this.store_pipe, 'name', '')
       },
       is_configure_expanded() {
         return this.collapse_configuration.indexOf('configuration') != -1
@@ -280,7 +280,7 @@
       is_changed() {
         var keys = ['name', 'alias', 'description', 'task', 'schedule', 'schedule_status']
         var pipe1 = _.pick(this.edit_pipe, keys)
-        var pipe2 = _.pick(this.orig_pipe, keys)
+        var pipe2 = _.pick(this.store_pipe, keys)
         return this.is_code_changed || !_.isEqual(pipe1, pipe2)
       },
 
@@ -371,7 +371,7 @@
         this.show_pipe_schedule_dialog = false
       },
       cancelChanges() {
-        this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
+        this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
       },
       saveChanges() {
         var keys = ['name', 'alias', 'description', 'schedule', 'schedule_status', 'task']
