@@ -40,16 +40,9 @@ class Base implements \Flexio\IFace\IJob
 
     public function getJobParameters() : array
     {
-        if (isset($this->properties['params']))
-        {
-            return $this->properties['params'];
-        }
-         else
-        {
-            $params = $this->properties;
-            unset($params['op']);
-            return $params;
-        }
+        $params = $this->properties;
+        unset($params['op']);
+        return $params;
     }
 
     public function validate() : array
