@@ -42,6 +42,7 @@
     <div
       class="pointer f3 black-30 hover-black-60 ph2 hint--top"
       aria-label="Delete"
+      :class="index == 0 ? 'invisible' : ''"
       @click="onDeleteClick"
     >
       &times;
