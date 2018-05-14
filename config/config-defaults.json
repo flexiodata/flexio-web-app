@@ -34,6 +34,9 @@
     "ses_access_key": "",
     "ses_secret_key": "",
 
+    "gmail_client_id": "",
+    "gmail_client_secret": "",
+    
     "googledrive_client_id": "",
     "googledrive_client_secret": "",
 
