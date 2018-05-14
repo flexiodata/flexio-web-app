@@ -515,7 +515,7 @@ class System
         return true;
     }
 
-    public static function getConfig() // TODO: set return type
+    public static function getConfig() // TODO: add return type
     {
         return $GLOBALS['g_config'];
     }

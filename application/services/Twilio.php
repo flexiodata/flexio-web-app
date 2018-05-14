@@ -222,7 +222,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $rows;
     }
 
-    private function map($content_root, $apidata, $structure) // TODO: add return type; TODO: add parameter types
+    private function map($content_root, $apidata, $structure) // TODO: add return type; TODO: add parameter type
     {
         $result = array();
 
@@ -256,7 +256,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $result;
     }
 
-    private function getRowData($content_root, $apidata) // TODO: add return type; TODO: add parameter types
+    private function getRowData($content_root, $apidata) // TODO: add return type; TODO: add parameter type
     {
         // set the current path to the root apidata object; find out the
         // path to the data node

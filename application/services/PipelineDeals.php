@@ -113,7 +113,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback) // TODO: set return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
 
@@ -143,7 +143,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return true;
     }
 
-    public function write(array $params, callable $callback) // TODO: set return type
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -155,7 +155,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function describeTable(string $path) // TODO: set return type
+    public function describeTable(string $path) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -171,7 +171,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return $structure;
     }
 
-    private function fetchData(string $path, &$page = null) // TODO: set return type
+    private function fetchData(string $path, &$page = null) // TODO: add return type
     {
         $path = self::cleanPath($path);
         if (!isset($page))
@@ -211,7 +211,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return $rows;
     }
 
-    private function map($content_root, $apidata, $structure) // TODO: set return type; TODO: set parameter type
+    private function map($content_root, $apidata, $structure) // TODO: add return type; TODO: add parameter type
     {
         $result = array();
 
@@ -245,7 +245,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return $result;
     }
 
-    private function getRowData($content_root, $apidata) // TODO: set return type; TODO: set parameter type
+    private function getRowData($content_root, $apidata) // TODO: add return type; TODO: add parameter type
     {
         // find out where the data is located in the result
         if (!is_string($content_root))
@@ -292,7 +292,7 @@ class PipelineDeals implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         return true;
     }
 
-    private function lookupDefinition(string $path) // TODO: set return type
+    private function lookupDefinition(string $path) // TODO: add return type
     {
         $definitions = $this->getDefinitions();
         foreach ($definitions as $d)

@@ -20,7 +20,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $access_token = '';
 
-    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
         if (!isset($params))
             return new self;
@@ -267,7 +267,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback) // TODO: set return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
 
@@ -326,7 +326,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback) // TODO: set return type
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         if (isset($params['structure']))
         {
@@ -451,7 +451,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private static function initialize(array $params) // TODO: set return type
+    private static function initialize(array $params) // TODO: add return type
     {
         $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';

@@ -23,7 +23,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $expires = 0;
     private $folders = [];
 
-    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) // TODO: add return type; fix dual return types which is used for Oauth
     {
         if (!isset($params))
             return new self;
@@ -236,7 +236,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback) // TODO: set return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -288,7 +288,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    private function internalCreateFolder($parentid, $name) // TODO: set return type
+    private function internalCreateFolder($parentid, $name) // TODO: add return type
     {
         $postdata = json_encode(array(
             'name' => $name,
@@ -313,7 +313,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $fileid;
     }
 
-    private function createFolderStructure($path) // TODO: set return type
+    private function createFolderStructure($path) // TODO: add return type
     {
         $folder = trim($path,'/');
         if ($folder == '')
@@ -345,7 +345,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $folderid;
     }
 
-    public function write(array $params, callable $callback) // TODO: set return type
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -473,7 +473,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                  'expires' => $this->expires ];
     }
 
-    private function getFolderItems($folder_id, $fields = null) // : array  // TODO: set return type
+    private function getFolderItems($folder_id, $fields = null) : array
     {
         if (!$this->authenticated())
             return array();
@@ -510,7 +510,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private static function initialize(array $params) // TODO: set return type
+    private static function initialize(array $params) // TODO: add return type
     {
         $client_id = $GLOBALS['g_config']->box_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->box_client_secret ?? '';
@@ -627,7 +627,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function createService($oauth_callback) // TODO: set parameter/return type
+    private static function createService($oauth_callback) // TODO: add return type; TODO: add parameter type
     {
         $client_id = $GLOBALS['g_config']->box_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->box_client_secret ?? '';

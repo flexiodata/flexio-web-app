@@ -162,7 +162,7 @@ class NoticeEmail
             return $this->sendWithoutAttachments();
     }
 
-    public function setFrom($addresses) : \Flexio\Services\NoticeEmail // TODO: set parameter type
+    public function setFrom($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -180,7 +180,7 @@ class NoticeEmail
         return $this->from_addresses;
     }
 
-    public function setTo($addresses) : \Flexio\Services\NoticeEmail // TODO: set parameter type
+    public function setTo($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -198,7 +198,7 @@ class NoticeEmail
         return $this->to_addresses;
     }
 
-    public function setCC($addresses) : \Flexio\Services\NoticeEmail // TODO: set parameter type
+    public function setCC($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -216,7 +216,7 @@ class NoticeEmail
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses) : \Flexio\Services\NoticeEmail // TODO: set parameter type
+    public function setBCC($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -234,7 +234,7 @@ class NoticeEmail
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses) : \Flexio\Services\NoticeEmail // TODO: set parameter type
+    public function setReplyTo($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))

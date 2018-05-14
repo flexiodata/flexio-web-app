@@ -271,7 +271,7 @@ class Structure
         return $column_entry;
     }
 
-    public function pop() // TODO: add function return type
+    public function pop() // TODO: add return type
     {
         // note: returns the removed column, or false if there was no column to remove
 

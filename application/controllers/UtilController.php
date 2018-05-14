@@ -368,7 +368,7 @@ EOT;
         return "data:$mime;base64,$base64";
     }
 
-    private function findTrailingCommas($file) // TODO: set return type
+    private function findTrailingCommas($file) // TODO: add return type
     {
         $notice = <<<EOT
 \n---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ----------\n
@@ -382,7 +382,7 @@ EOT;
         return $result;
     }
 
-    private function getAllFiles($dir, $recursive = false, $include_dirs = false) // TODO: set return type
+    private function getAllFiles($dir, $recursive = false, $include_dirs = false) // TODO: add return type
     {
         $output = array();
 
@@ -417,7 +417,7 @@ EOT;
         return $output;
     }
 
-    private function cleanFileList($files) // TODO: set return type
+    private function cleanFileList($files) // TODO: add return type
     {
         foreach ($files as $i => $file)
         {
@@ -434,7 +434,7 @@ EOT;
     }
 
     // file object array sort function
-    private static function sortFileObjectsByDimensions($a, $b) // TODO: set return type
+    private static function sortFileObjectsByDimensions($a, $b) // TODO: add return type
     {
         // sort by filename if image dimensions are the same
         if ($a['h'] == $b['h'] && $a['w'] == $b['w'])

@@ -115,7 +115,7 @@ class Util
         return str_pad($str, $n, $ch, STR_PAD_RIGHT);
     }
 
-    public static function zlstrpos(string $haystack, string $needle, int $offset = 0) // TODO: add function return type
+    public static function zlstrpos(string $haystack, string $needle, int $offset = 0) // TODO: add return type
     {
         if ($needle == '')
             return false;
@@ -158,7 +158,7 @@ class Util
         return $offset;
     }
 
-    private static function json_strpos(string $haystack, string $needle, int $offset = 0) // TODO: add function return type
+    private static function json_strpos(string $haystack, string $needle, int $offset = 0) // TODO: add return type
     {
         if ($needle == '')
             return false;
@@ -500,7 +500,7 @@ class Util
         return $arr;
     }
 
-    public static function getDaysDiff(string $dt1, string $dt2) // TODO: set function return type
+    public static function getDaysDiff(string $dt1, string $dt2) // TODO: add return type
     {
         // note: input are two strings of form YYYY-MM-DD
         $time1 = strtotime($dt1);
@@ -716,7 +716,7 @@ class Util
         return 'ZZXV2/'.base64_encode($enc);
     }
 
-    public static function decrypt(string $ciphertext, string $key = null) // TODO: set function return type
+    public static function decrypt(string $ciphertext, string $key = null) // TODO: add return type
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 

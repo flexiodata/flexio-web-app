@@ -143,7 +143,7 @@ class SetType extends \Flexio\Jobs\Base
         return $output_row;
     }
 
-    private static function convertValue($value, $changed_column) // TODO: set return type
+    private static function convertValue($value, $changed_column) // TODO: add return type
     {
         $new_type = $changed_column['type'];
         $new_scale = $changed_column['scale'];

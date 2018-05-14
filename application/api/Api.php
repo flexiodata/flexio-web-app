@@ -372,7 +372,7 @@ class Api
         \Flexio\Api\Response::sendError($error);
     }
 
-    private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type for function
+    private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type
     {
         $request_method = $request->getMethod();
         $url_params = $request->getUrlParams();

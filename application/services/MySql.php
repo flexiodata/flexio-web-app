@@ -157,7 +157,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback) // TODO: set return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $path = trim($path, '/');
@@ -169,7 +169,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback) // TODO: set return type
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -215,7 +215,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->authenticated;
     }
 
-    private function newConnection() // TODO: set return type
+    private function newConnection() // TODO: add return type
     {
         // connect to the database
         try
@@ -242,7 +242,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return null;
     }
 
-    public function queryAll(string $table) // TODO: set return type
+    public function queryAll(string $table) // TODO: add return type
     {
         $sql = "select * from " . self::quoteIdentifier($table);
 
@@ -294,7 +294,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function bulkInsert(string $table) // TODO: set return type
+    public function bulkInsert(string $table) // TODO: add return type
     {
         $inserter = new MysqlInserter;
         if (!$inserter->init($this, $this->db, $table))
@@ -302,7 +302,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $inserter;
     }
 
-    public function describeTable(string $table) // TODO: set return type
+    public function describeTable(string $table) // TODO: add return type
     {
         // STEP 1: query the database for the structure and the rows
         $structure = array();
@@ -352,7 +352,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return isset($result['cnt']) ? $result['cnt'] : null;
     }
 
-    public function fetchRow() // TODO: set return type
+    public function fetchRow() // TODO: add return type
     {
         return $this->dbresult->fetch_assoc();
     }
@@ -596,7 +596,7 @@ class MysqlInserter
     private $fields = '';
     private $columns = null;
 
-    public function init($service, $db, $table) // TODO: set return type; TODO: set parameter type
+    public function init($service, $db, $table) // TODO: add return type; TODO: add parameter type
     {
         $this->db = $db;
         $this->table = $table;

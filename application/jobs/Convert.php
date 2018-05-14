@@ -885,7 +885,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    private static function indexOfLineTerminator(string $haystack, string $qualifier, int $start = 0) // TODO: set return type
+    private static function indexOfLineTerminator(string $haystack, string $qualifier, int $start = 0) // TODO: add return type
     {
         if (empty($qualifier))
         {
@@ -1107,7 +1107,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromJsonArray(array $items) // TODO: set return type
+    private static function determineStructureFromJsonArray(array $items) // TODO: add return type
     {
         // create the fields based off the first row
         if (count($items) === 0)
@@ -1173,7 +1173,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition(array $job_params) // TODO: set return type
+    private static function getInputMimeTypeFromDefinition(array $job_params) // TODO: add return type
     {
         $input = $job_params['input'] ?? '';
         $format = is_string($input) ? $input : ($job_params['input']['format'] ?? '');
@@ -1194,7 +1194,7 @@ class Convert extends \Flexio\Jobs\Base
             return false;
     }
 
-    private static function getOutputMimeTypeFromDefinition(array $job_params) // TODO: set return type
+    private static function getOutputMimeTypeFromDefinition(array $job_params) // TODO: add return type
     {
         $output = $job_params['output'] ?? '';
         $format = is_string($output) ? $output : ($output['format'] ?? '');

@@ -42,7 +42,7 @@ class Factory
     const TYPE_TWILIO        = 'twilio';
 
 
-    public static function create(array $connection_properties) // TODO: set return type
+    public static function create(array $connection_properties) // TODO: add return type
     {
         global $g_store;
 

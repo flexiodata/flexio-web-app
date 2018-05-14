@@ -28,7 +28,7 @@ class SftpCapture
         return [ 'size' => 0 ];
     }
 
-    function stream_write($data) // TODO: set return type
+    function stream_write($data) // TODO: add return type
     {
         $len = strlen($data);
         $GLOBALS['g_sftp_callback']($data);
@@ -258,7 +258,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return ($type == 2 ? true : false);
     }
 
-    public function read(array $params, callable $callback) //  TODO: add return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->checkConnect())
             return false;

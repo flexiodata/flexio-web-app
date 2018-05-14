@@ -165,7 +165,7 @@ class Email
         return $this;
     }
 
-    public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setFrom($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         if ($addresses === null || $addresses === '')
         {
@@ -189,7 +189,7 @@ class Email
         return $this->from_addresses;
     }
 
-    public function setTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         if ($addresses === null || $addresses === '')
         {
@@ -213,7 +213,7 @@ class Email
         return $this->to_addresses;
     }
 
-    public function setCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -231,7 +231,7 @@ class Email
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setBCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -249,7 +249,7 @@ class Email
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))

@@ -116,7 +116,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback) // TODO: set return type
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
 
@@ -146,7 +146,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function write(array $params, callable $callback) // TODO: set return type
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -158,7 +158,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function describeTable(string $path) // TODO: set return type
+    public function describeTable(string $path) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -174,7 +174,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $structure;
     }
 
-    private function fetchData(string $path, int &$offset) // TODO: set return type
+    private function fetchData(string $path, int &$offset) // TODO: add return type
     {
         $path = self::cleanPath($path);
         if (!isset($offset))
@@ -267,7 +267,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private function map($content_root, $apidata, $structure) // TODO: set return type; TODO: set parameter type
+    private function map($content_root, $apidata, $structure) // TODO: add return type; TODO: add parameter type
     {
         $result = array();
 
@@ -323,7 +323,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private function lookupDefinition(string $path) // TODO: set return type
+    private function lookupDefinition(string $path) // TODO: add return type
     {
         $definitions = $this->getDefinitions();
         foreach ($definitions as $d)
@@ -335,7 +335,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    private function getRowData($content_root, $apidata) // TODO: set return type; TODO: set parameter type
+    private function getRowData($content_root, $apidata) // TODO: add return type; TODO: add parameter type
     {
         // find out where the data is located in the result
         if (!is_string($content_root))
