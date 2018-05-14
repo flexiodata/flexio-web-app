@@ -1,28 +1,48 @@
 <template>
   <div>
-    <div>
+    <el-form
+      class="el-form-compact el-form__label-tiny"
+      :model="$data"
+    >
       <div class="flex flex-column flex-row-ns">
-        <value-select
+        <el-form-item
           class="w-25-ns min-w4-ns"
-          placeholder="Method"
+          key="method"
           label="Method"
-          floating-label
-          :options="method_options"
-          v-model="method"
-        />
-        <ui-textbox
-          class="flex-fill ml4-ns"
-          autocomplete="off"
-          placeholder="URL"
-          label="URL"
-          floating-label
-          help=" "
-          v-model="url"
-        />
-      </div>
-    </div>
+          prop="method"
+        >
+          <el-select
+            class="w-100"
+            placeholder="Method"
+            v-model="method"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in method_options"
+            />
+          </el-select>
+        </el-form-item>
 
-    <div class="mv3">
+        <el-form-item
+          class="flex-fill ml3-ns"
+          key="url"
+          label="URL"
+          prop="url"
+        >
+          <el-input
+            class="w-100"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="URL"
+            v-model="url"
+          />
+        </el-form-item>
+      </div>
+    </el-form>
+
+    <div class="mv4">
       <ui-tabs>
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
@@ -30,8 +50,6 @@
               class="el-form-cozy"
               label-width="10rem"
               :model="$data"
-              :rules="rules"
-              :status-icon="true"
             >
               <el-form-item
                 label="Authorization Type"
