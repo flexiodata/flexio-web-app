@@ -93,12 +93,13 @@
     <div v-if="show_times">
       <label class="db f8">Run at the following times</label>
       <time-chooser-list
-        class="w-60 mb2"
+        class="mv2"
+        style="width: 20rem"
         :times="edit_pipe.schedule.times"
         @item-change="updateTime"
         @item-delete="deleteTime"
       />
-      <el-button size="mini" class="ttu b" @click="addTime">Add time</el-button>
+      <el-button size="mini" class="ttu b" style="width: 20rem" @click="addTime">Add time</el-button>
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -125,7 +126,7 @@
   import * as schedule from '../constants/schedule'
   import TimeChooserList from './TimeChooserList.vue'
 
-  var day_options = [
+  const day_options = [
     { label: 'Monday',    val: schedule.SCHEDULE_WEEK_DAY_MON },
     { label: 'Tuesday',   val: schedule.SCHEDULE_WEEK_DAY_TUE },
     { label: 'Wednesday', val: schedule.SCHEDULE_WEEK_DAY_WED },
@@ -135,13 +136,13 @@
     { label: 'Sunday',    val: schedule.SCHEDULE_WEEK_DAY_SUN }
   ]
 
-  var month_options = [
+  const month_options = [
     { label: 'First day',     val: schedule.SCHEDULE_MONTH_DAY_FIRST     },
     { label: 'Fifteenth day', val: schedule.SCHEDULE_MONTH_DAY_FIFTEENTH },
     { label: 'Last day',      val: schedule.SCHEDULE_MONTH_DAY_LAST      }
   ]
 
-  var frequency_options = [
+  const frequency_options = [
     { label: 'Every 5 minutes',  val: schedule.SCHEDULE_FREQUENCY_FIVE_MINUTES    },
     { label: 'Every 15 minutes', val: schedule.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES },
     { label: 'Every hour',       val: schedule.SCHEDULE_FREQUENCY_HOURLY          },
@@ -149,6 +150,10 @@
     { label: 'Every week',       val: schedule.SCHEDULE_FREQUENCY_WEEKLY          },
     { label: 'Every month',      val: schedule.SCHEDULE_FREQUENCY_MONTHLY         }
   ]
+
+  const timezone_options = _.map(timezones, (tz) => {
+    return { label: tz, val: tz }
+  })
 
   const defaultAttrs = () => {
     return {
@@ -189,32 +194,29 @@
         handler: 'updatePipe',
         immediate: true,
         deep: true
+      },
+      'edit_pipe.schedule.frequency'() {
+        _.set(this.edit_pipe, 'schedule.days', [])
       }
     },
     data() {
       return {
-        day_options: day_options,
-        month_options: month_options,
-        timezone_options: _.map(timezones, (tz) => {
-          return { label: tz, val: tz }
-        }),
-        frequency_options: frequency_options,
+        day_options,
+        month_options,
+        frequency_options,
+        timezone_options,
         edit_pipe: defaultAttrs()
       }
     },
     computed: {
+      frequency() {
+        return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
+      },
       is_weekly() {
-        return this.getFrequency() == schedule.SCHEDULE_FREQUENCY_WEEKLY
+        return this.frequency == schedule.SCHEDULE_FREQUENCY_WEEKLY
       },
       is_monthly() {
-        return this.getFrequency() == schedule.SCHEDULE_FREQUENCY_MONTHLY
-      },
-      show_times() {
-        return _.includes([
-          schedule.SCHEDULE_FREQUENCY_DAILY,
-          schedule.SCHEDULE_FREQUENCY_WEEKLY,
-          schedule.SCHEDULE_FREQUENCY_MONTHLY
-        ], this.getFrequency())
+        return this.frequency == schedule.SCHEDULE_FREQUENCY_MONTHLY
       },
       is_scheduled: {
         get() {
@@ -224,6 +226,13 @@
           var status = this.is_scheduled ? schedule.SCHEDULE_STATUS_INACTIVE : schedule.SCHEDULE_STATUS_ACTIVE
           _.set(this.edit_pipe, 'schedule_status', status)
         }
+      },
+      show_times() {
+        return _.includes([
+          schedule.SCHEDULE_FREQUENCY_DAILY,
+          schedule.SCHEDULE_FREQUENCY_WEEKLY,
+          schedule.SCHEDULE_FREQUENCY_MONTHLY
+        ], this.frequency)
       }
     },
     methods: {
@@ -256,9 +265,6 @@
           _.set(edit_pipe, 'schedule', default_schedule)
 
         this.edit_pipe = edit_pipe
-      },
-      getFrequency() {
-        return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
       },
       updateTime(item, index) {
         var times = _.get(this.edit_pipe, 'schedule.times', [])

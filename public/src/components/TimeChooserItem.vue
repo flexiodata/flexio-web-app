@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center br1 darken-10 ph3 hide-child">
+  <div class="flex flex-row items-center darken-10 hide-child">
     <div class="flex-fill mr3">
       <value-select
         :options="hour_options"
@@ -18,7 +18,7 @@
         v-model="period"
       ></ui-select>
     </div>
-    <div class="flex-none ml2">
+    <div class="flex-none mh2">
       <div
         class="pointer f3 lh-solid ph1 b hint--top"
         aria-label="Delete"
