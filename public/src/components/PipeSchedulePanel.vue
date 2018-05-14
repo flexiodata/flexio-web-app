@@ -91,7 +91,8 @@
       </el-select>
     </div>
     <div v-if="show_times">
-      <label class="db f8">Run at the following times</label>
+      <label class="db f8" v-if="is_weekly || is_monthly">Run at the following time</label>
+      <label class="db f8" v-else>Run at the following times</label>
       <time-chooser-list
         class="mb1"
         style="width: 20rem"
@@ -99,7 +100,11 @@
         @item-change="updateTime"
         @item-delete="deleteTime"
       />
-      <div class="ph1" style="width: 20rem">
+      <div
+        class="ph1"
+        style="width: 20rem"
+        v-if="!is_weekly && !is_monthly"
+      >
         <el-button
           size="mini"
           class="w-100 ttu b"
@@ -203,8 +208,16 @@
         immediate: true,
         deep: true
       },
-      'edit_pipe.schedule.frequency'() {
+      'edit_pipe.schedule.frequency'(val) {
         _.set(this.edit_pipe, 'schedule.days', [])
+
+        // for weekly or monthly schedules...
+        if (val == schedule.SCHEDULE_FREQUENCY_WEEKLY ||
+            val == schedule.SCHEDULE_FREQUENCY_MONTHLY) {
+          // ...only keep the first time
+          var times = _.take(_.get(this.edit_pipe, 'schedule.times', []))
+          _.set(this.edit_pipe, 'schedule.times', times)
+        }
       }
     },
     data() {
