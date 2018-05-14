@@ -25,50 +25,92 @@
         </transition>
       </span>
     </div>
-    <div class="flex flex-row">
-      <div class="flex-fill mr5">
-        <value-select
-          label="Frequency"
-          :options="frequency_options"
+    <div class="flex flex-row mb3">
+      <div class="flex-fill mr3">
+        <label class="db f8">Frequency</label>
+        <el-select
+          class="w-100"
+          placeholder="Frequency"
           v-model="edit_pipe.schedule.frequency"
-        />
+        >
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in frequency_options"
+          />
+        </el-select>
       </div>
       <div class="flex-fill">
-        <ui-select
-          label="Timezone"
-          has-search
-          :options="timezone_options"
+        <label class="db f8">Timezone</label>
+        <el-select
+          class="w-100"
+          placeholder="Search for Timezone"
+          filterable
           v-model="edit_pipe.schedule.timezone"
-        />
+        >
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in timezone_options"
+          />
+        </el-select>
       </div>
     </div>
-    <div class="mb4" v-if="is_weekly">
-      <value-select
-        label="Run on the following days of the week"
+    <div class="mb3" v-if="is_weekly">
+      <label class="db f8">Run on the following days of the week</label>
+      <el-select
+        class="w-100"
         placeholder="Choose days of the week"
         multiple
-        :options="day_options"
         v-model="edit_pipe.schedule.days"
-      />
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in day_options"
+        />
+      </el-select>
     </div>
-    <div class="mb4" v-if="is_monthly">
-      <value-select
-        label="Run on the following days of the month"
+    <div class="mb3" v-if="is_monthly">
+      <label class="db f8">Run on the following days of the month</label>
+      <el-select
+        class="w-100"
         placeholder="Choose days of the month"
         multiple
-        :options="month_options"
         v-model="edit_pipe.schedule.days"
-      />
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in month_options"
+        />
+      </el-select>
     </div>
-    <div v-if="show_times">
-      <div class="f8 mb3" style="color: rgba(0, 0, 0, 0.54)">Run at the following times</div>
+    <div style="width: 18rem" v-if="show_times">
+      <label class="db f8" v-if="is_weekly || is_monthly">Run at the following time</label>
+      <label class="db f8" v-else>Run at the following times</label>
       <time-chooser-list
-        class="w-60 mb2"
+        class="mb1 nl1"
         :times="edit_pipe.schedule.times"
         @item-change="updateTime"
         @item-delete="deleteTime"
       />
-      <el-button size="mini" class="ttu b" @click="addTime">Add time</el-button>
+      <div
+        class="ph1 nl1"
+        v-if="!is_weekly && !is_monthly"
+      >
+        <el-button
+          size="mini"
+          class="w-100 ttu b"
+          @click="addTime"
+        >
+          Add time
+        </el-button>
+      </div>
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -93,10 +135,9 @@
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { timezones } from '../constants/timezone'
   import * as schedule from '../constants/schedule'
-  import ValueSelect from './ValueSelect.vue'
   import TimeChooserList from './TimeChooserList.vue'
 
-  var day_options = [
+  const day_options = [
     { label: 'Monday',    val: schedule.SCHEDULE_WEEK_DAY_MON },
     { label: 'Tuesday',   val: schedule.SCHEDULE_WEEK_DAY_TUE },
     { label: 'Wednesday', val: schedule.SCHEDULE_WEEK_DAY_WED },
@@ -106,19 +147,24 @@
     { label: 'Sunday',    val: schedule.SCHEDULE_WEEK_DAY_SUN }
   ]
 
-  var month_options = [
+  const month_options = [
     { label: 'First day',     val: schedule.SCHEDULE_MONTH_DAY_FIRST     },
     { label: 'Fifteenth day', val: schedule.SCHEDULE_MONTH_DAY_FIFTEENTH },
     { label: 'Last day',      val: schedule.SCHEDULE_MONTH_DAY_LAST      }
   ]
 
-  var frequency_options = [
-    //{ label: 'Every minute', val: schedule.SCHEDULE_FREQUENCY_ONE_MINUTE },
-    { label: 'Every hour',   val: schedule.SCHEDULE_FREQUENCY_HOURLY     },
-    { label: 'Every day',    val: schedule.SCHEDULE_FREQUENCY_DAILY      },
-    { label: 'Every week',   val: schedule.SCHEDULE_FREQUENCY_WEEKLY     },
-    { label: 'Every month',  val: schedule.SCHEDULE_FREQUENCY_MONTHLY    }
+  const frequency_options = [
+    { label: 'Every 5 minutes',  val: schedule.SCHEDULE_FREQUENCY_FIVE_MINUTES    },
+    { label: 'Every 15 minutes', val: schedule.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES },
+    { label: 'Every hour',       val: schedule.SCHEDULE_FREQUENCY_HOURLY          },
+    { label: 'Every day',        val: schedule.SCHEDULE_FREQUENCY_DAILY           },
+    { label: 'Every week',       val: schedule.SCHEDULE_FREQUENCY_WEEKLY          },
+    { label: 'Every month',      val: schedule.SCHEDULE_FREQUENCY_MONTHLY         }
   ]
+
+  const timezone_options = _.map(timezones, (tz) => {
+    return { label: tz, val: tz }
+  })
 
   const defaultAttrs = () => {
     return {
@@ -152,7 +198,6 @@
       }
     },
     components: {
-      ValueSelect,
       TimeChooserList
     },
     watch: {
@@ -160,30 +205,37 @@
         handler: 'updatePipe',
         immediate: true,
         deep: true
+      },
+      'edit_pipe.schedule.frequency'(val) {
+        _.set(this.edit_pipe, 'schedule.days', [])
+
+        // for weekly or monthly schedules...
+        if (val == schedule.SCHEDULE_FREQUENCY_WEEKLY ||
+            val == schedule.SCHEDULE_FREQUENCY_MONTHLY) {
+          // ...only keep the first time
+          var times = _.take(_.get(this.edit_pipe, 'schedule.times', []))
+          _.set(this.edit_pipe, 'schedule.times', times)
+        }
       }
     },
     data() {
       return {
-        day_options: day_options,
-        month_options: month_options,
-        timezone_options: timezones,
-        frequency_options: frequency_options,
+        day_options,
+        month_options,
+        frequency_options,
+        timezone_options,
         edit_pipe: defaultAttrs()
       }
     },
     computed: {
+      frequency() {
+        return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
+      },
       is_weekly() {
-        return this.getFrequency() == schedule.SCHEDULE_FREQUENCY_WEEKLY
+        return this.frequency == schedule.SCHEDULE_FREQUENCY_WEEKLY
       },
       is_monthly() {
-        return this.getFrequency() == schedule.SCHEDULE_FREQUENCY_MONTHLY
-      },
-      show_times() {
-        return _.includes([
-          schedule.SCHEDULE_FREQUENCY_DAILY,
-          schedule.SCHEDULE_FREQUENCY_WEEKLY,
-          schedule.SCHEDULE_FREQUENCY_MONTHLY
-        ], this.getFrequency())
+        return this.frequency == schedule.SCHEDULE_FREQUENCY_MONTHLY
       },
       is_scheduled: {
         get() {
@@ -193,6 +245,13 @@
           var status = this.is_scheduled ? schedule.SCHEDULE_STATUS_INACTIVE : schedule.SCHEDULE_STATUS_ACTIVE
           _.set(this.edit_pipe, 'schedule_status', status)
         }
+      },
+      show_times() {
+        return _.includes([
+          schedule.SCHEDULE_FREQUENCY_DAILY,
+          schedule.SCHEDULE_FREQUENCY_WEEKLY,
+          schedule.SCHEDULE_FREQUENCY_MONTHLY
+        ], this.frequency)
       }
     },
     methods: {
@@ -225,9 +284,6 @@
           _.set(edit_pipe, 'schedule', default_schedule)
 
         this.edit_pipe = edit_pipe
-      },
-      getFrequency() {
-        return _.get(this.edit_pipe, 'schedule.frequency', schedule.SCHEDULE_FREQUENCY_DAILY)
       },
       updateTime(item, index) {
         var times = _.get(this.edit_pipe, 'schedule.times', [])
