@@ -131,7 +131,6 @@
           class="el-form-cozy"
           label-width="8rem"
           :model="$data"
-          :status-icon="true"
         >
           <el-form-item
             label="AWS Access Key"

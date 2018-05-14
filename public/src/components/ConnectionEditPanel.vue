@@ -29,64 +29,78 @@
     </div>
 
     <div>
-      <service-list v-show="!has_connection"
+      <service-list
         :omit-items="omitConnections"
         @item-activate="createPendingConnection"
-      ></service-list>
+        v-show="!has_connection"
+      />
       <div v-if="has_connection">
-        <form novalidate @submit.prevent="submit">
-          <div class="flex flex-row items-center">
-            <div class="flex-fill mr4">
-              <ui-textbox
+        <el-form
+          class="el-form-compact el-form__label-tiny"
+          :model="edit_connection"
+          :rules="rules"
+        >
+          <div class="flex flex-row">
+            <el-form-item
+              class="flex-fill mr3"
+              key="name"
+              label="Name"
+              prop="name"
+            >
+              <el-input
+                placeholder="Name"
                 autocomplete="off"
-                label="Name"
-                floating-label
-                help=" "
-                required
-                v-deferred-focus
-                :error="errors.first('name')"
-                :invalid="errors.has('name')"
+                :autofocus="true"
                 v-model="edit_connection.name"
-                v-validate
-                data-vv-name="name"
-                data-vv-value-path="edit_connection.name"
-                data-vv-rules="required"
-              ></ui-textbox>
-            </div>
-            <div class="flex-fill">
-              <ui-textbox
+              />
+            </el-form-item>
+
+            <el-form-item
+              class="flex-fill"
+              key="alias"
+              label="Alias"
+              prop="alias"
+            >
+              <el-input
+                placeholder="Alias"
                 autocomplete="off"
                 spellcheck="false"
-                label="Alias"
-                help=" "
-                :error="alias_error"
-                :invalid="alias_error.length > 0"
                 v-model="edit_connection.alias"
-              ></ui-textbox>
-            </div>
-            <div
-              class="hint--bottom-left hint--large cursor-default"
-              aria-label="Connections can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
-            >
-              <i class="material-icons blue md-24">info</i>
-            </div>
+              >
+                <span
+                  slot="suffix"
+                  class="h-100 hint--bottom-left hint--large cursor-default"
+                  aria-label="Connections can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
+                >
+                  <i class="material-icons md-24 blue v-mid">info</i>
+                </span>
+              </el-input>
+            </el-form-item>
           </div>
-          <ui-textbox
-            label="Description"
-            floating-label
-            help=" "
-            :multi-line="true"
-            :rows="1"
-            v-model="edit_connection.description"
-          ></ui-textbox>
-        </form>
 
-        <div class="mt4" v-if="is_http">
-          <connection-info-panel
-            :connection.sync="edit_connection"
-          />
-        </div>
-        <div class="mt4" v-else>
+          <el-form-item
+            key="description"
+            label="Description"
+            prop="description"
+          >
+            <el-input
+              type="textarea"
+              placeholder="Description"
+              :rows="2"
+              v-model="edit_connection.description"
+            />
+          </el-form-item>
+        </el-form>
+
+        <connection-info-panel
+          :connection.sync="edit_connection"
+          v-if="is_http"
+        />
+
+        <div
+          class="mt4"
+          v-else
+        >
           <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy ttu fw6 f6">
             <i class="material-icons mr1 f5">lock</i> Authentication
           </div>
@@ -232,21 +246,19 @@
         handler: 'initConnection',
         immediate: true,
         deep: true
-      },
-      'edit_connection.alias': function(val, old_val) {
-        var alias = val
-
-        this.validateAlias(OBJECT_TYPE_CONNECTION, val, (response, errors) => {
-          this.ss_errors = alias.length > 0 && _.size(errors) > 0
-            ? _.assign({}, errors)
-            : _.assign({})
-        })
       }
     },
     data() {
       return {
-        ss_errors: {},
-        edit_connection: _.assign({}, defaultAttrs(), this.connection)
+        edit_connection: _.assign({}, defaultAttrs(), this.connection),
+        rules: {
+          name: [
+            { required: true, message: 'Please input a name' }
+          ],
+          alias: [
+            { validator: this.formValidateAlias }
+          ]
+        }
       }
     },
     computed: {
@@ -296,22 +308,6 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
-      },
-      active_username() {
-        return _.get(this.getActiveUser(), 'username', '')
-      },
-      alias_error() {
-        if (this.mode == 'edit' && _.get(this.edit_connection, 'alias') === _.get(this.connection, 'alias'))
-          return ''
-
-        return _.get(this.ss_errors, 'alias.message', '')
-      },
-      has_client_errors() {
-        var errors = _.get(this.errors, 'errors', [])
-        return _.size(errors) > 0
-      },
-      has_errors() {
-        return this.has_client_errors || this.alias_error.length > 0
       }
     },
     methods: {
@@ -322,25 +318,11 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
-        this.$validator.validateAll().then(success => {
-          // handle error
-          if (!success)
-            return
-
-          var alias = _.get(this.edit_connection, 'alias', '')
-
-          this.validateAlias(OBJECT_TYPE_CONNECTION, alias, (response, errors) => {
-            this.ss_errors = alias.length > 0 && _.size(errors) > 0
-              ? _.assign({}, errors)
-              : _.assign({})
-
-            if (this.alias_error.length == 0)
-              this.$nextTick(() => { this.$emit('submit', this.edit_connection) })
-          })
-        })
+        // TODO: check form for errors
+        // if there are no errors in the form, do the submit
+        this.$emit('submit', this.edit_connection)
       },
       reset(attrs) {
-        this.ss_errors = {}
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
       },
       createPendingConnection(item) {
@@ -364,6 +346,20 @@
            else
           {
             // TODO: add error handling
+          }
+        })
+      },
+      formValidateAlias(rule, value, callback) {
+        if (value.length == 0)
+          return
+
+        if (value == _.get(this.connection, 'alias', ''))
+          return
+
+        this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+          var message = _.get(errors, 'alias.message', '')
+          if (message.length > 0) {
+            callback(new Error(message))
           }
         })
       },
