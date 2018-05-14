@@ -128,7 +128,7 @@
         v-else
       >
         <el-form
-          class="el-form-cozy"
+          class="el-form-compact"
           label-width="8rem"
           :model="$data"
         >

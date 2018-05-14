@@ -47,7 +47,7 @@
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <el-form
-              class="el-form-cozy"
+              class="el-form-compact"
               label-width="10rem"
               :model="$data"
             >
