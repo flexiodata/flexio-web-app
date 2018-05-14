@@ -272,6 +272,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 $response = \Flexio\Services\GitHub::create($auth_params);
                 break;
 
+            case 'gmail':
+                $response = \Flexio\Services\Gmail::create($auth_params);
+                break;
+            
             case 'googledrive':
                 $response = \Flexio\Services\GoogleDrive::create($auth_params);
                 break;
