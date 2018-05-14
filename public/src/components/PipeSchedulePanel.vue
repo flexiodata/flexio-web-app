@@ -25,43 +25,73 @@
         </transition>
       </span>
     </div>
-    <div class="flex flex-row">
-      <div class="flex-fill mr5">
-        <value-select
-          label="Frequency"
-          :options="frequency_options"
+    <div class="flex flex-row mb3">
+      <div class="flex-fill mr4">
+        <label class="db f8">Frequency</label>
+        <el-select
+          class="w-100"
+          placeholder="Frequency"
           v-model="edit_pipe.schedule.frequency"
-        />
+        >
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in frequency_options"
+          />
+        </el-select>
       </div>
       <div class="flex-fill">
-        <ui-select
-          label="Timezone"
-          has-search
-          :options="timezone_options"
+        <label class="db f8">Timezone</label>
+        <el-select
+          class="w-100"
+          placeholder="Search for Timezone"
+          filterable
           v-model="edit_pipe.schedule.timezone"
-        />
+        >
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in timezone_options"
+          />
+        </el-select>
       </div>
     </div>
-    <div class="mb4" v-if="is_weekly">
-      <value-select
-        label="Run on the following days of the week"
+    <div class="mb3" v-if="is_weekly">
+      <label class="db f8">Run on the following days of the week</label>
+      <el-select
+        class="w-100"
         placeholder="Choose days of the week"
         multiple
-        :options="day_options"
         v-model="edit_pipe.schedule.days"
-      />
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in day_options"
+        />
+      </el-select>
     </div>
-    <div class="mb4" v-if="is_monthly">
-      <value-select
-        label="Run on the following days of the month"
+    <div class="mb3" v-if="is_monthly">
+      <label class="db f8">Run on the following days of the month</label>
+      <el-select
+        class="w-100"
         placeholder="Choose days of the month"
         multiple
-        :options="month_options"
         v-model="edit_pipe.schedule.days"
-      />
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in month_options"
+        />
+      </el-select>
     </div>
     <div v-if="show_times">
-      <div class="f8 mb3" style="color: rgba(0, 0, 0, 0.54)">Run at the following times</div>
+      <label class="db f8">Run at the following times</label>
       <time-chooser-list
         class="w-60 mb2"
         :times="edit_pipe.schedule.times"
@@ -93,7 +123,6 @@
   import { TIMEZONE_UTC } from '../constants/timezone'
   import { timezones } from '../constants/timezone'
   import * as schedule from '../constants/schedule'
-  import ValueSelect from './ValueSelect.vue'
   import TimeChooserList from './TimeChooserList.vue'
 
   var day_options = [
@@ -152,7 +181,6 @@
       }
     },
     components: {
-      ValueSelect,
       TimeChooserList
     },
     watch: {
@@ -166,7 +194,9 @@
       return {
         day_options: day_options,
         month_options: month_options,
-        timezone_options: timezones,
+        timezone_options: _.map(timezones, (tz) => {
+          return { label: tz, val: tz }
+        }),
         frequency_options: frequency_options,
         edit_pipe: defaultAttrs()
       }
