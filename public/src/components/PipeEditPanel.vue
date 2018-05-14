@@ -8,53 +8,62 @@
     </div>
 
     <div>
-      <form novalidate @submit.prevent="submit">
-        <div class="flex flex-column">
-          <div class="flex-fill">
-            <ui-textbox
+      <el-form
+        class="el-form-compact el-form__label-tiny"
+        :model="edit_pipe"
+        :rules="rules"
+      >
+        <div class="flex flex-row">
+          <el-form-item
+            class="flex-fill mr3"
+            key="name"
+            label="Name"
+            prop="name"
+          >
+            <el-input
+              placeholder="Name"
               autocomplete="off"
-              label="Name"
-              floating-label
-              help=" "
-              required
-              v-deferred-focus
-              :error="errors.first('name')"
-              :invalid="errors.has('name')"
+              :autofocus="true"
               v-model="edit_pipe.name"
-              v-validate
-              data-vv-name="name"
-              data-vv-value-path="edit_pipe.name"
-              data-vv-rules="required"
             />
-          </div>
-          <div class="flex-fill flex flex-row items-center">
-            <ui-textbox
-              class="flex-fill"
+          </el-form-item>
+
+          <el-form-item
+            class="flex-fill"
+            key="alias"
+            label="Alias"
+            prop="alias"
+          >
+            <el-input
+              placeholder="Alias"
               autocomplete="off"
               spellcheck="false"
-              label="Alias"
-              help=" "
-              :error="alias_error"
-              :invalid="alias_error.length > 0"
               v-model="edit_pipe.alias"
-            />
-            <div
-              class="hint--bottom-left hint--large cursor-default"
-              aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
             >
-              <i class="material-icons blue md-24">info</i>
-            </div>
-          </div>
+              <span
+                slot="suffix"
+                class="h-100 hint--bottom-left hint--large cursor-default"
+                aria-label="Pipes can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
+              >
+                <i class="material-icons md-24 blue v-mid">info</i>
+              </span>
+            </el-input>
+          </el-form-item>
         </div>
-        <ui-textbox
+
+        <el-form-item
+          key="description"
           label="Description"
-          floating-label
-          help=" "
-          :multi-line="true"
-          :rows="1"
-          v-model="edit_pipe.description"
-        />
-      </form>
+          prop="description"
+        >
+          <el-input
+            type="textarea"
+            placeholder="Description"
+            :rows="3"
+            v-model="edit_pipe.description"
+          />
+        </el-form-item>
+      </el-form>
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
@@ -77,31 +86,31 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import * as mt from '../constants/member-type'
-  import * as at from '../constants/action-type'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
+  import * as mtypes from '../constants/member-type'
+  import * as atypes from '../constants/action-type'
+  import util from '../utils'
   import Validation from './mixins/validation'
 
   const defaultRights = () => {
     return {
-      [mt.MEMBER_TYPE_OWNER]: {
-        [at.ACTION_TYPE_READ]: true,
-        [at.ACTION_TYPE_WRITE]: true,
-        [at.ACTION_TYPE_EXECUTE]: true,
-        [at.ACTION_TYPE_DELETE]: true
+      [mtypes.MEMBER_TYPE_OWNER]: {
+        [atypes.ACTION_TYPE_READ]: true,
+        [atypes.ACTION_TYPE_WRITE]: true,
+        [atypes.ACTION_TYPE_EXECUTE]: true,
+        [atypes.ACTION_TYPE_DELETE]: true
       },
-      [mt.MEMBER_TYPE_MEMBER]: {
-        [at.ACTION_TYPE_READ]: true,
-        [at.ACTION_TYPE_WRITE]: true,
-        [at.ACTION_TYPE_EXECUTE]: true,
-        [at.ACTION_TYPE_DELETE]: false
+      [mtypes.MEMBER_TYPE_MEMBER]: {
+        [atypes.ACTION_TYPE_READ]: true,
+        [atypes.ACTION_TYPE_WRITE]: true,
+        [atypes.ACTION_TYPE_EXECUTE]: true,
+        [atypes.ACTION_TYPE_DELETE]: false
       },
-      [mt.MEMBER_TYPE_PUBLIC]: {
-        [at.ACTION_TYPE_READ]: false,
-        [at.ACTION_TYPE_WRITE]: false,
-        [at.ACTION_TYPE_EXECUTE]: false,
-        [at.ACTION_TYPE_DELETE]: false
+      [mtypes.MEMBER_TYPE_PUBLIC]: {
+        [atypes.ACTION_TYPE_READ]: false,
+        [atypes.ACTION_TYPE_WRITE]: false,
+        [atypes.ACTION_TYPE_EXECUTE]: false,
+        [atypes.ACTION_TYPE_DELETE]: false
       }
     }
   }
@@ -141,24 +150,23 @@
     },
     mixins: [Validation],
     watch: {
-      'pipe': function(val, old_val) {
-        this.edit_pipe = _.cloneDeep(val)
-        this.updatePipe(val)
-      },
-      'edit_pipe.alias': function(val, old_val) {
-        var alias = val
-
-        this.validateAlias(OBJECT_TYPE_PIPE, alias, (response, errors) => {
-          this.ss_errors = alias.length > 0 && _.size(errors) > 0
-            ? _.assign({}, errors)
-            : _.assign({})
-        })
+      pipe: {
+        handler: 'initPipe',
+        immediate: true,
+        deep: true
       }
     },
     data() {
       return {
-        ss_errors: {},
-        edit_pipe: _.assign({}, defaultAttrs(), this.pipe)
+        edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
+        rules: {
+          name: [
+            { required: true, message: 'Please input a name' }
+          ],
+          alias: [
+            { validator: this.formValidateAlias }
+          ]
+        }
       }
     },
     computed: {
@@ -175,64 +183,38 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
-      },
-      active_username() {
-        return _.get(this.getActiveUser(), 'username', '')
-      },
-      alias_error() {
-        if (this.mode == 'edit' && _.get(this.edit_pipe, 'alias') === _.get(this.pipe, 'alias'))
-          return ''
-
-        return _.get(this.ss_errors, 'alias.message', '')
-      },
-      has_client_errors() {
-        var errors = _.get(this.errors, 'errors', [])
-        return _.size(errors) > 0
-      },
-      has_errors() {
-        return this.has_client_errors || this.alias_error.length > 0
-      }
-    },
-    mounted() {
-      if (this.mode != 'edit')
-      {
-        var alias = _.get(this.edit_pipe, 'alias', '')
-
-        this.validateAlias(OBJECT_TYPE_PIPE, alias, (response, errors) => {
-          this.ss_errors = alias.length > 0 && _.size(errors) > 0
-            ? _.assign({}, errors)
-            : _.assign({})
-        })
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
-      setPipeAttributes(attrs) {
-        this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
-      },
       submit() {
-        this.$validator.validateAll().then(success => {
-          // handle error
-          if (!success)
-            return
-
-          var alias = _.get(this.edit_pipe, 'alias', '')
-
-          this.validateAlias(OBJECT_TYPE_PIPE, alias, (response, errors) => {
-            this.ss_errors = alias.length > 0 && _.size(errors) > 0
-              ? _.assign({}, errors)
-              : _.assign({})
-
-            if (this.alias_error.length == 0)
-              this.$emit('submit', this.edit_pipe)
-          })
-        })
+        // TODO: check form for errors
+        // if there are no errors in the form, do the submit
+        this.$emit('submit', this.edit_pipe)
       },
       reset(attrs) {
-        this.ss_errors = {}
         this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
+      },
+      formValidateAlias(rule, value, callback) {
+        if (value.length == 0)
+          return
+
+        if (value == _.get(this.pipe, 'alias', ''))
+          return
+
+        this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
+          var message = _.get(errors, 'alias.message', '')
+          if (message.length > 0) {
+            callback(new Error(message))
+          }
+        })
+      },
+      initPipe() {
+        var pipe = _.cloneDeep(this.pipe)
+
+        // we have to do this to force watcher validation
+        this.$nextTick(() => {
+          this.edit_pipe = _.assign({}, pipe)
+        })
       },
       updatePipe(attrs) {
         this.edit_pipe = _.assign({}, this.edit_pipe, attrs)
