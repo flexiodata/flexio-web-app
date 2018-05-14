@@ -35,6 +35,7 @@
       />
       <div v-if="has_connection">
         <el-form
+          ref="form"
           class="el-form-compact el-form__label-tiny"
           :model="edit_connection"
           :rules="rules"
@@ -125,7 +126,7 @@
         class="ttu b"
         type="primary"
         @click="submit"
-        :disabled="mode == 'add' && (has_errors || (is_oauth && !is_connected))"
+        :disabled="has_errors"
       >
         {{submit_label}}
       </el-button>
@@ -216,6 +217,13 @@
         handler: 'initConnection',
         immediate: true,
         deep: true
+      },
+      eid() {
+        this.$nextTick(() => {
+          if (this.$refs.form) {
+            this.$refs.form.validateField('alias')
+          }
+        })
       }
     },
     data() {
@@ -269,8 +277,9 @@
         return this.ctype.length > 0
       },
       our_title() {
-        if (this.title.length > 0)
+        if (this.title.length > 0) {
           return this.title
+        }
 
         return this.mode == 'edit'
           ? 'Edit "' + _.get(this.connection, 'name') + '" Connection'
@@ -278,7 +287,20 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
+      },
+      has_errors() {
+        if (this.is_oauth && !this.is_connected)
+          return true
+
+        return false
       }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        if (this.$refs.form) {
+          this.$refs.form.validateField('alias')
+        }
+      })
     },
     methods: {
       cinfo() {
@@ -320,7 +342,7 @@
         if (value.length == 0)
           return
 
-        if (value == _.get(this.connection, 'alias', ''))
+        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', ''))
           return
 
         this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {

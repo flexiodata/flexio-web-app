@@ -199,6 +199,9 @@
         if (value.length == 0)
           return
 
+        if (value == _.get(this.orig_pipe, 'alias', ''))
+          return
+
         this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {

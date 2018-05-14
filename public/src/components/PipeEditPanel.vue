@@ -9,6 +9,7 @@
 
     <div>
       <el-form
+        ref="form"
         class="el-form-compact el-form__label-tiny"
         :model="edit_pipe"
         :rules="rules"
@@ -150,8 +151,9 @@
         return _.get(this, 'edit_pipe.eid', '')
       },
       our_title() {
-        if (this.title.length > 0)
+        if (this.title.length > 0) {
           return this.title
+        }
 
         return this.mode == 'edit'
           ? 'Edit "' + _.get(this.pipe, 'name') + '" Pipe'
@@ -159,7 +161,17 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
+      },
+      has_errors() {
+        return false
       }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        if (this.$refs.form) {
+          this.$refs.form.validateField('alias')
+        }
+      })
     },
     methods: {
       submit() {
@@ -174,7 +186,7 @@
         if (value.length == 0)
           return
 
-        if (value == _.get(this.pipe, 'alias', ''))
+        if (this.mode == 'edit' && value == _.get(this.pipe, 'alias', ''))
           return
 
         this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
