@@ -40,7 +40,7 @@
       >
         <el-form
           ref="form"
-          class="el-form-cozy"
+          class="el-form-compact"
           label-width="8rem"
           :model="$data"
           :rules="rules"
