@@ -75,6 +75,15 @@ class AController extends \Flexio\System\FxControllerAction
             }
         }
 
+        if (($params['service'] ?? '') == 'gmail')
+        {
+            if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->gmail_client_secret ?? '')) == 0)
+            {
+                die('This function is presently not available.');
+            }
+        }
+
         $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         $eid = $params['eid'] ?? false;
