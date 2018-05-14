@@ -61,7 +61,7 @@ class Convert extends \Flexio\Jobs\Base
     const FORMAT_PDF            = 'pdf';
     const FORMAT_TABLE          = 'table';
 
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -71,7 +71,7 @@ class Convert extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // if a job format is specified, get the mime type from the job definition
         $job_params = $this->getJobParameters();
@@ -176,7 +176,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromTableInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromTableInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
@@ -290,7 +290,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromRssAtom(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromRssAtom(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         $outstream->set($instream->get());
         $outstream->setPath(\Flexio\Base\Util::generateHandle());
@@ -324,7 +324,7 @@ class Convert extends \Flexio\Jobs\Base
         });
     }
 
-    private function createOutputFromPdfInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromPdfInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         if (!isset($GLOBALS['pdfparser_included']))
         {
@@ -397,7 +397,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createOutputFromJsonInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromJsonInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         // read the json into a buffer
         $buffer = '';
@@ -435,7 +435,7 @@ class Convert extends \Flexio\Jobs\Base
         $streamwriter->close();
     }
 
-    private function createOutputFromCsvInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type)
+    private function createOutputFromCsvInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         // parameters
         $job_params = $this->getJobParameters();
@@ -723,7 +723,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private function createOutputFromFixedLengthInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function createOutputFromFixedLengthInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // parameters
         $job_params = $this->getJobParameters();
@@ -885,7 +885,7 @@ class Convert extends \Flexio\Jobs\Base
         $outstream->close();
     }
 
-    private static function indexOfLineTerminator(string $haystack, string $qualifier, $start = 0)
+    private static function indexOfLineTerminator(string $haystack, string $qualifier, int $start = 0) // TODO: set return type
     {
         if (empty($qualifier))
         {
@@ -985,7 +985,7 @@ class Convert extends \Flexio\Jobs\Base
         return $result_row;
     }
 
-    private static function updateStructureFromRow(array &$structure, array $row)
+    private static function updateStructureFromRow(array &$structure, array $row) : void
     {
         $idx = 0;
         foreach ($row as $key => $val)
@@ -1045,7 +1045,6 @@ class Convert extends \Flexio\Jobs\Base
                 }
             }
 
-
             if ($structure[$idx]['detected_type'] == 'N' && $len > 0)
             {
                 $v = str_replace(['$','%'], '', $val);
@@ -1071,7 +1070,7 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-    private static function structureFromIcsv(array $row)
+    private static function structureFromIcsv(array $row) : ?array
     {
         $structure = [];
         foreach ($row as $fld)
@@ -1108,7 +1107,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromJsonArray(array $items)
+    private static function determineStructureFromJsonArray(array $items) // TODO: set return type
     {
         // create the fields based off the first row
         if (count($items) === 0)
@@ -1174,7 +1173,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition(array $job_params)
+    private static function getInputMimeTypeFromDefinition(array $job_params) // TODO: set return type
     {
         $input = $job_params['input'] ?? '';
         $format = is_string($input) ? $input : ($job_params['input']['format'] ?? '');
@@ -1195,7 +1194,7 @@ class Convert extends \Flexio\Jobs\Base
             return false;
     }
 
-    private static function getOutputMimeTypeFromDefinition(array $job_params)
+    private static function getOutputMimeTypeFromDefinition(array $job_params) // TODO: set return type
     {
         $output = $job_params['output'] ?? '';
         $format = is_string($output) ? $output : ($output['format'] ?? '');

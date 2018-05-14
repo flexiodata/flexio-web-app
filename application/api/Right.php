@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Right
 {
-    public static function create(\Flexio\Api\Request $request)
+    public static function create(\Flexio\Api\Request $request) : void
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -151,7 +151,7 @@ class Right
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api\Request $request)
+    public static function set(\Flexio\Api\Request $request) : void
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -202,7 +202,7 @@ class Right
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api\Request $request)
+    public static function delete(\Flexio\Api\Request $request) : void
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -238,7 +238,7 @@ class Right
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready
@@ -267,7 +267,7 @@ class Right
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         // TODO: the behavior of this API endpoint isn't yet finalized;
         // throw an exception until it's ready

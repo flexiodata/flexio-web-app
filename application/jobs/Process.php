@@ -204,12 +204,12 @@ class Process implements \Flexio\IFace\IProcess
         return $this->files;
     }
 
-    public function addLocalConnection(string $identifier, array $connection_properties)
+    public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
         $this->local_connections[$identifier] = $connection_properties;
     }
 
-    public function getLocalConnection(string $identifier) // : ?array   TODO: add return type
+    public function getLocalConnection(string $identifier) : ?array
     {
         return ($this->local_connections[$identifier] ?? null);
     }
@@ -219,7 +219,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_connections;
     }
 
-    public function getConnection(string $identifier)
+    public function getConnection(string $identifier) : ?array
     {
         $local = $this->getLocalConnection($identifier);
         if ($local !== null)
@@ -401,7 +401,7 @@ class Process implements \Flexio\IFace\IProcess
         return $state;
     }
 
-    private function executeTask(array $task)
+    private function executeTask(array $task) : void
     {
         if (!IS_PROCESSTRYCATCH())
         {

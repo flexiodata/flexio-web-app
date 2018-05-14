@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class FlexioPlugin extends \Flexio\System\FrameworkPlugin
 {
-    public function preDispatch()
+    public function preDispatch() : void
     {
         global $g_config;
 
@@ -97,7 +97,7 @@ class FlexioPlugin extends \Flexio\System\FrameworkPlugin
         }
     }
 
-    public function dispatchLoopShutdown()
+    public function dispatchLoopShutdown() : void
     {
         $view = FlexioPlugin::getView();
         $response = $this->getResponse();

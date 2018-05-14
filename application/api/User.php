@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class User
 {
-    public static function create(\Flexio\Api\Request $request)
+    public static function create(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -218,7 +218,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api\Request $request)
+    public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -281,7 +281,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -300,7 +300,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function changepassword(\Flexio\Api\Request $request)
+    public static function changepassword(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -343,7 +343,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function resetpassword(\Flexio\Api\Request $request)
+    public static function resetpassword(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
 
@@ -391,7 +391,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function activate(\Flexio\Api\Request $request)
+    public static function activate(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
 
@@ -434,7 +434,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function resendverify(\Flexio\Api\Request $request)
+    public static function resendverify(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
 
@@ -478,7 +478,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function requestpasswordreset(\Flexio\Api\Request $request)
+    public static function requestpasswordreset(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
 
@@ -519,7 +519,7 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function resetConfig(\Flexio\Api\Request $request)
+    public static function resetConfig(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();

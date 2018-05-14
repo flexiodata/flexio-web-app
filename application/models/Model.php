@@ -854,7 +854,7 @@ class Model
     }
 
 /*
-    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename)
+    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename) : void
     {
         // create the zip archive if needed and add the temporary file to the zip archive
         $zip = new \ZipArchive();
@@ -863,7 +863,7 @@ class Model
         $zip->close();
     }
 
-    public static function echoZipDownload($zip_name)
+    public static function echoZipDownload($zip_name) : void
     {
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
@@ -888,7 +888,7 @@ class Model
         @readfile($zip_name);
     }
 
-    public static function getExtract()
+    public static function getExtract() : void
     {
         $items_selected = array(
             'object' => 'select eid, eid_type from tbl_object',

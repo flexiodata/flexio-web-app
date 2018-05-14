@@ -131,7 +131,7 @@ class System
         return true;
     }
 
-    public static function setCurrentUserEid(string $user_eid)
+    public static function setCurrentUserEid(string $user_eid) : void
     {
         $GLOBALS['g_store']->user_eid = $user_eid;
     }
@@ -141,7 +141,7 @@ class System
         return $GLOBALS['g_store']->user_eid;
     }
 
-    public static function clearLoginIdentity()
+    public static function clearLoginIdentity() : void
     {
         global $g_store;
 
@@ -162,14 +162,14 @@ class System
                 array('user_eid'           => $g_store->user_eid)));
     }
 
-    public static function unserializeGlobalVars(string $str)
+    public static function unserializeGlobalVars(string $str) : void
     {
         global $g_store;
         $arr = unserialize(base64_decode($str));
         $g_store->user_eid = $arr['user_eid'];
     }
 
-    public static function generateTemporaryAuthToken(string $user_eid)
+    public static function generateTemporaryAuthToken(string $user_eid) : string
     {
         $pk = $GLOBALS['g_config']->private_key;
         $time = ''.time();
@@ -181,7 +181,7 @@ class System
         return "$token:$hash";
     }
 
-    public static function getUserEidFromAuthToken(string $token) // : ?string
+    public static function getUserEidFromAuthToken(string $token) : ?string
     {
         $parts = explode(':', $token);
         if (count($parts) != 5)
@@ -221,7 +221,7 @@ class System
         return true;
     }
 
-    public static function resetModel()
+    public static function resetModel() : void
     {
         // this function resets the store reference to the model so that
         // a new model can be created with getModel() that uses updated
@@ -397,7 +397,7 @@ class System
         return trim($str);
     }
 
-    public static function getBinaryPath(string $bin)
+    public static function getBinaryPath(string $bin) : ?string
     {
         $fxhome = \Flexio\System\System::getBaseDirectory();
         $base_path = dirname($fxhome);
@@ -515,12 +515,12 @@ class System
         return true;
     }
 
-    public static function getConfig()
+    public static function getConfig() // TODO: set return type
     {
         return $GLOBALS['g_config'];
     }
 
-    public static function log(string $str)
+    public static function log(string $str) : void
     {
         if (!isset($GLOBALS['g_config']->query_log))
             return;

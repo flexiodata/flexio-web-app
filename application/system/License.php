@@ -38,7 +38,7 @@ class License
         return self::isLicenseAuthentic($license, $err);
     }
 
-    public static function decodeLicense(string $license, string &$err = null)
+    public static function decodeLicense(string $license, string &$err = null) // TODO: add return type
     {
         $license = preg_replace('/-{5}(BEGIN|END) LICENSE-{5}/', '', $license);
         $license = str_replace(array("\n", "\r", "\t", ' '), '', $license);

@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class Serial
 {
-    public static function jumble(array &$arr, int $check, int $encode)
+    public static function jumble(array &$arr, int $check, int $encode) : void
     {
         $key = array(6,7,9,5,1,4,5,4,2,8,1,8,7,2,3,4,1,7,5,6,9,2,7,7);
         $check = $check % count($key);

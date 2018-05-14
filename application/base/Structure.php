@@ -317,7 +317,7 @@ class Structure
         return true;
     }
 
-    private function initialize()
+    private function initialize() : void
     {
         $this->columns = array();
         $this->column_index_lookup = array();

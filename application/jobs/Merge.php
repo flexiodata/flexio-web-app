@@ -32,7 +32,7 @@ if (($validator->check($params, array(
 
 class Merge extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         //parent::run($process);
 
@@ -103,22 +103,24 @@ class Merge extends \Flexio\Jobs\Base
             }
         }
 
-
         switch ($merge_mode)
         {
             default:
             case 'stream':
-                return $this->mergeStreams($streams, $output);
+                $this->mergeStreams($streams, $output);
+                return;
 
             case 'json':
-                return $this->mergeJson($streams, $output);
+                $this->mergeJson($streams, $output);
+                return;
 
             case 'table':
-                return $this->mergeTables($streams, $output);
+                $this->mergeTables($streams, $output);
+                return;
         }
     }
 
-    private function mergeStreams(array $streams, \Flexio\Iface\IStream $outstream)
+    private function mergeStreams(array $streams, \Flexio\Iface\IStream $outstream) : void
     {
         // set the default output mime type; for now, use text, but should be
         // based on content
@@ -146,7 +148,7 @@ class Merge extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function mergeJson(array $streams, \Flexio\Iface\IStream $outstream)
+    private function mergeJson(array $streams, \Flexio\Iface\IStream $outstream) : void
     {
         // set the default output mime type; for now, use text, but should be
         // based on content
@@ -223,7 +225,7 @@ class Merge extends \Flexio\Jobs\Base
         }
     }
 
-    private function mergeTables(array $streams, \Flexio\Iface\IStream $outstream)
+    private function mergeTables(array $streams, \Flexio\Iface\IStream $outstream) : void
     {
         // create a merged structure and a row template for insertion
         // (the bulk insert, which the row inserter uses, requires the fields

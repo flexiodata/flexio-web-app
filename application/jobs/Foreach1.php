@@ -36,7 +36,7 @@ class Foreach1 extends \Flexio\Jobs\Base
     private $task;
     private $varname;
 
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -118,7 +118,7 @@ class Foreach1 extends \Flexio\Jobs\Base
         $process->setParams($this->env);
     }
 
-    private function doIteration(string $process_user_eid, $input)
+    private function doIteration(string $process_user_eid, $input) : void
     {
         $subprocess = \Flexio\Jobs\Process::create();
         $subprocess->setOwner($process_user_eid);

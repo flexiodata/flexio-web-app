@@ -100,7 +100,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this;
     }
 
-    public function resetConnection()
+    public function resetConnection() : \Flexio\Object\Connection
     {
         // TODO: test function
         $properties = json_encode(array('connection_info' => array()));

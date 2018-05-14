@@ -33,7 +33,7 @@ class Segment
     const TYPE_PIPE_RUN           = 'action.pipe.run';
     const TYPE_PROCESS_CREATED    = 'action.process.created';
 
-    public static function trackTest(\Flexio\Api\Request $request)
+    public static function trackTest(\Flexio\Api\Request $request) : void
     {
         // only allow test tracking on non-production systems
         if (IS_PRODSITE())
@@ -51,10 +51,10 @@ class Segment
 
         $action = $query_params['action'];
         self::track_request($action, $requesting_user_eid, $query_params);
-        return array();
+        return;
     }
 
-    public static function track(string $action, string $user_eid, array $params)
+    public static function track(string $action, string $user_eid, array $params) : void
     {
         // only allow actual tracking on production
         if (!IS_PRODSITE())
@@ -63,7 +63,7 @@ class Segment
         self::track_request($action, $user_eid, $params);
     }
 
-    public static function track_request(string $action, string $user_eid, array $params)
+    public static function track_request(string $action, string $user_eid, array $params) : void
     {
         // TODO: once we add back server-side analytics, we'll remove
         //       this and begin bringing things back online
@@ -71,7 +71,7 @@ class Segment
 
         // only track valid actions
         if (self::isValidAction($action) === false)
-            return false;
+            return;
 
         switch ($action)
         {
@@ -99,7 +99,7 @@ class Segment
         }
     }
 
-    private static function identify_internal(string $user_eid, array $params)
+    private static function identify_internal(string $user_eid, array $params) : void
     {
         // TODO: once we add back server-side analytics, we'll remove
         //       this and begin bringing things back online
@@ -134,7 +134,7 @@ class Segment
         curl_close($ch);
     }
 
-    private static function track_internal(string $action, string $user_eid, array $params)
+    private static function track_internal(string $action, string $user_eid, array $params) : void
     {
         $segment_key = $GLOBALS['g_config']->segment_key?? false;
         if ($segment_key === false)

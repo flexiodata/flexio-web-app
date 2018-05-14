@@ -187,7 +187,7 @@ class Api
         'GET /admin/action/test'                      => '\Flexio\Api\Action::test'
     );
 
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params)
+    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params) : void
     {
         // API v2 request can currently come from one of two patterns
         // TODO: handle both for now, but remove /api/v2 when appropriate
@@ -372,7 +372,7 @@ class Api
         \Flexio\Api\Response::sendError($error);
     }
 
-    private static function processRequest(\Flexio\Api\Request $request)
+    private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type for function
     {
         $request_method = $request->getMethod();
         $url_params = $request->getUrlParams();

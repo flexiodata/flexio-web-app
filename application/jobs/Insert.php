@@ -32,7 +32,7 @@ if (($validator->check($params, array(
 
 class Insert extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -47,9 +47,7 @@ class Insert extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
-
         if (!$vfs->insert($path, $values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-
     }
 }

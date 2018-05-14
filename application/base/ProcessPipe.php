@@ -30,7 +30,7 @@ class ProcessPipe
             proc_close($this->process);
     }
 
-    public function exec($cmd, $cwd, $env = null)
+    public function exec($cmd, $cwd, $env = null) : bool
     {
         $descriptor_spec = array(
             0 => array("pipe", "r"),
@@ -55,7 +55,7 @@ class ProcessPipe
         return true;
     }
 
-    public function isRunning()
+    public function isRunning() : bool
     {
         $status = proc_get_status($this->process);
         if ($status['running'])
@@ -64,8 +64,7 @@ class ProcessPipe
             return false;
     }
 
-
-    public function closeWrite()
+    public function closeWrite() : void
     {
         if ($this->pipes[0])
         {
@@ -74,7 +73,7 @@ class ProcessPipe
         }
     }
 
-    public function closeRead()
+    public function closeRead() : void
     {
         if ($this->pipes[1])
         {
@@ -83,7 +82,7 @@ class ProcessPipe
         }
     }
 
-    public function closeError()
+    public function closeError() : void
     {
         if ($this->pipes[2])
         {
@@ -92,8 +91,7 @@ class ProcessPipe
         }
     }
 
-
-    public function write($buf)
+    public function write($buf) // TODO: add return type
     {
         //fxdebug("Want to write " . strlen($buf) . " bytes");
 
@@ -103,15 +101,14 @@ class ProcessPipe
         return $b;
     }
 
-    public function read($size)
+    public function read($size) // TODO: add return type
     {
         //return stream_get_contents($this->pipes[1]);
         return fread($this->pipes[1], $size);
         //fgets($this->pipes[1]);
     }
 
-
-    public function canRead()
+    public function canRead() : bool
     {
         return !feof($this->pipes[1]);
         /*
@@ -130,7 +127,7 @@ class ProcessPipe
         */
     }
 
-    public function getError()
+    public function getError() : ?string
     {
         $str = fread($this->pipes[2], 8192);
         if (strlen($str) == 0)

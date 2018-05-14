@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class Util
 {
-    public static function rmtree($dir)
+    public static function rmtree($dir) // TODO: add return type
     {
         $files = array_diff(scandir($dir), array('.', '..'));
 
@@ -445,7 +445,7 @@ class Util
         return $datetime->format(\DateTime::ISO8601);
     }
 
-    public static function formatDateDiff(string $date1 = null, string $date2 = null) // TODO: set function return type
+    public static function formatDateDiff(string $date1 = null, string $date2 = null) : ?float
     {
         // returns the difference between two datetimes in seconds (including
         // fractions of a second)
@@ -687,7 +687,7 @@ class Util
         return self::generateRandomString(20);
     }
 
-    public static function encrypt(string $plaintext, string $key = null) // TODO: set function return type
+    public static function encrypt(string $plaintext, string $key = null) : ?string
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 
@@ -920,7 +920,7 @@ class Util
         }
     }
 
-    public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, $process) // TODO: add type checking for handle
+    public static function addProcessInputFromStream($php_stream_handle, string $post_content_type, $process) : void
     {
         $stream = false;
         $streamwriter = false;
@@ -1019,7 +1019,7 @@ class Util
         $process->setParams($form_params);
     }
 
-    public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type)
+    public static function handleStreamUpload(array $params, \Flexio\IFace\IStreamWriter $streamwriter, string &$filename, string &$mime_type) : void
     {
         $filename = '';
         $mime_type = '';

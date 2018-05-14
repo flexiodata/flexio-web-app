@@ -319,7 +319,7 @@ class NoticeEmail
         return $this;
     }
 
-    private function initialize()
+    private function initialize() : void
     {
         $this->from_addresses = array();
         $this->to_addresses = array();
@@ -333,7 +333,7 @@ class NoticeEmail
         $this->attachments = array();
     }
 
-    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message)
+    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message) : void
     {
         // start with a clean slate
         $this->initialize();

@@ -50,7 +50,7 @@ class Action
     //   const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
     //   const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
 
-    public static function test(\Flexio\Api\Request $request)
+    public static function test(\Flexio\Api\Request $request) : void
     {
         $request->track(\Flexio\Api\Action::TYPE_TEST);
         sleep(1);
@@ -61,12 +61,12 @@ class Action
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function summary(\Flexio\Api\Request $request)
+    public static function summary(\Flexio\Api\Request $request) : void
     {
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

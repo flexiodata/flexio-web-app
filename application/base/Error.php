@@ -47,7 +47,7 @@ class Error
     const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
     const NOT_FOUND              =  'not-found';  // generic not found (404)
 
-    public static function getDefaultMessage($code)
+    public static function getDefaultMessage($code) : string
     {
         switch ($code)
         {

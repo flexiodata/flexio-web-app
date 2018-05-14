@@ -33,7 +33,7 @@ if (($validator->check($params, array(
 
 class Select extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -59,7 +59,7 @@ class Select extends \Flexio\Jobs\Base
         }
     }
 
-    private function processJson(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
+    private function processJson(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream) : void
     {
         // get the selected columns
         $params = $this->getJobParameters();
@@ -108,7 +108,7 @@ class Select extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function processTable(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream)
+    private function processTable(\Flexio\IFace\IStream $instream, \Flexio\IFace\IStream $outstream) : void
     {
         // get the selected columns
         $params = $this->getJobParameters();

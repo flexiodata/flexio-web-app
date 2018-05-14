@@ -23,7 +23,7 @@ class AController extends \Flexio\System\FxControllerAction
         parent::init();
     }
 
-    public function connectionauthAction()
+    public function connectionauthAction() : void
     {
         // TODO: route this request through the UI?
 
@@ -105,7 +105,7 @@ class AController extends \Flexio\System\FxControllerAction
         }
     }
 
-    public function connectionauthcallbackAction()
+    public function connectionauthcallbackAction() : void
     {
         $params = $this->getRequest()->getParams();
 

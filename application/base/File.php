@@ -61,8 +61,6 @@ class File
         return [ 'base' => $base, 'name' => $name ];
     }
 
-
-
     public static function getFilename(string $filename) : string
     {
         // pathinfo will parse paths differently, depending on the

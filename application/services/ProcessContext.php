@@ -238,7 +238,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         }
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: set return type
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
 
@@ -249,7 +249,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
             $callback($buf);
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: set return type
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path,'/');

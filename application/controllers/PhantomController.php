@@ -18,13 +18,13 @@ namespace Flexio\Controllers;
 
 class PhantomController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         $this->renderRaw();
         parent::init();
     }
 
-    public static function renderWorkspaceThumbnail($params)
+    public static function renderWorkspaceThumbnail($params) // TODO: set return type
     {
         if (!isset($params['url']))
             return false;
@@ -56,7 +56,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
         return $output;
     }
 
-    private static function createParamsFile($params)
+    private static function createParamsFile($params) // TODO: set return type
     {
         // make sure parameters are an array
         if (!is_array($params))
@@ -84,7 +84,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
         return $params_file;
     }
 
-    private static function createFullUri($url)
+    private static function createFullUri($url) // TODO: set return type
     {
         // get the domain name
         $domain = $_SERVER['SERVER_NAME'];

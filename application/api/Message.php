@@ -68,7 +68,7 @@ class Message
         }
     }
 
-    private function initialize()
+    private function initialize() : void
     {
         $this->message_type = false;
         $this->message_params = false;

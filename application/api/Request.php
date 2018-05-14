@@ -97,7 +97,7 @@ class Request
         return $action;
     }
 
-    public function getAction()
+    public function getAction() // TODO: set return type
     {
         return $this->action;
     }

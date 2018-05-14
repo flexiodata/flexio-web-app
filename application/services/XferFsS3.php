@@ -151,7 +151,7 @@ class XferFsS3
         return true;
     }
 
-    public static function fileSize(string $path)
+    public static function fileSize(string $path) // TODO: add return type
     {
         global $g_config;
 

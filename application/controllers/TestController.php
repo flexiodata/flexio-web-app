@@ -21,12 +21,12 @@ namespace Flexio\Controllers;
 
 class TestController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         parent::init();
     }
 
-    public function constantsAction()
+    public function constantsAction() : void
     {
         $constants = array();
         $constants['EID_TYPE_USER']       = \Model::TYPE_USER;
@@ -40,7 +40,7 @@ class TestController extends \Flexio\System\FxControllerAction
         echo $result;
     }
 
-    public function phpinfoAction()
+    public function phpinfoAction() : void
     {
         // PHP CONFIG INFO
         if (!IS_TESTING())
@@ -50,7 +50,7 @@ class TestController extends \Flexio\System\FxControllerAction
         phpinfo();
     }
 
-    public function embedAction()
+    public function embedAction() : void
     {
         // EMBED TEST
         if (!IS_TESTING())
@@ -60,7 +60,7 @@ class TestController extends \Flexio\System\FxControllerAction
         $this->render();
     }
 
-    public function unitAction()
+    public function unitAction() : void
     {
         // TEST SUITE
         if (!IS_TESTING())
@@ -70,7 +70,7 @@ class TestController extends \Flexio\System\FxControllerAction
         $this->render();
     }
 
-    public function gridAction()
+    public function gridAction() : void
     {
         // GRID TEST
         if (!IS_TESTING())
@@ -80,7 +80,7 @@ class TestController extends \Flexio\System\FxControllerAction
         $this->render();
     }
 
-    public function waitAction()
+    public function waitAction() : void
     {
         if (!IS_TESTING())
             return;
@@ -91,7 +91,7 @@ class TestController extends \Flexio\System\FxControllerAction
         echo "Done Waiting ". time();
     }
 
-    public function echoAction()
+    public function echoAction() : void
     {
         if (!IS_TESTING())
             return;
@@ -100,7 +100,7 @@ class TestController extends \Flexio\System\FxControllerAction
         echo "Echo ". time();
     }
 
-    public function emptyAction()
+    public function emptyAction() : void
     {
         if (!IS_TESTING())
             return;
@@ -110,7 +110,7 @@ class TestController extends \Flexio\System\FxControllerAction
         echo '{}';
     }
 
-    public function uploadAction()
+    public function uploadAction() : void
     {
         // note: following is a simple form to echo raw multipart data
         if (!IS_TESTING())
@@ -178,7 +178,7 @@ EOD;
         echo($simple_upload);
     }
 
-    public function uploadresultAction()
+    public function uploadresultAction() : void
     {
         // note: following echoes the raw multipart data from uploadAction()
         if (!IS_TESTING())
@@ -220,7 +220,7 @@ EOD;
         echo($result);
     }
 
-    public function formAction()
+    public function formAction() : void
     {
         if (!IS_TESTING())
             return;

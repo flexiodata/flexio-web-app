@@ -147,14 +147,14 @@ class ElasticSearch implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSys
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: set return type
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
         return false;
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: set return type
     {
         // in elasticsearch, index endpoints follow form:  <host>:port/index/type
         // TODO: for now, set default type to 'rows'; should be based on path somehow

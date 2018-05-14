@@ -33,7 +33,7 @@ if (($validator->check($params, array(
 
 class Echo1 extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 

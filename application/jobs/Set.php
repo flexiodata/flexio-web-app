@@ -34,7 +34,7 @@ if (($validator->check($params, array(
 
 class Set extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 

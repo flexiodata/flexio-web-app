@@ -37,8 +37,7 @@ class Copy extends \Flexio\Jobs\Base
 {
     private $recursive = false;   // similar to cp -r flag
 
-
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -82,7 +81,7 @@ class Copy extends \Flexio\Jobs\Base
         }
     }
 
-    private function copyFiles(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyFiles(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to) : void
     {
 
         $arr = \Flexio\Base\File::splitBasePathAndName($from);
@@ -132,7 +131,6 @@ class Copy extends \Flexio\Jobs\Base
         {
         }
 
-
         foreach ($from_files as $file)
         {
             $full_from_path = \Flexio\Base\File::appendPath($base, $file['name']);
@@ -145,7 +143,7 @@ class Copy extends \Flexio\Jobs\Base
         }
     }
 
-    private function copyDirectory(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyDirectory(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to) : void
     {
         if (!$this->recursive) // if recursive mode is off (which is the default), then directory copying is disabled
             return;
@@ -154,7 +152,7 @@ class Copy extends \Flexio\Jobs\Base
         $this->copyFiles($process, $vfs, $from . '/*', $to);
     }
 
-    private function copyFile(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to)
+    private function copyFile(\Flexio\IFace\IProcess $process, \Flexio\Services\Vfs $vfs, string $from, string $to) : void
     {
         $subprocess = \Flexio\Jobs\Process::create();
 

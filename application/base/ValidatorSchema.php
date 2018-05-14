@@ -49,7 +49,7 @@ class ValidatorSchema
 
     private $errors = array();
 
-    public static function check($data, $schema)
+    public static function check($data, $schema) // TODO: add return type
     {
         // note: function to validate a schema and an object against a
         // schema; useful for validating both the data and schema when
@@ -71,7 +71,7 @@ class ValidatorSchema
         return $validator;
     }
 
-    public static function checkObject($data, $schema)
+    public static function checkObject($data, $schema) // TODO: add return type
     {
         // note: function to validate an object against a schema; useful
         // for validating data and schema when a schema is already validated
@@ -86,7 +86,7 @@ class ValidatorSchema
         return $validator;
     }
 
-    public static function checkSchema($schema)
+    public static function checkSchema($schema) // TODO: add return type
     {
         // note: function to validate a schema; useful for validating
         // a schema once before using it to check multiple objects
@@ -101,17 +101,17 @@ class ValidatorSchema
         return $validator;
     }
 
-    public function setError($code, $message = null)
+    public function setError($code, $message = null) : void
     {
         $this->errors[] = array('code' => $code, 'message' => $message);
     }
 
-    public function getErrors()
+    public function getErrors() : array
     {
         return $this->errors;
     }
 
-    public function hasErrors()
+    public function hasErrors() : bool
     {
         if (empty($this->errors))
             return false;
@@ -119,12 +119,12 @@ class ValidatorSchema
         return true;
     }
 
-    public function clearErrors()
+    public function clearErrors() : void
     {
         $this->errors = array();
     }
 
-    private function testSchema($schema)
+    private function testSchema($schema) : bool
     {
         // make sure schema is an object
         if (!is_object($schema))
@@ -264,7 +264,7 @@ class ValidatorSchema
         return true;
     }
 
-    private function testObject($property, $value, $schema)
+    private function testObject($property, $value, $schema) : bool
     {
         $this->testTitle($property, $value, $schema);
         $this->testDescription($property, $value, $schema);
@@ -293,7 +293,7 @@ class ValidatorSchema
         return true;
     }
 
-    private function testTitle($property, $data, $schema)
+    private function testTitle($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'title'))
             return;
@@ -304,7 +304,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testDescription($property, $data, $schema)
+    private function testDescription($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'description'))
             return;
@@ -315,7 +315,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testType($property, $data, $schema)
+    private function testType($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'type'))
             return;
@@ -353,7 +353,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testEnum($property, $data, $schema)
+    private function testEnum($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'enum'))
             return;
@@ -371,7 +371,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testNumericMinimum($property, $data, $schema)
+    private function testNumericMinimum($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'minimum'))
             return;
@@ -394,7 +394,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testNumericMaximum($property, $data, $schema)
+    private function testNumericMaximum($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'maximum'))
             return;
@@ -417,7 +417,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testNumericMultipleOf($property, $data, $schema)
+    private function testNumericMultipleOf($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'multipleOf'))
             return;
@@ -455,7 +455,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testStringMinimumLength($property, $data, $schema)
+    private function testStringMinimumLength($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'minLength'))
             return;
@@ -469,7 +469,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testStringMaximumLength($property, $data, $schema)
+    private function testStringMaximumLength($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'maxLength'))
             return;
@@ -483,7 +483,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testStringPattern($property, $data, $schema)
+    private function testStringPattern($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'pattern'))
             return;
@@ -504,7 +504,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testStringFormat($property, $data, $schema)
+    private function testStringFormat($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'format'))
             return;
@@ -539,7 +539,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testArrayMinimumItemCount($property, $data, $schema)
+    private function testArrayMinimumItemCount($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'minItems'))
             return;
@@ -553,7 +553,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testArrayMaximumItemCount($property, $data, $schema)
+    private function testArrayMaximumItemCount($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'maxItems'))
             return;
@@ -567,7 +567,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testObjectMinimumPropertyCount($property, $data, $schema)
+    private function testObjectMinimumPropertyCount($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'minProperties'))
             return;
@@ -585,7 +585,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testObjectMaximumPropertyCount($property, $data, $schema)
+    private function testObjectMaximumPropertyCount($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'maxProperties'))
             return;
@@ -603,7 +603,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testObjectRequiredProperties($property, $data, $schema)
+    private function testObjectRequiredProperties($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'required'))
             return;
@@ -622,7 +622,7 @@ class ValidatorSchema
         return;
     }
 
-    private function testArrayItems($property, $data, $schema)
+    private function testArrayItems($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'items'))
             return;
@@ -675,7 +675,7 @@ class ValidatorSchema
         // type has to be an array or an object; validated in schema test
     }
 
-    private function testObjectProperties($property, $data, $schema)
+    private function testObjectProperties($property, $data, $schema) : void
     {
         if (!property_exists($schema, 'properties'))
             return;
@@ -698,7 +698,7 @@ class ValidatorSchema
         }
     }
 
-    private static function isValueEqual($value1, $value2)
+    private static function isValueEqual($value1, $value2) : bool
     {
         // values are equal if they are both primitive types (not array
         // and not object) and they have the same equivalent value
@@ -764,7 +764,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function isPrimitiveValueEqual($value1, $value2)
+    private static function isPrimitiveValueEqual($value1, $value2) : bool
     {
         // if either node is an array or object, it's not a primitive
         if (is_array($value1) || is_array($value2))
@@ -794,7 +794,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function isTypeMatch($data, $type)
+    private static function isTypeMatch($data, $type) : bool
     {
         if ($type === 'null' && is_null($data))
             return true;
@@ -815,7 +815,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function isPrimitiveType($type)
+    private static function isPrimitiveType($type) : bool
     {
         if ($type === 'null')
             return true;
@@ -836,7 +836,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function getType($data)
+    private static function getType($data) : string
     {
         if (is_null($data))
             return 'null';
@@ -857,7 +857,7 @@ class ValidatorSchema
         return '';
     }
 
-    private static function json_property_exists($value, $key)
+    private static function json_property_exists($value, $key) : bool
     {
         // returns true if the key exists in a given array or object;
         // false otherwise
@@ -870,7 +870,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function is_jsonobject($value)
+    private static function is_jsonobject($value) : bool
     {
         // a json object is a set of key-value associations; returns
         // true if the value is a json array; false otherwise
@@ -887,7 +887,7 @@ class ValidatorSchema
         return false;
     }
 
-    private static function is_jsonarray($value)
+    private static function is_jsonarray($value) : bool
     {
         // a json array is an indexed array without string key-value
         // associations; returns true if the value is a json array;
@@ -900,7 +900,7 @@ class ValidatorSchema
         return ($str_item_count === 0) ? true : false;
     }
 
-    private static function example($key, $value)
+    private static function example($key, $value) // TODO: add return type
     {
         // create a value that can be displayed
         if (is_array($value) || is_object($value))
@@ -918,7 +918,7 @@ class ValidatorSchema
         return json_encode($pair);
     }
 
-    private static function example_list($data)
+    private static function example_list($data) // TODO: add return type
     {
         $count = count($data);
 

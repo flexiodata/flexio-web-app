@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Response
 {
-    public static function sendContent(array $content)
+    public static function sendContent(array $content) : void
     {
         // set the default headers; note: never cache api calls
         header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
@@ -34,7 +34,7 @@ class Response
         echo $response;
     }
 
-    public static function sendError(array $error)
+    public static function sendError(array $error) : void
     {
         $error_code = $error['code'] ?? \Flexio\Base\Error::GENERAL;
         $error_message = $error['message'] ?? '';

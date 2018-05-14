@@ -74,7 +74,7 @@ class Validator
         return $this->params_updated;
     }
 
-    public function clear()
+    public function clear() : void
     {
         $this->errors = array();
         $this->params_updated = false;
@@ -100,7 +100,7 @@ class Validator
         return false;
     }
 
-    public function setError(string $code, string $message = null)
+    public function setError(string $code, string $message = null) : void
     {
         $this->errors[] = array('code' => $code, 'message' => $message);
         $this->params_updated = false;
@@ -440,7 +440,7 @@ class Validator
         return false;
     }
 
-    private function makeString($s)
+    private function makeString($s) : string
     {
         if (is_array($s) || is_object($s))
             return json_encode($s);

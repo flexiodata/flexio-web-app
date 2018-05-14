@@ -62,7 +62,7 @@ class ExecuteProxy
     public $check_sig = '';
     public $callbacks = null;
 
-    public function initialize($cmd, $callbacks)
+    public function initialize($cmd, $callbacks) : bool
     {
         $this->callbacks = $callbacks;
 
@@ -81,9 +81,10 @@ class ExecuteProxy
 
         stream_set_blocking($this->pipes[0], true);  // write to here
         stream_set_blocking($this->pipes[1], false); // read from here
+        return true;
     }
 
-    public function run()
+    public function run() : void
     {
         while (!feof($this->pipes[1]))
         {
@@ -151,7 +152,7 @@ class ExecuteProxy
 */
     }
 
-    public function getStdError()
+    public function getStdError() // TODO: add return type
     {
         $res = fread($this->pipes[2], 8192);
         if (strlen(trim($res)) == 0)
@@ -159,7 +160,7 @@ class ExecuteProxy
         return $res;
     }
 
-    public static function encodepart($val)
+    public static function encodepart($val) // TODO: add return type
     {
         if (is_null($val))
         {
@@ -226,7 +227,7 @@ class ExecuteProxy
         return $type . strlen($val) . ',' . $val;
     }
 
-    public function parseCallString($s)
+    public function parseCallString($s) // TODO: add return type
     {
         $offset = 0;
         $strlen = strlen($s);
@@ -302,13 +303,13 @@ class ExecuteProxy
     }
 
 
-    public function sendMessage($msg)
+    public function sendMessage($msg) : void
     {
         fwrite($this->pipes[0], self::MESSAGE_SIGNATURE . strlen($msg) . ',' . $msg);
         fflush($this->pipes[0]);
     }
 
-    public function onMessage($msg)
+    public function onMessage($msg) : void
     {
         $arr = $this->parseCallString($msg);
         //var_dump($arr);
@@ -366,18 +367,18 @@ class ScriptHost
 
 
     //public function setProcess(\Flexio\IFace\Process $process)
-    public function setProcess($process)
+    public function setProcess($process) : void
     {
         $this->process = $process;
     }
 
     //public function getProcess() : \Flexio\IFace\Process
-    public function getProcess()
+    public function getProcess() // TODO: add return type
     {
         return $this->process;
     }
 
-    private function getInputReader($idx)
+    private function getInputReader($idx) // TODO: add return type
     {
         if (count($this->input_readers) != count($this->input_streams))
             $this->input_readers = array_pad($this->input_readers, count($this->input_streams), null);
@@ -396,7 +397,7 @@ class ScriptHost
         return $ret;
     }
 
-    private function getOutputWriter($idx)
+    private function getOutputWriter($idx) // TODO: add return type
     {
         if (count($this->output_writers) != count($this->output_streams))
             $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
@@ -415,30 +416,29 @@ class ScriptHost
         return $ret;
     }
 
-    public function func_hello($message)
+    public function func_hello(string $message) : string
     {
         return "Parameter = $message";
     }
 
-    public function func_exit($response_code)
+    public function func_exit($response_code) : void
     {
         $this->process->setExitCode((int)$response_code);
     }
 
-    public function func_setenv($key,$value)
+    public function func_setenv($key,$value) : void
     {
         $env = $this->process->getParams();
         $env[$key] = $value;
         $this->process->setParams($env);
     }
 
-
-    public function func_getQueryParameters()
+    public function func_getQueryParameters() // TODO: add return type
     {
         return (object)$_GET;
     }
 
-    public function func_getFormParameters()
+    public function func_getFormParameters() // TODO: add return type
     {
         $form = [];
         $params = $this->process->getParams();
@@ -452,7 +452,7 @@ class ScriptHost
         return (object)$form;
     }
 
-    public function func_getFilesParameters()
+    public function func_getFilesParameters() // TODO: add return type
     {
         if ($this->context_files)
         {
@@ -473,7 +473,7 @@ class ScriptHost
 
     private $runjob_stdin = null;
 
-    public function func_runJob($json)
+    public function func_runJob($json) : void
     {
         $task = @json_decode($json,true);
         if ($task === null)
@@ -492,13 +492,12 @@ class ScriptHost
         $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
-
-    public function func_debug($message)
+    public function func_debug($message) : void
     {
         die($message);
     }
 
-    public function func_getEnv()
+    public function func_getEnv() // TODO: add return type
     {
         $res = [];
         $params = $this->process->getParams();
@@ -509,7 +508,7 @@ class ScriptHost
         return (object)$res;
     }
 
-    public function func_setEnvValue($key, $value)
+    public function func_setEnvValue($key, $value) : bool
     {
         $env = $this->process->getParams();
         $env[(string)$key] = (string)$value;
@@ -517,10 +516,9 @@ class ScriptHost
         return true;
     }
 
-
     public $stream_cache = array();
 
-    private function __getInputStreamInfo($name)
+    private function __getInputStreamInfo($name) : ?array
     {
         if ($name === '_fxstdin_')
         {
@@ -550,7 +548,7 @@ class ScriptHost
         }
     }
 
-    public function func_getInputStreamInfo($name)
+    public function func_getInputStreamInfo($name) // TODO: add return type
     {
         if (isset($this->input_map[$name]))
         {
@@ -565,7 +563,7 @@ class ScriptHost
         return $res;
     }
 
-    private function __getOutputStreamInfo($name)
+    private function __getOutputStreamInfo($name) // TODO: add return type
     {
         if ($name === '_fxstdout_')
         {
@@ -582,7 +580,7 @@ class ScriptHost
         }
     }
 
-    public function func_getOutputStreamInfo($name)
+    public function func_getOutputStreamInfo($name) // TODO: add return type
     {
         if (isset($this->output_map[$name]))
         {
@@ -597,8 +595,7 @@ class ScriptHost
         return $res;
     }
 
-
-    public function func_setOutputStreamInfo($idx, $properties)
+    public function func_setOutputStreamInfo($idx, $properties) : bool
     {
         if ($idx < 0 || $idx >= count($this->output_streams))
             return false;
@@ -615,7 +612,7 @@ class ScriptHost
         return true;
     }
 
-    public function func_createOutputStream($properties)
+    public function func_createOutputStream($properties) : array
     {
         // we've removed the "looped stream" handling in the logic, so
         // we no longer support arbitrary creation and subsequent processing
@@ -650,7 +647,7 @@ class ScriptHost
                      'content_type' => $stream->getMimeType());
     }
 
-    public function func_managedCreate($stream_idx, $properties)
+    public function func_managedCreate($stream_idx, $properties) : bool
     {
         if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
             return false;
@@ -686,7 +683,7 @@ class ScriptHost
         return true;
     }
 
-    public function func_getInputStreamStructure($stream_idx)
+    public function func_getInputStreamStructure($stream_idx) // TODO: add return type
     {
         if ($stream_idx < 0 || $stream_idx >= count($this->input_streams))
             return false;
@@ -696,11 +693,11 @@ class ScriptHost
         return $stream->getStructure()->enum();
     }
 
-    public function func_insertRow($stream_idx, $row)
+    public function func_insertRow($stream_idx, $row) : void
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
-            return null;
+            return;
 
         if ($row instanceof BinaryData)
         {
@@ -714,11 +711,11 @@ class ScriptHost
         }
     }
 
-    public function func_insertRows($stream_idx, $row)
+    public function func_insertRows($stream_idx, $row) : void
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
-            return null;
+            return;
 
         foreach ($rows as $row)
         {
@@ -728,11 +725,11 @@ class ScriptHost
         }
     }
 
-    public function func_write($handle, $data)
+    public function func_write($handle, $data) : void
     {
         $writer = $this->getOutputWriter($handle);
         if (is_null($writer))
-            return null;
+            return;
 
         if ($data instanceof BinaryData)
         {
@@ -751,8 +748,7 @@ class ScriptHost
         }
     }
 
-
-    public function func_read($stream_idx, $length)
+    public function func_read($stream_idx, $length) // TODO: add return type
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
@@ -765,7 +761,7 @@ class ScriptHost
         return new BinaryData($res);
     }
 
-    public function func_readline($stream_idx, $associative)
+    public function func_readline($stream_idx, $associative) // TODO: add return type
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
@@ -843,7 +839,7 @@ class Execute extends \Flexio\Jobs\Base
         return $errors;
     }
 
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -962,7 +958,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
 
-            return true;
+            return;
         }
         else if ($this->lang == 'javascript')
         {
@@ -992,7 +988,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
 
-            return true;
+            return;
         }
         else if ($this->lang == 'html')
         {
@@ -1025,15 +1021,14 @@ class Execute extends \Flexio\Jobs\Base
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($code);
 
-            return true;
+            return;
         }
-
     }
 
     // checks a script for compile errors;  If script compiles cleanly, returns true,
     // otherwise returns the error as a textual string
 
-    public static function checkScript(string $lang, string $code)
+    public static function checkScript(string $lang, string $code) : bool
     {
         // only python supported for now
         if ($lang == 'python')

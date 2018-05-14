@@ -139,7 +139,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
-    
+
         $postdata = json_encode([
             "path" => $path
         ]);
@@ -231,7 +231,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
 
-    private function internalCreateFolder(string $path, string &$error_summary)
+    private function internalCreateFolder(string $path, string &$error_summary) : bool
     {
         $postdata = json_encode(array('path' => $path, 'autorename' => false));
 
@@ -261,16 +261,13 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
     }
 
-
-
-
     public function open($path) : \Flexio\IFace\IStream
     {
         // TODO: implement
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: set return type
     {
         $path = $params['path'] ?? '';
 
@@ -329,8 +326,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: set return type
     {
         if (isset($params['structure']))
         {
@@ -455,7 +451,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private static function initialize(array $params)
+    private static function initialize(array $params) // TODO: set return type
     {
         $client_id = $GLOBALS['g_config']->dropbox_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->dropbox_client_secret ?? '';

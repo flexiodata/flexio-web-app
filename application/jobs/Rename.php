@@ -32,7 +32,7 @@ if (($validator->check($params, array(
 
 class Rename extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -42,7 +42,7 @@ class Rename extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream, $process->getParams());
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, array $env)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, array $env) : void
     {
         // any renames will be handled by the file/column rename handler; if there
         // aren't any operations, the stream will simply be copied to the output
@@ -66,7 +66,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function renameStream(\Flexio\IFace\IStream $outstream, array $env)
+    private function renameStream(\Flexio\IFace\IStream $outstream, array $env) : void
     {
         // get the files to rename
         $job_params = $this->getJobParameters();
@@ -106,7 +106,7 @@ class Rename extends \Flexio\Jobs\Base
         }
     }
 
-    private function renameColumns(\Flexio\IFace\IStream $outstream)
+    private function renameColumns(\Flexio\IFace\IStream $outstream) : void
     {
         // get the columns to rename
         $job_params = $this->getJobParameters();

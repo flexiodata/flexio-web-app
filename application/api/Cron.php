@@ -44,7 +44,7 @@ class Cron
     private $table = array();
     private $last_update = '';
 
-    public static function run()
+    public static function run() : void
     {
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
@@ -55,7 +55,7 @@ class Cron
         $scheduler->loop();
     }
 
-    public function loop(int $count = null)
+    public function loop(int $count = null) : void
     {
         $lastkey = '';
 
@@ -192,14 +192,14 @@ class Cron
         }
     }
 
-    private function refreshSchedulerTable()
+    private function refreshSchedulerTable() : void
     {
         $pipe_model = \Flexio\System\System::getModel()->pipe;
         $current_update = $pipe_model->getLastSchedulerUpdateTime();
 
         print("Current update time " . $current_update . "; Last update time " . $this->last_update . "\n");
         if ($current_update == $this->last_update)
-            return false; // scheduler needs no updates
+            return; // scheduler needs no updates
         $this->last_update = $current_update;
 
         print("Refreshing scheduler table due to new changes.\n");
@@ -274,7 +274,7 @@ class Cron
         }
     }
 
-    private static function runPipe(string $pipe_eid)
+    private static function runPipe(string $pipe_eid) : void
     {
         // TODO: following run code is similar to \1\Process::create()
         // should factor; for example, the \Flexio\Api\Process::create()
@@ -294,7 +294,7 @@ class Cron
         }
         catch (\Flexio\Base\Exception $e)
         {
-            return false;
+            return;
         }
 
         $process_properties = array(

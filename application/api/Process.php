@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Process
 {
-    public static function create(\Flexio\Api\Request $request)
+    public static function create(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -120,7 +120,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api\Request $request)
+    public static function delete(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -145,7 +145,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api\Request $request)
+    public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -182,7 +182,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -261,7 +261,7 @@ class Process
         return;
     }
 
-    public static function summary(\Flexio\Api\Request $request)
+    public static function summary(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -317,7 +317,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -375,7 +375,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function log(\Flexio\Api\Request $request)
+    public static function log(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -399,7 +399,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api\Request $request)
+    public static function run(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -467,7 +467,7 @@ class Process
         exit(0);
     }
 
-    public static function cancel(\Flexio\Api\Request $request)
+    public static function cancel(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -501,7 +501,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) // TODO: set function return type
+    private static function waitforchangewhilerunning(string $eid, int $time_to_wait_for_change) : void
     {
         // TODO: move part of implemention to some type of function
         // on the object?  e.g. $object->hasChanged() so we can cache

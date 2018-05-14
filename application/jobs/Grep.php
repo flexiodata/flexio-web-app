@@ -32,7 +32,7 @@ if (($validator->check($params, array(
 
 class Grep extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -42,7 +42,7 @@ class Grep extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -57,7 +57,7 @@ class Grep extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // input/output
         $outstream->set($instream->get());
@@ -230,13 +230,13 @@ class WindowsPipe
         $this->closeError();
     }
 
-    public function exec($cmd, $cwd)
+    public function exec($cmd, $cwd) : void
     {
         $this->exec = $this->wsh->Exec($cmd);
         $this->open_streams = [true,true,true];
     }
 
-    public function isRunning()
+    public function isRunning() : bool
     {
         if (is_null($this->exec))
             return false;
@@ -244,7 +244,7 @@ class WindowsPipe
         return ($this->exec->Status == 0);
     }
 
-    public function closeWrite()
+    public function closeWrite() : void
     {
         if (!$this->open_streams[0])
         {
@@ -253,7 +253,7 @@ class WindowsPipe
         }
     }
 
-    public function closeRead()
+    public function closeRead() : void
     {
         if (!$this->open_streams[1])
         {
@@ -262,7 +262,7 @@ class WindowsPipe
         }
     }
 
-    public function closeError()
+    public function closeError() : void
     {
         if (!$this->open_streams[2])
         {
@@ -271,21 +271,20 @@ class WindowsPipe
         }
     }
 
-    public function write($buf)
+    public function write($buf) : void
     {
         $this->exec->Stdin->Write($buf);
     }
 
-    public function read($size)
+    public function read($size) // TODO: add return type
     {
         if (!$this->exec->Stderr->AtEndOfStream)
             $stderr = $this->exec->Stderr->ReadAll();
         return $this->exec->Stdout->Read($size);
     }
 
-    public function canRead()
+    public function canRead() : bool
     {
         return $this->exec->Stdout->AtEndOfStream ? false : true;
     }
-
 }
