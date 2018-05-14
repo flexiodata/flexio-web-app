@@ -56,7 +56,8 @@ class BinaryData
 
 class ExecuteProxy
 {
-    const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
+    private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
+
     public $pipes = [null,null,null];
     public $process = null;
     public $check_sig = '';

@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class System
 {
-    const SESSION_VERSION = 5;
+    public const SESSION_VERSION = 5;
 
     // login() authenticates a username and password and, if valid,
     // creates session variables which store the authentication information;

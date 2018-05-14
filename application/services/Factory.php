@@ -18,28 +18,28 @@ namespace Flexio\Services;
 
 class Factory
 {
-    const TYPE_UNDEFINED     = '';
-    const TYPE_FLEXIO        = 'flexio';
-    const TYPE_FTP           = 'ftp';
-    const TYPE_SFTP          = 'sftp';
-    const TYPE_MYSQL         = 'mysql';
-    const TYPE_POSTGRES      = 'postgres';
-    const TYPE_ELASTICSEARCH = 'elasticsearch';
-    const TYPE_DROPBOX       = 'dropbox';
-    const TYPE_BOX           = 'box';
-    const TYPE_GMAIL         = 'gmail';
-    const TYPE_GOOGLEDRIVE   = 'googledrive';
-    const TYPE_GOOGLESHEETS  = 'googlesheets';
-    const TYPE_GITHUB        = 'github';
-    const TYPE_AMAZONS3      = 'amazons3';
-    const TYPE_EMAIL         = 'email';
-    const TYPE_SMTP          = 'smtp';
-    const TYPE_HTTP          = 'http';
-    const TYPE_RSS           = 'rss';
-    const TYPE_SOCRATA       = 'socrata';
-    const TYPE_PIPELINEDEALS = 'pipelinedeals';
-    const TYPE_MAILJET       = 'mailjet';
-    const TYPE_TWILIO        = 'twilio';
+    public const TYPE_UNDEFINED     = '';
+    public const TYPE_FLEXIO        = 'flexio';
+    public const TYPE_FTP           = 'ftp';
+    public const TYPE_SFTP          = 'sftp';
+    public const TYPE_MYSQL         = 'mysql';
+    public const TYPE_POSTGRES      = 'postgres';
+    public const TYPE_ELASTICSEARCH = 'elasticsearch';
+    public const TYPE_DROPBOX       = 'dropbox';
+    public const TYPE_BOX           = 'box';
+    public const TYPE_GMAIL         = 'gmail';
+    public const TYPE_GOOGLEDRIVE   = 'googledrive';
+    public const TYPE_GOOGLESHEETS  = 'googlesheets';
+    public const TYPE_GITHUB        = 'github';
+    public const TYPE_AMAZONS3      = 'amazons3';
+    public const TYPE_EMAIL         = 'email';
+    public const TYPE_SMTP          = 'smtp';
+    public const TYPE_HTTP          = 'http';
+    public const TYPE_RSS           = 'rss';
+    public const TYPE_SOCRATA       = 'socrata';
+    public const TYPE_PIPELINEDEALS = 'pipelinedeals';
+    public const TYPE_MAILJET       = 'mailjet';
+    public const TYPE_TWILIO        = 'twilio';
 
 
     public static function create(array $connection_properties) // TODO: add return type

@@ -42,81 +42,81 @@ if (($validator->check($params, array(
 class Transform extends \Flexio\Jobs\Base
 {
     // transform options
-    const OPERATION_NONE        = '';
-    const OPERATION_CHANGE_TYPE = 'type';
-    const OPERATION_CHANGE_CASE = 'case';
-    const OPERATION_SUBSTRING   = 'substring';
-    const OPERATION_REMOVE_TEXT = 'remove';
-    const OPERATION_TRIM_TEXT   = 'trim';
-    const OPERATION_PAD_TEXT    = 'pad';
+    public const OPERATION_NONE        = '';
+    public const OPERATION_CHANGE_TYPE = 'type';
+    public const OPERATION_CHANGE_CASE = 'case';
+    public const OPERATION_SUBSTRING   = 'substring';
+    public const OPERATION_REMOVE_TEXT = 'remove';
+    public const OPERATION_TRIM_TEXT   = 'trim';
+    public const OPERATION_PAD_TEXT    = 'pad';
 
     // transform parameters
 
     // transform options
-    const CAPITALIZE_NONE         = '';
-    const CAPITALIZE_LOWER        = 'lower';
-    const CAPITALIZE_UPPER        = 'upper';
-    const CAPITALIZE_PROPER       = 'proper';
-    const CAPITALIZE_FIRST_LETTER = 'first-letter';
+    public const CAPITALIZE_NONE         = '';
+    public const CAPITALIZE_LOWER        = 'lower';
+    public const CAPITALIZE_UPPER        = 'upper';
+    public const CAPITALIZE_PROPER       = 'proper';
+    public const CAPITALIZE_FIRST_LETTER = 'first-letter';
 
-    const PAD_LOCATION_NONE  = '';
-    const PAD_LOCATION_LEFT  = 'left';
-    const PAD_LOCATION_RIGHT = 'right';
+    public const PAD_LOCATION_NONE  = '';
+    public const PAD_LOCATION_LEFT  = 'left';
+    public const PAD_LOCATION_RIGHT = 'right';
 
-    const TRIM_LOCATION_NONE             = '';
-    const TRIM_LOCATION_LEADING          = 'leading';
-    const TRIM_LOCATION_TRAILING         = 'trailing';
-    const TRIM_LOCATION_LEADING_TRAILING = 'leading-trailing';
+    public const TRIM_LOCATION_NONE             = '';
+    public const TRIM_LOCATION_LEADING          = 'leading';
+    public const TRIM_LOCATION_TRAILING         = 'trailing';
+    public const TRIM_LOCATION_LEADING_TRAILING = 'leading-trailing';
 
-    const SUBSTRING_LOCATION_NONE  = '';
-    const SUBSTRING_LOCATION_LEFT  = 'left';
-    const SUBSTRING_LOCATION_RIGHT = 'right';
-    const SUBSTRING_LOCATION_MID   = 'mid';
-    const SUBSTRING_LOCATION_PART  = 'part';
+    public const SUBSTRING_LOCATION_NONE  = '';
+    public const SUBSTRING_LOCATION_LEFT  = 'left';
+    public const SUBSTRING_LOCATION_RIGHT = 'right';
+    public const SUBSTRING_LOCATION_MID   = 'mid';
+    public const SUBSTRING_LOCATION_PART  = 'part';
 
-    const REMOVE_LOCATION_NONE             = '';
-    const REMOVE_LOCATION_LEADING          = 'leading';
-    const REMOVE_LOCATION_TRAILING         = 'trailing';
-    const REMOVE_LOCATION_LEADING_TRAILING = 'leading-trailing';
-    const REMOVE_LOCATION_ANY              = 'any';
+    public const REMOVE_LOCATION_NONE             = '';
+    public const REMOVE_LOCATION_LEADING          = 'leading';
+    public const REMOVE_LOCATION_TRAILING         = 'trailing';
+    public const REMOVE_LOCATION_LEADING_TRAILING = 'leading-trailing';
+    public const REMOVE_LOCATION_ANY              = 'any';
 
-    const REMOVE_TYPE_NONE           = '';
-    const REMOVE_TYPE_SYMBOLS        = 'symbols';
-    const REMOVE_TYPE_WHITESPACE     = 'whitespace';
-    const REMOVE_TYPE_LETTERS        = 'letters';
-    const REMOVE_TYPE_NUMBERS        = 'numbers';
-    const REMOVE_TYPE_REGEX          = 'regex';
-    const REMOVE_TYPE_SELECTED_TEXT  = 'selected-text';
-    const REMOVE_TYPE_SELECTED_CHARS = 'selected-chars';
+    public const REMOVE_TYPE_NONE           = '';
+    public const REMOVE_TYPE_SYMBOLS        = 'symbols';
+    public const REMOVE_TYPE_WHITESPACE     = 'whitespace';
+    public const REMOVE_TYPE_LETTERS        = 'letters';
+    public const REMOVE_TYPE_NUMBERS        = 'numbers';
+    public const REMOVE_TYPE_REGEX          = 'regex';
+    public const REMOVE_TYPE_SELECTED_TEXT  = 'selected-text';
+    public const REMOVE_TYPE_SELECTED_CHARS = 'selected-chars';
 
     // column classes
-    const COLUMN_TYPE_NONE           = '';
-    const COLUMN_TYPE_TEXT           = 'text';
-    const COLUMN_TYPE_CHARACTER      = 'character';
-    const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
-    const COLUMN_TYPE_NUMERIC        = 'numeric';
-    const COLUMN_TYPE_DOUBLE         = 'double';
-    const COLUMN_TYPE_INTEGER        = 'integer';
-    const COLUMN_TYPE_DATE           = 'date';
-    const COLUMN_TYPE_DATETIME       = 'datetime';
-    const COLUMN_TYPE_BOOLEAN        = 'boolean';
+    public const COLUMN_TYPE_NONE           = '';
+    public const COLUMN_TYPE_TEXT           = 'text';
+    public const COLUMN_TYPE_CHARACTER      = 'character';
+    public const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
+    public const COLUMN_TYPE_NUMERIC        = 'numeric';
+    public const COLUMN_TYPE_DOUBLE         = 'double';
+    public const COLUMN_TYPE_INTEGER        = 'integer';
+    public const COLUMN_TYPE_DATE           = 'date';
+    public const COLUMN_TYPE_DATETIME       = 'datetime';
+    public const COLUMN_TYPE_BOOLEAN        = 'boolean';
 
     // character classes
-    const CHARACTER_CLASS_NONE   = '';
-    const CHARACTER_CLASS_ALNUM  = 'alnum';
-    const CHARACTER_CLASS_ALPHA  = 'alpha';
-    const CHARACTER_CLASS_ASCII  = 'ascii';
-    const CHARACTER_CLASS_BLANK  = 'blank';
-    const CHARACTER_CLASS_CNTRL  = 'cntrl';
-    const CHARACTER_CLASS_DIGIT  = 'digit';
-    const CHARACTER_CLASS_GRAPH  = 'graph';
-    const CHARACTER_CLASS_LOWER  = 'lower';
-    const CHARACTER_CLASS_PRINT  = 'print';
-    const CHARACTER_CLASS_PUNCT  = 'punct';
-    const CHARACTER_CLASS_SPACE  = 'space';
-    const CHARACTER_CLASS_UPPER  = 'upper';
-    const CHARACTER_CLASS_WORD   = 'word';
-    const CHARACTER_CLASS_XDIGIT = 'xdigit';
+    public const CHARACTER_CLASS_NONE   = '';
+    public const CHARACTER_CLASS_ALNUM  = 'alnum';
+    public const CHARACTER_CLASS_ALPHA  = 'alpha';
+    public const CHARACTER_CLASS_ASCII  = 'ascii';
+    public const CHARACTER_CLASS_BLANK  = 'blank';
+    public const CHARACTER_CLASS_CNTRL  = 'cntrl';
+    public const CHARACTER_CLASS_DIGIT  = 'digit';
+    public const CHARACTER_CLASS_GRAPH  = 'graph';
+    public const CHARACTER_CLASS_LOWER  = 'lower';
+    public const CHARACTER_CLASS_PRINT  = 'print';
+    public const CHARACTER_CLASS_PUNCT  = 'punct';
+    public const CHARACTER_CLASS_SPACE  = 'space';
+    public const CHARACTER_CLASS_UPPER  = 'upper';
+    public const CHARACTER_CLASS_WORD   = 'word';
+    public const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
 
     public function run(\Flexio\IFace\IProcess $process) : void

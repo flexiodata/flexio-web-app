@@ -41,11 +41,11 @@ class ValidatorSchema
     // definitions
     // default
 
-    const ERROR_UNDEFINED          =  '';
-    const ERROR_GENERAL            =  'general';
-    const ERROR_INVALID_SYNTAX     =  'invalid-syntax';
-    const ERROR_MISSING_PARAMETER  =  'missing-parameter';
-    const ERROR_INVALID_PARAMETER  =  'invalid-parameter';
+    public const ERROR_UNDEFINED          =  '';
+    public const ERROR_GENERAL            =  'general';
+    public const ERROR_INVALID_SYNTAX     =  'invalid-syntax';
+    public const ERROR_MISSING_PARAMETER  =  'missing-parameter';
+    public const ERROR_INVALID_PARAMETER  =  'invalid-parameter';
 
     private $errors = array();
 

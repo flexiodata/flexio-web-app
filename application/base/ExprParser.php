@@ -51,22 +51,20 @@ class ExprVariable
 
 class ExprParser
 {
-    const TYPE_INVALID   = 0;
-    const TYPE_UNDEFINED = 1;
-    const TYPE_NULL      = 2;
-    const TYPE_STRING    = 3;
-    const TYPE_INTEGER   = 4;
-    const TYPE_FLOAT     = 5;
-    const TYPE_BOOLEAN   = 6;
-    const TYPE_DATE      = 7;
-    const TYPE_DATETIME  = 8;
+    public const TYPE_INVALID   = 0;
+    public const TYPE_UNDEFINED = 1;
+    public const TYPE_NULL      = 2;
+    public const TYPE_STRING    = 3;
+    public const TYPE_INTEGER   = 4;
+    public const TYPE_FLOAT     = 5;
+    public const TYPE_BOOLEAN   = 6;
+    public const TYPE_DATE      = 7;
+    public const TYPE_DATETIME  = 8;
 
-    const NODETYPE_VALUE     = 1;
-    const NODETYPE_OPERATOR  = 2;
-    const NODETYPE_FUNCTION  = 3;
-    const NODETYPE_VARIABLE  = 4;
-
-    const EPSILON = 0.000000000001;
+    public const NODETYPE_VALUE     = 1;
+    public const NODETYPE_OPERATOR  = 2;
+    public const NODETYPE_FUNCTION  = 3;
+    public const NODETYPE_VARIABLE  = 4;
 
     // normally, users should supply their own operator table; the operator
     // table below is a good example of how it should look like

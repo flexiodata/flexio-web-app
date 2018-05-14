@@ -18,28 +18,28 @@ namespace Flexio\Api;
 
 class Cron
 {
-    const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
+    public const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
 
-    const FREQ_ONE_MINUTE      = 'one-minute';
-    const FREQ_FIVE_MINUTES    = 'five-minutes';
-    const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
-    const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
-    const FREQ_HOURLY          = 'hourly';
-    const FREQ_DAILY           = 'daily';
-    const FREQ_WEEKLY          = 'weekly';
-    const FREQ_MONTHLY         = 'monthly';
+    public const FREQ_ONE_MINUTE      = 'one-minute';
+    public const FREQ_FIVE_MINUTES    = 'five-minutes';
+    public const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
+    public const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
+    public const FREQ_HOURLY          = 'hourly';
+    public const FREQ_DAILY           = 'daily';
+    public const FREQ_WEEKLY          = 'weekly';
+    public const FREQ_MONTHLY         = 'monthly';
 
-    const DAY_MONDAY    = 'mon';
-    const DAY_TUESDAY   = 'tue';
-    const DAY_WEDNESDAY = 'wed';
-    const DAY_THURSDAY  = 'thu';
-    const DAY_FRIDAY    = 'fri';
-    const DAY_SATURDAY  = 'sat';
-    const DAY_SUNDAY    = 'sun';
+    public const DAY_MONDAY    = 'mon';
+    public const DAY_TUESDAY   = 'tue';
+    public const DAY_WEDNESDAY = 'wed';
+    public const DAY_THURSDAY  = 'thu';
+    public const DAY_FRIDAY    = 'fri';
+    public const DAY_SATURDAY  = 'sat';
+    public const DAY_SUNDAY    = 'sun';
 
-    const MONTH_FIRST     = 1;
-    const MONTH_FIFTEENTH = 15;
-    const MONTH_LAST      = 'last';
+    public const MONTH_FIRST     = 1;
+    public const MONTH_FIFTEENTH = 15;
+    public const MONTH_LAST      = 'last';
 
     private $table = array();
     private $last_update = '';

@@ -18,37 +18,37 @@ namespace Flexio\Api;
 
 class Action
 {
-    const TYPE_UNDEFINED              = '';
-    const TYPE_TEST                   = 'action.test';
+    public const TYPE_UNDEFINED              = '';
+    public const TYPE_TEST                   = 'action.test';
 
-    const TYPE_USER_LOGIN             = 'action.user.login';
-    const TYPE_USER_LOGOUT            = 'action.user.logout';
+    public const TYPE_USER_LOGIN             = 'action.user.login';
+    public const TYPE_USER_LOGOUT            = 'action.user.logout';
 
-    const TYPE_USER_CREATE            = 'action.user.create';
-    const TYPE_USER_UPDATE            = 'action.user.update';
-    const TYPE_USER_DELETE            = 'action.user.delete';
-    const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
-    const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
+    public const TYPE_USER_CREATE            = 'action.user.create';
+    public const TYPE_USER_UPDATE            = 'action.user.update';
+    public const TYPE_USER_DELETE            = 'action.user.delete';
+    public const TYPE_USER_CREDENTIAL_UPDATE = 'action.user.credential.update';
+    public const TYPE_USER_CREDENTIAL_RESET  = 'action.user.credential.reset';
 
-    const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
-    const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
+    public const TYPE_USER_AUTHKEY_CREATE    = 'action.user.authkey.create';
+    public const TYPE_USER_AUTHKEY_DELETE    = 'action.user.authkey.delete';
 
-    const TYPE_PIPE_CREATE            = 'action.pipe.create';
-    const TYPE_PIPE_UPDATE            = 'action.pipe.update';
-    const TYPE_PIPE_DELETE            = 'action.pipe.delete';
-    const TYPE_PIPE_RUN               = 'action.pipe.run';
+    public const TYPE_PIPE_CREATE            = 'action.pipe.create';
+    public const TYPE_PIPE_UPDATE            = 'action.pipe.update';
+    public const TYPE_PIPE_DELETE            = 'action.pipe.delete';
+    public const TYPE_PIPE_RUN               = 'action.pipe.run';
 
-    const TYPE_CONNECTION_CREATE      = 'action.connection.create';
-    const TYPE_CONNECTION_UPDATE      = 'action.connection.update';
-    const TYPE_CONNECTION_DELETE      = 'action.connection.delete';
-    const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
-    const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
+    public const TYPE_CONNECTION_CREATE      = 'action.connection.create';
+    public const TYPE_CONNECTION_UPDATE      = 'action.connection.update';
+    public const TYPE_CONNECTION_DELETE      = 'action.connection.delete';
+    public const TYPE_CONNECTION_CONNECT     = 'action.connection.connect';
+    public const TYPE_CONNECTION_DISCONNECT  = 'action.connection.disconnect';
 
     // TODO: add actions for following API endpoints:
 
     // * creating folder/file; TODO: what about delete?
-    //   const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
-    //   const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
+    //   public const TYPE_STORE_FOLDER_CREATE   = 'action.store.folder.create';
+    //   public const TYPE_STORE_FILE_CREATE     = 'action.store.file.create';
 
     public static function test(\Flexio\Api\Request $request) : void
     {

@@ -19,8 +19,8 @@ namespace Flexio\Object;
 class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
 {
     // TODO: add tests for these constants
-    const TYPE_DIRECTORY = 'SD';
-    const TYPE_FILE = 'SF';
+    public const TYPE_DIRECTORY = 'SD';
+    public const TYPE_FILE = 'SF';
 
     public function __construct()
     {

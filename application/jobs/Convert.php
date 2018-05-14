@@ -41,25 +41,25 @@ if (($validator->check($params, array(
 class Convert extends \Flexio\Jobs\Base
 {
     // token delimiters; other types of delimiters are allowed as well
-    const DELIMITER_NONE              = '{none}';
-    const DELIMITER_COMMA             = '{comma}';
-    const DELIMITER_SEMICOLON         = '{semicolon}';
-    const DELIMITER_PIPE              = '{pipe}';
-    const DELIMITER_TAB               = '{tab}';
-    const DELIMITER_SPACE             = '{space}';
+    public const DELIMITER_NONE              = '{none}';
+    public const DELIMITER_COMMA             = '{comma}';
+    public const DELIMITER_SEMICOLON         = '{semicolon}';
+    public const DELIMITER_PIPE              = '{pipe}';
+    public const DELIMITER_TAB               = '{tab}';
+    public const DELIMITER_SPACE             = '{space}';
 
     // token text qualifiers
-    const TEXT_QUALIFIER_NONE         = '{none}';
-    const TEXT_QUALIFIER_SINGLE_QUOTE = '{single-quote}';
-    const TEXT_QUALIFIER_DOUBLE_QUOTE = '{double-quote}';
+    public const TEXT_QUALIFIER_NONE         = '{none}';
+    public const TEXT_QUALIFIER_SINGLE_QUOTE = '{single-quote}';
+    public const TEXT_QUALIFIER_DOUBLE_QUOTE = '{double-quote}';
 
     // conversion formats
-    const FORMAT_DELIMITED_TEXT = 'delimited';
-    const FORMAT_FIXED_LENGTH   = 'fixed';
-    const FORMAT_JSON           = 'json';
-    const FORMAT_RSS            = 'rss';
-    const FORMAT_PDF            = 'pdf';
-    const FORMAT_TABLE          = 'table';
+    public const FORMAT_DELIMITED_TEXT = 'delimited';
+    public const FORMAT_FIXED_LENGTH   = 'fixed';
+    public const FORMAT_JSON           = 'json';
+    public const FORMAT_RSS            = 'rss';
+    public const FORMAT_PDF            = 'pdf';
+    public const FORMAT_TABLE          = 'table';
 
     public function run(\Flexio\IFace\IProcess $process) : void
     {

@@ -22,8 +22,6 @@ namespace Flexio\Services;
 
 class Email
 {
-    const EMAIL_ADDRESS_NO_REPLY = 'no-reply@flex.io';
-
     private $from_addresses;
     private $to_addresses;
     private $cc_addresses;

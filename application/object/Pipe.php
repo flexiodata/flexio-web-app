@@ -334,7 +334,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     }
 
     // schedule info
-    const SCHEDULE_TEMPLATE = <<<EOD
+    public const SCHEDULE_TEMPLATE = <<<EOD
     {
         "frequency": "",
         "timezone": "",
@@ -347,7 +347,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         ]
     }
 EOD;
-    const SCHEDULE_SCHEMA = <<<EOD
+    public const SCHEDULE_SCHEMA = <<<EOD
     {
         "type": "object",
         "required": ["frequency","timezone","days","times"],

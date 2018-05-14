@@ -20,18 +20,18 @@ class Segment
 {
     // TODO: update list of actions; these are some of the actions currently
     // tracked through the UI (using the action description names for the event)
-    const TYPE_UNDEFINED          = '';
-    const TYPE_TEST               = 'action.test';
-    const TYPE_SIGNED_UP          = 'action.signed-up';
-    const TYPE_SIGNED_IN          = 'action.signed-in';
-    const TYPE_SIGNED_OUT         = 'action.signed-out';
-    const TYPE_PASSWORD_CHANGED   = 'action.password.changed';
-    const TYPE_APIKEY_CREATED     = 'action.apikey.created';
-    const TYPE_CONNECTION_CREATED = 'action.connection.created';
-    const TYPE_PIPE_CREATED       = 'action.pipe.created';
-    const TYPE_PIPE_SCHEDULED     = 'action.pipe.scheduled';
-    const TYPE_PIPE_RUN           = 'action.pipe.run';
-    const TYPE_PROCESS_CREATED    = 'action.process.created';
+    public const TYPE_UNDEFINED          = '';
+    public const TYPE_TEST               = 'action.test';
+    public const TYPE_SIGNED_UP          = 'action.signed-up';
+    public const TYPE_SIGNED_IN          = 'action.signed-in';
+    public const TYPE_SIGNED_OUT         = 'action.signed-out';
+    public const TYPE_PASSWORD_CHANGED   = 'action.password.changed';
+    public const TYPE_APIKEY_CREATED     = 'action.apikey.created';
+    public const TYPE_CONNECTION_CREATED = 'action.connection.created';
+    public const TYPE_PIPE_CREATED       = 'action.pipe.created';
+    public const TYPE_PIPE_SCHEDULED     = 'action.pipe.scheduled';
+    public const TYPE_PIPE_RUN           = 'action.pipe.run';
+    public const TYPE_PROCESS_CREATED    = 'action.process.created';
 
     public static function trackTest(\Flexio\Api\Request $request) : void
     {
