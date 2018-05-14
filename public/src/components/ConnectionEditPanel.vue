@@ -30,7 +30,6 @@
 
     <div>
       <service-list
-        :omit-items="omitConnections"
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
@@ -135,7 +134,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
@@ -143,7 +141,6 @@
   import * as atypes from '../constants/action-type'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import api from '../api'
   import util from '../utils'
   import ServiceList from './ServiceList.vue'
   import ServiceIcon from './ServiceIcon.vue'
@@ -226,9 +223,6 @@
         type: Object,
         default: () => { return {} }
       },
-      'omit-connections': {
-        type: [Array, Function]
-      },
       'mode': {
         type: String,
         default: 'add'
@@ -274,15 +268,6 @@
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
-      service_name() {
-        return _.result(this, 'cinfo.service_name', '')
-      },
-      service_description() {
-        return _.result(this, 'cinfo.service_description', '')
-      },
-      has_connection() {
-        return this.ctype.length > 0
-      },
       is_http() {
         return this.ctype == ctypes.CONNECTION_TYPE_HTTP
       },
@@ -298,6 +283,15 @@
         }
         return false
       },
+      service_name() {
+        return _.result(this, 'cinfo.service_name', '')
+      },
+      service_description() {
+        return _.result(this, 'cinfo.service_description', '')
+      },
+      has_connection() {
+        return this.ctype.length > 0
+      },
       our_title() {
         if (this.title.length > 0)
           return this.title
@@ -311,9 +305,6 @@
       }
     },
     methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
