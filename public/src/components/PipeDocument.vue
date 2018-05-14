@@ -160,7 +160,7 @@
     <!-- pipe schedule dialog -->
     <el-dialog
       custom-class="no-header no-footer"
-      width="56rem"
+      width="42rem"
       top="8vh"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_schedule_dialog"

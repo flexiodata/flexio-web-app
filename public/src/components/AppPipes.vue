@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading pipes..."></spinner>
+      <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
   <div class="flex flex-column overflow-y-auto" v-else>
@@ -24,7 +24,7 @@
     </div>
 
     <!-- list -->
-    <pipe-list
+    <PipeList
       class="pl4-l pr4-l pb4-l"
       style="max-width: 1152px"
       :filter="filter"
@@ -38,12 +38,12 @@
     <!-- pipe schedule dialog -->
     <el-dialog
       custom-class="no-header no-footer"
-      width="56rem"
+      width="42rem"
       top="8vh"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_schedule_dialog"
     >
-      <pipe-schedule-panel
+      <PipeSchedulePanel
         :pipe="active_pipe"
         @close="show_pipe_schedule_dialog = false"
         @cancel="show_pipe_schedule_dialog = false"
@@ -59,7 +59,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_pipe_deploy_dialog"
     >
-      <pipe-deploy-panel
+      <PipeDeployPanel
         :pipe="active_pipe"
         @close="show_pipe_deploy_dialog = false"
       />
