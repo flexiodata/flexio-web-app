@@ -149,29 +149,6 @@
   import ConnectionInfo from './mixins/connection-info'
   import Validation from './mixins/validation'
 
-  const defaultRights = () => {
-    return {
-      [mtypes.MEMBER_TYPE_OWNER]: {
-        [atypes.ACTION_TYPE_READ]: true,
-        [atypes.ACTION_TYPE_WRITE]: true,
-        [atypes.ACTION_TYPE_EXECUTE]: true,
-        [atypes.ACTION_TYPE_DELETE]: true
-      },
-      [mtypes.MEMBER_TYPE_MEMBER]: {
-        [atypes.ACTION_TYPE_READ]: true,
-        [atypes.ACTION_TYPE_WRITE]: true,
-        [atypes.ACTION_TYPE_EXECUTE]: true,
-        [atypes.ACTION_TYPE_DELETE]: false
-      },
-      [mtypes.MEMBER_TYPE_PUBLIC]: {
-        [atypes.ACTION_TYPE_READ]: false,
-        [atypes.ACTION_TYPE_WRITE]: false,
-        [atypes.ACTION_TYPE_EXECUTE]: false,
-        [atypes.ACTION_TYPE_DELETE]: false
-      }
-    }
-  }
-
   const defaultAttrs = () => {
     return {
       eid: null,
@@ -192,8 +169,7 @@
         expires: '',
         headers: [],
         data: []
-      },
-      rights: defaultRights()
+      }
     }
   }
 
