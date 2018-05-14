@@ -43,7 +43,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_connection_new_dialog"
     >
-      <connection-edit-panel
+      <ConnectionEditPanel
         @close="show_connection_new_dialog = false"
         @cancel="show_connection_new_dialog = false"
         @submit="tryUpdateConnection"
@@ -54,12 +54,12 @@
     <!-- pipe save dialog -->
     <el-dialog
       custom-class="no-header no-footer"
-      width="36rem"
+      width="42rem"
       top="8vh"
       :modal-append-to-body="false"
       :visible.sync="show_pipe_save_dialog"
     >
-      <pipe-edit-panel
+      <PipeEditPanel
         title="Save Pipe"
         :pipe="pipe_attrs"
         @close="show_pipe_save_dialog = false"
@@ -79,7 +79,7 @@
       :close-on-press-escape="false"
       :visible.sync="show_pipe_deploy_dialog"
     >
-      <pipe-deploy-panel
+      <PipeDeployPanel
         :pipe="pipe"
         :is-onboarding="true"
         @close="show_pipe_deploy_dialog = false"
