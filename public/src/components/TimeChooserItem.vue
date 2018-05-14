@@ -1,31 +1,50 @@
 <template>
-  <div class="flex flex-row items-center darken-10 hide-child">
-    <div class="flex-fill mr3">
-      <value-select
-        :options="hour_options"
+  <div class="flex flex-row items-center pa1 br1 darken-05 hide-child">
+    <div class="flex-fill mr2">
+      <el-select
+        size="mini"
         v-model="hour"
-      ></value-select>
-    </div>
-    <div class="flex-fill mr3">
-      <value-select
-        :options="minute_options"
-        v-model="minute"
-      ></value-select>
-    </div>
-    <div class="flex-fill mr3">
-      <ui-select
-        :options="period_options"
-        v-model="period"
-      ></ui-select>
-    </div>
-    <div class="flex-none mh2">
-      <div
-        class="pointer f3 lh-solid ph1 b hint--top"
-        aria-label="Delete"
-        @click="onDeleteClick"
       >
-        &times;
-      </div>
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in hour_options"
+        />
+      </el-select>
+    </div>
+    <div class="flex-fill mr2">
+      <el-select
+        size="mini"
+        v-model="minute"
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in minute_options"
+        />
+      </el-select>
+    </div>
+    <div class="flex-fill mr2">
+      <el-select
+        size="mini"
+        v-model="period"
+      >
+        <el-option
+          :label="option.label"
+          :value="option.val"
+          :key="option.val"
+          v-for="option in period_options"
+        />
+      </el-select>
+    </div>
+    <div
+      class="pointer f3 black-30 hover-black-60 ph2 hint--top"
+      aria-label="Delete"
+      @click="onDeleteClick"
+    >
+      &times;
     </div>
   </div>
 </template>
@@ -71,7 +90,10 @@
           { label: '50', val: 50 },
           { label: '55', val: 55 }
         ],
-        period_options: ['AM', 'PM']
+        period_options: [
+          { label: 'AM', val: 'AM'  },
+          { label: 'PM', val: 'PM'  }
+        ]
       }
     },
     watch: {

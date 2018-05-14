@@ -1,13 +1,12 @@
 <template>
   <div>
-      <time-chooser-item
-        v-for="(time, index) in times"
-        :item="time"
-        :index="index"
-        @change="onItemChange"
-        @delete="onItemDelete"
-      >
-      </time-chooser-item>
+    <TimeChooserItem
+      v-for="(time, index) in times"
+      :item="time"
+      :index="index"
+      @change="onItemChange"
+      @delete="onItemDelete"
+    />
   </div>
 </template>
 

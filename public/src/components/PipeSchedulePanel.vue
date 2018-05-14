@@ -93,13 +93,21 @@
     <div v-if="show_times">
       <label class="db f8">Run at the following times</label>
       <time-chooser-list
-        class="mv2"
+        class="mb1"
         style="width: 20rem"
         :times="edit_pipe.schedule.times"
         @item-change="updateTime"
         @item-delete="deleteTime"
       />
-      <el-button size="mini" class="ttu b" style="width: 20rem" @click="addTime">Add time</el-button>
+      <div class="ph1" style="width: 20rem">
+        <el-button
+          size="mini"
+          class="w-100 ttu b"
+          @click="addTime"
+        >
+          Add time
+        </el-button>
+      </div>
     </div>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
