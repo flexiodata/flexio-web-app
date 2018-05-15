@@ -82,7 +82,7 @@
         <el-collapse class="el-collapse-plain" v-model="collapse_properties">
           <el-collapse-item name="properties">
             <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Properties</h3></template>
-            <PipeDocumentForm class="mt3" />
+            <PipeDocumentForm ref="pipe-document-form" class="mt3" />
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -375,18 +375,23 @@
         this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
       },
       saveChanges() {
-        var eid = this.eid
-        var attrs = _.pick(this.edit_pipe, this.edit_keys)
+        this.$refs['pipe-document-form'].validate((valid) => {
+          if (!valid)
+            return
 
-        // don't POST null values
-        attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
+          var eid = this.eid
+          var attrs = _.pick(this.edit_pipe, this.edit_keys)
 
-        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok) {
-            this.$store.commit('pipe/INIT_PIPE', response.body)
-          } else {
-            // TODO: add error handling
-          }
+          // don't POST null values
+          attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
+
+          return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+            if (response.ok) {
+              this.$store.commit('pipe/INIT_PIPE', response.body)
+            } else {
+              // TODO: add error handling
+            }
+          })
         })
       },
       fetchProcessLog() {

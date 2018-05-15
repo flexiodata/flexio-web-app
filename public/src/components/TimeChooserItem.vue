@@ -51,13 +51,8 @@
 </template>
 
 <script>
-  import ValueSelect from './ValueSelect.vue'
-
   export default {
     props: ['item', 'index'],
-    components: {
-      ValueSelect
-    },
     data() {
       return {
         hour: 8,

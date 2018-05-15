@@ -59,7 +59,6 @@
   import AbstractList from './AbstractList.vue'
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
-  import Btn from './Btn.vue'
   import ConnectionInfoMixin from './mixins/connection-info'
 
   const LOCAL_STORAGE_ITEM = {
@@ -74,8 +73,7 @@
       Spinner,
       AbstractList,
       FileChooser,
-      EmptyItem,
-      Btn
+      EmptyItem
     },
     data() {
       return {

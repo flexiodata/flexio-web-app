@@ -77,15 +77,13 @@
   import PipeList from './PipeList.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
-  import Btn from './Btn.vue'
 
   export default {
     components: {
       Spinner,
       PipeList,
       PipeSchedulePanel,
-      PipeDeployPanel,
-      Btn
+      PipeDeployPanel
     },
     data() {
       return {

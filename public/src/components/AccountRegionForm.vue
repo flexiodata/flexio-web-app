@@ -6,17 +6,33 @@
     <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
       There was a problem updating your regional settings.
     </ui-alert>
-    <form novalidate @submit.prevent="submit">
-      <ui-select
+    <el-form
+      class="el-form-compact el-form__label-tiny"
+      :model="$data"
+    >
+      <el-form-item
+        key="timezone"
         label="Timezone"
-        has-search
-        v-model="timezone"
-        :options="timezones"
-      />
-      <div class="mt3">
-        <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
-      </div>
-    </form>
+        prop="timezone"
+      >
+        <el-select
+          class="w-100"
+          placeholder="Search for Timezone"
+          filterable
+          v-model="timezone"
+        >
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in timezone_options"
+          />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <div class="mt3">
+      <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
+    </div>
   </div>
 </template>
 
@@ -24,11 +40,15 @@
   import { mapState, mapGetters } from 'vuex'
   import { TIMEZONE_UTC, timezones } from '../constants/timezone'
 
+  const timezone_options = _.map(timezones, (tz) => {
+    return { label: tz, val: tz }
+  })
+
   export default {
     data() {
       return {
         timezone: '',
-        timezones: timezones,
+        timezone_options,
         show_success: false,
         show_error: false
       }
@@ -41,11 +61,7 @@
     computed: {
       ...mapState([
         'active_user_eid'
-      ]),
-      active_user() {
-        var user = this.getActiveUser()
-        return user ? user : {}
-      }
+      ])
     },
     mounted() {
       this.initFromActiveUser()
@@ -55,7 +71,8 @@
         'getActiveUser'
       ]),
       initFromActiveUser() {
-        this.timezone = _.get(this.active_user, 'timezone', TIMEZONE_UTC)
+        var user = this.getActiveUser()
+        this.timezone = _.get(user, 'timezone', TIMEZONE_UTC)
       },
       saveChanges() {
         var eid = this.active_user_eid

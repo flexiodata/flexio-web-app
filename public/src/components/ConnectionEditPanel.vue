@@ -92,7 +92,7 @@
           </el-form-item>
         </el-form>
 
-        <connection-info-panel
+        <ConnectionInfoPanel
           :connection.sync="edit_connection"
           v-if="is_http"
         />
@@ -105,7 +105,8 @@
             <i class="material-icons mr1 f5">lock</i> Authentication
           </div>
           <div class="pa3 pb4 ba bt-0 b--light-gray br2 br--bottom">
-            <connection-authentication-panel
+            <ConnectionAuthenticationPanel
+              ref="connection-authentication-panel"
               :connection="edit_connection"
               :mode="mode"
               @change="updateConnection"
@@ -138,8 +139,6 @@
   import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import * as mtypes from '../constants/member-type'
-  import * as atypes from '../constants/action-type'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import util from '../utils'
@@ -231,7 +230,7 @@
         edit_connection: _.assign({}, defaultAttrs(), this.connection),
         rules: {
           name: [
-            { required: true, message: 'Please input a name' }
+            { required: true, message: 'Please input a name', trigger: 'blur' }
           ],
           alias: [
             { validator: this.formValidateAlias }
@@ -307,9 +306,21 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
-        // TODO: check form for errors
-        // if there are no errors in the form, do the submit
-        this.$emit('submit', this.edit_connection)
+        this.$refs.form.validate((valid) => {
+          if (!valid)
+            return
+
+          var panel = this.$refs['connection-authentication-panel']
+          if (panel) {
+            panel.validate((valid2) => {
+              if (!valid2)
+                return
+
+              // there are no errors in the form; do the submit
+              this.$emit('submit', this.edit_connection)
+            })
+          }
+        })
       },
       reset(attrs) {
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
@@ -339,16 +350,22 @@
         })
       },
       formValidateAlias(rule, value, callback) {
-        if (value.length == 0)
+        if (value.length == 0) {
+          callback()
           return
+        }
 
-        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', ''))
+        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', '')) {
+          callback()
           return
+        }
 
         this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       },

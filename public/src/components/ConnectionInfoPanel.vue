@@ -193,9 +193,7 @@
 
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
-  import Btn from './Btn.vue'
   import ServiceIcon from './ServiceIcon.vue'
-  import ValueSelect from './ValueSelect.vue'
   import KeypairItem from './KeypairItem.vue'
 
   const newKeypairItem = (key, val) => {
@@ -234,9 +232,7 @@
       }
     },
     components: {
-      Btn,
       ServiceIcon,
-      ValueSelect,
       KeypairItem
     },
     watch: {

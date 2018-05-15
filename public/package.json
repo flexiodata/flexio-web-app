@@ -24,7 +24,6 @@
     "marked": "^0.3.6",
     "moment": "^2.17.1",
     "stickybits": "^3.3.1",
-    "vee-validate": "2.0.0-beta.18",
     "vue": "^2.5.13",
     "vue-chartjs": "^3.0.2",
     "vue-codemirror": "^4.0.5",
