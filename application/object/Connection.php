@@ -320,6 +320,92 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return true;
     }
 
+    public function authenticateCallback(array $params) // TODO: add function return type
+    {
+        // TODO: is there anyway to save some of these in the object so we can make
+        // successive calls without sending everything?
+
+        // get the connection properties
+        $connection_properties = $this->get();
+        $connection_type = $connection_properties['connection_type'] ?? '';
+
+        $code = $params['code'] ?? false;
+        $state = $params['state'] ?? false;
+
+        $auth_params = array();
+        $auth_params['state'] = base64_encode(json_encode($state));
+        if (isset($params['redirect']))
+            $auth_params['redirect'] = $params['redirect'];
+        if ($code !== false)
+            $auth_params['code'] = $code;
+
+        $response = null;
+        switch ($connection_type)
+        {
+            default:
+                return false;
+
+            case 'dropbox':
+                $response = \Flexio\Services\Dropbox::create($auth_params);
+                break;
+
+            case 'box':
+                $response = \Flexio\Services\Box::create($auth_params);
+                break;
+
+            case 'github':
+                $response = \Flexio\Services\GitHub::create($auth_params);
+                break;
+
+            case 'gmail':
+                $response = \Flexio\Services\Gmail::create($auth_params);
+                break;
+            
+            case 'googledrive':
+                $response = \Flexio\Services\GoogleDrive::create($auth_params);
+                break;
+
+            case 'googlesheets':
+                $response = \Flexio\Services\GoogleSheets::create($auth_params);
+                break;
+        }
+
+        // if the service creation response is null, something went wrong
+        if (is_null($response))
+        {
+            $properties = array();
+            $properties['connection_status'] = \Model::CONNECTION_STATUS_ERROR;
+            $this->set($properties);
+            return false;
+        }
+
+        // if the service creation response is a string, then it's
+        // an authorization uri, and we need to complete the process;
+        // return the string
+        if (is_string($response))
+            return $response;
+
+        // we're authenticated; get the token
+        $service_object = $response;
+        $tokens = $service_object->getTokens();
+
+        // DEBUG:
+        // file_put_contents('/tmp/tokens.txt', "Tokens :" . json_encode($tokens)."\n", FILE_APPEND);
+
+        $properties = array();
+        $properties['connection_status'] = \Model::CONNECTION_STATUS_AVAILABLE;
+        $properties['connection_info']['access_token'] = $tokens['access_token'];
+        $properties['connection_info']['refresh_token'] = $tokens['refresh_token'];
+        if (isset($tokens['expires']))
+        {
+            $properties['connection_info']['expires'] = $tokens['expires'];
+        }
+        $this->set($properties);
+
+        return true;
+    }
+
+
     public function getService() // TODO: add function return type
     {
         // get the connection properties

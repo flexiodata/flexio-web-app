@@ -29,8 +29,9 @@ class AController extends \Flexio\System\FxControllerAction
 
         $this->renderRaw();
         $params = $this->getRequest()->getParams();
-        $auth_params = array();
 
+        $auth_params = array();
+        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         if (isset($params['service']))
             $auth_params['service'] = $params['service'];
@@ -85,7 +86,6 @@ class AController extends \Flexio\System\FxControllerAction
             }
         }
 
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         $eid = $params['eid'] ?? false;
 
@@ -120,13 +120,12 @@ class AController extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
 
         $auth_params = array();
+        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         if (isset($params['code']))
             $auth_params['code'] = $params['code'];
         if (isset($params['state']))
             $auth_params['state'] = $params['state'];
-
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
 
         // if the state is set, get the eid and load the connection; otherwise
         // try to get the eid from the raw params
@@ -160,16 +159,7 @@ class AController extends \Flexio\System\FxControllerAction
 
         $result = false;
         if ($connection !== false)
-            $result = $connection->authenticate($auth_params);
-
-        /*
-        // TODO: remove this? this should have already been taken care of
-        //       by the 'error' check above...
-        if ($result === false)
-        {
-            die("The authorization unfortunately did not succeed.");
-        }
-        */
+            $result = $connection->authenticateCallback($auth_params);
 
         // render this page, so it can close the popup
         // and do the callback to the parent/app window
