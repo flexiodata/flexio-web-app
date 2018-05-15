@@ -88,9 +88,6 @@
 
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import * as mtypes from '../constants/member-type'
-  import * as atypes from '../constants/action-type'
-  import util from '../utils'
   import Validation from './mixins/validation'
 
   const defaultAttrs = () => {

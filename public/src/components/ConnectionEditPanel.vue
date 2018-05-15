@@ -138,8 +138,6 @@
   import { OBJECT_TYPE_CONNECTION } from '../constants/object-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import * as mtypes from '../constants/member-type'
-  import * as atypes from '../constants/action-type'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import util from '../utils'
