@@ -31,6 +31,7 @@ class AController extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
         $auth_params = array();
 
+
         if (isset($params['service']))
             $auth_params['service'] = $params['service'];
         if (isset($params['code']))
@@ -120,8 +121,6 @@ class AController extends \Flexio\System\FxControllerAction
 
         $auth_params = array();
 
-        if (isset($params['service']))
-            $auth_params['service'] = $params['service'];
         if (isset($params['code']))
             $auth_params['code'] = $params['code'];
         if (isset($params['state']))
@@ -138,13 +137,6 @@ class AController extends \Flexio\System\FxControllerAction
             {
                 $state = json_decode(base64_decode($auth_params['state']),true);
                 $eid = $state['eid'] ?? false;
-                $connection = \Flexio\Object\Connection::load($eid);
-                if ($connection->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-            }
-            else
-            {
-                $eid = $params['eid'] ?? false;
                 $connection = \Flexio\Object\Connection::load($eid);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
