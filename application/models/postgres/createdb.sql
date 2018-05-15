@@ -346,7 +346,6 @@ CREATE TABLE tbl_action (
   request_access_code varchar(255) NOT NULL default '', -- the token used to
   request_created_by varchar(12) NOT NULL default '',   -- the user making the request
   request_created timestamp NULL default NULL,          -- timestamp when the request was created
-  request_access_code varchar(255) NOT NULL default '', -- access code used to authenticate the request if it exists
   request_params json,                                  -- specific parameters included with the request; note: not all params may be saved (e.g. passwords)
   target_eid varchar(12) NOT NULL default '',           -- object eid being created, changed, deleted, etc
   target_eid_type varchar(3) NOT NULL default '',       -- object eid type being created

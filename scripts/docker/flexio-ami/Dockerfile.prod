@@ -54,7 +54,7 @@ RUN cp /srv/www/flexio/src/scripts/webserver/apache.conf /etc/apache2/sites-avai
 RUN a2dissite 000-default
 RUN a2ensite flexio
 RUN a2enmod headers rewrite
-#RUN a2enmode ssl
+#RUN a2enmod ssl
 
 
 # creation of docker images

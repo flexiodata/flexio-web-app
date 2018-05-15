@@ -128,10 +128,9 @@
         v-else
       >
         <el-form
-          class="el-form-cozy"
+          class="el-form-compact"
           label-width="8rem"
           :model="$data"
-          :status-icon="true"
         >
           <el-form-item
             label="AWS Access Key"
