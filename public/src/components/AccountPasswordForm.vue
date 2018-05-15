@@ -56,7 +56,7 @@
         </el-form-item>
       </el-form>
       <div class="mt4">
-        <el-button type="primary" class="ttu b" @click="trySaveChanges">Save Changes</el-button>
+        <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
       </div>
     </form>
   </div>
@@ -124,23 +124,28 @@
         this.show_success = false
         this.show_error = false
       },
-      trySaveChanges() {
-        var eid = this.active_user_eid
-        var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
-        this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.show_success = true
-            this.show_error = false
-            this.resetForm()
-            setTimeout(() => { this.show_success = false }, 4000)
-          }
-           else
-          {
-            this.show_success = false
-            this.show_error = true
-            this.error_msg = _.get(response, 'data.error.message', '')
-          }
+      saveChanges() {
+        this.$refs.form.validate((valid) => {
+          if (!valid)
+            return
+
+          var eid = this.active_user_eid
+          var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
+          this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
+            if (response.ok)
+            {
+              this.show_success = true
+              this.show_error = false
+              this.resetForm()
+              setTimeout(() => { this.show_success = false }, 4000)
+            }
+             else
+            {
+              this.show_success = false
+              this.show_error = true
+              this.error_msg = _.get(response, 'data.error.message', '')
+            }
+          })
         })
       }
     }
