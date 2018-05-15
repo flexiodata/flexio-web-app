@@ -305,9 +305,13 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       submit() {
-        // TODO: check form for errors
-        // if there are no errors in the form, do the submit
-        this.$emit('submit', this.edit_connection)
+        this.$refs.form.validate((valid) => {
+          if (!valid)
+            return
+
+          // there are no errors in the form; do the submit
+          this.$emit('submit', this.edit_connection)
+        })
       },
       reset(attrs) {
         this.edit_connection = _.assign({}, defaultAttrs(), attrs)
@@ -337,16 +341,22 @@
         })
       },
       formValidateAlias(rule, value, callback) {
-        if (value.length == 0)
+        if (value.length == 0) {
+          callback()
           return
+        }
 
-        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', ''))
+        if (this.mode == 'edit' && value == _.get(this.connection, 'alias', '')) {
+          callback()
           return
+        }
 
         this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       },

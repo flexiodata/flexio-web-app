@@ -176,8 +176,6 @@
           if (!valid)
             return
 
-          var pipe = _.cloneDeep(this.pipe)
-
           // there are no errors in the form; do the submit
           this.$emit('submit', this.edit_pipe)
         })
