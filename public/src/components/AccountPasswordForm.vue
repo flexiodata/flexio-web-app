@@ -75,14 +75,14 @@
         show_error: false,
         rules: {
           old_password: [
-            { required: true, message: 'Please input your current password' }
+            { required: true, message: 'Please input your current password', trigger: 'blur' }
           ],
           new_password: [
-            { required: true, message: 'Please input your new password' },
+            { required: true, message: 'Please input your new password', trigger: 'blur' },
             { validator: this.formValidatePassword }
           ],
           new_password2: [
-            { required: true, message: 'Please confirm your new password' },
+            { required: true, message: 'Please confirm your new password', trigger: 'blur' },
             { validator: this.checkPasswordMatch, trigger: 'blur' }
           ]
         }
