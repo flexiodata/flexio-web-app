@@ -12,7 +12,6 @@ module.exports = {
       'vue-router',
       'vue-simple-spinner',
       'vue-grid2',
-      'vee-validate',
       'vue-scrollto',
       'chart.js',
       'vue-chartjs',
