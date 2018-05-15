@@ -180,6 +180,9 @@
       this.resetForm(this.orig_pipe)
     },
     methods: {
+      validate(callback) {
+        this.$refs.form.validate(callback)
+      },
       updateStore() {
         this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
       },
@@ -196,16 +199,22 @@
         this.show_pipe_schedule_dialog = false
       },
       formValidateAlias(rule, value, callback) {
-        if (value.length == 0)
+        if (value.length == 0) {
+          callback()
           return
+        }
 
-        if (value == _.get(this.orig_pipe, 'alias', ''))
+        if (value == _.get(this.orig_pipe, 'alias', '')) {
+          callback()
           return
+        }
 
         this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       }
