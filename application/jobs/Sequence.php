@@ -33,7 +33,7 @@ if (($validator->check($params, array(
 
 class Sequence extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         // Don't uncomment this, as this will do token replacement on
         // the entire sequence before any variables are set/evaluated
