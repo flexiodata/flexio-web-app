@@ -39,7 +39,7 @@
         v-if="is_smtp"
       >
         <el-form
-          ref="form"
+          ref="smtp-form"
           class="el-form-compact"
           label-width="8rem"
           :model="$data"
@@ -401,7 +401,7 @@
         rules: {
           email: [
             { required: true, message: 'Please input an email address', trigger: 'blur' },
-            { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
+            { type: 'email', message: 'Please input a valid email address', trigger: 'blur' }
           ]
         }
       }
@@ -494,6 +494,9 @@
       this.$nextTick(() => { this.emitChange() })
     },
     methods: {
+      validate(callback) {
+        this.$refs['smtp-form'].validate(callback)
+      },
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
@@ -502,8 +505,8 @@
           this[key] = val
         })
 
-        if (this.$refs.form) {
-          this.$refs.form.clearValidate()
+        if (this.$refs['smtp-form']) {
+          this.$refs['smtp-form'].clearValidate()
         }
       },
       emitChange() {

@@ -92,7 +92,7 @@
           </el-form-item>
         </el-form>
 
-        <connection-info-panel
+        <ConnectionInfoPanel
           :connection.sync="edit_connection"
           v-if="is_http"
         />
@@ -105,7 +105,8 @@
             <i class="material-icons mr1 f5">lock</i> Authentication
           </div>
           <div class="pa3 pb4 ba bt-0 b--light-gray br2 br--bottom">
-            <connection-authentication-panel
+            <ConnectionAuthenticationPanel
+              ref="connection-authentication-panel"
               :connection="edit_connection"
               :mode="mode"
               @change="updateConnection"
@@ -309,8 +310,16 @@
           if (!valid)
             return
 
-          // there are no errors in the form; do the submit
-          this.$emit('submit', this.edit_connection)
+          var panel = this.$refs['connection-authentication-panel']
+          if (panel) {
+            panel.validate((valid2) => {
+              if (!valid2)
+                return
+
+              // there are no errors in the form; do the submit
+              this.$emit('submit', this.edit_connection)
+            })
+          }
         })
       },
       reset(attrs) {
