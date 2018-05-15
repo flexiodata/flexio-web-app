@@ -100,19 +100,18 @@
       checkPasswordMatch(rule, value, callback) {
         if (this.new_password != this.new_password2) {
           callback(new Error('The password confirmation does not match'))
+        } else {
+          callback()
         }
       },
       formValidatePassword(rule, value, callback) {
-        if (value.length == 0) {
-          callback()
-          return
-        }
-
         var key = rule.field
         this.validatePassword(key, value, (response, errors) => {
           var message = _.get(errors, key + '.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       },

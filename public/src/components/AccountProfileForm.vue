@@ -136,6 +136,8 @@
           var message = _.get(errors, 'username.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       },
