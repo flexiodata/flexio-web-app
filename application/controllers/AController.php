@@ -18,7 +18,7 @@ namespace Flexio\Controllers;
 
 class AController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         parent::init();
     }
