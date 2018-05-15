@@ -22,7 +22,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
     private $refresh_token = '';
     private $expires = 0;
 
-    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
         if (!isset($params))
             return new self;
@@ -68,7 +68,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
         $folderid = $fileinfo['id'];
 
-        
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$folderid'+in+parents+and+trashed=false");
@@ -260,7 +260,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         $fileinfo = $this->internalGetFileInfo($path);
         if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-        
+
         $fileid = $fileinfo['id'];
         $filetype = $fileinfo['content_type'];
 
@@ -386,7 +386,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         {
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
-    
+
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
 
@@ -492,7 +492,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                  'expires' => $this->expires ];
     }
 
-    public function getFileId(string $path)  // TODO: set function return type   (: ?string)
+    public function getFileId(string $path) // TODO: add return type (: ?string)
     {
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
@@ -621,7 +621,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return $oauth->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function createService($oauth_callback) // TODO: set parameter/return type
+    private static function createService($oauth_callback) // TODO: add return type; s
     {
         $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
         $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';

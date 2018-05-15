@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class System
 {
-    public static function about(\Flexio\Api\Request $request)
+    public static function about(\Flexio\Api\Request $request) : void
     {
         // return basic information
 
@@ -34,7 +34,7 @@ class System
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function login(\Flexio\Api\Request $request)
+    public static function login(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
 
@@ -93,7 +93,7 @@ class System
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function logout(\Flexio\Api\Request $request)
+    public static function logout(\Flexio\Api\Request $request) : void
     {
         $request->track(\Flexio\Api\Action::TYPE_USER_LOGOUT);
 
@@ -112,7 +112,7 @@ class System
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function validate(\Flexio\Api\Request $request)
+    public static function validate(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();

@@ -47,10 +47,10 @@ if (($validator->check($params, array(
 
 class Email extends \Flexio\Jobs\Base
 {
-    const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
-    const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
+    private const EMAIL_WAIT_FREQUENCY = 1; // wait time between emails that are sent
+    private const EMAIL_TO_ADDRESS_MAX_SIZE = 25; // maximum number of users that an email can be sent to at once
 
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -160,14 +160,13 @@ class Email extends \Flexio\Jobs\Base
         $email->send();
     }
 
-    private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment)
+    private function convertToDiskFile(\Flexio\IFace\IProcess $process, array &$attachment) : void
     {
         $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
         $fname = $storage_tmpbase . "emailattach-" . \Flexio\Base\Util::generateRandomString(20);
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
-
 
         try
         {
@@ -198,10 +197,9 @@ class Email extends \Flexio\Jobs\Base
 
             $attachment['file'] = $fname;
         }
-
     }
 
-    private function saveDataToFile(\Flexio\IFace\IStream $stream, string $filename)
+    private function saveDataToFile(\Flexio\IFace\IStream $stream, string $filename) : bool
     {
         $handle = fopen($filename, "wt");
         if (!$handle)
@@ -221,7 +219,7 @@ class Email extends \Flexio\Jobs\Base
         return true;
     }
 
-    private function saveDataToCsv(\Flexio\IFace\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1)
+    private function saveDataToCsv(\Flexio\IFace\IStream $stream, string $filename, int $maxrows = -1, int $maxbytes = -1) : bool
     {
         $handle = fopen($filename, "wt");
         if (!$handle)

@@ -18,24 +18,24 @@ namespace Flexio\Tests;
 
 class Base
 {
-    const ERROR_EXCEPTION = 'error-exception';
-    const ERROR_NO_EXCEPTION = 'error-no-exception';
-    const ERROR_BAD_PARSE = 'error-bad-parse';
-    const ERROR_EVAL_MISMATCH = 'error-eval-mismatch';
+    public const ERROR_EXCEPTION = 'error-exception';
+    public const ERROR_NO_EXCEPTION = 'error-no-exception';
+    public const ERROR_BAD_PARSE = 'error-bad-parse';
+    public const ERROR_EVAL_MISMATCH = 'error-eval-mismatch';
 
-    const DOUBLE_EPSILON = 0.000000000001;
-    const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
+    public const DOUBLE_EPSILON = 0.000000000001;
+    public const CONTENT_TYPE_BUFFER_TEST_SIZE = 2048;
 
-    const FLAG_NONE = '';
-    const FLAG_ERROR_SUPPRESS = 'flag-error-suppress';
+    public const FLAG_NONE = '';
+    public const FLAG_ERROR_SUPPRESS = 'flag-error-suppress';
 
-    const STORAGE_LOCAL = 'home';
-    const STORAGE_AMAZONS3 = 'testsuite-amazons3';
-    const STORAGE_BOX = 'testsuite-box';
-    const STORAGE_DROPBOX = 'testsuite-dropbox';
-    const STORAGE_GITHUB = 'testsuite-github';
-    const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
-    const STORAGE_SFTP = 'testsuite-sftp';
+    public const STORAGE_LOCAL = 'home';
+    public const STORAGE_AMAZONS3 = 'testsuite-amazons3';
+    public const STORAGE_BOX = 'testsuite-box';
+    public const STORAGE_DROPBOX = 'testsuite-dropbox';
+    public const STORAGE_GITHUB = 'testsuite-github';
+    public const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
+    public const STORAGE_SFTP = 'testsuite-sftp';
 
     public static function testsAllowed()
     {

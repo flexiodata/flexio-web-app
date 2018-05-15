@@ -18,9 +18,9 @@ namespace Flexio\Api;
 
 class Message
 {
-    const TYPE_EMAIL_WELCOME             = 'email_welcome';
-    const TYPE_EMAIL_RESET_PASSWORD      = 'email_reset_password';
-    const TYPE_EMAIL_SHARE_PIPE          = 'email_share_pipe';
+    public const TYPE_EMAIL_WELCOME             = 'email_welcome';
+    public const TYPE_EMAIL_RESET_PASSWORD      = 'email_reset_password';
+    public const TYPE_EMAIL_SHARE_PIPE          = 'email_share_pipe';
 
     protected $messge_type;
     protected $message_params;
@@ -68,7 +68,7 @@ class Message
         }
     }
 
-    private function initialize()
+    private function initialize() : void
     {
         $this->message_type = false;
         $this->message_params = false;

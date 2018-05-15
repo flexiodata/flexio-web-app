@@ -83,12 +83,12 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getFiles();
     }
 
-    public function addLocalConnection(string $identifier, array $connection_properties)
+    public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
         $this->engine->addLocalConnection($identifier, $connection_properties);
     }
 
-    public function getLocalConnection(string $identifier) // : ?array   TODO: add return type
+    public function getLocalConnection(string $identifier) : ?array
     {
         return $this->engine->getLocalConnection($identifier);
     }
@@ -98,7 +98,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getLocalConnections();
     }
 
-    public function getConnection(string $identifier)
+    public function getConnection(string $identifier) : ?array
     {
         return $this->engine->getConnection($identifier);
     }
@@ -297,7 +297,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this;
     }
 
-    private function startLog(array $process_info)
+    private function startLog(array $process_info) : void
     {
         $task = $process_info['task'] ?? array();
 /*
@@ -320,7 +320,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->current_log_eid = $this->procobj->addToLog(null, $params);
     }
 
-    private function finishLog(array $process_info)
+    private function finishLog(array $process_info) : void
     {
         $task = $process_info['task'] ?? array();
         //$storable_stdin = self::createStorableStream($process_info['stdin']);
@@ -342,7 +342,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $this->procobj->addToLog($this->current_log_eid, $params);
     }
 
-    private function updateProcessInfo(array $process_info)
+    private function updateProcessInfo(array $process_info) : void
     {
         // read the process object record and proxy information to the
         // process engine
@@ -373,8 +373,6 @@ class StoredProcess implements \Flexio\IFace\IProcess
             while (($data = $streamreader->read(32768)) !== false)
                 $streamwriter->write($data);
         }
-
-
 
         return $storable_stream;
     }

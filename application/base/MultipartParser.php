@@ -24,10 +24,10 @@ class MultipartParser
         return $parser;
     }
 
-    const TYPE_FILE_BEGIN = 1;
-    const TYPE_FILE_DATA = 2;
-    const TYPE_FILE_END = 3;
-    const TYPE_KEY_VALUE = 4;
+    public const TYPE_FILE_BEGIN = 1;
+    public const TYPE_FILE_DATA = 2;
+    public const TYPE_FILE_END = 3;
+    public const TYPE_KEY_VALUE = 4;
 
     // callback should be a function like this
     // function callback($type, $name, $data, $filename, $content_type)

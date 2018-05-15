@@ -33,7 +33,6 @@ if (($validator->check($params, array(
 class Diff extends \Flexio\Jobs\Base
 {
 
-
 private $code = <<<EOT
 
 import difflib
@@ -41,8 +40,7 @@ diff = difflib.unified_diff("a", "b")
 
 EOT;
 
-
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -68,5 +66,4 @@ EOT;
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
     }
-
 }

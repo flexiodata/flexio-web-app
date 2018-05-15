@@ -6,152 +6,144 @@
     <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
       {{error_msg}}
     </ui-alert>
-    <form novalidate @submit.prevent="submit">
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        name="old_password"
-        label="Current Password"
-        floating-label
-        help=" "
-        :error="errors.first('old_password')"
-        :invalid="errors.has('old_password')"
-        v-model="old_password"
-        v-validate
-        data-vv-as="password"
-        data-vv-name="old_password"
-        data-vv-value-path="old_password"
-        data-vv-rules="required"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        name="new_password"
-        label="New Password"
-        floating-label
-        help=" "
-        :error="new_password_error.length > 0 ? new_password_error : errors.first('new_password')"
-        :invalid="new_password_error.length > 0 || errors.has('new_password')"
-        v-model="new_password"
-        v-validate
-        data-vv-as="password"
-        data-vv-name="new_password"
-        data-vv-value-path="new_password"
-        data-vv-rules="required"
-      />
-      <ui-textbox
-        type="password"
-        autocomplete="off"
-        name="new_password2"
-        label="Confirm New Password"
-        floating-label
-        help=" "
-        :error="errors.first('new_password2')"
-        :invalid="errors.has('new_password2')"
-        v-model="new_password2"
-        v-validate
-        data-vv-as="password"
-        data-vv-name="new_password2"
-        data-vv-value-path="new_password2"
-        data-vv-rules="required|confirmed:new_password"
-      />
-      <div class="mt3">
-        <el-button type="primary" class="ttu b" @click="trySaveChanges">Save Changes</el-button>
+      <el-form
+        ref="form"
+        class="el-form-cozy el-form__label-tiny"
+        :model="$data"
+        :rules="rules"
+      >
+        <el-form-item
+          key="old_password"
+          label="Current Password"
+          prop="old_password"
+        >
+          <el-input
+            type="password"
+            placeholder="Current Password"
+            autocomplete="off"
+            spellcheck="false"
+            :autofocus="true"
+            v-model="old_password"
+          />
+        </el-form-item>
+
+        <el-form-item
+          key="new_password"
+          label="New Password"
+          prop="new_password"
+        >
+          <el-input
+            type="password"
+            placeholder="New Password"
+            autocomplete="off"
+            spellcheck="false"
+            v-model="new_password"
+          />
+        </el-form-item>
+
+        <el-form-item
+          key="new_password2"
+          label="Confirm New Password"
+          prop="new_password2"
+        >
+          <el-input
+            type="password"
+            placeholder="Confirm New Password"
+            autocomplete="off"
+            spellcheck="false"
+            v-model="new_password2"
+          />
+        </el-form-item>
+      </el-form>
+      <div class="mt4">
+        <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-  import api from '../api'
   import { mapState } from 'vuex'
+  import Validation from './mixins/validation'
 
   export default {
-    watch: {
-      new_password: function(val, old_val) {
-        if (val.length > 0)
-          this.validateForm('new_password')
-      }
-    },
+    mixins: [Validation],
     data() {
       return {
         old_password: '',
         new_password: '',
         new_password2: '',
         error_msg: '',
-        ss_errors: {},
         show_success: false,
-        show_error: false
+        show_error: false,
+        rules: {
+          old_password: [
+            { required: true, message: 'Please input your current password', trigger: 'blur' }
+          ],
+          new_password: [
+            { required: true, message: 'Please input your new password', trigger: 'blur' },
+            { validator: this.formValidatePassword }
+          ],
+          new_password2: [
+            { required: true, message: 'Please confirm your new password', trigger: 'blur' },
+            { validator: this.checkPasswordMatch, trigger: 'blur' }
+          ]
+        }
       }
     },
     computed: {
       ...mapState([
         'active_user_eid'
-      ]),
-      new_password_error() {
-        return _.get(this.ss_errors, 'new_password.message', '')
-      }
+      ])
     },
     methods: {
-      validateForm: _.debounce(function(validate_key, callback) {
-        var validate_attrs = [{
-          key: 'new_password',
-          value: this.new_password,
-          type: 'password'
-        }]
-
-        // if a validation key is provided; only run validation on that key
-        if (!_.isNil(validate_key))
-        {
-          validate_attrs = _.filter(validate_attrs, (attr) => {
-            return attr.key == validate_key || _.has(this.ss_errors, attr.key)
-          })
+      checkPasswordMatch(rule, value, callback) {
+        if (this.new_password != this.new_password2) {
+          callback(new Error('The password confirmation does not match'))
+        } else {
+          callback()
         }
-
-        api.validate({ attrs: validate_attrs }).then(response => {
-          this.ss_errors = _.keyBy(response.body, 'key')
-
-          if (_.isFunction(callback))
-            callback.call(this)
-        }, response => {
-          // error callback
+      },
+      formValidatePassword(rule, value, callback) {
+        var key = rule.field
+        this.validatePassword(key, value, (response, errors) => {
+          var message = _.get(errors, key + '.message', '')
+          if (message.length > 0) {
+            callback(new Error(message))
+          } else {
+            callback()
+          }
         })
-      }, 300),
+      },
       resetForm() {
         this.old_password = ''
         this.new_password = ''
         this.new_password2 = ''
         this.error_msg = ''
-        this.ss_errors = _.assign({})
+        this.show_success = false
+        this.show_error = false
       },
-      trySaveChanges() {
-        this.$validator.validateAll().then(success => {
-          // client-side validation failed; bail out
-          if (!success)
+      saveChanges() {
+        this.$refs.form.validate((valid) => {
+          if (!valid)
             return
 
-          // this will show errors below each input
-          this.validateForm(null, () => {
-            if (this.new_password_error.length > 0)
-              return
-
-            var eid = this.active_user_eid
-            var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
-            this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-              if (response.ok)
-              {
-                this.show_success = true
-                this.show_error = false
-                this.resetForm()
-                setTimeout(() => { this.show_success = false }, 4000)
-              }
-               else
-              {
-                this.show_success = false
-                this.show_error = true
-                this.error_msg = _.get(response, 'data.error.message', '')
-              }
-            })
+          var eid = this.active_user_eid
+          var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
+          this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
+            if (response.ok)
+            {
+              this.show_success = true
+              this.show_error = false
+              this.resetForm()
+              setTimeout(() => { this.show_success = false }, 4000)
+            }
+             else
+            {
+              this.show_success = false
+              this.show_error = true
+              this.error_msg = _.get(response, 'data.error.message', '')
+            }
           })
         })
       }

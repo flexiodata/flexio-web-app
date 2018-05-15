@@ -23,27 +23,27 @@ class FrameworkRequest
     public $url_parts = array();
     public $params = array();
 
-    public function setActionName($value)
+    public function setActionName($value) : void
     {
         $this->action = $value;
     }
 
-    public function getActionName()
+    public function getActionName() : string
     {
         return $this->action;
     }
 
-    public function setControllerName($value)
+    public function setControllerName($value) : void
     {
         $this->controller = $value;
     }
 
-    public function getControllerName()
+    public function getControllerName() : string
     {
         return $this->controller;
     }
 
-    public function getUrlPathPart($idx, $default = null)
+    public function getUrlPathPart($idx, $default = null) // TODO: add return type
     {
         if ($idx >= count($this->url_parts))
             return $default;
@@ -71,17 +71,17 @@ class FrameworkRequest
         return $_SERVER['REQUEST_METHOD'] ?? '';
     }
 
-    public function getQuery($key, $default = null)
+    public function getQuery($key, $default = null) // TODO: add return type
     {
         return (isset($_GET[$key])) ? $_GET[$key] : $default;
     }
 
-    public function setParam($key, $value)
+    public function setParam($key, $value) : void
     {
         $this->params[$key] = $value;
     }
 
-    public function getParam($key, $default = null)
+    public function getParam($key, $default = null) // TODO: add return type
     {
         if (isset($this->params[$key]))
             return $this->params[$key];
@@ -98,7 +98,7 @@ class FrameworkRequest
         return \getallheaders();
     }
 
-    public function getParams()
+    public function getParams() : array
     {
         $result = array();
         if (isset($_POST)) $result += $_POST;
@@ -107,14 +107,14 @@ class FrameworkRequest
         return $result;
     }
 
-    public function getQueryParams()
+    public function getQueryParams() : array
     {
         $result = array();
         if (isset($_GET))  $result += $_GET;
         return $result;
     }
 
-    public function getPostParams()
+    public function getPostParams() : array
     {
         $result = array();
         if (isset($_POST)) $result += $_POST;
@@ -126,12 +126,12 @@ class FrameworkResponse
 {
     public $body = '';
 
-    public function setBody($body)
+    public function setBody($body) : void
     {
         $this->body = $body;
     }
 
-    public function getBody()
+    public function getBody() // TODO: add return type
     {
         return $this->body;
     }
@@ -142,7 +142,7 @@ class FrameworkViewHeadLinks
 {
     public $arr = array();
 
-    public function appendStylesheet($link)
+    public function appendStylesheet($link) : void
     {
         $this->arr[] = array('type' => 'style', 'content' => $link);
     }
@@ -166,7 +166,7 @@ class FrameworkViewHeadStyle
 {
     public $arr = array();
 
-    public function appendStyle($style)
+    public function appendStyle($style) : void
     {
         $this->arr[] = $style;
     }
@@ -184,17 +184,17 @@ class FrameworkViewInlineScript
 {
     public $arr = array();
 
-    public function captureStart()
+    public function captureStart() : void
     {
         ob_start();
     }
 
-    public function captureEnd()
+    public function captureEnd() : void
     {
         $this->arr[] = array('type' => 'script', 'content' => ob_get_clean());
     }
 
-    public function appendFile($file)
+    public function appendFile($file) : void
     {
         $this->arr[] = array('type' => 'file', 'content' => $file);
     }
@@ -226,35 +226,35 @@ class FrameworkView
     {
     }
 
-    public function headLink()
+    public function headLink() // TODO: add return type
     {
         if (!$this->head_links)
             $this->head_links = new FrameworkViewHeadLinks;
         return $this->head_links;
     }
 
-    public function headStyle()
+    public function headStyle() // TODO: add return type
     {
         if (!$this->head_style)
             $this->head_style = new FrameworkViewHeadStyle;
         return $this->head_style;
     }
 
-    public function headTitle($title = null)
+    public function headTitle($title = null) : string
     {
         if (!is_null($title))
             $this->head_title = $title;
         return '<title>' . $this->head_title . '</title>';
     }
 
-    public function inlineScript()
+    public function inlineScript() // TODO: add return type
     {
         if (!$this->inline_script)
             $this->inline_script = new FrameworkViewInlineScript;
         return $this->inline_script;
     }
 
-    public function render($file)
+    public function render($file) // TODO: add return type
     {
         if (false === strpos($file, DIRECTORY_SEPARATOR))
         {
@@ -283,7 +283,7 @@ class FxControllerAction
     {
     }
 
-    public function initControllerAction($view, $request, $response)
+    public function initControllerAction($view, $request, $response) : void
     {
         $this->view = $view;
         $this->request = $request;
@@ -291,11 +291,11 @@ class FxControllerAction
         $this->init();
     }
 
-    public function init()
+    public function init() : void
     {
     }
 
-    public function invokeAction($controller, $action)
+    public function invokeAction($controller, $action) : void
     {
         if (!method_exists($this, $action . 'Action'))
         {
@@ -310,7 +310,7 @@ class FxControllerAction
         call_user_func_array(array($this, $action . 'Action'), array());
     }
 
-    public function render($action = null)
+    public function render($action = null) : void
     {
         if (is_null($action))
             $action = $this->action;
@@ -322,7 +322,7 @@ class FxControllerAction
         }
     }
 
-    public function renderScript($file)
+    public function renderScript($file) : void
     {
         if (!$this->render_raw)
         {
@@ -331,19 +331,19 @@ class FxControllerAction
         }
     }
 
-    public function getRequest()
+    public function getRequest() // TODO: add return type
     {
         return $this->request;
     }
 
-    public function getResponse()
+    public function getResponse() // TODO: add return type
     {
         if (!$this->response)
             $this->response = new FrameworkResponse;
         return $this->response;
     }
 
-    public function getView()
+    public function getView() // TODO: add return type
     {
         if (!$this->view)
         {
@@ -352,18 +352,18 @@ class FxControllerAction
         return $this->view;
     }
 
-    public function getRenderRaw()
+    public function getRenderRaw() // TODO: add return type
     {
         return $this->render_raw;
     }
 
-    public function _redirect($location)
+    public function _redirect($location) : void
     {
         header("Location: $location");
         exit(0);
     }
 
-    public function _forward($action, $controller = null)
+    public function _forward($action, $controller = null) : void
     {
         $this->forward = array('controller' => $controller, 'action' => $action);
     }
@@ -373,36 +373,36 @@ class FxControllerAction
      *
      * @return void
      */
-    public function __call($name, $args)
+    public function __call($name, $args) : void
     {
         throw new \Exception('Sorry, the requested action is unavailable');
     }
 
-    protected function renderRaw()
+    protected function renderRaw() : void
     {
         $this->view->render_raw = true;
         $this->render_raw = true;
     }
 
-    protected function renderBodyOnly()
+    protected function renderBodyOnly() : void
     {
         $this->view->render_body_only = true;
         $this->render_body_only = true;
     }
 
-    protected function renderPublic()
+    protected function renderPublic() : void
     {
         $this->view->render_public = true;
         $this->render_public = true;
     }
 
-    protected function renderEmbed()
+    protected function renderEmbed() : void
     {
         $this->view->render_embed = true;
         $this->render_embed = true;
     }
 
-    protected function setViewTitle($title)
+    protected function setViewTitle($title) : void
     {
         $this->view->title = $title;
     }
@@ -418,39 +418,47 @@ abstract class FrameworkPlugin
     protected $response;
     protected $view;
 
-    public function setRequest($request)
+    public function setRequest($request) : void
     {
         $this->request = $request;
     }
 
-    public function getRequest()
+    public function getRequest() // TODO: add return type
     {
         return $this->request;
     }
 
-    public function setResponse($response)
+    public function setResponse($response) : void
     {
         $this->response = $response;
     }
 
-    public function getResponse()
+    public function getResponse() // TODO: add return type
     {
         return $this->response;
     }
 
-    public function setView($view)
+    public function setView($view) : void
     {
         $this->view = $view;
     }
 
-    public function getView()
+    public function getView() // TODO: add return type
     {
         return $this->view;
     }
 
-    public function preDispatch() {}
-    public function postDispatch() {}
-    public function dispatchLoopShutdown() {}
+    public function preDispatch() : void
+    {
+    }
+
+    public function postDispatch() : void
+    {
+    }
+
+    public function dispatchLoopShutdown() : void
+    {
+    }
 }
 
 
@@ -461,7 +469,7 @@ class Framework
     protected $suffix = null;
     protected $plugins = array();
 
-    public static function getInstance()
+    public static function getInstance() // TODO: add return type
     {
         if (null === self::$_instance)
             self::$_instance = new self();
@@ -469,22 +477,22 @@ class Framework
         return self::$_instance;
     }
 
-    public function setControllerPrefix($prefix)
+    public function setControllerPrefix($prefix) : void
     {
         $this->prefix = $prefix;
     }
 
-    public function setControllerSuffix($suffix)
+    public function setControllerSuffix($suffix) : void
     {
         $this->suffix = $suffix;
     }
 
-    public function registerPlugin($plugin)
+    public function registerPlugin($plugin) : void
     {
         $this->plugins[] = $plugin;
     }
 
-    public function dispatch()
+    public function dispatch() : void
     {
         $uri = $_SERVER['REQUEST_URI'];
 

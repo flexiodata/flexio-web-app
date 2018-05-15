@@ -77,7 +77,7 @@ class Rss implements \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $feed = new \SimplePie();
         $feed->enable_cache(false);
@@ -113,7 +113,7 @@ class Rss implements \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;

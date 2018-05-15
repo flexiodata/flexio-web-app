@@ -18,36 +18,36 @@ namespace Flexio\Base;
 
 class Error
 {
-    const UNDEFINED              =  '';
-    const GENERAL                =  'general';
-    const UNIMPLEMENTED          =  'unimplemented';
-    const DEPRECATED             =  'deprecated';
-    const INVALID_VERSION        =  'invalid-version';
-    const INVALID_REQUEST        =  'invalid-request';
-    const INVALID_SYNTAX         =  'invalid-syntax';
-    const INVALID_FORMAT         =  'invalid-format';
-    const MISSING_PARAMETER      =  'missing-parameter';
-    const INVALID_PARAMETER      =  'invalid-parameter';
-    const UNAUTHORIZED           =  'unauthorized';
-    const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
-    const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
-    const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
-    const INTEGRITY_FAILED       =  'integrity-failed';
-    const CONNECTION_FAILED      =  'connection-failed';
-    const CREATE_FAILED          =  'create-failed';
-    const OPEN_FAILED            =  'open-failed';
-    const READ_FAILED            =  'read-failed';
-    const WRITE_FAILED           =  'write-failed';
-    const DELETE_FAILED          =  'delete-failed';
-    const EXECUTE_FAILED         =  'execute-failed';
-    const NO_DATABASE            =  'no-database';
-    const NO_MODEL               =  'no-model';
-    const NO_SERVICE             =  'no-service';
-    const NO_OBJECT              =  'no-object';
-    const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
-    const NOT_FOUND              =  'not-found';  // generic not found (404)
+    public const UNDEFINED              =  '';
+    public const GENERAL                =  'general';
+    public const UNIMPLEMENTED          =  'unimplemented';
+    public const DEPRECATED             =  'deprecated';
+    public const INVALID_VERSION        =  'invalid-version';
+    public const INVALID_REQUEST        =  'invalid-request';
+    public const INVALID_SYNTAX         =  'invalid-syntax';
+    public const INVALID_FORMAT         =  'invalid-format';
+    public const MISSING_PARAMETER      =  'missing-parameter';
+    public const INVALID_PARAMETER      =  'invalid-parameter';
+    public const UNAUTHORIZED           =  'unauthorized';
+    public const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
+    public const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
+    public const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+    public const INTEGRITY_FAILED       =  'integrity-failed';
+    public const CONNECTION_FAILED      =  'connection-failed';
+    public const CREATE_FAILED          =  'create-failed';
+    public const OPEN_FAILED            =  'open-failed';
+    public const READ_FAILED            =  'read-failed';
+    public const WRITE_FAILED           =  'write-failed';
+    public const DELETE_FAILED          =  'delete-failed';
+    public const EXECUTE_FAILED         =  'execute-failed';
+    public const NO_DATABASE            =  'no-database';
+    public const NO_MODEL               =  'no-model';
+    public const NO_SERVICE             =  'no-service';
+    public const NO_OBJECT              =  'no-object';
+    public const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
+    public const NOT_FOUND              =  'not-found';  // generic not found (404)
 
-    public static function getDefaultMessage($code)
+    public static function getDefaultMessage($code) : string
     {
         switch ($code)
         {

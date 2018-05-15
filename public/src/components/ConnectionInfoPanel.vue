@@ -47,7 +47,7 @@
         <ui-tab id="authorization" title="Authorization">
           <div class="ma3 mw6">
             <el-form
-              class="el-form-cozy"
+              class="el-form-compact"
               label-width="10rem"
               :model="$data"
             >
@@ -193,9 +193,7 @@
 
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
-  import Btn from './Btn.vue'
   import ServiceIcon from './ServiceIcon.vue'
-  import ValueSelect from './ValueSelect.vue'
   import KeypairItem from './KeypairItem.vue'
 
   const newKeypairItem = (key, val) => {
@@ -234,9 +232,7 @@
       }
     },
     components: {
-      Btn,
       ServiceIcon,
-      ValueSelect,
       KeypairItem
     },
     watch: {

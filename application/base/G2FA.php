@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class G2FA
 {
-    public static function isValidCode($secret, $code)
+    public static function isValidCode($secret, $code) : bool
     {
         $time = intval(time() / 30);
         $time = pack('N*', 0) . pack('N*', $time);
@@ -28,7 +28,7 @@ class G2FA
                  $code == self::getCode($secret, $time + 1)) ? true : false);
     }
 
-    public static function getCode($secret, $time = 0)
+    public static function getCode($secret, $time = 0) : int
     {
         $key = self::base32_decode($secret);
 

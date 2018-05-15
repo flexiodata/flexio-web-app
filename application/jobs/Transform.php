@@ -42,84 +42,84 @@ if (($validator->check($params, array(
 class Transform extends \Flexio\Jobs\Base
 {
     // transform options
-    const OPERATION_NONE        = '';
-    const OPERATION_CHANGE_TYPE = 'type';
-    const OPERATION_CHANGE_CASE = 'case';
-    const OPERATION_SUBSTRING   = 'substring';
-    const OPERATION_REMOVE_TEXT = 'remove';
-    const OPERATION_TRIM_TEXT   = 'trim';
-    const OPERATION_PAD_TEXT    = 'pad';
+    public const OPERATION_NONE        = '';
+    public const OPERATION_CHANGE_TYPE = 'type';
+    public const OPERATION_CHANGE_CASE = 'case';
+    public const OPERATION_SUBSTRING   = 'substring';
+    public const OPERATION_REMOVE_TEXT = 'remove';
+    public const OPERATION_TRIM_TEXT   = 'trim';
+    public const OPERATION_PAD_TEXT    = 'pad';
 
     // transform parameters
 
     // transform options
-    const CAPITALIZE_NONE         = '';
-    const CAPITALIZE_LOWER        = 'lower';
-    const CAPITALIZE_UPPER        = 'upper';
-    const CAPITALIZE_PROPER       = 'proper';
-    const CAPITALIZE_FIRST_LETTER = 'first-letter';
+    public const CAPITALIZE_NONE         = '';
+    public const CAPITALIZE_LOWER        = 'lower';
+    public const CAPITALIZE_UPPER        = 'upper';
+    public const CAPITALIZE_PROPER       = 'proper';
+    public const CAPITALIZE_FIRST_LETTER = 'first-letter';
 
-    const PAD_LOCATION_NONE  = '';
-    const PAD_LOCATION_LEFT  = 'left';
-    const PAD_LOCATION_RIGHT = 'right';
+    public const PAD_LOCATION_NONE  = '';
+    public const PAD_LOCATION_LEFT  = 'left';
+    public const PAD_LOCATION_RIGHT = 'right';
 
-    const TRIM_LOCATION_NONE             = '';
-    const TRIM_LOCATION_LEADING          = 'leading';
-    const TRIM_LOCATION_TRAILING         = 'trailing';
-    const TRIM_LOCATION_LEADING_TRAILING = 'leading-trailing';
+    public const TRIM_LOCATION_NONE             = '';
+    public const TRIM_LOCATION_LEADING          = 'leading';
+    public const TRIM_LOCATION_TRAILING         = 'trailing';
+    public const TRIM_LOCATION_LEADING_TRAILING = 'leading-trailing';
 
-    const SUBSTRING_LOCATION_NONE  = '';
-    const SUBSTRING_LOCATION_LEFT  = 'left';
-    const SUBSTRING_LOCATION_RIGHT = 'right';
-    const SUBSTRING_LOCATION_MID   = 'mid';
-    const SUBSTRING_LOCATION_PART  = 'part';
+    public const SUBSTRING_LOCATION_NONE  = '';
+    public const SUBSTRING_LOCATION_LEFT  = 'left';
+    public const SUBSTRING_LOCATION_RIGHT = 'right';
+    public const SUBSTRING_LOCATION_MID   = 'mid';
+    public const SUBSTRING_LOCATION_PART  = 'part';
 
-    const REMOVE_LOCATION_NONE             = '';
-    const REMOVE_LOCATION_LEADING          = 'leading';
-    const REMOVE_LOCATION_TRAILING         = 'trailing';
-    const REMOVE_LOCATION_LEADING_TRAILING = 'leading-trailing';
-    const REMOVE_LOCATION_ANY              = 'any';
+    public const REMOVE_LOCATION_NONE             = '';
+    public const REMOVE_LOCATION_LEADING          = 'leading';
+    public const REMOVE_LOCATION_TRAILING         = 'trailing';
+    public const REMOVE_LOCATION_LEADING_TRAILING = 'leading-trailing';
+    public const REMOVE_LOCATION_ANY              = 'any';
 
-    const REMOVE_TYPE_NONE           = '';
-    const REMOVE_TYPE_SYMBOLS        = 'symbols';
-    const REMOVE_TYPE_WHITESPACE     = 'whitespace';
-    const REMOVE_TYPE_LETTERS        = 'letters';
-    const REMOVE_TYPE_NUMBERS        = 'numbers';
-    const REMOVE_TYPE_REGEX          = 'regex';
-    const REMOVE_TYPE_SELECTED_TEXT  = 'selected-text';
-    const REMOVE_TYPE_SELECTED_CHARS = 'selected-chars';
+    public const REMOVE_TYPE_NONE           = '';
+    public const REMOVE_TYPE_SYMBOLS        = 'symbols';
+    public const REMOVE_TYPE_WHITESPACE     = 'whitespace';
+    public const REMOVE_TYPE_LETTERS        = 'letters';
+    public const REMOVE_TYPE_NUMBERS        = 'numbers';
+    public const REMOVE_TYPE_REGEX          = 'regex';
+    public const REMOVE_TYPE_SELECTED_TEXT  = 'selected-text';
+    public const REMOVE_TYPE_SELECTED_CHARS = 'selected-chars';
 
     // column classes
-    const COLUMN_TYPE_NONE           = '';
-    const COLUMN_TYPE_TEXT           = 'text';
-    const COLUMN_TYPE_CHARACTER      = 'character';
-    const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
-    const COLUMN_TYPE_NUMERIC        = 'numeric';
-    const COLUMN_TYPE_DOUBLE         = 'double';
-    const COLUMN_TYPE_INTEGER        = 'integer';
-    const COLUMN_TYPE_DATE           = 'date';
-    const COLUMN_TYPE_DATETIME       = 'datetime';
-    const COLUMN_TYPE_BOOLEAN        = 'boolean';
+    public const COLUMN_TYPE_NONE           = '';
+    public const COLUMN_TYPE_TEXT           = 'text';
+    public const COLUMN_TYPE_CHARACTER      = 'character';
+    public const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
+    public const COLUMN_TYPE_NUMERIC        = 'numeric';
+    public const COLUMN_TYPE_DOUBLE         = 'double';
+    public const COLUMN_TYPE_INTEGER        = 'integer';
+    public const COLUMN_TYPE_DATE           = 'date';
+    public const COLUMN_TYPE_DATETIME       = 'datetime';
+    public const COLUMN_TYPE_BOOLEAN        = 'boolean';
 
     // character classes
-    const CHARACTER_CLASS_NONE   = '';
-    const CHARACTER_CLASS_ALNUM  = 'alnum';
-    const CHARACTER_CLASS_ALPHA  = 'alpha';
-    const CHARACTER_CLASS_ASCII  = 'ascii';
-    const CHARACTER_CLASS_BLANK  = 'blank';
-    const CHARACTER_CLASS_CNTRL  = 'cntrl';
-    const CHARACTER_CLASS_DIGIT  = 'digit';
-    const CHARACTER_CLASS_GRAPH  = 'graph';
-    const CHARACTER_CLASS_LOWER  = 'lower';
-    const CHARACTER_CLASS_PRINT  = 'print';
-    const CHARACTER_CLASS_PUNCT  = 'punct';
-    const CHARACTER_CLASS_SPACE  = 'space';
-    const CHARACTER_CLASS_UPPER  = 'upper';
-    const CHARACTER_CLASS_WORD   = 'word';
-    const CHARACTER_CLASS_XDIGIT = 'xdigit';
+    public const CHARACTER_CLASS_NONE   = '';
+    public const CHARACTER_CLASS_ALNUM  = 'alnum';
+    public const CHARACTER_CLASS_ALPHA  = 'alpha';
+    public const CHARACTER_CLASS_ASCII  = 'ascii';
+    public const CHARACTER_CLASS_BLANK  = 'blank';
+    public const CHARACTER_CLASS_CNTRL  = 'cntrl';
+    public const CHARACTER_CLASS_DIGIT  = 'digit';
+    public const CHARACTER_CLASS_GRAPH  = 'graph';
+    public const CHARACTER_CLASS_LOWER  = 'lower';
+    public const CHARACTER_CLASS_PRINT  = 'print';
+    public const CHARACTER_CLASS_PUNCT  = 'punct';
+    public const CHARACTER_CLASS_SPACE  = 'space';
+    public const CHARACTER_CLASS_UPPER  = 'upper';
+    public const CHARACTER_CLASS_WORD   = 'word';
+    public const CHARACTER_CLASS_XDIGIT = 'xdigit';
 
 
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -129,7 +129,7 @@ class Transform extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -153,7 +153,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private function getTableOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getTableOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $column_expression_map = $this->getTableExpressionMap($instream);
         if ($column_expression_map === false)
@@ -219,7 +219,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getFileOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getFileOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $column_expression_map = $this->getStreamExpressionMap($instream);
         if ($column_expression_map === false)
@@ -263,7 +263,7 @@ class Transform extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getTableExpressionMap(\Flexio\IFace\IStream &$instream)
+    private function getTableExpressionMap(\Flexio\IFace\IStream &$instream) // TODO: add return type
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -345,7 +345,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private function getStreamExpressionMap(\Flexio\IFace\IStream &$instream)
+    private function getStreamExpressionMap(\Flexio\IFace\IStream &$instream) // TODO: add return type
     {
         // returns an array mapping column names to an expression
         // object that can be used for performing the transformation
@@ -415,7 +415,7 @@ class Transform extends \Flexio\Jobs\Base
         return $column_expression_map;
     }
 
-    private static function getChangeCaseExpr(array $operation, string $expr)
+    private static function getChangeCaseExpr(array $operation, string $expr) // TODO: add return type
     {
         $new_case = $operation['case'] ?? self::CAPITALIZE_NONE;
 
@@ -434,7 +434,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getSubstrExpr(array $operation, string $expr)
+    private static function getSubstrExpr(array $operation, string $expr) // TODO: add return type
     {
         $location = $operation['location'] ?? self::SUBSTRING_LOCATION_NONE;
 
@@ -483,7 +483,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getRemoveTextExpr(array $operation, string $expr)
+    private static function getRemoveTextExpr(array $operation, string $expr) // TODO: add return type
     {
         $characters_regex = '';
 
@@ -583,7 +583,7 @@ class Transform extends \Flexio\Jobs\Base
         }
     }
 
-    private static function getTrimTextExpr(array $operation, string $expr)
+    private static function getTrimTextExpr(array $operation, string $expr) // TODO: add return type
     {
         $location = $operation['location'] ?? '';
 
@@ -599,7 +599,7 @@ class Transform extends \Flexio\Jobs\Base
         return false;
     }
 
-    private static function getPadTextExpr(array $operation, string $expr, array $columns)
+    private static function getPadTextExpr(array $operation, string $expr, array $columns) // TODO: add return type
     {
         $location = $operation['location'] ?? '';
         $length = $operation['length'] ?? 0;
@@ -631,7 +631,7 @@ class Transform extends \Flexio\Jobs\Base
         return $new_expr;
     }
 
-    private static function getChangeTypeExpr(array $operation, string $expr, array $column, array &$new_structure)
+    private static function getChangeTypeExpr(array $operation, string $expr, array $column, array &$new_structure) // TODO: add return type
     {
         $type = $column['type'];
         $width = $column['width'] ?? -1;
@@ -702,7 +702,7 @@ class Transform extends \Flexio\Jobs\Base
         return $expr;
     }
 
-    private static function getChangeTypeExprDetail(string $name, string $old_type, string $new_type, $new_width, $new_scale, &$new_structure) // TODO: add parameter types
+    private static function getChangeTypeExprDetail(string $name, string $old_type, string $new_type, $new_width, $new_scale, &$new_structure) // TODO: add return type; TODO: add parameter type
     {
         $width = $new_width;
         $scale = $new_scale;

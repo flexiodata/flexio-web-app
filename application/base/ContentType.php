@@ -18,34 +18,34 @@ namespace Flexio\Base;
 
 class ContentType
 {
-    const UNDEFINED     = '';
-    const BMP           = 'image/x-ms-bmp';
-    const CSS           = 'text/css';
-    const CSV           = 'text/csv';
-    const DOC           = 'application/msword';
-    const DOCX          = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    const EMPTY         = 'application/x-empty';
-    const GIF           = 'image/gif';
-    const GZIP          = 'application/x-gzip';
-    const HTML          = 'text/html';
-    const JPEG          = 'image/jpeg';
-    const JAVASCRIPT    = 'application/javascript';
-    const JSON          = 'application/json';
-    const MARKDOWN      = 'text/markdown';
-    const PDF           = 'application/pdf';
-    const PNG           = 'image/png';
-    const RSS           = 'application/rss+xml';
-    const STREAM        = 'application/octet-stream';
-    const SVG           = 'image/svg+xml';
-    const TIFF          = 'image/tiff';
-    const TEXT          = 'text/plain';
-    const XLS           = 'application/vnd.ms-excel';
-    const XLSX          = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    const XML           = 'application/xml';
-    const ZIP           = 'application/zip';
-    const FLEXIO_TABLE  = 'application/vnd.flexio.table';
-    const FLEXIO_HTML   = 'application/vnd.flexio.html';
-    const FLEXIO_FOLDER = 'application/vnd.flexio.folder';
+    public const UNDEFINED     = '';
+    public const BMP           = 'image/x-ms-bmp';
+    public const CSS           = 'text/css';
+    public const CSV           = 'text/csv';
+    public const DOC           = 'application/msword';
+    public const DOCX          = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    public const EMPTY         = 'application/x-empty';
+    public const GIF           = 'image/gif';
+    public const GZIP          = 'application/x-gzip';
+    public const HTML          = 'text/html';
+    public const JPEG          = 'image/jpeg';
+    public const JAVASCRIPT    = 'application/javascript';
+    public const JSON          = 'application/json';
+    public const MARKDOWN      = 'text/markdown';
+    public const PDF           = 'application/pdf';
+    public const PNG           = 'image/png';
+    public const RSS           = 'application/rss+xml';
+    public const STREAM        = 'application/octet-stream';
+    public const SVG           = 'image/svg+xml';
+    public const TIFF          = 'image/tiff';
+    public const TEXT          = 'text/plain';
+    public const XLS           = 'application/vnd.ms-excel';
+    public const XLSX          = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    public const XML           = 'application/xml';
+    public const ZIP           = 'application/zip';
+    public const FLEXIO_TABLE  = 'application/vnd.flexio.table';
+    public const FLEXIO_HTML   = 'application/vnd.flexio.html';
+    public const FLEXIO_FOLDER = 'application/vnd.flexio.folder';
 
     public static function getMimeType($extension, $buffer, $content_length = false) : string
     {

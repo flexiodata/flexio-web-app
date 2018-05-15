@@ -18,15 +18,15 @@ namespace Flexio\Base;
 
 class DbUtil
 {
-    const TYPE_TEXT          = 'text';
-    const TYPE_CHARACTER     = 'character';
-    const TYPE_WIDECHARACTER = 'widecharacter';
-    const TYPE_NUMERIC       = 'numeric';
-    const TYPE_DOUBLE        = 'double';
-    const TYPE_INTEGER       = 'integer';
-    const TYPE_DATE          = 'date';
-    const TYPE_DATETIME      = 'datetime';
-    const TYPE_BOOLEAN       = 'boolean';
+    public const TYPE_TEXT          = 'text';
+    public const TYPE_CHARACTER     = 'character';
+    public const TYPE_WIDECHARACTER = 'widecharacter';
+    public const TYPE_NUMERIC       = 'numeric';
+    public const TYPE_DOUBLE        = 'double';
+    public const TYPE_INTEGER       = 'integer';
+    public const TYPE_DATE          = 'date';
+    public const TYPE_DATETIME      = 'datetime';
+    public const TYPE_BOOLEAN       = 'boolean';
 
     public static function formatSql($sql)
     {

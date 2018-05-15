@@ -19,8 +19,8 @@ namespace Flexio\Object;
 class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flexio\IFace\IStream
 {
     // TODO: add tests for these constants
-    const TYPE_DIRECTORY = 'SD';
-    const TYPE_FILE = 'SF';
+    public const TYPE_DIRECTORY = 'SD';
+    public const TYPE_FILE = 'SF';
 
     public function __construct()
     {
@@ -124,9 +124,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $this;
     }
 
-    // copies a streams properties to $dest, overwriting $dest's properties
-    public function copyFrom(\Flexio\IFace\IStream $source)
+    public function copyFrom(\Flexio\IFace\IStream $source) : void
     {
+        // note: copies a streams properties to $dest, overwriting $dest's properties
+
         $sourceimpl = $source->getImpl();
 
         if (!($sourceimpl instanceof \Flexio\Object\Stream))
@@ -249,7 +250,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $this->set($properties);
     }
 
-    public function getSize() // TODO: add return type (size can be null)
+    public function getSize() : ?int
     {
         $local_file_info = $this->getFileInfo();
         return $local_file_info['size'];
@@ -321,7 +322,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $info;
     }
 
-    public function getChildStreams($name = null) : array
+    public function getChildStreams(string $name = null) : array
     {
         // return an array of \Flexio\Object\Stream objects that have a
         // parent_eid = this object's eid;

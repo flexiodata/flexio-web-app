@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Vfs
 {
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -55,7 +55,7 @@ class Vfs
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();
@@ -117,7 +117,7 @@ class Vfs
         exit(0);
     }
 
-    public static function put(\Flexio\Api\Request $request)
+    public static function put(\Flexio\Api\Request $request) : void
     {
         $request_url = $request->getUrl();
         $requesting_user_eid = $request->getRequestingUser();

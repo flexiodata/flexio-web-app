@@ -28,7 +28,6 @@
 </template>
 
 <script>
-  import _ from 'lodash'
   import Btn from './Btn.vue'
 
   export default {

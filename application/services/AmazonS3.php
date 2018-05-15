@@ -56,7 +56,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->authenticated;
     }
 
-    private function getS3(string $path)
+    private function getS3(string $path) // TODO: add return type
     {
         if (strpos($path, "s3://") !== 0)
         {
@@ -421,7 +421,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         // TODO: let exceptions through on failure?
 

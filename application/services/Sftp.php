@@ -18,17 +18,17 @@ namespace Flexio\Services;
 
 class SftpCapture
 {
-    function stream_open($path, $mode, $options, &$opened_path)
+    function stream_open($path, $mode, $options, &$opened_path) : bool
     {
         return true;
     }
 
-    function stream_stat()
+    function stream_stat() : array
     {
         return [ 'size' => 0 ];
     }
 
-    function stream_write($data)
+    function stream_write($data) // TODO: add return type
     {
         $len = strlen($data);
         $GLOBALS['g_sftp_callback']($data);
@@ -248,7 +248,6 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-
     private function isDirectory(string $path) : bool
     {
         if (!$this->checkConnect())
@@ -259,7 +258,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return ($type == 2 ? true : false);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->checkConnect())
             return false;
@@ -278,7 +277,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->checkConnect())
             return false;

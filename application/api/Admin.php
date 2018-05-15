@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Admin
 {
-    public static function system(\Flexio\Api\Request $request)
+    public static function system(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
 
@@ -34,7 +34,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function users(\Flexio\Api\Request $request)
+    public static function users(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -84,7 +84,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function actions(\Flexio\Api\Request $request)
+    public static function actions(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -123,7 +123,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function connections(\Flexio\Api\Request $request)
+    public static function connections(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -162,7 +162,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function pipes(\Flexio\Api\Request $request)
+    public static function pipes(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -201,7 +201,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function processes(\Flexio\Api\Request $request)
+    public static function processes(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -240,7 +240,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function process_summary(\Flexio\Api\Request $request)
+    public static function process_summary(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -339,7 +339,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function email(\Flexio\Api\Request $request)
+    public static function email(\Flexio\Api\Request $request) : void
     {
         $f = fopen('php://input', 'r');
         if ($f === false)
@@ -351,7 +351,7 @@ class Admin
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function cron(\Flexio\Api\Request $request)
+    public static function cron(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
 

@@ -35,7 +35,7 @@ if (($validator->check($params, array(
 
 class Create extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -85,7 +85,7 @@ class Create extends \Flexio\Jobs\Base
         }
     }
 
-    private function createFile(\Flexio\IFace\IStream &$outstream)
+    private function createFile(\Flexio\IFace\IStream &$outstream) : void
     {
         $job_params = $this->getJobParameters();
         $name = $job_params['name'] ?? _('New File');
@@ -116,7 +116,7 @@ class Create extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function createTable(\Flexio\IFace\IStream &$outstream)
+    private function createTable(\Flexio\IFace\IStream &$outstream) : void
     {
         $job_params = $this->getJobParameters();
         $name = $job_params['name'] ?? _('New Table');

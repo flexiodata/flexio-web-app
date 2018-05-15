@@ -33,7 +33,7 @@ if (($validator->check($params, array(
 
 class Filter extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -43,7 +43,7 @@ class Filter extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -62,7 +62,7 @@ class Filter extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutputFromJson(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutputFromJson(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // get the job properties
         $params = $this->getJobParameters();
@@ -141,7 +141,7 @@ class Filter extends \Flexio\Jobs\Base
         $outstream->setSize($streamwriter->getBytesWritten());
     }
 
-    private function getOutputFromTable(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutputFromTable(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // get the job properties
         $params = $this->getJobParameters();

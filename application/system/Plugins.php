@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class FlexioPlugin extends \Flexio\System\FrameworkPlugin
 {
-    public function preDispatch()
+    public function preDispatch() : void
     {
         global $g_config;
 
@@ -97,7 +97,7 @@ class FlexioPlugin extends \Flexio\System\FrameworkPlugin
         }
     }
 
-    public function dispatchLoopShutdown()
+    public function dispatchLoopShutdown() : void
     {
         $view = FlexioPlugin::getView();
         $response = $this->getResponse();
@@ -142,13 +142,13 @@ class Flexio_View_Filter_Translate
      * Starting delimiter for translation snippets in view
      *
      */
-    const I18N_DELIMITER_START = '<i18n';
+    private const I18N_DELIMITER_START = '<i18n';
 
     /**
      * Ending delimiter for translation snippets in view
      *
      */
-    const I18N_DELIMITER_END = '</i18n>';
+    private const I18N_DELIMITER_END = '</i18n>';
 
     /**
      * Filter the value for i18n tags and translate
@@ -158,16 +158,16 @@ class Flexio_View_Filter_Translate
      */
     public function filter(string $value) : string
     {
-        $delim_start_len = strlen(Flexio_View_Filter_Translate::I18N_DELIMITER_START);
-        $delim_end_len = strlen(Flexio_View_Filter_Translate::I18N_DELIMITER_END);
+        $delim_start_len = strlen(self::I18N_DELIMITER_START);
+        $delim_end_len = strlen(self::I18N_DELIMITER_END);
 
         $offset = 0;
-        while (($start_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_START, $offset)) !== false)
+        while (($start_pos = strpos($value, self::I18N_DELIMITER_START, $offset)) !== false)
         {
             if (($close_tag = \Flexio\Base\Util::zlstrpos($value, '>', $start_pos)) === false)
                 throw new \Exception("Open tag was not terminated after position [$offset]!");
 
-            if (($end_pos = strpos($value, Flexio_View_Filter_Translate::I18N_DELIMITER_END, $close_tag)) === false)
+            if (($end_pos = strpos($value, self::I18N_DELIMITER_END, $close_tag)) === false)
                 throw new \Exception("No ending tag after position [$offset] found!");
 
 

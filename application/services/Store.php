@@ -238,7 +238,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return false;
     }
 
-    public function open($path) :  \Flexio\Iface\IStream
+    public function open($path) : \Flexio\Iface\IStream
     {
         $path = $path['path'] ?? (is_string($path) ? $path : '');
         $stream = $this->getStreamFromPath($path);
@@ -252,7 +252,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $stream;
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $stream = $this->getStreamFromPath($path);
@@ -275,7 +275,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         if (isset($params['structure']))
         {
@@ -333,7 +333,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $streamwriter->write($buf);
     }
 
-    public function insert(array $params, array $rows)  // $rows is an array of rows
+    public function insert(array $params, array $rows /*an array of rows*/) // TODO: add return type
     {
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $path = trim($path, "/ \t\n\r\0\x0B");
@@ -369,7 +369,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private function getStreamFromPath(string $path, bool $create_dir_structure = false) // : ?\Flexio\Object\Stream
+    private function getStreamFromPath(string $path, bool $create_dir_structure = false) : ?\Flexio\Object\Stream
     {
         $owner_user_eid = $this->getOwner();
         $user = false;

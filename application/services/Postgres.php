@@ -207,7 +207,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
 
@@ -248,7 +248,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -261,7 +261,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    private function newConnection()
+    private function newConnection() // TODO: add return type
     {
         $dsn = 'pgsql:host=' . $this->host . ';port=' . $this->port . ';dbname=' . $this->database;
 
@@ -339,7 +339,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function query(array $query_params) // TODO: set return type
+    public function query(array $query_params) // TODO: add return type
     {
         // TODO: add validation; quote table parameter
 
@@ -427,7 +427,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $iter;
     }
 
-    public function queryAll(string $table) // TODO: set return type
+    public function queryAll(string $table) // TODO: add return type
     {
         $sql = "select * from " . self::quoteIdentifierIfNecessary($table);
 
@@ -471,7 +471,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function selectInto(string $where, string $order, string $output)
+    public function selectInto(string $where, string $order, string $output) : bool
     {
         try
         {
@@ -487,7 +487,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function openFile(string $path) // TODO: set return type
+    public function openFile(string $path) // TODO: add return type
     {
         $db = $this->newConnection();
         $qtbl = self::quoteIdentifierIfNecessary($path);
@@ -517,7 +517,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $binf;
     }
 
-    public function bulkInsert(string $table)
+    public function bulkInsert(string $table) // TODO: add return type
     {
         $inserter = new PostgresInserterMultiRow;
 
@@ -529,7 +529,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $inserter;
     }
 
-    public function deleteFile(string $path)
+    public function deleteFile(string $path) : void
     {
         $qdbtable = self::quoteIdentifierIfNecessary($path);
 
@@ -537,7 +537,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $this->db->exec($sql);
     }
 
-    public function describeTable(string $table)
+    public function describeTable(string $table) // TODO: add return type
     {
         $handle_type = substr($table,0,3);
 
@@ -653,7 +653,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return isset($rows[0]['cnt']) ? $rows[0]['cnt'] : null;
     }
 
-    public function getIteratorFromHandle(string $handle)
+    public function getIteratorFromHandle(string $handle) // TODO: add return type
     {
         $iter = new PostgresIterator;
         $iter->db = $this->db;
@@ -786,12 +786,12 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return ($res !== false ? false : true);
     }
 
-    public static function base64url_encode($data)
+    public static function base64url_encode($data) // TODO: add return type
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
 
-    public static function base64url_decode($data)
+    public static function base64url_decode($data) // TODO: add return type
     {
         return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
     }
@@ -935,12 +935,12 @@ class PostgresIterator
         }
     }
 
-    public function getHandle() // TODO: set return type
+    public function getHandle() // TODO: add return type
     {
         return $this->cursor_type . \Flexio\Services\Postgres::base64url_encode($this->table . "\t" . $this->row_count . "\t" . $this->primary_key);
     }
 
-    public function getRows(int $offset, int $limit)
+    public function getRows(int $offset, int $limit) // TODO: add return type
     {
         if ($this->cursor_type == 'xh1')
         {
@@ -974,7 +974,7 @@ class PostgresIterator
         return null;
     }
 
-    public function fetchRow() // TODO: set return type
+    public function fetchRow() // TODO: add return type
     {
         $cnt = count($this->rows);
 
@@ -1009,7 +1009,7 @@ class PostgresIteratorAll
 {
     public $result;
 
-    public function fetchRow()
+    public function fetchRow() // TODO: add return type
     {
         $row = $this->result->fetch(\PDO::FETCH_ASSOC);
         unset($row['xdrowid']);
@@ -1029,7 +1029,7 @@ class PostgresInserterBulkCopy
     private $structure = null;
     private $columns = null;
 
-    public function init($service, $db, $table) // TODO: set parameter types
+    public function init($service, $db, $table) // TODO: add parameter type
     {
         $this->db = $db;
         $this->table = $table;
@@ -1168,7 +1168,7 @@ class PostgresInserterMultiRow
     private $structure = null;
     private $columns = null;
 
-    public function init($service, $db, $table) // TODO: set parameter types
+    public function init($service, $db, $table) : bool // TODO: add parameter type
     {
         $this->db = $db;
         $this->table = $table;
@@ -1288,7 +1288,7 @@ class PostgresInserterMultiRow
         }
     }
 
-    public function finishInsert()
+    public function finishInsert() : bool
     {
         return $this->flush();
     }
@@ -1328,7 +1328,7 @@ class PostgresInserterSimple
     private $rows = array();
     private $stmt = null;
 
-    public function init($service, $db, $table) // TODO: set parameter types
+    public function init($service, $db, $table) // TODO: add parameter type
     {
         $this->db = $db;
         $this->table = $table;
@@ -1382,7 +1382,7 @@ class PostgresBinaryFile
         $this->db->commit();
     }
 
-    public function read($length)
+    public function read($length) // TODO: add return type
     {
         // for some reason, fread() has a 8192-byte limit,
         // so we use stream_get_contents
@@ -1392,12 +1392,12 @@ class PostgresBinaryFile
         return $ret;
     }
 
-    public function write($data)
+    public function write($data) // TODO: add return type
     {
         return fwrite($this->f, $data);
     }
 
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET) // TODO: add return type
     {
         return fseek($this->f, $offset, $whence);
     }

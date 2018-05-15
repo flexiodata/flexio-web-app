@@ -26,7 +26,6 @@ import {
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
-import VeeValidate from 'vee-validate'
 import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
@@ -39,10 +38,6 @@ import './stylesheets/style.styl' // common styles
 // fallback css (if there's no Internet connection)
 
 util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
-
-// setup for VeeValidate (form validation)
-
-Vue.use(VeeValidate)
 
 // setup for KeenUi
 

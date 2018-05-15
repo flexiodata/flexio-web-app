@@ -18,12 +18,12 @@ namespace Flexio\Controllers;
 
 class DefaultController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         parent::init();
     }
 
-    public function indexAction()
+    public function indexAction() : void
     {
     }
 }

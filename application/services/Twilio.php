@@ -116,7 +116,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -152,7 +152,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -164,7 +164,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     // additional functions
     ////////////////////////////////////////////////////////////
 
-    public function describeTable(string $path)
+    public function describeTable(string $path) // TODO: add return type
     {
         if (!$this->authenticated())
             return false;
@@ -180,7 +180,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $structure;
     }
 
-    private function fetchData(string $path, int &$page = null)
+    private function fetchData(string $path, int &$page = null) // TODO: add return type
     {
         if (!isset($page))
             $page = 1;
@@ -222,7 +222,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $rows;
     }
 
-    private function map($content_root, $apidata, $structure) // TODO: add function parameters/return types
+    private function map($content_root, $apidata, $structure) // TODO: add return type; TODO: add parameter type
     {
         $result = array();
 
@@ -256,7 +256,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $result;
     }
 
-    private function getRowData($content_root, $apidata) // TODO: add function parameters/return types
+    private function getRowData($content_root, $apidata) // TODO: add return type; TODO: add parameter type
     {
         // set the current path to the root apidata object; find out the
         // path to the data node
@@ -302,7 +302,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    private function lookupDefinition(string $path)
+    private function lookupDefinition(string $path) // TODO: add return type
     {
         $definitions = $this->getDefinitions();
         foreach ($definitions as $d)
@@ -440,7 +440,7 @@ class Twilio implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $result;
     }
 
-    private static function cleanPath($path)
+    private static function cleanPath(string $path) : string
     {
         $path = trim(strtolower($path));
         $path = trim($path, '/');

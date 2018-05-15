@@ -32,11 +32,11 @@ class TableToCsvCallbackAdaptor
         fputcsv($this->fp, $field_names);
     }
 
-    function __invoke($length)
+    function __invoke($length) // TODO: add return type
     {
         if ($this->fp === false)
             return false;
-        
+
         while (ftell($this->fp) < $length)
         {
             $row = ($this->table_data_callback)();

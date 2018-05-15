@@ -9,6 +9,7 @@
 
     <div>
       <el-form
+        ref="form"
         class="el-form-compact el-form__label-tiny"
         :model="edit_pipe"
         :rules="rules"
@@ -87,9 +88,6 @@
 
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import * as mtypes from '../constants/member-type'
-  import * as atypes from '../constants/action-type'
-  import util from '../utils'
   import Validation from './mixins/validation'
 
   const defaultAttrs = () => {
@@ -137,7 +135,7 @@
         edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
         rules: {
           name: [
-            { required: true, message: 'Please input a name' }
+            { required: true, message: 'Please input a name', trigger: 'blur' }
           ],
           alias: [
             { validator: this.formValidateAlias }
@@ -150,8 +148,9 @@
         return _.get(this, 'edit_pipe.eid', '')
       },
       our_title() {
-        if (this.title.length > 0)
+        if (this.title.length > 0) {
           return this.title
+        }
 
         return this.mode == 'edit'
           ? 'Edit "' + _.get(this.pipe, 'name') + '" Pipe'
@@ -159,28 +158,49 @@
       },
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create pipe'
+      },
+      has_errors() {
+        return false
       }
+    },
+    mounted() {
+      this.$nextTick(() => {
+        if (this.$refs.form) {
+          this.$refs.form.validateField('alias')
+        }
+      })
     },
     methods: {
       submit() {
-        // TODO: check form for errors
-        // if there are no errors in the form, do the submit
-        this.$emit('submit', this.edit_pipe)
+        this.$refs.form.validate((valid) => {
+          if (!valid)
+            return
+
+          // there are no errors in the form; do the submit
+          this.$emit('submit', this.edit_pipe)
+        })
       },
       reset(attrs) {
         this.edit_pipe = _.assign({}, defaultAttrs(), attrs)
       },
       formValidateAlias(rule, value, callback) {
-        if (value.length == 0)
+        if (value.length == 0) {
+          callback()
           return
+        }
 
-        if (value == _.get(this.pipe, 'alias', ''))
+        // we haven't changed the alias; trying to validate it will tell us it already exists
+        if (this.mode == 'edit' && value == _.get(this.pipe, 'alias', '')) {
+          callback()
           return
+        }
 
         this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))
+          } else {
+            callback()
           }
         })
       },

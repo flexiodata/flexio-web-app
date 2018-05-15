@@ -18,18 +18,18 @@ namespace Flexio\Controllers;
 
 class UtilController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         parent::init();
     }
 
-    public function indexAction()
+    public function indexAction() : void
     {
         // render the page
         $this->render();
     }
 
-    public function generatespriteAction()
+    public function generatespriteAction() : void
     {
         // render the page
         $this->renderRaw();
@@ -253,7 +253,7 @@ EOT;
         echo $output;
     }
 
-    public function generatebase64pngAction()
+    public function generatebase64pngAction() : void
     {
         // render the page
         $this->renderRaw();
@@ -294,7 +294,7 @@ EOT;
         echo $output;
     }
 
-    public function findtrailingcommasAction()
+    public function findtrailingcommasAction() : void
     {
         // render the page
         $this->renderRaw();
@@ -368,7 +368,7 @@ EOT;
         return "data:$mime;base64,$base64";
     }
 
-    private function findTrailingCommas($file)
+    private function findTrailingCommas($file) // TODO: add return type
     {
         $notice = <<<EOT
 \n---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ---------- TRAILING COMMA ALERT ----------\n
@@ -382,7 +382,7 @@ EOT;
         return $result;
     }
 
-    private function getAllFiles($dir, $recursive = false, $include_dirs = false)
+    private function getAllFiles($dir, $recursive = false, $include_dirs = false) // TODO: add return type
     {
         $output = array();
 
@@ -417,7 +417,7 @@ EOT;
         return $output;
     }
 
-    private function cleanFileList($files)
+    private function cleanFileList($files) // TODO: add return type
     {
         foreach ($files as $i => $file)
         {
@@ -434,7 +434,7 @@ EOT;
     }
 
     // file object array sort function
-    private static function sortFileObjectsByDimensions($a, $b)
+    private static function sortFileObjectsByDimensions($a, $b) // TODO: add return type
     {
         // sort by filename if image dimensions are the same
         if ($a['h'] == $b['h'] && $a['w'] == $b['w'])

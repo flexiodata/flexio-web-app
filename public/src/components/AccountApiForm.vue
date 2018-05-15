@@ -1,40 +1,41 @@
 <template>
   <div>
     <div class="pb2 bb b--black-10" v-if="showCreateButton">
-      <el-button type="primary" size="mini" class="ttu b" @click="createApiKey">Create API Key</el-button>
+      <el-button type="primary" size="small" class="ttu b" @click="createApiKey">Create API Key</el-button>
     </div>
-    <empty-item class="mv3" v-if="tokens.length == 0">
+    <EmptyItem class="mv3" v-if="tokens.length == 0">
       <span slot="text">No API keys to show</span>
-    </empty-item>
-    <div
-      class="flex flex-row items-center hide-child"
-      :class="showOnlyOne ? '' : 'darken-05'"
-      v-for="(token, index) in tokens"
-      v-else
-    >
+    </EmptyItem>
+    <div v-else>
       <div
-        class="flex-fill pv2 ph3"
-        :class="showOnlyOne ? 'f5 min-w5 mr3 bg-black-05' : ''"
-      ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
-      <div class="pv2 tr">
-        <el-button
-          type="primary"
-          size="mini"
-          class="hint--top"
-          aria-label="Copy to Clipboard"
-          :data-clipboard-text="token.access_code"
-        >
-          <span class="ttu b">Copy</span>
-        </el-button>
-      </div>
-      <div class="pv2 ph3 tr" v-if="!showOnlyOne">
-        <span
-          class="pointer f3 lh-solid b child hint--top"
-          aria-label="Delete API Key"
-          @click="deleteKey(token)"
-        >
-          &times;
-        </span>
+        class="flex flex-row items-center hide-child"
+        :class="showOnlyOne ? '' : 'darken-05'"
+        v-for="(token, index) in tokens"
+      >
+        <div
+          class="flex-fill pv2 ph3"
+          :class="showOnlyOne ? 'f5 min-w5 mr3 bg-black-05' : ''"
+        ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
+        <div class="pv2 tr">
+          <el-button
+            type="primary"
+            size="mini"
+            class="hint--top"
+            aria-label="Copy to Clipboard"
+            :data-clipboard-text="token.access_code"
+          >
+            <span class="ttu b">Copy</span>
+          </el-button>
+        </div>
+        <div class="pv2 ph3 tr" v-if="!showOnlyOne">
+          <span
+            class="pointer f3 lh-solid black-30 hover-black-60 child hint--top"
+            aria-label="Delete API Key"
+            @click="deleteKey(token)"
+          >
+            &times;
+          </span>
+        </div>
       </div>
     </div>
   </div>

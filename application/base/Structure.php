@@ -19,25 +19,25 @@ namespace Flexio\Base;
 class Structure
 {
     // column types
-    const TYPE_INVALID = '';
-    const TYPE_TEXT = 'text';
-    const TYPE_CHARACTER = 'character';
-    const TYPE_WIDECHARACTER = 'widecharacter';
-    const TYPE_NUMERIC = 'numeric';
-    const TYPE_DOUBLE = 'double';
-    const TYPE_INTEGER = 'integer';
-    const TYPE_DATE = 'date';
-    const TYPE_DATETIME = 'datetime';
-    const TYPE_BOOLEAN = 'boolean';
+    public const TYPE_INVALID = '';
+    public const TYPE_TEXT = 'text';
+    public const TYPE_CHARACTER = 'character';
+    public const TYPE_WIDECHARACTER = 'widecharacter';
+    public const TYPE_NUMERIC = 'numeric';
+    public const TYPE_DOUBLE = 'double';
+    public const TYPE_INTEGER = 'integer';
+    public const TYPE_DATE = 'date';
+    public const TYPE_DATETIME = 'datetime';
+    public const TYPE_BOOLEAN = 'boolean';
 
     // column wildcards for denoting type classes in specified column list
-    const WILDCARD_INVALID = '';
-    const WILDCARD_ALL = '*';
-    const WILDCARD_TEXT = ':text';
-    const WILDCARD_NUMBER = ':number';
-    const WILDCARD_DATE = ':date';
-    const WILDCARD_DATETIME = ':datetime';
-    const WILDCARD_BOOLEAN = ':boolean';
+    public const WILDCARD_INVALID = '';
+    public const WILDCARD_ALL = '*';
+    public const WILDCARD_TEXT = ':text';
+    public const WILDCARD_NUMBER = ':number';
+    public const WILDCARD_DATE = ':date';
+    public const WILDCARD_DATETIME = ':datetime';
+    public const WILDCARD_BOOLEAN = ':boolean';
 
     private $columns;
     private $column_index_lookup; // column lookup indexed by 'name'
@@ -271,7 +271,7 @@ class Structure
         return $column_entry;
     }
 
-    public function pop() // TODO: add function return type
+    public function pop() // TODO: add return type
     {
         // note: returns the removed column, or false if there was no column to remove
 
@@ -317,7 +317,7 @@ class Structure
         return true;
     }
 
-    private function initialize()
+    private function initialize() : void
     {
         $this->columns = array();
         $this->column_index_lookup = array();

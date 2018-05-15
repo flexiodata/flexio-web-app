@@ -28,7 +28,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         $this->owner_eid = $owner_eid;
     }
 
-    public function setProcess(\Flexio\IFace\IProcess $process)
+    public function setProcess(\Flexio\IFace\IProcess $process) : void
     {
         $this->process = $process;
         $this->process_context_service = new \Flexio\Services\ProcessContext($process);
@@ -275,7 +275,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->unlink($rpath);
     }
 
-    public function read($path, callable $callback)
+    public function read($path, callable $callback) // TODO: add return type
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
         if (is_array($path))
@@ -292,7 +292,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->read([ 'path' => $rpath ], $callback);
     }
 
-    public function write($path, callable $callback)
+    public function write($path, callable $callback) // TODO: add return type
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
         $pathstr = $path;
@@ -317,7 +317,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         return $service->write($arr, $callback);
     }
 
-    public function insert(string $path, array $rows)
+    public function insert(string $path, array $rows) // TODO: add return type
     {
         // path can either be an array [ 'path' => value ] or a string containing the path
         if (is_array($path))
@@ -370,7 +370,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
     }
 
-    public function getServiceFromPath(string $path)
+    public function getServiceFromPath(string $path) // TODO: add return type
     {
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
