@@ -404,7 +404,7 @@
 
         rules: {
           email: [
-            { required: true, message: 'Please input an email address' },
+            { required: true, message: 'Please input an email address', trigger: 'blur' },
             { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
           ]
         }

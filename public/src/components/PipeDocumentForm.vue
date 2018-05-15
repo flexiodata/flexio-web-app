@@ -143,7 +143,7 @@
         form_values: null,
         rules: {
           name: [
-            { required: true, message: 'Please input a name' }
+            { required: true, message: 'Please input a name', trigger: 'blur' }
           ],
           alias: [
             { validator: this.formValidateAlias }

@@ -135,7 +135,7 @@
         edit_pipe: _.assign({}, defaultAttrs(), this.pipe),
         rules: {
           name: [
-            { required: true, message: 'Please input a name' }
+            { required: true, message: 'Please input a name', trigger: 'blur' }
           ],
           alias: [
             { validator: this.formValidateAlias }

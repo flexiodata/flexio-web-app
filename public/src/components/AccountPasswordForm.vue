@@ -21,6 +21,7 @@
             type="password"
             placeholder="Current Password"
             autocomplete="off"
+            spellcheck="false"
             :autofocus="true"
             v-model="old_password"
           />
@@ -35,6 +36,7 @@
             type="password"
             placeholder="New Password"
             autocomplete="off"
+            spellcheck="false"
             v-model="new_password"
           />
         </el-form-item>
@@ -48,6 +50,7 @@
             type="password"
             placeholder="Confirm New Password"
             autocomplete="off"
+            spellcheck="false"
             v-model="new_password2"
           />
         </el-form-item>
