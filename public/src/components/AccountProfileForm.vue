@@ -140,15 +140,20 @@
         })
       },
       trySaveChanges() {
-        var user = this.getActiveUser()
-        var old_username = _.get(user, 'username', ' ')
-        var new_username = _.get(this.$data, 'username')
+        this.$refs.form.validate((valid) => {
+          if (!valid)
+            return
 
-        if (new_username == old_username) {
-          this.saveChanges()
-        } else {
-          this.openConfirmModal()
-        }
+          var user = this.getActiveUser()
+          var old_username = _.get(user, 'username', ' ')
+          var new_username = _.get(this.$data, 'username')
+
+          if (new_username == old_username) {
+            this.saveChanges()
+          } else {
+            this.openConfirmModal()
+          }
+        })
       },
       saveChanges() {
         this.$refs.form.validate((valid) => {
