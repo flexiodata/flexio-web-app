@@ -296,7 +296,6 @@
   } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import ValueSelect from './ValueSelect.vue'
   import OauthPopup from './mixins/oauth-popup'
 
   const defaultConnectionInfo = () => {
@@ -351,9 +350,6 @@
       }
     },
     mixins: [OauthPopup],
-    components: {
-      ValueSelect
-    },
     watch: {
       connection() { this.reset() },
 
