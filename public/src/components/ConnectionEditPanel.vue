@@ -98,20 +98,19 @@
         />
 
         <div
-          class="mt4"
+          class="mt3 pa3 ba b--black-10 br2"
           v-else
         >
-          <div class="flex flex-row items-center pa2 bg-light-gray br2 br--top mid-gray lh-copy ttu fw6 f6">
-            <i class="material-icons mr1 f5">lock</i> Authentication
+          <div class="flex flex-row items-center mb3 mid-gray lh-copy ttu fw6 f6">
+            <i class="material-icons mr1 f4">lock</i> Authentication
           </div>
-          <div class="pa3 pb4 ba bt-0 b--light-gray br2 br--bottom">
-            <ConnectionAuthenticationPanel
-              ref="connection-authentication-panel"
-              :connection="edit_connection"
-              :mode="mode"
-              @change="updateConnection"
-            />
-          </div>
+          <ConnectionAuthenticationPanel
+            ref="connection-authentication-panel"
+            class="mb2"
+            :connection="edit_connection"
+            :mode="mode"
+            @change="updateConnection"
+          />
         </div>
       </div>
     </div>

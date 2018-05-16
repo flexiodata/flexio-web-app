@@ -43,10 +43,10 @@
     </el-form>
 
     <div class="mv3 ba b--black-10 br2">
-      <el-tabs class="bg-white br2 ph4 pt3 pb4" v-model="active_tab_name">
+      <el-tabs class="bg-white br2 ph3 pt1 pb3" v-model="active_tab_name">
         <el-tab-pane name="authorization">
           <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
-          <div class="mv2 mw6">
+          <div class="mv2 mh3 mw6">
             <el-form
               class="el-form-compact"
               label-width="10rem"
@@ -152,7 +152,7 @@
 
         <el-tab-pane name="form-data">
           <div slot="label" class="tc" style="min-width: 3rem">Form Data</div>
-          <div class="mv2">
+          <div class="mv2 mh3">
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
@@ -172,7 +172,7 @@
 
         <el-tab-pane name="headers">
           <div slot="label" class="tc" style="min-width: 3rem">Headers</div>
-          <div class="mv2">
+          <div class="mv2 mh3">
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
