@@ -319,6 +319,9 @@
               // there are no errors in the form; do the submit
               this.$emit('submit', this.edit_connection)
             })
+          } else {
+            // there are no errors in the form; do the submit
+            this.$emit('submit', this.edit_connection)
           }
         })
       },
