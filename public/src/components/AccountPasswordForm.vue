@@ -55,7 +55,7 @@
           />
         </el-form-item>
       </el-form>
-      <div class="mt4">
+      <div class="mt3">
         <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
       </div>
     </form>
