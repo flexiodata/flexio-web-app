@@ -16,37 +16,28 @@
       </div>
       <div class="bg-white css-dashboard-box br2">
         <el-tabs
-          class="bg-white"
-          type="border-card"
+          class="bg-white br2 ph4 pt3 pb4"
           @tab-click="onTabClick"
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
-            <div slot="label" class="ph2">Profile</div>
-            <div class="pa3">
-              <AccountProfileForm />
-            </div>
+            <div slot="label" style="padding: 0 15px">Profile</div>
+            <AccountProfileForm class="mt3" />
           </el-tab-pane>
 
           <el-tab-pane name="region">
-            <div slot="label" class="ph2">Region</div>
-            <div class="pa3">
-              <AccountRegionForm />
-            </div>
+            <div slot="label" style="padding: 0 15px">Region</div>
+            <AccountRegionForm class="mt3" />
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label" class="ph2">API</div>
-            <div class="pa3">
-              <AccountApiForm v-if="has_user" />
-            </div>
+            <div slot="label" style="padding: 0 15px">API</div>
+            <AccountApiForm class="mt3" v-if="has_user" />
           </el-tab-pane>
 
           <el-tab-pane name="password">
-            <div slot="label" class="ph2">Password</div>
-            <div class="pa3">
-              <AccountPasswordForm />
-            </div>
+            <div slot="label" style="padding: 0 15px">Password</div>
+            <AccountPasswordForm class="mt3" />
           </el-tab-pane>
         </el-tabs>
       </div>
