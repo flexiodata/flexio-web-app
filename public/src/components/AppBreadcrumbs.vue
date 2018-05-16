@@ -36,7 +36,7 @@
       },
       doc_name() {
         if (this.$route.name == ROUTE_ACCOUNT) {
-          return 'Account'
+          return 'Account Settings'
         }
 
         return _.get(this.getActiveDocument(), 'name', '')

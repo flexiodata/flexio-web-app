@@ -18,7 +18,7 @@
         ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
         <div class="pv2 tr">
           <el-button
-            type="primary"
+            type="plain"
             size="mini"
             class="hint--top"
             aria-label="Copy to Clipboard"

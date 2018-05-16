@@ -1,36 +1,56 @@
 <template>
-  <div class="flex flex-column items-stretch">
-    <h1 v-if="false" class="flex-none f3 f2-l fw6 ph2 pv2 pv3-m pv4-l ma0 truncate white bg-blue tc">Account</h1>
-    <h1 v-if="false" class="flex-none f3 f2-l fw6 ph2 pv2 pv3-m pv4-l ma0 truncate mid-gray tc">Account</h1>
-    <ui-tabs
-      class="flex-fill flex flex-column ui-tabs--centered ui-tabs--fill"
-      ref="tabs"
-      @tab-change="onTabChange"
-    >
-      <ui-tab id="profile" title="Profile">
-        <div class="mw6 center mv4">
-          <account-profile-form></account-profile-form>
+  <div
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    style="padding-bottom: 8rem"
+  >
+    <div class="center" style="max-width: 36rem">
+      <div
+        class="mt4 mb3 relative z-7 bg-nearer-white"
+      >
+        <div
+          class="flex flex-row items-center center tc"
+          style="max-width: 1440px"
+        >
+          <h1 class="flex-fill mv0 pv3 fw6 mid-gray">Account Settings</h1>
         </div>
-      </ui-tab>
+      </div>
+      <div class="bg-white css-dashboard-box br2">
+        <el-tabs
+          class="bg-white"
+          type="border-card"
+          @tab-click="onTabClick"
+          v-model="active_tab_name"
+        >
+          <el-tab-pane name="profile">
+            <div slot="label" class="ph2">Profile</div>
+            <div class="pa3">
+              <AccountProfileForm />
+            </div>
+          </el-tab-pane>
 
-      <ui-tab id="region" title="Region">
-        <div class="mw6 center mv4">
-          <account-region-form></account-region-form>
-        </div>
-      </ui-tab>
+          <el-tab-pane name="region">
+            <div slot="label" class="ph2">Region</div>
+            <div class="pa3">
+              <AccountRegionForm />
+            </div>
+          </el-tab-pane>
 
-      <ui-tab id="api" title="API">
-        <div class="mw6 center mv4">
-          <account-api-form v-if="has_user"></account-api-form>
-        </div>
-      </ui-tab>
+          <el-tab-pane name="api">
+            <div slot="label" class="ph2">API</div>
+            <div class="pa3">
+              <AccountApiForm v-if="has_user" />
+            </div>
+          </el-tab-pane>
 
-      <ui-tab id="password" title="Password">
-        <div class="mw6 center mv4">
-          <account-password-form></account-password-form>
-        </div>
-      </ui-tab>
-    </ui-tabs>
+          <el-tab-pane name="password">
+            <div slot="label" class="ph2">Password</div>
+            <div class="pa3">
+              <AccountPasswordForm />
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -48,6 +68,11 @@
       AccountApiForm,
       AccountPasswordForm
     },
+    data() {
+      return {
+        active_tab_name: this.getTabName()
+      }
+    },
     computed: {
       ...mapState([
         'active_user_eid'
@@ -59,22 +84,21 @@
     mounted() {
       this.$store.track('Visited Account Page')
 
-      var hash = window.location.hash
-      var tab_id = hash.substring(1)
-      if (tab_id.length == 0)
-        tab_id = 'profile'
-
       this.$nextTick(() => {
-        this.$refs['tabs'].setActiveTab(tab_id)
-        this.setHash(tab_id)
+        this.setHash(this.getTabName())
       })
     },
     methods: {
-      setHash(tab_id) {
-        window.location.hash = '#'+tab_id
+      setHash(tab_name) {
+        window.location.hash = '#'+tab_name
       },
-      onTabChange(tab_id) {
-        this.setHash(tab_id)
+      getTabName() {
+        var hash = window.location.hash
+        var tab_name = hash.substring(1)
+        return tab_name.length > 0 ? tab_name : 'profile'
+      },
+      onTabClick(tab) {
+        this.setHash(tab.name)
       }
     }
   }

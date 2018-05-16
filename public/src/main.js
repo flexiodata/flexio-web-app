@@ -21,8 +21,9 @@ import {
   Radio,
   RadioGroup,
   Select,
-  Switch
-  //TimePicker
+  Switch,
+  Tabs,
+  TabPane
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
@@ -67,7 +68,8 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Select)
 Vue.use(Switch)
-//Vue.use(TimePicker)
+Vue.use(Tabs)
+Vue.use(TabPane)
 
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
