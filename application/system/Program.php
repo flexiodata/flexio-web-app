@@ -18,7 +18,7 @@ namespace Flexio\System;
 
 class Program
 {
-    public static function exec(string $cmdline, bool $wait = false)
+    public static function exec(string $cmdline, bool $wait = false) : void
     {
         if (\Flexio\System\System::isPlatformWindows())
         {
@@ -37,7 +37,7 @@ class Program
     // this is a function that will pop up a traditional
     // GUI message box, which can be useful for debugging
     // At present, it only works on Win32
-    public static function messageBox(string $msg, string $caption = 'Message')
+    public static function messageBox(string $msg, string $caption = 'Message') : void
     {
         // to show object data, use var_export (similar to var_dump):
         // \Flexio\System\Program::messageBox(var_export($validation_info,true));
@@ -49,7 +49,7 @@ class Program
         }
     }
 
-    public static function notepad(string $msg)
+    public static function notepad(string $msg) : void
     {
         $filename = \Flexio\Base\File::createTempFile('', 'txt');
         file_put_contents($filename, $msg);
@@ -60,7 +60,7 @@ class Program
         unlink($filename);
     }
 
-    public static function runInBackground(string $code, bool $wait = false)
+    public static function runInBackground(string $code, bool $wait = false) : void
     {
         $phpbin = \Flexio\System\System::getBinaryPath('php');
 
@@ -107,8 +107,7 @@ EOT;
         self::execute($command, $wait);
     }
 
-
-    public static function execute(string $command, bool $wait = false)
+    public static function execute(string $command, bool $wait = false) : void
     {
         if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN")
         {

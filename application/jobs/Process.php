@@ -21,32 +21,32 @@ class Process implements \Flexio\IFace\IProcess
     // note: the following constants may be stored in the database;
     // if they are changed, the database values need to be migrated
 
-    const MODE_UNDEFINED  = '';
-    const MODE_BUILD      = 'B';
-    const MODE_RUN        = 'R';
+    public const MODE_UNDEFINED  = '';
+    public const MODE_BUILD      = 'B';
+    public const MODE_RUN        = 'R';
 
-    const STATUS_UNDEFINED = '';
-    const STATUS_PENDING   = 'S'; // 'S' for 'Starting'
-    const STATUS_WAITING   = 'W';
-    const STATUS_RUNNING   = 'R';
-    const STATUS_CANCELLED = 'X';
-    const STATUS_PAUSED    = 'P';
-    const STATUS_FAILED    = 'F';
-    const STATUS_COMPLETED = 'C';
+    public const STATUS_UNDEFINED = '';
+    public const STATUS_PENDING   = 'S'; // 'S' for 'Starting'
+    public const STATUS_WAITING   = 'W';
+    public const STATUS_RUNNING   = 'R';
+    public const STATUS_CANCELLED = 'X';
+    public const STATUS_PAUSED    = 'P';
+    public const STATUS_FAILED    = 'F';
+    public const STATUS_COMPLETED = 'C';
 
-    const RESPONSE_NONE = 0;
-    const RESPONSE_NORMAL = 200;
+    public const RESPONSE_NONE = 0;
+    public const RESPONSE_NORMAL = 200;
 
-    const LOG_TYPE_UNDEFINED = '';
-    const LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
-    const LOG_TYPE_USER      = 'U'; // 'U' for user
+    public const LOG_TYPE_UNDEFINED = '';
+    public const LOG_TYPE_SYSTEM    = 'P'; // 'P' for process
+    public const LOG_TYPE_USER      = 'U'; // 'U' for user
 
     // events are passed in a callback function along with info
     // to track info about the process
-    const EVENT_STARTING       = 'process.starting';
-    const EVENT_STARTING_TASK  = 'process.starting.task';
-    const EVENT_FINISHED       = 'process.finished';
-    const EVENT_FINISHED_TASK  = 'process.finished.task';
+    public const EVENT_STARTING       = 'process.starting';
+    public const EVENT_STARTING_TASK  = 'process.starting.task';
+    public const EVENT_FINISHED       = 'process.finished';
+    public const EVENT_FINISHED_TASK  = 'process.finished.task';
 
     private static $manifest = array(
         'calc'      => '\Flexio\Jobs\CalcField',
@@ -204,12 +204,12 @@ class Process implements \Flexio\IFace\IProcess
         return $this->files;
     }
 
-    public function addLocalConnection(string $identifier, array $connection_properties)
+    public function addLocalConnection(string $identifier, array $connection_properties) : void
     {
         $this->local_connections[$identifier] = $connection_properties;
     }
 
-    public function getLocalConnection(string $identifier) // : ?array   TODO: add return type
+    public function getLocalConnection(string $identifier) : ?array
     {
         return ($this->local_connections[$identifier] ?? null);
     }
@@ -219,7 +219,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this->local_connections;
     }
 
-    public function getConnection(string $identifier)
+    public function getConnection(string $identifier) : ?array
     {
         $local = $this->getLocalConnection($identifier);
         if ($local !== null)
@@ -401,7 +401,7 @@ class Process implements \Flexio\IFace\IProcess
         return $state;
     }
 
-    private function executeTask(array $task)
+    private function executeTask(array $task) : void
     {
         if (!IS_PROCESSTRYCATCH())
         {

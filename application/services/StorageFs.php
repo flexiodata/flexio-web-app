@@ -137,7 +137,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         return true;
     }
 
-    public function read($length = 1024)
+    public function read($length = 1024) // TODO: add return type
     {
         if ($this->isOk() === false)
             return false;
@@ -152,7 +152,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         return $res;
     }
 
-    public function readRow()
+    public function readRow() // TODO: add return type
     {
         if ($this->isOk() === false)
             return false;
@@ -173,7 +173,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         return false;
     }
 
-    public function getRows(int $offset, int $limit)
+    public function getRows(int $offset, int $limit) // TODO: add return type
     {
         if ($this->isOk() === false)
             return false;
@@ -285,7 +285,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
     private $insert_rows = [];
     private $insert_length = 0;
 
-    public function write($data)
+    public function write($data) // TODO: add return type
     {
         if ($this->sqlite)
         {
@@ -336,12 +336,12 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         $this->bytes_written += $res;
     }
 
-    public function getBytesWritten()
+    public function getBytesWritten() // TODO: add return type
     {
         return $this->bytes_written;
     }
 
-    private function flushRows()
+    private function flushRows() // TODO: add return type
     {
         if (!$this->sqlite)
             return;
@@ -499,7 +499,7 @@ class StorageFsFile
         return $this->openStream(false);
     }
 
-    public function setStructure(array $structure)
+    public function setStructure(array $structure) : void
     {
         // optional ability to set structure
         $this->structure = $structure;
@@ -541,7 +541,7 @@ class StorageFs
         return $service;
     }
 
-    private function initialize($params)
+    private function initialize($params) : bool
     {
         if (!isset($params['base_path']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "'base_path' must be specified in StorageFs::create()");
@@ -630,7 +630,6 @@ class StorageFs
         return $file;
     }
 
-
     public function createDirectory(string $path) : bool
     {
         $fspath = self::getFsPath($path);
@@ -667,7 +666,7 @@ class StorageFs
         return true;
     }
 
-    public function list(string $path = '', array $options = [])
+    public function list(string $path = '', array $options = []) : array
     {
         $fspath = self::getFsPath($path);
 
@@ -722,8 +721,6 @@ class StorageFs
                 return false;
         }
     }
-
-
 
     private function getFsPath(string $path) : string
     {

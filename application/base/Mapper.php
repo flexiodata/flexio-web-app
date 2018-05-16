@@ -21,8 +21,8 @@ class Mapper
     // class for converting between hierarchical objects and flat objects,
     // such as when converting json to a table
 
-    const DEFAULT_KEY_NAME = "field";
-    const KEY_DELIMITER = ".";
+    private const DEFAULT_KEY_NAME = "field";
+    private const KEY_DELIMITER = ".";
 
     public static function flatten($data, $schema = null, $key_delimiter = self::KEY_DELIMITER)
     {

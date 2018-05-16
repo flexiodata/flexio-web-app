@@ -111,63 +111,63 @@ class Limit
 
 class Model
 {
-    const TYPE_UNDEFINED      = '';
-    const TYPE_USER           = 'USR';
-    const TYPE_PIPE           = 'PIP';
-    const TYPE_STREAM         = 'STR';
-    const TYPE_CONNECTION     = 'CTN';
-    const TYPE_COMMENT        = 'CMT';
-    const TYPE_PROCESS        = 'PRC';
-    const TYPE_TOKEN          = 'TKN';
-    const TYPE_RIGHT          = 'RGH';
-    const TYPE_ACTION         = 'ACT';
+    public const TYPE_UNDEFINED      = '';
+    public const TYPE_USER           = 'USR';
+    public const TYPE_PIPE           = 'PIP';
+    public const TYPE_STREAM         = 'STR';
+    public const TYPE_CONNECTION     = 'CTN';
+    public const TYPE_COMMENT        = 'CMT';
+    public const TYPE_PROCESS        = 'PRC';
+    public const TYPE_TOKEN          = 'TKN';
+    public const TYPE_RIGHT          = 'RGH';
+    public const TYPE_ACTION         = 'ACT';
 
-    const EDGE_UNDEFINED     = '';     // undefind edge
-    const EDGE_INVITED       = 'INV';  // user A invited user B
-    const EDGE_INVITED_BY    = 'INB';  // user A was invited by user B
-    const EDGE_SHARED_WITH   = 'SHW';  // user A shared with user B
-    const EDGE_SHARED_FROM   = 'SHF';  // user A was shared something from user B
-    const EDGE_FOLLOWING     = 'FLW';  // user A is following object B
-    const EDGE_FOLLOWED_BY   = 'FLB';  // object A is followed by user B
-    const EDGE_LINKED_TO     = 'LKT';  // object A links to object B
-    const EDGE_LINKED_FROM   = 'LKF';  // object A links from object B
-    const EDGE_COPIED_TO     = 'CPT';  // object A copied to object B
-    const EDGE_COPIED_FROM   = 'CPF';  // object A copied from object B
-    const EDGE_COMMENT_ON    = 'CMO';  // comment A is a comment on object B
-    const EDGE_HAS_COMMENT   = 'HCM';  // object A has comment B
-    const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
-    const EDGE_HAS_STORE     = 'HST';  // object A has store a store that is object B
+    public const EDGE_UNDEFINED     = '';     // undefind edge
+    public const EDGE_INVITED       = 'INV';  // user A invited user B
+    public const EDGE_INVITED_BY    = 'INB';  // user A was invited by user B
+    public const EDGE_SHARED_WITH   = 'SHW';  // user A shared with user B
+    public const EDGE_SHARED_FROM   = 'SHF';  // user A was shared something from user B
+    public const EDGE_FOLLOWING     = 'FLW';  // user A is following object B
+    public const EDGE_FOLLOWED_BY   = 'FLB';  // object A is followed by user B
+    public const EDGE_LINKED_TO     = 'LKT';  // object A links to object B
+    public const EDGE_LINKED_FROM   = 'LKF';  // object A links from object B
+    public const EDGE_COPIED_TO     = 'CPT';  // object A copied to object B
+    public const EDGE_COPIED_FROM   = 'CPF';  // object A copied from object B
+    public const EDGE_COMMENT_ON    = 'CMO';  // comment A is a comment on object B
+    public const EDGE_HAS_COMMENT   = 'HCM';  // object A has comment B
+    public const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
+    public const EDGE_HAS_STORE     = 'HST';  // object A has store a store that is object B
 
-    const STATUS_UNDEFINED = '';
-    const STATUS_PENDING   = 'P';
-    const STATUS_AVAILABLE = 'A';
-    const STATUS_DELETED   = 'D';
+    public const STATUS_UNDEFINED = '';
+    public const STATUS_PENDING   = 'P';
+    public const STATUS_AVAILABLE = 'A';
+    public const STATUS_DELETED   = 'D';
 
-    const ACCESS_CODE_TYPE_UNDEFINED = '';
-    const ACCESS_CODE_TYPE_EID       = 'EID';
-    const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
-    const ACCESS_CODE_TYPE_EMAIL     = 'EML';
-    const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
+    public const ACCESS_CODE_TYPE_UNDEFINED = '';
+    public const ACCESS_CODE_TYPE_EID       = 'EID';
+    public const ACCESS_CODE_TYPE_TOKEN     = 'TKN';
+    public const ACCESS_CODE_TYPE_EMAIL     = 'EML';
+    public const ACCESS_CODE_TYPE_CATEGORY  = 'CAT';
 
-    const REGISTRY_VALUE_UNDEFINED = '';
-    const REGISTRY_VALUE_STRING    = 'S';
-    const REGISTRY_VALUE_NUMBER    = 'N';
-    const REGISTRY_VALUE_BOOLEAN   = 'B';
-    const REGISTRY_VALUE_DATE      = 'D'; // (YYYY-MM-DD)
-    const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
-    const REGISTRY_VALUE_BINARY    = 'X';
+    public const REGISTRY_VALUE_UNDEFINED = '';
+    public const REGISTRY_VALUE_STRING    = 'S';
+    public const REGISTRY_VALUE_NUMBER    = 'N';
+    public const REGISTRY_VALUE_BOOLEAN   = 'B';
+    public const REGISTRY_VALUE_DATE      = 'D'; // (YYYY-MM-DD)
+    public const REGISTRY_VALUE_DATETIME  = 'T'; // (YYYY-MM-DD HH:MM:SS)
+    public const REGISTRY_VALUE_BINARY    = 'X';
 
-    const CONNECTION_STATUS_UNDEFINED   = '';
-    const CONNECTION_STATUS_AVAILABLE   = 'A';
-    const CONNECTION_STATUS_UNAVAILABLE = 'U';
-    const CONNECTION_STATUS_ERROR       = 'E';
+    public const CONNECTION_STATUS_UNDEFINED   = '';
+    public const CONNECTION_STATUS_AVAILABLE   = 'A';
+    public const CONNECTION_STATUS_UNAVAILABLE = 'U';
+    public const CONNECTION_STATUS_ERROR       = 'E';
 
-    const PIPE_STATUS_UNDEFINED  = '';
-    const PIPE_STATUS_ACTIVE     = 'A';
-    const PIPE_STATUS_INACTIVE   = 'I';
+    public const PIPE_STATUS_UNDEFINED  = '';
+    public const PIPE_STATUS_ACTIVE     = 'A';
+    public const PIPE_STATUS_INACTIVE   = 'I';
 
-    const ROLE_UNDEFINED     = '';
-    const ROLE_ADMINISTRATOR = 'A';
+    public const ROLE_UNDEFINED     = '';
+    public const ROLE_ADMINISTRATOR = 'A';
 
     private $objs = array();
     private $database = null;
@@ -854,7 +854,7 @@ class Model
     }
 
 /*
-    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename)
+    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename) : void
     {
         // create the zip archive if needed and add the temporary file to the zip archive
         $zip = new \ZipArchive();
@@ -863,7 +863,7 @@ class Model
         $zip->close();
     }
 
-    public static function echoZipDownload($zip_name)
+    public static function echoZipDownload($zip_name) : void
     {
         $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
@@ -888,7 +888,7 @@ class Model
         @readfile($zip_name);
     }
 
-    public static function getExtract()
+    public static function getExtract() : void
     {
         $items_selected = array(
             'object' => 'select eid, eid_type from tbl_object',

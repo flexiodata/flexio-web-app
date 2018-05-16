@@ -22,8 +22,6 @@ namespace Flexio\Services;
 
 class Email
 {
-    const EMAIL_ADDRESS_NO_REPLY = 'no-reply@flex.io';
-
     private $from_addresses;
     private $to_addresses;
     private $cc_addresses;
@@ -134,7 +132,6 @@ class Email
         return $ret;
     }
 
-
     public static function setEmail(array $params = null)
     {
         if (isset($params['from']))
@@ -166,8 +163,7 @@ class Email
         return $this;
     }
 
-
-    public function setFrom($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setFrom($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         if ($addresses === null || $addresses === '')
         {
@@ -191,7 +187,7 @@ class Email
         return $this->from_addresses;
     }
 
-    public function setTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         if ($addresses === null || $addresses === '')
         {
@@ -215,7 +211,7 @@ class Email
         return $this->to_addresses;
     }
 
-    public function setCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -233,7 +229,7 @@ class Email
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setBCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -251,7 +247,7 @@ class Email
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: set parameter type
+    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
         // make sure we have an array
         if (is_string($addresses))
@@ -336,7 +332,7 @@ class Email
         return $this;
     }
 
-    private function initialize($params = [])
+    private function initialize($params = []) : void
     {
         $this->from_addresses = array();
         $this->to_addresses = array();
@@ -352,7 +348,7 @@ class Email
         $from = ($params['from'] ?? '');
         if (strlen($from) == 0)
             $from = ($params['email'] ?? '');
-        
+
         $this->setFrom($from);
         $this->protocol = ($params['protocol'] ?? '');              // none, smtp
         $this->security = ($params['security'] ?? '');              // none, ssl, tls
@@ -362,7 +358,7 @@ class Email
         $this->password = ($params['password'] ?? '');
     }
 
-    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message)
+    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message) : void
     {
         // start with a clean slate
         $this->initialize();
@@ -473,7 +469,7 @@ class Email
             {
                 $mail->addAttachment($attachment['file'], $attachment['name'], 'base64', $attachment['mime_type']);
             }
-            
+
             $mail->Subject = $this->subject;
             $mail->Body = $this->msg_text;
 
@@ -487,8 +483,6 @@ class Email
 
         return true;
     }
-
-
 
     private static function getCleanedAddresses(array $addresses) : array
     {

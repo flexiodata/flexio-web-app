@@ -36,7 +36,7 @@ class ReportScriptHost extends ScriptHost
 {
     public $params = [];
 
-    public function func_getReportPayload()
+    public function func_getReportPayload() : string
     {
         $input = $this->process->getStdin();
         $content_type = $input->getMimeType();
@@ -75,7 +75,7 @@ class ReportScriptHost extends ScriptHost
 
 class Report extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -148,7 +148,5 @@ EOT;
             //die("<pre>".$err);
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
         }
-
-        return true;
     }
 }

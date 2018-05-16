@@ -19,7 +19,7 @@ class ModelBase
 {
     private $model;
 
-    public function setModel($model)
+    public function setModel($model) : void
     {
         $this->model = $model;
     }

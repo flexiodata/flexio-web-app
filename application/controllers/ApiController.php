@@ -18,13 +18,13 @@ namespace Flexio\Controllers;
 
 class ApiController extends \Flexio\System\FxControllerAction
 {
-    public function init()
+    public function init() : void
     {
         parent::init();
         $this->renderRaw();
     }
 
-    public function indexAction()
+    public function indexAction() : void
     {
         // get the request and related info
         $request = $this->getRequest();

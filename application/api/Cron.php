@@ -18,33 +18,33 @@ namespace Flexio\Api;
 
 class Cron
 {
-    const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
+    public const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
 
-    const FREQ_ONE_MINUTE      = 'one-minute';
-    const FREQ_FIVE_MINUTES    = 'five-minutes';
-    const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
-    const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
-    const FREQ_HOURLY          = 'hourly';
-    const FREQ_DAILY           = 'daily';
-    const FREQ_WEEKLY          = 'weekly';
-    const FREQ_MONTHLY         = 'monthly';
+    public const FREQ_ONE_MINUTE      = 'one-minute';
+    public const FREQ_FIVE_MINUTES    = 'five-minutes';
+    public const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
+    public const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
+    public const FREQ_HOURLY          = 'hourly';
+    public const FREQ_DAILY           = 'daily';
+    public const FREQ_WEEKLY          = 'weekly';
+    public const FREQ_MONTHLY         = 'monthly';
 
-    const DAY_MONDAY    = 'mon';
-    const DAY_TUESDAY   = 'tue';
-    const DAY_WEDNESDAY = 'wed';
-    const DAY_THURSDAY  = 'thu';
-    const DAY_FRIDAY    = 'fri';
-    const DAY_SATURDAY  = 'sat';
-    const DAY_SUNDAY    = 'sun';
+    public const DAY_MONDAY    = 'mon';
+    public const DAY_TUESDAY   = 'tue';
+    public const DAY_WEDNESDAY = 'wed';
+    public const DAY_THURSDAY  = 'thu';
+    public const DAY_FRIDAY    = 'fri';
+    public const DAY_SATURDAY  = 'sat';
+    public const DAY_SUNDAY    = 'sun';
 
-    const MONTH_FIRST     = 1;
-    const MONTH_FIFTEENTH = 15;
-    const MONTH_LAST      = 'last';
+    public const MONTH_FIRST     = 1;
+    public const MONTH_FIFTEENTH = 15;
+    public const MONTH_LAST      = 'last';
 
     private $table = array();
     private $last_update = '';
 
-    public static function run()
+    public static function run() : void
     {
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
@@ -55,7 +55,7 @@ class Cron
         $scheduler->loop();
     }
 
-    public function loop(int $count = null)
+    public function loop(int $count = null) : void
     {
         $lastkey = '';
 
@@ -192,14 +192,14 @@ class Cron
         }
     }
 
-    private function refreshSchedulerTable()
+    private function refreshSchedulerTable() : void
     {
         $pipe_model = \Flexio\System\System::getModel()->pipe;
         $current_update = $pipe_model->getLastSchedulerUpdateTime();
 
         print("Current update time " . $current_update . "; Last update time " . $this->last_update . "\n");
         if ($current_update == $this->last_update)
-            return false; // scheduler needs no updates
+            return; // scheduler needs no updates
         $this->last_update = $current_update;
 
         print("Refreshing scheduler table due to new changes.\n");
@@ -274,7 +274,7 @@ class Cron
         }
     }
 
-    private static function runPipe(string $pipe_eid)
+    private static function runPipe(string $pipe_eid) : void
     {
         // TODO: following run code is similar to \1\Process::create()
         // should factor; for example, the \Flexio\Api\Process::create()
@@ -294,7 +294,7 @@ class Cron
         }
         catch (\Flexio\Base\Exception $e)
         {
-            return false;
+            return;
         }
 
         $process_properties = array(

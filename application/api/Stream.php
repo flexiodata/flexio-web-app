@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Stream
 {
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -45,7 +45,7 @@ class Stream
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function content(\Flexio\Api\Request $request)
+    public static function content(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

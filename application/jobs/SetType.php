@@ -36,7 +36,7 @@ if (($validator->check($params, array(
 
 class SetType extends \Flexio\Jobs\Base
 {
-    public function run(\Flexio\IFace\IProcess $process)
+    public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
 
@@ -46,7 +46,7 @@ class SetType extends \Flexio\Jobs\Base
         $this->processStream($instream, $outstream);
     }
 
-    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function processStream(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         $mime_type = $instream->getMimeType();
         switch ($mime_type)
@@ -61,7 +61,7 @@ class SetType extends \Flexio\Jobs\Base
         }
     }
 
-    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream)
+    private function getOutput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // get the job properties
         $job_params = $this->getJobParameters();
@@ -143,7 +143,7 @@ class SetType extends \Flexio\Jobs\Base
         return $output_row;
     }
 
-    private static function convertValue($value, $changed_column)
+    private static function convertValue($value, $changed_column) // TODO: add return type
     {
         $new_type = $changed_column['type'];
         $new_scale = $changed_column['scale'];

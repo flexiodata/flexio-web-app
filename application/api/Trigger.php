@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Trigger
 {
-    public static function handleEmail($stream, bool $echo_result = false) // echo_result is available for testing, but not normally necessary
+    public static function handleEmail($stream, bool $echo_result = false) : void // echo_result is available for testing, but not normally necessary
     {
         // STEP 1: parse the stream
         $parser = \Flexio\Services\NoticeEmail::parseResource($stream);

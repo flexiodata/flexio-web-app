@@ -192,6 +192,5 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         );
 
         return $mapped_properties;
-
     }
 }

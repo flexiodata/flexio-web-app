@@ -18,13 +18,13 @@ namespace Flexio\Object;
 
 class Query
 {
-    public static function exec($eid, $query) // TODO: add input parameter types
+    public static function exec($eid, $query) : ?array
     {
         // \Query::exec() is an alias for \Query::get()
         return self::get($eid, $query);
     }
 
-    public static function get($eid, $query) // TODO: add input parameter types
+    public static function get($eid, $query) : ?array
     {
         // this function puts together information about the eid based
         // on the form of information specified in the query
@@ -69,7 +69,7 @@ class Query
         return self::get_internal($eid, $query);
     }
 
-    private static function get_internal($eid, $query)
+    private static function get_internal($eid, $query) : ?array
     {
         // return object
         $result = array();

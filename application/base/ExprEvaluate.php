@@ -18,6 +18,8 @@ namespace Flexio\Base;
 
 class ExprEvaluate
 {
+    private const EPSILON = 0.000000000001;
+
     public $fields = [];
     public $parser = null;
     public $parse_result = null;
@@ -2584,7 +2586,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             return true;
         }
 
-        $dt->truncateTime();        
+        $dt->truncateTime();
         $retval = $dt;
         return true;
     }
@@ -2649,7 +2651,7 @@ TODO: remove deprecated implementation; following was split into two functions,
             $retval = null;
             return true;
         }
-      
+
         $retval = $dt;
         return true;
     }
@@ -2921,9 +2923,9 @@ TODO: remove deprecated implementation; following was split into two functions,
         if (is_nan($b))
             return 1;
 
-        if (($a - $b) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * ExprParser::EPSILON))
+        if (($a - $b) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * self::EPSILON))
             return 1;
-        if (($b - $a) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * ExprParser::EPSILON))
+        if (($b - $a) > ( (abs($a) < abs($b) ? abs($b) : abs($a)) * self::EPSILON))
             return -1;
         return 0;
     }
@@ -2966,7 +2968,7 @@ class ExprDateTime
         // if date is empty, return null
         if ($value == '')
             return false;
-        
+
         if (isset($format))
         {
             $format = str_replace(['YYYY', 'MM', 'DD', 'HH24', 'HH12', 'HH', 'MI', 'SS'],

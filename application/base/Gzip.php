@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class Gzip
 {
-    public static function gzip($in, $out = false)
+    public static function gzip($in, $out = false) : bool
     {
         if (!file_exists($in))
             return false;
@@ -59,8 +59,7 @@ class Gzip
         return true;
     }
 
-
-    public static function gunzip($in, $out = false)
+    public static function gunzip($in, $out = false) : bool
     {
         if (!file_exists($in))
             return false;
@@ -106,5 +105,4 @@ class Gzip
 
         return true;
     }
-
 }

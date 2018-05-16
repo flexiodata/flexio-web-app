@@ -157,7 +157,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
-    public function read(array $params, callable $callback)
+    public function read(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $path = trim($path, '/');
@@ -169,7 +169,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
     }
 
-    public function write(array $params, callable $callback)
+    public function write(array $params, callable $callback) // TODO: add return type
     {
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
@@ -215,7 +215,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->authenticated;
     }
 
-    private function newConnection()
+    private function newConnection() // TODO: add return type
     {
         // connect to the database
         try
@@ -242,7 +242,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return null;
     }
 
-    public function queryAll(string $table)
+    public function queryAll(string $table) // TODO: add return type
     {
         $sql = "select * from " . self::quoteIdentifier($table);
 
@@ -294,7 +294,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
-    public function bulkInsert(string $table)
+    public function bulkInsert(string $table) // TODO: add return type
     {
         $inserter = new MysqlInserter;
         if (!$inserter->init($this, $this->db, $table))
@@ -302,7 +302,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $inserter;
     }
 
-    public function describeTable(string $table)
+    public function describeTable(string $table) // TODO: add return type
     {
         // STEP 1: query the database for the structure and the rows
         $structure = array();
@@ -352,13 +352,13 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return isset($result['cnt']) ? $result['cnt'] : null;
     }
 
-    public function fetchRow()
+    public function fetchRow() // TODO: add return type
     {
         return $this->dbresult->fetch_assoc();
     }
 
     // NOTE: don't add parameter types as these parameters are used for output
-    private static function getFieldInfo($info, &$name, &$type, &$width, &$scale)
+    private static function getFieldInfo($info, &$name, &$type, &$width, &$scale) : void
     {
         // MySQL types (from the create statement documentation)
         // note: describe table returns these in lowercase; when
@@ -596,7 +596,7 @@ class MysqlInserter
     private $fields = '';
     private $columns = null;
 
-    public function init($service, $db, $table) // TODO: add parameter/return types
+    public function init($service, $db, $table) // TODO: add return type; TODO: add parameter type
     {
         $this->db = $db;
         $this->table = $table;
@@ -676,7 +676,7 @@ class MysqlInserter
         return true;
     }
 
-    public function flush()
+    public function flush() : void
     {
         if (count($this->rows) > 0)
         {
@@ -701,7 +701,7 @@ class MysqlInserter
         $this->rows = [];
     }
 
-    public function finishInsert()
+    public function finishInsert() : void
     {
         $this->flush();
     }

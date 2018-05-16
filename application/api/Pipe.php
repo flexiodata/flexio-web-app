@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Pipe
 {
-    public static function create(\Flexio\Api\Request $request)
+    public static function create(\Flexio\Api\Request $request)  : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -28,7 +28,10 @@ class Pipe
         // using the original parameters; this simply allows us to reuse
         // the create api call, even though the two functions are distinct
         if (isset($post_params['copy_eid']))
-            return self::copy($request);
+        {
+            self::copy($request);
+            return;
+        }
 
         // start tracking the request after copy() since copy() may be called
         // separately and has it's own tracking function
@@ -85,7 +88,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function copy(\Flexio\Api\Request $request)
+    public static function copy(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -154,7 +157,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api\Request $request)
+    public static function delete(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -184,7 +187,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function set(\Flexio\Api\Request $request)
+    public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -231,7 +234,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -256,7 +259,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -299,7 +302,7 @@ class Pipe
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function run(\Flexio\Api\Request $request)
+    public static function run(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();

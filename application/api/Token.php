@@ -18,7 +18,7 @@ namespace Flexio\Api;
 
 class Token
 {
-    public static function create(\Flexio\Api\Request $request)
+    public static function create(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -46,7 +46,7 @@ class Token
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function delete(\Flexio\Api\Request $request)
+    public static function delete(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -75,7 +75,7 @@ class Token
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function get(\Flexio\Api\Request $request)
+    public static function get(\Flexio\Api\Request $request) : void
     {
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
@@ -98,7 +98,7 @@ class Token
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function list(\Flexio\Api\Request $request)
+    public static function list(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();

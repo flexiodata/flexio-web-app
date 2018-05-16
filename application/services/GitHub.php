@@ -20,7 +20,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $access_token = '';
 
-    public static function create(array $params = null) // TODO: fix dual return types which is used for Oauth
+    public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
         if (!isset($params))
             return new self;

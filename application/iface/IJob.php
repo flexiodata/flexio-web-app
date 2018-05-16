@@ -21,6 +21,6 @@ interface IJob
     public static function create(array $task);
     public function getProperties() : array;
     public function validate() : array;
-    public function run(\Flexio\IFace\IProcess $process);
+    public function run(\Flexio\IFace\IProcess $process) : void;
 }
 
