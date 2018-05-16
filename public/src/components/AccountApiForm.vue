@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div :class="tokens.length == 0 ? 'tc' : 'mt2'" v-if="showCreateButton">
+    <div :class="tokens.length == 0 ? 'tc' : 'mt2 pt2 bt b--black-10'" v-if="showCreateButton">
       <el-button type="primary" class="ttu b" @click="createApiKey">Create API Key</el-button>
     </div>
   </div>
