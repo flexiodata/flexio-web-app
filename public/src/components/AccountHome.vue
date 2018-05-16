@@ -21,22 +21,22 @@
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
-            <div slot="label" style="padding: 0 15px">Profile</div>
+            <div slot="label" class="tc" style="min-width: 3rem">Profile</div>
             <AccountProfileForm class="mt3" />
           </el-tab-pane>
 
           <el-tab-pane name="region">
-            <div slot="label" style="padding: 0 15px">Region</div>
+            <div slot="label" class="tc" style="min-width: 3rem">Region</div>
             <AccountRegionForm class="mt3" />
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label" style="padding: 0 15px">API</div>
+            <div slot="label" class="tc" style="min-width: 3rem">API</div>
             <AccountApiForm class="mt3" v-if="has_user" />
           </el-tab-pane>
 
           <el-tab-pane name="password">
-            <div slot="label" style="padding: 0 15px">Password</div>
+            <div slot="label" class="tc" style="min-width: 3rem">Password</div>
             <AccountPasswordForm class="mt3" />
           </el-tab-pane>
         </el-tabs>

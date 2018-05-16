@@ -42,10 +42,11 @@
       </div>
     </el-form>
 
-    <div class="mv4">
-      <ui-tabs>
-        <ui-tab id="authorization" title="Authorization">
-          <div class="ma3 mw6">
+    <div class="mv3 ba b--black-10 br2">
+      <el-tabs class="bg-white br2 ph4 pt3 pb4" v-model="active_tab_name">
+        <el-tab-pane name="authorization">
+          <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
+          <div class="mv2 mw6">
             <el-form
               class="el-form-compact"
               label-width="10rem"
@@ -147,10 +148,11 @@
               </el-form-item>
             </el-form>
           </div>
-        </ui-tab>
+        </el-tab-pane>
 
-        <ui-tab id="form-data" title="Form Data">
-          <div class="ma3">
+        <el-tab-pane name="form-data">
+          <div slot="label" class="tc" style="min-width: 3rem">Form Data</div>
+          <div class="mv2">
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
@@ -166,10 +168,11 @@
               @delete="onFormDataItemDelete"
             />
           </div>
-        </ui-tab>
+        </el-tab-pane>
 
-        <ui-tab id="headers" title="Headers">
-          <div class="ma3">
+        <el-tab-pane name="headers">
+          <div slot="label" class="tc" style="min-width: 3rem">Headers</div>
+          <div class="mv2">
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
@@ -185,8 +188,8 @@
               @delete="onHeaderItemDelete"
             />
           </div>
-        </ui-tab>
-      </ui-tabs>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -242,6 +245,8 @@
     },
     data() {
       return {
+        active_tab_name: 'authorization',
+
         method_options,
         auth_options,
         method: '',
