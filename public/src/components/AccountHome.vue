@@ -16,7 +16,7 @@
       </div>
       <div class="bg-white css-dashboard-box br2">
         <el-tabs
-          class="bg-white br2 ph4 pt3 pb4"
+          class="bg-white br2 ph4 pt3 pb4 el-tabs--allow-overflow"
           @tab-click="onTabClick"
           v-model="active_tab_name"
         >

@@ -1,15 +1,12 @@
 <template>
   <div>
-    <div class="pb2 bb b--black-10" v-if="showCreateButton">
-      <el-button type="primary" size="small" class="ttu b" @click="createApiKey">Create API Key</el-button>
-    </div>
-    <EmptyItem class="mv3" v-if="tokens.length == 0">
+    <EmptyItem class="mv4" v-if="tokens.length == 0">
       <span slot="text">No API keys to show</span>
     </EmptyItem>
     <div v-else>
       <div
         class="flex flex-row items-center hide-child"
-        :class="showOnlyOne ? '' : 'darken-05'"
+        :class="showOnlyOne ? '' : 'br2 darken-05'"
         v-for="(token, index) in tokens"
       >
         <div
@@ -37,6 +34,9 @@
           </span>
         </div>
       </div>
+    </div>
+    <div :class="tokens.length == 0 ? 'tc' : 'mt2'" v-if="showCreateButton">
+      <el-button type="primary" class="ttu b" @click="createApiKey">Create API Key</el-button>
     </div>
   </div>
 </template>
