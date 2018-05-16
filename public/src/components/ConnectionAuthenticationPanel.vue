@@ -495,7 +495,11 @@
     },
     methods: {
       validate(callback) {
-        this.$refs['smtp-form'].validate(callback)
+        if (this.$refs['smtp-form']) {
+          this.$refs['smtp-form'].validate(callback)
+        } else {
+          callback(true)
+        }
       },
       cinfo() {
         return _.find(connections, { connection_type: this.ctype })
