@@ -17,6 +17,7 @@ import {
   FormItem,
   Icon,
   Input,
+  Message,
   MessageBox,
   Option,
   Radio,
@@ -73,6 +74,7 @@ Vue.use(Switch)
 Vue.use(Tabs)
 Vue.use(TabPane)
 
+Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
