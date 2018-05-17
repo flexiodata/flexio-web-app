@@ -3,7 +3,7 @@ import * as types from '../store/mutation-types'
 import { ROUTE_ADMIN } from '../constants/route'
 import AdminHome from '../components/AdminHome.vue'
 import AdminDashboard from '../components/AdminDashboard.vue'
-import AdminTests from '../components/AdminTests.vue'
+import AdminTest from '../components/AdminTest.vue'
 import AdminCodeTranslator from '../components/AdminCodeTranslator.vue'
 import AdminCode from '../components/AdminCode.vue'
 import AdminModals from '../components/AdminModals.vue'
@@ -26,10 +26,10 @@ export default {
       component: AdminDashboard
     },
     {
-      // AdminTests will be rendered inside AdminHome's <router-view>
+      // AdminTest will be rendered inside AdminHome's <router-view>
       // /admin/tests is matched
       path: 'tests',
-      component: AdminTests
+      component: AdminTest
     },
     {
       // AdminCodeTranslator will be rendered inside AdminHome's <router-view>
