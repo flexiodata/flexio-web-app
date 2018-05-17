@@ -25,7 +25,6 @@
       @keyup.enter.space="addUrl"
       @input="onInputChange"
       v-model.trim="url_str"
-      v-deferred-focus
     ></input>
   </div>
 </template>

@@ -79,6 +79,7 @@ Vue.prototype.$prompt = MessageBox.prompt
 
 Vue.use(VueScrollTo)
 
+/*
 // global directives (move to a new file if we get too many here)
 
 Vue.directive('focus', {
@@ -110,6 +111,7 @@ Vue.directive('select-all', {
     }, delay)
   }
 })
+*/
 
 // add helper `track` method to global store object
 
