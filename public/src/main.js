@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import KeenUi from 'keen-ui'
 import {
+  Alert,
   Button,
   Checkbox,
   CheckboxButton,
@@ -48,6 +49,7 @@ Vue.use(KeenUi)
 
 locale.use(lang)
 
+Vue.use(Alert)
 Vue.use(Button)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)
