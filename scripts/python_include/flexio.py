@@ -180,7 +180,24 @@ class EnvVars(object):
             self.initialize()
         return self.fx_env.values()
 
-env_vars = EnvVars()
+env_vars_obj = EnvVars()
+
+
+
+
+
+class ContextFs(object):
+
+    def __init__(self):
+        pass
+
+    def read(self, path):
+        pass
+
+    def write(self, path):
+        pass
+
+context_fs = ContextFs()
 
 
 
@@ -511,7 +528,11 @@ class Context(object):
 
     @property
     def vars(self):
-        return env_vars
+        return env_vars_obj
+
+    @property
+    def vars(self):
+        return context_fs
 
 def run(handler):
 
