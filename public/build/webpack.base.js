@@ -15,7 +15,6 @@ module.exports = {
       'vue-scrollto',
       'chart.js',
       'vue-chartjs',
-      'keen-ui',
       'axios',
       'filesize',
       'clipboard',

@@ -283,10 +283,6 @@ autoprefixer@^6.0.2, autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-autosize@^3.0.20:
-  version "3.0.20"
-  resolved "https://registry.yarnpkg.com/autosize/-/autosize-3.0.20.tgz#e343ea7c5603834738169420f0349dc953e62a9e"
-
 aws-sign2@~0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/aws-sign2/-/aws-sign2-0.6.0.tgz#14342dd38dbcc94d0e5b87d763cd63612c0e794f"
@@ -2575,10 +2571,6 @@ function-bind@^1.0.2, function-bind@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.1.tgz#a56899d3ea3c9bab874bb9773b7c5ede92f4895d"
 
-fuzzysearch@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/fuzzysearch/-/fuzzysearch-1.0.3.tgz#dffc80f6d6b04223f2226aa79dd194231096d008"
-
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -3590,17 +3582,6 @@ juice@^4.0.2:
     mensch "^0.3.3"
     slick "1.12.2"
     web-resource-inliner "^4.2.0"
-
-keen-ui@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/keen-ui/-/keen-ui-1.0.0.tgz#379f35a9222c4492613a1b755d462d4044afc5a4"
-  dependencies:
-    autosize "^3.0.20"
-    deep-assign "^2.0.0"
-    fuzzysearch "^1.0.3"
-    lodash.debounce "^4.0.8"
-    tether-drop "^1.4.2"
-    tether-tooltip "^1.2.0"
 
 killable@^1.0.0:
   version "1.0.0"
@@ -6182,23 +6163,6 @@ tempfile@^2.0.0:
   dependencies:
     temp-dir "^1.0.0"
     uuid "^3.0.1"
-
-tether-drop@^1.4.0, tether-drop@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/tether-drop/-/tether-drop-1.4.2.tgz#28e240cce077f4ae1d8e5990a03b71e0cd6fbfec"
-  dependencies:
-    tether "^1.1.0"
-
-tether-tooltip@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/tether-tooltip/-/tether-tooltip-1.2.0.tgz#08f49764d5f448708b51119c9fe119972b4d6962"
-  dependencies:
-    tether "^1.1.0"
-    tether-drop "^1.4.0"
-
-tether@^1.1.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.0.tgz#0f9fa171f75bf58485d8149e94799d7ae74d1c1a"
 
 thenify-all@^1.0.0:
   version "1.6.0"

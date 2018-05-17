@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import KeenUi from 'keen-ui'
 import {
   Alert,
   Button,
@@ -41,10 +40,6 @@ import './stylesheets/style.styl' // common styles
 // fallback css (if there's no Internet connection)
 
 util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
-
-// setup for KeenUi
-
-Vue.use(KeenUi)
 
 // setup for Element UI
 
