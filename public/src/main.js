@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import KeenUi from 'keen-ui'
 import {
+  Alert,
   Button,
   Checkbox,
   CheckboxButton,
@@ -16,6 +16,7 @@ import {
   FormItem,
   Icon,
   Input,
+  Message,
   MessageBox,
   Option,
   Radio,
@@ -40,14 +41,11 @@ import './stylesheets/style.styl' // common styles
 
 util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
-// setup for KeenUi
-
-Vue.use(KeenUi)
-
 // setup for Element UI
 
 locale.use(lang)
 
+Vue.use(Alert)
 Vue.use(Button)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)
@@ -71,6 +69,7 @@ Vue.use(Switch)
 Vue.use(Tabs)
 Vue.use(TabPane)
 
+Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm

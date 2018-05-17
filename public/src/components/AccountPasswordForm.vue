@@ -1,64 +1,71 @@
 <template>
   <div>
-    <ui-alert @dismiss="show_success = false" type="success" :dismissible="false" v-show="show_success">
-      Your password was updated successfully.
-    </ui-alert>
-    <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
-      {{error_msg}}
-    </ui-alert>
-      <el-form
-        ref="form"
-        class="el-form-cozy el-form__label-tiny"
-        :model="$data"
-        :rules="rules"
+    <el-alert
+      type="success"
+      show-icon
+      title="Your password was updated successfully."
+      :closable="false"
+      v-if="show_success"
+    />
+    <el-alert
+      type="error"
+      show-icon
+      :title="error_msg"
+      @close="show_error = false"
+      v-if="show_error"
+    />
+    <el-form
+      ref="form"
+      class="mt3 el-form-cozy el-form__label-tiny"
+      :model="$data"
+      :rules="rules"
+    >
+      <el-form-item
+        key="old_password"
+        label="Current Password"
+        prop="old_password"
       >
-        <el-form-item
-          key="old_password"
-          label="Current Password"
-          prop="old_password"
-        >
-          <el-input
-            type="password"
-            placeholder="Current Password"
-            autocomplete="off"
-            spellcheck="false"
-            :autofocus="true"
-            v-model="old_password"
-          />
-        </el-form-item>
+        <el-input
+          type="password"
+          placeholder="Current Password"
+          autocomplete="off"
+          spellcheck="false"
+          :autofocus="true"
+          v-model="old_password"
+        />
+      </el-form-item>
 
-        <el-form-item
-          key="new_password"
-          label="New Password"
-          prop="new_password"
-        >
-          <el-input
-            type="password"
-            placeholder="New Password"
-            autocomplete="off"
-            spellcheck="false"
-            v-model="new_password"
-          />
-        </el-form-item>
+      <el-form-item
+        key="new_password"
+        label="New Password"
+        prop="new_password"
+      >
+        <el-input
+          type="password"
+          placeholder="New Password"
+          autocomplete="off"
+          spellcheck="false"
+          v-model="new_password"
+        />
+      </el-form-item>
 
-        <el-form-item
-          key="new_password2"
-          label="Confirm New Password"
-          prop="new_password2"
-        >
-          <el-input
-            type="password"
-            placeholder="Confirm New Password"
-            autocomplete="off"
-            spellcheck="false"
-            v-model="new_password2"
-          />
-        </el-form-item>
-      </el-form>
-      <div class="mt3">
-        <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
-      </div>
-    </form>
+      <el-form-item
+        key="new_password2"
+        label="Confirm New Password"
+        prop="new_password2"
+      >
+        <el-input
+          type="password"
+          placeholder="Confirm New Password"
+          autocomplete="off"
+          spellcheck="false"
+          v-model="new_password2"
+        />
+      </el-form-item>
+    </el-form>
+    <div class="mt3">
+      <el-button type="primary" class="ttu b" @click="saveChanges">Save Changes</el-button>
+    </div>
   </div>
 </template>
 
@@ -119,9 +126,10 @@
         this.old_password = ''
         this.new_password = ''
         this.new_password2 = ''
-        this.error_msg = ''
-        this.show_success = false
-        this.show_error = false
+
+        if (this.$refs.form) {
+          this.$refs.form.resetFields()
+        }
       },
       saveChanges() {
         this.$refs.form.validate((valid) => {
@@ -131,15 +139,12 @@
           var eid = this.active_user_eid
           var attrs = _.pick(this.$data, ['old_password', 'new_password', 'new_password2'])
           this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
-            if (response.ok)
-            {
+            if (response.ok) {
               this.show_success = true
               this.show_error = false
               this.resetForm()
               setTimeout(() => { this.show_success = false }, 4000)
-            }
-             else
-            {
+            } else {
               this.show_success = false
               this.show_error = true
               this.error_msg = _.get(response, 'data.error.message', '')

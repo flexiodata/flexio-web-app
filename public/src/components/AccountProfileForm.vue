@@ -1,14 +1,22 @@
 <template>
   <div>
-    <ui-alert @dismiss="show_success = false" type="success" :dismissible="false" v-show="show_success">
-      Your profile was updated successfully.
-    </ui-alert>
-    <ui-alert @dismiss="show_error = false" type="error" v-show="show_error">
-      There was a problem updating your profile.
-    </ui-alert>
+    <el-alert
+      type="success"
+      show-icon
+      title="Your profile was updated successfully."
+      :closable="false"
+      v-if="show_success"
+    />
+    <el-alert
+      type="error"
+      show-icon
+      title="There was a problem updating your profile."
+      @close="show_error = false"
+      v-if="show_error"
+    />
     <el-form
       ref="form"
-      class="el-form-cozy el-form__label-tiny"
+      class="mt3 el-form-cozy el-form__label-tiny"
       :model="$data"
       :rules="rules"
     >
