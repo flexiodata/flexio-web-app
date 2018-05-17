@@ -27,15 +27,23 @@
       </div>
     </div>
     <div v-else>
-      <ui-alert type="success" :dismissible="false" v-show="is_tested && is_connected && error_msg.length == 0">
-        You've successfully connected to {{service_name}}!
-      </ui-alert>
-      <ui-alert type="error" :dismissible="true" @dismiss="error_msg = ''" v-show="error_msg.length > 0">
-        {{error_msg}}
-      </ui-alert>
-      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+      <el-alert
+        type="success"
+        show-icon
+        :title="success_msg"
+        :closable="false"
+        v-if="is_tested && is_connected && success_msg.length > 0"
+      />
+      <el-alert
+        type="error"
+        show-icon
+        :title="error_msg"
+        @close="error_msg = ''"
+        v-if="error_msg.length > 0"
+      />
+      <div class="lh-copy mt3">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div
-        class="w-two-thirds-ns center mt4"
+        class="w-two-thirds-ns center mt3"
         v-if="is_smtp"
       >
         <el-form
@@ -124,7 +132,7 @@
         </el-form>
       </div>
       <div
-        class="w-two-thirds-ns center mt4"
+        class="w-two-thirds-ns center mt3"
         v-else
       >
         <el-form
@@ -376,6 +384,7 @@
       c = _.assign({}, defaultConnectionInfo(), c)
 
       return {
+        success_msg: '',
         error_msg: '',
         is_tested: false,
         region_options,
@@ -549,12 +558,14 @@
         this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
           if (response.ok)
           {
+            this.success_msg = "You've successfully disconnected from " + this.service_name + "!"
             this.error_msg = ''
             this.$emit('change', response.body)
           }
            else
           {
-            this.error_msg = _.get(response, 'body.error.message', '')
+            this.success_msg = ''
+            this.error_msg = _.get(response, 'data.error.message', '')
           }
         })
       },
@@ -568,12 +579,14 @@
           this.$store.dispatch('fetchConnection', { eid }).then(response => {
             if (response.ok)
             {
+              this.success_msg = ''
               this.error_msg = ''
               this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
             }
              else
             {
-              this.error_msg = _.get(response, 'body.error.message', '')
+              this.success_msg = ''
+              this.error_msg = _.get(response, 'data.error.message', '')
             }
           })
         })
@@ -586,7 +599,11 @@
         // update the connection
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           this.is_tested = true
-          setTimeout(() => { this.is_tested = false }, 4000)
+
+          setTimeout(() => {
+            this.success_msg = ''
+            this.is_tested = false
+          }, 4000)
 
           if (response.ok)
           {
@@ -594,18 +611,21 @@
             this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
               if (response.ok)
               {
+                this.success_msg = "You've successfully connected to " + this.service_name + "!"
                 this.error_msg = ''
                 this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
               }
                else
               {
-                this.error_msg = _.get(response, 'body.error.message', '')
+                this.success_msg = ''
+                this.error_msg = _.get(response, 'data.error.message', '')
               }
             })
           }
            else
           {
-            this.error_msg = _.get(response, 'body.error.message', '')
+            this.success_msg = ''
+            this.error_msg = _.get(response, 'data.error.message', '')
           }
         })
       }
