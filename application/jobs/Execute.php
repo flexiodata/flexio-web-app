@@ -786,7 +786,7 @@ class ScriptHost
         $stream->setName($path);
 
         $this->output_streams[] = $stream;
-        $info = array('handle' => count($this->input_streams)-1,
+        $info = array('handle' => count($this->output_streams)-1,
                       'name' => $key,
                       'size' => 0,
                       'content_type' => 'application/octet-stream');
