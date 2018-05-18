@@ -22,14 +22,14 @@ module.exports = {
       'marked',
       'moment',
       'flexio-sdk-js',
+      'vue-codemirror',
+      'codemirror/mode/javascript/javascript',
+      'codemirror/mode/python/python'
       /*
       'codemirror/mode/css/css',
-      'codemirror/mode/javascript/javascript',
       'codemirror/mode/xml/xml',
       'codemirror/mode/htmlmixed/htmlmixed',
-      'codemirror/mode/python/python',
       */
-      'vue-codemirror'
     ],
     app: options.paths.resolve('src/main.js')
   },
