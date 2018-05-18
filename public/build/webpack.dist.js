@@ -63,18 +63,36 @@ config.plugins = (config.plugins || []).concat([
     }
   }),
 
+  // Provide lodash and Clipboard.js to every file without needing to do an import
   new webpack.ProvidePlugin({
     _: 'lodash',
     Clipboard: 'clipboard'
   }),
 
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity
+  new BundleAnalyzerPlugin({
+    analyzerMode: 'static',
+    reportFilename: '../src/build/bundle-report.html'
   }),
 
+  // Extract all 3rd party modules into a separate 'vendor' chunk
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'vendor',
+    filename: 'js/vendor.js',
+    minChunks(module, count) {
+      var context = module.context;
+      return context && context.indexOf('node_modules') >= 0;
+    },
+  }),
+
+  // Generate a 'manifest' chunk to be inlined in the HTML template
+  new webpack.optimize.CommonsChunkPlugin('manifest'),
+
+  // IgnorePlugin doesn't load 'zn-CN' local (which is right) but in runtime, when page is being loaded,
+  // the code which requires 'zh-CN' locale is executed. Therefore an error is thrown to browser.
+  // Check out https://github.com/ElemeFE/element/issues/1315 for more info.
   new webpack.NormalModuleReplacementPlugin(/element-ui[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]zh-CN/, 'element-ui/lib/locale/lang/en'),
 
+  // Reduce build size by not including a ton of moment.js locale files
   new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // TODO: find out if there's a no-locale moment.js NPM repo
 
   new WebpackMd5Hash(), // use standard md5 hash when using [chunkfile]
@@ -90,10 +108,12 @@ config.plugins = (config.plugins || []).concat([
     minimize: true
   }),
 
+  /*
   new AssetsPlugin({
     filename: options.paths.resolve('src/build/assets.json'),
     prettyPrint: true
   }),
+  */
 
   new ExtractTextPlugin({
     filename: options.isProduction ? 'css/style-[contenthash].css' : 'css/style.css'
@@ -109,12 +129,5 @@ config.plugins = (config.plugins || []).concat([
     filename: options.paths.resolve('../application/views/layout.phtml')
   })
 ])
-
-if (true)
-{
-  config.plugins = config.plugins.concat([
-    new BundleAnalyzerPlugin()
-  ])
-}
 
 module.exports = config

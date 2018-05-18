@@ -4,33 +4,6 @@ const options = require('./options')
 
 module.exports = {
   entry: {
-    vendor: [
-      'lodash',
-      'vue',
-      'vuex',
-      'vue-resource',
-      'vue-router',
-      'vue-simple-spinner',
-      'vue-grid2',
-      'vue-scrollto',
-      'chart.js',
-      'vue-chartjs',
-      'axios',
-      'filesize',
-      'clipboard',
-      'stickybits',
-      'marked',
-      'moment',
-      'flexio-sdk-js',
-      'vue-codemirror',
-      'codemirror/mode/javascript/javascript',
-      'codemirror/mode/python/python'
-      /*
-      'codemirror/mode/css/css',
-      'codemirror/mode/xml/xml',
-      'codemirror/mode/htmlmixed/htmlmixed',
-      */
-    ],
     app: options.paths.resolve('src/main.js')
   },
 
