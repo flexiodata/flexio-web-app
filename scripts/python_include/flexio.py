@@ -203,8 +203,21 @@ class ContextFs(object):
         return buf
 
 
-    def write(self, path):
-        pass
+    def write(self, path, data):
+ 
+        handle = proxy.invoke('createVfsStreamHandle', [path])
+
+        idx = 0
+        buf = data
+        while len(buf) > 0:
+            chunk = buf[:4096]
+            buf = buf[4096:]
+            proxy.invoke('write', [handle, chunk])
+            idx = idx + 1
+
+        handle = proxy.invoke('commitVfsStreamHandle', [handle])
+
+        
 
 context_fs = ContextFs()
 
