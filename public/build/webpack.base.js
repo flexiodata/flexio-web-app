@@ -37,7 +37,7 @@ module.exports = {
   output: {
     path: options.paths.output.main,
     publicPath: '/dist/',
-    filename: options.isProduction ? '[name]-[chunkhash].js' : '[name].js'
+    filename: options.isProduction ? 'js/[name]-[chunkhash].js' : 'js/[name].js'
   },
 
   resolve: {
