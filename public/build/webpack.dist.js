@@ -48,15 +48,7 @@ config.module.rules = (config.module.rules || []).concat([
     test: /\.styl$/,
     loader: ExtractTextPlugin.extract({
       fallback: 'style-loader',
-      use: 'css-loader!stylus-loader'
-    })
-  },
-  // extract less files
-  {
-    test: /\.less$/,
-    loader: ExtractTextPlugin.extract({
-      fallback: 'style-loader',
-      use: 'css-loader!autoprefixer-loader!less-loader'
+      use: 'css-loader!autoprefixer-loader!stylus-loader'
     })
   }
 ])
