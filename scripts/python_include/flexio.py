@@ -192,7 +192,16 @@ class ContextFs(object):
         pass
 
     def read(self, path):
-        pass
+        handle = proxy.invoke('getVfsStreamHandle', [path])
+
+        buf = b''
+        while True:
+            chunk = proxy.invoke('read', [handle, 4096])
+            if chunk is False:
+                break
+            buf += chunk
+        return buf
+
 
     def write(self, path):
         pass
@@ -531,7 +540,7 @@ class Context(object):
         return env_vars_obj
 
     @property
-    def vars(self):
+    def fs(self):
         return context_fs
 
 def run(handler):

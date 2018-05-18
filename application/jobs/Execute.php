@@ -564,6 +564,35 @@ class ScriptHost
         return $res;
     }
 
+    public function func_getVfsStreamHandle($path)
+    {
+        if (isset($this->input_map[$path]))
+        {
+            return $this->input_map[$path];
+        }
+
+        $stream = \Flexio\Base\Stream::create();
+        $streamwriter = $stream->getWriter();
+
+
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+
+        $files = $vfs->read($path, function($data) use (&$streamwriter) {
+            $streamwriter->write($data);
+        });
+
+
+        $this->input_streams[] = $stream;
+        $info = array('handle' => count($this->input_streams)-1,
+                      'name' => $path,
+                      'size' => $stream->getSize(),
+                      'content_type' => 'application/octet-stream');
+
+        $this->input_map[$path] = $info;
+        return $info['handle'];
+    }
+
     private function __getOutputStreamInfo($name) // TODO: add return type
     {
         if ($name === '_fxstdout_')
