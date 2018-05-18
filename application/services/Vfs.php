@@ -283,6 +283,9 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
+        if (strlen(trim($path)) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
         $rpath = rtrim(trim($arr[1]), '/');
@@ -300,6 +303,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         {
             $pathstr = $path['path'] ?? '';
         }
+
+        if (strlen(trim($pathstr)) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+
 
         $arr = $this->splitPath($pathstr);
         $connection_identifier = $arr[0];
