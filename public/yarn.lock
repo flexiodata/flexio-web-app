@@ -6523,15 +6523,15 @@ vue-codemirror@^4.0.5:
     codemirror "^5.32.0"
     diff-match-patch "^1.0.0"
 
-vue-grid2@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/vue-grid2/-/vue-grid2-0.2.9.tgz#198b1227fefcacc5c1cacb8dbb1f8456ed45a742"
+vue-grid2@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/vue-grid2/-/vue-grid2-0.2.14.tgz#311b06ba701d9508ae327da45612fc05c68f4849"
   dependencies:
     axios "^0.16.1"
     tachyons "^4.6.1"
     vue-resize-directive "^1.0.0"
     vue-router "^2.5.3"
-    vue-simple-spinner "^1.2.1"
+    vue-simple-spinner "^1.2.8"
 
 vue-hot-reload-api@^2.2.0:
   version "2.2.4"
@@ -6582,7 +6582,7 @@ vue-scrollto@^2.8.0:
   dependencies:
     bezier-easing "^2.0.3"
 
-vue-simple-spinner@^1.2.1, vue-simple-spinner@^1.2.8:
+vue-simple-spinner@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/vue-simple-spinner/-/vue-simple-spinner-1.2.8.tgz#638249e9b25b43424ff906c14f1b7c7ed441ce9d"
 
