@@ -71,7 +71,9 @@ config.plugins = (config.plugins || []).concat([
 
   new BundleAnalyzerPlugin({
     analyzerMode: 'static',
-    reportFilename: '../src/build/bundle-report.html'
+    generateStatsFile: true,
+    reportFilename: '../src/build/report.html',
+    statsFilename: '../src/build/stats.json',
   }),
 
   // Extract all 3rd party modules into a separate 'vendor' chunk
@@ -79,9 +81,9 @@ config.plugins = (config.plugins || []).concat([
     name: 'vendor',
     filename: 'js/vendor.js',
     minChunks(module, count) {
-      var context = module.context;
-      return context && context.indexOf('node_modules') >= 0;
-    },
+      var context = module.context
+      return context && context.indexOf('node_modules') >= 0
+    }
   }),
 
   // Generate a 'manifest' chunk to be inlined in the HTML template
