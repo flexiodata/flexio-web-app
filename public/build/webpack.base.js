@@ -111,16 +111,5 @@ module.exports = {
         }
       }
     ]
-  }/*,
-
-  // Stats is used to customize Webpack's console output
-  // https://webpack.js.org/configuration/stats/
-  stats: {
-    hash: false,
-    colors: true,
-    chunks: false,
-    version: false,
-    children: false,
-    timings: true
-  }*/
+  }
 }

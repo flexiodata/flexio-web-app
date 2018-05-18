@@ -62,37 +62,48 @@ config.plugins = (config.plugins || []).concat([
       NODE_ENV: JSON.stringify('production')
     }
   }),
+
   new webpack.ProvidePlugin({
     _: 'lodash',
     Clipboard: 'clipboard'
   }),
+
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: Infinity
   }),
+
   new webpack.NormalModuleReplacementPlugin(/element-ui[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]zh-CN/, 'element-ui/lib/locale/lang/en'),
+
   new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), // TODO: find out if there's a no-locale moment.js NPM repo
+
   new WebpackMd5Hash(), // use standard md5 hash when using [chunkfile]
+
   new webpack.optimize.UglifyJsPlugin({
     //sourceMap: true,
     compress: {
       warnings: false
     }
   }),
+
   new webpack.LoaderOptionsPlugin({
     minimize: true
   }),
+
   new AssetsPlugin({
     filename: options.paths.resolve('src/build/assets.json'),
     prettyPrint: true
   }),
+
   new ExtractTextPlugin({
     filename: options.isProduction ? 'css/style-[contenthash].css' : 'css/style.css'
   }),
+
   new HtmlWebpackPlugin({
     template: options.paths.resolve('src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
     filename: options.paths.resolve('src/build/index-template.html')
   }),
+
   new HtmlWebpackPlugin({
     template: options.paths.resolve('src/index-template.ejs'), // load a custom template (ejs by default see the FAQ for details)
     filename: options.paths.resolve('../application/views/layout.phtml')
