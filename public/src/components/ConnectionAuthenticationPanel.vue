@@ -220,13 +220,13 @@
             />
           </el-form-item>
           <el-form-item
-            label="Post"
+            label="Port"
             key="port"
             prop="port"
             v-if="showInput('port')"
           >
             <el-input
-              placeholder="Post"
+              placeholder="Port"
               spellcheck="false"
               v-model="port"
             />
