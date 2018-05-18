@@ -31,111 +31,20 @@
 
     <div v-else>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div
-        class="w-two-thirds-ns center mt3"
-        v-if="is_smtp"
-      >
+      <div class="w-two-thirds-ns center mt3">
         <el-form
-          ref="smtp-form"
-          class="el-form-compact"
+          ref="form"
+          class="flex flex-column el-form-compact"
           label-width="8rem"
           :model="$data"
           :rules="rules"
         >
-          <el-form-item
-            label="Email address"
-            key="email"
-            prop="email"
-            spellcheck="false"
-          >
-            <el-input
-              placeholder="Email address"
-              :autofocus="true"
-              v-model="email"
-            />
-          </el-form-item>
-          <el-form-item
-            label="Username"
-            key="username"
-            prop="username"
-          >
-            <el-input
-              placeholder="Username"
-              v-model="username"
-            />
-          </el-form-item>
-          <el-form-item
-            label="Password"
-            key="password"
-            prop="password"
-          >
-            <el-input
-              type="password"
-              placeholder="Password"
-              v-model="password"
-            />
-          </el-form-item>
-          <el-form-item
-            label="Host"
-            key="host"
-            prop="host"
-          >
-            <el-input
-              placeholder="Host"
-              v-model="host"
-            />
-          </el-form-item>
-          <el-form-item
-            label="Port"
-            key="port"
-            prop="port"
-          >
-            <el-input
-              placeholder="Port"
-              v-model="port"
-            />
-          </el-form-item>
-          <el-form-item
-            label="Security"
-            key="security"
-            prop="security"
-          >
-            <el-select
-              placeholder="Security"
-              v-model="security"
-            >
-              <el-option label="None" value="" />
-              <el-option label="TLS" value="tls" />
-              <el-option label="SSL" value="ssl" />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              class="ttu b"
-              :type="test_btn_type"
-              :icon="test_btn_icon"
-              :loading="test_state == 'testing'"
-              :disabled="test_state == 'success' || test_state == 'error'"
-              @click="onTestClick"
-            >
-              {{test_btn_label}}
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div
-        class="w-two-thirds-ns center mt3"
-        v-else
-      >
-        <el-form
-          class="el-form-compact"
-          label-width="8rem"
-          :model="$data"
-        >
+          <!-- amazon s3 -->
           <el-form-item
             label="AWS Access Key"
             key="aws_key"
             prop="aws_key"
+            :class="getClass('aws_key')"
             v-if="showInput('aws_key')"
           >
             <el-input
@@ -145,10 +54,13 @@
               v-model="aws_key"
             />
           </el-form-item>
+
+          <!-- amazon s3 -->
           <el-form-item
             label="AWS Secret Key"
             key="aws_secret"
             prop="aws_secret"
+            :class="getClass('aws_secret')"
             v-if="showInput('aws_secret')"
           >
             <el-input
@@ -157,10 +69,13 @@
               v-model="aws_secret"
             />
           </el-form-item>
+
+          <!-- amazon s3 -->
           <el-form-item
             label="Bucket"
             key="bucket"
             prop="bucket"
+            :class="getClass('bucket')"
             v-if="showInput('bucket')"
           >
             <el-input
@@ -169,10 +84,13 @@
               v-model="bucket"
             />
           </el-form-item>
+
+          <!-- amazon s3 -->
           <el-form-item
             label="Region"
             key="region"
             prop="region"
+            :class="getClass('region')"
             v-if="showInput('region')"
           >
             <el-select
@@ -187,10 +105,13 @@
               />
             </el-select>
           </el-form-item>
+
+          <!-- TODO: anyone? -->
           <el-form-item
             label="Token"
             key="token"
             prop="token"
+            :class="getClass('token')"
             v-if="showInput('token')"
           >
             <el-input
@@ -199,10 +120,47 @@
               v-model="token"
             />
           </el-form-item>
+
+          <!-- smtp -->
+          <el-form-item
+            label="Email address"
+            key="email"
+            prop="email"
+            spellcheck="false"
+            :class="getClass('email')"
+            v-if="showInput('email')"
+          >
+            <el-input
+              placeholder="Email address"
+              :autofocus="true"
+              v-model="email"
+            />
+          </el-form-item>
+
+          <!-- smtp -->
+          <el-form-item
+            label="Security"
+            key="security"
+            prop="security"
+            :class="getClass('security')"
+            v-if="showInput('security')"
+          >
+            <el-select
+              placeholder="Security"
+              v-model="security"
+            >
+              <el-option label="None" value="" />
+              <el-option label="TLS" value="tls" />
+              <el-option label="SSL" value="ssl" />
+            </el-select>
+          </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Host"
             key="host"
             prop="host"
+            :class="getClass('host')"
             v-if="showInput('host')"
           >
             <el-input
@@ -211,10 +169,13 @@
               v-model="host"
             />
           </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Port"
             key="port"
             prop="port"
+            :class="getClass('port')"
             v-if="showInput('port')"
           >
             <el-input
@@ -223,10 +184,13 @@
               v-model="port"
             />
           </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Username"
             key="username"
             prop="username"
+            :class="getClass('username')"
             v-if="showInput('username')"
           >
             <el-input
@@ -235,10 +199,13 @@
               v-model="username"
             />
           </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Password"
             key="password"
             prop="password"
+            :class="getClass('password')"
             v-if="showInput('password')"
           >
             <el-input
@@ -248,10 +215,13 @@
               v-model="password"
             />
           </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Database"
             key="database"
             prop="database"
+            :class="getClass('database')"
             v-if="showInput('database')"
           >
             <el-input
@@ -260,10 +230,13 @@
               v-model="database"
             />
           </el-form-item>
+
+          <!-- shared -->
           <el-form-item
             label="Base Path"
             key="base_path"
             prop="base_path"
+            :class="getClass('base_path')"
             v-if="showInput('base_path')"
           >
             <el-input
@@ -272,7 +245,8 @@
               v-model="base_path"
             />
           </el-form-item>
-          <el-form-item>
+
+          <el-form-item class="order-last">
             <el-button
               class="ttu b"
               :type="test_btn_type"
@@ -422,8 +396,7 @@
         return _.pick(this.$data, this.key_values)
       },
       key_values() {
-        switch (this.getConnectionType())
-        {
+        switch (this.getConnectionType()) {
           default:
             return ['host', 'port', 'username', 'password', 'database']
           case ctypes.CONNECTION_TYPE_SFTP:
@@ -524,8 +497,8 @@
     },
     methods: {
       validate(callback) {
-        if (this.$refs['smtp-form']) {
-          this.$refs['smtp-form'].validate(callback)
+        if (this.$refs.form) {
+          this.$refs.form.validate(callback)
         } else {
           callback(true)
         }
@@ -538,8 +511,8 @@
           this[key] = val
         })
 
-        if (this.$refs['smtp-form']) {
-          this.$refs['smtp-form'].clearValidate()
+        if (this.$refs.form) {
+          this.$refs.form.clearValidate()
         }
       },
       emitChange() {
@@ -559,6 +532,9 @@
           case ctypes.CONNECTION_TYPE_SFTP:          return '22'
         }
         return ''
+      },
+      getClass(key) {
+        return 'order-' + this.key_values.indexOf(key)
       },
       showInput(key) {
         return _.includes(this.key_values, key)
