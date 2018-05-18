@@ -104,7 +104,7 @@
       :visible.sync="show_pipe_deploy_dialog"
     >
       <PipeDeployPanel
-        :pipe="edit_pipe"
+        :pipe="orig_pipe"
         @close="show_pipe_deploy_dialog = false"
       />
     </el-dialog>
