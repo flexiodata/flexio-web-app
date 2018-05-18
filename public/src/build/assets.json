@@ -1,9 +1,9 @@
 {
   "app": {
-    "js": "/dist/app.js",
+    "js": "/dist/js/app.js",
     "css": "/dist/css/style.css"
   },
   "vendor": {
-    "js": "/dist/vendor.js"
+    "js": "/dist/js/vendor.js"
   }
 }
