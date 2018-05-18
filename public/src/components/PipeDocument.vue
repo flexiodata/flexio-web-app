@@ -82,7 +82,7 @@
         <el-collapse class="el-collapse-plain" v-model="collapse_properties">
           <el-collapse-item name="properties">
             <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Properties</h3></template>
-            <PipeDocumentForm ref="pipe-document-form" class="mt3" />
+            <PipeDocumentForm ref="form" class="mt3" />
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -375,7 +375,7 @@
         this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
       },
       saveChanges() {
-        this.$refs['pipe-document-form'].validate((valid) => {
+        this.$refs.form.validate((valid) => {
           if (!valid)
             return
 
@@ -387,9 +387,17 @@
 
           return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
             if (response.ok) {
+              this.$message({
+                message: 'The pipe was updated successfully.',
+                type: 'success'
+              })
+
               this.$store.commit('pipe/INIT_PIPE', response.body)
             } else {
-              // TODO: add error handling
+              this.$message({
+                message: 'There was a problem updating the pipe.',
+                type: 'error'
+              })
             }
           })
         })

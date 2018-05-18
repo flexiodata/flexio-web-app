@@ -1,5 +1,6 @@
 <template>
   <el-form
+    ref="form"
     class="el-form-compact"
     label-width="7rem"
     size="small"
