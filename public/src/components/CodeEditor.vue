@@ -12,11 +12,11 @@
   // vue-codemirror includes
   import { codemirror } from 'vue-codemirror'
   import 'codemirror/lib/codemirror.css'
-  import {} from 'codemirror/mode/css/css'
   import {} from 'codemirror/mode/javascript/javascript'
-  import {} from 'codemirror/mode/xml/xml'
-  import {} from 'codemirror/mode/htmlmixed/htmlmixed'
   import {} from 'codemirror/mode/python/python'
+  //import {} from 'codemirror/mode/css/css'
+  //import {} from 'codemirror/mode/xml/xml'
+  //import {} from 'codemirror/mode/htmlmixed/htmlmixed'
 
   export default {
     inheritAttrs: false,
