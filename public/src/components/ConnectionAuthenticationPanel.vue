@@ -1,9 +1,9 @@
 <template>
   <div>
     <div v-if="is_oauth && is_connected">
-      <div class="flex flex-row items-center lh-copy">
+      <div class="flex flex-row items-center justify-center lh-copy">
         <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-        <span class="dn dib-ns">You've successfully connected to {{service_name}}!</span>
+        <span class="dn dib-ns">You are connected to {{service_name}}!</span>
       </div>
       <div class="mt3 tc">
         <el-button
@@ -27,20 +27,6 @@
       </div>
     </div>
     <div v-else>
-      <el-alert
-        type="success"
-        show-icon
-        :title="success_msg"
-        :closable="false"
-        v-if="is_tested && is_connected && success_msg.length > 0"
-      />
-      <el-alert
-        type="error"
-        show-icon
-        :title="error_msg"
-        @close="error_msg = ''"
-        v-if="error_msg.length > 0"
-      />
       <div class="lh-copy mt3">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div
         class="w-two-thirds-ns center mt3"
@@ -123,10 +109,13 @@
           <el-form-item>
             <el-button
               class="ttu b"
-              type="primary"
+              :type="test_btn_type"
+              :icon="test_btn_icon"
+              :loading="test_state == 'testing'"
+              :disabled="test_state == 'success' || test_state == 'error'"
               @click="onTestClick"
             >
-              Test connection
+              {{test_btn_label}}
             </el-button>
           </el-form-item>
         </el-form>
@@ -283,10 +272,13 @@
           <el-form-item>
             <el-button
               class="ttu b"
-              type="primary"
+              :type="test_btn_type"
+              :icon="test_btn_icon"
+              :loading="test_state == 'testing'"
+              :disabled="test_state == 'success' || test_state == 'error'"
               @click="onTestClick"
             >
-              Test connection
+              {{test_btn_label}}
             </el-button>
           </el-form-item>
         </el-form>
@@ -384,9 +376,7 @@
       c = _.assign({}, defaultConnectionInfo(), c)
 
       return {
-        success_msg: '',
-        error_msg: '',
-        is_tested: false,
+        test_state: 'none', // none, testing, error, success
         region_options,
 
         token: _.get(c, 'token', ''),
@@ -452,13 +442,40 @@
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
-      cls() {
-        return this.is_connected ? 'b--dark-green' : 'b--blue'
-      },
       service_name() {
         return this.is_gmail ? 'Gmail' :
           this.is_smtp ? 'your email account' :
           _.result(this, 'cinfo.service_name', '')
+      },
+      test_btn_type() {
+        switch (this.test_state) {
+          case 'none':    return 'primary'
+          case 'testing': return 'primary'
+          case 'success': return 'success'
+          case 'error':   return 'danger'
+        }
+
+        return 'primary'
+      },
+      test_btn_icon() {
+        switch (this.test_state) {
+          case 'none':    return ''
+          case 'testing': return ''
+          case 'success': return 'el-icon-success'
+          case 'error':   return 'el-icon-error'
+        }
+
+        return 'Test connection'
+      },
+      test_btn_label() {
+        switch (this.test_state) {
+          case 'none':    return 'Test connection'
+          case 'testing': return 'Testing...'
+          case 'success': return 'Success!'
+          case 'error':   return 'Error'
+        }
+
+        return 'Test connection'
       },
       is_smtp() {
         return this.ctype == ctypes.CONNECTION_TYPE_SMTP
@@ -523,6 +540,7 @@
         }
       },
       emitChange() {
+        this.test_state = 'none'
         this.$emit('change', { connection_info: this.connection_info })
       },
       getConnectionType() {
@@ -556,16 +574,18 @@
 
         // disconnect from this connection (oauth only)
         this.$store.dispatch('disconnectConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            this.success_msg = "You've successfully disconnected from " + this.service_name + "!"
-            this.error_msg = ''
+          if (response.ok) {
+            this.$message({
+              message: "You've successfully disconnected from " + this.service_name + ".",
+              type: 'success'
+            })
+
             this.$emit('change', response.body)
-          }
-           else
-          {
-            this.success_msg = ''
-            this.error_msg = _.get(response, 'data.error.message', '')
+          } else {
+            this.$message({
+              message: _.get(response, 'data.error.message', ''),
+              type: 'error'
+            })
           }
         })
       },
@@ -577,16 +597,22 @@
 
           // for now, re-fetch the connection to update its state
           this.$store.dispatch('fetchConnection', { eid }).then(response => {
-            if (response.ok)
-            {
-              this.success_msg = ''
-              this.error_msg = ''
+            if (response.ok) {
               this.$emit('change', _.omit(response.body, ['name', 'alias', 'description']))
-            }
-             else
-            {
-              this.success_msg = ''
-              this.error_msg = _.get(response, 'data.error.message', '')
+
+              this.$nextTick(() => {
+                if (this.is_connected) {
+                  this.$message({
+                    message: "You've successfully connected to " + this.service_name + "!",
+                    type: 'success'
+                  })
+                }
+              })
+            } else {
+              this.$message({
+                message: _.get(response, 'data.error.message', ''),
+                type: 'error'
+              })
             }
           })
         })
@@ -598,34 +624,22 @@
 
         // update the connection
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          this.is_tested = true
+          if (response.ok) {
+            this.test_state = 'testing'
 
-          setTimeout(() => {
-            this.success_msg = ''
-            this.is_tested = false
-          }, 4000)
-
-          if (response.ok)
-          {
             // test the connection
             this.$store.dispatch('testConnection', { eid, attrs }).then(response => {
-              if (response.ok)
-              {
-                this.success_msg = "You've successfully connected to " + this.service_name + "!"
-                this.error_msg = ''
+              if (response.ok) {
+                this.test_state = 'success'
                 this.$emit('change', _.omit(response.body, ['name', 'alias', 'description', 'connection_info']))
-              }
-               else
-              {
-                this.success_msg = ''
-                this.error_msg = _.get(response, 'data.error.message', '')
+              } else {
+                this.test_state = 'error'
+                setTimeout(() => { this.test_state = 'none' }, 4000)
               }
             })
-          }
-           else
-          {
-            this.success_msg = ''
-            this.error_msg = _.get(response, 'data.error.message', '')
+          } else {
+            this.test_state = 'error'
+            setTimeout(() => { this.test_state = 'none' }, 4000)
           }
         })
       }
