@@ -107,7 +107,7 @@ config.plugins = (config.plugins || []).concat([
   })
 ])
 
-if (!options.isProduction && options.showBundleAnalyzer)
+if (true)
 {
   config.plugins = config.plugins.concat([
     new BundleAnalyzerPlugin()
