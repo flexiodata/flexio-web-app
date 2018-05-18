@@ -6523,9 +6523,9 @@ vue-codemirror@^4.0.5:
     codemirror "^5.32.0"
     diff-match-patch "^1.0.0"
 
-vue-grid2@^0.2.13:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/vue-grid2/-/vue-grid2-0.2.13.tgz#003b9eff74936b2dd62f1c4507ca92d43086c2d0"
+vue-grid2@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/vue-grid2/-/vue-grid2-0.2.14.tgz#311b06ba701d9508ae327da45612fc05c68f4849"
   dependencies:
     axios "^0.16.1"
     tachyons "^4.6.1"
