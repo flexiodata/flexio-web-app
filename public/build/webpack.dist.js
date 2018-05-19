@@ -71,9 +71,9 @@ config.plugins = (config.plugins || []).concat([
 
   new BundleAnalyzerPlugin({
     analyzerMode: 'static',
-    generateStatsFile: true,
-    reportFilename: '../src/build/report.html',
-    statsFilename: '../src/build/stats.json',
+    reportFilename: '../src/build/report.html'
+    //statsFilename: '../src/build/stats.json',
+    //generateStatsFile: true,
   }),
 
   // Extract all 3rd party modules into a separate 'vendor' chunk
