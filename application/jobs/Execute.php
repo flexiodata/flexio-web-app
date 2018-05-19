@@ -398,7 +398,7 @@ class ScriptHost
         return $ret;
     }
 
-    private function getOutputWriter($idx) // TODO: add return type
+    private function getOutputWriter($idx, $reset = false) // TODO: add return type
     {
         if (count($this->output_writers) != count($this->output_streams))
             $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
@@ -407,7 +407,7 @@ class ScriptHost
             return null;
 
         $ret = $this->output_writers[$idx];
-        if (is_null($ret))
+        if (is_null($ret) || $reset === true)
         {
             $output_stream = $this->output_streams[$idx];
             $ret = $output_stream->getWriter();
@@ -776,6 +776,48 @@ class ScriptHost
         {
             $writer->write((string)$data);
         }
+    }
+
+    public function func_createVfsStreamHandle($path)
+    {
+        $key = \Flexio\Base\Util::generateRandomString(20);
+
+        $stream = \Flexio\Base\Stream::create();
+        $stream->setName($path);
+
+        $this->output_streams[] = $stream;
+        $info = array('handle' => count($this->output_streams)-1,
+                      'name' => $key,
+                      'size' => 0,
+                      'content_type' => 'application/octet-stream');
+
+        $this->output_map[$key] = $info;
+
+        return $info['handle'];
+    }
+
+    public function func_commitVfsStreamHandle($stream_idx /* handle */)
+    {
+        if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
+            return false;
+
+        $writer = $this->getOutputWriter($stream_idx);
+        if (is_null($writer))
+            return false;
+        
+        $this->output_writers[$stream_idx] = null;
+        $writer = null;
+
+
+        $stream = $this->output_streams[$stream_idx];
+        $reader = $stream->getReader();
+
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+
+        $files = $vfs->write($stream->getName(), function($length) use (&$reader) {
+            return $reader->read($length);
+        });
     }
 
     public function func_read($stream_idx, $length) // TODO: add return type
