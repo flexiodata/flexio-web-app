@@ -125,7 +125,7 @@
         error_msg: '',
         ss_errors: {},
         verify_code: '',
-        input_cls: 'input-reset ba b--black-10 br2 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100'
       }
     },
     watch: {
