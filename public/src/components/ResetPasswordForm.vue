@@ -83,10 +83,11 @@
         error_msg: '',
         rules: {
           password: [
-            { required: true, message: 'Please input your current password', trigger: 'blur' }
+            { required: true, message: 'Please input your new password', trigger: 'blur' },
+            { validator: this.formValidatePassword }
           ],
           password2: [
-            { required: true, message: 'Please input your new password', trigger: 'blur' },
+            { required: true, message: 'Please confirm your new password', trigger: 'blur' },
             { validator: this.formValidatePassword },
             { validator: this.checkPasswordMatch, trigger: 'blur' }
           ]
