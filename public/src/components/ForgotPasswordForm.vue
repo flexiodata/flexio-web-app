@@ -8,7 +8,12 @@
       <div class="mv3 lh-copy">
         <p>An email has been sent to <span class="b">{{email}}</span> with further instructions.</p>
         <p>You may need to check your spam folder or unblock no-reply@flex.io.</p>
-        <button class="link ph4 pv2a b lh-title white bg-blue b--blue darken-10 ttu tc w-100" @click="$emit('sign-in-click')">Sign in</button>
+        <button
+          :class="button_cls"
+          @click="$emit('sign-in-click')"
+        >
+          Sign in
+        </button>
       </div>
     </div>
     <div v-else>
