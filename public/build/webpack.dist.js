@@ -73,24 +73,27 @@ config.plugins = (config.plugins || []).concat([
   new BundleAnalyzerPlugin({
     analyzerMode: 'static',
     reportFilename: '../src/build/report.html'
-    //statsFilename: '../src/build/stats.json',
-    //generateStatsFile: true,
   }),
 
   // Extract all 3rd party modules into a separate 'vendor' chunk
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
-    filename: 'js/vendor.js',
     minChunks(module, count) {
-      var context = module.context
-      return context && context.indexOf('node_modules') >= 0
+      // This prevents stylesheet resources with the .css or .scss extension
+      // from being moved from their original chunk to the vendor chunk
+      if(module.resource && (/^.*\.(css|styl)$/).test(module.resource)) {
+        return false
+      }
+
+      return module.context && module.context.includes('node_modules')
     }
   }),
 
-  /*
   // Generate a 'manifest' chunk to be inlined in the HTML template
-  new webpack.optimize.CommonsChunkPlugin('manifest'),
-  */
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'manifest',
+    minChunks: Infinity
+  }),
 
   // IgnorePlugin doesn't load 'zn-CN' local (which is right) but in runtime, when page is being loaded,
   // the code which requires 'zh-CN' locale is executed. Therefore an error is thrown to browser.
