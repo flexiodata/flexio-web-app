@@ -4,10 +4,8 @@ const path = require('path')
 const version = require('../package.json').version
 
 const banner =
-  '/*!\n' +
-  ' * Flex.io Web App v' + version + ' (https://github.com/flexiodata/flexio)\n' +
-  ' * (c) ' + new Date().getFullYear() + ' Gold Prairie LLC\n' +
-  ' */'
+  'Flex.io Web App v' + version + ' (https://github.com/flexiodata/flexio)\n' +
+  '(c) ' + new Date().getFullYear() + ' Gold Prairie LLC'
 
 module.exports = {
   banner,
