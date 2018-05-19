@@ -26,7 +26,8 @@ const config = merge(base, {
     new webpack.BannerPlugin({
       banner: options.banner,
       raw: false,
-      entryOnly: true
+      entryOnly: true,
+      test: /app\.js$/
     })
   ]
 })
