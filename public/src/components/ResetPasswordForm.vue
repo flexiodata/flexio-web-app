@@ -24,7 +24,7 @@
 
       <el-form
         ref="form"
-        class="mt3 el-form-cozy el-form__label-tiny"
+        class="mt3"
         :model="$data"
         :rules="rules"
       >
@@ -88,7 +88,6 @@
           ],
           password2: [
             { required: true, message: 'Please confirm your new password', trigger: 'blur' },
-            { validator: this.formValidatePassword },
             { validator: this.checkPasswordMatch, trigger: 'blur' }
           ]
         }
