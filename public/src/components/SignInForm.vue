@@ -33,10 +33,15 @@
         <button type="button" class="f8 fw6 black-60 link underline-hover dib pa0" @click="$emit('forgot-password-click')">Forgot your password?</button>
       </div>
       <div class="mv3">
-        <btn btn-lg btn-primary :disabled="is_submitting" @click="trySignIn" class="ttu b w-100">
+        <button
+          type="button"
+          :class="button_cls"
+          :disabled="is_submitting"
+          @click="trySignIn"
+        >
           <span v-if="is_submitting">Signing in...</span>
           <span v-else>Sign in</span>
-        </btn>
+        </button>
       </div>
     </div>
     <div class="mt3 pt2 f5 fw6 tc">
@@ -49,12 +54,8 @@
 <script>
   import _ from 'lodash'
   import axios from 'axios'
-  import Btn from './Btn.vue'
 
   export default {
-    components: {
-      Btn
-    },
     data() {
       return {
         username: '',
@@ -62,7 +63,8 @@
         is_submitting: false,
         error_msg: '',
         verify_code: '',
-        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
+        button_cls: 'border-box no-select ttu b w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
     },
     mounted() {
@@ -82,7 +84,6 @@
 
         axios.post('/api/v2/login', attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
-          this.is_submitting = false
           this.$emit('signed-in', user_info)
           this.trackSignIn(user_info)
         }).catch(error => {

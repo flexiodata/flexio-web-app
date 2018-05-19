@@ -32,10 +32,15 @@
         >
       </div>
       <div class="mt3">
-        <btn btn-lg btn-primary :disabled="is_submitting" @click="sendReset" class="ttu b w-100">
+        <button
+          type="button"
+          :class="button_cls"
+          :disabled="is_submitting"
+          @click="sendReset"
+        >
           <span v-if="is_submitting">Sending reset instructions...</span>
           <span v-else>Send reset instructions</span>
-        </btn>
+        </button>
       </div>
     </div>
     <div class="mt3 pt2 f5 fw6 tc">
@@ -48,19 +53,16 @@
 <script>
   import _ from 'lodash'
   import axios from 'axios'
-  import Btn from './Btn.vue'
 
   export default {
-    components: {
-      Btn
-    },
     data() {
       return {
         email: '',
         is_submitting: false,
         is_sent: false,
         error_msg: '',
-        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
+        button_cls: 'border-box no-select ttu b w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
     },
     mounted() {
@@ -79,7 +81,6 @@
         this.is_submitting = true
 
         axios.post('/api/v2/forgotpassword', attrs).then(response => {
-          this.is_submitting = false
           this.is_sent = true
           this.$emit('requested-password')
         }).catch(error => {

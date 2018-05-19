@@ -78,16 +78,15 @@
         <span class="f8 dark-red" v-show="has_password_error">{{password_error}}</span>
       </div>
       <div class="mv3">
-        <btn
-          btn-lg
-          btn-primary
-          class="ttu b w-100"
+        <button
+          type="button"
+          :class="button_cls"
           :disabled="is_submitting || has_errors"
           @click="trySignUp"
         >
           <span v-if="is_submitting">{{label_submitting}}</span>
           <span v-else>Sign up</span>
-        </btn>
+        </button>
         <div class="mt1 f8 fw6 black-60">
           By signing up, you agree to Flex.io's
           <a class="link underline-hover blue" href="/terms" target="_blank" rel="noopener noreferrer">Terms</a> and
@@ -105,12 +104,8 @@
 <script>
   import _ from 'lodash'
   import axios from 'axios'
-  import Btn from './Btn.vue'
 
   export default {
-    components: {
-      Btn
-    },
     data() {
       return {
         first_name: '',
@@ -125,7 +120,8 @@
         error_msg: '',
         ss_errors: {},
         verify_code: '',
-        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 br2 focus-b--blue lh-title ph3 pv2a w-100',
+        button_cls: 'border-box no-select ttu b w-100 ph4 pv2a lh-title white bg-blue br2 darken-10'
       }
     },
     watch: {
@@ -152,15 +148,8 @@
       has_password_error() {
         return this.password_error.length > 0
       },
-      has_client_errors() {
-        var errors = _.get(this.errors, 'errors', [])
-        return _.size(errors) > 0
-      },
-      has_server_errors() {
-        return this.has_email_error || this.has_username_error || this.has_password_error
-      },
       has_errors() {
-        return this.has_client_errors || this.has_server_errors
+        return this.has_email_error || this.has_username_error || this.has_password_error
       }
     },
     mounted() {
@@ -222,15 +211,13 @@
 
         // check server-side errors
         this.checkSignup(null, () => {
-          if (this.has_errors)
-          {
+          if (this.has_errors) {
             this.is_submitting = false
             return
           }
 
           axios.post('/api/v2/signup', attrs).then(response => {
             var user_info =  _.get(response, 'data', {})
-            this.is_submitting = false
             this.$emit('signed-up', user_info)
             this.trySignIn()
             this.trackSignUp(user_info)
@@ -249,7 +236,6 @@
 
         axios.post('/api/v2/login', attrs).then(response => {
           var user_info =  _.get(response, 'data', {})
-          this.is_submitting = false
           this.$emit('signed-in', user_info)
         }).catch(error => {
           this.is_submitting = false
