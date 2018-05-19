@@ -87,8 +87,10 @@ config.plugins = (config.plugins || []).concat([
     }
   }),
 
+  /*
   // Generate a 'manifest' chunk to be inlined in the HTML template
   new webpack.optimize.CommonsChunkPlugin('manifest'),
+  */
 
   // IgnorePlugin doesn't load 'zn-CN' local (which is right) but in runtime, when page is being loaded,
   // the code which requires 'zh-CN' locale is executed. Therefore an error is thrown to browser.
