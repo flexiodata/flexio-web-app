@@ -62,7 +62,7 @@
         is_submitting: false,
         error_msg: '',
         verify_code: '',
-        input_cls: 'input-reset ba b--black-10 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
+        input_cls: 'input-reset ba b--black-10 br2 focus-b--transparent focus-outline focus-o--blue lh-title ph3 pv2a w-100'
       }
     },
     mounted() {
