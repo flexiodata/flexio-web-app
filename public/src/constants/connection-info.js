@@ -98,7 +98,7 @@ const GMAIL = {
   is_service: true,
   is_input: true,
   is_output: true,
-  is_storage: true
+  is_storage: false
 }
 
 const GOOGLEDRIVE = {

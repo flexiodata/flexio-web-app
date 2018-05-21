@@ -70,7 +70,7 @@
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
-  import MixinConnectionInfo from './mixins/connection-info'
+  import MixinConnection from './mixins/connection-info'
 
   export default {
     props: {
@@ -83,7 +83,7 @@
         required: true
       }
     },
-    mixins: [MixinConnectionInfo],
+    mixins: [MixinConnection],
     components: {
       ConnectionEditPanel,
       ConnectionChooserList,
@@ -134,7 +134,7 @@
         return _.find(this.connections, { eid: this.ceid }, null)
       },
       service_name() {
-        return this.getConnectionInfo(this.ctype, 'service_name')
+        return this.$_Connection_getServiceName(this.ctype)
       },
     },
     methods: {

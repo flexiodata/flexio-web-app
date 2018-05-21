@@ -145,8 +145,8 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
-  import ConnectionInfo from './mixins/connection-info'
-  import Validation from './mixins/validation'
+  import MixinConnection from './mixins/connection-info'
+  import MixinValidation from './mixins/validation'
 
   const defaultAttrs = () => {
     return {
@@ -203,7 +203,7 @@
         default: 'add'
       }
     },
-    mixins: [ConnectionInfo, Validation],
+    mixins: [MixinConnection, MixinValidation],
     components: {
       ServiceList,
       ServiceIcon,
@@ -375,7 +375,7 @@
         var connection = _.cloneDeep(this.connection)
 
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
-          var service_name = this.getConnectionServiceName(connection)
+          var service_name = this.$_Connection_getServiceName(connection)
           var service_slug = util.slugify(service_name)
 
           // create a default alias
