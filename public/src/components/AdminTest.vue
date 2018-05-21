@@ -65,11 +65,11 @@
 <script>
   import api from '../api'
   import AdminTestItem from './AdminTestItem.vue'
-  import MixinCommonFilter from './mixins/common-filter'
+  import MixinFilter from './mixins/common-filter'
   import MixinResponse from './mixins/response'
 
   export default {
-    mixins: [MixinCommonFilter, MixinResponse],
+    mixins: [MixinFilter, MixinResponse],
     components: {
       AdminTestItem
     },
@@ -88,7 +88,7 @@
         if (this.show_errors_only)
           test_arr = _.filter(test_arr, (t) => { return t.passed !== true })
 
-        return this.commonFilter(test_arr, this.filter, ['id'])
+        return this.$_Filter_filter(test_arr, this.filter, ['id'])
       },
       total_cnt() {
         return _

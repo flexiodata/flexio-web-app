@@ -3,7 +3,7 @@
 
 export default {
   methods: {
-    commonFilter: function(arr, filter, keys) {
+    $_Filter_filter: function(arr, filter, keys) {
       // not an array; bail out
       if (!_.isArray(arr))
         return []

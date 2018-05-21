@@ -34,7 +34,7 @@
   import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
-  import CommonFilter from './mixins/common-filter'
+  import MixinFilter from './mixins/common-filter'
 
   export default {
     props: {
@@ -46,7 +46,7 @@
         default: false
       }
     },
-    mixins: [CommonFilter],
+    mixins: [MixinFilter],
     components: {
       Spinner,
       PipeItem,
@@ -59,7 +59,7 @@
         'is_fetched': 'pipes_fetched'
       }),
       pipes() {
-        return this.commonFilter(this.getAllPipes(), this.filter, ['name', 'description'])
+        return this.$_Filter_filter(this.getAllPipes(), this.filter, ['name', 'description'])
       }
     },
     created() {
