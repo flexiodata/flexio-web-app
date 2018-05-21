@@ -34,7 +34,7 @@
   import Spinner from 'vue-simple-spinner'
   import PipeItem from './PipeItem.vue'
   import EmptyItem from './EmptyItem.vue'
-  import MixinFilter from './mixins/common-filter'
+  import MixinFilter from './mixins/filter'
 
   export default {
     props: {
