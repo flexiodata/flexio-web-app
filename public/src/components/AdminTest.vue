@@ -66,10 +66,10 @@
   import api from '../api'
   import AdminTestItem from './AdminTestItem.vue'
   import MixinCommonFilter from './mixins/common-filter'
-  import MixinGetResponseText from './mixins/get-response-text'
+  import MixinResponse from './mixins/response'
 
   export default {
-    mixins: [MixinCommonFilter, MixinGetResponseText],
+    mixins: [MixinCommonFilter, MixinResponse],
     components: {
       AdminTestItem
     },
