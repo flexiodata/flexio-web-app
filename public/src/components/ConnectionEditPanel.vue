@@ -145,7 +145,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
-  import MixinConnection from './mixins/connection-info'
+  import MixinConnection from './mixins/connection'
   import MixinValidation from './mixins/validation'
 
   const defaultAttrs = () => {

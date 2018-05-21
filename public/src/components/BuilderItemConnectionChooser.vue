@@ -70,7 +70,7 @@
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
-  import MixinConnection from './mixins/connection-info'
+  import MixinConnection from './mixins/connection'
 
   export default {
     props: {

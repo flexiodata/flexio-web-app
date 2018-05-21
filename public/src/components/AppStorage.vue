@@ -59,7 +59,7 @@
   import AbstractList from './AbstractList.vue'
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
-  import MixinConnection from './mixins/connection-info'
+  import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_HOME,
