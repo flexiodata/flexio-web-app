@@ -37,7 +37,10 @@ class Trigger
             {
                 $to_part = $email_to_parts[0];
 
-                $user_and_pipe = explode("/", $to_part, 2);
+                // support | and / delimiters
+                $to_part = str_replace(array('|','/'), '|', $to_part);
+                $user_and_pipe = explode('|', $to_part, 2);
+
                 if (count($user_and_pipe) != 2)
                     $user_and_pipe = null;
             }
