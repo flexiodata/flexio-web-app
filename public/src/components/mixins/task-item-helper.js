@@ -7,60 +7,30 @@ import { VARIABLE_REGEX } from '../../constants/common'
 
 export default {
   computed: {
-    task() {
+    $_Task_item() {
       return _.get(this, 'item', {})
     },
-    task_icon() {
-      return _.result(this, 'tinfo.icon', 'build')
+    $_Task_icon() {
+      return _.result(this, '$_Task_tinfo.icon', 'build')
     },
-    task_bg_color() {
-      return _.result(this, 'tinfo.bg_color', '')
-    },
-    ctype() {
-      return _.get(this, 'task.metadata.connection_type', '')
-    },
-    is_input_task() {
-      return _.get(this, 'task.op') == ops.TASK_OP_INPUT
-    },
-    is_output_task() {
-      return _.get(this, 'task.op') == ops.TASK_OP_OUTPUT
-    },
-    show_connection_icon() {
-      if (this.ctype.length == 0)
-        return false
+    $_Task_bg_color() {
+      var color = _.result(this, '$_Task_tinfo.bg_color', '')
 
-      switch (_.get(this, 'task.op'))
-      {
-        case ops.TASK_OP_INPUT:
-        case ops.TASK_OP_OUTPUT:
-          return true
+      if (color.length > 0) {
+        return color
       }
-
-      return false
-    },
-    display_name() {
-      var name = _.get(this, 'task.name', '')
-      var default_name = _.result(this, 'tinfo.name', 'Untitled Step')
-      return name.length > 0 ? name : default_name
-    },
-    bg_color() {
-      if (this.task_bg_color.length > 0)
-        return this.task_bg_color
 
       // default
       return 'bg-task-gray'
     },
-    has_variables() {
-      try {
-        var str = JSON.stringify(this.task)
-        return str.match(VARIABLE_REGEX) ? true : false
-      } catch(e) {
-        return false
-      }
+    $_Task_display_name() {
+      var name = _.get(this, '$_Task_item.name', '')
+      var default_name = _.result(this, '$_Task_tinfo.name', 'Untitled Step')
+      return name.length > 0 ? name : default_name
     }
   },
   methods: {
-    tinfo() {
+    $_Task_tinfo() {
       return _.find(tasks, { op: _.get(this.task, 'op') })
     }
   }
