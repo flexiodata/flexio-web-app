@@ -42,7 +42,7 @@
       this.$store.track('Visited Sign In Page')
 
       if (this.active_user_eid.length > 0)
-        this.redirect()
+        this.$_Redirect_redirect()
     },
     methods: {
       onSignUpClick() {
@@ -52,7 +52,7 @@
         this.$router.push(this.forgotpassword_route)
       },
       onSignedIn() {
-        this.redirect()
+        this.$_Redirect_redirect()
       }
     }
   }

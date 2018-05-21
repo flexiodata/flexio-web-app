@@ -6,7 +6,7 @@ import { ROUTE_HOME } from '../../constants/route'
 
 export default {
   methods: {
-    redirect: function(redirect) {
+    $_Redirect_redirect: function(redirect) {
       if (!_.isString(redirect))
       {
         // grab the redirect from the query string if it exists

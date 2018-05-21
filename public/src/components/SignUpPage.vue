@@ -36,7 +36,7 @@
         this.$router.push(this.signin_route)
       },
       onSignedIn() {
-        this.redirect()
+        this.$_Redirect_redirect()
       }
     }
   }
