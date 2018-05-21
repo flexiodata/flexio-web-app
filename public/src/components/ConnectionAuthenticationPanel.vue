@@ -496,7 +496,7 @@
       this.$nextTick(() => { this.emitChange() })
     },
     methods: {
-      validate2(callback) {
+      validate(callback) {
         if (this.$refs.form) {
           this.$refs.form.validate(callback)
         } else {

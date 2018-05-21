@@ -311,7 +311,7 @@
 
           var auth_panel = this.$refs['connection-authentication-panel']
           if (auth_panel) {
-            auth_panel.validate2((valid2) => {
+            auth_panel.validate((valid2) => {
               if (!valid2)
                 return
 
@@ -362,7 +362,7 @@
           return
         }
 
-        this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+        this.$_Validation_validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))

@@ -113,7 +113,7 @@
       },
       formValidatePassword(rule, value, callback) {
         var key = rule.field
-        this.validatePassword(key, value, (response, errors) => {
+        this.$_Validation_validatePassword(key, value, (response, errors) => {
           var message = _.get(errors, key + '.message', '')
           if (message.length > 0) {
             callback(new Error(message))

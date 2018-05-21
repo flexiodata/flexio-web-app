@@ -376,7 +376,7 @@
       },
       saveChanges() {
         var doc_form = this.$refs['pipe-document-form']
-        doc_form.validate2((valid) => {
+        doc_form.validate((valid) => {
           if (!valid)
             return
 
