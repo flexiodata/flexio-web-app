@@ -59,7 +59,7 @@
   import AbstractList from './AbstractList.vue'
   import FileChooser from './FileChooser.vue'
   import EmptyItem from './EmptyItem.vue'
-  import ConnectionInfoMixin from './mixins/connection-info'
+  import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
     connection_type: CONNECTION_TYPE_HOME,
@@ -68,7 +68,7 @@
   }
 
   export default {
-    mixins: [ConnectionInfoMixin],
+    mixins: [MixinConnection],
     components: {
       Spinner,
       AbstractList,
@@ -88,7 +88,7 @@
         'is_fetched': 'connections_fetched'
       }),
       connections() {
-        var items = _.filter(this.getAvailableConnections(), this.isStorageConnection)
+        var items = _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
         return [LOCAL_STORAGE_ITEM].concat(items)
       },
       ctype() {

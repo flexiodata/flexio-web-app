@@ -66,10 +66,10 @@
   import api from '../api'
   import AdminTestItem from './AdminTestItem.vue'
   import MixinCommonFilter from './mixins/common-filter'
-  import MixinGetResponseText from './mixins/get-response-text'
+  import MixinResponse from './mixins/response'
 
   export default {
-    mixins: [MixinCommonFilter, MixinGetResponseText],
+    mixins: [MixinCommonFilter, MixinResponse],
     components: {
       AdminTestItem
     },
@@ -170,7 +170,7 @@
             var me = this
 
             // handle errors here...
-            var error_text = this.getResponseText(response, (error_text) => {
+            var error_text = this.$_Response_getResponseText(response, (error_text) => {
               xhr.ok = false
               me.tests[test_id] = _.assign({}, test, { is_running: false, xhr, error_text })
               me.runTest(this.queue.next())

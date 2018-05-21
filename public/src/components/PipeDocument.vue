@@ -82,7 +82,7 @@
         <el-collapse class="el-collapse-plain" v-model="collapse_properties">
           <el-collapse-item name="properties">
             <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Properties</h3></template>
-            <PipeDocumentForm ref="form" class="mt3" />
+            <PipeDocumentForm ref="pipe-document-form" class="mt3" />
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -375,7 +375,8 @@
         this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
       },
       saveChanges() {
-        this.$refs.form.validate((valid) => {
+        var doc_form = this.$refs['pipe-document-form']
+        doc_form.validate((valid) => {
           if (!valid)
             return
 

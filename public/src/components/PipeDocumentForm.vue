@@ -210,7 +210,7 @@
           return
         }
 
-        this.validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
+        this.$_Validation_validateAlias(OBJECT_TYPE_PIPE, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))

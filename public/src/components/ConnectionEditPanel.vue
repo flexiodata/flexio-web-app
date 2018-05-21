@@ -145,8 +145,8 @@
   import ServiceIcon from './ServiceIcon.vue'
   import ConnectionAuthenticationPanel from './ConnectionAuthenticationPanel.vue'
   import ConnectionInfoPanel from './ConnectionInfoPanel.vue'
-  import ConnectionInfo from './mixins/connection-info'
-  import Validation from './mixins/validation'
+  import MixinConnection from './mixins/connection'
+  import MixinValidation from './mixins/validation'
 
   const defaultAttrs = () => {
     return {
@@ -203,7 +203,7 @@
         default: 'add'
       }
     },
-    mixins: [ConnectionInfo, Validation],
+    mixins: [MixinConnection, MixinValidation],
     components: {
       ServiceList,
       ServiceIcon,
@@ -309,9 +309,9 @@
           if (!valid)
             return
 
-          var panel = this.$refs['connection-authentication-panel']
-          if (panel) {
-            panel.validate((valid2) => {
+          var auth_panel = this.$refs['connection-authentication-panel']
+          if (auth_panel) {
+            auth_panel.validate((valid2) => {
               if (!valid2)
                 return
 
@@ -362,7 +362,7 @@
           return
         }
 
-        this.validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
+        this.$_Validation_validateAlias(OBJECT_TYPE_CONNECTION, value, (response, errors) => {
           var message = _.get(errors, 'alias.message', '')
           if (message.length > 0) {
             callback(new Error(message))
@@ -375,7 +375,7 @@
         var connection = _.cloneDeep(this.connection)
 
         if (this.mode == 'add' && _.has(connection, 'connection_type')) {
-          var service_name = this.getConnectionServiceName(connection)
+          var service_name = this.$_Connection_getServiceName(connection)
           var service_slug = util.slugify(service_name)
 
           // create a default alias

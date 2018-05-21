@@ -24,7 +24,7 @@
 
       <el-form
         ref="form"
-        class="mt3 el-form-cozy el-form__label-tiny"
+        class="mt3"
         :model="$data"
         :rules="rules"
       >
@@ -83,11 +83,11 @@
         error_msg: '',
         rules: {
           password: [
-            { required: true, message: 'Please input your current password', trigger: 'blur' }
+            { required: true, message: 'Please input your new password', trigger: 'blur' },
+            { validator: this.formValidatePassword }
           ],
           password2: [
-            { required: true, message: 'Please input your new password', trigger: 'blur' },
-            { validator: this.formValidatePassword },
+            { required: true, message: 'Please confirm your new password', trigger: 'blur' },
             { validator: this.checkPasswordMatch, trigger: 'blur' }
           ]
         }
@@ -109,7 +109,7 @@
       },
       formValidatePassword(rule, value, callback) {
         var key = rule.field
-        this.validatePassword(key, value, (response, errors) => {
+        this.$_Validation_validatePassword(key, value, (response, errors) => {
           var message = _.get(errors, key + '.message', '')
           if (message.length > 0) {
             callback(new Error(message))
