@@ -273,7 +273,7 @@
   } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import MixinOauth from './mixins/oauth-popup'
+  import MixinOauth from './mixins/oauth'
 
   const defaultConnectionInfo = () => {
     return {
