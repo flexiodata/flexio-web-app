@@ -2,12 +2,13 @@
 
 export default {
   methods: {
-    oauthPopup(oauth_url, callback) {
+    $_Oauth_showPopup(oauth_url, callback) {
       var wnd
       var wnd_timeout
 
-      if (_.isNil(oauth_url))
+      if (_.isNil(oauth_url)) {
         return
+      }
 
       // default window settings
       var wnd_dimensions = {
@@ -16,10 +17,13 @@ export default {
       }
 
       // minimum window dimensions
-      if (wnd_dimensions.height < 600)
+      if (wnd_dimensions.height < 600) {
         wnd_dimensions.height = 600
-      if (wnd_dimensions.width < 800)
+      }
+
+      if (wnd_dimensions.width < 800) {
         wnd_dimensions.width = 800
+      }
 
       // window positioning
       wnd_dimensions.left = window.screenX + (window.outerWidth - wnd_dimensions.width) / 2
@@ -37,19 +41,20 @@ export default {
       wnd = window.open(oauth_url, 'ConnectWithOAuth', wnd_options)
 
       var timer = setInterval(function() {
-        if (wnd.closed)
-        {
+        if (wnd.closed) {
           clearInterval(timer)
 
-          if (typeof wnd.getOauthParams == 'function')
+          if (typeof wnd.getOauthParams == 'function') {
             callback(wnd.getOauthParams())
-             else
+          } else {
             callback()
+          }
         }
       }, 500)
 
-      if (wnd)
+      if (wnd) {
         wnd.focus()
+      }
     }
   }
 }

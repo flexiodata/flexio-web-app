@@ -273,7 +273,7 @@
   } from '../constants/connection-status'
   import * as ctypes from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
-  import OauthPopup from './mixins/oauth-popup'
+  import MixinOauth from './mixins/oauth-popup'
 
   const defaultConnectionInfo = () => {
     return {
@@ -326,7 +326,7 @@
         default: 'add'
       }
     },
-    mixins: [OauthPopup],
+    mixins: [MixinOauth],
     watch: {
       connection() { this.reset() },
 
@@ -571,7 +571,7 @@
       tryOauthConnect() {
         var eid = this.eid
 
-        this.oauthPopup(this.oauth_url, (params) => {
+        this.$_Oauth_showPopup(this.oauth_url, (params) => {
           // TODO: handle 'code' and 'state' and 'error' here...
 
           // for now, re-fetch the connection to update its state
