@@ -18,6 +18,10 @@ export default {
       var validate_attrs = [{ eid_type, key: 'alias', value: alias, type: 'alias' }]
       return this.validate(_.omitBy(validate_attrs, _.isEmpty), callback)
     },
+    validateUsername: function(key, username, callback) {
+      var validate_attrs = [{ key, value: username, type: 'username' }]
+      return this.validate(_.omitBy(validate_attrs, _.isEmpty), callback)
+    },
     validatePassword: function(key, password, callback) {
       var validate_attrs = [{ key, value: password, type: 'password' }]
       return this.validate(_.omitBy(validate_attrs, _.isEmpty), callback)

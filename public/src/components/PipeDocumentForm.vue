@@ -181,7 +181,7 @@
       this.resetForm(this.orig_pipe)
     },
     methods: {
-      validate(callback) {
+      validate2(callback) {
         this.$refs.form.validate(callback)
       },
       updateStore() {

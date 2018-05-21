@@ -309,9 +309,9 @@
           if (!valid)
             return
 
-          var panel = this.$refs['connection-authentication-panel']
-          if (panel) {
-            panel.validate((valid2) => {
+          var auth_panel = this.$refs['connection-authentication-panel']
+          if (auth_panel) {
+            auth_panel.validate2((valid2) => {
               if (!valid2)
                 return
 
