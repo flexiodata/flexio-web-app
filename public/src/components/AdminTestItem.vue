@@ -7,9 +7,19 @@
           :class="{ 'rotate-90': !show_details }"
           v-if="has_details"
         >chevron_right</i>
+        <div
+          class="flex flex-row items-center justify-center"
+          style="width: 24px; height: 24px"
+          v-else
+        >
+          <Spinner
+            :size="16"
+            :line-size="2"
+            v-if="item.is_running"
+          />
+        </div>
       </span>
       <span class="f6 fw6 mr2">{{item.id}}</span>
-      <Spinner :size="16" :line-size="2" v-if="item.is_running" />
       <div class="flex-fill">&nbsp;</div>
       <div class="tr pl3 f7 fw6">{{item.message}}</div>
       <div class="f4 pl3 pr1 tr monospace ttu b dark-green" v-if="has_details && is_passed===true">Passed</div>
