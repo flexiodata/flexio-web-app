@@ -49,6 +49,7 @@ class Process implements \Flexio\IFace\IProcess
     public const EVENT_FINISHED_TASK  = 'process.finished.task';
 
     private static $manifest = array(
+        'archive'   => '\Flexio\Jobs\Archive',
         'calc'      => '\Flexio\Jobs\CalcField',
         'connect'   => '\Flexio\Jobs\Connect',
         'convert'   => '\Flexio\Jobs\Convert',

@@ -19,6 +19,8 @@ namespace Flexio\Jobs;
 
 class Archive extends \Flexio\Jobs\Base
 {
+    private $to_delete = [];
+
     public function run(\Flexio\IFace\IProcess $process) : void
     {
         parent::run($process);
@@ -29,13 +31,76 @@ class Archive extends \Flexio\Jobs\Base
         $outstream->copyFrom($instream);
 
         $params = $this->getJobParameters();
-        $msg = $params['msg'] ?? '';
+        $path = $params['path'] ?? '';
+        $files = $params['files'] ?? '';
 
-        if (is_array($msg) || is_object($msg))
+        if (is_string($files))
+            $files = \Flexio\Base\Util::filterArrayEmptyValues(explode(',', $files));
+
+
+        $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+        $archive_fname = $storage_tmpbase . "tmparchive-" . \Flexio\Base\Util::generateRandomString(30);
+
+        $this->to_delete[] = $archive_fname;
+
+
+
+        $zip = new \ZipArchive();
+        $zip->open($archive_fname, \ZipArchive::CREATE);
+
+
+
+
+
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
+        $vfs->setProcess($process);
+
+
+        foreach ($files as $filespec)
         {
-            $msg = @json_encode($msg);
+            $list = $vfs->listWithWildcard($filespec);
+
+            foreach ($list as $fileinfo)
+            {
+                $fname = $storage_tmpbase . "tmparchive-file-" . \Flexio\Base\Util::generateRandomString(30);
+                $this->to_delete[] = $fname;
+
+                $f = fopen($fname, 'wb');
+
+                $files = $vfs->read($fileinfo['path'], function($data) use (&$f) {
+                    fwrite($f, $data);
+                });
+
+                fclose($f);
+
+                $zip->addFile($fname, $filespec['name']);
+            }
         }
 
-        echo $msg;
+        $zip->close();
+        $zip = null;
+
+
+
+        $f = fopen($archive_fname, 'rb');
+
+        if (strlen($path) > 0)
+        {
+            $vfs->write($path, function($length) use (&$f) {
+                return $f->fread($length);
+            });
+        }
+         else
+        {
+            $outstream = $process->getStdout();
+            $writer = $outstream->getWriter();
+
+            while (($buf = fread($f, 32768)) !== false)
+            {
+                $writer->write($buf);
+            }
+        }
+
+        fclose($f);
     }
 }

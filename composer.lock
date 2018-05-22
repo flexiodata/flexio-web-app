@@ -4,7 +4,6 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5e5e530168bdd5228956999817138758",
     "content-hash": "873caa76055d41202cefbe7f28df632c",
     "packages": [
         {
@@ -85,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-05-02 19:55:35"
+            "time": "2018-05-02T19:55:35+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -150,7 +149,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2018-04-22 15:46:56"
+            "time": "2018-04-22T15:46:56+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -201,7 +200,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-12-20 10:07:11"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -266,7 +265,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20 17:10:46"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "league/oauth2-client",
@@ -333,7 +332,7 @@
                 "oauth2",
                 "single sign on"
             ],
-            "time": "2018-01-13 05:27:58"
+            "time": "2018-01-13T05:27:58+00:00"
         },
         {
             "name": "league/oauth2-google",
@@ -384,7 +383,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2018-03-19 17:28:55"
+            "time": "2018-03-19T17:28:55+00:00"
         },
         {
             "name": "lusitanian/oauth",
@@ -451,7 +450,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2018-02-14 22:37:14"
+            "time": "2018-02-14T22:37:14+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -506,7 +505,7 @@
                 "json",
                 "jsonpath"
             ],
-            "time": "2016-12-03 22:08:25"
+            "time": "2016-12-03T22:08:25+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -554,7 +553,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-04-04 21:24:14"
+            "time": "2018-04-04T21:24:14+00:00"
         },
         {
             "name": "pear/console_getopt",
@@ -601,7 +600,7 @@
                 }
             ],
             "description": "More info available on: http://pear.php.net/package/Console_Getopt",
-            "time": "2015-07-20 20:28:12"
+            "time": "2015-07-20T20:28:12+00:00"
         },
         {
             "name": "pear/mail_mime",
@@ -647,7 +646,7 @@
             ],
             "description": "Mail_Mime provides classes to create MIME messages",
             "homepage": "http://pear.php.net/package/Mail_Mime",
-            "time": "2017-11-17 09:21:45"
+            "time": "2017-11-17T09:21:45+00:00"
         },
         {
             "name": "pear/pear-core-minimal",
@@ -691,7 +690,7 @@
                 }
             ],
             "description": "Minimal set of PEAR core files to be used as composer dependency",
-            "time": "2017-02-28 16:46:11"
+            "time": "2017-02-28T16:46:11+00:00"
         },
         {
             "name": "pear/pear_exception",
@@ -746,7 +745,7 @@
             "keywords": [
                 "exception"
             ],
-            "time": "2015-02-10 20:07:52"
+            "time": "2015-02-10T20:07:52+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -812,7 +811,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2018-03-27 13:49:45"
+            "time": "2018-03-27T13:49:45+00:00"
         },
         {
             "name": "phpseclib/phpseclib",
@@ -904,7 +903,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2018-04-15 16:55:05"
+            "time": "2018-04-15T16:55:05+00:00"
         },
         {
             "name": "psr/http-message",
@@ -954,7 +953,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "stevenmaguire/oauth2-microsoft",
@@ -1004,7 +1003,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2017-06-07 13:42:47"
+            "time": "2017-06-07T13:42:47+00:00"
         },
         {
             "name": "zbateson/mail-mime-parser",
@@ -1055,7 +1054,7 @@
                 "parser",
                 "php-imap"
             ],
-            "time": "2018-04-18 18:25:58"
+            "time": "2018-04-18T18:25:58+00:00"
         }
     ],
     "packages-dev": [],
