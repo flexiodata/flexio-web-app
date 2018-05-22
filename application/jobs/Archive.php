@@ -71,9 +71,11 @@ class Archive extends \Flexio\Jobs\Base
                     fwrite($f, $data);
                 });
 
+
                 fclose($f);
 
-                $zip->addFile($fname, $filespec['name']);
+                $zip->addFile($fname, $fileinfo['name']);
+
             }
         }
 
@@ -81,22 +83,25 @@ class Archive extends \Flexio\Jobs\Base
         $zip = null;
 
 
-
         $f = fopen($archive_fname, 'rb');
 
         if (strlen($path) > 0)
         {
             $vfs->write($path, function($length) use (&$f) {
+                if (feof($f))
+                    return false;
                 return $f->fread($length);
             });
         }
          else
         {
             $outstream = $process->getStdout();
+            $outstream->setMimeType(\Flexio\Base\ContentType::ZIP);
             $writer = $outstream->getWriter();
 
-            while (($buf = fread($f, 32768)) !== false)
+            while (!feof($f))
             {
+                $buf = fread($f, 32768);
                 $writer->write($buf);
             }
         }
