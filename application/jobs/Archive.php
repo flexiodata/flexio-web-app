@@ -33,10 +33,13 @@ class Archive extends \Flexio\Jobs\Base
         $params = $this->getJobParameters();
         $path = $params['path'] ?? '';
         $files = $params['files'] ?? '';
+        $format = $params['format'] ?? 'zip';
 
         if (is_string($files))
             $files = \Flexio\Base\Util::filterArrayEmptyValues(explode(',', $files));
 
+        if ($format != 'zip')
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Unknown value for 'format' parameter. ");
 
         $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
         $archive_fname = $storage_tmpbase . "tmparchive-" . \Flexio\Base\Util::generateRandomString(30);
