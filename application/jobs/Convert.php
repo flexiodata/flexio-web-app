@@ -221,6 +221,42 @@ class Convert extends \Flexio\Jobs\Base
             $streamwriter->close();
             $outstream->setSize($streamwriter->getBytesWritten());
         }
+         else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
+        {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $streamreader = $instream->getReader();
+            $rows = [];
+            while (($row = $streamreader->readRow()) !== false)
+            {
+                if ($row === false)
+                    break;
+                $rows[] = $row;
+            }
+
+            $worksheet->fromArray($rows);
+
+            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            switch ($output_mime_type)
+            {
+                default:
+                case \Flexio\Base\ContentType::XLSX: $spreadsheet_fname .= '.xlsx'; break;
+                case \Flexio\Base\ContentType::XLS:  $spreadsheet_fname .= '.xls'; break;
+                case \Flexio\Base\ContentType::ODS:  $spreadsheet_fname .= '.ods'; break;
+            }
+
+            register_shutdown_function('unlink', $spreadsheet_fname);
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save($spreadsheet_fname);
+            $writer = null;
+            $spreadsheet = null;
+
+            $contents = file_get_contents($spreadsheet_fname);
+            $streamwriter->write($contents);
+        }
          else
         {
             $delimiter = $job_params['output']['delimiter'] ?? self::DELIMITER_COMMA;
@@ -1296,7 +1332,7 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::FLEXIO_TABLE;
         else if ($format == 'xls')
             return \Flexio\Base\ContentType::XLS;
-        else if ($format == 'xlsx' || $format == 'excel')
+        else if ($format == 'xlsx' || $format == 'excel' || $format == 'spreadsheet')
             return \Flexio\Base\ContentType::XLSX;
         else if ($format == 'ods')
             return \Flexio\Base\ContentType::ODS;
