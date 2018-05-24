@@ -164,6 +164,13 @@ class Convert extends \Flexio\Jobs\Base
                 $this->createOutputFromCsvInput($instream, $outstream, $output_content_type_from_definition);
                 return;
 
+            case 'spreadsheet':
+            case \Flexio\Base\ContentType::ODS:
+            case \Flexio\Base\ContentType::XLS:
+            case \Flexio\Base\ContentType::XLSX:
+                $this->createOutputFromSpreadsheetInput($instream, $outstream, $output_content_type_from_definition);
+                return;
+            
             // text input
             case \Flexio\Base\ContentType::TEXT:
                 $this->createOutputFromFixedLengthInput($instream, $outstream, $output_content_type_from_definition);
@@ -723,6 +730,70 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
+
+
+    private function createOutputFromSpreadsheetInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
+    {
+        $reader = $instream->getReader();
+
+        $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+        $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+        register_shutdown_function('unlink', $spreadsheet_fname);
+
+        $f = fopen($spreadsheet_fname, 'wb');
+        while (($piece = $reader->read(16384)) !== false)
+        {
+            fwrite($f, $piece);
+        }
+        fclose($f);
+
+        $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($spreadsheet_fname);
+
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray();
+
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $rown = 0;
+
+            // transfer the data
+            $streamwriter = $outstream->getWriter();
+            $streamwriter->write(json_encode($rows));
+            $streamwriter->close();
+
+            // input/output
+            $outstream->set([
+                'mime_type' => \Flexio\Base\ContentType::JSON,
+                'size' => $streamwriter->getBytesWritten()
+            ]);
+        }
+         else
+        {
+            // set the output structure and write the rows
+            $structure = self::determineStructureFromJsonArray($rows);
+            if ($structure === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            
+            // input/output
+            $outstream->set([
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                'structure' => $structure
+            ]);
+
+            $streamwriter = $outstream->getWriter();
+
+            foreach($rows as $row)
+            {
+                $streamwriter->write($row);
+            }
+
+            $streamwriter->close();
+        }
+    }
+
+
+
     private function createOutputFromFixedLengthInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream) : void
     {
         // parameters
@@ -1115,11 +1186,19 @@ class Convert extends \Flexio\Jobs\Base
 
         $structure = array();
 
+        $idx = 0;
+
         $first_item = $items[0];
         foreach ($first_item as $key => $value)
         {
+            $idx++;
+            if (is_numeric($key))
+                $name = 'field' . $idx;
+                 else
+                $name = $key;
+
             $structure[] = array(
-                'name'  => $key,
+                'name'  => $name,
                 'type'  => 'text',
                 'width' => null,
                 'scale' => 0
@@ -1190,6 +1269,12 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::PDF;
         else if ($format == self::FORMAT_TABLE)
             return \Flexio\Base\ContentType::FLEXIO_TABLE;
+        else if ($format == 'xls')
+            return \Flexio\Base\ContentType::XLS;
+        else if ($format == 'xlsx' || $format == 'excel')
+            return \Flexio\Base\ContentType::XLSX;
+        else if ($format == 'ods')
+            return \Flexio\Base\ContentType::ODS;
         else
             return false;
     }
@@ -1209,6 +1294,12 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::PDF;
         else if ($format == self::FORMAT_TABLE)
             return \Flexio\Base\ContentType::FLEXIO_TABLE;
+        else if ($format == 'xls')
+            return \Flexio\Base\ContentType::XLS;
+        else if ($format == 'xlsx' || $format == 'excel')
+            return \Flexio\Base\ContentType::XLSX;
+        else if ($format == 'ods')
+            return \Flexio\Base\ContentType::ODS;
         else
             return false;
     }

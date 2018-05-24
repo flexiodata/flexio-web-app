@@ -178,6 +178,49 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 */
     }
 
+
+    public function listWithWildcard(string $path = '', array $options = []) : array
+    {
+        $parts = \Flexio\Base\File::splitPath($path);
+        $lastpart = array_pop($parts);
+
+        foreach ($parts as $part)
+        {
+            if (strpos($part, '*') !== false)
+            {
+                // only the last part of the path may contain a wildcard
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
+            }
+        }
+
+        $wildcard = null;
+        if ($lastpart !== null)
+        {
+            if (strpos($lastpart, '*') !== false)
+                $wildcard = $lastpart;
+                else
+                $parts[] = $lastpart;
+        }
+
+        $path = '/' . implode('/', $parts);
+
+        $files = $this->list($path);
+
+        $results = [];
+        foreach ($files as $f)
+        {
+            if ($wildcard !== null)
+            {
+                if (!\Flexio\Base\File::matchPath($f['name'], $wildcard, false))
+                    continue;
+            }
+
+            $results[] = $f;
+        }
+
+        return $results;
+    }
+
     public function getFileInfo(string $path) : array
     {
         $arr = $this->splitPath($path);

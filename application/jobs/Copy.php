@@ -165,20 +165,7 @@ class Copy extends \Flexio\Jobs\Base
 
         $process_owner_eid = $process->getOwner();
         $subprocess->setOwner($process_owner_eid);
-        $subprocess->execute([ 'op' => 'read', 'params' => [ 'path' => $from ] ]);
-        $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);  // executes can be chained; stdout of previous execute becomes stdin of next
-/*
-        $data = \Flexio\Base\Stream::create();
-
-        $subprocess = \Flexio\Jobs\Process::create();
-        $subprocess->setOwner($process_owner_eid);
-        $subprocess->setStdout($data);
-        $subprocess->execute([ 'op' => 'read', 'params' => [ 'path' => $from ] ]);
-
-        $subprocess = \Flexio\Jobs\Process::create();
-        $subprocess->setOwner($process_owner_eid);
-        $subprocess->setStdin($data);
-        $subprocess->execute([ 'op' => 'write', 'params' => [ 'path' => $to ] ]);
-*/
+        $subprocess->execute([ 'op' => 'read', 'path' => $from ]);
+        $subprocess->execute([ 'op' => 'write', 'path' => $to ]);  // executes can be chained; stdout of previous execute becomes stdin of next
     }
 }

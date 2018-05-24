@@ -22,6 +22,9 @@ RUN pip3 install matplotlib
 RUN pip3 install plotly
 RUN pip3 install pandas
 
+# excel support
+RUN pip3 install openpyxl
+
 # web scraping, html parsing
 #RUN pip3 install scrapy                     >> /root/fxpython/Dockerfile
 RUN pip3 install beautifulsoup4

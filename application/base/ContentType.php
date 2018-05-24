@@ -39,6 +39,7 @@ class ContentType
     public const SVG           = 'image/svg+xml';
     public const TIFF          = 'image/tiff';
     public const TEXT          = 'text/plain';
+    public const ODS           = 'application/vnd.oasis.opendocument.spreadsheet';
     public const XLS           = 'application/vnd.ms-excel';
     public const XLSX          = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     public const XML           = 'application/xml';
