@@ -256,6 +256,12 @@ class Convert extends \Flexio\Jobs\Base
 
             $contents = file_get_contents($spreadsheet_fname);
             $streamwriter->write($contents);
+
+            // input/output
+            $outstream->set([
+                'mime_type' => $output_mime_type,
+                'size' => strlen($contents)
+            ]);
         }
          else
         {
@@ -457,25 +463,66 @@ class Convert extends \Flexio\Jobs\Base
         // flatten the json
         $items = \Flexio\Base\Mapper::flatten($buffer);
 
-        // set the output structure and write the rows
-        $structure = self::determineStructureFromJsonArray($items);
-        if ($structure === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-        // input/output
-        $outstream->set([
-            'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
-            'structure' => $structure
-        ]);
-
-        $streamwriter = $outstream->getWriter();
-
-        foreach($items as $i)
+        if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
         {
-            $streamwriter->write($i);
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $worksheet->fromArray($items);
+
+            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            switch ($output_mime_type)
+            {
+                default:
+                case \Flexio\Base\ContentType::XLSX: $spreadsheet_fname .= '.xlsx'; break;
+                case \Flexio\Base\ContentType::XLS:  $spreadsheet_fname .= '.xls'; break;
+                case \Flexio\Base\ContentType::ODS:  $spreadsheet_fname .= '.ods'; break;
+            }
+
+            register_shutdown_function('unlink', $spreadsheet_fname);
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save($spreadsheet_fname);
+            $writer = null;
+            $spreadsheet = null;
+
+            $contents = file_get_contents($spreadsheet_fname);
+            
+            $streamwriter = $outstream->getWriter();
+            $streamwriter->write($contents);
+
+            // input/output
+            $outstream->set([
+                'mime_type' => $output_mime_type,
+                'size' => strlen($contents)
+            ]);
+        }
+         else
+        {
+            // set the output structure and write the rows
+            $structure = self::determineStructureFromJsonArray($items);
+            if ($structure === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            // input/output
+            $outstream->set([
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                'structure' => $structure
+            ]);
+
+            $streamwriter = $outstream->getWriter();
+
+            foreach($items as $i)
+            {
+                $streamwriter->write($i);
+            }
+
+            $streamwriter->close();
         }
 
-        $streamwriter->close();
+
     }
 
     private function createOutputFromCsvInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
