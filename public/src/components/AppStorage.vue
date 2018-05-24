@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading storage items..."></spinner>
+      <Spinner size="large" message="Loading storage items..." />
     </div>
   </div>
   <div class="flex flex-column" v-else>
@@ -18,12 +18,12 @@
     </div>
 
     <div class="flex flex-row h-100" v-if="connections.length > 0">
-      <abstract-list
+      <AbstractList
         ref="list"
         class="br b--black-05 overflow-y-auto"
         layout="list"
         item-component="AbstractConnectionChooserItem"
-        :auto-select-item="true"
+        :selected-item.sync="connection"
         :items="connections"
         :item-options="{
           'item-cls': 'min-w5 pa3 pr2 darken-05',
@@ -35,7 +35,7 @@
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
-        <file-chooser
+        <FileChooser
           class="pa2"
           :connection="connection"
           v-if="has_connection"
@@ -43,10 +43,10 @@
       </div>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
-      <empty-item>
+      <EmptyItem>
         <i slot="icon" class="material-icons">repeat</i>
         <span slot="text">No storage items to show</span>
-      </empty-item>
+      </EmptyItem>
     </div>
   </div>
 </template>
@@ -126,8 +126,7 @@
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
+          if (response.ok) {
             modal.close()
 
             // try to connect to the connection
@@ -138,9 +137,7 @@
               var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
               this.$store.track('Created Connection', analytics_payload)
             }
-          }
-           else
-          {
+          } else {
             // TODO: add error handling
           }
         })

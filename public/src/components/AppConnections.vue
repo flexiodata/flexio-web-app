@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading connections..."></spinner>
+      <Spinner size="large" message="Loading connections..." />
     </div>
   </div>
   <div class="flex flex-column" v-else>

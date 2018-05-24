@@ -76,12 +76,14 @@
           path += '/'+name
 
           // show the folder name
-          if (idx++ > 0)
+          if (idx++ > 0) {
             return { name, path, is_connection: false }
+          }
 
           // show the service icon and name
-          if (name === _.get(this.connection, 'eid') || name === _.get(this.connection, 'alias'))
+          if (name === _.get(this.connection, 'eid') || name === _.get(this.connection, 'alias')) {
             return { name, path, is_connection: true }
+          }
         })
       }
     },
