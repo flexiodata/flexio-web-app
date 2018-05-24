@@ -1,6 +1,6 @@
 {
   "name": "flexio",
-  "version": "1.24.0",
+  "version": "1.25.0",
   "description": "Flex.io Client Web Application",
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
@@ -18,7 +18,7 @@
     "clipboard": "^1.5.16",
     "element-ui": "2.2.0",
     "filesize": "^3.3.0",
-    "flexio-sdk-js": "^1.28.0",
+    "flexio-sdk-js": "^1.28.1",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "moment": "^2.17.1",
