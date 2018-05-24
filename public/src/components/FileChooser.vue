@@ -123,7 +123,7 @@
       },
       refreshFromConnection(connection) {
         // do a hard refresh of the file list
-        this.connection_path = false
+        this.connection_path = this.getConnectionBasePath()
         this.$nextTick(() => { this.openFolder() })
       },
       updateItems(items, path) {

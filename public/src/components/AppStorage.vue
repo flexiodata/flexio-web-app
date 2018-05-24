@@ -126,8 +126,7 @@
 
         // update the connection and make it available
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
+          if (response.ok) {
             modal.close()
 
             // try to connect to the connection
@@ -138,9 +137,7 @@
               var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
               this.$store.track('Created Connection', analytics_payload)
             }
-          }
-           else
-          {
+          } else {
             // TODO: add error handling
           }
         })
