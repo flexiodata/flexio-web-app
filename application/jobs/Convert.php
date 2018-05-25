@@ -247,21 +247,21 @@ class Convert extends \Flexio\Jobs\Base
             $worksheet->fromArray($rows);
 
 
-
-
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
             switch ($output_mime_type)
             {
                 default:
-                case \Flexio\Base\ContentType::XLSX: $spreadsheet_fname .= '.xlsx'; break;
-                case \Flexio\Base\ContentType::XLS:  $spreadsheet_fname .= '.xls'; break;
-                case \Flexio\Base\ContentType::ODS:  $spreadsheet_fname .= '.ods'; break;
+                case \Flexio\Base\ContentType::XLSX: $format = 'Xlsx'; break;
+                case \Flexio\Base\ContentType::XLS:  $format = 'Xls';  break;
+                case \Flexio\Base\ContentType::ODS:  $format = 'Ods';  break;
             }
+
+            $spreadsheet_fname .= ('.' . strtolower($format));
 
             register_shutdown_function('unlink', $spreadsheet_fname);
 
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, $format);
             $writer->save($spreadsheet_fname);
             $writer = null;
             $spreadsheet = null;
@@ -505,14 +505,16 @@ class Convert extends \Flexio\Jobs\Base
             switch ($output_mime_type)
             {
                 default:
-                case \Flexio\Base\ContentType::XLSX: $spreadsheet_fname .= '.xlsx'; break;
-                case \Flexio\Base\ContentType::XLS:  $spreadsheet_fname .= '.xls'; break;
-                case \Flexio\Base\ContentType::ODS:  $spreadsheet_fname .= '.ods'; break;
+                case \Flexio\Base\ContentType::XLSX: $format = 'Xlsx'; break;
+                case \Flexio\Base\ContentType::XLS:  $format = 'Xls'; break;
+                case \Flexio\Base\ContentType::ODS:  $format = 'Ods'; break;
             }
+
+            $spreadsheet_fname .= ('.' . strtolower($format));
 
             register_shutdown_function('unlink', $spreadsheet_fname);
 
-            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, $format);
             $writer->save($spreadsheet_fname);
             $writer = null;
             $spreadsheet = null;
