@@ -353,10 +353,6 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromRssAtom(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\Base\ContentType::FLEXIO_TABLE);
-
         $structure = [
             [ 'name' => 'link', 'type' => 'text' ],
             [ 'name' => 'title', 'type' => 'text' ],
@@ -367,7 +363,9 @@ class Convert extends \Flexio\Jobs\Base
             [ 'name' => 'date', 'type' => 'text' ]
         ];
 
-        $outstream->setStructure($structure);
+        $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                         'structure' => $structure]);
+
         $streamreader = $instream->getReader();
         $streamwriter = $outstream->getWriter();
 
