@@ -563,7 +563,18 @@ class Convert extends \Flexio\Jobs\Base
         $streamwriter = null;
 
         $delimiter = $job_params['input']['delimiter'] ?? self::DELIMITER_COMMA;
-        $is_output_json = ($output_mime_type == \Flexio\Base\ContentType::JSON ? true : false);
+
+        $output = 'table';
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+            $output = 'json';
+        else if ($output_mime_type == \Flexio\Base\ContentType::XLSX || $output_mime_type == \Flexio\Base\ContentType::XLS || $output_mime_type == \Flexio\Base\ContentType::ODS)
+            $output = 'spreadsheet';
+        else
+            $output_mime_type = \Flexio\Base\ContentType::FLEXIO_TABLE;
+
+        $spreadsheet_output = [];
+        $total_json_size = 0;
 
         $header = toBoolean($job_params['input']['header'] ?? true);
         $qualifier = $job_params['input']['qualifier'] ?? self::TEXT_QUALIFIER_DOUBLE_QUOTE;
@@ -607,16 +618,18 @@ class Convert extends \Flexio\Jobs\Base
 
         // get the input
         $streamreader = $instream->getReader();
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType($is_output_json ? \Flexio\Base\ContentType::JSON : \Flexio\Base\ContentType::FLEXIO_TABLE);
 
-        if ($is_output_json)
+
+        if ($output == 'json')
         {
             // for json output, streamwriter is created here; for table output, streamwriter
             // is created below, because header row must be collected in advance
             $streamwriter = $outstream->getWriter();
             $streamwriter->write("[");
+        }
+         else if ($output == 'spreadsheet')
+        {
+            $streamwriter = $outstream->getWriter();
         }
 
         // parse each row into a table
@@ -792,10 +805,17 @@ class Convert extends \Flexio\Jobs\Base
             if (!$is_icsv)
                 self::updateStructureFromRow($structure, $row);
 
-            if ($is_output_json)
+            if ($output == 'json')
             {
                 $row = json_encode($row);
-                $result = $streamwriter->write(($rown>0?",\n":"\n") . $row);
+                $buf = ($rown>0?",\n":"\n") . $row;
+                $total_json_size += strlen($buf);
+                $result = $streamwriter->write($buf);
+            }
+             else if ($output == 'spreadsheet')
+            {
+                $spreadsheet_output[] = array_values($row);
+                $result = true;
             }
              else
             {
@@ -812,32 +832,86 @@ class Convert extends \Flexio\Jobs\Base
         // make sure the buffer is flushed before converting values
         if (isset($streamwriter))
         {
-            if ($is_output_json)
+            if ($output == 'json')
             {
                 $streamwriter->write("\n]");
             }
+            else if ($output == 'table')
+            {
+                $result = $streamwriter->close();
 
-            $result = $streamwriter->close();
+                if ($result === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-            if ($result === false)
+                $outstream->setSize($streamwriter->getBytesWritten());
+            }
+        }
+
+
+        if ($output == 'spreadsheet')
+        {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $worksheet = $spreadsheet->getActiveSheet();
+
+            $structure = self::determineStructureFromJsonArray($spreadsheet_output);
+            if ($structure === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
-            $outstream->setSize($streamwriter->getBytesWritten());
+            $job_params = $this->getJobParameters();
+            $header = toBoolean($job_params['output']['header'] ?? true);
+            if ($header && count($spreadsheet_output) > 0)
+            {
+                $header_row = array_column($structure, 'name');
+                array_unshift($spreadsheet_output, $header_row);
+            }
+
+            $worksheet->fromArray($spreadsheet_output);
+
+            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
+            switch ($output_mime_type)
+            {
+                default:
+                case \Flexio\Base\ContentType::XLSX: $format = 'Xlsx'; break;
+                case \Flexio\Base\ContentType::XLS:  $format = 'Xls'; break;
+                case \Flexio\Base\ContentType::ODS:  $format = 'Ods'; break;
+            }
+
+            $spreadsheet_fname .= ('.' . strtolower($format));
+
+            register_shutdown_function('unlink', $spreadsheet_fname);
+
+            $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, $format);
+            $writer->save($spreadsheet_fname);
+            $writer = null;
+            $spreadsheet = null;
+
+            $contents = file_get_contents($spreadsheet_fname);
+            
+            $streamwriter->write($contents);
+
+            // input/output
+            $outstream->set([
+                'mime_type' => $output_mime_type,
+                'size' => strlen($contents)
+            ]);
         }
 
-        // change the structure if the flag is set
-/*
-        if ($determine_structure)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        }
-*/
-
-        if (!$is_output_json)
+        if ($output == 'table')
         {
             $output_properties = array(
                 'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
                 'structure' => $structure
+            );
+
+            $outstream->set($output_properties);
+        }
+
+        if ($output == 'json')
+        {
+            $output_properties = array(
+                'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                'size' => $total_json_size
             );
 
             $outstream->set($output_properties);
