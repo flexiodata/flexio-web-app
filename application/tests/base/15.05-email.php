@@ -43,19 +43,19 @@ class Test
         // TEST: stream parsing; empty input
 
         // BEGIN TEST
-        $email = \Flexio\Services\NoticeEmail::parseFile('');
+        $email = \Flexio\Base\Email::parseFile('');
         $actual = get_class($email);
-        $expected = 'Flexio\Services\NoticeEmail';
-        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Services\NoticeEmail::parseStream(); basic test', $actual, $expected, $results);
+        $expected = 'Flexio\Base\Email';
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Base\Email::parseFile(); basic test', $actual, $expected, $results);
 
 
         // TEST: content parsing; "from" information
 
         // BEGIN TEST
         $file = getTestEmailFile('m0001.txt');
-        $email = \Flexio\Services\NoticeEmail::parseFile($file);
+        $email = \Flexio\Base\Email::parseFile($file);
         $actual = $email->getFrom();
         $expected = '["Doug Sauder <doug@example.com>"]';
-        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Services\NoticeEmail::parseText(); get the "from" addresses', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\Email::parseText(); get the "from" addresses', $actual, $expected, $results);
     }
 }

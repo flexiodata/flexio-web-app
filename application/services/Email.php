@@ -12,10 +12,6 @@
  */
 
 
-// email processing involves parsing the email; to parse emails,
-// the following library is used:  https://github.com/zbateson/MailMimeParser
-
-
 declare(strict_types=1);
 namespace Flexio\Services;
 
@@ -33,13 +29,11 @@ class Email
     private $msg_htmlembedded;
     private $attachments;
 
-
     private $protocol;
     private $host;
     private $port;
     private $username;
     private $password;
-
 
     public static function create(array $params = null) : \Flexio\Services\Email
     {
@@ -49,79 +43,6 @@ class Email
         $service = new self;
         $service->initialize($params);
         return $service;
-    }
-
-    public static function parseText(string $content) : \Flexio\Services\Email
-    {
-        // parse the string content
-        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
-        $message = $parser->parse($content);
-
-        // create the email with the parsed values
-        $email = new self;
-        $email->initializeFromParsedMessage($message);
-
-        return $email;
-    }
-
-    public static function parseFile(string $path) : \Flexio\Services\Email
-    {
-        $email = new self;
-
-        if (strlen($path) === 0)
-            return $email;
-
-        // open the file
-        $handle = fopen($path, 'r');
-        if ($handle === false)
-            return $email;
-
-        // parse the file contents
-        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
-        $message = $parser->parse($handle);
-        fclose($handle);
-
-        // create the email with the parsed values
-        $email = new self;
-        $email->initializeFromParsedMessage($message);
-
-        return $email;
-    }
-
-    public static function parseResource($handle) : \Flexio\Services\Email
-    {
-        // parse the stream
-        $parser = new \ZBateson\MailMimeParser\MailMimeParser;
-        $message = $parser->parse($handle);
-
-        // create the email with the parsed values
-        $email = new self;
-        $email->initializeFromParsedMessage($message);
-
-        return $email;
-    }
-
-    // splits an address list like:  [  "First Last <first.last@email.com>" ] into
-    //                               [ { "display" => "First Last", "email" => "first.last@email.com" } ]
-
-    public static function splitAddressList(array $arr) : array
-    {
-        $ret = [];
-        foreach ($arr as $a)
-            $ret[] = self::splitAddress($a);
-        return $ret;
-    }
-
-    public static function splitAddress(string $str) : array
-    {
-        $pos = strpos($str, '<');
-        if ($pos === false)
-            return array("display" => $str, "email" => $str);
-
-        $ret = [];
-        $ret['display'] = trim(substr($str, 0, $pos), " \t\n\r\0\x0B<>'\"");
-        $ret['email'] = trim(substr($str, $pos+1), " \t\n\r\0\x0B<>'\"");
-        return $ret;
     }
 
     public static function setEmail(array $params = null)
@@ -348,78 +269,6 @@ class Email
         $this->host = ($params['host'] ?? '');
         $this->username = ($params['username'] ?? '');
         $this->password = ($params['password'] ?? '');
-    }
-
-    private function initializeFromParsedMessage(\ZBateson\MailMimeParser\Message $message) : void
-    {
-        // start with a clean slate
-        $this->initialize();
-
-        // get the 'from' address headers
-        $from_header = $message->getHeader('from');
-        if ($from_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
-        {
-            $from = array();
-            $addresses = $from_header->getParts();
-            foreach ($addresses as $a)
-            {
-                $display = $a->getName();
-                $address = $a->getEmail();
-                $from[] = "$display <$address>";
-            }
-            $this->setFrom($from);
-        }
-
-        // get the 'to' address headers
-        $to_header = $message->getHeader('to');
-        if ($to_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
-        {
-            $to = array();
-            $addresses = $to_header->getParts();
-            foreach ($addresses as $a)
-            {
-                $display = $a->getName();
-                $address = $a->getEmail();
-                $to[] = "$display <$address>";
-            }
-            $this->setTo($to);
-        }
-
-        // get the "cc"
-        $this->setCC(''); // TODO: populate
-
-        // get the "bcc"
-        $this->setBCC(''); // TODO: populate
-
-        // get the "replyto"
-        $this->setReplyTo(''); // TODO: populate
-
-        // get the subject
-        $subject = $message->getHeaderValue('subject') ?? '';
-        $this->setSubject($subject);
-
-        // get the body
-        $txtcontent = $message->getTextContent() ?? '';
-        $this->setMessageText($txtcontent);
-
-        $htmlcontent = $message->getHtmlContent() ?? '';
-        $this->setMessageHtml($htmlcontent);
-        $this->setMessageHtmlEmbedded($htmlcontent);
-
-        // get the attachments
-        $attachments = $message->getAllAttachmentParts();
-        $this->attachments = [];
-        foreach ($attachments as $attachment)
-        {
-            $att = array(
-                'mime_type' => $attachment->getHeaderValue('Content-Type', 'application/octet-stream'),
-                'name' => $attachment->getHeaderParameter('Content-Type', 'name') ?? null,
-                'file' => null,
-                'content' => stream_get_contents($attachment->getContentResourceHandle())
-            );
-
-            $this->addAttachment($att);
-        }
     }
 
     public function send() : bool

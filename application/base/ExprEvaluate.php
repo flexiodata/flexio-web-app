@@ -1208,7 +1208,7 @@ TODO: remove deprecated implementation; following was split into two functions,
                 return true;
 
             case 'email':
-                $retval = \Flexio\Base\Email::isValid($param0);
+                $retval = \Flexio\Base\Util::isValidEmail($param0);
                 break;
 
             case 'english':
