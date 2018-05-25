@@ -58,6 +58,7 @@ class Convert extends \Flexio\Jobs\Base
     public const FORMAT_FIXED_LENGTH   = 'fixed';
     public const FORMAT_JSON           = 'json';
     public const FORMAT_RSS            = 'rss';
+    public const FORMAT_ATOM           = 'atom';
     public const FORMAT_PDF            = 'pdf';
     public const FORMAT_TABLE          = 'table';
 
@@ -150,6 +151,7 @@ class Convert extends \Flexio\Jobs\Base
 
             // rss input
             case \Flexio\Base\ContentType::RSS:
+            case \Flexio\Base\ContentType::ATOM:
                 $this->createOutputFromRssAtom($instream, $outstream, $output_content_type_from_definition);
                 return;
 
@@ -353,23 +355,8 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromRssAtom(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
-        $outstream->set($instream->get());
-        $outstream->setPath(\Flexio\Base\Util::generateHandle());
-        $outstream->setMimeType(\Flexio\Base\ContentType::FLEXIO_TABLE);
 
-        $structure = [
-            [ 'name' => 'link', 'type' => 'text' ],
-            [ 'name' => 'title', 'type' => 'text' ],
-            [ 'name' => 'description', 'type' => 'text' ],
-            [ 'name' => 'content', 'type' => 'text' ],
-            [ 'name' => 'source', 'type' => 'text' ],
-            [ 'name' => 'author', 'type' => 'text' ],
-            [ 'name' => 'date', 'type' => 'text' ]
-        ];
-
-        $outstream->setStructure($structure);
         $streamreader = $instream->getReader();
-        $streamwriter = $outstream->getWriter();
 
 
         $rss_payload = '';
@@ -387,7 +374,32 @@ class Convert extends \Flexio\Jobs\Base
 
         $feed->init();
         $feed->handle_content_type();
-        $items = $feed->get_items();
+        $items = @$feed->get_items();
+
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $streamwriter = $outstream->getWriter();
+            $rows = [];
+        }
+         else
+        {
+            $structure = [
+                [ 'name' => 'link', 'type' => 'text' ],
+                [ 'name' => 'title', 'type' => 'text' ],
+                [ 'name' => 'description', 'type' => 'text' ],
+                [ 'name' => 'content', 'type' => 'text' ],
+                [ 'name' => 'source', 'type' => 'text' ],
+                [ 'name' => 'author', 'type' => 'text' ],
+                [ 'name' => 'date', 'type' => 'text' ]
+            ];
+    
+            $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                             'structure' => $structure]);
+    
+            $streamwriter = $outstream->getWriter();
+        }
+
 
         foreach ($items as $item)
         {
@@ -401,7 +413,24 @@ class Convert extends \Flexio\Jobs\Base
                 'date' => $item->get_date()
             );
 
-            $streamwriter->write($row);
+            if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+            {
+                $rows[] = $row;
+            }
+            else if ($output_mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
+            {
+                $streamwriter->write($row);
+            }
+        }
+
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $json = json_encode($rows);
+            $streamwriter->write($json);
+
+            $outstream->set(['mime_type' => \Flexio\Base\ContentType::JSON,
+                             'size' => strlen($json)]);
         }
     }
 
@@ -1473,6 +1502,8 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::JSON;
         else if ($format == self::FORMAT_RSS)
             return \Flexio\Base\ContentType::RSS;
+        else if ($format == self::FORMAT_ATOM)
+            return \Flexio\Base\ContentType::ATOM;
         else if ($format == self::FORMAT_PDF)
             return \Flexio\Base\ContentType::PDF;
         else if ($format == self::FORMAT_TABLE)

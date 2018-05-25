@@ -35,6 +35,7 @@ class ContentType
     public const PDF           = 'application/pdf';
     public const PNG           = 'image/png';
     public const RSS           = 'application/rss+xml';
+    public const ATOM          = 'application/atom+xml';
     public const STREAM        = 'application/octet-stream';
     public const SVG           = 'image/svg+xml';
     public const TIFF          = 'image/tiff';
