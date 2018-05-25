@@ -93,11 +93,6 @@ class Test
         \Flexio\Tests\Check::assertString('A.17', 'Type constant',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Services\Factory::TYPE_RSS;
-        $expected = 'rss';
-        \Flexio\Tests\Check::assertString('A.18', 'Type constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Services\Factory::TYPE_SOCRATA;
         $expected = 'socrata';
         \Flexio\Tests\Check::assertString('A.19', 'Type constant',  $actual, $expected, $results);

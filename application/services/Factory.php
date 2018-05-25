@@ -35,7 +35,6 @@ class Factory
     public const TYPE_EMAIL         = 'email';
     public const TYPE_SMTP          = 'smtp';
     public const TYPE_HTTP          = 'http';
-    public const TYPE_RSS           = 'rss';
     public const TYPE_SOCRATA       = 'socrata';
     public const TYPE_PIPELINEDEALS = 'pipelinedeals';
     public const TYPE_MAILJET       = 'mailjet';
@@ -68,13 +67,6 @@ class Factory
                         // TODO: add parameters for basic auth?
                     );
                     $service = \Flexio\Services\Http::create($auth_params);
-                break;
-
-            case self::TYPE_RSS:
-                    $auth_params = array(
-                        // TODO: add parameters for basic auth?
-                    );
-                    $service = \Flexio\Services\Rss::create($auth_params);
                 break;
 
             case self::TYPE_FTP:

@@ -170,7 +170,7 @@ class Convert extends \Flexio\Jobs\Base
             case \Flexio\Base\ContentType::XLSX:
                 $this->createOutputFromSpreadsheetInput($instream, $outstream, $output_content_type_from_definition);
                 return;
-            
+
             // text input
             case \Flexio\Base\ContentType::TEXT:
                 $this->createOutputFromFixedLengthInput($instream, $outstream, $output_content_type_from_definition);
@@ -379,10 +379,30 @@ class Convert extends \Flexio\Jobs\Base
         }
 
 
-        $rss = new \Flexio\Services\Rss;
-        $rss->read(array('data'=> $rss_payload), function ($row) use (&$streamwriter) {
-            $result = $streamwriter->write($row);
-        });
+        require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'library'. DIRECTORY_SEPARATOR .'simplepie'. DIRECTORY_SEPARATOR . 'autoloader.php';
+
+        $feed = new \SimplePie();
+        $feed->enable_cache(false);
+        $feed->set_raw_data($rss_payload);
+
+        $feed->init();
+        $feed->handle_content_type();
+        $items = $feed->get_items();
+
+        foreach ($items as $item)
+        {
+            $row = array(
+                'link' => $item->get_link(),
+                'title' => $item->get_title(),
+                'description' => html_entity_decode(strip_tags($item->get_description())),
+                'content' => $item->get_content(),
+                'source' => $item->get_source(),
+                'author' => $item->get_author(),
+                'date' => $item->get_date()
+            );
+
+            $streamwriter->write($row);
+        }
     }
 
     private function createOutputFromPdfInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
@@ -520,7 +540,7 @@ class Convert extends \Flexio\Jobs\Base
             $spreadsheet = null;
 
             $contents = file_get_contents($spreadsheet_fname);
-            
+
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($contents);
 
@@ -887,7 +907,7 @@ class Convert extends \Flexio\Jobs\Base
             $spreadsheet = null;
 
             $contents = file_get_contents($spreadsheet_fname);
-            
+
             $streamwriter->write($contents);
 
             // input/output
@@ -962,7 +982,7 @@ class Convert extends \Flexio\Jobs\Base
             $structure = self::determineStructureFromJsonArray($rows);
             if ($structure === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
-            
+
             // input/output
             $outstream->set([
                 'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
