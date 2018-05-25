@@ -38,12 +38,6 @@ class NoticeEmail
     private $_aws = null;
     private $_ses = null;
 
-    public static function isValid(string $email) : bool
-    {
-        // checks if an email address is valid
-        return \Flexio\Base\Util::isValidEmail($email);
-    }
-
     public static function create(array $params = null) : \Flexio\Services\NoticeEmail
     {
         $email = new self;

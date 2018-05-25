@@ -312,7 +312,7 @@ class System
     private static function validateEmail(string $type, string $value, string &$message = '') : bool
     {
         // check for valid email
-        if (\Flexio\Services\NoticeEmail::isValid($value) === false)
+        if (\Flexio\Base\Email::isValid($value) === false)
         {
             $message = _('This email address must be formatted correctly.');
             return false;

@@ -380,7 +380,7 @@ class Validator
         if (!is_string($value))
             return false;
 
-        if (!\Flexio\Base\Util::isValidEmail($value))
+        if (!\Flexio\Base\Email::isValid($value))
             return false;
 
         return true;

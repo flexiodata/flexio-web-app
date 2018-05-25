@@ -41,14 +41,6 @@ class Email
     private $password;
 
 
-
-
-    public static function isValid(string $email) : bool
-    {
-        // checks if an email address is valid
-        return \Flexio\Base\Util::isValidEmail($email);
-    }
-
     public static function create(array $params = null) : \Flexio\Services\Email
     {
         if (!isset($params))
