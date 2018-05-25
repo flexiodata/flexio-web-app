@@ -58,6 +58,7 @@ class Convert extends \Flexio\Jobs\Base
     public const FORMAT_FIXED_LENGTH   = 'fixed';
     public const FORMAT_JSON           = 'json';
     public const FORMAT_RSS            = 'rss';
+    public const FORMAT_ATOM           = 'atom';
     public const FORMAT_PDF            = 'pdf';
     public const FORMAT_TABLE          = 'table';
 
@@ -150,6 +151,7 @@ class Convert extends \Flexio\Jobs\Base
 
             // rss input
             case \Flexio\Base\ContentType::RSS:
+            case \Flexio\Base\ContentType::ATOM:
                 $this->createOutputFromRssAtom($instream, $outstream, $output_content_type_from_definition);
                 return;
 
@@ -372,7 +374,7 @@ class Convert extends \Flexio\Jobs\Base
 
         $feed->init();
         $feed->handle_content_type();
-        @$items = $feed->get_items();
+        $items = @$feed->get_items();
 
 
         if ($output_mime_type == \Flexio\Base\ContentType::JSON)
@@ -1500,6 +1502,8 @@ class Convert extends \Flexio\Jobs\Base
             return \Flexio\Base\ContentType::JSON;
         else if ($format == self::FORMAT_RSS)
             return \Flexio\Base\ContentType::RSS;
+        else if ($format == self::FORMAT_ATOM)
+            return \Flexio\Base\ContentType::ATOM;
         else if ($format == self::FORMAT_PDF)
             return \Flexio\Base\ContentType::PDF;
         else if ($format == self::FORMAT_TABLE)
