@@ -353,21 +353,8 @@ class Convert extends \Flexio\Jobs\Base
 
     private function createOutputFromRssAtom(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
-        $structure = [
-            [ 'name' => 'link', 'type' => 'text' ],
-            [ 'name' => 'title', 'type' => 'text' ],
-            [ 'name' => 'description', 'type' => 'text' ],
-            [ 'name' => 'content', 'type' => 'text' ],
-            [ 'name' => 'source', 'type' => 'text' ],
-            [ 'name' => 'author', 'type' => 'text' ],
-            [ 'name' => 'date', 'type' => 'text' ]
-        ];
-
-        $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                         'structure' => $structure]);
 
         $streamreader = $instream->getReader();
-        $streamwriter = $outstream->getWriter();
 
 
         $rss_payload = '';
@@ -385,7 +372,32 @@ class Convert extends \Flexio\Jobs\Base
 
         $feed->init();
         $feed->handle_content_type();
-        $items = $feed->get_items();
+        @$items = $feed->get_items();
+
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $streamwriter = $outstream->getWriter();
+            $rows = [];
+        }
+         else
+        {
+            $structure = [
+                [ 'name' => 'link', 'type' => 'text' ],
+                [ 'name' => 'title', 'type' => 'text' ],
+                [ 'name' => 'description', 'type' => 'text' ],
+                [ 'name' => 'content', 'type' => 'text' ],
+                [ 'name' => 'source', 'type' => 'text' ],
+                [ 'name' => 'author', 'type' => 'text' ],
+                [ 'name' => 'date', 'type' => 'text' ]
+            ];
+    
+            $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                             'structure' => $structure]);
+    
+            $streamwriter = $outstream->getWriter();
+        }
+
 
         foreach ($items as $item)
         {
@@ -399,7 +411,24 @@ class Convert extends \Flexio\Jobs\Base
                 'date' => $item->get_date()
             );
 
-            $streamwriter->write($row);
+            if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+            {
+                $rows[] = $row;
+            }
+            else if ($output_mime_type == \Flexio\Base\ContentType::FLEXIO_TABLE)
+            {
+                $streamwriter->write($row);
+            }
+        }
+
+
+        if ($output_mime_type == \Flexio\Base\ContentType::JSON)
+        {
+            $json = json_encode($rows);
+            $streamwriter->write($json);
+
+            $outstream->set(['mime_type' => \Flexio\Base\ContentType::JSON,
+                             'size' => strlen($json)]);
         }
     }
 
