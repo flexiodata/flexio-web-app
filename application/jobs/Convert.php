@@ -232,10 +232,22 @@ class Convert extends \Flexio\Jobs\Base
             {
                 if ($row === false)
                     break;
-                $rows[] = $row;
+                $rows[] = array_values($row);
+            }
+
+
+            $header = toBoolean($job_params['output']['header'] ?? true);
+            if ($header && count($rows) > 0)
+            {
+                $structure = $instream->getStructure()->enum();
+                $header_row = array_column($structure, 'name');
+                array_unshift($rows, $header_row);
             }
 
             $worksheet->fromArray($rows);
+
+
+
 
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $spreadsheet_fname = $storage_tmpbase . "tmpspreadsheet-" . \Flexio\Base\Util::generateRandomString(30);
@@ -468,6 +480,23 @@ class Convert extends \Flexio\Jobs\Base
         {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
             $worksheet = $spreadsheet->getActiveSheet();
+
+
+            $structure = self::determineStructureFromJsonArray($items);
+            if ($structure === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+
+            foreach ($items as &$row)
+                $row = array_values($row);
+            unset($row);
+
+            $job_params = $this->getJobParameters();
+            $header = toBoolean($job_params['output']['header'] ?? true);
+            if ($header && count($items) > 0)
+            {
+                $header_row = array_column($structure, 'name');
+                array_unshift($items, $header_row);
+            }
 
             $worksheet->fromArray($items);
 
