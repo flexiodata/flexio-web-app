@@ -306,7 +306,7 @@ class Model
         }
         catch (\Exception $e)
         {
-            \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
         return $eid;

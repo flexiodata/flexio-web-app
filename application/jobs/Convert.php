@@ -393,10 +393,10 @@ class Convert extends \Flexio\Jobs\Base
                 [ 'name' => 'author', 'type' => 'text' ],
                 [ 'name' => 'date', 'type' => 'text' ]
             ];
-    
+
             $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
                              'structure' => $structure]);
-    
+
             $streamwriter = $outstream->getWriter();
         }
 
@@ -695,7 +695,6 @@ class Convert extends \Flexio\Jobs\Base
         $eof_reached = false;
         $first = true;
 
-
         while (true)
         {
             $row = false;
@@ -724,7 +723,6 @@ class Convert extends \Flexio\Jobs\Base
                     }
 
                     $buf_head = $lineend_pos + 1;
-
                     break;
                 }
                  else
@@ -739,6 +737,9 @@ class Convert extends \Flexio\Jobs\Base
                     {
                         // get any last row without LF
                         $row = substr($buf, $buf_head);
+                        if ($row === false)
+                            break;
+
                         $buf_head += strlen($row);
                         if (strlen($row) == 0)
                             $row = false;
@@ -811,7 +812,6 @@ class Convert extends \Flexio\Jobs\Base
             if ($first_row && $row === array(null)) // skip blank rows
                 continue;
 
-
             // if we're on the first row, try to determine the structure
             // and the initial writer
             if ($first_row)
@@ -857,9 +857,9 @@ class Convert extends \Flexio\Jobs\Base
             if ($output == 'json')
             {
                 $row = json_encode($row);
-                $buf = ($rown>0?",\n":"\n") . $row;
-                $total_json_size += strlen($buf);
-                $result = $streamwriter->write($buf);
+                $json = ($rown>0?",\n":"\n") . $row;
+                $total_json_size += strlen($json);
+                $result = $streamwriter->write($json);
             }
              else if ($output == 'spreadsheet')
             {
@@ -959,7 +959,7 @@ class Convert extends \Flexio\Jobs\Base
         if ($output == 'json')
         {
             $output_properties = array(
-                'mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
+                'mime_type' => \Flexio\Base\ContentType::JSON,
                 'size' => $total_json_size
             );
 

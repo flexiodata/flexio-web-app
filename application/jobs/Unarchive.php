@@ -28,13 +28,54 @@ class Unarchive extends \Flexio\Jobs\Base
         $outstream->copyFrom($instream);
 
         $params = $this->getJobParameters();
-        $msg = $params['msg'] ?? '';
+        $path = $params['path'] ?? '';
+        $files = $params['files'] ?? '';
+        $format = $params['format'] ?? 'zip';
 
-        if (is_array($msg) || is_object($msg))
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
+        $vfs->setProcess($process);
+
+
+        if ($format == 'gz' || $format == 'gzip')
         {
-            $msg = @json_encode($msg);
-        }
+            $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
+            $archive_fname = $storage_tmpbase . "tmpgz-" . \Flexio\Base\Util::generateRandomString(30) . ".gz";
+            register_shutdown_function('unlink', $archive_fname);
 
-        echo $msg;
+            $f = fopen($archive_fname, 'wb');
+    
+            if (isset($params['path']))
+            {
+                $files = $vfs->read($path, function($data) use (&$f) {
+                    fwrite($f, $data);
+                });
+            }
+             else
+            {
+                $reader = $instream->getReader();
+                while (($data = $reader->read(16384)) !== false)
+                {
+                    fwrite($f, $data);
+                }
+            }
+
+            fclose($f);
+    
+            $writer = $outstream->getWriter();
+
+            $f = gzopen($archive_fname, 'rb');
+
+            while (!gzeof($f)) {
+                $buf = gzread($f, 16384);
+                if (strlen($buf) > 0)
+                {
+                    $writer->write($buf);
+                }
+            }
+            
+            gzclose($f);
+            $writer->close();
+            unset($writer);
+        }
     }
 }
