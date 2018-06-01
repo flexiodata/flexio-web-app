@@ -8,10 +8,10 @@
       <i class="material-icons mid-gray md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
       <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
       <div class="flex flex-row items-center relative mr3">
-        <service-icon :type="ctype" class="br1 square-3" />
+        <service-icon class="br1 square-3" :type="ctype" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus">
-          <i class="el-icon-success dark-green bg-white br-100 f7" v-if="is_available"></i>
-          <i class="el-icon-error dark-red bg-white br-100 f7" v-else></i>
+          <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
+          <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
         </div>
       </div>
       <div class="flex-fill flex flex-column">

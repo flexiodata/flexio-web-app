@@ -14,8 +14,8 @@
       <div class="flex flex-row items-center relative mr3">
         <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_home">
-          <i class="el-icon-success dark-green bg-white br-100 f7" v-if="is_available"></i>
-          <i class="el-icon-error dark-red bg-white br-100 f7" v-else></i>
+          <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
+          <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
         </div>
       </div>
 
