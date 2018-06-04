@@ -109,6 +109,14 @@ class Util
 
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
+        if (false)
+        {
+            // debug mode for fixing tests
+            $process = \Flexio\Jobs\Process::create()->execute($tasks);
+            $response = $process->getStdout()->getReader()->read();
+            return [ 'code' => 200, 'content_type' => $process->getStdout()->getMimeType(), 'response' => $response ];
+        }
+
         // wraps up the creation of a process and the running of that process
         $params = json_encode(['task' => $tasks]);
         $result = self::callApi(array(
