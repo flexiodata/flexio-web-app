@@ -276,6 +276,12 @@ EOD;
         return $pipe->getEid();
     }
 
+    public static function createStream(string $test_file_local_path) : \Flexio\Base\Stream
+    {
+        $file = \Flexio\System\System::getTestDataDirectory() . $test_file_local_path;
+        return self::createStreamFromFile($file);
+    }
+
     public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
     {
         $f = @fopen($path, 'rb');
