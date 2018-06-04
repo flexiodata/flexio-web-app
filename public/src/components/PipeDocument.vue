@@ -162,7 +162,7 @@
               <Spinner size="large" message="Running pipe..." />
             </div>
             <div
-              v-else-if="last_stream_eid.length > 0 && !is_process_failed && false"
+              v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
             >
               <PipeContent
                 class="mt1"
@@ -171,7 +171,7 @@
               />
             </div>
             <div
-              v-else-if="is_superuser && is_process_failed && false"
+              v-else-if="has_run_once && is_superuser && is_process_failed"
             >
               <CodeEditor
                 class="mt1 bg-white ba b--black-10 overflow-y-auto"
@@ -285,6 +285,7 @@
           { value: 'json',    label: 'JSON'           },
           { value: 'yaml',    label: 'YAML'           }
         ],
+        has_run_once: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
         collapse_properties: ['properties'],
@@ -405,6 +406,9 @@
         })
 
         this.$store.dispatch('createProcess', { attrs }).then(response => {
+          // we've manually run the pipe once so we can now show an output result
+          this.has_run_once = true
+
           if (response.ok) {
             this.$nextTick(() => { this.is_running = false })
           }
