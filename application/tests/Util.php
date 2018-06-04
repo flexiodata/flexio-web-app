@@ -303,7 +303,7 @@ EOD;
 
     public static function getTestDataFiles() : array
     {
-        $testdata_dir = __DIR__ . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR;
+        $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . 'basic' . DIRECTORY_SEPARATOR;
         $files = scandir($testdata_dir);
         if (!$files)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
