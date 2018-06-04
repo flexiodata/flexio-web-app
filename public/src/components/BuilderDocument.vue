@@ -34,7 +34,7 @@
           :show-insert-buttons="false"
         />
         <div
-          class="dn db-l ml4 pa3 bg-white br2 css-dashboard-box sticky"
+          class="dn db-l ml4 pa3 bg-white br2 css-white-box sticky"
           style="min-width: 20rem; max-width: 33%; max-height: 30rem"
         >
           <div class="h-100 flex flex-column">

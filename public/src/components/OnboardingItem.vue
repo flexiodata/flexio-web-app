@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-column flex-row-l">
       <div class="flex-fill mr4-l order-1 order-0-l">
-        <div class="bg-white css-dashboard-box cf">
+        <div class="bg-white css-white-box cf">
           <div
             class="ma3 pa4 f6 lh-copy bg-white ba overflow-hidden marked css-onboarding-box"
             :class="isStepActive(index) ? 'bw1 b--blue' : 'b--black-20 o-40 pointer css-onboarding-box-inactive css-onboarding-box-hover'"
