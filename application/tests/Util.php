@@ -164,7 +164,7 @@ EOD;
         // user doesn't exist
         $username = "testuser";
         $email = "test@flex.io";
-        $password = 'test@flex.io';
+        $password = 'test9999';
 
         // see if the user already exists
         $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($username);
