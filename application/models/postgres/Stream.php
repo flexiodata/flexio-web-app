@@ -237,6 +237,12 @@ class Stream extends ModelBase
                 $where_arr[] = $conditions['stream_type'];
                 unset($conditions['stream_type']);
             }
+            if (isset($conditions['eid_status']))
+            {
+                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'eid_status = ?';
+                $where_arr[] = $conditions['eid_status'];
+                unset($conditions['eid_status']);
+            }
 
             if (count($where_arr) == 0 || count($conditions) > 0)
             {
