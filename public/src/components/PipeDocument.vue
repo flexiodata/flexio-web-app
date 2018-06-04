@@ -92,12 +92,28 @@
           <el-collapse-item name="configuration">
             <template slot="title">
               <div class="flex flex-row items-center">
-                <h3 class="flex-fill mv0 fw6 f4 mid-gray">Configuration</h3>
+                <h3 class="flex-none mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
+                <transition name="el-zoom-in-center">
+                  <el-select
+                    size="small"
+                    style="width: 10rem"
+                    v-model="view"
+                    v-if="is_configure_expanded"
+                  >
+                    <el-option
+                      :label="option.label"
+                      :value="option.value"
+                      :key="option.value"
+                      v-for="option in view_options"
+                    />
+                  </el-select>
+                </transition>
+                <div class="flex-fill"></div>
                 <div class="flex flex-row items-center mr3">
                   <transition name="el-zoom-in-center">
                     <el-button
                       class="ttu b"
-                      style="width: 5rem"
+                      style="min-width: 5rem"
                       type="primary"
                       size="small"
                       :disabled="has_errors"
@@ -110,9 +126,9 @@
                 </div>
               </div>
             </template>
-            <div>
+            <div class="mt2" v-if="view == 'sdk-js'">
               <CodeEditor
-                class="mt3 bg-white ba b--black-10 overflow-y-auto"
+                class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
                 :options="{ minRows: 12, maxRows: 24 }"
                 v-model="edit_code"
@@ -121,27 +137,44 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
+            <div class="mt2" v-else-if="view == 'builder'">
+              Visual Builder
+            </div>
+            <div class="mt2" v-else-if="view == 'json'">
+              JSON
+            </div>
+            <div class="mt2" v-else-if="view == 'yaml'">
+              YAML
+            </div>
+          </el-collapse-item>
+        </el-collapse>
+      </div>
+
+      <div class="mb4 ph4 pv2 bg-white br2 css-white-box">
+        <el-collapse class="el-collapse-plain" v-model="collapse_output">
+          <el-collapse-item name="properties">
+            <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Output</h3></template>
             <div
-              class="mt3 bg-white ba b--black-10 flex flex-column justify-center"
+              class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
               style="height: 300px"
               v-if="is_process_running"
             >
               <Spinner size="large" message="Running pipe..." />
             </div>
             <div
-              v-else-if="last_stream_eid.length > 0 && !is_process_failed"
+              v-else-if="last_stream_eid.length > 0 && !is_process_failed && false"
             >
               <PipeContent
-                class="mt3"
+                class="mt1"
                 :height="300"
                 :stream-eid="last_stream_eid"
               />
             </div>
             <div
-              v-else-if="is_superuser && is_process_failed"
+              v-else-if="is_superuser && is_process_failed && false"
             >
               <CodeEditor
-                class="mt3 bg-white ba b--black-10 overflow-y-auto"
+                class="mt1 bg-white ba b--black-10 overflow-y-auto"
                 lang="application/json"
                 :options="{
                   minRows: 12,
@@ -151,6 +184,13 @@
                 }"
                 v-model="active_process_info_str"
               />
+            </div>
+            <div
+              v-else
+            >
+              <div class="mt1 bg-white ba b--black-10 pa3">
+                <em>Click the 'Run' button above to see a preview of the pipe's output</em>
+              </div>
             </div>
           </el-collapse-item>
         </el-collapse>
@@ -238,10 +278,18 @@
     },
     data() {
       return {
+        view: 'sdk-js',
+        view_options: [
+          { value: 'sdk-js',  label: 'Javascript SDK' },
+          { value: 'builder', label: 'Visual Builder' },
+          { value: 'json',    label: 'JSON'           },
+          { value: 'yaml',    label: 'YAML'           }
+        ],
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
         collapse_properties: ['properties'],
-        collapse_configuration: ['configuration']
+        collapse_configuration: ['configuration'],
+        collapse_output: ['output']
       }
     },
     computed: {
