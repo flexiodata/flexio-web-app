@@ -6,7 +6,7 @@
     <div class="flex flex-row flex-wrap ma3">
       <a
         target="_blank"
-        class="db w-100 mw6-l ma3 bg-white pa3 pa4-ns no-underline ba bw1 b--transparent hover-b--blue css-dashboard-box"
+        class="db w-100 mw6-l ma3 bg-white pa3 pa4-ns no-underline ba bw1 b--transparent hover-b--blue css-white-box"
         :href="item.link.href"
         v-for="(item, index) in doc_items"
       >

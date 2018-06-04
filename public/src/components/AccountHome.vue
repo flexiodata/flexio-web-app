@@ -14,7 +14,7 @@
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">Account Settings</h1>
         </div>
       </div>
-      <div class="bg-white css-dashboard-box br2">
+      <div class="bg-white css-white-box br2">
         <el-tabs
           class="bg-white br2 ph4 pt3 pb4 el-tabs--allow-overflow"
           @tab-click="onTabClick"

@@ -2,7 +2,7 @@
   <main class="pa3 ph3-m pa5-ns bg-nearer-white black-60 overflow-auto">
     <div class="measure center">
       <sign-in-form
-        class="br2 bg-white pa3 pa4-ns css-dashboard-box"
+        class="br2 bg-white pa3 pa4-ns css-white-box"
         @sign-up-click="onSignUpClick"
         @forgot-password-click="onForgotPasswordClick"
         @signed-in="onSignedIn"

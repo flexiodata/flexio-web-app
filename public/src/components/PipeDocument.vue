@@ -78,7 +78,7 @@
       style="max-width: 1440px"
       v-if="is_fetched"
     >
-      <div class="mb4 ph4 pv2 bg-white br2 css-dashboard-box">
+      <div class="mb4 ph4 pv2 bg-white br2 css-white-box">
         <el-collapse class="el-collapse-plain" v-model="collapse_properties">
           <el-collapse-item name="properties">
             <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Properties</h3></template>
@@ -87,7 +87,7 @@
         </el-collapse>
       </div>
 
-      <div class="mb4 ph4 pv2 bg-white br2 css-dashboard-box">
+      <div class="mb4 ph4 pv2 bg-white br2 css-white-box">
         <el-collapse class="el-collapse-plain" v-model="collapse_configuration">
           <el-collapse-item name="configuration">
             <template slot="title">
