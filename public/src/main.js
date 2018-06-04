@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import {
   Alert,
+  Breadcrumb,
+  BreadcrumbItem,
   Button,
   Checkbox,
   CheckboxButton,
@@ -46,6 +48,8 @@ util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 locale.use(lang)
 
 Vue.use(Alert)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 Vue.use(Button)
 Vue.use(Checkbox)
 Vue.use(CheckboxButton)

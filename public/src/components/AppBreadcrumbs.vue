@@ -1,7 +1,11 @@
 <template>
-  <div class="cursor-default lh-title f7" v-if="show_breadcrumbs">
-    <router-link
-      class="flex flex-row items-center link mid-gray hover-black"
+  <el-breadcrumb
+    class="flex flex-row items-center"
+    separator-class="el-icon-arrow-right"
+    v-if="show_breadcrumbs"
+  >
+    <el-breadcrumb-item
+      class="flex flex-row items-center"
       :to="home_link"
     >
       <i
@@ -10,10 +14,11 @@
       >
         home
       </i>
-    </router-link>
-    <i class="material-icons md-18 black-20 rotate-270">expand_more</i>
-    <div class="dib mid-gray truncate">{{doc_name}}</div>
-  </div>
+    </el-breadcrumb-item>
+    <el-breadcrumb-item>
+      <span class="cursor-default">{{doc_name}}</span>
+    </el-breadcrumb-item>
+  </el-breadcrumb>
 </template>
 
 <script>
