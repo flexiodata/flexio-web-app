@@ -10,6 +10,7 @@
     >
       <Spinner size="large" message="Loading..." />
     </div>
+
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
       class="mt4 mb3 nl4 nr4 relative z-7 bg-nearer-white sticky"
@@ -73,6 +74,7 @@
         </div>
       </div>
     </div>
+
     <div
       class="center"
       style="max-width: 1440px"
@@ -93,40 +95,26 @@
             <template slot="title">
               <div class="flex flex-row items-center">
                 <h3 class="flex-none mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
-                <transition name="el-zoom-in-center">
-                  <el-select
-                    size="small"
-                    style="width: 10rem"
-                    v-model="view"
-                    v-if="is_configure_expanded"
-                  >
-                    <el-option
-                      :label="option.label"
-                      :value="option.value"
-                      :key="option.value"
-                      v-for="option in view_options"
-                    />
-                  </el-select>
-                </transition>
                 <div class="flex-fill"></div>
-                <div class="flex flex-row items-center mr3">
-                  <transition name="el-zoom-in-center">
-                    <el-button
-                      class="ttu b"
-                      style="min-width: 5rem"
-                      type="primary"
+                <transition name="el-zoom-in-center">
+                  <div class="mr3" v-if="is_configure_expanded">
+                    <el-select
                       size="small"
-                      :disabled="has_errors"
-                      @click.stop="runPipe"
-                      v-if="is_configure_expanded"
+                      style="width: 10rem"
+                      v-model="view"
                     >
-                      Run
-                    </el-button>
-                  </transition>
-                </div>
+                      <el-option
+                        :label="option.label"
+                        :value="option.value"
+                        :key="option.value"
+                        v-for="option in view_options"
+                      />
+                    </el-select>
+                  </div>
+                </transition>
               </div>
             </template>
-            <div class="mt2" v-if="view == 'sdk-js'">
+            <div class="mt1" v-if="view == 'sdk-js'">
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
@@ -137,13 +125,13 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
-            <div class="mt2" v-else-if="view == 'builder'">
+            <div class="mt1" v-else-if="view == 'builder'">
               Visual Builder
             </div>
-            <div class="mt2" v-else-if="view == 'json'">
+            <div class="mt1" v-else-if="view == 'json'">
               JSON
             </div>
-            <div class="mt2" v-else-if="view == 'yaml'">
+            <div class="mt1" v-else-if="view == 'yaml'">
               YAML
             </div>
           </el-collapse-item>
@@ -151,15 +139,34 @@
       </div>
 
       <div class="mb4 ph4 pv2 bg-white br2 css-white-box">
-        <el-collapse class="el-collapse-plain" v-model="collapse_output">
-          <el-collapse-item name="output">
-            <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Output</h3></template>
+        <el-collapse class="el-collapse-plain" v-model="collapse_debugger">
+          <el-collapse-item name="debugger">
+            <template slot="title">
+              <div class="flex flex-row items-center">
+                <h3 class="flex-none mv0 mr3 fw6 f4 mid-gray">Debugger</h3>
+                <div class="flex-fill"></div>
+                <transition name="el-zoom-in-center">
+                  <div class="mr3" v-if="is_debugger_expanded">
+                    <el-button
+                      class="ttu b"
+                      style="min-width: 5rem"
+                      type="primary"
+                      size="small"
+                      :disabled="has_errors"
+                      @click.stop="runPipe"
+                    >
+                      Run
+                    </el-button>
+                  </div>
+                </transition>
+              </div>
+            </template>
             <div
               class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
               style="height: 300px"
               v-if="is_process_running"
             >
-              <Spinner message="Running pipe..." />
+              <Spinner size="large" message="Running pipe..." />
             </div>
             <div
               v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
@@ -192,7 +199,7 @@
                 class="mt1 bg-white ba b--black-10 pa3"
                 style="height: 300px"
               >
-                <em>Click the 'Run' button above to see a preview of the pipe's output</em>
+                <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
               </div>
             </div>
             <div
@@ -311,7 +318,7 @@
         show_pipe_deploy_dialog: false,
         collapse_properties: ['properties'],
         collapse_configuration: ['configuration'],
-        collapse_output: ['output']
+        collapse_debugger: ['debugger']
       }
     },
     computed: {
@@ -345,6 +352,9 @@
       },
       is_configure_expanded() {
         return this.collapse_configuration.indexOf('configuration') != -1
+      },
+      is_debugger_expanded() {
+        return this.collapse_debugger.indexOf('debugger') != -1
       },
       is_code_changed() {
         return this.isCodeChanged()
