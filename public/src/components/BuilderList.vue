@@ -9,7 +9,7 @@
     />
     <div v-if="prompts.length == 0">
       <p class="ttu fw6 f7 moon-gray">Start your pipe with one of the following tasks</p>
-      <BuilderItemTaskChooser :starter="true" />
+      <BuilderItemTaskChooser :starter="true" @task-chooser-item-click="chooseTask" />
       <p class="ttu fw6 f7 moon-gray">&mdash; or &mdash;</p>
       <div class="mt3">
         <el-button
@@ -77,6 +77,22 @@
 
         var item_id = _.get(this.active_prompt, 'id', null)
         this.scrollToItem(item_id)
+      },
+      chooseTask(item) {
+        switch (item.op) {
+          case 'read':
+            alert(item.op)
+            break
+          case 'request':
+            alert(item.op)
+            break
+          case 'execute':
+            alert(item.op)
+            break
+          case 'echo':
+            alert(item.op)
+            break
+        }
       }
     }
   }

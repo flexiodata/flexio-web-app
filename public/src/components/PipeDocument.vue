@@ -146,7 +146,7 @@
           <el-collapse-item name="debugger">
             <template slot="title">
               <div class="flex flex-row items-center">
-                <h3 class="flex-none mv0 mr3 fw6 f4 mid-gray">Debugger</h3>
+                <h3 class="flex-none mv0 mr3 fw6 f4 mid-gray">Output</h3>
                 <div class="flex-fill"></div>
                 <transition name="el-zoom-in-center">
                   <div class="mr3" v-if="is_debugger_expanded">

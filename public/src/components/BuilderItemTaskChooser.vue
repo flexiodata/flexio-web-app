@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-row flex-wrap items-center">
+  <div class="flex flex-row flex-wrap items-center nl1">
     <div
-      style="min-width: 9rem"
       class="flex flex-column justify-center items-center"
-      :class="'f6 fw6 ttu br2 ma1 pa3 pointer silver hover-blue bg-white hover-bg-near-white'"
+      :class="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
       :key="item.op"
+      @click="itemClick(item)"
       v-for="(item, index) in items"
     >
       <i class="material-icons md-48">{{item.icon}}</i>
@@ -17,19 +17,19 @@
   const tasks = [
     {
       op: 'read',
-      name: 'Read files',
+      name: 'Read',
       icon: 'input'
     },{
       op: 'request',
-      name: 'Web Request',
+      name: 'Request',
       icon: 'http'
     },{
       op: 'execute',
-      name: 'Execute code',
+      name: 'Execute',
       icon: 'code'
     },{
       op: 'echo',
-      name: 'Echo text',
+      name: 'Echo',
       icon: 'settings_remote'
     }
   ]
@@ -122,6 +122,11 @@
         } else {
           return tasks
         }
+      }
+    },
+    methods: {
+      itemClick(item) {
+        this.$emit('task-chooser-item-click', item)
       }
     }
   }
