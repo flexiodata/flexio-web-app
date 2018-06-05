@@ -189,8 +189,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'content' => base64_encode($content)
         ]);
 
-        var_dump($url);
-        //die($payload);
 
         // put the file
 
@@ -199,20 +197,19 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        //curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
-        //                                      'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
+                                              'User-Agent: Flex.io']);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Flex.io']);
-
+        curl_setopt($ch, CURLOPT_USERPWD, "flexiotesting:358a266a949ec2b2ad37116e206af66c");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         $result = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        var_dump($httpcode);
-        var_dump($result);
-        die();
 
+        if ($httpcode < 200 || $httpcode >= 300)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
     ////////////////////////////////////////////////////////////
@@ -478,7 +475,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // instantiate the github service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('GitHub', $credentials, $storage, array());
+        $service = $service_factory->createService('GitHub', $credentials, $storage, array('repo'));
         if (!isset($service))
             return null;
 
