@@ -152,14 +152,14 @@
 
       <div class="mb4 ph4 pv2 bg-white br2 css-white-box">
         <el-collapse class="el-collapse-plain" v-model="collapse_output">
-          <el-collapse-item name="properties">
+          <el-collapse-item name="output">
             <template slot="title"><h3 class="mv0 fw6 f4 mid-gray">Output</h3></template>
             <div
               class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
               style="height: 300px"
               v-if="is_process_running"
             >
-              <Spinner size="large" message="Running pipe..." />
+              <Spinner message="Running pipe..." />
             </div>
             <div
               v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
@@ -186,10 +186,22 @@
               />
             </div>
             <div
+              v-else-if="!has_run_once"
+            >
+              <div
+                class="mt1 bg-white ba b--black-10 pa3"
+                style="height: 300px"
+              >
+                <em>Click the 'Run' button above to see a preview of the pipe's output</em>
+              </div>
+            </div>
+            <div
               v-else
             >
-              <div class="mt1 bg-white ba b--black-10 pa3">
-                <em>Click the 'Run' button above to see a preview of the pipe's output</em>
+              <div
+                class="mt1 bg-white ba b--black-10 pa3"
+                style="height: 300px"
+              >
               </div>
             </div>
           </el-collapse-item>
@@ -456,6 +468,10 @@
         })
       },
       fetchProcessLog() {
+        if (!this.has_run_once) {
+          return
+        }
+
         var eid = _.get(this.active_process, 'eid', '')
         if (eid.length > 0) {
           this.$store.dispatch('fetchProcessLog', { eid })
