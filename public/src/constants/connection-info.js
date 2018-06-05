@@ -202,7 +202,7 @@ const RSS = {
 
 const SMTP = {
   service_name: 'Email (SMTP)',
-  service_description: '',
+  service_description: 'Send and receive email using the Simple Mail Transfer Protocol',
   connection_type: types.CONNECTION_TYPE_SMTP,
   icon: require('../assets/icon/icon-email-128.png'),
   is_service: false,
@@ -213,7 +213,7 @@ const SMTP = {
 
 const SFTP = {
   service_name: 'SFTP',
-  service_description: 'Secure File Transfer Protocol',
+  service_description: 'Transfer files using the SSH (secure shell) File Transfer Protocol',
   connection_type: types.CONNECTION_TYPE_SFTP,
   icon: require('../assets/icon/icon-ftp-128.png'),
   is_service: true,
