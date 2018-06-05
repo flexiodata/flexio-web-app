@@ -126,7 +126,10 @@
               </transition>
             </div>
             <div class="mt1" v-else-if="view == 'builder'">
-              Visual Builder
+              <BuilderList
+                :container-id="doc_id"
+                :show-insert-buttons="true"
+              />
             </div>
             <div class="mt1" v-else-if="view == 'json'">
               JSON
@@ -261,6 +264,7 @@
   } from '../constants/process'
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
+  import BuilderList from './BuilderList.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
@@ -275,6 +279,7 @@
     components: {
       Spinner,
       CodeEditor,
+      BuilderList,
       PipeDocumentForm,
       PipeSchedulePanel,
       PipeDeployPanel,

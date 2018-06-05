@@ -146,6 +146,7 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
+  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
@@ -181,6 +182,7 @@
     components: {
       ServiceIcon,
       TaskIcon,
+      BuilderItemTaskChooser,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
