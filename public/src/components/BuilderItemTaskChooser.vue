@@ -16,14 +16,21 @@
 <script>
   const tasks = [
     {
-      op: 'cu.read-files',
+      op: 'read',
       name: 'Read files',
       icon: 'input'
-    },
-    {
-      op: 'cu.execute-script',
+    },{
+      op: 'request',
+      name: 'Web Request',
+      icon: 'http'
+    },{
+      op: 'execute',
       name: 'Execute code',
       icon: 'code'
+    },{
+      op: 'echo',
+      name: 'Echo text',
+      icon: 'settings_remote'
     }
   ]
 
