@@ -101,6 +101,7 @@
                     <el-select
                       size="small"
                       style="width: 10rem"
+                      :disabled="has_errors"
                       v-model="view"
                     >
                       <el-option
@@ -132,7 +133,15 @@
               />
             </div>
             <div class="mt1" v-else-if="view == 'json'">
-              JSON
+              <CodeEditor
+                class="bg-white ba b--black-10 overflow-y-auto"
+                lang="javascript"
+                :options="{ minRows: 12, maxRows: 24 }"
+                v-model="edit_json"
+              />
+              <transition name="el-zoom-in-top">
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
+              </transition>
             </div>
             <div class="mt1" v-else-if="view == 'yaml'">
               YAML
@@ -275,6 +284,19 @@
   const PIPEDOC_VIEW_JSON    = 'json'
   const PIPEDOC_VIEW_YAML    = 'yaml'
 
+  // TODO: remove 'omitDeep' once we get rid of task eids
+  const omitDeep = (collection, excludeKeys) => {
+    function omitFn(val) {
+      if (val && typeof val === 'object') {
+        excludeKeys.forEach((key) => {
+          delete val[key]
+        })
+      }
+    }
+
+    return _.cloneDeepWith(collection, omitFn)
+  }
+
   export default {
     components: {
       Spinner,
@@ -315,15 +337,16 @@
         view_options: [
           { value: PIPEDOC_VIEW_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_VIEW_BUILDER, label: 'Visual Builder' },
-          { value: PIPEDOC_VIEW_JSON,    label: 'JSON'           },
-          { value: PIPEDOC_VIEW_YAML,    label: 'YAML'           }
+          { value: PIPEDOC_VIEW_JSON,    label: 'JSON'           }/*,
+          { value: PIPEDOC_VIEW_YAML,    label: 'YAML'           }*/
         ],
         has_run_once: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
         collapse_properties: ['properties'],
         collapse_configuration: ['configuration'],
-        collapse_debugger: ['debugger']
+        collapse_debugger: ['debugger'],
+        parse_error: ''
       }
     },
     computed: {
@@ -352,6 +375,32 @@
           this.$store.commit('pipe/UPDATE_CODE', value)
         }
       },
+      edit_json: {
+        get() {
+          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
+
+          // TODO: remove 'omitDeep' once we get rid of task eids
+          task = omitDeep(task, ['eid'])
+
+          // stringify JSON; indent 2 spaces
+          var task_str = JSON.stringify(task, null, 2)
+
+          return task_str
+        },
+        set(value) {
+          try {
+            var task = JSON.parse(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { task })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.parse_error = ''
+          }
+          catch(e)
+          {
+            this.parse_error = e.message
+          }
+        }
+      },
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
@@ -368,7 +417,7 @@
         return this.isChanged()
       },
       has_errors() {
-        return this.syntax_error.length > 0
+        return this.syntax_error.length > 0 || this.parse_error.length > 0
       },
 
       // -- all of the below computed values pertain to getting the preview --
