@@ -259,6 +259,11 @@
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
 
+  const PIPEDOC_VIEW_SDK_JS  = 'sdk-js'
+  const PIPEDOC_VIEW_BUILDER = 'builder'
+  const PIPEDOC_VIEW_JSON    = 'json'
+  const PIPEDOC_VIEW_YAML    = 'yaml'
+
   export default {
     components: {
       Spinner,
@@ -271,6 +276,10 @@
     watch: {
       eid: {
         handler: 'loadPipe',
+        immediate: true
+      },
+      view: {
+        handler: 'updateRoute',
         immediate: true
       },
       is_fetched: {
@@ -290,12 +299,12 @@
     },
     data() {
       return {
-        view: 'sdk-js',
+        view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_SDK_JS),
         view_options: [
-          { value: 'sdk-js',  label: 'Javascript SDK' },
-          { value: 'builder', label: 'Visual Builder' },
-          { value: 'json',    label: 'JSON'           },
-          { value: 'yaml',    label: 'YAML'           }
+          { value: PIPEDOC_VIEW_SDK_JS,  label: 'Javascript SDK' },
+          { value: PIPEDOC_VIEW_BUILDER, label: 'Visual Builder' },
+          { value: PIPEDOC_VIEW_JSON,    label: 'JSON'           },
+          { value: PIPEDOC_VIEW_YAML,    label: 'YAML'           }
         ],
         has_run_once: false,
         show_pipe_schedule_dialog: false,
@@ -390,6 +399,13 @@
         'getActiveDocumentProcesses',
         'getActiveUser'
       ]),
+      updateRoute() {
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        var new_view = this.view
+        _.set(new_route, 'params.view', new_view)
+        this.$router.replace(new_route)
+      },
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
