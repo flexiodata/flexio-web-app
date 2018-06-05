@@ -109,10 +109,10 @@ class Util
 
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
-        if (false)
+        if (true)
         {
             // debug mode for fixing tests
-            $process = \Flexio\Jobs\Process::create()->execute($tasks);
+            $process = \Flexio\Jobs\Process::create()->setOwner($userid)->execute($tasks);
             $response = $process->getStdout()->getReader()->read();
             return [ 'code' => 200, 'content_type' => $process->getStdout()->getMimeType(), 'response' => $response ];
         }
