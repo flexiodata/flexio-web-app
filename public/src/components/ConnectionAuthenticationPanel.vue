@@ -34,7 +34,7 @@
       <div class="w-two-thirds-ns center mt3">
         <el-form
           ref="form"
-          class="flex flex-column el-form-compact"
+          class="flex flex-column el-form--compact"
           label-width="8rem"
           :model="$data"
           :rules="rules"

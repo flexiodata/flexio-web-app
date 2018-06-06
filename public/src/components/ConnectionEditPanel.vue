@@ -36,7 +36,7 @@
       <div v-if="has_connection">
         <el-form
           ref="form"
-          class="el-form-compact el-form__label-tiny"
+          class="el-form--compact el-form__label-tiny"
           :model="edit_connection"
           :rules="rules"
         >

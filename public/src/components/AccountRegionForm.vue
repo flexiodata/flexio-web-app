@@ -15,7 +15,7 @@
       v-if="show_error"
     />
     <el-form
-      class="mt3 el-form-cozy el-form__label-tiny"
+      class="mt3 el-form--cozy el-form__label-tiny"
       :model="$data"
     >
       <el-form-item

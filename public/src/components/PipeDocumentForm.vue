@@ -1,7 +1,7 @@
 <template>
   <el-form
     ref="form"
-    class="el-form-cozy"
+    class="el-form--cozy"
     label-width="9rem"
     :model="form_values"
     :rules="rules"
