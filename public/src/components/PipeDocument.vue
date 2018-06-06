@@ -13,7 +13,7 @@
 
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="mt4 mb3 nl4 nr4 relative z-7 bg-nearer-white sticky"
+      class="mt4 nl4 nr4 relative z-7 bg-nearer-white sticky"
       v-if="is_fetched"
     >
       <div class="ph4">
@@ -59,9 +59,9 @@
         v-model="active_tab_name"
       >
         <el-tab-pane name="properties" label="Properties">
-          <div class="mv4 pa4 bg-white br2 css-white-box">
+          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
-            <div class="flex flex-row items-center nt2 pb2">
+            <div class="flex flex-row items-center pt1 pb3">
               <h3 class="flex-fill mv0 fw6 f4 mid-gray">Properties</h3>
               <el-button
                 class="ttu b invisible"
@@ -71,14 +71,14 @@
               </el-button>
             </div>
             <!-- content -->
-            <PipeDocumentForm ref="pipe-document-form" class="mt3" />
+            <PipeDocumentForm ref="pipe-document-form" />
           </div>
         </el-tab-pane>
 
         <el-tab-pane name="build" :label="'Build & Test'">
-          <div class="mv4 pa4 bg-white br2 css-white-box">
+          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
-            <div class="flex flex-row items-center nt2 pb2">
+            <div class="flex flex-row items-center pt1 pb3">
               <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
               <el-select
                 class="tr"
@@ -97,7 +97,7 @@
             </div>
 
             <!-- content -->
-            <div class="mt1" v-if="view == 'sdk-js'">
+            <div v-if="view == 'sdk-js'">
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
@@ -105,16 +105,16 @@
                 v-model="edit_code"
               />
               <transition name="el-zoom-in-top">
-                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
-            <div class="mt1" v-else-if="view == 'builder'">
+            <div v-else-if="view == 'builder'">
               <BuilderList
                 :container-id="doc_id"
                 :show-insert-buttons="true"
               />
             </div>
-            <div class="mt1" v-else-if="view == 'json'">
+            <div v-else-if="view == 'json'">
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
@@ -125,14 +125,14 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
               </transition>
             </div>
-            <div class="mt1" v-else-if="view == 'yaml'">
+            <div v-else-if="view == 'yaml'">
               YAML
             </div>
           </div>
 
-          <div class="mv4 pa4 bg-white br2 css-white-box">
+          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
-            <div class="flex flex-row items-center nt2 pb2">
+            <div class="flex flex-row items-center pt1 pb3">
               <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Output</h3>
               <el-button
                 class="ttu b"
@@ -148,7 +148,7 @@
 
             <!-- content -->
             <div
-              class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
+              class="bg-white ba b--black-10 flex flex-column justify-center"
               style="height: 300px"
               v-if="is_process_running"
             >
@@ -158,7 +158,6 @@
               v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
             >
               <PipeContent
-                class="mt1"
                 :height="300"
                 :stream-eid="last_stream_eid"
               />
@@ -167,7 +166,7 @@
               v-else-if="has_run_once && is_superuser && is_process_failed"
             >
               <CodeEditor
-                class="mt1 bg-white ba b--black-10 overflow-y-auto"
+                class="bg-white ba b--black-10 overflow-y-auto"
                 lang="application/json"
                 :options="{
                   minRows: 12,
@@ -182,7 +181,7 @@
               v-else-if="!has_run_once"
             >
               <div
-                class="mt1 bg-white ba b--black-10 pa3 f6"
+                class="bg-white ba b--black-10 pa3 f6"
                 style="height: 300px"
               >
                 <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
@@ -192,7 +191,7 @@
               v-else
             >
               <div
-                class="mt1 bg-white ba b--black-10 pa3"
+                class="bg-white ba b--black-10 pa3"
                 style="height: 300px"
               >
               </div>

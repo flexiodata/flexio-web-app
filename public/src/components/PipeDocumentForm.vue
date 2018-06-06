@@ -74,7 +74,7 @@
         type="textarea"
         placeholder="Enter description"
         style="max-width: 48rem"
-        :rows="2"
+        :rows="3"
         v-model="form_values.description"
       />
     </el-form-item>
