@@ -13,7 +13,7 @@
 
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div
-      class="mt4 nl4 nr4 relative z-7 bg-nearer-white sticky"
+      class="mt4 mb2 nl4 nr4 relative z-7 bg-nearer-white sticky"
       v-if="is_fetched"
     >
       <div class="ph4">
