@@ -199,7 +199,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
                                               'User-Agent: Flex.io']);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Flex.io']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
