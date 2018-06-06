@@ -54,143 +54,152 @@
       style="max-width: 1440px"
       v-if="is_fetched"
     >
-      <div class="mb4 pa4 bg-white br2 css-white-box">
-        <!-- title bar -->
-        <div class="flex flex-row items-center nt2 pb2">
-          <h3 class="flex-fill mv0 fw6 f4 mid-gray">Properties</h3>
-          <el-button
-            class="ttu b invisible"
-            size="small"
-          >
-            Spacer
-          </el-button>
-        </div>
-        <!-- content -->
-        <PipeDocumentForm ref="pipe-document-form" class="mt3" />
-      </div>
-
-      <div class="mb4 pa4 bg-white br2 css-white-box">
-        <!-- title bar -->
-        <div class="flex flex-row items-center nt2 pb2">
-          <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
-          <el-select
-            class="tr"
-            size="small"
-            style="width: 10rem"
-            :disabled="has_errors"
-            v-model="view"
-          >
-            <el-option
-              :label="option.label"
-              :value="option.value"
-              :key="option.value"
-              v-for="option in view_options"
-            />
-          </el-select>
-        </div>
-
-        <!-- content -->
-        <div class="mt1" v-if="view == 'sdk-js'">
-          <CodeEditor
-            class="bg-white ba b--black-10 overflow-y-auto"
-            lang="javascript"
-            :options="{ minRows: 12, maxRows: 30 }"
-            v-model="edit_code"
-          />
-          <transition name="el-zoom-in-top">
-            <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
-          </transition>
-        </div>
-        <div class="mt1" v-else-if="view == 'builder'">
-          <BuilderList
-            :container-id="doc_id"
-            :show-insert-buttons="true"
-          />
-        </div>
-        <div class="mt1" v-else-if="view == 'json'">
-          <CodeEditor
-            class="bg-white ba b--black-10 overflow-y-auto"
-            lang="javascript"
-            :options="{ minRows: 12, maxRows: 30 }"
-            v-model="edit_json"
-          />
-          <transition name="el-zoom-in-top">
-            <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
-          </transition>
-        </div>
-        <div class="mt1" v-else-if="view == 'yaml'">
-          YAML
-        </div>
-      </div>
-
-      <div class="mb4 pa4 bg-white br2 css-white-box">
-        <!-- title bar -->
-        <div class="flex flex-row items-center nt2 pb2">
-          <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Output</h3>
-          <el-button
-            class="ttu b"
-            style="min-width: 5rem"
-            type="primary"
-            size="small"
-            :disabled="has_errors"
-            @click.stop="runPipe"
-          >
-            Run
-          </el-button>
-        </div>
-
-        <!-- content -->
-        <div
-          class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
-          style="height: 300px"
-          v-if="is_process_running"
-        >
-          <Spinner size="large" message="Running pipe..." />
-        </div>
-        <div
-          v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
-        >
-          <PipeContent
-            class="mt1"
-            :height="300"
-            :stream-eid="last_stream_eid"
-          />
-        </div>
-        <div
-          v-else-if="has_run_once && is_superuser && is_process_failed"
-        >
-          <CodeEditor
-            class="mt1 bg-white ba b--black-10 overflow-y-auto"
-            lang="application/json"
-            :options="{
-              minRows: 12,
-              maxRows: 24,
-              lineNumbers: false,
-              readOnly: true
-            }"
-            v-model="active_process_info_str"
-          />
-        </div>
-        <div
-          v-else-if="!has_run_once"
-        >
-          <div
-            class="mt1 bg-white ba b--black-10 pa3"
-            style="height: 300px"
-          >
-            <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
+      <el-tabs
+        class="el-tabs--allow-overflow"
+        v-model="active_tab_name"
+      >
+        <el-tab-pane name="properties" label="Properties">
+          <div class="mv4 pa4 bg-white br2 css-white-box">
+            <!-- title bar -->
+            <div class="flex flex-row items-center nt2 pb2">
+              <h3 class="flex-fill mv0 fw6 f4 mid-gray">Properties</h3>
+              <el-button
+                class="ttu b invisible"
+                size="small"
+              >
+                Spacer
+              </el-button>
+            </div>
+            <!-- content -->
+            <PipeDocumentForm ref="pipe-document-form" class="mt3" />
           </div>
-        </div>
-        <div
-          v-else
-        >
-          <div
-            class="mt1 bg-white ba b--black-10 pa3"
-            style="height: 300px"
-          >
+        </el-tab-pane>
+
+        <el-tab-pane name="build" :label="'Build & Test'">
+          <div class="mv4 pa4 bg-white br2 css-white-box">
+            <!-- title bar -->
+            <div class="flex flex-row items-center nt2 pb2">
+              <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
+              <el-select
+                class="tr"
+                size="small"
+                style="width: 10rem"
+                :disabled="has_errors"
+                v-model="view"
+              >
+                <el-option
+                  :label="option.label"
+                  :value="option.value"
+                  :key="option.value"
+                  v-for="option in view_options"
+                />
+              </el-select>
+            </div>
+
+            <!-- content -->
+            <div class="mt1" v-if="view == 'sdk-js'">
+              <CodeEditor
+                class="bg-white ba b--black-10 overflow-y-auto"
+                lang="javascript"
+                :options="{ minRows: 12, maxRows: 30 }"
+                v-model="edit_code"
+              />
+              <transition name="el-zoom-in-top">
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
+              </transition>
+            </div>
+            <div class="mt1" v-else-if="view == 'builder'">
+              <BuilderList
+                :container-id="doc_id"
+                :show-insert-buttons="true"
+              />
+            </div>
+            <div class="mt1" v-else-if="view == 'json'">
+              <CodeEditor
+                class="bg-white ba b--black-10 overflow-y-auto"
+                lang="javascript"
+                :options="{ minRows: 12, maxRows: 30 }"
+                v-model="edit_json"
+              />
+              <transition name="el-zoom-in-top">
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
+              </transition>
+            </div>
+            <div class="mt1" v-else-if="view == 'yaml'">
+              YAML
+            </div>
           </div>
-        </div>
-      </div>
+
+          <div class="mv4 pa4 bg-white br2 css-white-box">
+            <!-- title bar -->
+            <div class="flex flex-row items-center nt2 pb2">
+              <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Output</h3>
+              <el-button
+                class="ttu b"
+                style="min-width: 5rem"
+                type="primary"
+                size="small"
+                :disabled="has_errors"
+                @click.stop="runPipe"
+              >
+                Run
+              </el-button>
+            </div>
+
+            <!-- content -->
+            <div
+              class="mt1 bg-white ba b--black-10 flex flex-column justify-center"
+              style="height: 300px"
+              v-if="is_process_running"
+            >
+              <Spinner size="large" message="Running pipe..." />
+            </div>
+            <div
+              v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
+            >
+              <PipeContent
+                class="mt1"
+                :height="300"
+                :stream-eid="last_stream_eid"
+              />
+            </div>
+            <div
+              v-else-if="has_run_once && is_superuser && is_process_failed"
+            >
+              <CodeEditor
+                class="mt1 bg-white ba b--black-10 overflow-y-auto"
+                lang="application/json"
+                :options="{
+                  minRows: 12,
+                  maxRows: 24,
+                  lineNumbers: false,
+                  readOnly: true
+                }"
+                v-model="active_process_info_str"
+              />
+            </div>
+            <div
+              v-else-if="!has_run_once"
+            >
+              <div
+                class="mt1 bg-white ba b--black-10 pa3 f6"
+                style="height: 300px"
+              >
+                <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
+              </div>
+            </div>
+            <div
+              v-else
+            >
+              <div
+                class="mt1 bg-white ba b--black-10 pa3"
+                style="height: 300px"
+              >
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
 
     <!-- pipe schedule dialog -->
@@ -298,6 +307,7 @@
     },
     data() {
       return {
+        active_tab_name: 'properties',
         view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_SDK_JS),
         view_options: [
           { value: PIPEDOC_VIEW_SDK_JS,  label: 'Javascript SDK' },
