@@ -292,6 +292,10 @@
         handler: 'updateRoute',
         immediate: true
       },
+      editor: {
+        handler: 'updateRoute',
+        immediate: true
+      },
       is_fetched: {
         handler: 'initSticky',
         immediate: true
@@ -310,7 +314,7 @@
     data() {
       return {
         active_tab_name: _.get(this.$route, 'params.view', PIPEDOC_VIEW_PROPERTIES),
-        editor: _.get(this.$route, 'params.state.editor', PIPEDOC_EDITOR_SDK_JS),
+        editor: _.get(this.$route, 'query.editor', PIPEDOC_EDITOR_SDK_JS),
         editor_options: [
           { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
@@ -434,8 +438,13 @@
       updateRoute() {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        var new_view = this.active_tab_name
-        _.set(new_route, 'params.view', new_view)
+        var view = this.active_tab_name
+        var editor = this.editor
+        _.set(new_route, 'params.view', view)
+        _.set(new_route, 'query', { editor })
+
+        console.log(new_route)
+
         this.$router.replace(new_route)
       },
       loadPipe() {
