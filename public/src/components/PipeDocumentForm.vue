@@ -80,7 +80,7 @@
 
     <!-- pipe schedule dialog -->
     <el-dialog
-      custom-class="no-header no-footer"
+      custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
@@ -96,7 +96,7 @@
 
     <!-- pipe deploy dialog -->
     <el-dialog
-      custom-class="no-header no-footer"
+      custom-class="el-dialog--no-header el-dialog--no-footer"
       width="56rem"
       top="8vh"
       :modal-append-to-body="false"
