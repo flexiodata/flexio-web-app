@@ -1,9 +1,7 @@
 <template>
   <el-form
     ref="form"
-    class="el-form-compact"
-    label-width="7rem"
-    size="small"
+    label-width="9rem"
     :model="form_values"
     :rules="rules"
     v-if="form_values"
