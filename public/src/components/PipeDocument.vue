@@ -198,6 +198,12 @@
             </div>
           </div>
         </el-tab-pane>
+
+        <el-tab-pane name="history" label="History">
+          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
+            <ProcessList />
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -251,6 +257,7 @@
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
+  import ProcessList from './ProcessList.vue'
 
   const PIPEDOC_VIEW_PROPERTIES = 'properties'
   const PIPEDOC_VIEW_CONFIGURE  = 'configure'
@@ -281,7 +288,8 @@
       PipeDocumentForm,
       PipeSchedulePanel,
       PipeDeployPanel,
-      PipeContent
+      PipeContent,
+      ProcessList
     },
     watch: {
       eid: {
