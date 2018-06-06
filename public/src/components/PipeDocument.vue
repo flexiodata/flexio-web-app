@@ -75,7 +75,7 @@
           </div>
         </el-tab-pane>
 
-        <el-tab-pane name="build" :label="'Build & Test'">
+        <el-tab-pane name="configure" :label="'Build & Test'">
           <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
             <div class="flex flex-row items-center pt1 pb3">
@@ -85,19 +85,19 @@
                 size="small"
                 style="width: 10rem"
                 :disabled="has_errors"
-                v-model="view"
+                v-model="editor"
               >
                 <el-option
                   :label="option.label"
                   :value="option.value"
                   :key="option.value"
-                  v-for="option in view_options"
+                  v-for="option in editor_options"
                 />
               </el-select>
             </div>
 
             <!-- content -->
-            <div v-if="view == 'sdk-js'">
+            <div v-if="editor == 'sdk-js'">
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
@@ -108,13 +108,13 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
-            <div v-else-if="view == 'builder'">
+            <div v-else-if="editor == 'builder'">
               <BuilderList
                 :container-id="doc_id"
                 :show-insert-buttons="true"
               />
             </div>
-            <div v-else-if="view == 'json'">
+            <div v-else-if="editor == 'json'">
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
@@ -125,7 +125,7 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
               </transition>
             </div>
-            <div v-else-if="view == 'yaml'">
+            <div v-else-if="editor == 'yaml'">
               YAML
             </div>
           </div>
@@ -252,10 +252,13 @@
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
 
-  const PIPEDOC_VIEW_SDK_JS  = 'sdk-js'
-  const PIPEDOC_VIEW_BUILDER = 'builder'
-  const PIPEDOC_VIEW_JSON    = 'json'
-  const PIPEDOC_VIEW_YAML    = 'yaml'
+  const PIPEDOC_VIEW_PROPERTIES = 'properties'
+  const PIPEDOC_VIEW_CONFIGURE  = 'configure'
+
+  const PIPEDOC_EDITOR_SDK_JS  = 'sdk-js'
+  const PIPEDOC_EDITOR_BUILDER = 'builder'
+  const PIPEDOC_EDITOR_JSON    = 'json'
+  const PIPEDOC_EDITOR_YAML    = 'yaml'
 
   // TODO: remove 'omitDeep' once we get rid of task eids
   const omitDeep = (collection, excludeKeys) => {
@@ -285,7 +288,7 @@
         handler: 'loadPipe',
         immediate: true
       },
-      view: {
+      active_tab_name: {
         handler: 'updateRoute',
         immediate: true
       },
@@ -306,13 +309,13 @@
     },
     data() {
       return {
-        active_tab_name: 'properties',
-        view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_SDK_JS),
-        view_options: [
-          { value: PIPEDOC_VIEW_SDK_JS,  label: 'Javascript SDK' },
-          { value: PIPEDOC_VIEW_BUILDER, label: 'Visual Builder' },
-          { value: PIPEDOC_VIEW_JSON,    label: 'JSON'           }/*,
-          { value: PIPEDOC_VIEW_YAML,    label: 'YAML'           }*/
+        active_tab_name: _.get(this.$route, 'params.view', PIPEDOC_VIEW_PROPERTIES),
+        editor: _.get(this.$route, 'params.state.editor', PIPEDOC_EDITOR_SDK_JS),
+        editor_options: [
+          { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
+          { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
+          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           }/*,
+          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
         ],
         has_run_once: false,
         show_pipe_schedule_dialog: false,
@@ -431,7 +434,7 @@
       updateRoute() {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        var new_view = this.view
+        var new_view = this.active_tab_name
         _.set(new_route, 'params.view', new_view)
         this.$router.replace(new_route)
       },
