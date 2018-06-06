@@ -200,7 +200,6 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
                                               'User-Agent: Flex.io']);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['User-Agent: Flex.io']);
-        curl_setopt($ch, CURLOPT_USERPWD, "flexiotesting:358a266a949ec2b2ad37116e206af66c");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
