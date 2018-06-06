@@ -18,28 +18,35 @@ namespace Flexio\Tests;
 
 class Test
 {
-    private static function buildTask(string $data) : array
+    public function run(&$results)
     {
+        // SETUP
         $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "create",
-                "content_type" => \Flexio\Base\ContentType::CSV,
-                "content" => base64_encode(trim($data))
-            ],
             [
                 "op" => "convert",
                 "input" => [
-                    "delimiter" => "{comma}",
-                    "header_row" => "true",
-                    "text_qualifier" => "{double_quote}"
+                    "format" => "delimited",
+                    "delimiter" => "{tab}",
+                    "header" => false,
+                    "qualifier" => "{none}"
                 ]
             ]
         ]);
-        return $task;
-    }
 
-    public function run(&$results)
-    {
+
+
+        // TEST: Convert; basic content test
+
+        // BEGIN TEST
+        $stream = \Flexio\Tests\Util::createStream('/csv/03.02-content-ascii.tsv');
+        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
+        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
+        $expected = '["f1"]';
+        \Flexio\Tests\Check::assertArray('A.1', 'Convert CSV; single fieldname should create correctly',  $actual, $expected, $results);
+
+
+return;
+
         // TEST: Convert; basic content upload test
 
         // BEGIN TEST
@@ -57,6 +64,9 @@ EOD;
         // note: this line uses php's fgetcsv rules
         $expected = '[["a1","b1"],["a2","b2"]]';
         \Flexio\Tests\Check::assertArray('A.1', 'Convert Job; basic content upload test',  $actual, $expected, $results);
+
+
+
 
 
 
