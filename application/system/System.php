@@ -331,6 +331,11 @@ class System
         return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'email';
     }
 
+    public static function getTestDataDirectory() : string
+    {
+        return \Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'testdata';
+    }
+
     public static function getUpdateDirectory() : string
     {
         return (\Flexio\System\System::getBaseDirectory() . DIRECTORY_SEPARATOR . 'scripts' . DIRECTORY_SEPARATOR . 'update');

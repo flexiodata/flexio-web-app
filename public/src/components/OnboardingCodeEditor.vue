@@ -177,7 +177,8 @@
       CodeEditor
     },
     watch: {
-      code() {
+      code(val) {
+        this.edit_code = val
         this.syntax_msg = ''
       }
     },

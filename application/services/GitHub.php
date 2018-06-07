@@ -70,9 +70,60 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->getFolderItems($repository_to_find, $folder_path);
     }
 
-    public function getFileInfo(string $path) : array
+    public function getFileInfo(string $full_path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->authenticated())
+            return array();
+
+        $repository = '';
+        $path = '';
+        $result = self::getPathParts($full_path, $repository, $path);
+        if ($result === false)
+            return [];
+
+        $url = "https://api.github.com/repos/$repository/contents/$path";
+
+        $contents = '';
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                              'Accept: application/vnd.github.v3+json',
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+            $headers[] = $data;
+            return strlen($data);
+        });
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $entry = @json_decode($result, true);
+        if (!is_array($entry))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        if ($httpcode == 404)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
+
+        if ($httpcode >= 200 && $httpcode <= 299)
+        {
+            $res = array('id'=> md5($entry['git_url']),
+                        'name' => $entry['name'],
+                        'size' => $entry['size'] ?? null,
+                        'modified' => '',
+                        'type' => ($result['type'] ?? 'file') ? 'FILE' : 'DIR');  // github api will return json {} for file, [] for directory
+
+            return $res;
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+        }
     }
 
     public function exists(string $path) : bool
@@ -90,8 +141,11 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
+        // git doesn't support folders; you have to create a directory with a file in it
+        return true;
+
         // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        //throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function unlink(string $path) : bool
@@ -108,6 +162,9 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function read(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return array();
+
         $full_path = $params['path'] ?? '';
         $repository = '';
         $path = '';
@@ -146,6 +203,9 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function write(array $params, callable $callback)
     {
+        if (!$this->authenticated())
+            return array();
+
         // File Create:
         // Request: PUT https://api.github.com/repos/:owner/:repo/contents/:path
         // Params:
@@ -156,6 +216,49 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // File Update:
         // PUT https://api.github.com/repos/:owner/:repo/contents/:path
+
+
+        $full_path = $params['path'] ?? '';
+        $repository = '';
+        $path = '';
+        $result = self::getPathParts($full_path, $repository, $path);
+        if ($result === false)
+            return;
+
+        $url = "https://api.github.com/repos/$repository/contents/$path";
+
+        $content = '';
+        while (($chunk = $callback(16384)) !== false)
+        {
+            $content .= $chunk;
+        }
+
+
+        $payload = json_encode([
+            'path' => $path,
+            'message' => 'Commit from flex.io',
+            'content' => base64_encode($content)
+        ]);
+
+
+        // put the file
+
+        $total_written = 0;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: token '.$this->access_token,
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode < 200 || $httpcode >= 300)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
     }
 
     ////////////////////////////////////////////////////////////
@@ -421,7 +524,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         // instantiate the github service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('GitHub', $credentials, $storage, array());
+        $service = $service_factory->createService('GitHub', $credentials, $storage, array('repo'));
         if (!isset($service))
             return null;
 

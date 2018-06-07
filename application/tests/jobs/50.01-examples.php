@@ -136,7 +136,7 @@ class Test
             ],
             [
                 "op" => "convert",
-                "input" => ["format" => "delimited_text", "delimiter" => "{comma}", "header_row" => true, "text_qualifier" => "{double_quote}"]
+                "input" => ["format" => "delimited", "delimiter" => "{comma}", "header" => true, "qualifier" => "{double_quote}"]
             ],
             [
                 "op" => "transform",

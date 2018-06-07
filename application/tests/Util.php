@@ -109,6 +109,14 @@ class Util
 
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
+        if (true)
+        {
+            // debug mode for fixing tests
+            $process = \Flexio\Jobs\Process::create()->setOwner($userid)->execute($tasks);
+            $response = $process->getStdout()->getReader()->read();
+            return [ 'code' => 200, 'content_type' => $process->getStdout()->getMimeType(), 'response' => $response ];
+        }
+
         // wraps up the creation of a process and the running of that process
         $params = json_encode(['task' => $tasks]);
         $result = self::callApi(array(
@@ -164,7 +172,7 @@ EOD;
         // user doesn't exist
         $username = "testuser";
         $email = "test@flex.io";
-        $password = 'test@flex.io';
+        $password = 'test9999';
 
         // see if the user already exists
         $user_eid = \Flexio\Tests\Util::getModel()->user->getEidFromIdentifier($username);
@@ -276,6 +284,12 @@ EOD;
         return $pipe->getEid();
     }
 
+    public static function createStream(string $test_file_local_path) : \Flexio\Base\Stream
+    {
+        $file = \Flexio\System\System::getTestDataDirectory() . $test_file_local_path;
+        return self::createStreamFromFile($file);
+    }
+
     public static function createStreamFromFile(string $path) : \Flexio\Base\Stream
     {
         $f = @fopen($path, 'rb');
@@ -303,7 +317,7 @@ EOD;
 
     public static function getTestDataFiles() : array
     {
-        $testdata_dir = __DIR__ . DIRECTORY_SEPARATOR . 'testdata' . DIRECTORY_SEPARATOR;
+        $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . 'basic' . DIRECTORY_SEPARATOR;
         $files = scandir($testdata_dir);
         if (!$files)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);

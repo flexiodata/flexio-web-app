@@ -154,9 +154,14 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         foreach ($service_list as $entry)
         {
+            $full_path = '/' . $connection_identifier;
+            if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
+                $full_path .= '/';
+            $full_path .= $entry['path'];
+
             $results[] = array(
                 'name' => $entry['name'],
-                'path' =>  '/' . $connection_identifier . $entry['path'],
+                'path' =>  $full_path,
                 'remote_path' =>  $entry['path'],
                 'size' => $entry['size'],
                 'modified' => $entry['modified'],
