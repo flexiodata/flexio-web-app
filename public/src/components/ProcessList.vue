@@ -23,7 +23,16 @@
       <el-table-column
         prop="fmt_process_status"
         label="Status"
-      />
+      >
+        <template slot-scope="scope">
+          <div class="flex flex-row items-center lh-copy">
+            <i class="el-icon-success dark-green mr2" v-if="scope.row.process_status == 'C'"></i>
+            <i class="el-icon-error dark-red mr2" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-info blue mr2" v-else></i>
+            <span>{{scope.row.fmt_process_status}}</span>
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
