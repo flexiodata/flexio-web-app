@@ -27,8 +27,8 @@ class Test
                 "input" => [
                     "format" => "delimited",
                     "delimiter" => "{comma}",
-                    "header_row" => true,
-                    "text_qualifier" => "{double_quote}"
+                    "header" => true,
+                    "qualifier" => "{double_quote}"
                 ]
             ]
         ]);

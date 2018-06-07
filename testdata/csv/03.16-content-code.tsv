@@ -1,0 +1,12 @@
+1	";break;$b="
+2	';$a=1/0;$b='
+3	true;
+4	throw new Exception('Problem.');
+5	" or "a" != "
+6	' or 'a' != '
+7	//  /*
+8	.*
+9	/.*/
+10	' || true || '
+11	' || true;
+12	''; while (1) {}
