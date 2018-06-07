@@ -26,9 +26,12 @@ class Test
                 "op" => "convert",
                 "input" => [
                     "format" => "delimited",
-                    "delimiter" => "{comma}",
-                    "header" => true,
-                    "qualifier" => "{double_quote}"
+                    "delimiter" => ",",
+                    "qualifier" => "\"",
+                    "header" => true
+                ],
+                "output" => [
+                    "format" => "table"
                 ]
             ]
         ]);

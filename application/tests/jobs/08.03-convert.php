@@ -26,9 +26,12 @@ class Test
                 "op" => "convert",
                 "input" => [
                     "format" => "delimited",
-                    "delimiter" => "{tab}",
-                    "header" => false,
-                    "qualifier" => "{none}"
+                    "delimiter" => "\t",
+                    "qualifier" => "",
+                    "header" => false
+                ],
+                "output" => [
+                    "format" => "table"
                 ]
             ]
         ]);
