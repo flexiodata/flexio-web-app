@@ -450,9 +450,6 @@
         var editor = this.editor
         _.set(new_route, 'params.view', view)
         _.set(new_route, 'query', { editor })
-
-        console.log(new_route)
-
         this.$router.replace(new_route)
       },
       loadPipe() {

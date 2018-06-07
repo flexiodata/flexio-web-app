@@ -25,6 +25,8 @@ import {
   RadioGroup,
   Select,
   Switch,
+  Table,
+  TableColumn,
   Tabs,
   TabPane
 } from 'element-ui'
@@ -70,6 +72,8 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Select)
 Vue.use(Switch)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
 
