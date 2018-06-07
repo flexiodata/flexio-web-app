@@ -291,12 +291,12 @@ class Convert extends \Flexio\Jobs\Base
                 default:
                     break;
 
-                case self::DELIMITER_NONE:       $delimiter = "";   break;
-                case self::DELIMITER_COMMA:      $delimiter = ",";  break;
-                case self::DELIMITER_SEMICOLON:  $delimiter = ";";  break;
-                case self::DELIMITER_PIPE:       $delimiter = "|";  break;
-                case self::DELIMITER_TAB:        $delimiter = "\t"; break;
-                case self::DELIMITER_SPACE:      $delimiter = " ";  break;
+                case self::DELIMITER_NONE:       $delimiter = "\r\n"; break; // use new-line so 'explode' doesn't flag a warning for no delimiter
+                case self::DELIMITER_COMMA:      $delimiter = ",";    break;
+                case self::DELIMITER_SEMICOLON:  $delimiter = ";";    break;
+                case self::DELIMITER_PIPE:       $delimiter = "|";    break;
+                case self::DELIMITER_TAB:        $delimiter = "\t";   break;
+                case self::DELIMITER_SPACE:      $delimiter = " ";    break;
             }
 
             switch ($qualifier)
@@ -639,12 +639,12 @@ class Convert extends \Flexio\Jobs\Base
             default:
                 break;
 
-            case self::DELIMITER_NONE:       $delimiter = "";   break;
-            case self::DELIMITER_COMMA:      $delimiter = ",";  break;
-            case self::DELIMITER_SEMICOLON:  $delimiter = ";";  break;
-            case self::DELIMITER_PIPE:       $delimiter = "|";  break;
-            case self::DELIMITER_TAB:        $delimiter = "\t"; break;
-            case self::DELIMITER_SPACE:      $delimiter = " ";  break;
+            case self::DELIMITER_NONE:       $delimiter = "\r\n"; break; // use new-line so 'explode' doesn't flag a warning for no delimiter
+            case self::DELIMITER_COMMA:      $delimiter = ",";    break;
+            case self::DELIMITER_SEMICOLON:  $delimiter = ";";    break;
+            case self::DELIMITER_PIPE:       $delimiter = "|";    break;
+            case self::DELIMITER_TAB:        $delimiter = "\t";   break;
+            case self::DELIMITER_SPACE:      $delimiter = " ";    break;
         }
 
         switch ($qualifier)
