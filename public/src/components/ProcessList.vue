@@ -5,19 +5,20 @@
       style="width: 100%"
     >
       <el-table-column
+        prop="eid"
+        label="EID"
+      />
+      <el-table-column
         prop="fmt_started"
         label="Started"
-        width="240"
       />
       <el-table-column
         prop="fmt_finished"
         label="Finished"
-        width="240"
       />
       <el-table-column
         prop="fmt_duration"
         label="Duration (in seconds)"
-        width="240"
       />
       <el-table-column
         prop="fmt_process_status"
