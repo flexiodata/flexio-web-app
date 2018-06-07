@@ -1,8 +1,9 @@
 <template>
   <div>
     <el-table
+      class="w-100"
       :data="fmt_processes"
-      style="width: 100%"
+      :default-sort="{ prop: 'fmt_started', order: 'descending' }"
     >
       <el-table-column
         prop="eid"
@@ -11,25 +12,31 @@
       <el-table-column
         prop="fmt_started"
         label="Started"
+        :sortable="true"
+        :sort-by="'started'"
       />
       <el-table-column
         prop="fmt_finished"
         label="Finished"
+        :sortable="true"
+        :sort-by="'finished'"
       />
       <el-table-column
         prop="fmt_duration"
         label="Duration (in seconds)"
+        :sortable="true"
       />
       <el-table-column
         prop="fmt_process_status"
         label="Status"
+        :sortable="true"
       >
         <template slot-scope="scope">
           <div class="flex flex-row items-center lh-copy">
-            <i class="el-icon-success dark-green mr2" v-if="scope.row.process_status == 'C'"></i>
-            <i class="el-icon-error dark-red mr2" v-else-if="scope.row.process_status == 'F'"></i>
-            <i class="el-icon-info blue mr2" v-else></i>
-            <span>{{scope.row.fmt_process_status}}</span>
+            <i class="el-icon-success dark-green" v-if="scope.row.process_status == 'C'"></i>
+            <i class="el-icon-error dark-red" v-else-if="scope.row.process_status == 'F'"></i>
+            <i class="el-icon-info blue" v-else></i>
+            <span class="ml2">{{scope.row.fmt_process_status}}</span>
           </div>
         </template>
       </el-table-column>
