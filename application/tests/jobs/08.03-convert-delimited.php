@@ -18,17 +18,16 @@ namespace Flexio\Tests;
 
 class Test
 {
-    public function run(&$results)
+    public function createConvertTask(string $delimiter, string $qualifier, bool $header)
     {
-        // SETUP
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "convert",
                 "input" => [
                     "format" => "delimited",
-                    "delimiter" => "\t",
-                    "qualifier" => "",
-                    "header" => false
+                    "delimiter" => "$delimiter",
+                    "qualifier" => "$qualifier",
+                    "header" => $header,
                 ],
                 "output" => [
                     "format" => "table"
@@ -36,10 +35,15 @@ class Test
             ]
         ]);
 
+        return $task;
+    }
 
+    public function run(&$results)
+    {
         // TEST: Convert Delimited; basic content conversion
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.02-content-ascii.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -47,6 +51,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.1', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.03-content-unicode.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -54,6 +59,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.2', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.04-content-integer.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -61,6 +67,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.3', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.05-content-decimal.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -68,6 +75,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.4', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.06-content-number.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -75,6 +83,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.5', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.07-content-scientific.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -82,6 +91,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.6', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.08-content-amount.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -89,6 +99,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.7', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.09-content-financial.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -96,6 +107,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.8', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.10-content-identifier.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -103,6 +115,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.9', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.11-content-null.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -110,6 +123,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.10', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.12-content-escape.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -117,6 +131,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.11', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.13-content-symbol.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -124,6 +139,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.12', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.14-content-separator.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -131,6 +147,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.13', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.15-content-bracket.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -138,6 +155,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.14', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.16-content-code.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -145,6 +163,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.15', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.17-content-date.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -152,6 +171,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.16', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.18-content-date-format.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -159,6 +179,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.17', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.19-content-datetime.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -166,6 +187,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.18', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.20-content-datetime-format.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -173,6 +195,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.19', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.21-content-bool.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
@@ -180,6 +203,7 @@ class Test
         \Flexio\Tests\Check::assertArray('A.20', 'Convert Delimited; content conversion',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $task = self::createConvertTask("\t", "", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/03.22-content-bool-format.tsv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
