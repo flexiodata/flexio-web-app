@@ -13,6 +13,7 @@
   import { codemirror } from 'vue-codemirror'
   import 'codemirror/lib/codemirror.css'
   import {} from 'codemirror/mode/javascript/javascript'
+  import {} from 'codemirror/mode/yaml/yaml'
   import {} from 'codemirror/mode/python/python'
   //import {} from 'codemirror/mode/css/css'
   //import {} from 'codemirror/mode/xml/xml'

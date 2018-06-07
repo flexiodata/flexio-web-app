@@ -122,11 +122,19 @@
                 v-model="edit_json"
               />
               <transition name="el-zoom-in-top">
-                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="parse_error.length > 0">Parse error: {{parse_error}}</div>
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="json_parse_error.length > 0">Parse error: {{json_parse_error}}</div>
               </transition>
             </div>
             <div v-else-if="editor == 'yaml'">
-              YAML
+              <CodeEditor
+                class="bg-white ba b--black-10 overflow-y-auto"
+                lang="yaml"
+                :options="{ minRows: 12, maxRows: 30 }"
+                v-model="edit_yaml"
+              />
+              <transition name="el-zoom-in-top">
+                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="yaml_parse_error.length > 0">Parse error: {{yaml_parse_error}}</div>
+              </transition>
             </div>
           </div>
 
@@ -242,6 +250,7 @@
 
 <script>
   import stickybits from 'stickybits'
+  import yaml from 'js-yaml'
   import Flexio from 'flexio-sdk-js'
   import { mapState, mapGetters } from 'vuex'
   import {
@@ -327,14 +336,15 @@
         editor_options: [
           { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
-          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           }/*,
-          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
+          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           },
+          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }
         ],
         has_run_once: false,
         processes_fetched: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
-        parse_error: ''
+        json_parse_error: '',
+        yaml_parse_error: ''
       }
     },
     computed: {
@@ -381,11 +391,34 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.parse_error = ''
+            this.json_parse_error = ''
           }
           catch(e)
           {
-            this.parse_error = e.message
+            this.json_parse_error = e.message
+          }
+        }
+      },
+      edit_yaml: {
+        get() {
+          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
+
+          // TODO: remove 'omitDeep' once we get rid of task eids
+          task = omitDeep(task, ['eid'])
+
+          return yaml.safeDump(task)
+        },
+        set(value) {
+          try {
+            var task = yaml.safeLoad(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { task })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.yaml_parse_error = ''
+          }
+          catch(e)
+          {
+            this.yaml_parse_error = e.message
           }
         }
       },
@@ -399,7 +432,7 @@
         return this.isChanged()
       },
       has_errors() {
-        return this.syntax_error.length > 0 || this.parse_error.length > 0
+        return this.syntax_error.length > 0 || this.json_parse_error.length > 0 || this.yaml_parse_error.length > 0
       },
 
       // -- all of the below computed values pertain to getting the preview --
