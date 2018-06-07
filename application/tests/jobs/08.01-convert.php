@@ -49,7 +49,7 @@ class Test
 
 
         // TEST: Convert Delimited; empty file
-/*
+
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", true);
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.01-empty.txt');
@@ -82,7 +82,7 @@ class Test
         $expected = [];
         \Flexio\Tests\Check::assertArray('A.4', 'Convert Delimited; empty file',  $actual, $expected, $results);
 
-*/
+
         // TEST: Convert Delimited; variations in delimiter
 
         // BEGIN TEST
@@ -100,7 +100,7 @@ class Test
             [":,|	~; :,|	~; "]
         ];
         \Flexio\Tests\Check::assertArray('B.1', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
-return;
+
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
