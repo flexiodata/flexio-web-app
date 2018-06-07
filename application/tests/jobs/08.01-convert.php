@@ -90,7 +90,15 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [[",|	~; :,|	~; :"],["|	~; :,|	~; :,"],["	~; :,|	~; :,|"],["~; :,|	~; :,|	"],["; :,|	~; :,|	~"],[" :,|	~; :,|	~;"],[":,|	~; :,|	~; "]];
+        $expected = [
+            [",|	~; :,|	~; :"],
+            ["|	~; :,|	~; :,"],
+            ["	~; :,|	~; :,|"],
+            ["~; :,|	~; :,|	"],
+            ["; :,|	~; :,|	~"],
+            [" :,|	~; :,|	~;"],
+            [":,|	~; :,|	~; "]
+        ];
         \Flexio\Tests\Check::assertArray('B.1', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 */
         // BEGIN TEST
@@ -114,7 +122,15 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",|	~"," :,|	~"," :"],
+            ["|	~"," :,|	~"," :,"],
+            ["	~"," :,|	~"," :,|"],
+            ["~"," :,|	~"," :,|	"],
+            [""," :,|	~"," :,|	~"],
+            [" :,|	~"," :,|	~",""],
+            [":,|	~"," :,|	~"," "]
+        ];
         \Flexio\Tests\Check::assertArray('B.3', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -122,7 +138,15 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",","	~; :,","	~; :"],
+            ["","	~; :,","	~; :,"],
+            ["	~; :,","	~; :,",""],
+            ["~; :,","	~; :,","	"],
+            ["; :,","	~; :,","	~"],
+            [" :,","	~; :,","	~;"],
+            [":,","	~; :,","	~; "]
+        ];
         \Flexio\Tests\Check::assertArray('B.4', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -130,7 +154,15 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",|","~; :,|","~; :"],
+            ["|","~; :,|","~; :,"],
+            ["","~; :,|","~; :,|"],
+            ["~; :,|","~; :,|",""],
+            ["; :,|","~; :,|","~"],
+            [" :,|","~; :,|","~;"],
+            [":,|","~; :,|","~; "]
+        ];
         \Flexio\Tests\Check::assertArray('B.5', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -138,7 +170,15 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",|	~;",":,|	~;",":"],
+            ["|	~;",":,|	~;",":,"],
+            ["	~;",":,|	~;",":,|"],
+            ["~;",":,|	~;",":,|	"],
+            [";",":,|	~;",":,|	~"],
+            ["",":,|	~;",":,|	~;"],
+            [":,|	~;",":,|	~;",""]
+        ];
         \Flexio\Tests\Check::assertArray('B.6', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -158,11 +198,19 @@ class Test
         \Flexio\Tests\Check::assertArray('B.7', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task = self::createConvertTask(";", "{none}", false);
+        $task = self::createConvertTask("\t", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",|","~; :,|","~; :"],
+            ["|","~; :,|","~; :,"],
+            ["","~; :,|","~; :,|"],
+            ["~; :,|","~; :,|",""],
+            ["; :,|","~; :,|","~"],
+            [" :,|","~; :,|","~;"],
+            [":,|","~; :,|","~; "]
+        ];
         \Flexio\Tests\Check::assertArray('B.8', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
@@ -170,31 +218,63 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
+        $expected = [
+            [",|	~; ",",|	~; ",""],
+            ["|	~; ",",|	~; ",","],
+            ["	~; ",",|	~; ",",|"],
+            ["~; ",",|	~; ",",|	"],
+            ["; ",",|	~; ",",|	~"],
+            [" ",",|	~; ",",|	~;"],
+            ["",",|	~; ",",|	~; "]
+        ];
         \Flexio\Tests\Check::assertArray('B.9', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $task = self::createConvertTask(":", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
-        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
-        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('B.10', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = self::createConvertTask("`", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('B.11', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
+        $expected = [
+            [",|	~; :,|	~; :"],
+            ["|	~; :,|	~; :,"],
+            ["	~; :,|	~; :,|"],
+            ["~; :,|	~; :,|	"],
+            ["; :,|	~; :,|	~"],
+            [" :,|	~; :,|	~;"],
+            [":,|	~; :,|	~; "]
+        ];
+        \Flexio\Tests\Check::assertArray('B.10', 'Convert Delimited; variations in delimiter (delimiter doesn\'t exist)',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = self::createConvertTask(",,", "{none}", false);
         $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [];
-        \Flexio\Tests\Check::assertArray('B.12', 'Convert Delimited; variations in delimiter',  $actual, $expected, $results);
+        $expected = [
+            [",|	~; :,|	~; :"],
+            ["|	~; :,|	~; :,"],
+            ["	~; :,|	~; :,|"],
+            ["~; :,|	~; :,|	"],
+            ["; :,|	~; :,|	~"],
+            [" :,|	~; :,|	~;"],
+            [":,|	~; :,|	~; "]
+        ];
+        \Flexio\Tests\Check::assertArray('B.11', 'Convert Delimited; variations in delimiter (multiple-character delimiter)',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = self::createConvertTask(",|", "{none}", false);
+        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
+        $actual = \Flexio\Tests\Content::getRows($process->getStdout());
+        $expected = [
+            ["","	~; :","	~; :"],
+            ["|	~; :","	~; :,",null],
+            ["	~; :","	~; :",""],
+            ["~; :","	~; :","	"],
+            ["; :","	~; :","	~"],
+            [" :","	~; :","	~;"],
+            [":","	~; :","	~; "]
+        ];
+        \Flexio\Tests\Check::assertArray('B.12', 'Convert Delimited; variations in delimiter (multiple-character delimiter)',  $actual, $expected, $results);
     }
 }
