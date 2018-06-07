@@ -29,6 +29,10 @@ class Test
         // 1. blank initial rows (first row isn't on first row)
         // 2. embedded blank rows
         // 3. trailing blank rows
+        // 4. various delimiters
+        // 5. varying number of delimiters in various rows
+        // 6. different line-feed characters
+        // 7. different text qualifiers
 
     }
 }

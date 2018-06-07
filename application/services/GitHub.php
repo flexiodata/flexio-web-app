@@ -70,9 +70,60 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->getFolderItems($repository_to_find, $folder_path);
     }
 
-    public function getFileInfo(string $path) : array
+    public function getFileInfo(string $full_path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if (!$this->authenticated())
+            return array();
+
+        $repository = '';
+        $path = '';
+        $result = self::getPathParts($full_path, $repository, $path);
+        if ($result === false)
+            return [];
+
+        $url = "https://api.github.com/repos/$repository/contents/$path";
+
+        $contents = '';
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                              'Accept: application/vnd.github.v3+json',
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+            $headers[] = $data;
+            return strlen($data);
+        });
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $entry = @json_decode($result, true);
+        if (!is_array($entry))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        if ($httpcode == 404)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
+
+        if ($httpcode >= 200 && $httpcode <= 299)
+        {
+            $res = array('id'=> md5($entry['git_url']),
+                        'name' => $entry['name'],
+                        'size' => $entry['size'] ?? null,
+                        'modified' => '',
+                        'type' => ($result['type'] ?? 'file') ? 'FILE' : 'DIR');  // github api will return json {} for file, [] for directory
+
+            return $res;
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+        }
     }
 
     public function exists(string $path) : bool
