@@ -98,19 +98,32 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return strlen($data);
         });
         $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         $entry = @json_decode($result, true);
         if (!is_array($entry))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $res = array('id'=> md5($entry['git_url']),
-                     'name' => $entry['name'],
-                     'size' => $entry['size'] ?? null,
-                     'modified' => '',
-                     'type' => ($result['type'] ?? 'file') ? 'FILE' : 'DIR');  // github api will return json {} for file, [] for directory
+        if ($httpcode == 404)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
 
-        return $res;
+        if ($httpcode >= 200 && $httpcode <= 299)
+        {
+            $res = array('id'=> md5($entry['git_url']),
+                        'name' => $entry['name'],
+                        'size' => $entry['size'] ?? null,
+                        'modified' => '',
+                        'type' => ($result['type'] ?? 'file') ? 'FILE' : 'DIR');  // github api will return json {} for file, [] for directory
+
+            return $res;
+        }
+         else
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+        }
     }
 
     public function exists(string $path) : bool
