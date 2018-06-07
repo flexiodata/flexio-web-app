@@ -38,7 +38,7 @@ class Test
     public function run(&$results)
     {
         // TEST: Convert JSON; empty file
-
+/*
         // BEGIN TEST
         $task = self::createConvertTask();
         $stream = \Flexio\Tests\Util::createStream('/json/01.01-empty.json');
@@ -108,5 +108,6 @@ class Test
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];
         \Flexio\Tests\Check::assertArray('C.4', 'Convert JSON; simple file',  $actual, $expected, $results);
+*/
     }
 }
