@@ -42,10 +42,9 @@ class Test
         // 2. blank initial rows (first row isn't on first row)
         // 3. embedded blank rows
         // 4. trailing blank rows
-        // 5. various delimiters
-        // 6. varying number of delimiters in various rows
-        // 7. different line-feed characters
-        // 8. different text qualifiers
+        // 5. varying number of delimiters in various rows
+        // 6. different line-feed characters
+        // 7. different text qualifiers
 
 
         // TEST: Convert Delimited; empty file
