@@ -29,6 +29,9 @@ class Test
                     "delimiter" => ",",
                     "qualifier" => "\"",
                     "header" => true
+                ],
+                "output" => [
+                    "format" => "table"
                 ]
             ]
         ]);

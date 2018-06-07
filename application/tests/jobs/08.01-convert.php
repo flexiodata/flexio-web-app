@@ -28,6 +28,9 @@ class Test
                     "delimiter" => "$delimiter",
                     "qualifier" => "$qualifier",
                     "header" => $header,
+                ],
+                "output" => [
+                    "format" => "table"
                 ]
             ]
         ]);
