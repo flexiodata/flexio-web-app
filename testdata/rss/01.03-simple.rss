@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0">
     <channel>
-    <title>RSS Feed</title>
-    <link>http://www.flex.io/rss</link>
-    <description>Feed Description</description>
+    <title></title>
+    <link></link>
+    <description></description>
     <item>
-        <title>Item Title</title>
-        <link>http://www.flex.io/rss/item.html</link>
-        <description>This is a test.</description>
-        <guid>http://www.flex.io/rss/item.html</guid>
+        <title></title>
+        <link></link>
+        <description></description>
+        <guid></guid>
     </item>
     </channel>
 </rss>
