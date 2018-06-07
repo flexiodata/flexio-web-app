@@ -109,7 +109,7 @@ class Util
 
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
-        if (true)
+        if (false)
         {
             // debug mode for fixing tests
             $process = \Flexio\Jobs\Process::create()->setOwner($userid)->execute($tasks);
