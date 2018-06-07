@@ -261,6 +261,7 @@
 
   const PIPEDOC_VIEW_PROPERTIES = 'properties'
   const PIPEDOC_VIEW_CONFIGURE  = 'configure'
+  const PIPEDOC_VIEW_HISTORY    = 'history'
 
   const PIPEDOC_EDITOR_SDK_JS  = 'sdk-js'
   const PIPEDOC_EDITOR_BUILDER = 'builder'
@@ -297,11 +298,11 @@
         immediate: true
       },
       active_tab_name: {
-        handler: 'updateRoute',
+        handler: 'onTabChange',
         immediate: true
       },
       editor: {
-        handler: 'updateRoute',
+        handler: 'onEditorChange',
         immediate: true
       },
       is_fetched: {
@@ -330,6 +331,7 @@
           { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
         ],
         has_run_once: false,
+        processes_fetched: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false,
         parse_error: ''
@@ -443,6 +445,22 @@
         'getActiveDocumentProcesses',
         'getActiveUser'
       ]),
+      onTabChange(val) {
+        if (!this.processes_fetched && val == PIPEDOC_VIEW_HISTORY) {
+          this.$store.dispatch('fetchProcesses', { parent_eid: this.eid }).then(response => {
+            if (response.ok) {
+              this.processes_fetched = true
+            } else {
+              // TODO: add error handling
+            }
+          })
+        }
+
+        this.updateRoute()
+      },
+      onEditorChange(val) {
+        this.updateRoute()
+      },
       updateRoute() {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])

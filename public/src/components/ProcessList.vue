@@ -7,17 +7,17 @@
       <el-table-column
         prop="fmt_started"
         label="Started"
-        width="180"
+        width="240"
       />
       <el-table-column
         prop="fmt_finished"
         label="Finished"
-        width="180"
+        width="240"
       />
       <el-table-column
         prop="fmt_duration"
         label="Duration (in seconds)"
-        width="220"
+        width="240"
       />
       <el-table-column
         prop="fmt_process_status"
@@ -69,8 +69,8 @@
       fmt_processes() {
         return _.map(this.our_processes, (p) => {
           return _.assign({}, p, {
-            fmt_started: p.started ? moment(p.started).format('l h:mm:ss') : '--',
-            fmt_finished: p.finished ? moment(p.finished).format('l h:mm:ss') : '--',
+            fmt_started: p.started ? moment(p.started).format('LL hh:mm:ss') : '--',
+            fmt_finished: p.finished ? moment(p.finished).format('LL hh:mm:ss') : '--',
             fmt_duration: p.duration ? p.duration.toFixed(4) : '--',
             fmt_process_status: friendlyProcessStatus(p.process_status)
           })
