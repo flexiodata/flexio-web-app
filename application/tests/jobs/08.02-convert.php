@@ -34,75 +34,75 @@ class Test
         ]);
 
 
-        // TEST: Convert CSV; single fieldname
+        // TEST: Convert Delimited; single fieldname
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.10-header-basic.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
-        \Flexio\Tests\Check::assertArray('A.1', 'Convert CSV; single fieldname should create correctly',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', 'Convert Delimited; single fieldname should create correctly',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.11-header-basic.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
-        \Flexio\Tests\Check::assertArray('A.2', 'Convert CSV; single fieldname should create correctly',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', 'Convert Delimited; single fieldname should create correctly',  $actual, $expected, $results);
 
 
 
-        // TEST: Convert CSV; fieldnames with leading/trailing/embedded spaces
+        // TEST: Convert Delimited; fieldnames with leading/trailing/embedded spaces
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.20-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
-        \Flexio\Tests\Check::assertArray('B.1', 'Convert CSV; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', 'Convert Delimited; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.21-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
-        \Flexio\Tests\Check::assertArray('B.2', 'Convert CSV; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', 'Convert Delimited; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.21-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
-        \Flexio\Tests\Check::assertArray('B.3', 'Convert CSV; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', 'Convert Delimited; leading/trailing spaces in a fieldname should be trimmed; internal spaces preserved',  $actual, $expected, $results);
 
 
 
-        // TEST: Convert CSV; fieldnames with uppercase characters
+        // TEST: Convert Delimited; fieldnames with uppercase characters
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.30-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
-        \Flexio\Tests\Check::assertArray('D.1', 'Convert CSV; uppercase characters in a fieldname should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.1', 'Convert Delimited; uppercase characters in a fieldname should be converted to lowercase',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.31-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
-        \Flexio\Tests\Check::assertArray('D.2', 'Convert CSV; uppercase characters in a fieldname should be converted to lowercase',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.2', 'Convert Delimited; uppercase characters in a fieldname should be converted to lowercase',  $actual, $expected, $results);
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.32-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
-        \Flexio\Tests\Check::assertArray('D.3', 'Convert CSV; uppercase characters in a fieldname should be converted to lowercase in',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.3', 'Convert Delimited; uppercase characters in a fieldname should be converted to lowercase in',  $actual, $expected, $results);
 
 
 
-        // TEST: Convert CSV; fieldnames with embedded symbols
+        // TEST: Convert Delimited; fieldnames with embedded symbols
 
         // BEGIN TEST
         $stream = \Flexio\Tests\Util::createStream('/delimited/02.40-header-symbol.csv');
@@ -176,7 +176,7 @@ class Test
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["row","column","min","max","sum","avg","count","total","update","updated","delete","deleted","select","where","true","false","yes","no","null"]';
-        \Flexio\Tests\Check::assertArray('F.1', 'Convert CSV; allow a fieldname to be a keyword',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('F.1', 'Convert Delimited; allow a fieldname to be a keyword',  $actual, $expected, $results);
 
 
 
