@@ -7,7 +7,7 @@
     >
       <el-table-column
         prop="eid"
-        label="EID"
+        label="Process ID"
       />
       <el-table-column
         prop="fmt_started"
