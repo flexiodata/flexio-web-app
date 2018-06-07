@@ -55,7 +55,9 @@
     },
     computed: {
       all_processes() {
-        return this.getAllProcesses()
+        var p = this.getAllProcesses()
+        p = _.sortBy(p, [ function(p) { return new Date(p.created) } ])
+        return _.reverse(p)
       },
       our_processes() {
         if (this.parentEid.length == 0) {
