@@ -36,14 +36,92 @@ class Test
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "method" => "get",
-                "url" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
-        $actual = substr($result['response'],0,27);
-        $expected = 'def flexio_handler(context)';
-        \Flexio\Tests\Check::assertString('A.1', 'Process Render; basic functionality',  $actual, $expected, $results);
+        $response = json_decode($result['response'],true);
+        $actual = $result;
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 404,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "missing-parameter",
+                    "message": "Missing parameter: \'url\'"
+                }
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; missing url parameter',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "invalid",
+                "url" => "https://postman-echo.com/get"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $response = json_decode($result['response'],true);
+        $actual = $result;
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 404,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "invalid-parameter",
+                    "message": "Invalid parameter: \'method\'"
+                }
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; invalid method',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "get",
+                "url" => "http"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $response = json_decode($result['response'],true);
+        $actual = $result;
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 404,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "invalid-parameter",
+                    "message": "Invalid parameter: \'url\'"
+                }
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; invalid method',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "url" => "https://postman-echo.com/get"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $response = json_decode($result['response'],true);
+        $actual = $result;
+        $actual['response'] = $response;
+        $expected = '{
+            "code": 200,
+            "content_type": "application\/json; charset=utf-8",
+            "response": {
+                "args":[],
+                "url":"https://postman-echo.com/get"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.4', 'Process Request; use default \'get\' for method',  $actual, $expected, $results);
     }
 }
 
