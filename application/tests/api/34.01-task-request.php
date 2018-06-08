@@ -91,16 +91,11 @@ class Test
         $actual = $result;
         $actual['response'] = $response;
         $expected = '{
-            "code": 404,
-            "content_type": "application/json",
-            "response": {
-                "error": {
-                    "code": "invalid-parameter",
-                    "message": "Invalid parameter: \'url\'"
-                }
-            }
+            "code": 200,
+            "content_type": "application\/x-empty",
+            "response": null
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; invalid method',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; invalid url',  $actual, $expected, $results);
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
