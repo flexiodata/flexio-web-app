@@ -42,7 +42,7 @@ module.exports = {
       },
       {
         test: /\.yml$/,
-        loader: 'yaml-loader',
+        loader: 'json-loader!yaml-loader',
         exclude: /node_modules/
       },
       // compress images before outputting them
