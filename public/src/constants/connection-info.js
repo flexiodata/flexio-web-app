@@ -101,6 +101,17 @@ const GMAIL = {
   is_storage: false
 }
 
+const GOOGLECLOUDSTORAGE = {
+  service_name: 'Google Cloud Storage',
+  service_description: 'Unified object storage for developers and enterprises',
+  connection_type: types.CONNECTION_TYPE_GOOGLECLOUDSTORAGE,
+  icon: require('../assets/icon/icon-google-cloud-storage-128.png'),
+  is_service: true,
+  is_input: true,
+  is_output: true,
+  is_storage: true
+}
+
 const GOOGLEDRIVE = {
   service_name: 'Google Drive',
   service_description: 'Online document and file storage',
@@ -292,18 +303,19 @@ const UPLOAD = {
 //export const CONNECTION_INFO_PIPELINEDEALS = PIPELINEDEALS
 
 // go out of alphabetical order here so the order is correct in the pipe add modal
-export const CONNECTION_INFO_CUSTOM_API    = CUSTOM_API
-export const CONNECTION_INFO_AMAZON_S3     = AMAZON_S3
-export const CONNECTION_INFO_BOX           = BOX
-export const CONNECTION_INFO_DROPBOX       = DROPBOX
-export const CONNECTION_INFO_ELASTICSEARCH = ELASTICSEARCH
-export const CONNECTION_INFO_SMTP          = SMTP
-export const CONNECTION_INFO_GITHUB        = GITHUB
-export const CONNECTION_INFO_GMAIL         = GMAIL
-export const CONNECTION_INFO_GOOGLEDRIVE   = GOOGLEDRIVE
-export const CONNECTION_INFO_GOOGLESHEETS  = GOOGLESHEETS
-export const CONNECTION_INFO_HOME          = HOME
-export const CONNECTION_INFO_MYSQL         = MYSQL
-export const CONNECTION_INFO_POSTGRES      = POSTGRES
-export const CONNECTION_INFO_SFTP          = SFTP
-export const CONNECTION_INFO_TWILIO        = TWILIO
+export const CONNECTION_INFO_CUSTOM_API           = CUSTOM_API
+export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
+export const CONNECTION_INFO_BOX                  = BOX
+export const CONNECTION_INFO_DROPBOX              = DROPBOX
+export const CONNECTION_INFO_ELASTICSEARCH        = ELASTICSEARCH
+export const CONNECTION_INFO_SMTP                 = SMTP
+export const CONNECTION_INFO_GITHUB               = GITHUB
+export const CONNECTION_INFO_GMAIL                = GMAIL
+export const CONNECTION_INFO_GOOGLECLOUDSTORAGE   = GOOGLECLOUDSTORAGE
+export const CONNECTION_INFO_GOOGLEDRIVE          = GOOGLEDRIVE
+export const CONNECTION_INFO_GOOGLESHEETS         = GOOGLESHEETS
+export const CONNECTION_INFO_HOME                 = HOME
+export const CONNECTION_INFO_MYSQL                = MYSQL
+export const CONNECTION_INFO_POSTGRES             = POSTGRES
+export const CONNECTION_INFO_SFTP                 = SFTP
+export const CONNECTION_INFO_TWILIO               = TWILIO
