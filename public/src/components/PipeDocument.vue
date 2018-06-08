@@ -336,8 +336,8 @@
         editor_options: [
           { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
-          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           },
-          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }
+          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           }/*,
+          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
         ],
         has_run_once: false,
         processes_fetched: false,
