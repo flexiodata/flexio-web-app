@@ -30,20 +30,7 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task basic functionality
 
-        // BEGIN TEST
-        $task = \Flexio\Tests\Task::create([
-            [
-                "op" => "request",
-                "method" => "get",
-                "url" => "https://raw.githubusercontent.com/flexiodata/functions/master/python/hello-world.py"
-            ]
-        ]);
-        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
-        $actual = substr($result['response'],0,27);
-        $expected = 'def flexio_handler(context)';
-        \Flexio\Tests\Check::assertString('B.1', 'Process Request; basic functionality',  $actual, $expected, $results);
     }
 }
 
