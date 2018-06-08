@@ -242,7 +242,11 @@ class Request extends \Flexio\Jobs\Base
 
         switch ($method)
         {
-            default: // default to get
+            // if method isn't supplied, it's already set to get; 'default' here
+            // is an invalid method
+            default:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
             case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
             //case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
             //case 'put':     curl_setopt($ch, CURLOPT_HTTPPUT, true); break;
