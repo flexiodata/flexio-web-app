@@ -72,7 +72,7 @@ class Test
             "response": {
                 "error": {
                     "code": "invalid-parameter",
-                    "message": "Invalid parameter: \'method\'"
+                    "message": "Invalid parameter"
                 }
             }
         }';
