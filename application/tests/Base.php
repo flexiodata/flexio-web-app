@@ -33,9 +33,12 @@ class Base
     public const STORAGE_AMAZONS3 = 'testsuite-amazons3';
     public const STORAGE_BOX = 'testsuite-box';
     public const STORAGE_DROPBOX = 'testsuite-dropbox';
-    public const STORAGE_GITHUB = 'testsuite-github';
     public const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
     public const STORAGE_SFTP = 'testsuite-sftp';
+
+    public const STORAGE_GITHUB = 'testsuite-github';
+    public const STORAGE_GITHUB_OWNER = 'flexiotesting';
+    public const STORAGE_GITHUB_REPO = 'testsuite';
 
     public static function testsAllowed()
     {

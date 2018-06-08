@@ -198,7 +198,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!isset($result['content']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        $callback($result['content']);
+        $callback(base64_decode($result['content']));
     }
 
     public function write(array $params, callable $callback)
