@@ -107,16 +107,16 @@ class Util
         return [ 'code' => $http_code, 'content_type' => $content_type, 'response' => $response ];
     }
 
+    public static function runProcessDebug(string $apibase, string $userid, string $token, array $tasks)
+    {
+        // debug mode for fixing tests
+        $process = \Flexio\Jobs\Process::create()->setOwner($userid)->execute($tasks);
+        $response = $process->getStdout()->getReader()->read();
+        return [ 'code' => 200, 'content_type' => $process->getStdout()->getMimeType(), 'response' => $response ];
+    }
+
     public static function runProcess(string $apibase, string $userid, string $token, array $tasks)
     {
-        if (true)
-        {
-            // debug mode for fixing tests
-            $process = \Flexio\Jobs\Process::create()->setOwner($userid)->execute($tasks);
-            $response = $process->getStdout()->getReader()->read();
-            return [ 'code' => 200, 'content_type' => $process->getStdout()->getMimeType(), 'response' => $response ];
-        }
-
         // wraps up the creation of a process and the running of that process
         $params = json_encode(['task' => $tasks]);
         $result = self::callApi(array(
