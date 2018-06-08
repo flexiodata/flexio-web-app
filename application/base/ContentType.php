@@ -58,6 +58,14 @@ class ContentType
         // buffer (e.g. text/plain), but the filename indicates a specific content
         // type, then the mime is based off the filename
 
+        // handle flexible input types for convenience
+        if (!is_string($extension))
+            $extension = '';
+        if (!is_string($buffer))
+            $buffer = '';
+        if ($content_length !== false && !is_integer($content_length))
+            $content_length = false;
+
         // if we have an empty buffer and extension, return the empty mime type
         if ($extension === ''  && $buffer === '')
             return ContentType::EMPTY;
@@ -137,6 +145,12 @@ class ContentType
 
     public static function getMimeTypeFromExtension($ext, $def_return = ContentType::STREAM) : string
     {
+        // handle flexible input types for convenience
+        if (!is_string($ext))
+            $ext = '';
+        if (!is_string($def_return))
+            $def_return = ContentType::STREAM;
+
         if (strpos($ext, '.') !== false)
             $ext = \Flexio\Base\File::getFileExtension($ext);
 
@@ -176,6 +190,10 @@ class ContentType
 
     public static function getMimeAndContentType($buffer, &$mime_type, &$content_type) : bool
     {
+        // handle flexible input types for convenience
+        if (!is_string($buffer))
+            $buffer = '';
+
         // gets the mime and content type from a string; returns true on success
         // and false otherwise
 
