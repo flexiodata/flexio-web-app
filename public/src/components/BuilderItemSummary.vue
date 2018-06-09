@@ -12,17 +12,11 @@
       <div class="mt4">
         <el-button
           class="ttu b"
+          type="primary"
+          size="large"
           @click="gotoPipe"
         >
           View pipe
-        </el-button>
-        <span class="ph2">or</span>
-        <el-button
-          class="ttu b"
-          type="primary"
-          @click="runPipe"
-        >
-          Run now
         </el-button>
       </div>
     </div>
@@ -88,10 +82,6 @@
       gotoPipe() {
         var eid = this.pipe.eid
         this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-      },
-      runPipe() {
-        var eid = this.pipe.eid
-        this.$router.push({ name: ROUTE_PIPES, params: { eid, state: 'run' } })
       },
       createPipe() {
         var pipe_fn = (Flexio, callback) => {
