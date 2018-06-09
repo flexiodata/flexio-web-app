@@ -1,0 +1,37 @@
+task:
+  op: email
+  to:
+  subject:
+  body:
+  html:
+  attachments: []
+
+prompts:
+  - element: form
+    title: Email
+    description: ''
+    label_position: left
+    label_width: 14rem
+    form_items:
+      - element: input
+        type: hidden
+        variable: op
+        value: email
+      - element: input
+        type: email
+        variable: to
+        label: To
+        placeholder: Enter email address
+        value: ''
+      - element: input
+        type: text
+        variable: subject
+        label: Subject
+        placeholder: Enter subject
+        value: ''
+      - element: input
+        type: textarea
+        variable: body
+        label: Message
+        placeholder: Enter message
+        value: ''

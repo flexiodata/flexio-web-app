@@ -110,6 +110,7 @@
             </div>
             <div v-else-if="editor == 'builder'">
               <BuilderList
+                class="mt3"
                 :container-id="doc_id"
                 :show-insert-buttons="true"
               />
