@@ -259,6 +259,8 @@
     PROCESS_STATUS_COMPLETED,
     PROCESS_MODE_BUILD
   } from '../constants/process'
+  import builder_items from '../data/builder'
+
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
   import BuilderList from './BuilderList.vue'
@@ -503,6 +505,19 @@
         _.set(new_route, 'query', { editor })
         this.$router.replace(new_route)
       },
+      taskToDef(task) {
+        var prompts = []
+        _.each(task.items, (t) => {
+          var item = _.find(builder_items, (bi) => {
+            return _.get(bi, 'task.op') == t.op
+          })
+
+          if (item) {
+            prompts = prompts.concat(item.prompts)
+          }
+        })
+        return { prompts }
+      },
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
@@ -511,6 +526,7 @@
             var pipe = response.data
             this.$store.commit('pipe/INIT_PIPE', pipe)
             this.$store.commit('pipe/FETCHING_PIPE', false)
+            this.$store.commit('builder/INIT_DEF', this.taskToDef(pipe.task))
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)
           }

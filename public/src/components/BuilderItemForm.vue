@@ -17,9 +17,11 @@
       v-if="is_active"
     >
       <el-form-item
+        :class="fi.cls"
         :label="fi.label"
         :key="fi.variable"
         :prop="fi.variable"
+        v-show="fi.type !== 'hidden'"
         v-for="fi in form_items"
       >
         <el-switch
@@ -83,6 +85,12 @@
           :placeholder="fi.placeholder"
           v-model="form_values[fi.variable]"
           v-else-if="fi.element == 'input' && fi.type == 'textarea'"
+        />
+        <el-input
+          type="hidden"
+          :placeholder="fi.placeholder"
+          v-model="form_values[fi.variable]"
+          v-else-if="fi.element == 'input' && fi.type == 'hidden'"
         />
         <el-input
           :placeholder="fi.placeholder"
