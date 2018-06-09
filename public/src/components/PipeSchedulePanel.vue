@@ -7,109 +7,112 @@
       </div>
     </div>
 
-    <div class="flex flex-row items-center nt3 mb3">
-      <el-switch
-        class="hint--bottom"
-        active-color="#009900"
-        :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-        v-model="is_scheduled"
-      />
-      <span
-        class="fw6 f5 pl2 pointer"
-        @click.stop="is_scheduled = !is_scheduled"
-      >
-        <transition name="el-zoom-in-center" mode="out-in">
-          <span v-bind:key="is_scheduled">
-            {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
-          </span>
-        </transition>
-      </span>
-    </div>
-    <div class="flex flex-row mb3">
-      <div class="flex-fill mr3">
-        <label class="db f8">Frequency</label>
+    <!-- use <el-form> classes for consistent spacing -->
+    <div class="el-form el-form--cozy el-form__label-tiny">
+      <div class="el-form-item flex flex-row items-center">
+        <el-switch
+          class="hint--bottom"
+          active-color="#009900"
+          :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
+          v-model="is_scheduled"
+        />
+        <span
+          class="fw6 f5 pl2 pointer"
+          @click.stop="is_scheduled = !is_scheduled"
+        >
+          <transition name="el-zoom-in-center" mode="out-in">
+            <span v-bind:key="is_scheduled">
+              {{is_scheduled ? 'Scheduled' : 'Not Scheduled'}}
+            </span>
+          </transition>
+        </span>
+      </div>
+      <div class="el-form-item flex flex-row">
+        <div class="flex-fill mr3">
+          <label class="el-form-item__label">Frequency</label>
+          <el-select
+            class="w-100"
+            placeholder="Frequency"
+            v-model="edit_pipe.schedule.frequency"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in frequency_options"
+            />
+          </el-select>
+        </div>
+        <div class="flex-fill">
+          <label class="el-form-item__label">Timezone</label>
+          <el-select
+            class="w-100"
+            placeholder="Search for Timezone"
+            filterable
+            v-model="edit_pipe.schedule.timezone"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.val"
+              :key="option.val"
+              v-for="option in timezone_options"
+            />
+          </el-select>
+        </div>
+      </div>
+      <div class="el-form-item" v-if="is_weekly">
+        <label class="el-form-item__label">Run on the following days of the week</label>
         <el-select
           class="w-100"
-          placeholder="Frequency"
-          v-model="edit_pipe.schedule.frequency"
+          placeholder="Choose days of the week"
+          multiple
+          v-model="edit_pipe.schedule.days"
         >
           <el-option
             :label="option.label"
             :value="option.val"
             :key="option.val"
-            v-for="option in frequency_options"
+            v-for="option in day_options"
           />
         </el-select>
       </div>
-      <div class="flex-fill">
-        <label class="db f8">Timezone</label>
+      <div class="el-form-item" v-if="is_monthly">
+        <label class="el-form-item__label">Run on the following days of the month</label>
         <el-select
           class="w-100"
-          placeholder="Search for Timezone"
-          filterable
-          v-model="edit_pipe.schedule.timezone"
+          placeholder="Choose days of the month"
+          multiple
+          v-model="edit_pipe.schedule.days"
         >
           <el-option
             :label="option.label"
             :value="option.val"
             :key="option.val"
-            v-for="option in timezone_options"
+            v-for="option in month_options"
           />
         </el-select>
       </div>
-    </div>
-    <div class="mb3" v-if="is_weekly">
-      <label class="db f8">Run on the following days of the week</label>
-      <el-select
-        class="w-100"
-        placeholder="Choose days of the week"
-        multiple
-        v-model="edit_pipe.schedule.days"
-      >
-        <el-option
-          :label="option.label"
-          :value="option.val"
-          :key="option.val"
-          v-for="option in day_options"
+      <div class="el-form-item" style="width: 270px" v-if="show_times">
+        <label class="el-form-item__label" v-if="is_weekly || is_monthly">Run at the following time</label>
+        <label class="el-form-item__label" v-else>Run at the following times</label>
+        <time-chooser-list
+          class="mb1 nl1"
+          :times="edit_pipe.schedule.times"
+          @item-change="updateTime"
+          @item-delete="deleteTime"
         />
-      </el-select>
-    </div>
-    <div class="mb3" v-if="is_monthly">
-      <label class="db f8">Run on the following days of the month</label>
-      <el-select
-        class="w-100"
-        placeholder="Choose days of the month"
-        multiple
-        v-model="edit_pipe.schedule.days"
-      >
-        <el-option
-          :label="option.label"
-          :value="option.val"
-          :key="option.val"
-          v-for="option in month_options"
-        />
-      </el-select>
-    </div>
-    <div style="width: 18rem" v-if="show_times">
-      <label class="db f8" v-if="is_weekly || is_monthly">Run at the following time</label>
-      <label class="db f8" v-else>Run at the following times</label>
-      <time-chooser-list
-        class="mb1 nl1"
-        :times="edit_pipe.schedule.times"
-        @item-change="updateTime"
-        @item-delete="deleteTime"
-      />
-      <div
-        class="ph1 nl1"
-        v-if="!is_weekly && !is_monthly"
-      >
-        <el-button
-          size="mini"
-          class="w-100 ttu b"
-          @click="addTime"
+        <div
+          class="ph1 nl1"
+          v-if="!is_weekly && !is_monthly"
         >
-          Add time
-        </el-button>
+          <el-button
+            size="mini"
+            class="w-100 ttu b"
+            @click="addTime"
+          >
+            Add time
+          </el-button>
+        </div>
       </div>
     </div>
 
@@ -309,3 +312,10 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .el-form-item__label
+    display: inline-block
+    float: none
+    text-align: left
+</style>
