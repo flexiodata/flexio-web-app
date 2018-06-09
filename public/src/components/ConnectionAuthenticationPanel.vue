@@ -466,6 +466,7 @@
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GMAIL:
+          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
             return true
