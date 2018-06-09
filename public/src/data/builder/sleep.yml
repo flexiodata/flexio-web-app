@@ -1,0 +1,19 @@
+task:
+  op: sleep
+  value: 5000
+
+prompts:
+  - element: form
+    title: Sleep
+    description: ''
+    form_items:
+      - element: input
+        type: hidden
+        variable: op
+        value: sleep
+      - element: input
+        type: number
+        variable: value
+        label: Milliseconds
+        placeholder: Enter sleep value
+        value: 5000

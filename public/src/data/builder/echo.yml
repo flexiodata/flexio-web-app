@@ -1,0 +1,19 @@
+task:
+  op: echo
+  msg: ''
+
+prompts:
+  - element: form
+    title: Echo
+    description: ''
+    form_items:
+      - element: input
+        type: hidden
+        variable: op
+        value: echo
+      - element: input
+        type: textarea
+        variable: msg
+        label: Message
+        placeholder: Enter message
+        value: Hello world!
