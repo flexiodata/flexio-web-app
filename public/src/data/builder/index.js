@@ -7,7 +7,7 @@ const files = require.context('.', false, /\.yml$/)
 const items = {}
 
 files.keys().forEach(key => {
-  if (key === './index.js') return
+  if (key === './index.js' || key === './test-def.yml') return
   items[key.replace(/(\.\/|\.yml)/g, '')] = files(key)
 })
 

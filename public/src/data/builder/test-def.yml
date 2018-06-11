@@ -1,0 +1,149 @@
+title: Test Prompts
+description: ''
+keywords: []
+connections: []
+content: |
+  # Test prompts
+
+  Example template for rendering all components
+
+prompts:
+  - element: form
+    title: Standard form
+    description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+    label_position: left
+    label_width: 9rem
+    form_items:
+      - element: input
+        type: text
+        variable: input_text
+        label: Text Input
+        placeholder: Text Input
+        value: ''
+
+      - element: input
+        type: textarea
+        variable: input_textarea
+        label: Textarea
+        placeholder: Textarea
+        value: ''
+
+      - element: input
+        type: date
+        variable: input_date
+        label: Date Input
+        placeholder: Date Input
+        value: ''
+
+      - element: input
+        type: daterange
+        variable: input_daterange
+        label: Date Range Input
+        placeholder: Date Range Input
+        value: ''
+
+      - element: select
+        variable: input_select
+        label: Select
+        placeholder: Select
+        value: IL
+        options:
+          - label: California
+            value: CA
+          - label: Illinois
+            value: IL
+          - label: Wyoming
+            value: WY
+
+      - element: radio-group
+        variable: radio_group
+        label: Radio Group
+        placeholder: Radio Group
+        value: []
+        options:
+          - label: California
+            value: CA
+          - label: Illinois
+            value: IL
+          - label: Wyoming
+            value: WY
+
+      - element: checkbox-group
+        variable: checkbox_group
+        label: Checkbox Group
+        placeholder: Checkbox Group
+        value: []
+        options:
+          - label: California
+            value: CA
+          - label: Illinois
+            value: IL
+          - label: Wyoming
+            value: WY
+
+      - element: checkbox
+        variable: checkbox
+        label: Checkbox
+        placeholder: Checkbox
+        value: false
+
+      - element: switch
+        variable: switch
+        label: Switch
+        placeholder: Switch
+        value: false
+
+  - title: Connection chooser with single connection type
+    element: connection-chooser
+    variable: connection_dropbox
+    connection_type: dropbox
+
+  - title: Connection chooser with all connection
+    element: connection-chooser
+    variable: connection_any
+    connection_type: ''
+
+  - title: Default file chooser
+    description: This is the default file chooser. Multiple files and folder can be selected at the same time.
+    element: file-chooser
+    variable: file_chooser_default
+    connection: connection_any
+
+  - title: File chooser with CSVs only
+    description: This file chooser only allows CSV files to be selected.
+    element: file-chooser
+    variable: file_chooser_default
+    connection: connection_dropbox
+    filetype_filter:
+    - csv
+
+  - title: File chooser with a connection alias
+    description: This file chooser uses a connection alias `my-foo-alias`.
+    element: file-chooser
+    variable: file_chooser_alias
+    connection: connection_dropbox
+    connection_alias: my-foo-alias
+
+  - title: Single file selection file chooser
+    description: This file chooser only allows a single file to be selected.
+    element: file-chooser
+    variable: file_chooser_single_file
+    connection: connection_dropbox
+    allow_multiple: false
+    allow_folders: false
+
+  - description: Folder only file chooser
+    element: file-chooser
+    variable: folder_chooser_folders_only
+    connection: connection_dropbox
+    folders_only: true
+
+  - description: Single folder selection file chooser
+    element: file-chooser
+    variable: folder_chooser_single_folder
+    connection: connection_dropbox
+    folders_only: true
+    allow_multiple: false
+
+pipe_language: javascript
+pipe: ''
