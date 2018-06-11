@@ -283,6 +283,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             case 'googlesheets':
                 $response = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
+
+            case 'googlecloudstorage':
+                $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
+                break;
         }
 
         // if the service creation response is null, something went wrong
@@ -367,6 +371,10 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
             case 'googlesheets':
                 $response = \Flexio\Services\GoogleSheets::create($auth_params);
+                break;
+
+            case 'googlecloudstorage':
+                $response = \Flexio\Services\GoogleCloudStorage::create($auth_params);
                 break;
         }
 
