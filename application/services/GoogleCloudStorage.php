@@ -69,15 +69,22 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         $folderid = $fileinfo['id'];
 
 
+        $bucket = 'testsuite';
+
+
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$folderid'+in+parents+and+trashed=false");
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/storage/v1/b/bucket/o/$bucket");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         $result = curl_exec($ch);
         curl_close($ch);
+
+
+        var_dump($result);
+        die();
 
         $result = json_decode($result,true);
         if (isset($result['files']))

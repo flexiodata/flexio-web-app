@@ -63,6 +63,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             case 'github':
             case 'googledrive':
             case 'googlesheets':
+            case 'googlecloudstorage':
             case 'amazons3':
             case 'elasticsearch':
             case 'twilio':
