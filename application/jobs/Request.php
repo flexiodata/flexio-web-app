@@ -72,8 +72,18 @@ class Request extends \Flexio\Jobs\Base
         self::setBasicAuth($ch, $username, $password);
         self::setHeaders($ch, $headers);
 
-        if ($method == 'post')
-            self::setPostFields($ch, $headers, $post_data);
+        switch ($method)
+        {
+            case 'put':
+            case 'post':
+            case 'delete':
+            case 'patch':
+                self::setPostFields($ch, $headers, $post_data);
+                break;
+        }
+
+        //if ($method == 'post')
+        //    self::setPostFields($ch, $headers, $post_data);
 
 
         // STEP 3: execute CURL
