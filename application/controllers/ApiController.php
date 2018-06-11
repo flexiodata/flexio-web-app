@@ -135,7 +135,7 @@ class ApiController extends \Flexio\System\FxControllerAction
                 $error['file'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTrace();
+                $error['trace'] = $e->getTraceAsString();
             }
 
             \Flexio\Api\Response::sendError($error);

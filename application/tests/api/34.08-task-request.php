@@ -36,17 +36,17 @@ class Test
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "method" => "head",
-                "url" => "https://postman-echo.com/head"
+                "method" => "options",
+                "url" => "https://postman-echo.com/options"
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
-            "url":"https://postman-echo.com/head",
+            "url":"https://postman-echo.com/options",
             "args":[]
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'head\' method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'options\' method type',  $actual, $expected, $results);
     }
 }
 

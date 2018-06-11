@@ -74,7 +74,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/storage/v1/b/bucket/o/$bucket");
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/storage/v1/b/$bucket/o");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -83,12 +83,9 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         curl_close($ch);
 
 
-        var_dump($result);
-        die();
-
         $result = json_decode($result,true);
-        if (isset($result['files']))
-            $result = $result['files'];
+        if (isset($result['items']))
+            $result = $result['items'];
              else
             $result = array();
 
@@ -104,14 +101,16 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $full_path = $base_path;
             if (substr($full_path, -1) != '/')
                 $full_path .= '/';
-            $full_path .= $file;
+
+            $full_path .= ltrim($file,'/');
+            $full_path = rtrim($full_path, '/');
 
             $f = array(
                 'name' => $file,
                 'path' => $full_path,
-                'size' => null,
-                'modified' => null,
-                'type' => ($row['mimeType'] == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE')
+                'size' => (int)$row['size'],
+                'modified' => $row['updated'],
+                'type' => (substr($file, -1) == '/' ? 'DIR' : 'FILE')
             );
 
             if (isset($row['size']))

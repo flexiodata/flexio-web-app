@@ -284,7 +284,7 @@ class Process implements \Flexio\IFace\IProcess
         return $this->response_code;
     }
 
-    public function setError(string $code = '', string $message = null, string $module = null, int $line = null, string $type = null, array $trace = null)  : \Flexio\Jobs\Process
+    public function setError(string $code = '', string $message = null, string $module = null, int $line = null, string $type = null, string $trace = null)  : \Flexio\Jobs\Process
     {
         if (!isset($message))
         $message = \Flexio\Base\Error::getDefaultMessage($code);
@@ -427,7 +427,7 @@ class Process implements \Flexio\IFace\IProcess
             $info = json_decode($info,true);
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $debug ? $e->getTrace() : null;
+            $trace = $debug ? $e->getTraceAsString() : null;
             $code = $info['code'];
             $message = $info['message'];
             $type = 'flexio exception';
@@ -442,7 +442,7 @@ class Process implements \Flexio\IFace\IProcess
             $debug = IS_DEBUG();
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $debug ? $e->getTrace() : null;
+            $trace = $debug ? $e->getTraceAsString() : null;
             $message = $e->getMessage();
             $type = 'system exception';
 
@@ -456,7 +456,7 @@ class Process implements \Flexio\IFace\IProcess
             $debug = IS_DEBUG();
             $module = $debug ? $e->getFile() : \Flexio\Base\Util::safePrintCodeFilename($e->getFile());
             $line = $e->getLine();
-            $trace = $debug ? $e->getTrace() : null;
+            $trace = $debug ? $e->getTraceAsString() : null;
             $message = $e->getMessage();
             $type = 'system error';
 

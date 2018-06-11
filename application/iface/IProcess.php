@@ -33,7 +33,7 @@ interface IProcess
     public function getStdout();
     public function setResponseCode(int $code);
     public function getResponseCode();
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null);
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, string $trace = null);
     public function getError();
     public function hasError();
     public function validate(array $task);

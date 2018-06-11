@@ -36,17 +36,28 @@ class Test
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "method" => "head",
-                "url" => "https://postman-echo.com/head"
+                "method" => "patch",
+                "url" => "https://postman-echo.com/patch?p1=a&p2=b",
+                "data" => [
+                    "f1" => "a",
+                    "f2" => "b"
+                ]
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
-            "url":"https://postman-echo.com/head",
-            "args":[]
+            "url":"https://postman-echo.com/patch?p1=a&p2=b",
+            "args":{
+                "p1":"a",
+                "p2":"b"
+            },
+            "form":{
+                "f1":"a",
+                "f2":"b"
+            }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'head\' method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'patch\' method type',  $actual, $expected, $results);
     }
 }
 
