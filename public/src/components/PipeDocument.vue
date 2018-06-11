@@ -527,6 +527,7 @@
             var pipe = response.data
             this.$store.commit('pipe/INIT_PIPE', pipe)
             this.$store.commit('pipe/FETCHING_PIPE', false)
+            this.$store.commit('builder/SET_MODE', 'build')
             this.$store.commit('builder/INIT_DEF', this.taskToDef(pipe.task))
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)

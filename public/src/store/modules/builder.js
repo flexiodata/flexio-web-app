@@ -4,6 +4,7 @@ import api from '../../api'
 const state = {
   def: {},
   code: '',
+  mode: 'prompt', // 'prompt' or 'build'
   pipe: {},
   prompts: [],
   active_prompt: {},
@@ -26,16 +27,18 @@ const mutations = {
   INIT_DEF (state, def) {
     state.def = def
     state.code = _.get(def, 'pipe', '').trim()
+    state.fetched = true
 
     var prompts = _.get(def, 'prompts', [])
 
-    // always include the summary item
-    var existing_summary = _.find(prompts, { element: 'summary-page' })
-    if (!existing_summary) {
-      prompts.push({ element: 'summary-page' })
+    // include the summary item in prompt mode
+    if (state.mode == 'prompt') {
+      var existing_summary = _.find(prompts, { element: 'summary-page' })
+      if (!existing_summary) {
+        prompts.push({ element: 'summary-page' })
+      }
     }
 
-    state.fetched = true
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
@@ -58,6 +61,10 @@ const mutations = {
 
     state.active_prompt_idx = 0
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+  },
+
+  SET_MODE (state, mode) {
+    state.mode = mode
   },
 
   UPDATE_ACTIVE_ITEM (state, attrs) {
@@ -89,8 +96,9 @@ const mutations = {
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
-      if (idx > state.active_prompt_idx)
+      if (idx > state.active_prompt_idx) {
         return
+      }
 
       switch (p.element) {
         case 'connection-chooser':
