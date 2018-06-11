@@ -158,7 +158,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $full_path = '/' . $connection_identifier;
             if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
                 $full_path .= '/';
-            $full_path .= $entry['path'];
+            $full_path .= ltrim($entry['path'],'/');
 
             $results[] = array(
                 'name' => $entry['name'],

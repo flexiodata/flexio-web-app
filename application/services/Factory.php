@@ -168,6 +168,15 @@ class Factory
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
 
+            case self::TYPE_GOOGLECLOUDSTORAGE:
+                $auth_params = array(
+                    'access_token' => $connection_info['access_token'] ?? '',
+                    'refresh_token' => $connection_info['refresh_token'] ?? ''
+                );
+                if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
+                $service = \Flexio\Services\GoogleCloudStorage::create($auth_params);
+            break;
+
             case self::TYPE_GITHUB:
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
