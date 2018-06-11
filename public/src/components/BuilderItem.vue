@@ -99,6 +99,7 @@
         <BuilderItemTaskChooser
           :item="item"
           :index="index"
+          message="Choose the task that you'd like to insert:"
           v-if="item.element == 'task-chooser'"
         />
         <BuilderItemConnectionChooser

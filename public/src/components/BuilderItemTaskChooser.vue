@@ -1,14 +1,17 @@
 <template>
-  <div class="flex flex-row flex-wrap items-center nl1">
-    <div
-      class="flex flex-column justify-center items-center"
-      :class="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
-      :key="item.op"
-      @click="itemClick(item)"
-      v-for="(item, index) in items"
-    >
-      <i class="material-icons md-48">{{item.icon}}</i>
-      <div class="mt2">{{item.name}}</div>
+  <div>
+    <p class="mt0" v-if="message.length > 0">{{message}}</p>
+    <div class="flex flex-row flex-wrap items-center nl1">
+      <div
+        class="flex flex-column justify-center items-center"
+        :class="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
+        :key="item.op"
+        @click="itemClick(item)"
+        v-for="(item, index) in items"
+      >
+        <i class="material-icons md-48">{{item.icon}}</i>
+        <div class="mt2">{{item.name}}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -20,17 +23,17 @@
       name: 'Read',
       icon: 'input'
     },{
-      op: 'request',
-      name: 'Request',
-      icon: 'http'
+      op: 'echo',
+      name: 'Echo',
+      icon: 'settings_remote'
     },{
       op: 'execute',
       name: 'Execute',
       icon: 'code'
     },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote'
+      op: 'email',
+      name: 'Email',
+      icon: 'mail_outline'
     }
   ]
 
@@ -110,6 +113,10 @@
 
   export default {
     props: {
+      message: {
+        type: String,
+        default: ''
+      },
       starter: {
         type: Boolean,
         default: false
