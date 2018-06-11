@@ -30,7 +30,7 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task basic functionality
+        // TEST: request parameters
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -53,10 +53,6 @@ class Test
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; missing url parameter',  $actual, $expected, $results);
-
-
-return;
-
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -123,6 +119,41 @@ return;
         \Flexio\Tests\Check::assertInArray('A.4', 'Process Request; use default \'get\' for method',  $actual, $expected, $results);
 
 
+        // TEST: request task method case insensitivity
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "get",
+                "url" => "https://postman-echo.com/get"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "args":[],
+            "url":"https://postman-echo.com/get"
+        }';
+        \Flexio\Tests\Check::assertInArray('B.1', 'Process Request; method case insensitivity',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "GET",
+                "url" => "https://postman-echo.com/get"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "args":[],
+            "url":"https://postman-echo.com/get"
+        }';
+        \Flexio\Tests\Check::assertInArray('B.2', 'Process Request; method case insensitivity',  $actual, $expected, $results);
+
+
         // TEST: request task basic functionality
 
         // BEGIN TEST
@@ -136,7 +167,7 @@ return;
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = substr($result['response'],0,27);
         $expected = 'def flexio_handler(context)';
-        \Flexio\Tests\Check::assertString('B.1', 'Process Request; basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', 'Process Request; basic functionality',  $actual, $expected, $results);
     }
 }
 
