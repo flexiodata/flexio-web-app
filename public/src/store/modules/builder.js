@@ -67,6 +67,31 @@ const mutations = {
     state.mode = mode
   },
 
+  // item = { id, attrs }
+  UPDATE_ITEM (state, item) {
+    var ap = _.find(state.prompts, { id: item.id })
+    var attrs = item.attrs
+
+    ap = _.assign({}, ap, attrs)
+    ap = _.cloneDeep(ap)
+    state.active_prompt = ap
+
+    state.prompts = _.map(state.prompts, p => {
+      if (p.id == ap.id) {
+        return ap
+      } else {
+        // update file chooser connections with the active prompt's connection if they match
+        if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
+          return _.assign(p, {
+            connection_eid: ap.connection_eid,
+            files: []
+          })
+        }
+        return p
+      }
+    })
+  },
+
   UPDATE_ACTIVE_ITEM (state, attrs) {
     var ap = _.assign({}, state.active_prompt, attrs)
     ap = _.cloneDeep(ap)
