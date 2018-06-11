@@ -24,9 +24,17 @@
         v-show="fi.type !== 'hidden'"
         v-for="fi in form_items"
       >
+        <CodeEditor
+          class="bg-white ba b--black-10 overflow-y-auto"
+          style="line-height: 1.15; font-size: 13px"
+          :lang="fi.lang ? fi.lang : 'javascript'"
+          :options="{ minRows: 8, maxRows: 20 }"
+          v-model="form_values[fi.variable]"
+          v-if="fi.element == 'code-editor'"
+        />
         <el-switch
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'switch'"
+          v-else-if="fi.element == 'switch'"
         />
         <el-checkbox
           :placeholder="fi.placeholder"
@@ -120,6 +128,7 @@
 <script>
   import marked from 'marked'
   import { mapState } from 'vuex'
+  import CodeEditor from './CodeEditor.vue'
 
   export default {
     props: {
@@ -131,6 +140,9 @@
         type: Number,
         required: true
       }
+    },
+    components: {
+      CodeEditor
     },
     watch: {
       is_active: {

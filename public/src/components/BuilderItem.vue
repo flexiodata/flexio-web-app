@@ -84,7 +84,7 @@
 
     <!-- main content -->
     <div
-      class="flex-fill flex flex-column bg-white pa4"
+      class="flex-fill flex flex-column bg-white"
       :class="content_cls"
     >
       <div class="flex-fill">
@@ -230,7 +230,8 @@
       },
       content_cls() {
         return {
-          'b--white-box': true,
+          'pa4 b--white-box': this.is_prompt_mode,
+          'pv4 b--transparent': !this.is_prompt_mode,
           'bl br': !this.is_first && !this.is_last,
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
