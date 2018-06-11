@@ -6,10 +6,10 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="is_active && description.length > 0"
+      v-show="(!is_prompt_mode || is_active) && description.length > 0"
     >
     </div>
-    <div v-show="is_active">
+    <div v-show="!is_prompt_mode || is_active">
       <FileChooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div v-if="is_before_active">
+    <div v-if="is_prompt_mode && is_before_active">
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
@@ -69,9 +69,13 @@
     },
     computed: {
       ...mapState({
+        mode: state => state.builder.mode,
         prompts: state => state.builder.prompts,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      is_prompt_mode() {
+        return this.mode == 'prompt'
+      },
       is_active() {
         return this.index == this.active_prompt_idx
       },

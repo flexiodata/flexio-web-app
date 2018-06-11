@@ -118,7 +118,7 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="is_active && !is_last"
+        v-if="is_prompt_mode && is_active && !is_last"
       >
         <el-button
           class="ttu b"
@@ -191,6 +191,7 @@
     computed: {
       ...mapState({
         def: state => state.builder.def,
+        mode: state => state.builder.mode,
         prompts: state => state.builder.prompts,
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
@@ -209,6 +210,9 @@
       },
       is_last() {
         return this.index == this.prompts.length - 1
+      },
+      is_prompt_mode() {
+        return this.mode == 'prompt'
       },
       is_active() {
         return this.index == this.active_prompt_idx
@@ -230,8 +234,8 @@
           'bl br': !this.is_first && !this.is_last,
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
-          'css-active': this.is_active,
-          'o-40 no-pointer-events no-select': !this.is_active
+          'css-active': this.is_prompt_mode && this.is_active,
+          'o-40 no-pointer-events no-select': this.is_prompt_mode && !this.is_active
         }
       },
       task_icon() {
