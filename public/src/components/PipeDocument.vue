@@ -109,10 +109,10 @@
               </transition>
             </div>
             <div v-else-if="editor == 'builder'">
-              <BuilderList
-                class="mt3"
+              <PipeBuilderList
+                class="mv3"
                 :container-id="doc_id"
-                :show-insert-buttons="true"
+                v-model="edit_task_list"
               />
             </div>
             <div v-else-if="editor == 'json'">
@@ -260,11 +260,10 @@
     PROCESS_STATUS_COMPLETED,
     PROCESS_MODE_BUILD
   } from '../constants/process'
-  import builder_items from '../data/builder'
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
-  import BuilderList from './BuilderList.vue'
+  import PipeBuilderList from './PipeBuilderList.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
@@ -297,7 +296,7 @@
     components: {
       Spinner,
       CodeEditor,
-      BuilderList,
+      PipeBuilderList,
       PipeDocumentForm,
       PipeSchedulePanel,
       PipeDeployPanel,
@@ -374,6 +373,25 @@
         },
         set(value) {
           this.$store.commit('pipe/UPDATE_CODE', value)
+        }
+      },
+      edit_task_list: {
+        get() {
+          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
+          return task
+        },
+        set(value) {
+          try {
+            var task = _cloneDeep(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { task })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            // TODO: add clear error handling
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
         }
       },
       edit_json: {
@@ -506,19 +524,6 @@
         _.set(new_route, 'query', { editor })
         this.$router.replace(new_route)
       },
-      taskToDef(task) {
-        var prompts = []
-        _.each(task.items, (t) => {
-          var item = _.find(builder_items, (bi) => {
-            return _.get(bi, 'task.op') == t.op
-          })
-
-          if (item) {
-            prompts = prompts.concat(item.prompts)
-          }
-        })
-        return { prompts }
-      },
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
@@ -527,8 +532,6 @@
             var pipe = response.data
             this.$store.commit('pipe/INIT_PIPE', pipe)
             this.$store.commit('pipe/FETCHING_PIPE', false)
-            this.$store.commit('builder/SET_MODE', 'build')
-            this.$store.commit('builder/INIT_DEF', this.taskToDef(pipe.task))
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)
           }
