@@ -11,6 +11,7 @@ prompts:
   - element: form
     title: Standard form
     description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+    cls: el-form--cozy
     label_position: left
     label_width: 9rem
     form_items:
@@ -118,7 +119,7 @@ prompts:
   - title: File chooser with CSVs only
     description: This file chooser only allows CSV files to be selected.
     element: file-chooser
-    variable: file_chooser_default
+    variable: file_chooser_csv_only
     connection: connection_dropbox
     filetype_filter:
     - csv

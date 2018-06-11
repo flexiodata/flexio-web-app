@@ -11,6 +11,7 @@
     </div>
     <el-form
       ref="form"
+      :class="item.cls"
       :model="form_values"
       :label-position="label_position"
       :label-width="label_width"

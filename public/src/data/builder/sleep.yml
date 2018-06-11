@@ -6,6 +6,7 @@ prompts:
   - element: form
     title: Sleep
     description: ''
+    cls: el-form--compact
     label_position: left
     label_width: 9rem
     form_items:

@@ -135,6 +135,7 @@ const mutations = {
             code = code.replace(regex, JSON.stringify(identifier, null, 2))
           }
           break
+
         case 'file-chooser':
           var files = _.get(p, 'files', [])
           var connection_alias = _.get(p, 'connection_alias', false)
@@ -167,6 +168,7 @@ const mutations = {
 
           code = code.replace(regex, JSON.stringify(paths, null, 2))
           break
+
         case 'form':
           var form_vals = _.get(p, 'form_values', {})
           _.each(form_vals, (val, key) => {

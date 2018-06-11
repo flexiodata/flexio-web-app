@@ -10,6 +10,7 @@ prompts:
   - element: form
     title: Email
     description: ''
+    cls: el-form--compact
     label_position: left
     label_width: 9rem
     form_items:
