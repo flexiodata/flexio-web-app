@@ -5,6 +5,7 @@
       :index="index"
       :key="item.id"
       v-bind="$attrs"
+      v-on="$listeners"
       v-for="(item, index) in prompts"
     />
     <div v-if="prompts.length == 0">

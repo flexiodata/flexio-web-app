@@ -1,9 +1,9 @@
 <template>
-  <div :value="value" @input="onChange">
+  <div :value="value">
     <BuilderList
-      class="mw8"
       :container-id="containerId"
       :show-insert-buttons="true"
+      @insertStep="insertStep"
       v-bind="$attrs"
     />
   </div>
@@ -38,15 +38,18 @@
       this.$store.commit('builder/SET_MODE', 'build')
     },
     methods: {
-      onChange(value) {
-        this.$emit('input', value)
-      },
       updateFromTask(task) {
         var prompts = []
         _.each(task.items, (t) => {
-          var item = _.find(builder_items, (bi) => {
-            return _.get(bi, 'task.op') == t.op
-          })
+          var item
+
+          if (t.op == '') {
+            item = { prompts: [{ element: 'task-chooser' }] }
+          } else {
+            item = _.find(builder_items, (bi) => {
+              return _.get(bi, 'task.op') == t.op
+            })
+          }
 
           if (item) {
             prompts = prompts.concat(item.prompts)
@@ -54,6 +57,11 @@
         })
 
         this.$store.commit('builder/INIT_DEF', { prompts })
+      },
+      insertStep(idx) {
+        var items = _.cloneDeep(this.value.items)
+        items.splice(idx, 0, { op: '' })
+        this.$emit('input', { op: 'sequence', items })
       }
     }
   }

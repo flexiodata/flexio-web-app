@@ -64,7 +64,11 @@
           style="top: -2px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
-          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <div
+            class="pointer moon-gray hover-blue link hint--right"
+            aria-label="Insert a new step"
+            @click="$emit('insertStep', index)"
+          >
             <i class="db material-icons f3">add_circle</i>
           </div>
         </div>
@@ -75,7 +79,11 @@
           style="bottom: -4px; right: 4px"
           v-if="showInsertButtons"
         >
-          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
+          <div
+            class="pointer moon-gray hover-blue link hint--right"
+            aria-label="Insert a new step"
+            @click="$emit('insertStep', index+1)"
+          >
             <i class="db material-icons f3">add_circle</i>
           </div>
         </div>
@@ -91,7 +99,7 @@
         <BuilderItemTaskChooser
           :item="item"
           :index="index"
-          v-if="!item.element || item.element == ''"
+          v-if="item.element == 'task-chooser'"
         />
         <BuilderItemConnectionChooser
           :item="item"

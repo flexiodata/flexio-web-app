@@ -382,7 +382,7 @@
         },
         set(value) {
           try {
-            var task = _cloneDeep(value)
+            var task = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
