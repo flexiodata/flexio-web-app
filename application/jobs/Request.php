@@ -42,16 +42,10 @@ class Request extends \Flexio\Jobs\Base
     {
         parent::run($process);
 
-        $params = $this->getJobParameters();
-
-        $owner_user_eid = $process->getOwner();
-
-        // note: don't clear out the streams; this job simply adds a new stream
-
         // get the parameters
-        $connection = false;
+        $params = $this->getJobParameters();
         $connection_identifier = $params['connection'] ?? false;
-        $method = $params['method'] ?? null;
+        $method = $params['method'] ?? '';
         $url = $params['url'] ?? '';
         $headers = $params['headers'] ?? array();
         $get_params = $params['params'] ?? array();
@@ -60,6 +54,188 @@ class Request extends \Flexio\Jobs\Base
         $password = $params['password'] ?? '';
 
 
+        // STEP 1: use any connection to configure the parameters
+        self::configureParamsFromConnection($process, $connection_identifier,
+                                            $method, $url, $username, $password, $headers, $post_data);
+
+        // STEP 2: configure CURL
+        $ch = curl_init();
+
+        if ($method === '')
+            $method = 'get';
+             else
+            $method = strtolower($method);
+
+        self::setOptions($ch);
+        self::setMethod($ch, $method);
+        self::setUrl($ch, $url, $get_params);
+        self::setBasicAuth($ch, $username, $password);
+        self::setHeaders($ch, $headers);
+
+        if ($method == 'post')
+            self::setPostFields($ch, $headers, $post_data);
+
+
+        // STEP 3: execute CURL
+        $outstream = $process->getStdout();
+        $outstream_properties = array(
+           // 'name' => $url,
+           // 'path' => $url,
+            'mime_type' => \Flexio\Base\ContentType::STREAM // default
+        );
+        $outstream->set($outstream_properties);
+
+        // TODO: get header info?
+        //curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$streamwriter) {});
+
+        $streamwriter = $outstream->getWriter();
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$streamwriter) {
+            $length = strlen($data);
+            $streamwriter->write($data);
+            return $length;
+        });
+
+        $result = curl_exec($ch);
+        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+
+        // note: sometimes the content type isn't returned by the request; in this
+        // case, look at the content type and get it that way
+        if (!isset($content_type) || $content_type === false)
+        {
+            $outputstream_reader = $outstream->getReader();
+            $buffer = $outputstream_reader->read();
+            \Flexio\Base\ContentType::getMimeAndContentType($buffer, $content_type, $temp);
+        }
+
+        $streamwriter->close();
+        $outstream->set(array(
+            'size' => $streamwriter->getBytesWritten(),
+            'mime_type' => $content_type
+        ));
+
+        // TODO: get the mime type from the returned info
+
+        // cleanup
+        if ($result === false)
+        {
+            $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            // TODO: a call that fails doesn't mean the request job itself failed;
+            // do we want to do anything other than pass on the info from the write
+            // function?
+        }
+         else
+        {
+            curl_close($ch);
+        }
+    }
+
+    private static function setOptions($ch) : void
+    {
+        // TODO: for now, configure some defaults; remove defaults; use info provided in header
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Flex.io');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    }
+
+    private static function setMethod($ch, string $method) : void
+    {
+        switch ($method)
+        {
+            default:
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+            case 'head':    curl_setopt($ch, CURLOPT_NOBODY, true); break;
+            case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
+            case 'post':    curl_setopt($ch, CURLOPT_POST, true); break;
+            case 'put':     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT'); break;
+            case 'patch':   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH'); break;
+            case 'delete':  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); break;
+            case 'options': curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'OPTIONS'); break;
+        }
+    }
+
+    private static function setUrl($ch, string $url, array $get_params) : void
+    {
+        if (strlen($url) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter: 'url'");
+
+        if (count($get_params) > 0)
+        {
+            if (parse_url($url, PHP_URL_QUERY))
+            {
+                $url .= '&';
+            }
+             else
+            {
+                $url .= '?';
+            }
+
+            $url .= http_build_query($get_params);
+        }
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+    }
+
+    private static function setBasicAuth($ch, string $username, string $password) : void
+    {
+        if (strlen($username) === 0 && strlen($password) === 0)
+            return;
+
+        $userpwd = "$username:$password";
+        curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
+    }
+
+    private static function setHeaders($ch, array $headers) : void
+    {
+        if (count($headers) === 0)
+            return;
+
+        if (\Flexio\Base\Util::isAssociativeArray($headers))
+        {
+            $h = [];
+            foreach ($headers as $k => $v)
+            {
+                $h[] = "$k: $v";
+            }
+            $headers = $h;
+        }
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+
+    private static function setPostFields($ch, $headers, $post_data) : void
+    {
+        // use `application/x-www-form-urlencoded` instead of `multipart/form-data`
+        //$urlencoded_post_data = http_build_query($post_data);
+        //curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
+
+        $content_type = '';
+        foreach ($headers as $k => $v)
+        {
+            if (strtolower($k) == 'content-type')
+            {
+                $content_type = $v;
+                break;
+            }
+        }
+        if ($content_type == 'application/json' && is_array($post_data))
+        {
+            $post_data = json_encode($post_data);
+        }
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    }
+
+    private static function configureParamsFromConnection($process, $connection_identifier, &$method, &$url, &$username, &$password, &$headers, &$post_data) : void
+    {
+        $owner_user_eid = $process->getOwner();
+        $connection = false;
 
         if ($connection_identifier !== false)
         {
@@ -122,7 +298,7 @@ class Request extends \Flexio\Jobs\Base
                 }
             }
 
-            if ($method === null && isset($connection_info['method']))
+            if ($method === '' && isset($connection_info['method']))
             {
                 $method = $connection_info['method'];
             }
@@ -208,160 +384,6 @@ class Request extends \Flexio\Jobs\Base
                     }
                 }
             }
-        }
-
-
-        if (strlen($url) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter: 'url'");
-
-        $ch = curl_init();
-
-        if (is_array($get_params) && count($get_params) > 0)
-        {
-            if (parse_url($url, PHP_URL_QUERY))
-            {
-                $url .= '&';
-            }
-             else
-            {
-                $url .= '?';
-            }
-
-            $url .= http_build_query($get_params);
-        }
-
-
-        // configure the URL
-        curl_setopt($ch, CURLOPT_URL, $url);
-
-        // configure the method
-        if ($method === null)
-            $method = 'get';
-             else
-            $method = strtolower($method);
-
-        switch ($method)
-        {
-            // if method isn't supplied, it's already set to get; 'default' here
-            // is an invalid method
-            default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
-
-            case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
-            //case 'head':    curl_setopt($ch, CURLOPT_HTTPHEAD, true); break;
-            //case 'put':     curl_setopt($ch, CURLOPT_HTTPPUT, true); break;
-            case 'post':    curl_setopt($ch, CURLOPT_POST, true); break;
-            //case 'patch':   curl_setopt($ch, CURLOPT_HTTPPATCH, true); break;
-            //case 'delete':  curl_setopt($ch, CURLOPT_HTTPDELETE, true); break;
-            //case 'options': curl_setopt($ch, CURLOPT_HTTPOPTIONS, true); break;
-        }
-
-        if (strlen($username) > 0 || strlen($password) > 0)
-        {
-            $userpwd = "$username:$password";
-            curl_setopt($ch, CURLOPT_USERPWD, $userpwd);
-        }
-
-        if ($method == 'post')
-        {
-            // use `application/x-www-form-urlencoded` instead of `multipart/form-data`
-            //$urlencoded_post_data = http_build_query($post_data);
-            //curl_setopt($ch, CURLOPT_POSTFIELDS, $urlencoded_post_data);
-
-            $content_type = '';
-            foreach ($headers as $k => $v)
-            {
-                if (strtolower($k) == 'content-type')
-                {
-                    $content_type = $v;
-                    break;
-                }
-            }
-            if ($content_type == 'application/json' && is_array($post_data))
-            {
-                $post_data = json_encode($post_data);
-            }
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        }
-
-        if (count($headers) > 0)
-        {
-            if (\Flexio\Base\Util::isAssociativeArray($headers))
-            {
-                $h = [];
-                foreach ($headers as $k => $v)
-                {
-                    $h[] = "$k: $v";
-                }
-                $headers = $h;
-            }
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
-
-        // TODO: for now, configure some defaults; remove defaults; use info provided in header
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Flex.io');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-        $outstream = $process->getStdout();
-
-        // make the call and get the result
-        $outstream_properties = array(
-           // 'name' => $url,
-           // 'path' => $url,
-            'mime_type' => \Flexio\Base\ContentType::STREAM // default
-        );
-        $outstream->set($outstream_properties);
-
-        // TODO: get header info?
-        //curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$streamwriter) {});
-
-        $streamwriter = $outstream->getWriter();
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $data) use (&$streamwriter) {
-            $length = strlen($data);
-            $streamwriter->write($data);
-            return $length;
-        });
-
-        $result = curl_exec($ch);
-        $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-
-        // note: sometimes the content type isn't returned by the request; in this
-        // case, look at the content type and get it that way
-        if (!isset($content_type) || $content_type === false)
-        {
-            $outputstream_reader = $outstream->getReader();
-            $buffer = $outputstream_reader->read();
-            \Flexio\Base\ContentType::getMimeAndContentType($buffer, $content_type, $temp);
-        }
-
-        $streamwriter->close();
-        $outstream->set(array(
-            'size' => $streamwriter->getBytesWritten(),
-            'mime_type' => $content_type
-        ));
-
-        // TODO: get the mime type from the returned info
-
-        // cleanup
-        if ($result === false)
-        {
-            $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            // TODO: a call that fails doesn't mean the request job itself failed;
-            // do we want to do anything other than pass on the info from the write
-            // function?
-        }
-         else
-        {
-            curl_close($ch);
         }
     }
 }
