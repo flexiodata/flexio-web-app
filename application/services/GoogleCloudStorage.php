@@ -507,8 +507,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     private static function initialize(array $params)
     {
-        $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
-        $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
+        $client_id = $GLOBALS['g_config']->googlecloudstorage_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->googlecloudstorage_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;
@@ -623,8 +623,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     private static function createService($oauth_callback) // TODO: add return type; s
     {
-        $client_id = $GLOBALS['g_config']->googledrive_client_id ?? '';
-        $client_secret = $GLOBALS['g_config']->googledrive_client_secret ?? '';
+        $client_id = $GLOBALS['g_config']->googlecloudstorage_client_id ?? '';
+        $client_secret = $GLOBALS['g_config']->googlecloudstorage_client_secret ?? '';
 
         if (strlen($client_id) == 0 || strlen($client_secret) == 0)
             return null;
@@ -641,7 +641,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         // instantiate the google service using the credentials,
         // http client and storage mechanism for the token
-        $service = $service_factory->createService('google', $credentials, $storage, array('googledrive', 'spreadsheets', 'documentslist'));
+        $service = $service_factory->createService('google', $credentials, $storage, array('cloudstorage'));
         if (!isset($service))
             return null;
 

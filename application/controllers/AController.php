@@ -77,6 +77,15 @@ class AController extends \Flexio\System\FxControllerAction
             }
         }
 
+        if (($params['service'] ?? '') == 'googlecloudstorage')
+        {
+            if (strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_id ?? '')) == 0 ||
+                strlen(''.($GLOBALS['g_config']->googlecloudstorage_client_secret ?? '')) == 0)
+            {
+                die('This function is presently not available.');
+            }
+        }
+
         if (($params['service'] ?? '') == 'gmail')
         {
             if (strlen(''.($GLOBALS['g_config']->gmail_client_id ?? '')) == 0 ||
