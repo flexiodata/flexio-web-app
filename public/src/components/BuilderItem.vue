@@ -88,10 +88,15 @@
       :class="content_cls"
     >
       <div class="flex-fill">
+        <BuilderItemTaskChooser
+          :item="item"
+          :index="index"
+          v-if="!item.element || item.element == ''"
+        />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
-          v-if="item.element == 'connection-chooser'"
+          v-else-if="item.element == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
