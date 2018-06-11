@@ -30,34 +30,95 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task method types
+        // TEST: request task PUT method
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
                 "method" => "put",
-                "url" => "https://postman-echo.com/put?p1=a&p2=b",
+                "url" => "https://postman-echo.com/put"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "url":"https://postman-echo.com/put",
+            "args":[],
+            "form":[]
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; PUT method type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "put",
+                "url" => "https://postman-echo.com/put?p1=A&P2=b"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "url":"https://postman-echo.com/put?p1=A&P2=b",
+            "args":{
+                "p1":"A",
+                "P2":"b"
+            },
+            "form":[]
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; PUT method type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "put",
+                "url" => "https://postman-echo.com/put",
                 "data" => [
-                    "f1" => "a",
-                    "f2" => "b"
+                    "f1" => "A",
+                    "F2" => "b"
                 ]
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
-            "url":"https://postman-echo.com/put?p1=a&p2=b",
-            "args":{
-                "p1":"a",
-                "p2":"b"
-            },
+            "url":"https://postman-echo.com/put",
+            "args":[],
             "form":{
-                "f1":"a",
-                "f2":"b"
+                "f1":"A",
+                "F2":"b"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'put\' method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; PUT method type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "put",
+                "url" => "https://postman-echo.com/put?p1=A&P2=b",
+                "data" => [
+                    "f1" => "A",
+                    "F2" => "b"
+                ]
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "url":"https://postman-echo.com/put?p1=A&P2=b",
+            "args":{
+                "p1":"A",
+                "P2":"b"
+            },
+            "form":{
+                "f1":"A",
+                "F2":"b"
+            }
+        }';
+        \Flexio\Tests\Check::assertInArray('A.4', 'Process Request; PUT method type',  $actual, $expected, $results);
     }
 }
 

@@ -116,7 +116,7 @@ class Test
                 "url":"https://postman-echo.com/get"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.4', 'Process Request; use default \'get\' for method',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.4', 'Process Request; default method',  $actual, $expected, $results);
 
 
         // TEST: request task method case insensitivity

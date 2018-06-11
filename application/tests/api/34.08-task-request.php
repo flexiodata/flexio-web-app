@@ -30,7 +30,7 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task method types
+        // TEST: request task OPTIONS method
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
@@ -46,7 +46,7 @@ class Test
             "url":"https://postman-echo.com/options",
             "args":[]
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'options\' method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; OPTIONS method type',  $actual, $expected, $results);
     }
 }
 
