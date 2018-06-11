@@ -466,6 +466,7 @@
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
           case ctypes.CONNECTION_TYPE_GMAIL:
+          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
             return true
@@ -474,19 +475,7 @@
       },
       oauth_url() {
         var eid =  _.get(this, 'connection.eid', '')
-        var base_url = 'https://'+HOSTNAME+'/a/connectionauth'
-
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:          return base_url+'?service=box&eid='+eid
-          case ctypes.CONNECTION_TYPE_DROPBOX:      return base_url+'?service=dropbox&eid='+eid
-          case ctypes.CONNECTION_TYPE_GITHUB:       return base_url+'?service=github&eid='+eid
-          case ctypes.CONNECTION_TYPE_GMAIL:        return base_url+'?service=gmail&eid='+eid
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:  return base_url+'?service=googledrive&eid='+eid
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS: return base_url+'?service=googlesheets&eid='+eid
-        }
-
-        return ''
+        return 'https://' + HOSTNAME + '/a/connectionauth' + '?service=' + this.ctype + '&eid=' + eid
       }
     },
     mounted() {

@@ -18,27 +18,28 @@ namespace Flexio\Services;
 
 class Factory
 {
-    public const TYPE_UNDEFINED     = '';
-    public const TYPE_FLEXIO        = 'flexio';
-    public const TYPE_FTP           = 'ftp';
-    public const TYPE_SFTP          = 'sftp';
-    public const TYPE_MYSQL         = 'mysql';
-    public const TYPE_POSTGRES      = 'postgres';
-    public const TYPE_ELASTICSEARCH = 'elasticsearch';
-    public const TYPE_DROPBOX       = 'dropbox';
-    public const TYPE_BOX           = 'box';
-    public const TYPE_GMAIL         = 'gmail';
-    public const TYPE_GOOGLEDRIVE   = 'googledrive';
-    public const TYPE_GOOGLESHEETS  = 'googlesheets';
-    public const TYPE_GITHUB        = 'github';
-    public const TYPE_AMAZONS3      = 'amazons3';
-    public const TYPE_EMAIL         = 'email';
-    public const TYPE_SMTP          = 'smtp';
-    public const TYPE_HTTP          = 'http';
-    public const TYPE_SOCRATA       = 'socrata';
-    public const TYPE_PIPELINEDEALS = 'pipelinedeals';
-    public const TYPE_MAILJET       = 'mailjet';
-    public const TYPE_TWILIO        = 'twilio';
+    public const TYPE_UNDEFINED           = '';
+    public const TYPE_FLEXIO              = 'flexio';
+    public const TYPE_FTP                 = 'ftp';
+    public const TYPE_SFTP                = 'sftp';
+    public const TYPE_MYSQL               = 'mysql';
+    public const TYPE_POSTGRES            = 'postgres';
+    public const TYPE_ELASTICSEARCH       = 'elasticsearch';
+    public const TYPE_DROPBOX             = 'dropbox';
+    public const TYPE_BOX                 = 'box';
+    public const TYPE_GMAIL               = 'gmail';
+    public const TYPE_GOOGLEDRIVE         = 'googledrive';
+    public const TYPE_GOOGLESHEETS        = 'googlesheets';
+    public const TYPE_GOOGLECLOUDSTORAGE  = 'googlecloudstorage';
+    public const TYPE_GITHUB              = 'github';
+    public const TYPE_AMAZONS3            = 'amazons3';
+    public const TYPE_EMAIL               = 'email';
+    public const TYPE_SMTP                = 'smtp';
+    public const TYPE_HTTP                = 'http';
+    public const TYPE_SOCRATA             = 'socrata';
+    public const TYPE_PIPELINEDEALS       = 'pipelinedeals';
+    public const TYPE_MAILJET             = 'mailjet';
+    public const TYPE_TWILIO              = 'twilio';
 
 
     public static function create(array $connection_properties) // TODO: add return type
@@ -166,6 +167,15 @@ class Factory
                     if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\GoogleSheets::create($auth_params);
                 break;
+
+            case self::TYPE_GOOGLECLOUDSTORAGE:
+                $auth_params = array(
+                    'access_token' => $connection_info['access_token'] ?? '',
+                    'refresh_token' => $connection_info['refresh_token'] ?? ''
+                );
+                if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
+                $service = \Flexio\Services\GoogleCloudStorage::create($auth_params);
+            break;
 
             case self::TYPE_GITHUB:
                 $auth_params = array(
