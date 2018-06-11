@@ -326,7 +326,7 @@ class Api
                 $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTrace();
+                $error['trace'] = $e->getTraceAsString();
             }
         }
         catch (\Exception $e)
@@ -340,7 +340,7 @@ class Api
                 $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTrace();
+                $error['trace'] = $e->getTraceAsString();
             }
         }
         catch (\Error $e)
@@ -354,7 +354,7 @@ class Api
                 $error['module'] = $e->getFile();
                 $error['line'] = $e->getLine();
                 $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTrace();
+                $error['trace'] = $e->getTraceAsString();
             }
         }
 
