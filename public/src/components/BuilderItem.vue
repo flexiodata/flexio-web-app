@@ -64,13 +64,16 @@
           style="top: -2px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
-          <div
-            class="pointer moon-gray hover-blue link hint--right"
+          <el-button
+            class="hint--right"
+            style="border: 0; padding: 0"
+            type="text"
             aria-label="Insert a new step"
+            :disabled="disable_insert"
             @click="$emit('insertStep', index)"
           >
-            <i class="db material-icons f3">add_circle</i>
-          </div>
+            <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
+          </el-button>
         </div>
 
         <!-- insert after button -->
@@ -79,13 +82,16 @@
           style="bottom: -4px; right: 4px"
           v-if="showInsertButtons"
         >
-          <div
-            class="pointer moon-gray hover-blue link hint--right"
+          <el-button
+            class="hint--right"
+            style="border: 0; padding: 0"
+            type="text"
             aria-label="Insert a new step"
+            :disabled="disable_insert"
             @click="$emit('insertStep', index+1)"
           >
-            <i class="db material-icons f3">add_circle</i>
-          </div>
+            <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
+          </el-button>
         </div>
       </div>
     </div>
@@ -256,6 +262,9 @@
         }
 
         return true
+      },
+      disable_insert() {
+        return false
       },
       ceid() {
         return _.get(this.item, 'connection_eid', null)
