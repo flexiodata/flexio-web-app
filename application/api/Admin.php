@@ -287,6 +287,7 @@ class Admin
             $item['pipe']['eid_type'] = '';
             $item['pipe']['name'] = 'Anonymous';
             $item['pipe']['description'] = 'Anonymous Process';
+            $item['pipe']['created'] = '';
 
             $item['process_created'] = $s['created'];
             $item['total_count'] = $s['total_count'];
@@ -323,6 +324,7 @@ class Admin
                     $item['pipe']['eid_type'] = $pipe_info['eid_type'];
                     $item['pipe']['name'] = $pipe_info['name'];
                     $item['pipe']['description'] = $pipe_info['description'];
+                    $item['pipe']['created'] = $pipe_info['created'];
                 }
                 else
                 {
