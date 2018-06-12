@@ -116,19 +116,11 @@
       message: {
         type: String,
         default: ''
-      },
-      starter: {
-        type: Boolean,
-        default: false
       }
     },
     computed: {
       items() {
-        if (this.starter) {
-          return tasks
-        } else {
-          return tasks
-        }
+        return tasks
       }
     },
     methods: {

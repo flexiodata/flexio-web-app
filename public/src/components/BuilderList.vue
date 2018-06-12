@@ -10,7 +10,7 @@
     />
     <div v-if="prompts.length == 0">
       <p class="ttu fw6 f7 moon-gray">Start your pipe with one of the following tasks</p>
-      <BuilderItemTaskChooser :starter="true" @task-chooser-item-click="chooseTask" />
+      <BuilderItemTaskChooser @task-chooser-item-click="chooseTask" />
       <p class="ttu fw6 f7 moon-gray">&mdash; or &mdash;</p>
       <div class="mt3">
         <el-button
