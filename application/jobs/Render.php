@@ -30,13 +30,13 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true),
-        'url'        => array('type' => 'string',     'required' => true),
-        'format'     => array('type' => 'string',     'required' => false),
-        'paper'      => array('type' => 'string',     'required' => false),
-        'width'      => array('type' => 'integer',    'required' => false),
-        'height'     => array('type' => 'integer',    'required' => false),
-        'scrollbars' => array('type' => 'boolean',    'required' => false)
+        'op'         => array('required' => true,  'enum' => ['render']),
+        'url'        => array('required' => true,  'type' => 'string'),
+        'format'     => array('required' => false, 'enum' => ['png','jpg','jpeg','pdf']),
+        'paper'      => array('required' => false, 'enum' => ['paper','letter']),
+        'width'      => array('required' => false, 'type' => 'integer'),
+        'height'     => array('required' => false, 'type' => 'integer'),
+        'scrollbars' => array('required' => false, 'type' => 'boolean')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
