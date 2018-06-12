@@ -184,6 +184,27 @@ class Validator
                 continue;
             }
 
+            // if the field exists, and an enumeration is specified, check if the value
+            // matches one of the enumerated values
+            if (isset($value['enum']) && (is_array($value['enum']) === true))
+            {
+                $p = $params[$key];
+
+                $match = false;
+                $enum = $value['enum'];
+                foreach ($enum as $e)
+                {
+                    if ($e === $p)
+                        $match = true;
+                }
+
+                if ($match === false)
+                {
+                    $invalid_values[] = $key . ":" . self::makeString($p);
+                    continue;
+                }
+            }
+
             // the field exists, check to see if multiple instances are allowed;
             // if so, check each of the individual members of the array
             $array_output = false;
