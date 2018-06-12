@@ -30,23 +30,23 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task HEAD method
+        // TEST: request task OPTIONS method
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "method" => "head",
-                "url" => "https://postman-echo.com/head"
+                "method" => "options",
+                "url" => "https://postman-echo.com/options"
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
-            "url":"https://postman-echo.com/head",
+            "url":"https://postman-echo.com/options",
             "args":[]
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; HEAD method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; OPTIONS method type',  $actual, $expected, $results);
     }
 }
 

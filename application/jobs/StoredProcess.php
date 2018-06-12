@@ -136,7 +136,7 @@ class StoredProcess implements \Flexio\IFace\IProcess
         return $this->engine->getResponseCode();
     }
 
-    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, array $trace = null) : \Flexio\IFace\IProcess
+    public function setError(string $code = '', string $message = null, string $file = null, int $line = null, string $type = null, string $trace = null) : \Flexio\IFace\IProcess
     {
         $this->engine->setError($code, $message, $file, $line, $type, $trace);
         return $this;
@@ -290,6 +290,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
 
                 $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
                 $process_params['process_info'] = $process_info_str;
+
+
+// TODO: handle bad json_encode (where json_encode is false)
+
             }
         }
         $this->procobj->set($process_params);
