@@ -99,7 +99,7 @@
         <BuilderItemTaskChooser
           :item="item"
           :index="index"
-          message="Choose the task that you'd like to insert:"
+          message="Choose the task that you'd like to insert"
           v-if="item.element == 'task-chooser'"
         />
         <BuilderItemConnectionChooser
@@ -228,6 +228,24 @@
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
+      is_prompt_mode() {
+        return this.mode == 'prompt'
+      },
+      is_active() {
+        return this.index == this.active_prompt_idx
+      },
+      is_before_active() {
+        return this.index < this.active_prompt_idx
+      },
+      is_after_active() {
+        return this.index > this.active_prompt_idx
+      },
+      is_first() {
+        return this.index == 0
+      },
+      is_last() {
+        return this.index == this.prompts.length - 1
+      },
       ceid() {
         return _.get(this.item, 'connection_eid', null)
       },
@@ -236,18 +254,6 @@
       },
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
-      },
-      is_first() {
-        return this.index == 0
-      },
-      is_last() {
-        return this.index == this.prompts.length - 1
-      },
-      is_prompt_mode() {
-        return this.mode == 'prompt'
-      },
-      is_active() {
-        return this.index == this.active_prompt_idx
       },
       is_next_allowed() {
         if (this.item.element == 'connection-chooser') {

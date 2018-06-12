@@ -113,6 +113,14 @@
 
   export default {
     props: {
+      item: {
+        type: Object,
+        required: true
+      },
+      index: {
+        type: Number,
+        required: true
+      },
       message: {
         type: String,
         default: ''
