@@ -272,5 +272,44 @@ class Test
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.6', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'id' => 1
+        );
+        $checks = array(
+            'status' => array('type' => 'string', 'required' => false, 'enum' => ['A'])
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+        );
+        \Flexio\Tests\Check::assertInArray('B.7', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'A'
+        );
+        $checks = array(
+            'status' => array('type' => 'string', 'required' => false, 'enum' => ['A'])
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+            'status' => 'A'
+        );
+        \Flexio\Tests\Check::assertInArray('B.8', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+            'status' => 'B'
+        );
+        $checks = array(
+            'status' => array('type' => 'string', 'required' => false, 'enum' => ['A'])
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.9', '\Flexio\Base\Validator::check(); check enumeration of allowed values; value must still pass other contraints',  $actual, $expected, $results);
     }
 }
