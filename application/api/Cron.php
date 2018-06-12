@@ -298,6 +298,7 @@ class Cron
         }
 
         $process_properties = array(
+            'parent_eid' => $pipe_properties['eid'],
             'task' => $pipe_properties['task'],
             'owned_by' => $pipe_properties['owned_by']['eid'],
             'created_by' => $pipe_properties['owned_by']['eid'] // scheduled processes are created by the owner
