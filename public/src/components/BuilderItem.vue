@@ -246,15 +246,6 @@
       is_last() {
         return this.index == this.prompts.length - 1
       },
-      ceid() {
-        return _.get(this.item, 'connection_eid', null)
-      },
-      connections() {
-        return this.getAllConnections()
-      },
-      store_connection() {
-        return _.find(this.connections, { eid: this.ceid }, null)
-      },
       is_next_allowed() {
         if (this.item.element == 'connection-chooser') {
           return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
@@ -265,6 +256,15 @@
         }
 
         return true
+      },
+      ceid() {
+        return _.get(this.item, 'connection_eid', null)
+      },
+      connections() {
+        return this.getAllConnections()
+      },
+      store_connection() {
+        return _.find(this.connections, { eid: this.ceid }, null)
       },
       content_cls() {
         return {
