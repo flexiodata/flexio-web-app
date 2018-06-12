@@ -8,10 +8,11 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="(!is_prompt_mode || is_active) && description.length > 0"
+      v-show="description.length > 0"
     >
     </div>
-    <div v-show="!is_prompt_mode || is_active">
+
+    <div v-show="!builder__is_prompt_mode || is_active">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
         class="mb3 bt bb b--light-gray overflow-auto"
@@ -33,7 +34,8 @@
         </el-button>
       </div>
     </div>
-    <div v-if="is_prompt_mode && is_before_active">
+
+    <div v-if="builder__is_prompt_mode && is_before_active">
       <ConnectionChooserItem
         class="mb3 bt bb b--black-10"
         :item="store_connection"
@@ -101,7 +103,7 @@
         mode: state => state.builder.mode,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
-      is_prompt_mode() {
+      builder__is_prompt_mode() {
         return this.mode == 'prompt'
       },
       is_active() {

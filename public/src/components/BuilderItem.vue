@@ -138,7 +138,7 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="is_prompt_mode && is_active && !is_last"
+        v-if="builder__is_prompt_mode && is_active && !is_last"
       >
         <el-button
           class="ttu b"
@@ -158,7 +158,7 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="!is_prompt_mode && is_active"
+        v-if="!builder__is_prompt_mode && is_active"
       >
         <el-button
           class="ttu b"
@@ -234,7 +234,10 @@
         active_prompt: state  => state.builder.active_prompt,
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
-      is_prompt_mode() {
+      builder__is_editing() {
+        return true
+      },
+      builder__is_prompt_mode() {
         return this.mode == 'prompt'
       },
       is_active() {
@@ -282,7 +285,7 @@
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
           'css-active': this.is_active,
-          'o-40 no-pointer-events no-select': !this.is_active
+          'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         }
       },
       task_icon() {
