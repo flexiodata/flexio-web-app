@@ -8,11 +8,11 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="description.length > 0"
+      v-show="show_description"
     >
     </div>
 
-    <div v-show="!builder__is_prompt_mode || is_active">
+    <div v-show="show_controls">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
         class="mb3 bt bb b--light-gray overflow-auto"
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <div v-if="builder__is_prompt_mode && is_before_active">
+    <div v-if="show_summary">
       <ConnectionChooserItem
         class="mb3 bt bb b--black-10"
         :item="store_connection"
@@ -111,6 +111,15 @@
       },
       is_before_active() {
         return this.index < this.active_prompt_idx
+      },
+      show_controls() {
+        return !this.builder__is_prompt_mode || this.is_active
+      },
+      show_description() {
+        return this.show_controls && this.description.length > 0
+      },
+      show_summary() {
+        return this.builder__is_prompt_mode && this.is_before_active
       },
       title() {
         return _.get(this.item, 'title', '')

@@ -6,7 +6,7 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="description.length > 0"
+      v-show="show_description"
     >
     </div>
 
@@ -16,7 +16,7 @@
       :model="form_values"
       :label-position="label_position"
       :label-width="label_width"
-      v-if="!builder__is_prompt_mode || is_active"
+      v-if="show_controls"
     >
       <el-form-item
         :class="fi.cls"
@@ -110,7 +110,7 @@
       </el-form-item>
     </el-form>
 
-    <div v-else if="is_before_active">
+    <div v-else-if="show_summary">
       <div class="mb2 bt b--black-10"></div>
       <table>
         <tbody>
@@ -176,6 +176,15 @@
       },
       is_before_active() {
         return this.index < this.active_prompt_idx
+      },
+      show_controls() {
+        return !this.builder__is_prompt_mode || this.is_active
+      },
+      show_description() {
+        return this.show_controls && this.description.length > 0
+      },
+      show_summary() {
+        return this.builder__is_prompt_mode && this.is_before_active
       },
       title() {
         return _.get(this.item, 'title', 'Choose values')

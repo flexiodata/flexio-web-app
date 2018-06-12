@@ -6,11 +6,11 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="description.length > 0"
+      v-show="show_description"
     >
     </div>
 
-    <div v-show="!builder__is_prompt_mode || is_active">
+    <div v-show="show_controls">
       <FileChooser
         class="bb b--light-gray"
         style="max-height: 24rem"
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div v-if="builder__is_prompt_mode && is_before_active">
+    <div v-if="show_summary">
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
@@ -89,6 +89,15 @@
       },
       is_single_file_select() {
         return this.item.folders_only !== true && this.item.allow_multiple === false
+      },
+      show_controls() {
+        return !this.builder__is_prompt_mode || this.is_active
+      },
+      show_description() {
+        return this.show_controls && this.description.length > 0
+      },
+      show_summary() {
+        return this.builder__is_prompt_mode && this.is_before_active
       },
       title() {
         var def_title = ''
