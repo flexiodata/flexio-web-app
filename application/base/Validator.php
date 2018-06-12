@@ -150,7 +150,7 @@ class Validator
         foreach ($checks as $key => $value)
         {
             // if the value is required, make sure it's present
-            if (!array_key_exists($key, $params) && $value['required'])
+            if (!array_key_exists($key, $params) && isset($value['required']) && $value['required'])
             {
                 $missing_fields[] = $key;
                 continue;
@@ -170,7 +170,7 @@ class Validator
 
             // if the field exists, make sure any boolean values that are represented
             // as a string 'true'/'false' are converted to actual boolean values
-            if ($value['type'] === 'boolean' && $this->check_bool($params[$key]))
+            if (isset($value['type']) && $value['type'] === 'boolean' && $this->check_bool($params[$key]))
             {
                 $result[$key] = toBoolean($params[$key]);
                 continue;
@@ -225,7 +225,7 @@ class Validator
 
             foreach ($param_values as $p)
             {
-                if ($value['type'] == 'any')
+                if (!isset($value['type']) || $value['type'] == 'any')
                     continue;
 
                 // the field exists; make sure the field conforms to the type specified

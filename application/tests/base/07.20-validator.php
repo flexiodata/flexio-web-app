@@ -106,7 +106,7 @@ class Test
             'id' => 'A'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => [''])
+            'id' => array('enum' => [''])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
@@ -118,7 +118,7 @@ class Test
             'id' => 'A'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['a'])
+            'id' => array('enum' => ['a'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
@@ -130,7 +130,7 @@ class Test
             'id' => 'A'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['AA'])
+            'id' => array('enum' => ['AA'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = false;
@@ -142,7 +142,7 @@ class Test
             'id' => 'A'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['A'])
+            'id' => array('enum' => ['A'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
@@ -156,7 +156,7 @@ class Test
             'id' => ''
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['','A','B'])
+            'id' => array('enum' => ['','A','B'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
@@ -170,7 +170,7 @@ class Test
             'id' => 'A'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['','A','B'])
+            'id' => array('enum' => ['','A','B'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
@@ -184,13 +184,36 @@ class Test
             'id' => 'B'
         );
         $checks = array(
-            'id' => array('type' => 'string', 'required' => true, 'enum' => ['','A','B'])
+            'id' => array('enum' => ['','A','B'])
         );
         $actual = $validator->check($values, $checks)->getParams();
         $expected = array(
             'id' => 'B'
         );
         \Flexio\Tests\Check::assertInArray('A.13', '\Flexio\Base\Validator::check(); check enumeration of allowed values',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+        );
+        $checks = array(
+            'id' => array('enum' => ['','A','B'])
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = array(
+        );
+        \Flexio\Tests\Check::assertInArray('A.14', '\Flexio\Base\Validator::check(); check enumeration of allowed values',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $validator = \Flexio\Base\Validator::create();
+        $values = array(
+        );
+        $checks = array(
+            'id' => array('enum' => ['','A','B'], 'required' => true)
+        );
+        $actual = $validator->check($values, $checks)->getParams();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.15', '\Flexio\Base\Validator::check(); check enumeration of allowed values',  $actual, $expected, $results);
 
 
         // TEST: check enumeration of allowed values; make sure values still pass other contraints
