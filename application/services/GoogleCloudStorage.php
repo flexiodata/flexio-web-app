@@ -22,6 +22,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     private $refresh_token = '';
     private $expires = 0;
 
+    private $bucket = 'testsuite';
+
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
         if (!isset($params))
@@ -52,6 +54,31 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         if (!$this->authenticated())
             return array();
 
+        if (strlen($this->bucket) == 0)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        /*
+        if (strlen($this->bucket) == 0 && ($path == '' || $path == '/'))
+        {
+            return $this->listBuckets();
+        }
+        */
+
+        $bucket = '';
+        $bucket_path = '';
+        if (!$this->getPathParts($path, $bucket, $bucket_path))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        $bucket_path = trim($bucket_path,'/');
+        if (strlen($bucket_path) > 0)
+            $bucket_path .= '/';
+        $bucket_path_len = strlen($bucket_path);
+
+/*
         $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
         $folder = $path;
 
@@ -67,14 +94,18 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
 
         $folderid = $fileinfo['id'];
-
-
-        $bucket = 'testsuite';
-
+*/
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/storage/v1/b/$bucket/o");
+        $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o";
+        if (strlen($bucket_path) > 0)
+        {
+            $url .= "?prefix=" . rawurlencode($bucket_path);
+        }
+
+ 
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -84,6 +115,68 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
 
         $result = json_decode($result,true);
+        if (isset($result['items']))
+            $result = $result['items'];
+             else
+            $result = array();
+
+        $base_path = $path;
+        if ($base_path == '')
+            $base_path = '/';
+
+        $files = array();
+        foreach ($result as $row)
+        {
+            $file = $row['name'];
+
+            if ($file == $bucket_path)
+                continue;
+            if (substr($file, 0, $bucket_path_len) == $bucket_path)
+                $file = substr($file, $bucket_path_len);
+            
+            $full_path = $base_path;
+            if (substr($full_path, -1) != '/')
+                $full_path .= '/';
+
+            $full_path .= ltrim($file,'/');
+            $full_path = rtrim($full_path, '/');
+
+            $f = array(
+                'name' => $file,
+                'path' => $full_path,
+                'size' => (int)$row['size'],
+                'modified' => $row['updated'],
+                'type' => (substr($file, -1) == '/' ? 'DIR' : 'FILE')
+            );
+
+            if (isset($row['size']))
+                $f['size'] = (int)$row['size'];
+            if (isset($row['modifiedTime']))
+                $f['modified'] = $row['modifiedTime'];
+            $files[] = $f;
+        }
+
+        return $files;
+    }
+
+    public function listBuckets(string $path = '', array $options = []) : array
+    {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/storage/v1/b");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+
+        $result = json_decode($result,true);
+
+        var_dump($result);
+        die();
+
         if (isset($result['items']))
             $result = $result['items'];
              else
@@ -162,7 +255,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
 
 
-        $path = trim($path, '/');
+        $path = trim($path, '/'); 
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
         $parts = explode('/', $path);
@@ -655,4 +748,40 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         $service->setAccessType('offline');
         return $service;
     }
+
+
+    private function getPathParts(string $full_path, &$bucket, &$path) : bool
+    {
+        if (strlen($this->bucket) > 0)
+        {
+            $bucket = $this->bucket;
+            $path = $full_path;
+        }
+         else
+        {
+            $has_leading_slash = (substr($full_path, 0, 1) == '/');
+            $has_trailing_slash = (substr($full_path, -1) == '/');
+    
+            $full_path = trim($full_path,'/');
+
+            $parts = \Flexio\Base\File::splitPath($path);
+
+            if (count($parts) == 0)
+                return false;
+
+            $bucket = array_shift($parts);
+
+            if (count($parts) == 0)
+            {
+                $path = '/';
+            }
+             else
+            {
+                $path = ($has_leading_slash?'/':'') . implode('/',$path) . ($has_trailing_slash?'/':'');
+            }
+        }
+
+        return true;
+    }
+
 }
