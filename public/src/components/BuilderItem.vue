@@ -120,7 +120,7 @@
         <BuilderItemSummary
           :item="item"
           :index="index"
-          v-else-if="item.element == 'summary-page'"
+          v-else-if="item.element == 'summary-prompt'"
         />
         <div v-else>
           <span class="silver">
@@ -148,6 +148,24 @@
           @click="$store.commit('builder/GO_NEXT_ITEM')"
         >
           Next
+        </el-button>
+      </div>
+      <div
+        class="flex-none mt4 flex flex-row justify-end"
+        v-if="!is_prompt_mode && is_active"
+      >
+        <el-button
+          class="ttu b"
+          @click=""
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click=""
+        >
+          Save Changes
         </el-button>
       </div>
     </div>
@@ -244,27 +262,26 @@
       },
       content_cls() {
         return {
-          'pa4 b--white-box': this.is_prompt_mode,
-          'pv4 b--transparent': !this.is_prompt_mode,
+          'pa4 b--white-box': true,
           'bl br': !this.is_first && !this.is_last,
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
-          'css-active': this.is_prompt_mode && this.is_active,
-          'o-40 no-pointer-events no-select': this.is_prompt_mode && !this.is_active
+          'css-active': this.is_active,
+          'o-40 no-pointer-events no-select': !this.is_active
         }
       },
       task_icon() {
         switch (this.item.element) {
-          case 'file-chooser': return 'insert_drive_file'
-          case 'form':         return 'edit'
-          case 'summary-page': return 'check'
+          case 'file-chooser':   return 'insert_drive_file'
+          case 'form':           return 'edit'
+          case 'summary-prompt': return 'check'
         }
       },
       task_color() {
         switch (this.item.element) {
-          case 'file-chooser': return '#0ab5f3'
-          case 'form':         return '#0ab5f3'
-          case 'summary-page': return '#009900'
+          case 'file-chooser':   return '#0ab5f3'
+          case 'form':           return '#0ab5f3'
+          case 'summary-prompt': return '#009900'
         }
       }
     },

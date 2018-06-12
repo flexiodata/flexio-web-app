@@ -34,9 +34,6 @@
         immediate: true
       }
     },
-    mounted() {
-      this.$store.commit('builder/SET_MODE', 'build')
-    },
     methods: {
       updateFromTask(task) {
         var prompts = []
@@ -56,6 +53,7 @@
           }
         })
 
+        this.$store.commit('builder/SET_MODE', 'build')
         this.$store.commit('builder/INIT_DEF', { prompts })
       },
       insertStep(idx) {

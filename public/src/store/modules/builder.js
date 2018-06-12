@@ -8,7 +8,7 @@ const state = {
   pipe: {},
   prompts: [],
   active_prompt: {},
-  active_prompt_idx: null,
+  active_prompt_idx: -1,
   fetching: false,
   fetched: false
 }
@@ -19,7 +19,7 @@ const mutations = {
 
     if (fetching === true) {
       state.fetched = false
-      state.active_prompt_idx = null
+      state.active_prompt_idx = -1
       state.active_prompt = {}
     }
   },
@@ -33,9 +33,9 @@ const mutations = {
 
     // include the summary item in prompt mode
     if (state.mode == 'prompt') {
-      var existing_summary = _.find(prompts, { element: 'summary-page' })
+      var existing_summary = _.find(prompts, { element: 'summary-prompt' })
       if (!existing_summary) {
-        prompts.push({ element: 'summary-page' })
+        prompts.push({ element: 'summary-prompt' })
       }
     }
 
@@ -59,37 +59,14 @@ const mutations = {
       return p
     })
 
-    state.active_prompt_idx = 0
-    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+    if (state.mode == 'prompt') {
+      state.active_prompt_idx = 0
+      state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+    }
   },
 
   SET_MODE (state, mode) {
     state.mode = mode
-  },
-
-  // item = { id, attrs }
-  UPDATE_ITEM (state, item) {
-    var ap = _.find(state.prompts, { id: item.id })
-    var attrs = item.attrs
-
-    ap = _.assign({}, ap, attrs)
-    ap = _.cloneDeep(ap)
-    state.active_prompt = ap
-
-    state.prompts = _.map(state.prompts, p => {
-      if (p.id == ap.id) {
-        return ap
-      } else {
-        // update file chooser connections with the active prompt's connection if they match
-        if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
-          return _.assign(p, {
-            connection_eid: ap.connection_eid,
-            files: []
-          })
-        }
-        return p
-      }
-    })
   },
 
   UPDATE_ACTIVE_ITEM (state, attrs) {
@@ -184,6 +161,12 @@ const mutations = {
 
   CREATE_PIPE (state, attrs) {
     state.pipe = attrs
+  },
+
+  GO_ITEM (state, idx) {
+    state.active_prompt_idx = Math.max(idx, 0)
+    state.active_prompt_idx = Math.min(idx, state.prompts.length - 1)
+    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
   GO_PREV_ITEM (state) {
