@@ -81,15 +81,14 @@
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       cls() {
-        var sel_cls = this.is_selected ? 'bg-light-gray' : 'bg-white'
+        var sel_cls = this.showSelectionCheckmark ? 'bg-white' : 'bg-near-white'
+        sel_cls = this.is_selected ? sel_cls : 'bg-white'
 
-        if (this.showSelectionCheckmark)
-          sel_cls = 'bg-white'
-
-        if (_.get(this, 'layout', '') == 'list')
-          return 'css-item pointer pa3 darken-05 ' + sel_cls
-           else
+        if (_.get(this, 'layout', '') == 'list') {
+          return 'css-item pointer pa3 ' + sel_cls
+        } else {
           return 'pointer dib mw5 h4 w4 center bg-white br2 pa1 ma2 v-top darken-10 ' + sel_cls
+        }
       }
     },
     methods: {
@@ -101,6 +100,13 @@
 </script>
 
 <style lang="stylus" scoped>
-  .css-item + .css-item
+  .css-item
     border-top: 1px solid #eee
+    border-bottom: 1px solid #eee
+    &:hover
+      background-color: #ecf5ff // match Element UI button
+      border-color: #c6e2ff     // match Element UI button
+      position: relative
+  .css-item + .css-item
+    margin-top: -1px
 </style>

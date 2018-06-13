@@ -15,7 +15,7 @@
     <div v-show="show_controls">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
-        class="mb3 bt bb b--light-gray overflow-auto"
+        class="mb3 overflow-auto"
         style="max-height: 277px"
         :connection="store_connection"
         :connection-type-filter="ctype"
