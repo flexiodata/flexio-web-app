@@ -91,9 +91,17 @@
       ConnectionChooserList,
       ConnectionChooserItem
     },
+    watch: {
+      is_changed(val) {
+        if (!this.builder__is_prompt_mode && val === true) {
+          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
+        }
+      }
+    },
     data() {
       return {
         edit_mode: 'add',
+        orig_connection: undefined,
         edit_connection: undefined,
         show_connection_dialog: false
       }
@@ -111,6 +119,9 @@
       },
       is_before_active() {
         return this.index < this.active_prompt_idx
+      },
+      is_changed() {
+        return !_.isEqual(this.edit_connection, this.orig_connection)
       },
       show_controls() {
         return !this.builder__is_prompt_mode || this.is_active

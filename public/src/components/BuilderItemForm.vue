@@ -148,6 +148,11 @@
       CodeEditor
     },
     watch: {
+      is_changed(val) {
+        if (!this.builder__is_prompt_mode && val === true) {
+          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
+        }
+      },
       is_active: {
         handler: 'autoFocus',
         immediate: true
@@ -160,7 +165,8 @@
     },
     data() {
       return {
-        form_values: null
+        form_values: null,
+        orig_form_values: null
       }
     },
     computed: {
@@ -176,6 +182,9 @@
       },
       is_before_active() {
         return this.index < this.active_prompt_idx
+      },
+      is_changed() {
+        return !_.isEqual(this.form_values, this.orig_form_values)
       },
       show_controls() {
         return !this.builder__is_prompt_mode || this.is_active
@@ -224,6 +233,7 @@
         if (this.form_values === null) {
           var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
           this.form_values = _.cloneDeep(form_values)
+          this.orig_form_values = _.cloneDeep(form_values)
         } else {
           this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
         }

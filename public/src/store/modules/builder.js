@@ -163,10 +163,16 @@ const mutations = {
     state.pipe = attrs
   },
 
-  GO_ITEM (state, idx) {
-    state.active_prompt_idx = Math.max(idx, 0)
-    state.active_prompt_idx = Math.min(idx, state.prompts.length - 1)
-    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+  SET_ACTIVE_ITEM (state, idx) {
+    if (idx >= 0 && idx < state.prompts.length) {
+      state.active_prompt_idx = idx
+      state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+    }
+  },
+
+  UNSET_ACTIVE_ITEM(state) {
+    state.active_prompt_idx = -1
+    state.active_prompt = {}
   },
 
   GO_PREV_ITEM (state) {

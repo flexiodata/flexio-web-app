@@ -381,6 +381,7 @@
           return task
         },
         set(value) {
+            debugger
           try {
             var task = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)

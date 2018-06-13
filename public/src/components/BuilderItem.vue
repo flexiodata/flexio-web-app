@@ -162,14 +162,14 @@
       >
         <el-button
           class="ttu b"
-          @click=""
+          @click="onCancelClick"
         >
           Cancel
         </el-button>
         <el-button
           class="ttu b"
           type="primary"
-          @click=""
+          @click="onSaveClick"
         >
           Save Changes
         </el-button>
@@ -235,7 +235,7 @@
         active_prompt_idx: state => state.builder.active_prompt_idx
       }),
       builder__is_editing() {
-        return true
+        return this.active_prompt_idx != -1
       },
       builder__is_prompt_mode() {
         return this.mode == 'prompt'
@@ -306,7 +306,16 @@
     methods: {
       ...mapGetters([
         'getAllConnections'
-      ])
+      ]),
+      onCancelClick() {
+        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
+        this.$store.commit('builder/INIT_DEF', this.def)
+      },
+      onSaveClick() {
+        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
+        this.$store.commit('builder/INIT_DEF', this.def)
+        alert('Save clicked! TODO...')
+      }
     }
   }
 </script>

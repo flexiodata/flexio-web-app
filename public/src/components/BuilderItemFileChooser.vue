@@ -69,6 +69,11 @@
       FileChooser,
       FileChooserItem
     },
+    data() {
+      return {
+        is_changed: false
+      }
+    },
     computed: {
       ...mapState({
         mode: state => state.builder.mode,
@@ -165,6 +170,7 @@
         }
 
         this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: [ folder ] })
+        this.is_changed = true
       },
       updateFiles(files, path) {
         if (this.is_single_folder_select && !_.isNil(path)) {
@@ -176,6 +182,7 @@
         })
 
         this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: store_files })
+        this.is_changed = true
       }
     }
   }
