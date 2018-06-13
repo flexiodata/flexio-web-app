@@ -181,8 +181,8 @@ class Test
         $expected = '
         {
             "error": {
-                "code":"no-object",
-                "message":"Object not available"
+                "code":"invalid-request",
+                "message":"Invalid request"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.7', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);
