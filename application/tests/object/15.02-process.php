@@ -55,11 +55,8 @@ class Test
         // TEST: check status on process success or failure
 
         // BEGIN TEST
-        $task =
-        [
-            [
-                "op" => "application/bad-job-definition"
-            ]
+        $task = [
+            "op" => "application/bad-job-definition"
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);
         $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
@@ -68,16 +65,13 @@ class Test
         \Flexio\Tests\Check::assertString('B.1', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task =
-        [
-            [
-                "op" => "create",
-                "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
-                "columns" => [
-                    [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
-                ],
-                "content" => "bad content"
-            ]
+        $task = [
+            "op" => "create",
+            "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
+            "columns" => [
+                [ "name" => "f1", "type" => "d", "width" => 10, "scale" => 0 ]
+            ],
+            "content" => "bad content"
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);
         $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
@@ -86,11 +80,8 @@ class Test
         \Flexio\Tests\Check::assertString('B.2', 'Basic Process; make sure the task status is properly set when a process fails',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $task =
-        [
-            [
-                "op" => "nop"
-            ]
+        $task = [
+            "op" => "exit"
         ];
         $process = \Flexio\Object\Process::create(["task" => $task]);
         $engine = \Flexio\Jobs\StoredProcess::create($process)->run(false);
