@@ -174,9 +174,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $result = json_decode($result,true);
 
-        var_dump($result);
-        die();
-
         if (isset($result['items']))
             $result = $result['items'];
              else
@@ -490,96 +487,133 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $path = $params['path'] ?? '';
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
+        $content_type = "text/plain";
 
-        $folder = trim($path,'/');
-        while (false !== strpos($folder,'//'))
-            $folder = str_replace('//','/',$folder);
-        $parts = explode('/',$folder);
-
-        $filename = array_pop($parts);
-        $folder = '/' . join('/',$parts);
-
-        if (strlen($filename) == 0)
-            return false;
-
-        $folderid = $this->getFileId($folder);
-        if (is_null($folderid) || strlen($folderid) == 0)
+        $bucket = '';
+        $bucket_path = '';
+        if (!$this->getPathParts($path, $bucket, $bucket_path))
         {
-            $folderid = $this->createFolderStructure($folder);
-            if (is_null($folderid) || strlen($folderid) == 0)
-                return false; // bad folderid
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        // see if the file already exists by getting its id
-        $fullpath = $folder;
-        if (substr($fullpath, -1) != '/')
-            $fullpath .= '/';
-        $fullpath .= $filename;
+        $bucket_path = trim($bucket_path,'/');
+        $bucket_path = ltrim($bucket_path, '/');
+        $bucket_path_len = strlen($bucket_path);
 
 
-        $info = $this->internalGetFileInfo($fullpath);
-        if (($info['content_type'] ?? '') == 'application/vnd.google-apps.folder')
+
+        // store a copy, because GCS needs to know content length
+
+        $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
+        while (($data = $callback(32768)) !== false)
         {
-            // destination path is a folder
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+            $writer->write($data);
         }
 
-        $fileid = $info['id'] ?? null;
+        $total_payload_size = $writer->getBytesWritten();
+        $writer->close();
+        unset($writer);
+
+        $reader = $stream->getReader();
 
 
-        // if the file doesn't already exist, create the file (otherwise overwrite it)
-        if (!$fileid)
+        // upload/write the file
+        $ch = curl_init();
+
+        $encoded_path = rawurlencode($bucket_path);
+        $url = "https://www.googleapis.com/upload/storage/v1/b/" . urlencode($bucket) . "/o?uploadType=media&name=" . $encoded_path;
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Length: " . $total_payload_size, 'Content-Type: '.$content_type, 'Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
+        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$reader) {
+            $data = $reader->read($length);
+            if ($data === false)
+                return '';
+            return $data;
+        });
+        $result = curl_exec($ch);
+        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpcode == 404)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Google Cloud Storage Bucket not found");
+
+        if ($httpcode < 200 || $httpcode >= 300)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not upload to GCS");
+
+        return true;
+
+/*
+        $encoded_path = rawurlencode($bucket_path);
+        $url = "https://www.googleapis.com/upload/storage/v1/b/" . urlencode($bucket) . "/o?uploadType=resumable&name=" . $encoded_path;
+
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $location = '';
+        $result = str_replace(["\r\n","\r","\n"], "\n", $result);
+        $lines = explode("\n", $result);
+        foreach ($lines as $line)
         {
-            $postdata = json_encode(array(
-                "name" => $filename,
-                "parents" => [ $folderid ]
-            ));
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files");
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($ch);
-
-            curl_close($ch);
-
-
-            $result = @json_decode($result, true);
-            $fileid = $result['id'] ?? '';
-            if (strlen($fileid) == 0)
-                return false;
+            if (strtolower(substr($line, 0, 9)) == "location:")
+            {
+                $location = trim(substr($line, 9));
+                break;
+            }
         }
 
+        if (strlen($location) == 0)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not retrieve GCS upload endpoint");
+        }
+*/
 
+
+
+
+        /*
         // put the file
 
         $total_written = 0;
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/upload/drive/v2/files/$fileid?uploadType=media");
-       // curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_URL, $location);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/octet-stream','Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_UPLOAD, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback, &$total_written) {
-            $res = $callback($length);
-            if ($res === false) return '';
-            $total_written += strlen($res);
-            return $res;
+        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$reader) {
+            $data = $reader->read($length);
+            if ($data === false)
+                return '';
+            return $data;
         });
         $result = curl_exec($ch);
         curl_close($ch);
+
+        var_dump($result);
+        die();
 
         $result = @json_decode($result,true);
         $file_size = $result['fileSize'] ?? -1;
 
         return ($file_size == $total_written ? true : false);
+        */
     }
 
     ////////////////////////////////////////////////////////////
