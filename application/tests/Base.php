@@ -34,6 +34,7 @@ class Base
     public const STORAGE_BOX = 'testsuite-box';
     public const STORAGE_DROPBOX = 'testsuite-dropbox';
     public const STORAGE_GOOGLEDRIVE = 'testsuite-googledrive';
+    public const STORAGE_GOOGLECLOUDSTORAGE = 'testsuite-googlecloudstorage';
     public const STORAGE_SFTP = 'testsuite-sftp';
 
     public const STORAGE_GITHUB = 'testsuite-github';
