@@ -353,31 +353,33 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     {
         $path = $params['path'] ?? '';
 
+        
         if (!$this->authenticated())
             return false;
 
-        $fileinfo = $this->internalGetFileInfo($path);
-        if (!isset($fileinfo['id']) || $fileinfo['id'] == '' || $fileinfo['id'] == 'root')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
-        $fileid = $fileinfo['id'];
-        $filetype = $fileinfo['content_type'];
-
-        if ($fileinfo['content_type'] == 'application/vnd.google-apps.spreadsheet')
+        $bucket = '';
+        $bucket_path = '';
+        if (!$this->getPathParts($path, $bucket, $bucket_path))
         {
-            $sheets = \Flexio\Services\GoogleSheets::create(array(
-                            'access_token' => $this->access_token,
-                            'refresh_token' => $this->refresh_token,
-                            'expires' => $this->expires));
-            return $sheets->read(array('spreadsheet_id' => $fileid), $callback);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
+
+        $bucket_path = trim($bucket_path,'/');
+        $bucket_path = ltrim($bucket_path, '/');
+        $bucket_path_len = strlen($bucket_path);
+
 
         $http_response_code = false;
         $error_payload = '';
 
+
+        $encoded_path = rawurlencode($bucket_path);
+        $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o/" . $encoded_path . "?alt=media";
+  
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/$fileid?alt=media");
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);

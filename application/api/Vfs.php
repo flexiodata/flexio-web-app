@@ -57,7 +57,7 @@ class Vfs
 
     public static function get(\Flexio\Api\Request $request) : void
     {
-        $request_url = $request->getUrl();
+        $request_url = urldecode($request->getUrl());
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
