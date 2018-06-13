@@ -267,7 +267,7 @@
         return true
       },
       disable_insert() {
-        return false
+        return this.builder__is_editing
       },
       ceid() {
         return _.get(this.item, 'connection_eid', null)
