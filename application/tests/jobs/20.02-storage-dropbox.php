@@ -22,7 +22,7 @@ class Test
     {
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
-        $files = \Flexio\Tests\Util::getTestDataFiles();
+        $files = \Flexio\Tests\Util::getTestDataSamples();
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 

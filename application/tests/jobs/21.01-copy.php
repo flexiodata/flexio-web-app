@@ -21,7 +21,7 @@ class Test
     public function run(&$results)
     {
         // SETUP
-        $files = \Flexio\Tests\Util::getTestDataFiles();
+        $files = \Flexio\Tests\Util::getTestDataSamples();
         $test_folder = 'tests' . \Flexio\Tests\Util::getTimestampName();
         $source_directory = '/home/' . $test_folder . '/';
         $target_directory = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . $test_folder . '/';

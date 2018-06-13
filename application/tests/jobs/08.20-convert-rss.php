@@ -44,7 +44,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.01-empty.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.01-empty.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = ["link","title","description","content","source","author","date"];
@@ -52,7 +52,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.01-empty.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.01-empty.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];
@@ -63,7 +63,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.02-malformed.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.02-malformed.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = ["link","title","description","content","source","author","date"];
@@ -71,7 +71,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.02-malformed.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.02-malformed.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];
@@ -82,7 +82,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.03-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = ["link","title","description","content","source","author","date"];
@@ -90,7 +90,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.03-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["","","","",null,null,null]];
@@ -98,7 +98,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.04-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.04-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = ["link","title","description","content","source","author","date"];
@@ -106,7 +106,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/rss/01.04-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.04-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["http://www.flex.io/rss/item.html","Item Title","This is a test.","This is a test.",null,null,null]];
