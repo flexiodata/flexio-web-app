@@ -54,7 +54,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.01-empty.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = [];
@@ -62,7 +62,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.01-empty.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = [];
@@ -70,7 +70,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.01-empty.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];
@@ -78,7 +78,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.01-empty.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.01-empty.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];
@@ -89,7 +89,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{none}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -105,7 +105,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{comma}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -121,7 +121,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{semicolon}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -137,7 +137,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{pipe}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -153,7 +153,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{tab}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -169,7 +169,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("{space}", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -185,7 +185,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -201,7 +201,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("\t", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -217,7 +217,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(":", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -233,7 +233,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask("`", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -249,7 +249,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",,", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
@@ -265,7 +265,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",|", "{none}", false);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/01.02-delimiter.txt');
+        $stream = \Flexio\Tests\Util::createStream('/text/01.02-delimiter.txt');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [
