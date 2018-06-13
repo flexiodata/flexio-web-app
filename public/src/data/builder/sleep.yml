@@ -1,6 +1,11 @@
+variables:
+  to:
+    type: Number
+    value: 1000
+
 task:
   op: sleep
-  value: 5000
+  value: 1000
 
 prompts:
   - element: form
@@ -19,4 +24,4 @@ prompts:
         variable: value
         label: Milliseconds
         placeholder: Enter sleep value
-        value: 5000
+        value: 1000

@@ -1,9 +1,23 @@
+variables:
+  lang:
+    type: String
+    value: javascript
+  code:
+    type: String
+    value: ''
+  path:
+    type: String
+    value: ''
+  integrity:
+    type: String
+    value: ''
+
 task:
   op: execute
   lang: javascript
-  code:
-  path:
-  integrity:
+  code: ''
+  path: ''
+  integrity: ''
 
 prompts:
   - element: form

@@ -1,9 +1,26 @@
+variables:
+  to:
+    type: String
+    value: ''
+  subject:
+    type: String
+    value: ''
+  body:
+    type: String
+    value: ''
+  html:
+    type: String
+    value: ''
+  attachments:
+    type: Array
+    value: []
+
 task:
   op: email
-  to:
-  subject:
-  body:
-  html:
+  to: ''
+  subject: ''
+  body: ''
+  html: ''
   attachments: []
 
 prompts:

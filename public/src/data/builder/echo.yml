@@ -1,3 +1,8 @@
+variables:
+  msg:
+    type: String
+    value: ''
+
 task:
   op: echo
   msg: ''
@@ -19,4 +24,4 @@ prompts:
         variable: msg
         label: Message
         placeholder: Enter message
-        value: Hello world!
+        value: ''
