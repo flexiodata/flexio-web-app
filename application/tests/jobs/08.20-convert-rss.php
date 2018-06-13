@@ -109,7 +109,7 @@ class Test
         $stream = \Flexio\Tests\Util::createStream('/xml/01.04-simple.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
-        $expected = [["http://www.flex.io/xml/item.html","Item Title","This is a test.","This is a test.",null,null,null]];
+        $expected = [["http://www.flex.io/rss/item.html","Item Title","This is a test.","This is a test.",null,null,null]];
         \Flexio\Tests\Check::assertArray('C.4', 'Convert RSS; simple file',  $actual, $expected, $results);
     }
 }
