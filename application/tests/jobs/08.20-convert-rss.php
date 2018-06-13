@@ -82,7 +82,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-minimum.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = ["link","title","description","content","source","author","date"];
@@ -90,7 +90,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-simple.rss');
+        $stream = \Flexio\Tests\Util::createStream('/xml/01.03-minimum.rss');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [["","","","",null,null,null]];
