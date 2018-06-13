@@ -218,29 +218,57 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         if (!$this->authenticated())
             return false;
 
-        $fileid = $this->getFileId($path);
-        if ($fileid === null)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        $bucket = '';
+        $bucket_path = '';
+        if (!$this->getPathParts($path, $bucket, $bucket_path))
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        $bucket_path = trim($bucket_path,'/');
+        $bucket_path_len = strlen($bucket_path);
+
+        $http_response_code = false;
+        $error_payload = '';
+
 
         $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/" . $fileid . "?fields=id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $info = @json_decode($result, true);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        for ($i = 0; $i < 2; ++$i)
+        {
+            $encoded_path = rawurlencode($bucket_path . ($i == 0 ? '/':''));
+            $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o/" . $encoded_path . "";
+    
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $this->access_token]);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($http_response_code >= 200 && $http_response_code <= 299)
+                break;
+        }
         curl_close($ch);
 
+        $info = @json_decode($result,true);
+
         if (!isset($info['name']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        }
+
+        $plain_filename = $info['name'];
+        $plain_filename = trim($plain_filename, '/');
+        $sl = strpos($plain_filename,'/');
+        if ($sl !== false)
+            $plain_filename = substr($plain_filename, $sl+1);
 
         return [
-            'name' => $info['name'],
+            'name' => $plain_filename,
             'size' => $info['size'] ?? null,
-            'modified' => $info['modifiedTime'] ?? '',
-            'type' => (($info['mimeType']??'') == 'application/vnd.google-apps.folder' ? 'DIR' : 'FILE')
+            'modified' => $info['updated'] ?? '',
+            'type' => (substr($info['name'], -1) == '/' ? 'DIR' : 'FILE')
         ];
     }
 
@@ -625,14 +653,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         return [ 'access_token' => $this->access_token,
                  'refresh_token' => $this->refresh_token,
                  'expires' => $this->expires ];
-    }
-
-    public function getFileId(string $path) // TODO: add return type (: ?string)
-    {
-        $info = $this->internalGetFileInfo($path);
-        if (!isset($info['id']))
-            return null;
-        return $info['id'];
     }
 
     private function connect() : bool
