@@ -28,11 +28,11 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'              => array('type' => 'string',     'required' => true),
-        'alias'           => array('type' => 'identifier', 'required' => true),
-        'connection'      => array('type' => 'string',     'required' => false), // either 'connection' or 'connection_type' is required
-        'connection_type' => array('type' => 'string',     'required' => false), // either 'connection' or 'connection_type' is required
-        'connection_info' => array('type' => 'object',     'required' => false)
+        'op'              => array('required' => true,  'enum' => ['connect']),
+        'alias'           => array('required' => true,  'type' => 'identifier'),
+        'connection'      => array('required' => false, 'type' => 'string'), // either 'connection' or 'connection_type' is required
+        'connection_type' => array('required' => false, 'type' => 'string'), // either 'connection' or 'connection_type' is required
+        'connection_info' => array('required' => false, 'type' => 'object')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */

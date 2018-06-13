@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "request", // string, required
-    "method": ""     // string, required, enum: get|post (TODO: support additional request types)
+    "method": ""     // string, required, enum: get|post|put|patch|delete|head|options
     "url": "",       // string, required
     "headers": []    // array,
     "params": []     // array (GET parameters; TODO: different name)
@@ -29,9 +29,9 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true),
-        'method'     => array('type' => 'string',     'required' => true),
-        'url'        => array('type' => 'string',     'required' => true)
+        'op'         => array('required' => true,  'enum' => ['request']),
+        'method'     => array('required' => true,  'enum' => ['get','post','put','patch','delete','head','options']),
+        'url'        => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */

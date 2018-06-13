@@ -25,8 +25,8 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true),
-        'rows'       => array('type' => 'integer',    'required' => true)
+        'op'         => array('required' => true,  'enum' => ['limit']),
+        'rows'       => array('required' => true,  'type' => 'integer')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
