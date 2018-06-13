@@ -59,6 +59,17 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
+
+        // list on single file
+        $arr = $this->getFileInfo($path);
+
+        if (($arr['type'] ?? '') == 'FILE')
+        {
+            $arr['path'] = $path;
+            return [ $arr ];
+        }
+
+
         /*
         if (strlen($this->bucket) == 0 && ($path == '' || $path == '/'))
         {
