@@ -329,8 +329,16 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     public function exists(string $path) : bool
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        try
+        {
+            $info = $this->getFileInfo($path);
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
+
+        return isset($info);
     }
 
     public function open($path) : \Flexio\IFace\IStream
@@ -350,16 +358,17 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         if (!$this->authenticated())
             return false;
 
-        $folderid = $this->getFileId($path);
-        if (is_null($folderid) || strlen($folderid) == 0)
-        {
-            $folderid = $this->createFolderStructure($path);
-            if (is_null($folderid) || strlen($folderid) == 0)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-            return true;
-        }
+        // S3 directories are created by adding an object with a '/' as the last character
+        if (substr($path,-1) != '/')
+            $path .= '/';
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+        if ($this->exists($path))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
+
+        if (!$this->write([ 'path' => $path ], function($length) { return false; }))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+
+        return true;
     }
 
     public function unlink(string $path) : bool
@@ -521,6 +530,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         if (isset($params['structure']))
         {
+
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
 
