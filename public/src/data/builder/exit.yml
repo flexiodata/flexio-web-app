@@ -1,0 +1,29 @@
+task:
+  op: exit
+  code: ''
+  response: ''
+
+prompts:
+  - element: form
+    title: Exit
+    description: ''
+    cls: el-form--compact
+    label_position: left
+    label_width: 9rem
+    form_items:
+      - element: input
+        type: hidden
+        variable: op
+        value: exit
+      - element: input
+        type: text
+        variable: code
+        label: Exit code
+        placeholder: Enter exit code
+        value: ''
+      - element: input
+        type: text
+        variable: response
+        label: Exit response
+        placeholder: Enter exit response
+        value: ''
