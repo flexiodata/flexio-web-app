@@ -1,8 +1,3 @@
-variables:
-  msg:
-    type: String
-    value: ''
-
 task:
   op: echo
   msg: ''

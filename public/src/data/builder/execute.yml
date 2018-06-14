@@ -1,17 +1,3 @@
-variables:
-  lang:
-    type: String
-    value: javascript
-  code:
-    type: String
-    value: ''
-  path:
-    type: String
-    value: ''
-  integrity:
-    type: String
-    value: ''
-
 task:
   op: execute
   lang: javascript
