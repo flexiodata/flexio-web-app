@@ -315,9 +315,11 @@ EOD;
         return $handle1 . '@' . $handle2 . '.com';
     }
 
-    public static function getTestDataFiles() : array
+    public static function getTestDataSamples() : array
     {
-        $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . 'basic' . DIRECTORY_SEPARATOR;
+        // TODO: get a selection of test data samples
+
+        $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR;
         $files = scandir($testdata_dir);
         if (!$files)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);

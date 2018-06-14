@@ -39,7 +39,7 @@ class Test
         $schema = \Flexio\Object\Pipe::SCHEDULE_SCHEMA;
         $schedule = <<<EOD
 {
-    "frequency": "",
+    "frequency": "randomly",
     "timezone": "",
     "days": [
     ],
@@ -91,6 +91,22 @@ EOD;
         $schema = \Flexio\Object\Pipe::SCHEDULE_SCHEMA;
         $schedule = <<<EOD
 {
+    "frequency": "",
+    "timezone": "",
+    "days": [
+    ],
+    "times": [
+    ]
+}
+EOD;
+        $actual = \Flexio\Base\ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.4', 'Pipe: invalid schedule formats should pass validation',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $schema = \Flexio\Object\Pipe::SCHEDULE_SCHEMA;
+        $schedule = <<<EOD
+{
     "frequency": "hourly",
     "timezone": "UTC",
     "days": [
@@ -101,7 +117,7 @@ EOD;
 EOD;
         $actual = \Flexio\Base\ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.4', 'Pipe: valid schedule formats should pass validation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', 'Pipe: valid schedule formats should pass validation',  $actual, $expected, $results);
 
         // BEGIN TEST
         $schema = \Flexio\Object\Pipe::SCHEDULE_SCHEMA;
@@ -126,6 +142,6 @@ EOD;
 EOD;
         $actual = \Flexio\Base\ValidatorSchema::check(json_decode($schedule), $schema)->hasErrors();
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.5', 'Pipe: valid schedule formats should pass validation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.6', 'Pipe: valid schedule formats should pass validation',  $actual, $expected, $results);
     }
 }

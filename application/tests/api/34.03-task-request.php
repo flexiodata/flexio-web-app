@@ -30,26 +30,42 @@ class Test
         $token = \Flexio\Tests\Util::createToken($userid);
 
 
-        // TEST: request task method types
+        // TEST: request task GET method
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
                 "method" => "get",
-                "url" => "https://postman-echo.com/get?p1=A&p2=b"
+                "url" => "https://postman-echo.com/get"
             ]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = json_decode($result['response'],true);
         $expected = '{
-            "url":"https://postman-echo.com/get?p1=A&p2=b",
+            "url":"https://postman-echo.com/get",
+            "args":[]
+        }';
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; GET method type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $task = \Flexio\Tests\Task::create([
+            [
+                "op" => "request",
+                "method" => "get",
+                "url" => "https://postman-echo.com/get?p1=A&P2=b"
+            ]
+        ]);
+        $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
+        $actual = json_decode($result['response'],true);
+        $expected = '{
+            "url":"https://postman-echo.com/get?p1=A&P2=b",
             "args":{
                 "p1":"A",
-                "p2":"b"
+                "P2":"b"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Request; \'get\' method type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Request; GET method type with query params',  $actual, $expected, $results);
     }
 }
 

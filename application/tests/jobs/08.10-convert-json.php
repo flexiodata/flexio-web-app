@@ -79,7 +79,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/json/01.03-simple.json');
+        $stream = \Flexio\Tests\Util::createStream('/json/01.03-minimum.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = [];
@@ -87,7 +87,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask();
-        $stream = \Flexio\Tests\Util::createStream('/json/01.03-simple.json');
+        $stream = \Flexio\Tests\Util::createStream('/json/01.03-minimum.json');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = \Flexio\Tests\Content::getRows($process->getStdout());
         $expected = [];

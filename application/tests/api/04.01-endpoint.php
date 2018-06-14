@@ -27,7 +27,8 @@ class Test
 
         // BEGIN TEST
         $endpoints = [
-            '/1',
+            '/api/1',
+            '/api/2',
             '/api/v1',
             '/api/v3'
         ];
@@ -41,6 +42,7 @@ class Test
                 'url' => "$apibase/about",
                 // 'token' => '', // no token included
             );
+
             $result = \Flexio\Tests\Util::callApi($params);
             $response = json_decode($result['response'],true);
             $actual = $result;

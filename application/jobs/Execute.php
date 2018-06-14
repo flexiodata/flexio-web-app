@@ -28,11 +28,11 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true),
-        'lang'       => array('type' => 'string',     'required' => true),
-        'code'       => array('type' => 'string',     'required' => false),
-        'path'       => array('type' => 'string',     'required' => false),
-        'integrity'  => array('type' => 'string',     'required' => false)
+        'op'         => array('required' => true,  'enum' => ['execute']),
+        'lang'       => array('required' => true,  'enum' => ['python','javascript']),
+        'code'       => array('required' => false, 'type' => 'string'),
+        'path'       => array('required' => false, 'type' => 'string'),
+        'integrity'  => array('required' => false, 'type' => 'string')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
@@ -804,7 +804,7 @@ class ScriptHost
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
             return false;
-        
+
         $this->output_writers[$stream_idx] = null;
         $writer = null;
 

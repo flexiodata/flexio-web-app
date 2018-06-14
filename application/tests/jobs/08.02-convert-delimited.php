@@ -44,7 +44,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.10-header-basic.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.10-header-basic.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
@@ -52,7 +52,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.11-header-basic.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.11-header-basic.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1"]';
@@ -64,7 +64,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.20-header-space.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.20-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
@@ -72,7 +72,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.21-header-space.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.21-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
@@ -80,7 +80,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.21-header-space.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.21-header-space.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  5", "f  6", "f  7", "f  8", "f9"]';
@@ -92,7 +92,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.30-header-case.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.30-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
@@ -100,7 +100,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.31-header-case.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.31-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
@@ -108,7 +108,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.32-header-case.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.32-header-case.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f1", "f2", "f3", "f4", "f  f5", "f  f6", "f  f7", "f  f8", "f_f9"]';
@@ -120,7 +120,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.40-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.40-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '[",","field2","field3","field3_1","field5","field6"]';
@@ -128,7 +128,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.41-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.41-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["10","20","30","40","50"]';
@@ -136,7 +136,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.42-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.42-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["t1.f1","t1.f2","t2.f1","t2.f2","t3. f1","t3 .f2"]';
@@ -144,7 +144,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.43-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.43-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["#1","# 2","3#"]';
@@ -152,7 +152,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.44-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.44-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["f(1)","(f)2","(f3)","(f 4)","f (5)","(f) 6","( f 7 )","()","( )"]';
@@ -160,7 +160,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.45-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.45-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["<25%","25-50%","50-75%","> 75%"]';
@@ -168,7 +168,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.46-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.46-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["<=100","101-199","200 - 299","300-"]';
@@ -176,7 +176,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.47-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.47-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["1/2010","2/2010","3/2010","[2020?]"]';
@@ -184,7 +184,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.48-header-symbol.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.48-header-symbol.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["%","% (of total amount)","$","$ (total)"]';
@@ -196,7 +196,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.50-header-keyword.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.50-header-keyword.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["row","column","min","max","sum","avg","count","total","update","updated","delete","deleted","select","where","true","false","yes","no","null"]';
@@ -208,7 +208,7 @@ class Test
 
         // BEGIN TEST
         $task = self::createConvertTask(",", "\"", true);
-        $stream = \Flexio\Tests\Util::createStream('/delimited/02.60-header-duplicate.csv');
+        $stream = \Flexio\Tests\Util::createStream('/text/02.60-header-duplicate.csv');
         $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($task);
         $actual = $process->getStdout()->getStructure()->getNames();
         $expected = '["id","order #","id_1","order #_1","id_2","order #_2"]';

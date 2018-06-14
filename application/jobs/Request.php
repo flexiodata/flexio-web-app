@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "request", // string, required
-    "method": ""     // string, required, enum: get|post (TODO: support additional request types)
+    "method": ""     // string, required, enum: get|post|put|patch|delete|head|options
     "url": "",       // string, required
     "headers": []    // array,
     "params": []     // array (GET parameters; TODO: different name)
@@ -29,9 +29,9 @@ namespace Flexio\Jobs;
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true),
-        'method'     => array('type' => 'string',     'required' => true),
-        'url'        => array('type' => 'string',     'required' => true)
+        'op'         => array('required' => true,  'enum' => ['request']),
+        'method'     => array('required' => true,  'enum' => ['get','post','put','patch','delete','head','options']),
+        'url'        => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */
@@ -58,7 +58,7 @@ class Request extends \Flexio\Jobs\Base
         self::configureParamsFromConnection($process, $connection_identifier,
                                             $method, $url, $username, $password, $headers, $post_data);
 
-        // STEP 2: configure CURL
+        // STEP 2: configure the request
         $ch = curl_init();
 
         if ($method === '')
@@ -76,21 +76,17 @@ class Request extends \Flexio\Jobs\Base
         {
             case 'put':
             case 'post':
-            case 'delete':
             case 'patch':
+            case 'delete':
                 self::setPostFields($ch, $headers, $post_data);
                 break;
         }
 
-        //if ($method == 'post')
-        //    self::setPostFields($ch, $headers, $post_data);
-
-
-        // STEP 3: execute CURL
+        // STEP 3: execute the request
         $outstream = $process->getStdout();
         $outstream_properties = array(
-           // 'name' => $url,
-           // 'path' => $url,
+            // 'name' => $url,
+            // 'path' => $url,
             'mime_type' => \Flexio\Base\ContentType::STREAM // default
         );
         $outstream->set($outstream_properties);
@@ -122,8 +118,6 @@ class Request extends \Flexio\Jobs\Base
             'size' => $streamwriter->getBytesWritten(),
             'mime_type' => $content_type
         ));
-
-        // TODO: get the mime type from the returned info
 
         // cleanup
         if ($result === false)

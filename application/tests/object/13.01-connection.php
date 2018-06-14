@@ -213,7 +213,8 @@ class Test
             "description" : null,
             "connection_type" : null,
             "connection_status" : null,
-            "connection_info" : null,
+            "connection_info" : {
+            },
             "expires" : null,
             "owned_by" : {
                 "eid" : null,

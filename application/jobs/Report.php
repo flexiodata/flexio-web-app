@@ -27,7 +27,7 @@ require_once __DIR__ . '/Execute.php';
 // VALIDATOR:
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
-        'op'         => array('type' => 'string',     'required' => true)
+        'op'         => array('required' => true,  'enum' => ['report'])
     ))->hasErrors()) === true)
     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 */

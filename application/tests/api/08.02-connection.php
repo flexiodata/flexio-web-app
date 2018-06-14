@@ -261,12 +261,12 @@ class Test
                 "username": "default",
                 "password": "*****"
             },
-            "expires": "2018-01-02 03:04:05",
+            "expires": null,
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
             }
         }';
-        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/connections/:objeid; return updated connection info',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.8', 'POST /:userid/connections/:objeid; return updated connection info; don\'t allow \'expires\' to be set from api for now',  $actual, $expected, $results);
     }
 }
