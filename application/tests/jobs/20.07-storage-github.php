@@ -105,7 +105,7 @@ class Test
             ["op" => "write", "path" => $filepath],
             ["op" => "read", "path" => $filepath]
         ]);
-        $process = \Flexio\Jobs\Process::create()->execute($task);
+        $process = \Flexio\Jobs\Process::create()->setOwner($process_owner)->execute($task);
         $actual_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
         $expected_contents = <<<EOD
 c1,c2,n1,n2,n3,d1,d2,b1
