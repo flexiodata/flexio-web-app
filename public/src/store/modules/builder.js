@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import api from '../../api'
+import utilSdkJs from '../../utils/sdk-js'
 
 const state = {
   def: {},
@@ -32,7 +32,7 @@ const mutations = {
     var lang = _.get(def, 'pipe_language', 'json')
     if (lang == 'javascript') {
       state.code = _.get(def, 'pipe', '')
-      state.pipe = _.get(def, 'pipe', {})
+      state.pipe = utilSdkJs.getTaskJSON(state.code)
     } else {
       state.code = ''
       state.pipe = _.get(def, 'pipe', {})
