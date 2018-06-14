@@ -100,7 +100,7 @@ const mutations = {
   },
 
   UPDATE_CODE (state) {
-    var code = state.def.pipe
+    var code = state.def.code /* new format */ || state.def.pipe /* old format */ || ''
 
     const VFS_TYPE_DIR = 'DIR'
 

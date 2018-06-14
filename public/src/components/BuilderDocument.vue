@@ -84,7 +84,8 @@
 
   buildPipeCode(test_def.prompts)
 
-  test_def.pipe = pipe_arr.join('\n  .')
+  test_def.code_language = 'javascript'
+  test_def.code = pipe_arr.join('\n  .')
 
   export default {
     components: {

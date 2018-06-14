@@ -152,5 +152,5 @@ prompts:
     folders_only: true
     allow_multiple: false
 
-pipe_language: javascript
-pipe: ''
+code_language: javascript
+code: ''
