@@ -313,13 +313,10 @@
         'getAllConnections'
       ]),
       onCancelClick() {
-        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
-        this.$store.commit('builder/INIT_DEF', this.def)
+        this.$emit('item-cancel', this.index)
       },
       onSaveClick() {
-        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
-        this.$store.commit('builder/INIT_DEF', this.def)
-        alert('Save clicked! TODO...')
+        this.$emit('item-save', this.index)
       }
     }
   }

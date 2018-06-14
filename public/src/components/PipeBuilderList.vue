@@ -5,6 +5,8 @@
       :show-insert-buttons="true"
       @insert-step="insertStep"
       @item-change="itemChange"
+      @item-cancel="itemCancel"
+      @item-save="itemSave"
       v-bind="$attrs"
     />
   </div>
@@ -35,9 +37,13 @@
         immediate: true
       }
     },
+    computed: {
+      ...mapState({
+        orig_pipe: state => state.pipe.orig_pipe
+      })
+    },
     methods: {
       updateFromTask(task) {
-        var pipe = { op: 'sequence', items: [] } // this is really the task object
         var prompts = []
         _.each(task.items, (t) => {
           var item
@@ -51,13 +57,12 @@
           }
 
           if (item) {
-            pipe.items = pipe.items.concat(item.task)
             prompts = prompts.concat(item.prompts)
           }
         })
 
         this.$store.commit('builder/SET_MODE', 'build')
-        this.$store.commit('builder/INIT_DEF', { prompts, pipe })
+        this.$store.commit('builder/INIT_DEF', { prompts })
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)
@@ -67,8 +72,16 @@
           this.$store.commit('builder/SET_ACTIVE_ITEM', idx)
         })
       },
-      itemChange(item, idx) {
+      itemChange(prompt, idx) {
         // TODO: do we want to handle this here?
+      },
+      itemCancel(prompt_idx) {
+        var value = _.get(this.orig_pipe, 'task', { op: 'sequence', items: [] })
+        this.$emit('input', value)
+        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
+      },
+      itemSave(prompt_idx) {
+        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
       }
     }
   }
