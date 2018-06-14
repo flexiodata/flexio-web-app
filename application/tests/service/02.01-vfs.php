@@ -28,7 +28,7 @@ class Test
             \Flexio\Tests\Base::STORAGE_AMAZONS3,
             \Flexio\Tests\Base::STORAGE_BOX,
             \Flexio\Tests\Base::STORAGE_DROPBOX,
-            \Flexio\Tests\Base::STORAGE_GITHUB,
+            //\Flexio\Tests\Base::STORAGE_GITHUB,   // github currently needs to have owner and repo in path
             \Flexio\Tests\Base::STORAGE_GOOGLEDRIVE,
             \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE,
             \Flexio\Tests\Base::STORAGE_SFTP

@@ -210,7 +210,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
-        
+
         // File Create:
         // Request: PUT https://api.github.com/repos/:owner/:repo/contents/:path
         // Params:
