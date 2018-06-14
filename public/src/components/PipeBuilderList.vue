@@ -36,12 +36,13 @@
     },
     methods: {
       updateFromTask(task) {
+        var pipe = { op: 'sequence', items: [] } // this is really the task object
         var prompts = []
         _.each(task.items, (t) => {
           var item
 
           if (t.op == '') {
-            item = { prompts: [{ element: 'task-chooser' }] }
+            item = { task: { op: '' }, prompts: [{ element: 'task-chooser' }] }
           } else {
             item = _.find(builder_items, (bi) => {
               return _.get(bi, 'task.op') == t.op
@@ -49,17 +50,21 @@
           }
 
           if (item) {
+            pipe.items = pipe.items.concat(item.task)
             prompts = prompts.concat(item.prompts)
           }
         })
 
         this.$store.commit('builder/SET_MODE', 'build')
-        this.$store.commit('builder/INIT_DEF', { prompts })
+        this.$store.commit('builder/INIT_DEF', { prompts, pipe })
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)
         items.splice(idx, 0, { op: '' })
         this.$emit('input', { op: 'sequence', items })
+        this.$nextTick(() => {
+          this.$store.commit('builder/SET_ACTIVE_ITEM', idx)
+        })
       }
     }
   }

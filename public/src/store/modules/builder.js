@@ -26,8 +26,17 @@ const mutations = {
 
   INIT_DEF (state, def) {
     state.def = def
-    state.code = _.get(def, 'pipe', '').trim()
     state.fetched = true
+
+    // determine what was passed to us
+    var lang = _.get(def, 'pipe_language', 'json')
+    if (lang == 'javascript') {
+      state.code = _.get(def, 'pipe', '')
+      state.pipe = _.get(def, 'pipe', {})
+    } else {
+      state.code = ''
+      state.pipe = _.get(def, 'pipe', {})
+    }
 
     var prompts = _.get(def, 'prompts', [])
 
