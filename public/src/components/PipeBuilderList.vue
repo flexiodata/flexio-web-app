@@ -81,7 +81,9 @@
 
         this.$store.commit('builder/SET_MODE', 'build')
         this.$store.commit('builder/INIT_DEF', { prompts })
+        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
         this.task_items = tasks
+        this.is_editing = false
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)
@@ -113,7 +115,7 @@
       },
       itemSave() {
         this.is_editing = false
-        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
+        this.$emit('save')
       }
     }
   }

@@ -112,6 +112,7 @@
               <PipeBuilderList
                 class="mv3"
                 :container-id="doc_id"
+                @save="saveChanges"
                 v-model="edit_task_list"
               />
             </div>
@@ -381,7 +382,6 @@
           return task
         },
         set(value) {
-            debugger
           try {
             var task = _.cloneDeep(value)
             var pipe = _.cloneDeep(this.edit_pipe)
