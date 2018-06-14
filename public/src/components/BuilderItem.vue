@@ -280,7 +280,7 @@
       },
       content_cls() {
         return {
-          'pa4 b--white-box': true,
+          'pa4 b--black-10': true,
           'bl br': !this.is_first && !this.is_last,
           'bl br bt br2 br--top': this.is_first,
           'bl br bb br2 br--bottom': this.is_last,
