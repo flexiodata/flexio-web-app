@@ -148,10 +148,8 @@
       CodeEditor
     },
     watch: {
-      is_changed(val) {
-        if (!this.builder__is_prompt_mode && val === true) {
-          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
-        }
+      is_changed: {
+        handler: 'onChange'
       },
       is_active: {
         handler: 'autoFocus',
@@ -240,6 +238,12 @@
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
+      },
+      onChange(val) {
+        if (!this.builder__is_prompt_mode && val === true) {
+          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
+          this.$emit('item-change', this.form_values, this.index)
+        }
       }
     }
   }

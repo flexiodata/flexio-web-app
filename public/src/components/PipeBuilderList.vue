@@ -3,7 +3,8 @@
     <BuilderList
       :container-id="containerId"
       :show-insert-buttons="true"
-      @insertStep="insertStep"
+      @insert-step="insertStep"
+      @item-change="itemChange"
       v-bind="$attrs"
     />
   </div>
@@ -65,6 +66,9 @@
         this.$nextTick(() => {
           this.$store.commit('builder/SET_ACTIVE_ITEM', idx)
         })
+      },
+      itemChange(item, idx) {
+        // TODO: do we want to handle this here?
       }
     }
   }

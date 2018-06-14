@@ -70,7 +70,7 @@
             type="text"
             aria-label="Insert a new step"
             :disabled="disable_insert"
-            @click="$emit('insertStep', index)"
+            @click="$emit('insert-step', index)"
           >
             <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
           </el-button>
@@ -88,7 +88,7 @@
             type="text"
             aria-label="Insert a new step"
             :disabled="disable_insert"
-            @click="$emit('insertStep', index+1)"
+            @click="$emit('insert-step', index+1)"
           >
             <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
           </el-button>
@@ -106,26 +106,31 @@
           :item="item"
           :index="index"
           message="Choose the task that you'd like to insert"
+          v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
+          v-on="$listeners"
           v-else-if="item.element == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
           :index="index"
+          v-on="$listeners"
           v-else-if="item.element == 'file-chooser'"
         />
         <BuilderItemForm
           :item="item"
           :index="index"
+          v-on="$listeners"
           v-else-if="item.element == 'form'"
         />
         <BuilderItemSummary
           :item="item"
           :index="index"
+          v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
         />
         <div v-else>
