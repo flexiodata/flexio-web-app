@@ -322,7 +322,7 @@ EOD;
         $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR;
         $files = scandir($testdata_dir);
         if (!$files)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Problem in getTestDataSamples()");
 
         $result = array();
         foreach ($files as $f)
@@ -335,6 +335,30 @@ EOD;
 
         return $result;
     }
+
+
+    public static function getTestDataFolder($folder /* for example, 'images'... */) : array
+    {
+        // TODO: get a selection of test data samples
+
+        $testdata_dir = \Flexio\System\System::getTestDataDirectory() . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR;
+        $files = scandir($testdata_dir);
+        if (!$files)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Problem in getTestDataFolder('$folder')");
+
+
+        $result = array();
+        foreach ($files as $f)
+        {
+            if ($f == '.' || $f == '..')
+                continue;
+
+            $result[] = $testdata_dir . $f;
+        }
+
+        return $result;
+    }
+
 
     public static function getOutputFilePath(string $output_folderpath, string $input_filepath) : string
     {
