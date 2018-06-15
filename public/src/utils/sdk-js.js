@@ -7,15 +7,23 @@ var getTaskJSON = function(code) {
   // get access to pipe object
   var pipe = fn.call(this, Flexio)
 
-  // check pipe syntax
-  if (!Flexio.util.isPipeObject(pipe)) {
-    throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
+  try {
+    // check pipe syntax
+    if (!Flexio.util.isPipeObject(pipe)) {
+      throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
+    }
+
+    // get the pipe task JSON
+    var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
+
+    return task
+  }
+  catch (e) {
+    console.log(e)
+    return {}
   }
 
-  // get the pipe task JSON
-  var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
-
-  return task
+  return {}
 }
 
 export default {

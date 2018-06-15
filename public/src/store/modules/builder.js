@@ -33,19 +33,8 @@ const mutations = {
     if (lang == 'javascript') {
       var code = _.get(def, 'pipe', '')
       state.code = code
-
-      try {
-        // get the pipe task JSON
-        var task = utilSdkJs.getTaskJSON(code)
-        state.pipe = task
-      }
-      catch(e)
-      {
-        console.log(e)
-      }
     } else {
       state.code = ''
-      state.pipe = _.get(def, 'pipe', {})
     }
 
     var prompts = _.get(def, 'prompts', [])
