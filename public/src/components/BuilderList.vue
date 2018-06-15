@@ -8,25 +8,12 @@
       v-on="$listeners"
       v-for="(item, index) in prompts"
     />
-    <div v-if="prompts.length == 0">
-      <p class="ttu fw6 f7 moon-gray">Start your pipe with one of the following tasks</p>
-      <BuilderItemTaskChooser @task-chooser-item-click="chooseTask" />
-      <p class="ttu fw6 f7 moon-gray">&mdash; or &mdash;</p>
-      <div class="mt3">
-        <el-button
-          class="ttu b"
-        >
-          Get started with a pipe template
-        </el-button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
   import BuilderItem from './BuilderItem.vue'
-  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
 
   export default {
     inheritAttrs: false,
@@ -36,8 +23,7 @@
       }
     },
     components: {
-      BuilderItem,
-      BuilderItemTaskChooser
+      BuilderItem
     },
     watch: {
       active_prompt_idx: {
