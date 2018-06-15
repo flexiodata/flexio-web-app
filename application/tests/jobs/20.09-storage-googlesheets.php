@@ -22,10 +22,10 @@ class Test
     {
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
-        $files = \Flexio\Tests\Util::getTestDataSamples();
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLESHEETS . "-" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $files = \Flexio\Tests\Util::getTestDataFolder("text");
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLESHEETS . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "-";
 
-
+/*
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
@@ -34,27 +34,55 @@ class Test
         $actual = $process_read->hasError();
         $expected = true;
         \Flexio\Tests\Check::assertBoolean("D.1", 'Read; throw an exception when attempting to read from a file that doesn\'t exist.', $actual, $expected, $results);
+*/
 
-        /*
         // BEGIN TEST
         $idx = 1;
         foreach ($files as $filename)
         {
+            if (strpos($filename, 'empty') !== false)
+                continue;
+            if (strpos($filename, 'content') === false)
+                continue;
+            
             $idx++;
+            if ($idx == 5)
+                break;
+
+            $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
 
             $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);
-            $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
-            $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
-            $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
-            $actual_contents = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
-            $expected_contents = \Flexio\Base\Util::getStreamContents($stream);
-            $actual = md5($actual_contents);
-            $expected = md5($expected_contents);
+            $filepath = str_replace('.tsv', '', $filepath);
+
+
+            $process = \Flexio\Jobs\Process::create()->setOwner($process_owner);
+            $process->setStdin($stream);
+            $process->execute([ "op" => "convert", "input" => [ "format" => "delimited", "header" => false, "delimiter" => "{tab}", "qualifier" => '"' ], "output" => "table" ]);
+            $expected_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
+            if (is_array($expected_contents))
+            {
+                foreach ($expected_contents as &$row)
+                    $row = array_values($row);
+            }
+            $process->execute([ "op" => "write", "path" => $filepath ]);
+
+            $process = \Flexio\Jobs\Process::create()->setOwner($process_owner);
+            $process->execute([ "op" => "read", "path" => $filepath ]);
+            $actual_contents = \Flexio\Base\Util::getStreamContents($process->getStdout());
+            if (is_array($actual_contents))
+            {
+                foreach ($actual_contents as &$row)
+                    $row = array_values($row);
+            }
+
+            $actual = json_encode($actual_contents);
+            $expected = json_encode($expected_contents);
+
             \Flexio\Tests\Check::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
 
-
+/*
         // TEST: Write/Read Job; Overwrite
 
         // BEGIN TEST
@@ -74,6 +102,6 @@ class Test
             $expected = $c;
             \Flexio\Tests\Check::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
         }
-        */
+*/
     }
 }

@@ -111,7 +111,77 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public function getFileInfo(string $path) : array
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $ids = $this->getIdsFromPath($path);
+        if (isset($ids['spreadsheet_id']))
+            $spreadsheet_id = $ids['spreadsheet_id'];
+             else
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
+        $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
+        if (!$spreadsheet)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        
+        if (isset($ids['worksheet_title']))
+        {
+            $worksheet_title = $ids['worksheet_title'];
+        }
+         else
+        {
+            $worksheets = $spreadsheet->getWorksheets();
+            if (count($worksheets) < 1)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            $worksheet_title = $spreadsheet->worksheets[0]->title;
+        }
+
+        $r = array('id'=> md5(strtolower(trim($path,'/'))) ?? null,
+                   'name' => trim($path,'/'),
+                   'size' => null,
+                   'modified' => null,
+                   'type' => 'FILE');
+        
+
+        // figure out structure
+        $url = "https://sheets.googleapis.com/v4/spreadsheets/".rawurlencode($spreadsheet_id)."/values/".rawurlencode($worksheet_title);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token, 'GData-Version: 3.0']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        $http_response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        $column_names = array();
+
+        $result = @json_decode($result, true);
+
+        if (isset($result['values']))
+        {
+            foreach ($result['values'] as $row)
+            {
+                while (count($row) > count($column_names))
+                {
+                    $column_names[] = self::stringFromColumnIndex(count($column_names)+1);
+                }
+            }
+
+            if (count($column_names) == 0)
+            {
+                $column_names[] = 'a';
+            }
+
+            $r['structure'] = array();
+            foreach ($column_names as $column)
+            {
+                $r['structure'][] = [ 'name' => $column, 'type' => 'text' ];
+            }
+        }
+        
+        return $r;
     }
 
     public function exists(string $path) : bool
@@ -530,10 +600,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         {
             foreach ($result['values'] as $row)
             {
-                $idx = 1;
                 while (count($row) > count($column_names))
                 {
-                    $column_names[] = self::stringFromColumnIndex($idx++);
+                    $column_names[] = self::stringFromColumnIndex(count($column_names)+1);
                 }
 
                 if (count($row) < count($column_names))

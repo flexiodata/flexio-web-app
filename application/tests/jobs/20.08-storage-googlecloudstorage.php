@@ -38,7 +38,7 @@ class Test
         // BEGIN TEST
         $idx = 1;
         foreach ($files as $filename)
-        {
+        { 
             $idx++;
 
             $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);
