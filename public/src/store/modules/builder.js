@@ -31,8 +31,18 @@ const mutations = {
     // determine what was passed to us
     var lang = _.get(def, 'pipe_language', 'json')
     if (lang == 'javascript') {
-      state.code = _.get(def, 'pipe', '')
-      state.pipe = utilSdkJs.getTaskJSON(state.code)
+      var code = _.get(def, 'pipe', '')
+      state.code = code
+
+      try {
+        // get the pipe task JSON
+        var task = utilSdkJs.getTaskJSON(code)
+        state.pipe = task
+      }
+      catch(e)
+      {
+        console.log(e)
+      }
     } else {
       state.code = ''
       state.pipe = _.get(def, 'pipe', {})
