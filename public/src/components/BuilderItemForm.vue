@@ -21,18 +21,23 @@
       <el-form-item
         :class="fi.cls"
         :label="fi.label"
+        :label-width="fi.element == 'markdown' ? (fi.label_width || '0') : fi.label_width"
         :key="fi.variable"
         :prop="fi.variable"
         v-show="fi.type !== 'hidden'"
         v-for="fi in form_items"
       >
+        <div
+          v-html="getMarkdown(fi.value)"
+          v-if="fi.element == 'markdown'"
+        ></div>
         <CodeEditor
           class="bg-white ba b--black-10 overflow-y-auto"
           style="line-height: 1.15; font-size: 13px"
           :lang="fi.lang ? fi.lang : 'javascript'"
           :options="{ minRows: 8, maxRows: 20 }"
           v-model="form_values[fi.variable]"
-          v-if="fi.element == 'code-editor'"
+          v-else-if="fi.element == 'code-editor'"
         />
         <el-switch
           v-model="form_values[fi.variable]"
@@ -226,6 +231,9 @@
             }
           }
         })
+      },
+      getMarkdown(val) {
+        return marked(val)
       },
       updateForm() {
         if (this.form_values === null) {

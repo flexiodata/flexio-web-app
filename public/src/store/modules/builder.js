@@ -60,7 +60,11 @@ const mutations = {
 
       if (p.element == 'form') {
         var form_values = {}
-        _.each(p.form_items, f => { form_values[f.variable] = f.value })
+        _.each(p.form_items, f => {
+          if (f.element != 'markdown') {
+            form_values[f.variable] = f.value
+          }
+        })
         return _.assign(p, { form_values })
       }
 

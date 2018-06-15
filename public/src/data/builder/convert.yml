@@ -24,8 +24,12 @@ prompts:
         variable: op
         value: convert
 
+      - element: markdown
+        value: |
+          <h3 class="mv0 mid-gray">Input</h3>
+
       - element: select
-        variable: input.format
+        variable: input--format
         label: Format
         placeholder: Select input format
         value: 'delimited'
@@ -44,7 +48,7 @@ prompts:
             value: 'table'
 
       - element: select
-        variable: input.delimiter
+        variable: input--delimiter
         label: Delimiter
         placeholder: Select input delimiter
         value: ','
@@ -61,12 +65,12 @@ prompts:
             value: ' '
 
       - element: switch
-        variable: input.header
+        variable: input--header
         label: First row header
         value: false
 
       - element: select
-        variable: input.qualifier
+        variable: input--qualifier
         label: Text qualifier
         placeholder: Select input text qualifier
         value: '"'
@@ -78,8 +82,13 @@ prompts:
           - label: None
             value: ''
 
+      - element: markdown
+        value: |
+          <div class="bt b--black-10 mv3"></div>
+          <h3 class="mv0 mid-gray">Output</h3>
+
       - element: select
-        variable: output.format
+        variable: output--format
         label: Format
         placeholder: Select output format
         value: 'delimited'
@@ -98,7 +107,7 @@ prompts:
             value: 'table'
 
       - element: select
-        variable: output.delimiter
+        variable: output--delimiter
         label: Delimiter
         placeholder: Select output delimiter
         value: ','
@@ -115,12 +124,12 @@ prompts:
             value: ' '
 
       - element: switch
-        variable: output.header
+        variable: output--header
         label: First row header
         value: false
 
       - element: select
-        variable: output.qualifier
+        variable: output--qualifier
         label: Text qualifier
         placeholder: Select output text qualifier
         value: '"'
