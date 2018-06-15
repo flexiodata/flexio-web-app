@@ -41,11 +41,30 @@ class Insert extends \Flexio\Jobs\Base
         $path = $params['path'] ?? '';
         $values = $params['values'] ?? [];
 
-        if (strlen($path) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        if (!is_string($path) || strlen($path) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Path parameter must specify an insert target");
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
+
+
+        if (is_array($values))
+        {
+            $all_elements_are_arrays = true;
+            foreach ($values as $v)
+            {
+                if (!is_array($v))
+                {
+                    $all_elements_are_arrays = false;
+                    break;
+                }
+            }
+
+            if (!$all_elements_are_arrays)
+            {
+                $values = [ $values ];
+            }
+        }
 
         if (!$vfs->insert($path, $values))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
