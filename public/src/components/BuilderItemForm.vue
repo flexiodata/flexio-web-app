@@ -13,7 +13,7 @@
     <el-form
       ref="form"
       :class="item.cls"
-      :model="form_values"
+      :model="flat_values"
       :label-position="label_position"
       :label-width="label_width"
       v-if="show_controls"
@@ -22,8 +22,8 @@
         :class="fi.cls"
         :label="fi.label"
         :label-width="fi.element == 'markdown' ? (fi.label_width || '0') : fi.label_width"
-        :key="fi.variable"
-        :prop="fi.variable"
+        :key="getFlatKey(fi.variable)"
+        :prop="getFlatKey(fi.variable)"
         v-show="fi.type !== 'hidden'"
         v-for="fi in form_items"
       >
@@ -36,21 +36,21 @@
           style="line-height: 1.15; font-size: 13px"
           :lang="fi.lang ? fi.lang : 'javascript'"
           :options="{ minRows: 8, maxRows: 20 }"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'code-editor'"
         />
         <el-switch
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'switch'"
         />
         <el-checkbox
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'checkbox'"
         />
         <el-checkbox-group
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'checkbox-group'"
         >
           <el-checkbox
@@ -64,7 +64,7 @@
         </el-checkbox-group>
         <el-radio-group
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'radio-group'"
         >
           <el-radio
@@ -77,7 +77,7 @@
         </el-radio-group>
         <el-select
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'select'"
         >
           <el-option
@@ -92,24 +92,24 @@
           :type="fi.type"
           :editable="false"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'input' && isDatePickerType(fi.type)"
         />
         <el-input
           type="textarea"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'input' && fi.type == 'textarea'"
         />
         <el-input
           type="hidden"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'input' && fi.type == 'hidden'"
         />
         <el-input
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else
         />
       </el-form-item>
@@ -138,6 +138,9 @@
   import { mapState } from 'vuex'
   import CodeEditor from './CodeEditor.vue'
 
+  const flatten = require('flat')
+  const unflatten = require('flat').unflatten
+
   export default {
     props: {
       item: {
@@ -164,10 +167,15 @@
         handler: 'updateForm',
         immediate: true,
         deep: true
+      },
+      flat_values: {
+        handler: 'updateFlatValues',
+        deep: true
       }
     },
     data() {
       return {
+        flat_values: null,
         form_values: null,
         orig_form_values: null
       }
@@ -235,14 +243,29 @@
       getMarkdown(val) {
         return marked(val)
       },
+      getFlatKey(key) {
+        if (!key) return
+        return key.replace('.', '--')
+      },
+      getExpandedKey(key) {
+        if (!key) return
+        return key.replace('--', '.')
+      },
       updateForm() {
         if (this.form_values === null) {
           var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
           this.form_values = _.cloneDeep(form_values)
           this.orig_form_values = _.cloneDeep(form_values)
+
+          var flat_values = flatten(this.form_values)
+          this.flat_values = _.mapKeys(flat_values, (val, key) => { return this.getFlatKey(key) })
         } else {
           this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
         }
+      },
+      updateFlatValues() {
+        var form_values = _.mapKeys(this.flat_values, (val, key) => { return this.getExpandedKey(key) })
+        this.form_values = unflatten(form_values)
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
