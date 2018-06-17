@@ -243,10 +243,12 @@
       getMarkdown(val) {
         return marked(val)
       },
+      // this is necessary since ElForm doesn't like periods in key values
       getFlatKey(key) {
         if (!key) return
         return key.replace('.', '--')
       },
+      // this is necessary since ElForm doesn't like periods in key values
       getExpandedKey(key) {
         if (!key) return
         return key.replace('--', '.')
@@ -261,6 +263,7 @@
           this.flat_values = _.mapKeys(flat_values, (val, key) => { return this.getFlatKey(key) })
         } else {
           this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
+          this.$emit('item-change', this.form_values, this.index)
         }
       },
       updateFlatValues() {
@@ -273,7 +276,6 @@
       onChange(val) {
         if (!this.builder__is_prompt_mode && val === true) {
           this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
-          this.$emit('item-change', this.form_values, this.index)
         }
       }
     }
