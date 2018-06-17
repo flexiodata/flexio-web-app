@@ -74,7 +74,19 @@
 
             // associate prompts with tasks
             _.each(item.prompts, (p) => {
-              prompts.push(_.assign({ task_idx }, p))
+              var prompt = _.cloneDeep(prompt)
+              prompt = _.assign({ task_idx }, p)
+
+              // for form builder items, get the value by finding it in the task object
+              if (prompt.element == 'form') {
+                prompt.form_items = _.map(prompt.form_items, (item) => {
+                  return _.assign(item, {
+                    value: _.get(t, item.variable, '')
+                  })
+                })
+              }
+
+              prompts.push(prompt)
             })
           }
         })
