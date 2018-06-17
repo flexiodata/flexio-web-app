@@ -106,7 +106,6 @@
         })
       },
       itemChange(prompt_values, prompt_idx) {
-        console.log(prompt_values)
         var p = this.builder_prompts[prompt_idx]
         if (p) {
           var t = _.get(this.task_items, '['+p.task_idx+ ']', null)
