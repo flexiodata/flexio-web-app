@@ -103,8 +103,6 @@
     >
       <div class="flex-fill">
         <BuilderItemTaskChooser
-          :item="item"
-          :index="index"
           message="Choose the task that you'd like to insert"
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"

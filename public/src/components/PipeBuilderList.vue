@@ -74,8 +74,7 @@
 
             // associate prompts with tasks
             _.each(item.prompts, (p) => {
-              var prompt = _.cloneDeep(prompt)
-              prompt = _.assign({ task_idx }, p)
+              var prompt = _.assign({ task_idx }, p)
 
               // for form builder items, get the value by finding it in the task object
               if (prompt.element == 'form') {
@@ -100,6 +99,7 @@
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)
         items.splice(idx, 0, { op: '' })
+        this.is_editing = false
         this.$emit('input', { op: 'sequence', items })
         this.$nextTick(() => {
           this.$store.commit('builder/SET_ACTIVE_ITEM', idx)
