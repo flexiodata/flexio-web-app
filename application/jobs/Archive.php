@@ -39,7 +39,8 @@ class Archive extends \Flexio\Jobs\Base
             $files = \Flexio\Base\Util::filterArrayEmptyValues(explode(',', $files));
 
 
-
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
+        $vfs->setProcess($process);
 
 
         if ($format == 'zip')
@@ -50,9 +51,6 @@ class Archive extends \Flexio\Jobs\Base
     
             $zip = new \ZipArchive();
             $zip->open($archive_fname, \ZipArchive::CREATE);
-
-            $vfs = new \Flexio\Services\Vfs($process->getOwner());
-            $vfs->setProcess($process);
 
             foreach ($files as $filespec)
             {
@@ -65,7 +63,7 @@ class Archive extends \Flexio\Jobs\Base
 
                     $f = fopen($fname, 'wb');
 
-                    $files = $vfs->read($fileinfo['path'], function($data) use (&$f) {
+                    $vfs->read($fileinfo['path'], function($data) use (&$f) {
                         fwrite($f, $data);
                     });
 
@@ -113,12 +111,22 @@ class Archive extends \Flexio\Jobs\Base
 
             $f = gzopen($archive_fname, 'wb9');
 
-            $vfs->read($path, function($data) use (&$f) {
-                gzwrite($f, $data);
-            });
+            if (strlen($path) > 0)
+            {
+                $vfs->read($path, function($data) use (&$f) {
+                    gzwrite($f, $data);
+                });
+            }
+             else
+            {
+                $reader = $instream->getReader();
+                while (($data = $reader->read(32768)) !== false)
+                {
+                    gzwrite($f, $data);
+                }
+            }
 
-            gzclose($fgz);
-
+            gzclose($f);
 
             $f = fopen($archive_fname, 'rb');
 

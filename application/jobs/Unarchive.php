@@ -25,8 +25,6 @@ class Unarchive extends \Flexio\Jobs\Base
         $instream = $process->getStdin();
         $outstream = $process->getStdout();
 
-        $outstream->copyFrom($instream);
-
         $params = $this->getJobParameters();
         $path = $params['path'] ?? '';
         $files = $params['files'] ?? '';
