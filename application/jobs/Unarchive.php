@@ -36,7 +36,10 @@ class Unarchive extends \Flexio\Jobs\Base
         $vfs->setProcess($process);
 
 
-        if ($format == 'gz' || $format == 'gzip')
+        if ($format == 'zip')
+        {
+        }
+        else if ($format == 'gz' || $format == 'gzip')
         {
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $archive_fname = $storage_tmpbase . "tmpgz-" . \Flexio\Base\Util::generateRandomString(30) . ".gz";
@@ -46,7 +49,7 @@ class Unarchive extends \Flexio\Jobs\Base
     
             if (isset($params['path']))
             {
-                $files = $vfs->read($path, function($data) use (&$f) {
+                $vfs->read($path, function($data) use (&$f) {
                     fwrite($f, $data);
                 });
             }
