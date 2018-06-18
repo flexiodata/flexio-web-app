@@ -129,7 +129,10 @@
         this.is_editing = false
       },
       selectTask(item) {
-        alert(item.op)
+        this.$message({
+          message: '"' + item.op + '" clicked!',
+          type: 'info'
+        })
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)
