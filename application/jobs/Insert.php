@@ -18,7 +18,9 @@ namespace Flexio\Jobs;
 /*
 // DESCRIPTION:
 {
-    "op": "insert"
+    "op": "insert",      // string, required
+    "path": "",          // string, required
+    "values": []         // array, required
     // TODO: fill out
 }
 
