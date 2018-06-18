@@ -24,7 +24,7 @@
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
           <div class="flex-none flex flex-row items-center pl2">
             <transition name="el-zoom-in-top">
-              <div class="flex flex-row pl3" v-if="is_changed">
+              <div class="flex flex-row pl3" v-if="show_save_cancel">
                 <el-button
                   size="medium"
                   class="ttu b"
@@ -452,6 +452,9 @@
       },
       is_changed() {
         return this.isChanged()
+      },
+      show_save_cancel() {
+        return this.is_changed && this.editor != PIPEDOC_EDITOR_BUILDER
       },
       has_errors() {
         return this.syntax_error.length > 0 || this.json_parse_error.length > 0 || this.yaml_parse_error.length > 0
