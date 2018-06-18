@@ -175,6 +175,7 @@
     },
     data() {
       return {
+        is_inited: false,
         flat_values: null,
         form_values: null,
         orig_form_values: null
@@ -261,14 +262,17 @@
 
           var flat_values = flatten(this.form_values)
           this.flat_values = _.mapKeys(flat_values, (val, key) => { return this.getFlatKey(key) })
+          this.is_inited = true
         } else {
           this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
           this.$emit('item-change', this.form_values, this.index)
         }
       },
       updateFlatValues() {
-        var form_values = _.mapKeys(this.flat_values, (val, key) => { return this.getExpandedKey(key) })
-        this.form_values = unflatten(form_values)
+        if (this.is_inited) {
+          var form_values = _.mapKeys(this.flat_values, (val, key) => { return this.getExpandedKey(key) })
+          this.form_values = _.cloneDeep(unflatten(form_values))
+        }
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
