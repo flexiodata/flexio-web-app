@@ -79,6 +79,10 @@
               // for form builder items, get the value by finding it in the task object
               if (prompt.element == 'form') {
                 prompt.form_items = _.map(prompt.form_items, (item) => {
+                  if (!item.variable) {
+                    return item
+                  }
+
                   return _.assign(item, {
                     value: _.get(t, item.variable, '')
                   })
