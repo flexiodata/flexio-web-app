@@ -25,6 +25,10 @@
 <script>
   const tasks = [
     {
+      op: 'create',
+      name: 'Create',
+      icon: 'photo_filter'
+    },{
       op: 'connect',
       name: 'Connect',
       icon: 'repeat'
@@ -56,23 +60,19 @@
       op: 'request',
       name: 'Request',
       icon: 'http'
+    },{
+      op: 'write',
+      name: 'Write',
+      icon: 'input'
     }
   ]
 
   /*
   const tasks = [
     {
-      op: 'create',
-      name: 'Create',
-      icon: 'photo_filter'
-    },{
       op: 'delete',
       name: 'Delete',
       icon: 'delete'
-    },{
-      op: 'execute',
-      name: 'Execute',
-      icon: 'code'
     },{
       op: 'exit',
       name: 'Exit',
@@ -90,10 +90,6 @@
       name: 'Mkdir',
       icon: 'folder'
     },{
-      op: 'read',
-      name: 'Read',
-      icon: 'input'
-    },{
       op: 'render',
       name: 'Render',
       icon: 'photo'
@@ -101,10 +97,6 @@
       op: 'select',
       name: 'Select',
       icon: 'view_carousel'
-    },{
-      op: 'write',
-      name: 'Write',
-      icon: 'input'
     }
   ]
   */
