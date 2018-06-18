@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div
+      class="tl pb3"
+      v-if="showTitle"
+    >
+      <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="title.length > 0">{{title}}</h3>
+    </div>
     <p class="mt0" v-if="message.length > 0">{{message}}</p>
     <div class="flex flex-row flex-wrap items-center nl1">
       <div
@@ -113,9 +119,17 @@
 
   export default {
     props: {
+      title: {
+        type: String,
+        default: ''
+      },
       message: {
         type: String,
         default: ''
+      },
+      showTitle: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {

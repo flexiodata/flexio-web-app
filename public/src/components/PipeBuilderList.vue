@@ -8,7 +8,27 @@
       @item-cancel="itemCancel"
       @item-save="itemSave"
       v-bind="$attrs"
+      v-if="task_items.length > 0"
     />
+    <div
+      v-else
+    >
+      <p class="ttu fw6 f7 moon-gray">Choose a starting connection</p>
+      <ConnectionChooserList
+        class="mb3 overflow-auto"
+        style="max-height: 277px"
+        :show-selection-checkmark="true"
+      />
+      <div class="mt3">
+        <el-button
+          class="ttu b"
+        >
+          Set up a new connection
+        </el-button>
+      </div>
+      <p class="mv4 ttu fw6 f7 moon-gray">&mdash; or start with one of the following tasks &mdash;</p>
+      <BuilderItemTaskChooser title="Choose a task" />
+    </div>
   </div>
 </template>
 
@@ -16,6 +36,8 @@
   import { mapState } from 'vuex'
   import builder_items from '../data/builder'
   import BuilderList from './BuilderList.vue'
+  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
+  import ConnectionChooserList from './ConnectionChooserList.vue'
 
   export default {
     inheritAttrs: false,
@@ -29,7 +51,9 @@
       }
     },
     components: {
-      BuilderList
+      BuilderList,
+      BuilderItemTaskChooser,
+      ConnectionChooserList
     },
     watch: {
       value: {
