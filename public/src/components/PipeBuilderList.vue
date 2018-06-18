@@ -3,6 +3,7 @@
     <BuilderList
       :container-id="containerId"
       :show-insert-buttons="true"
+      @task-chooser-item-click="selectTask"
       @insert-step="insertStep"
       @item-change="itemChange"
       @item-cancel="itemCancel"
@@ -126,6 +127,9 @@
         this.$store.commit('builder/UNSET_ACTIVE_ITEM')
         this.task_items = tasks
         this.is_editing = false
+      },
+      selectTask(item) {
+        alert(item.op)
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)

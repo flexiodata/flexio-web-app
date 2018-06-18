@@ -25,9 +25,21 @@
 <script>
   const tasks = [
     {
+      op: 'connect',
+      name: 'Connect',
+      icon: 'repeat'
+    },{
+      op: 'copy',
+      name: 'Copy',
+      icon: 'content_copy'
+    },{
       op: 'read',
       name: 'Read',
       icon: 'input'
+    },{
+      op: 'convert',
+      name: 'Convert',
+      icon: 'settings'
     },{
       op: 'echo',
       name: 'Echo',
@@ -40,24 +52,16 @@
       op: 'email',
       name: 'Email',
       icon: 'mail_outline'
+    },{
+      op: 'request',
+      name: 'Request',
+      icon: 'http'
     }
   ]
 
   /*
   const tasks = [
     {
-      op: 'connect',
-      name: 'Connect',
-      icon: 'repeat'
-    },{
-      op: 'convert',
-      name: 'Convert',
-      icon: 'settings'
-    },{
-      op: 'copy',
-      name: 'Copy',
-      icon: 'content_copy'
-    },{
       op: 'create',
       name: 'Create',
       icon: 'photo_filter'
@@ -65,14 +69,6 @@
       op: 'delete',
       name: 'Delete',
       icon: 'delete'
-    },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote'
-    },{
-      op: 'email',
-      name: 'Email',
-      icon: 'mail_outline'
     },{
       op: 'execute',
       name: 'Execute',
@@ -101,10 +97,6 @@
       op: 'render',
       name: 'Render',
       icon: 'photo'
-    },{
-      op: 'request',
-      name: 'Request',
-      icon: 'http'
     },{
       op: 'select',
       name: 'Select',

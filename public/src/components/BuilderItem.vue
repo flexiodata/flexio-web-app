@@ -179,6 +179,7 @@
           class="ttu b"
           type="primary"
           @click="onSaveClick"
+          v-if="show_save_button"
         >
           Save Changes
         </el-button>
@@ -279,6 +280,9 @@
       },
       disable_insert() {
         return this.builder__is_editing
+      },
+      show_save_button() {
+        return this.item.element != 'task-chooser'
       },
       ceid() {
         return _.get(this.item, 'connection_eid', null)
