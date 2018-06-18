@@ -118,6 +118,9 @@
           }
         })
 
+        // make sure we're not mutating anything in the Vuex store
+        prompts = _.cloneDeep(prompts)
+
         this.$store.commit('builder/SET_MODE', 'build')
         this.$store.commit('builder/INIT_DEF', { prompts })
         this.$store.commit('builder/UNSET_ACTIVE_ITEM')
