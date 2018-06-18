@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="tl pb3">
+    <div class="tl pb3"
+      v-if="showTitle"
+    >
       <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
     </div>
     <div
@@ -63,6 +65,10 @@
       index: {
         type: Number,
         required: true
+      },
+      showTitle: {
+        type: Boolean,
+        default: true
       }
     },
     components: {

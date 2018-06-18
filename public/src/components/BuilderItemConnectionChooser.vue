@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="tl pb3">
+    <div
+      class="tl pb3"
+      v-if="showTitle"
+    >
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="title.length > 0">{{title}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else-if="ctype.length > 0">Connect to {{service_name}}</h3>
       <h3 class="fw6 f3 mid-gray mt0 mb2" v-else>Choose a connection</h3>
@@ -83,6 +86,10 @@
       index: {
         type: Number,
         required: true
+      },
+      showTitle: {
+        type: Boolean,
+        default: true
       }
     },
     mixins: [MixinConnection],

@@ -107,6 +107,12 @@
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
+        <BuilderItemConnectionFileChooser
+          :item="item"
+          :index="index"
+          v-on="$listeners"
+          v-else-if="item.element == 'connection-file-chooser'"
+        />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
@@ -188,6 +194,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
+  import BuilderItemConnectionFileChooser from './BuilderItemConnectionFileChooser.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
@@ -224,6 +231,7 @@
       ServiceIcon,
       TaskIcon,
       BuilderItemTaskChooser,
+      BuilderItemConnectionFileChooser,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
