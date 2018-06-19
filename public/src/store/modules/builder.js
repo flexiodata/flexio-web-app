@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import utilSdkJs from '../../utils/sdk-js'
+
+const VFS_TYPE_DIR = 'DIR'
 
 const state = {
   def: {},
@@ -122,12 +123,6 @@ const mutations = {
   UPDATE_CODE (state) {
     var code = state.def.code /* new format */ || state.def.pipe /* old format */ || ''
 
-    _.each(state.attrs, (val, key) => {
-      var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-      code = code.replace(regex, JSON.stringify(val, null, 2))
-    })
-
-    /*
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
@@ -137,7 +132,7 @@ const mutations = {
 
       switch (p.element) {
         case 'connection-chooser':
-          var eid = p.connection_eid
+          var eid = state.attrs[p.variable]
           if (!_.isNil(eid)) {
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
@@ -147,7 +142,7 @@ const mutations = {
           break
 
         case 'file-chooser':
-          var files = _.get(p, 'files', [])
+          var files = state.attrs[p.variable]
           var connection_alias = _.get(p, 'connection_alias', false)
           var paths = []
 
@@ -178,17 +173,13 @@ const mutations = {
 
           code = code.replace(regex, JSON.stringify(paths, null, 2))
           break
-
-        case 'form':
-          var form_vals = _.get(p, 'form_values', {})
-          _.each(form_vals, (val, key) => {
-            var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-            code = code.replace(regex, JSON.stringify(val, null, 2))
-          })
-          break
       }
     })
-    */
+
+    _.each(state.attrs, (val, key) => {
+      var regex = new RegExp("\\$\\{" + key + "\\}", "g")
+      code = code.replace(regex, JSON.stringify(val, null, 2))
+    })
 
     state.code = code
   },
