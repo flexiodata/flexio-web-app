@@ -1,5 +1,18 @@
 <template>
   <div>
+    <div
+      class="tl pb3"
+      v-if="title.length > 0"
+    >
+      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
+    </div>
+    <div
+      class="pb3 mid-gray marked"
+      v-html="description"
+      v-show="show_description"
+    >
+    </div>
+
     <CodeEditor
       class="bg-white ba b--black-10 overflow-y-auto"
       lang="javascript"
@@ -13,6 +26,7 @@
 </template>
 
 <script>
+  import marked from 'marked'
   import CodeEditor from './CodeEditor.vue'
 
   export default {
@@ -49,6 +63,15 @@
       }
     },
     computed: {
+      show_description() {
+        return this.description.length > 0
+      },
+      title() {
+        return _.get(this.item, 'title', 'Task JSON')
+      },
+      description() {
+        return marked(_.get(this.item, 'description', ''))
+      },
       is_changed() {
         return this.edit_json != this.orig_json
       }
