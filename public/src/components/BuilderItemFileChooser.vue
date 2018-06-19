@@ -66,6 +66,14 @@
         type: Number,
         required: true
       },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
+      },
       showTitle: {
         type: Boolean,
         default: true
@@ -75,25 +83,31 @@
       FileChooser,
       FileChooserItem
     },
+    watch: {
+      is_active: {
+        handler: 'initSelf',
+        immediate: true
+      },
+      files: {
+        handler: 'updateAllowNext',
+        deep: true
+      }
+    },
     data() {
       return {
+        files: [],
         is_changed: false
       }
     },
     computed: {
-      ...mapState({
-        mode: state => state.builder.mode,
-        prompts: state => state.builder.prompts,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
-      builder__is_prompt_mode() {
-        return this.mode == 'prompt'
+      builder__is_wizard() {
+        return true
       },
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
       },
       is_single_folder_select() {
         return this.item.folders_only === true && this.item.allow_multiple === false
@@ -102,13 +116,13 @@
         return this.item.folders_only !== true && this.item.allow_multiple === false
       },
       show_controls() {
-        return !this.builder__is_prompt_mode || this.is_active
+        return !this.builder__is_wizard || this.is_active
       },
       show_description() {
         return this.show_controls && this.description.length > 0
       },
       show_summary() {
-        return this.builder__is_prompt_mode && this.is_before_active
+        return this.builder__is_wizard && this.is_before_active
       },
       title() {
         var def_title = ''
@@ -125,18 +139,15 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
-      prompt() {
-        var prompt_id = _.get(this.item, 'id', '')
-        return _.find(this.prompts, { id: prompt_id }, {})
-      },
       folder_path() {
-        if (this.is_single_folder_select || this.is_single_file_select)
-          return _.get(this.prompt, 'files[0].path', '')
+        if (this.is_single_folder_select || this.is_single_file_select) {
+          return _.get(this.files, '[0].path', '')
+        }
 
         return ''
       },
       ceid() {
-        return _.get(this.prompt, 'connection_eid', null)
+        return _.get(this.item, 'connection_eid', '')
       },
       connections() {
         return this.getAllConnections()
@@ -153,9 +164,13 @@
       ...mapGetters([
         'getAllConnections'
       ]),
+      initSelf() {
+        this.updateAllowNext()
+      },
       updateFolder(path) {
-        if (this.item.folders_only !== true)
+        if (this.item.folders_only !== true) {
           return
+        }
 
         var afterFirst = function(str, char, cnt) {
           if (!_.isNumber(cnt)) { cnt = 1 }
@@ -175,8 +190,13 @@
           type: VFS_TYPE_DIR
         }
 
-        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: [ folder ] })
+        this.files = [folder]
         this.is_changed = true
+
+        var key = _.get(this.item, 'variable', 'files')
+        var form_values = {}
+        form_values[key] = this.files
+        this.$emit('item-change', form_values, this.index)
       },
       updateFiles(files, path) {
         if (this.is_single_folder_select && !_.isNil(path)) {
@@ -187,8 +207,17 @@
           return _.omit(f, ['is_selected'])
         })
 
-        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { files: store_files })
+        this.files = store_files
         this.is_changed = true
+
+        var key = _.get(this.item, 'variable', 'files')
+        var form_values = {}
+        form_values[key] = this.files
+        this.$emit('item-change', form_values, this.index)
+      },
+      updateAllowNext() {
+        var allow = this.files.length > 0
+        this.$emit('update:isNextAllowed', allow)
       }
     }
   }

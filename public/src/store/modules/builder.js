@@ -84,6 +84,18 @@ const mutations = {
 
   UPDATE_ATTRS (state, attrs) {
     state.attrs = _.assign({}, state.attrs, attrs)
+
+    state.prompts = _.map(state.prompts, p => {
+      // update file chooser connections with the associated connection if they match
+      if (p.element == 'file-chooser' && p.connection) {
+        return _.assign({}, p, {
+          connection_eid: _.get(state.attrs, p.connection, '')
+        })
+      }
+
+      // otherwise, just return the prompt as-is
+      return p
+    })
   },
 
   UPDATE_ACTIVE_ITEM (state, attrs) {
@@ -97,7 +109,7 @@ const mutations = {
       } else {
         // update file chooser connections with the active prompt's connection if they match
         if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
-          return _.assign(p, {
+          return _.assign({}, p, {
             connection_eid: ap.connection_eid,
             files: []
           })

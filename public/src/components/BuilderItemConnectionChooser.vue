@@ -257,7 +257,6 @@
       },
       updateAllowNext() {
         var allow = _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
-
         this.$emit('update:isNextAllowed', allow)
       }
     }
