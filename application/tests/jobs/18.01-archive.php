@@ -66,10 +66,11 @@ class Test
         // BEGIN TEST
         $archivetask = self::createArchiveTask('gzip');
         $unarchivetask = self::createUnarchiveTask('gzip');
-        $stream = \Flexio\Tests\Util::createStream('/text/02.11-header-basic.csv');
-        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($archivetask)->execute($unarchivetask);
-        $actual = $process->getStdout()->getReader()->read();
-        $expected = 'f1';
-        \Flexio\Tests\Check::assertArray('A.1', 'Archive/Unarchive; basic file',  $actual, $expected, $results);
+        $inputstream = \Flexio\Tests\Util::createStream('/text/02.11-header-basic.csv');
+        $archivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($archivetask)->getStdout();
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($archivestream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = "f1\r\n";
+        \Flexio\Tests\Check::assertString('A.1', 'Archive/Unarchive; basic file',  $actual, $expected, $results);
     }
 }
