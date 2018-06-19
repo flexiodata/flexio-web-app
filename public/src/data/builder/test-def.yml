@@ -122,7 +122,8 @@ prompts:
     variable: file_chooser_csv_only
     connection: connection_dropbox
     filetype_filter:
-    - csv
+      - csv
+    allow_folders: false
 
   - title: File chooser with a connection alias
     description: This file chooser uses a connection alias `my-foo-alias`.
