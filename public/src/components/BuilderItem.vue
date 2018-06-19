@@ -118,7 +118,8 @@
 
       <div class="flex-fill">
         <BuilderItemTaskChooser
-          message="Choose the task that you'd like to insert"
+          title="Choose the task to insert"
+          :show-title="true"
           :item="item"
           :index="index"
           :active-item-idx="activeItemIdx"

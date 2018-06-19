@@ -2,11 +2,17 @@
   <div>
     <div
       class="tl pb3"
-      v-if="showTitle"
+      v-if="showTitle && title.length > 0"
     >
-      <h3 class="fw6 f3 mid-gray mt0 mb2" v-if="title.length > 0">{{title}}</h3>
+      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
     </div>
-    <p class="mt0" v-if="message.length > 0">{{message}}</p>
+    <div
+      class="pb3 mid-gray marked"
+      v-html="marked_description"
+      v-show="show_description"
+    >
+    </div>
+
     <div class="flex flex-row flex-wrap items-center nl1">
       <div
         class="flex flex-column justify-center items-center"
@@ -23,6 +29,8 @@
 </template>
 
 <script>
+  import marked from 'marked'
+
   const tasks = [
     {
       op: 'create',
@@ -127,12 +135,18 @@
         type: String,
         default: ''
       },
-      message: {
+      description: {
         type: String,
         default: ''
       }
     },
     computed: {
+      show_description() {
+        return this.marked_description.length > 0
+      },
+      marked_description() {
+        return marked(this.description)
+      },
       items() {
         return tasks
       }
