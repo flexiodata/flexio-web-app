@@ -29,7 +29,7 @@ class Unarchive extends \Flexio\Jobs\Base
         $path = $params['path'] ?? '';
         $files = $params['files'] ?? '';
         $format = $params['format'] ?? 'zip';
-        $targets = $params['target'] ?? '';
+        $target = $params['target'] ?? '';
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
@@ -74,8 +74,12 @@ class Unarchive extends \Flexio\Jobs\Base
                 if (!$f)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED, "Read failed on ZIP entry " . $entry);
 
+                $target_file_path = $target;
+                if (substr($target_file_path, -1) != '/')
+                    $target_file_path .= '/';
+                $target_file_path .= trim($entry,'/');
 
-                $vfs->write($mypath, function($length) use (&$f) {
+                $vfs->write($target_file_path, function($length) use (&$f) {
                     if (feof($f))
                         return false;
                     $buf = fread($f, $length);
@@ -85,7 +89,7 @@ class Unarchive extends \Flexio\Jobs\Base
                 });
 
 
-                fclose($fp);
+                fclose($f);
             }
 
 
