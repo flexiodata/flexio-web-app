@@ -5,7 +5,6 @@ const VFS_TYPE_DIR = 'DIR'
 const state = {
   def: {},
   code: '',
-  mode: 'prompt', // 'prompt' or 'build'
   pipe: {},
   prompts: [],
   attrs: {},
@@ -41,12 +40,10 @@ const mutations = {
 
     var prompts = _.get(def, 'prompts', [])
 
-    // include the summary item in prompt mode
-    if (state.mode == 'prompt') {
-      var existing_summary = _.find(prompts, { element: 'summary-prompt' })
-      if (!existing_summary) {
-        prompts.push({ element: 'summary-prompt' })
-      }
+    // include the summary item at the end
+    var existing_summary = _.find(prompts, { element: 'summary-prompt' })
+    if (!existing_summary) {
+      prompts.push({ element: 'summary-prompt' })
     }
 
     state.prompts = _.map(prompts, p => {
@@ -73,14 +70,8 @@ const mutations = {
       return p
     })
 
-    if (state.mode == 'prompt') {
-      state.active_prompt_idx = 0
-      state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
-    }
-  },
-
-  SET_MODE (state, mode) {
-    state.mode = mode
+    state.active_prompt_idx = 0
+    state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
 
   UPDATE_ATTRS (state, attrs) {

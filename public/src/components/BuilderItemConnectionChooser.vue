@@ -93,11 +93,14 @@
       },
       isNextAllowed: {
         type: Boolean,
-        required: true
+        required: false
       },
       showTitle: {
         type: Boolean,
         default: true
+      },
+      builderMode: {
+        type: String
       }
     },
     mixins: [MixinConnection],
@@ -129,7 +132,7 @@
     },
     computed: {
       builder__is_wizard() {
-        return true
+        return this.builderMode == 'wizard' ? true : false
       },
       is_active() {
         return this.index == this.activeItemIdx

@@ -108,6 +108,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
@@ -116,6 +117,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'connection-chooser'"
         />
@@ -124,6 +126,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'file-chooser'"
         />
@@ -132,6 +135,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'form'"
         />
@@ -140,6 +144,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
         />
@@ -148,6 +153,7 @@
           :index="index"
           :active-item-idx.sync="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'task-json-editor'"
         />
@@ -249,6 +255,9 @@
       showLine: {
         type: Boolean,
         default: true
+      },
+      builderMode: {
+        type: String
       }
     },
     components: {
@@ -268,7 +277,7 @@
     },
     computed: {
       builder__is_wizard() {
-        return true
+        return this.builderMode == 'wizard' ? true : false
       },
       builder__is_editing() {
         return this.activeItemIdx != -1

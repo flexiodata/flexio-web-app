@@ -123,8 +123,8 @@
             :key="key"
             v-for="(val, key) in form_values"
           >
-            <td class="v-top pa1"><span class="fw6">{{key}}:</span></td>
-            <td class="v-top pa1">{{ JSON.stringify(val, null, 2) }}</td>
+            <td class="v-top pa1 f6"><span class="fw6">{{key}}:</span></td>
+            <td class="v-top pa1 f6">{{ JSON.stringify(val, null, 2) }}</td>
           </tr>
         </tbody>
       </table>
@@ -156,7 +156,10 @@
       },
       isNextAllowed: {
         type: Boolean,
-        required: true
+        required: false
+      },
+      builderMode: {
+        type: String
       }
     },
     components: {
@@ -190,7 +193,7 @@
     },
     computed: {
       builder__is_wizard() {
-        return true
+        return this.builderMode == 'wizard' ? true : false
       },
       is_active() {
         return this.index == this.activeItemIdx

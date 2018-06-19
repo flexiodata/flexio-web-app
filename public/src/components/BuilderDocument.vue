@@ -30,6 +30,7 @@
       <div class="flex flex-row">
         <BuilderList
           class="flex-fill"
+          builder-mode="wizard"
           :items="prompts"
           :container-id="doc_id"
           :active-item-idx="active_prompt_idx"
