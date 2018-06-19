@@ -13,7 +13,7 @@
       @item-save="itemSave"
       v-if="prompts.length > 0"
     />
-    <div class="pa5 tc bg-near-white" v-else>
+    <div class="pa5 ba b--black-10 br2 tc" v-else>
       <el-button
         type="primary"
         size="large"
