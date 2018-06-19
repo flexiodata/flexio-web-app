@@ -94,29 +94,38 @@
             })
           }
 
-          if (item) {
-            tasks.push(_.cloneDeep(t))
-
-            // associate prompts with tasks
-            _.each(item.prompts, (p) => {
-              var prompt = _.assign({ task_idx }, p)
-
-              // for form builder items, get the value by finding it in the task object
-              if (prompt.element == 'form') {
-                prompt.form_items = _.map(prompt.form_items, (item) => {
-                  if (!item.variable) {
-                    return item
-                  }
-
-                  return _.assign(item, {
-                    value: _.get(t, item.variable, '')
-                  })
-                })
-              }
-
-              prompts.push(prompt)
-            })
+          if (!item) {
+            var task = _.cloneDeep(_.omit(t, ['eid']))
+            item = {
+              task,
+              prompts: [{
+                element: 'task-json-editor',
+                value: JSON.stringify(task, null, 2)
+              }]
+            }
           }
+
+          tasks.push(_.cloneDeep(t))
+
+          // associate prompts with tasks
+          _.each(item.prompts, (p) => {
+            var prompt = _.assign({ task_idx }, p)
+
+            // for form builder items, get the value by finding it in the task object
+            if (prompt.element == 'form') {
+              prompt.form_items = _.map(prompt.form_items, (item) => {
+                if (!item.variable) {
+                  return item
+                }
+
+                return _.assign(item, {
+                  value: _.get(t, item.variable, '')
+                })
+              })
+            }
+
+            prompts.push(prompt)
+          })
         })
 
         // make sure we're not mutating anything in the Vuex store

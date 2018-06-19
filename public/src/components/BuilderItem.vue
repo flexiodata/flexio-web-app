@@ -107,12 +107,6 @@
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
-        <BuilderItemConnectionFileChooser
-          :item="item"
-          :index="index"
-          v-on="$listeners"
-          v-else-if="item.element == 'connection-file-chooser'"
-        />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
@@ -137,7 +131,15 @@
           v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
         />
-        <div v-else>
+        <BuilderItemTaskJsonEditor
+          :item="item"
+          :index="index"
+          v-on="$listeners"
+          v-else-if="item.element == 'task-json-editor'"
+        />
+        <div
+          v-else
+        >
           <span class="silver">
             {{item.element}}
             <span v-if="item.variable">:</span>
@@ -195,7 +197,7 @@
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
-  import BuilderItemConnectionFileChooser from './BuilderItemConnectionFileChooser.vue'
+  import BuilderItemTaskJsonEditor from './BuilderItemTaskJsonEditor.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
@@ -232,7 +234,7 @@
       ServiceIcon,
       TaskIcon,
       BuilderItemTaskChooser,
-      BuilderItemConnectionFileChooser,
+      BuilderItemTaskJsonEditor,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
