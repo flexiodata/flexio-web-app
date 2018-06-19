@@ -1,0 +1,7 @@
+task:
+  op: connect
+
+prompt:
+  element: connection-chooser
+  title: Connect
+  variable: connection
