@@ -181,6 +181,10 @@
       flat_values: {
         handler: 'updateFlatValues',
         deep: true
+      },
+      'item.form_values': {
+        handler: 'resetSelf',
+        deep: true
       }
     },
     data() {
@@ -230,9 +234,18 @@
       }
     },
     methods: {
-      initSelf() {
-        this.$emit('update:isNextAllowed', true)
-        this.autoFocus()
+      resetSelf() {
+        // reset the form
+        this.form_values = null
+        this.orig_form_values = null
+        this.updateForm()
+      },
+      initSelf(active) {
+        if (active) {
+          // focus first element in form and allow next step
+          this.$emit('update:isNextAllowed', true)
+          this.autoFocus()
+        }
       },
       autoFocus() {
         if (!this.is_active) {

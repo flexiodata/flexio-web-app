@@ -147,8 +147,8 @@
         // make sure we're not mutating anything in the Vuex store
         prompts = _.cloneDeep(prompts)
 
-        this.task_items = tasks
-        this.prompts = prompts
+        this.task_items = [].concat(tasks)
+        this.prompts = [].concat(prompts)
         this.is_editing = false
       },
       selectTask(item) {
