@@ -1,11 +1,11 @@
 <?php
 /**
  *
- * Copyright (c) 2015, Gold Prairie, Inc.  All rights reserved.
+ * Copyright (c) 2018, Gold Prairie, Inc.  All rights reserved.
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2015-06-23
+ * Created:  2018-06-18
  *
  * @package flexio
  * @subpackage Tests
@@ -20,6 +20,9 @@ class Test
 {
     public function createArchiveTask($format, $path = null, $files = null)
     {
+        // { "op": "archive", "format": "zip", "path": "/vfs/output.zip", "files": [ "/vfs/file1.txt", "/vfs/file2.txt" ] }
+        // { "op": "archive", "format": "gzip"}
+
         $task_arr = [
             "op" => "archive",
             "format" => $format
@@ -36,6 +39,9 @@ class Test
 
     public function createUnArchiveTask($format, $path = null, $files = null, $target = null)
     {
+        // { "op": "unarchive", "format": "zip", "path": "/vfs/input.zip", "files": [ "file_in_zip1.txt", "file_in_zip2.txt" ], "target": "/vfs/output_path" }
+        // { "op": "unarchive", "format": "gzip"}
+
         $task_arr = [
             "op" => "unarchive",
             "format" => $format
@@ -54,22 +60,57 @@ class Test
 
     public function run(&$results)
     {
-/*
-    { "op": "archive", "format": "zip", "path": "/vfs/output.zip", "files": [ "/vfs/file1.txt", "/vfs/file2.txt" ] }
-    { "op": "unarchive", "format": "zip", "path": "/vfs/input.zip", "files": [ "file_in_zip1.txt", "file_in_zip2.txt" ], "target": "/vfs/output_path" }
-    { "op": "archive", "format": "gzip"}
-    { "op": "unarchive", "format": "gzip"}
-*/
-
-        // TEST: Archive/Unarchive; basic file
+        // TEST: Unarchive; gzip
 
         // BEGIN TEST
-        $archivetask = self::createArchiveTask('gzip');
         $unarchivetask = self::createUnarchiveTask('gzip');
-        $stream = \Flexio\Tests\Util::createStream('/text/02.11-header-basic.csv');
-        $process = \Flexio\Jobs\Process::create()->setStdin($stream)->execute($archivetask)->execute($unarchivetask);
-        $actual = $process->getStdout()->getReader()->read();
-        $expected = 'f1';
-        \Flexio\Tests\Check::assertArray('A.1', 'Archive/Unarchive; basic file',  $actual, $expected, $results);
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/02.01-empty.txt.gz');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.1', 'Unarchive; empty file with a gz extension',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('gzip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/02.02-malformed.txt.gz');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.2', 'Unarchive; malformed gz file',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('gzip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/02.03-minimum.txt.gz');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = '';
+        \Flexio\Tests\Check::assertString('A.3', 'Unarchive; valid gz file with no content',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('gzip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/02.04-simple.txt.gz');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = 'This is a test.';
+        \Flexio\Tests\Check::assertString('A.4', 'Unarchive; valid gz file with a simple string',  $actual, $expected, $results);
+
+
+        // TEST: Unarchive; zip
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('zip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/01.01-empty.zip');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.1', 'Unarchive; empty file with a zip extension',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('zip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/01.02-malformed.zip');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.2', 'Unarchive; malformed zip file',  $actual, $expected, $results);
     }
 }
