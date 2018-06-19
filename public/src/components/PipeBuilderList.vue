@@ -1,15 +1,16 @@
 <template>
   <div :value="value">
     <BuilderList
+      :items="prompts"
       :container-id="containerId"
+      :active-item-idx.sync="active_prompt_idx"
       :show-insert-buttons="true"
       @task-chooser-item-click="selectTask"
       @insert-step="insertStep"
       @item-change="itemChange"
       @item-cancel="itemCancel"
       @item-save="itemSave"
-      v-bind="$attrs"
-      v-if="task_items.length > 0"
+      v-if="prompts.length > 0"
     />
     <div
       v-else
@@ -35,13 +36,12 @@
 
 <script>
   import { mapState } from 'vuex'
-  import builder_items from '../data/builder'
+  import builder_defs from '../data/builder'
   import BuilderList from './BuilderList.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
   import ConnectionChooserList from './ConnectionChooserList.vue'
 
   export default {
-    inheritAttrs: false,
     props: {
       value: {
         type: Object,
@@ -58,24 +58,25 @@
     },
     watch: {
       value: {
-        handler: 'updateFromTask',
+        handler: 'initFromPipeTask',
         immediate: true
       }
     },
     data() {
       return {
         is_editing: false,
-        task_items: []
+        task_items: [],
+        prompts: [],
+        active_prompt_idx: -1
       }
     },
     computed: {
       ...mapState({
-        builder_prompts: state => state.builder.prompts,
         orig_pipe: state => state.pipe.orig_pipe
       })
     },
     methods: {
-      updateFromTask(task) {
+      initFromPipeTask(task) {
         var tasks = []
         var prompts = []
 
@@ -83,58 +84,71 @@
           return
         }
 
+        // map existing tasks in model to prompts
         _.each(task.items, (t, task_idx) => {
-          var item
+          var prompt
 
           if (t.op == '') {
-            item = { task: { op: '' }, prompts: [{ element: 'task-chooser' }] }
+            prompt = {
+              element: 'task-chooser'
+            }
           } else {
-            item = _.find(builder_items, (bi) => {
+            var def = _.find(builder_defs, (bi) => {
               return _.get(bi, 'task.op') == t.op
+            })
+            prompt = _.get(def, 'prompt', null)
+          }
+
+          // if we couldn't find a matching task builder definition
+          // show a basic JSON task editor
+          if (_.isNil(prompt)) {
+            var task = _.cloneDeep(_.omit(t, ['eid']))
+            prompt = {
+              element: 'task-json-editor',
+              value: JSON.stringify(task, null, 2)
+            }
+          }
+
+          // for form builder items, assign the form item value by finding it in the task object
+          if (prompt.element == 'form') {
+            prompt.form_items = _.map(prompt.form_items, fi => {
+              if (!fi.variable) {
+                return fi
+              }
+
+              return _.assign(fi, {
+                value: _.get(t, fi.variable, '')
+              })
             })
           }
 
-          if (!item) {
-            var task = _.cloneDeep(_.omit(t, ['eid']))
-            item = {
-              task,
-              prompts: [{
-                element: 'task-json-editor',
-                value: JSON.stringify(task, null, 2)
-              }]
-            }
+          // now set the form values from the form items
+          if (prompt.element == 'form') {
+            var form_values = {}
+            _.each(prompt.form_items, fi => {
+              if (fi.variable) {
+                _.set(form_values, fi.variable, fi.value)
+              }
+            })
+
+            prompt = _.assign({}, prompt, { form_values })
           }
 
+          // associate prompt with task
+          prompt = _.assign({}, prompt, { task_idx })
+          prompt = _.cloneDeep(prompt)
+
+          prompts.push(prompt)
+
+          // store task internally
           tasks.push(_.cloneDeep(t))
-
-          // associate prompts with tasks
-          _.each(item.prompts, (p) => {
-            var prompt = _.assign({ task_idx }, p)
-
-            // for form builder items, get the value by finding it in the task object
-            if (prompt.element == 'form') {
-              prompt.form_items = _.map(prompt.form_items, (item) => {
-                if (!item.variable) {
-                  return item
-                }
-
-                return _.assign(item, {
-                  value: _.get(t, item.variable, '')
-                })
-              })
-            }
-
-            prompts.push(prompt)
-          })
         })
 
         // make sure we're not mutating anything in the Vuex store
         prompts = _.cloneDeep(prompts)
 
-        this.$store.commit('builder/SET_MODE', 'build')
-        this.$store.commit('builder/INIT_DEF', { prompts })
-        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
         this.task_items = tasks
+        this.prompts = prompts
         this.is_editing = false
       },
       selectTask(item) {
@@ -149,15 +163,15 @@
         this.is_editing = false
         this.$emit('input', { op: 'sequence', items })
         this.$nextTick(() => {
-          this.$store.commit('builder/SET_ACTIVE_ITEM', idx)
+          this.active_prompt_idx = idx
         })
       },
-      itemChange(prompt_values, prompt_idx) {
-        var p = this.builder_prompts[prompt_idx]
+      itemChange(values, index) {
+        var p = this.prompts[index]
         if (p) {
           var t = _.get(this.task_items, '['+p.task_idx+ ']', null)
           if (t) {
-            t = _.assign(t, prompt_values)
+            t = _.assign(t, values)
             var items = _.cloneDeep(this.task_items)
             _.set(items, '['+p.task_idx+ ']', t)
             this.task_items = [].concat(items)
@@ -169,11 +183,12 @@
       itemCancel() {
         var value = _.get(this.orig_pipe, 'task', { op: 'sequence', items: [] })
         this.is_editing = false
+        this.active_prompt_idx = -1
         this.$emit('input', value)
-        this.$store.commit('builder/UNSET_ACTIVE_ITEM')
       },
       itemSave() {
         this.is_editing = false
+        this.active_prompt_idx = -1
         this.$emit('save')
       }
     }

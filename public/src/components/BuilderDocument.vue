@@ -33,7 +33,7 @@
           builder-mode="wizard"
           :items="prompts"
           :container-id="doc_id"
-          :active-item-idx="active_prompt_idx"
+          :active-item-idx.sync="active_prompt_idx"
           :show-insert-buttons="false"
           @item-prev="goPrev"
           @item-next="goNext"

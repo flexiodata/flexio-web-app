@@ -24,6 +24,10 @@
       index: {
         type: Number,
         required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        required: true
       }
     },
     components: {
@@ -52,7 +56,7 @@
     methods: {
       onChange(val) {
         if (val === true) {
-          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
+          this.$emit('update:activeItemIdx', this.index)
         }
       },
       onEditJsonChange() {

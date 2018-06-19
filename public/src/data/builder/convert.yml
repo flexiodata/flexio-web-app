@@ -1,142 +1,132 @@
 task:
   op: convert
-  input:
-    format: ''
-    delimiter: ''
-    header: true
-    qualifier: ''
-  output:
-    format: ''
-    delimiter: ''
-    header: true
-    qualifier: ''
 
-prompts:
-  - element: form
-    title: Convert
-    description: ''
-    cls: el-form--compact
-    label_position: left
-    label_width: 9rem
-    form_items:
-      - element: input
-        type: hidden
-        variable: op
-        value: convert
+prompt:
+  element: form
+  title: Convert
+  description: ''
+  cls: el-form--compact
+  label_position: left
+  label_width: 9rem
+  form_items:
+    - element: input
+      type: hidden
+      variable: op
+      value: convert
 
-      - element: markdown
-        value: |
-          <h3 class="mv0 mid-gray">Input</h3>
+    - element: markdown
+      value: |
+        <h3 class="mv0 mid-gray">Input</h3>
 
-      - element: select
-        variable: input.format
-        label: Format
-        placeholder: Select input format
-        value: 'delimited'
-        options:
-          - label: Delimited
-            value: 'delimited'
-          - label: JSON
-            value: 'json'
-          - label: RSS
-            value: 'rss'
-          - label: Atom
-            value: 'atom'
-          - label: PDF
-            value: 'pdf'
-          - label: Table
-            value: 'table'
+    - element: select
+      variable: input.format
+      label: Format
+      placeholder: Select input format
+      value: 'delimited'
+      options:
+        - label: Delimited
+          value: 'delimited'
+        - label: JSON
+          value: 'json'
+        - label: RSS
+          value: 'rss'
+        - label: Atom
+          value: 'atom'
+        - label: PDF
+          value: 'pdf'
+        - label: Table
+          value: 'table'
 
-      - element: select
-        variable: input.delimiter
-        label: Delimiter
-        placeholder: Select input delimiter
-        value: ','
-        options:
-          - label: Comma
-            value: ','
-          - label: Tab
-            value: \t
-          - label: Semicolon
-            value: ';'
-          - label: Pipe
-            value: '|'
-          - label: Space
-            value: ' '
+    - element: select
+      variable: input.delimiter
+      label: Delimiter
+      placeholder: Select input delimiter
+      value: ','
+      options:
+        - label: Comma
+          value: ','
+        - label: Tab
+          value: \t
+        - label: Semicolon
+          value: ';'
+        - label: Pipe
+          value: '|'
+        - label: Space
+          value: ' '
 
-      - element: switch
-        variable: input.header
-        label: First row header
-        value: false
+    - element: switch
+      variable: input.header
+      label: First row header
+      value: false
 
-      - element: select
-        variable: input.qualifier
-        label: Text qualifier
-        placeholder: Select input text qualifier
-        value: '"'
-        options:
-          - label: Double-quote
-            value: '"'
-          - label: Single-quote
-            value: "'"
-          - label: None
-            value: ''
+    - element: select
+      variable: input.qualifier
+      label: Text qualifier
+      placeholder: Select input text qualifier
+      value: '"'
+      options:
+        - label: Double-quote
+          value: '"'
+        - label: Single-quote
+          value: "'"
+        - label: None
+          value: ''
 
-      - element: markdown
-        value: |
-          <div class="bt b--black-10 mv3"></div>
-          <h3 class="mv0 mid-gray">Output</h3>
+    - element: markdown
+      value: |
+        <div class="bt b--black-10 mv3"></div>
+        <h3 class="mv0 mid-gray">Output</h3>
 
-      - element: select
-        variable: output.format
-        label: Format
-        placeholder: Select output format
-        value: 'delimited'
-        options:
-          - label: Delimited
-            value: 'delimited'
-          - label: JSON
-            value: 'json'
-          - label: RSS
-            value: 'rss'
-          - label: Atom
-            value: 'atom'
-          - label: PDF
-            value: 'pdf'
-          - label: Table
-            value: 'table'
+    - element: select
+      variable: output.format
+      label: Format
+      placeholder: Select output format
+      value: 'delimited'
+      options:
+        - label: Delimited
+          value: 'delimited'
+        - label: JSON
+          value: 'json'
+        - label: RSS
+          value: 'rss'
+        - label: Atom
+          value: 'atom'
+        - label: PDF
+          value: 'pdf'
+        - label: Table
+          value: 'table'
 
-      - element: select
-        variable: output.delimiter
-        label: Delimiter
-        placeholder: Select output delimiter
-        value: ','
-        options:
-          - label: Comma
-            value: ','
-          - label: Tab
-            value: \t
-          - label: Semicolon
-            value: ';'
-          - label: Pipe
-            value: '|'
-          - label: Space
-            value: ' '
+    - element: select
+      variable: output.delimiter
+      label: Delimiter
+      placeholder: Select output delimiter
+      value: ','
+      options:
+        - label: Comma
+          value: ','
+        - label: Tab
+          value: \t
+        - label: Semicolon
+          value: ';'
+        - label: Pipe
+          value: '|'
+        - label: Space
+          value: ' '
 
-      - element: switch
-        variable: output.header
-        label: First row header
-        value: false
+    - element: switch
+      variable: output.header
+      label: First row header
+      value: false
 
-      - element: select
-        variable: output.qualifier
-        label: Text qualifier
-        placeholder: Select output text qualifier
-        value: '"'
-        options:
-          - label: Double-quote
-            value: '"'
-          - label: Single-quote
-            value: "'"
-          - label: None
-            value: ''
+    - element: select
+      variable: output.qualifier
+      label: Text qualifier
+      placeholder: Select output text qualifier
+      value: '"'
+      options:
+        - label: Double-quote
+          value: '"'
+        - label: Single-quote
+          value: "'"
+        - label: None
+          value: ''
