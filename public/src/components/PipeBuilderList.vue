@@ -13,6 +13,16 @@
       @item-save="itemSave"
       v-if="prompts.length > 0"
     />
+    <div class="pa5 tc bg-near-white" v-else>
+      <el-button
+        type="primary"
+        size="large"
+        class="ttu b"
+        @click="insertStep(0)"
+      >
+        This will actually be the thing that gets the user going instead of a button
+      </el-button>
+    </div>
     <div
       v-if="false"
     >
