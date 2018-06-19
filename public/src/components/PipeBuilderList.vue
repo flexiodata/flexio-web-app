@@ -5,7 +5,7 @@
       :container-id="containerId"
       :active-item-idx.sync="active_prompt_idx"
       :show-insert-buttons="true"
-      @task-chooser-item-click="selectTask"
+      @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
       @item-change="itemChange"
       @item-cancel="itemCancel"
@@ -76,6 +76,61 @@
       })
     },
     methods: {
+      promptFromTask(task, task_idx) {
+        var prompt
+
+        if (task.op == '') {
+          prompt = {
+            element: 'task-chooser'
+          }
+        } else {
+          var def = _.find(builder_defs, (bi) => {
+            return _.get(bi, 'task.op') == task.op
+          })
+          prompt = _.get(def, 'prompt', null)
+        }
+
+        // if we couldn't find a matching task builder definition
+        // show a basic JSON task editor
+        if (_.isNil(prompt)) {
+          var task = _.omit(task, ['eid'])
+          prompt = {
+            element: 'task-json-editor',
+            value: JSON.stringify(task, null, 2)
+          }
+        }
+
+        // for form builder items, assign the form item value by finding it in the task object
+        if (prompt.element == 'form') {
+          prompt.form_items = _.map(prompt.form_items, fi => {
+            if (!fi.variable) {
+              return fi
+            }
+
+            return _.assign(fi, {
+              value: _.get(task, fi.variable, '')
+            })
+          })
+        }
+
+        // now set the form values from the form items
+        if (prompt.element == 'form') {
+          var form_values = {}
+          _.each(prompt.form_items, fi => {
+            if (fi.variable) {
+              _.set(form_values, fi.variable, fi.value)
+            }
+          })
+
+          prompt = _.assign({}, prompt, { form_values })
+        }
+
+        // associate prompt with task
+        prompt = _.assign({}, prompt, { task_idx })
+        prompt = _.cloneDeep(prompt)
+
+        return prompt
+      },
       initFromPipeTask(task) {
         var tasks = []
         var prompts = []
@@ -86,76 +141,27 @@
 
         // map existing tasks in model to prompts
         _.each(task.items, (t, task_idx) => {
-          var prompt
-
-          if (t.op == '') {
-            prompt = {
-              element: 'task-chooser'
-            }
-          } else {
-            var def = _.find(builder_defs, (bi) => {
-              return _.get(bi, 'task.op') == t.op
-            })
-            prompt = _.get(def, 'prompt', null)
-          }
-
-          // if we couldn't find a matching task builder definition
-          // show a basic JSON task editor
-          if (_.isNil(prompt)) {
-            var task = _.cloneDeep(_.omit(t, ['eid']))
-            prompt = {
-              element: 'task-json-editor',
-              value: JSON.stringify(task, null, 2)
-            }
-          }
-
-          // for form builder items, assign the form item value by finding it in the task object
-          if (prompt.element == 'form') {
-            prompt.form_items = _.map(prompt.form_items, fi => {
-              if (!fi.variable) {
-                return fi
-              }
-
-              return _.assign(fi, {
-                value: _.get(t, fi.variable, '')
-              })
-            })
-          }
-
-          // now set the form values from the form items
-          if (prompt.element == 'form') {
-            var form_values = {}
-            _.each(prompt.form_items, fi => {
-              if (fi.variable) {
-                _.set(form_values, fi.variable, fi.value)
-              }
-            })
-
-            prompt = _.assign({}, prompt, { form_values })
-          }
-
-          // associate prompt with task
-          prompt = _.assign({}, prompt, { task_idx })
-          prompt = _.cloneDeep(prompt)
-
-          prompts.push(prompt)
+          // create prompt from task
+          prompts.push(this.promptFromTask(t, task_idx))
 
           // store task internally
           tasks.push(_.cloneDeep(t))
         })
 
-        // make sure we're not mutating anything in the Vuex store
-        prompts = _.cloneDeep(prompts)
-
         this.task_items = [].concat(tasks)
         this.prompts = [].concat(prompts)
         this.is_editing = false
       },
-      selectTask(item) {
-        this.$message({
-          message: '"' + item.op + '" clicked!',
-          type: 'info'
-        })
+      selectNewTask(item, index) {
+        var items = this.task_items
+        _.set(items, '[' + index + ']', { op: item.op })
+        this.task_items = [].concat(items)
+
+        var prompts = this.prompts
+        _.set(prompts, '[' + index + ']', this.promptFromTask(item, index))
+        this.prompts = [].concat(prompts)
+
+        this.$emit('input', { op: 'sequence', items })
       },
       insertStep(idx) {
         var items = _.cloneDeep(this.value.items)

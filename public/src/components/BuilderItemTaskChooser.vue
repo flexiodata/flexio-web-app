@@ -103,6 +103,26 @@
 
   export default {
     props: {
+      item: {
+        type: Object,
+        required: true
+      },
+      index: {
+        type: Number,
+        required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: false
+      },
+      showTitle: {
+        type: Boolean,
+        default: false
+      },
       title: {
         type: String,
         default: ''
@@ -110,10 +130,6 @@
       message: {
         type: String,
         default: ''
-      },
-      showTitle: {
-        type: Boolean,
-        default: false
       }
     },
     computed: {
@@ -123,7 +139,7 @@
     },
     methods: {
       itemClick(item) {
-        this.$emit('task-chooser-item-click', item)
+        this.$emit('task-chooser-select-task', item, this.index)
       }
     }
   }
