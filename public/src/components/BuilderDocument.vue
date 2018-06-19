@@ -37,6 +37,8 @@
           @item-prev="goPrev"
           @item-next="goNext"
           @item-change="updateItemState"
+          @create-pipe="createPipe"
+          @open-pipe="openPipe"
         />
         <div
           class="dn db-l ml4 pa3 bg-white br2 css-white-box sticky"
@@ -65,14 +67,16 @@
 <script>
   import axios from 'axios'
   import stickybits from 'stickybits'
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
+  import { ROUTE_PIPES } from '../constants/route'
+  import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
   import CodeEditor from './CodeEditor.vue'
 
+  import test_def from '../data/builder/test-def.yml'
   // easy way to get rid of a bunch of elements for quick testing
   //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
-  import test_def from '../data/builder/test-def.yml'
 
   var pipe_arr = [ "Flexio.pipe()" ]
 
@@ -119,11 +123,13 @@
     },
     computed: {
       ...mapState({
+        def: state => state.builder.def,
+        title: state => state.builder.def.title,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
-        prompts: state => state.builder.prompts,
         active_prompt_idx: state => state.builder.active_prompt_idx,
-        title: state => state.builder.def.title
+        prompts: state => state.builder.prompts,
+        pipe: state => state.builder.pipe
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
@@ -135,9 +141,23 @@
         set(value) {
           // read only
         }
+      },
+      save_code() {
+        var name = _.get(this.def, 'title', 'Untitled Pipe')
+        return this.code + '.save({ name: "' + name + '" }, callback)'
+      },
+      api_key() {
+        return this.getSdkKey()
+      },
+      sdk_options() {
+        return this.getSdkOptions()
       }
     },
     methods: {
+      ...mapGetters([
+        'getSdkKey',
+        'getSdkOptions'
+      ]),
       loadTemplate() {
         this.$store.commit('builder/FETCHING_DEF', true)
 
@@ -166,6 +186,26 @@
       },
       goNext() {
         this.$store.commit('builder/GO_NEXT_ITEM')
+      },
+      createPipe() {
+        var pipe_fn = (Flexio, callback) => {
+          eval(this.save_code)
+        }
+
+        Flexio.setup(this.api_key, this.sdk_options)
+
+        pipe_fn.call(this, Flexio, (err, response) => {
+          // TODO: error reporting?
+          var pipe = response
+          this.$store.commit('builder/CREATE_PIPE', pipe)
+          this.$store.track('Finished Template', {
+            title: this.def.title
+          })
+        })
+      },
+      openPipe() {
+        var eid = this.pipe.eid
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
