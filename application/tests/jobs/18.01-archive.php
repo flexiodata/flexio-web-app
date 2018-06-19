@@ -60,7 +60,7 @@ class Test
 
     public function run(&$results)
     {
-        // TEST: Unarchive; basic file
+        // TEST: Unarchive; gzip
 
         // BEGIN TEST
         $unarchivetask = self::createUnarchiveTask('gzip');
@@ -93,5 +93,24 @@ class Test
         $actual = $unarchivestream->getReader()->read();
         $expected = 'This is a test.';
         \Flexio\Tests\Check::assertString('A.4', 'Unarchive; valid gz file with a simple string',  $actual, $expected, $results);
+
+
+        // TEST: Unarchive; zip
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('zip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/01.01-empty.zip');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.1', 'Unarchive; empty file with a zip extension',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $unarchivetask = self::createUnarchiveTask('zip');
+        $inputstream = \Flexio\Tests\Util::createStream('/zip/01.02-malformed.zip');
+        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
+        $actual = $unarchivestream->getReader()->read();
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.2', 'Unarchive; malformed zip file',  $actual, $expected, $results);
     }
 }
