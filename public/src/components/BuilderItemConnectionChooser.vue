@@ -69,7 +69,7 @@
 
 <script>
   import marked from 'marked'
-  import { mapState, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import ConnectionEditPanel from './ConnectionEditPanel.vue'
@@ -87,6 +87,14 @@
         type: Number,
         required: true
       },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
+      },
       showTitle: {
         type: Boolean,
         default: true
@@ -99,10 +107,16 @@
       ConnectionChooserItem
     },
     watch: {
-      is_changed(val) {
-        if (!this.builder__is_prompt_mode && val === true) {
-          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
-        }
+      is_active: {
+        handler: 'initSelf',
+        immediate: true
+      },
+      is_changed: {
+        handler: 'onChange'
+      },
+      edit_connection: {
+        handler: 'updateAllowNext',
+        deep: true
       }
     },
     data() {
@@ -114,39 +128,32 @@
       }
     },
     computed: {
-      ...mapState({
-        mode: state => state.builder.mode,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
-      builder__is_prompt_mode() {
-        return this.mode == 'prompt'
+      builder__is_wizard() {
+        return true
       },
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
       },
       is_changed() {
         return !_.isEqual(this.edit_connection, this.orig_connection)
       },
       show_controls() {
-        return !this.builder__is_prompt_mode || this.is_active
+        return !this.builder__is_wizard || this.is_active
       },
       show_description() {
         return this.show_controls && this.description.length > 0
       },
       show_summary() {
-        return this.builder__is_prompt_mode && this.is_before_active
+        return this.builder__is_wizard && this.is_before_active
       },
       title() {
         return _.get(this.item, 'title', '')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
-      },
-      ceid() {
-        return _.get(this.item, 'connection_eid', null)
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
@@ -164,7 +171,8 @@
         return this.connections.length > 0
       },
       store_connection() {
-        return _.find(this.connections, { eid: this.ceid }, null)
+        var eid = _.get(this.edit_connection, 'eid', null)
+        return _.find(this.connections, { eid }, null)
       },
       service_name() {
         return this.$_Connection_getServiceName(this.ctype)
@@ -174,8 +182,15 @@
       ...mapGetters([
         'getAvailableConnections'
       ]),
+      initSelf() {
+        this.updateAllowNext()
+      },
       chooseConnection(connection) {
-        this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { connection_eid: connection.eid })
+        var key = _.get(this.item, 'variable', 'connection_eid')
+        var form_values = {}
+        form_values[key] = connection.eid
+        this.edit_connection = connection
+        this.$emit('item-change', form_values, this.index)
       },
       fixConnection(connection) {
         this.chooseConnection(connection)
@@ -233,6 +248,16 @@
           }
         })
       },
+      onChange(val) {
+        if (!this.builder__is_wizard && val === true) {
+          this.$emit('update:activeItemIdx', this.index)
+        }
+      },
+      updateAllowNext() {
+        var allow = _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+
+        this.$emit('update:isNextAllowed', allow)
+      }
     }
   }
 </script>

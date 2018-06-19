@@ -107,7 +107,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
@@ -115,7 +115,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'connection-chooser'"
         />
@@ -123,7 +123,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'file-chooser'"
         />
@@ -131,7 +131,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'form'"
         />
@@ -139,7 +139,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
         />
@@ -147,7 +147,7 @@
           :item="item"
           :index="index"
           :active-item-idx.sync="activeItemIdx"
-          :isNextAllowed.sync="is_next_allowed"
+          :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'task-json-editor'"
         />
@@ -207,7 +207,6 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
@@ -264,7 +263,7 @@
     },
     data() {
       return {
-        is_next_allowed: false
+        is_next_allowed: true
       }
     },
     computed: {

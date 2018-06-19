@@ -167,7 +167,7 @@
         handler: 'onChange'
       },
       is_active: {
-        handler: 'initForm',
+        handler: 'initSelf',
         immediate: true
       },
       form_values: {
@@ -227,7 +227,7 @@
       }
     },
     methods: {
-      initForm() {
+      initSelf() {
         this.$emit('update:isNextAllowed', true)
         this.autoFocus()
       },
@@ -283,7 +283,7 @@
       },
       onChange(val) {
         if (!this.builder__is_wizard && val === true) {
-          this.activeItemIdx = this.index
+          this.$emit('update:activeItemIdx', this.index)
         }
       }
     }
