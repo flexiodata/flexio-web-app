@@ -56,7 +56,7 @@
     methods: {
       onChange(val) {
         if (val === true) {
-          this.$emit('update:activeItemIdx', this.index)
+          this.$emit('active-item-change', this.index)
         }
       },
       onEditJsonChange() {

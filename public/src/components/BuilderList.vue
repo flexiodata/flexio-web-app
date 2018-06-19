@@ -4,8 +4,9 @@
       :item="item"
       :index="index"
       :items="items"
-      :active-item-idx.sync="activeItemIdx"
+      :active-item-idx="activeItemIdx"
       :key="item.id"
+      @active-item-change="onActiveItemChange"
       v-bind="$attrs"
       v-on="$listeners"
       v-for="(item, index) in items"
@@ -71,6 +72,9 @@
 
         var item_id = _.get(this.active_item, 'id', null)
         this.scrollToItem(item_id)
+      },
+      onActiveItemChange(index) {
+        this.$emit('update:activeItemIdx', index)
       }
     }
   }

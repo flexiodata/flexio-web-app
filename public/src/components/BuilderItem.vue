@@ -106,7 +106,7 @@
           message="Choose the task that you'd like to insert"
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
@@ -115,7 +115,7 @@
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
@@ -124,7 +124,7 @@
         <BuilderItemFileChooser
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
@@ -133,7 +133,7 @@
         <BuilderItemForm
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
@@ -142,7 +142,7 @@
         <BuilderItemSummary
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
@@ -151,7 +151,7 @@
         <BuilderItemTaskJsonEditor
           :item="item"
           :index="index"
-          :active-item-idx.sync="activeItemIdx"
+          :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           :builder-mode="builderMode"
           v-on="$listeners"
