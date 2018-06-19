@@ -102,6 +102,12 @@
           v-else-if="fi.element == 'input' && fi.type == 'textarea'"
         />
         <el-input
+          type="number"
+          :placeholder="fi.placeholder"
+          v-model.number="flat_values[getFlatKey(fi.variable)]"
+          v-else-if="fi.element == 'input' && fi.type == 'number'"
+        />
+        <el-input
           type="hidden"
           :placeholder="fi.placeholder"
           v-model="flat_values[getFlatKey(fi.variable)]"
