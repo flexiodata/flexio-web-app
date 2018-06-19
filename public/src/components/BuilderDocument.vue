@@ -15,16 +15,12 @@
       class="mt4 mb3 relative z-7 bg-nearer-white"
       v-if="is_fetched"
     >
-      <div
-        class="flex flex-row items-center center tc"
-        style="max-width: 1440px"
-      >
+      <div class="flex flex-row items-center center tc mw-doc">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
       </div>
     </div>
     <div
-      class="center"
-      style="max-width: 1440px"
+      class="center mw-doc"
       v-if="is_fetched"
     >
       <div class="flex flex-row">
@@ -44,6 +40,7 @@
         <div
           class="dn db-l ml4 pa3 bg-white br2 css-white-box sticky"
           style="min-width: 20rem; max-width: 33%; max-height: 30rem"
+          v-show="false"
         >
           <div class="h-100 flex flex-column">
             <div class="flex flex-row items-center pb2 mb2 bb b--black-10">

@@ -17,10 +17,7 @@
       v-if="is_fetched"
     >
       <div class="ph4">
-        <div
-          class="flex flex-row items-center center"
-          style="max-width: 1440px"
-        >
+        <div class="flex flex-row items-center center mw-doc">
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
           <div class="flex-none flex flex-row items-center pl2">
             <transition name="el-zoom-in-top">
@@ -50,8 +47,7 @@
     </div>
 
     <div
-      class="center"
-      style="max-width: 1440px"
+      class="center mw-doc"
       v-if="is_fetched"
     >
       <el-tabs
