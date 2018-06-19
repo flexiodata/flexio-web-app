@@ -151,7 +151,12 @@
         required: true
       },
       activeItemIdx: {
-        type: Number
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
@@ -162,7 +167,7 @@
         handler: 'onChange'
       },
       is_active: {
-        handler: 'autoFocus',
+        handler: 'initForm',
         immediate: true
       },
       form_values: {
@@ -221,13 +226,15 @@
         return _.get(this.item, 'form_items', [])
       }
     },
-    mounted() {
-      this.autoFocus()
-    },
     methods: {
+      initForm() {
+        this.$emit('update:isNextAllowed', true)
+        this.autoFocus()
+      },
       autoFocus() {
-        if (!this.is_active)
+        if (!this.is_active) {
           return
+        }
 
         this.$nextTick(() => {
           var form = this.$refs['form']

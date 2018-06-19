@@ -15,12 +15,6 @@ prompts:
     label_position: left
     label_width: 9rem
     form_items:
-      - element: code-editor
-        lang: javascript
-        variable: code
-        label: Code
-        value: ''
-
       - element: input
         type: text
         variable: input_text
@@ -33,6 +27,12 @@ prompts:
         variable: input_textarea
         label: Textarea
         placeholder: Textarea
+        value: ''
+
+      - element: code-editor
+        lang: javascript
+        variable: code
+        label: Code
         value: ''
 
       - element: input

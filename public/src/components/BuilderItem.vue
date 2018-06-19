@@ -104,6 +104,8 @@
       <div class="flex-fill">
         <BuilderItemTaskChooser
           message="Choose the task that you'd like to insert"
+          :item="item"
+          :index="index"
           :active-item-idx.sync="activeItemIdx"
           :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
