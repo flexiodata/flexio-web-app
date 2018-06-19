@@ -30,9 +30,18 @@ const mutations = {
     var task = _.get(pipe, 'task', {})
 
     state.orig_pipe = pipe
-    state.orig_code = Flexio.pipe(task).toCode()
     state.edit_pipe = pipe
-    state.edit_code = Flexio.pipe(task).toCode()
+
+    try {
+      state.orig_code = Flexio.pipe(task).toCode()
+      state.edit_code = Flexio.pipe(task).toCode()
+    }
+    catch (e) {
+      var msg = 'Flexio.pipe().echo("There was an error parsing the pipe JSON.")'
+      state.orig_code = msg
+      state.edit_code = msg
+    }
+
     state.syntax_error = ''
     state.fetched = true
   },
