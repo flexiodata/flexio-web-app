@@ -137,7 +137,7 @@ const mutations = {
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
             var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
-            code = code.replace(regex, JSON.stringify(identifier, null, 2))
+            code = code.replace(regex, JSON.stringify(identifier))
           }
           break
 
@@ -171,14 +171,14 @@ const mutations = {
             paths = _.get(paths, '[0]', '')
           }
 
-          code = code.replace(regex, JSON.stringify(paths, null, 2))
+          code = code.replace(regex, JSON.stringify(paths))
           break
       }
     })
 
     _.each(state.attrs, (val, key) => {
       var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-      code = code.replace(regex, JSON.stringify(val, null, 2))
+      code = code.replace(regex, JSON.stringify(val))
     })
 
     state.code = code
