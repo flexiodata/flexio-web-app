@@ -30,8 +30,13 @@
       <div class="flex flex-row">
         <BuilderList
           class="flex-fill"
+          :items="prompts"
           :container-id="doc_id"
+          :active-item-idx="active_prompt_idx"
           :show-insert-buttons="false"
+          @item-prev="goPrev"
+          @item-next="goNext"
+          @item-change="updateItemState"
         />
         <div
           class="dn db-l ml4 pa3 bg-white br2 css-white-box sticky"
@@ -98,7 +103,7 @@
         handler: 'loadTemplate',
         immediate: true
       },
-      active_prompt: {
+      active_prompt_idx: {
         handler: 'updateCode',
         immediate: true
       },
@@ -116,7 +121,8 @@
       ...mapState({
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
-        active_prompt: state => state.builder.active_prompt,
+        prompts: state => state.builder.prompts,
+        active_prompt_idx: state => state.builder.active_prompt_idx,
         title: state => state.builder.def.title
       }),
       slug() {
@@ -153,6 +159,16 @@
         }
       },
       updateCode() {
+        this.$store.commit('builder/UPDATE_CODE')
+      },
+      goPrev() {
+        this.$store.commit('builder/GO_PREV_ITEM')
+      },
+      goNext() {
+        this.$store.commit('builder/GO_NEXT_ITEM')
+      },
+      updateItemState(values, index) {
+        this.$store.commit('builder/UPDATE_ATTRS', values)
         this.$store.commit('builder/UPDATE_CODE')
       },
       initSticky() {

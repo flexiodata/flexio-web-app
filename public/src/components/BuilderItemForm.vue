@@ -135,7 +135,6 @@
 
 <script>
   import marked from 'marked'
-  import { mapState } from 'vuex'
   import CodeEditor from './CodeEditor.vue'
 
   const flatten = require('flat')
@@ -150,6 +149,9 @@
       index: {
         type: Number,
         required: true
+      },
+      activeItemIdx: {
+        type: Number
       }
     },
     components: {
@@ -182,30 +184,26 @@
       }
     },
     computed: {
-      ...mapState({
-        mode: state => state.builder.mode,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
-      builder__is_prompt_mode() {
-        return this.mode == 'prompt'
+      builder__is_wizard() {
+        return true
       },
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
       },
       is_changed() {
         return !_.isEqual(this.form_values, this.orig_form_values)
       },
       show_controls() {
-        return !this.builder__is_prompt_mode || this.is_active
+        return !this.builder__is_wizard || this.is_active
       },
       show_description() {
         return this.show_controls && this.description.length > 0
       },
       show_summary() {
-        return this.builder__is_prompt_mode && this.is_before_active
+        return this.builder__is_wizard && this.is_before_active
       },
       title() {
         return _.get(this.item, 'title', 'Choose values')
@@ -256,7 +254,7 @@
       },
       updateForm() {
         if (this.form_values === null) {
-          var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
+          var form_values = _.get(this.item, 'form_values', {})
           this.form_values = _.cloneDeep(form_values)
           this.orig_form_values = _.cloneDeep(form_values)
 
@@ -264,7 +262,6 @@
           this.flat_values = _.mapKeys(flat_values, (val, key) => { return this.getFlatKey(key) })
           this.is_inited = true
         } else {
-          this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
           this.$emit('item-change', this.form_values, this.index)
         }
       },
@@ -278,8 +275,8 @@
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
       },
       onChange(val) {
-        if (!this.builder__is_prompt_mode && val === true) {
-          this.$store.commit('builder/SET_ACTIVE_ITEM', this.index)
+        if (!this.builder__is_wizard && val === true) {
+          this.activeItemIdx = this.index
         }
       }
     }

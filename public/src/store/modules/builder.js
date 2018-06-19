@@ -7,6 +7,7 @@ const state = {
   mode: 'prompt', // 'prompt' or 'build'
   pipe: {},
   prompts: [],
+  attrs: {},
   active_prompt: {},
   active_prompt_idx: -1,
   fetching: false,
@@ -81,6 +82,10 @@ const mutations = {
     state.mode = mode
   },
 
+  UPDATE_ATTRS (state, attrs) {
+    state.attrs = _.assign({}, state.attrs, attrs)
+  },
+
   UPDATE_ACTIVE_ITEM (state, attrs) {
     var ap = _.assign({}, state.active_prompt, attrs)
     ap = _.cloneDeep(ap)
@@ -105,8 +110,12 @@ const mutations = {
   UPDATE_CODE (state) {
     var code = state.def.code /* new format */ || state.def.pipe /* old format */ || ''
 
-    const VFS_TYPE_DIR = 'DIR'
+    _.each(state.attrs, (val, key) => {
+      var regex = new RegExp("\\$\\{" + key + "\\}", "g")
+      code = code.replace(regex, JSON.stringify(val, null, 2))
+    })
 
+    /*
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
@@ -167,6 +176,7 @@ const mutations = {
           break
       }
     })
+    */
 
     state.code = code
   },

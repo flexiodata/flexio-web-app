@@ -69,7 +69,7 @@
             style="border: 0; padding: 0"
             type="text"
             aria-label="Insert a new step"
-            :disabled="disable_insert"
+            :disabled="!is_insert_allowed"
             @click="$emit('insert-step', index)"
           >
             <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
@@ -87,7 +87,7 @@
             style="border: 0; padding: 0"
             type="text"
             aria-label="Insert a new step"
-            :disabled="disable_insert"
+            :disabled="!is_insert_allowed"
             @click="$emit('insert-step', index+1)"
           >
             <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
@@ -104,36 +104,48 @@
       <div class="flex-fill">
         <BuilderItemTaskChooser
           message="Choose the task that you'd like to insert"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
           :index="index"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'file-chooser'"
         />
         <BuilderItemForm
           :item="item"
           :index="index"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'form'"
         />
         <BuilderItemSummary
           :item="item"
           :index="index"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
         />
         <BuilderItemTaskJsonEditor
           :item="item"
           :index="index"
+          :active-item-idx.sync="activeItemIdx"
+          :isNextAllowed.sync="is_next_allowed"
           v-on="$listeners"
           v-else-if="item.element == 'task-json-editor'"
         />
@@ -149,11 +161,11 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="builder__is_prompt_mode && is_active && !is_last"
+        v-if="builder__is_wizard && is_active && !is_last"
       >
         <el-button
           class="ttu b"
-          @click="$store.commit('builder/GO_PREV_ITEM')"
+          @click="onPrevClick"
           v-show="!is_first"
         >
           Back
@@ -162,14 +174,14 @@
           class="ttu b"
           type="primary"
           :disabled="!is_next_allowed"
-          @click="$store.commit('builder/GO_NEXT_ITEM')"
+          @click="onNextClick"
         >
           Next
         </el-button>
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="!builder__is_prompt_mode && is_active"
+        v-if="!builder__is_wizard && is_active"
       >
         <el-button
           class="ttu b"
@@ -192,7 +204,7 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
@@ -212,6 +224,14 @@
       index: {
         type: Number,
         required: true
+      },
+      items: {
+        type: Array,
+        required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        default: -1
       },
       showNumbers: {
         type: Boolean,
@@ -240,60 +260,38 @@
       BuilderItemForm,
       BuilderItemSummary
     },
+    data() {
+      return {
+        is_next_allowed: false
+      }
+    },
     computed: {
-      ...mapState({
-        def: state => state.builder.def,
-        mode: state => state.builder.mode,
-        prompts: state => state.builder.prompts,
-        active_prompt: state  => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
-      builder__is_editing() {
-        return this.active_prompt_idx != -1
+      builder__is_wizard() {
+        return true
       },
-      builder__is_prompt_mode() {
-        return this.mode == 'prompt'
+      builder__is_editing() {
+        return this.activeItemIdx != -1
       },
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
       },
       is_after_active() {
-        return this.index > this.active_prompt_idx
+        return this.index > this.activeItemIdx
       },
       is_first() {
         return this.index == 0
       },
       is_last() {
-        return this.index == this.prompts.length - 1
+        return this.index == this.items.length - 1
       },
-      is_next_allowed() {
-        if (this.item.element == 'connection-chooser') {
-          return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
-        }
-
-        if (this.item.element == 'file-chooser') {
-          return _.get(this.item, 'files', []).length > 0
-        }
-
-        return true
-      },
-      disable_insert() {
-        return this.builder__is_editing
+      is_insert_allowed() {
+        return !this.builder__is_editing
       },
       show_save_button() {
         return this.item.element != 'task-chooser'
-      },
-      ceid() {
-        return _.get(this.item, 'connection_eid', null)
-      },
-      connections() {
-        return this.getAllConnections()
-      },
-      store_connection() {
-        return _.find(this.connections, { eid: this.ceid }, null)
       },
       content_cls() {
         return {
@@ -324,6 +322,12 @@
       ...mapGetters([
         'getAllConnections'
       ]),
+      onPrevClick() {
+        this.$emit('item-prev', this.index)
+      },
+      onNextClick() {
+        this.$emit('item-next', this.index)
+      },
       onCancelClick() {
         this.$emit('item-cancel', this.index)
       },
