@@ -45,6 +45,9 @@ class Archive extends \Flexio\Jobs\Base
 
         if ($format == 'zip')
         {
+            if (!isset($files) || !is_array($files) || count($files) == 0)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "No files specified.");
+
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $archive_fname = $storage_tmpbase . "tmparchive-" . \Flexio\Base\Util::generateRandomString(30);
             $this->to_delete[] = $archive_fname;
