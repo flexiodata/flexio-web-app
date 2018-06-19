@@ -71,6 +71,11 @@
       this.updateMinMaxHeight()
     },
     methods: {
+      focus() {
+        if (this.$refs.editor) {
+          this.$refs.editor.codemirror.focus()
+        }
+      },
       getMinHeight() {
         // `minHeight` overrides `minRows`
         var min_h = this.opts.minHeight || (this.opts.minRows * 14) + 8
