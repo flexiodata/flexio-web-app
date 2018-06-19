@@ -155,6 +155,9 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
+      ceid() {
+        return _.get(this.edit_connection, 'eid', null)
+      },
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
@@ -171,8 +174,7 @@
         return this.connections.length > 0
       },
       store_connection() {
-        var eid = _.get(this.edit_connection, 'eid', null)
-        return _.find(this.connections, { eid }, null)
+        return _.find(this.connections, { eid: this.ceid }, null)
       },
       service_name() {
         return this.$_Connection_getServiceName(this.ctype)
