@@ -53,6 +53,10 @@
       },
       edit_json: {
         handler: 'onEditJsonChange'
+      },
+      'item.value': {
+        handler: 'resetSelf',
+        deep: true
       }
     },
     data() {
@@ -77,6 +81,12 @@
       }
     },
     methods: {
+      resetSelf() {
+        // reset the form
+        this.edit_json = this.item.value
+        this.orig_json = this.item.value
+        this.json_parse_error = ''
+      },
       onChange(val) {
         if (val === true) {
           this.$emit('active-item-change', this.index)
@@ -85,9 +95,8 @@
       onEditJsonChange() {
         try {
           var task = JSON.parse(this.edit_json)
-          this.$store.commit('pipe/UPDATE_EDIT_TASK', { index: this.index, attrs: task })
+          this.$emit('item-change', task, this.index)
           this.json_parse_error = ''
-
         }
         catch(e)
         {
