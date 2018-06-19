@@ -31,6 +31,7 @@
           :container-id="doc_id"
           :active-item-idx.sync="active_prompt_idx"
           :show-insert-buttons="false"
+          :show-delete-buttons="false"
           @item-prev="goPrev"
           @item-next="goNext"
           @item-change="updateItemState"

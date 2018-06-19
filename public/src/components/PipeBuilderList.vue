@@ -7,6 +7,7 @@
       :show-insert-buttons="true"
       @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
+      @delete-step="deleteStep"
       @item-change="itemChange"
       @item-cancel="itemCancel"
       @item-save="itemSave"
@@ -170,6 +171,16 @@
         this.$emit('input', { op: 'sequence', items })
         this.$nextTick(() => {
           this.active_prompt_idx = idx
+        })
+      },
+      deleteStep(idx) {
+        var items = _.cloneDeep(this.value.items)
+        items.splice(idx, 1)
+        this.is_editing = false
+        this.$emit('input', { op: 'sequence', items })
+        this.$nextTick(() => {
+          this.active_prompt_idx = -1
+          this.$emit('save')
         })
       },
       itemChange(values, index) {

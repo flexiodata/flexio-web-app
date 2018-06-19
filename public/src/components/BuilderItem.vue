@@ -98,9 +98,24 @@
 
     <!-- main content -->
     <div
-      class="flex-fill flex flex-column bg-white"
+      class="flex-fill flex flex-column bg-white hide-child relative"
       :class="content_cls"
     >
+      <div
+        class="child absolute right-0 mr4"
+        v-if="showDeleteButtons"
+      >
+        <el-button
+          class="hint--top"
+          style="border: 0; padding: 0"
+          type="text"
+          aria-label="Delete this step"
+          @click="$emit('delete-step', index)"
+        >
+          <i class="el-icon-close pointer f3 black-30 hover-black-60"></i>
+        </el-button>
+      </div>
+
       <div class="flex-fill">
         <BuilderItemTaskChooser
           message="Choose the task that you'd like to insert"
@@ -249,6 +264,10 @@
         default: true
       },
       showInsertButtons: {
+        type: Boolean,
+        default: true
+      },
+      showDeleteButtons: {
         type: Boolean,
         default: true
       },
