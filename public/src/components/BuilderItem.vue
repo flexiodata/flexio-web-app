@@ -216,6 +216,7 @@
         <el-button
           class="ttu b"
           type="primary"
+          :disabled="!is_next_allowed"
           @click="onSaveClick"
           v-if="show_save_button"
         >

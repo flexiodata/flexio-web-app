@@ -14,7 +14,7 @@
       v-if="prompts.length > 0"
     />
     <div
-      v-else
+      v-if="false"
     >
       <p class="ttu fw6 f7 moon-gray">Choose a starting connection</p>
       <ConnectionChooserList
