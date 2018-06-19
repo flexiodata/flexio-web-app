@@ -93,18 +93,5 @@ class Test
         $actual = $unarchivestream->getReader()->read();
         $expected = 'This is a test.';
         \Flexio\Tests\Check::assertString('A.4', 'Unarchive; valid gz file with a simple string',  $actual, $expected, $results);
-
-
-        // TEST: Archive; basic file
-
-        // BEGIN TEST
-        $archivetask = self::createArchiveTask('gzip');
-        $unarchivetask = self::createUnarchiveTask('gzip');
-        $inputstream = \Flexio\Tests\Util::createStream('/text/02.11-header-basic.csv');
-        $archivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($archivetask)->getStdout();
-        $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($archivestream)->execute($unarchivetask)->getStdout();
-        $actual = $unarchivestream->getReader()->read();
-        $expected = "f1\r\n";
-        \Flexio\Tests\Check::assertString('B.1', 'Archive; basic file',  $actual, $expected, $results);
     }
 }
