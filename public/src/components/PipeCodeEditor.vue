@@ -31,6 +31,7 @@
 <script>
   import yaml from 'js-yaml'
   import Flexio from 'flexio-sdk-js'
+  import utilSdkJs from '../utils/sdk-js'
   import CodeEditor from './CodeEditor.vue'
 
   // TODO: remove 'omitDeep' once we get rid of task eids
@@ -109,27 +110,33 @@
           return
         }
 
-        // TODO: remove 'omitDeep' once we get rid of task eids
-        var task = omitDeep(this.value, ['eid'])
+        try {
+          // TODO: remove 'omitDeep' once we get rid of task eids
+          var task = omitDeep(this.value, ['eid'])
 
-        switch (this.type) {
+          switch (this.type) {
+            case 'json':
+              if (this.json_view == 'yaml') {
+                // YAML view; stringify JSON into YAML
+                this.code = yaml.safeDump(task)
+              } else {
+                // JSON view; stringify JSON and indent 2 spaces
+                this.code = JSON.stringify(task, null, 2)
+              }
+              break
 
-          case 'json':
-            if (this.json_view == 'yaml') {
-              // YAML view; stringify JSON into YAML
-              this.code = yaml.safeDump(task)
-            } else {
-              // JSON view; stringify JSON and indent 2 spaces
-              this.code = JSON.stringify(task, null, 2)
-            }
-            break
+            case 'sdk-js':
+              // Flex.io JS SDK view
+              this.code = Flexio.pipe(task).toCode()
+              break
+          }
 
-          case 'sdk-js':
-            break
+          // set original code so we know if we've edited it or not
+          this.orig_code = this.code
         }
-
-        // set original code so we know if we've edited it or not
-        this.orig_code = this.code
+        catch (e) {
+          this.error_msg = e.message
+        }
       },
       revert() {
         this.initFromPipeTask(true)
@@ -166,10 +173,20 @@
             break
 
           case 'sdk-js':
+            try {
+              // get the pipe task JSON
+              task = utilSdkJs.getTaskJSON(this.code)
+              this.error_msg = ''
+            }
+            catch(e)
+            {
+              this.error_msg = 'Syntax error: ' + e.message
+            }
             break
         }
 
         if (_.isNil(task)) {
+          this.$emit('input', { op: 'sequence', items: [] })
           return
         }
 
@@ -191,7 +208,7 @@
           this.$emit('input', { op: 'sequence', items: [] })
           this.error_msg = e.message
         }
-      }, 50, { 'leading': true, 'trailing': false })
+      }, 50)
     }
   }
 </script>

@@ -102,16 +102,14 @@
               />
             </div>
             <div v-else-if="editor == 'sdk-js'">
-              <CodeEditor
+              <PipeCodeEditor
                 ref="code-editor"
-                class="bg-white ba b--black-10 overflow-y-auto"
-                lang="javascript"
+                type="sdk-js"
                 :options="{ minRows: 12, maxRows: 30 }"
-                v-model="edit_code"
+                :has-errors.sync="has_errors"
+                @save="saveChanges"
+                v-model="edit_task_list"
               />
-              <transition name="el-zoom-in-top">
-                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
-              </transition>
             </div>
             <div v-else-if="editor == 'json'">
               <PipeCodeEditor
@@ -330,7 +328,6 @@
         orig_pipe: state => state.pipe.orig_pipe,
         edit_pipe: state => state.pipe.edit_pipe,
         edit_keys: state => state.pipe.edit_keys,
-        syntax_error: state => state.pipe.syntax_error,
         is_fetching: state => state.pipe.fetching,
         is_fetched: state => state.pipe.fetched
       }),
@@ -342,14 +339,6 @@
       },
       store_pipe() {
         return this.getStorePipe()
-      },
-      edit_code: {
-        get() {
-          return this.$store.state.pipe.edit_code
-        },
-        set(value) {
-          this.$store.commit('pipe/UPDATE_CODE', value)
-        }
       },
       edit_task_list: {
         get() {
@@ -379,8 +368,11 @@
       is_changed() {
         return this.isChanged()
       },
+      is_builder_view() {
+        return this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER
+      },
       show_save_cancel() {
-        return this.is_changed && !(this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER)
+        return this.is_changed && !this.is_builder_view
       },
 
       // -- all of the below computed values pertain to getting the preview --
