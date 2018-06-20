@@ -22,6 +22,7 @@ import {
   MessageBox,
   Option,
   Radio,
+  RadioButton,
   RadioGroup,
   Select,
   Switch,
@@ -69,6 +70,7 @@ Vue.use(Icon)
 Vue.use(Input)
 Vue.use(Option)
 Vue.use(Radio)
+Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Select)
 Vue.use(Switch)

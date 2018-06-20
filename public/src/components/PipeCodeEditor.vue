@@ -1,13 +1,29 @@
 <template>
-  <div :value="value">
+  <div
+    class="relative"
+    :value="value"
+  >
+    <div
+      class="z-6 absolute right-0 ma2"
+      v-if="type == 'json'"
+    >
+      <el-radio-group
+        size="mini"
+        :disabled="has_errors"
+        v-model="json_view"
+      >
+        <el-radio-button label="json"><span class="b">JSON</span></el-radio-button>
+        <el-radio-button label="yaml"><span class="b">YAML</span></el-radio-button>
+      </el-radio-group>
+    </div>
     <CodeEditor
-      class="bg-white ba b--black-10 overflow-y-auto"
+      class="relative bg-white ba b--black-10 overflow-y-auto"
       :lang="lang"
       v-bind="$attrs"
       v-model="code"
     />
     <transition name="el-zoom-in-top">
-      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="error_msg.length > 0">{{errorPrefix}}{{error_msg}}</div>
+      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{errorPrefix}}{{error_msg}}</div>
     </transition>
   </div>
 </template>
@@ -60,14 +76,15 @@
         deep: true
       },
       type: {
-        handler: 'onTypeChange',
-        immediate: true,
-        deep: true
+        handler: 'onTypeChange'
+      },
+      json_view: {
+        handler: 'onJsonViewChange'
       },
       code: {
         handler: 'onChange'
       },
-      error_msg: {
+      has_errors: {
         handler: 'onErrorChange'
       }
     },
@@ -75,15 +92,19 @@
       return {
         orig_code: '',
         code: '',
+        json_view: 'json',
         error_msg: ''
       }
     },
     computed: {
       lang() {
-        return this.type == 'yaml' ? 'yaml' : 'javascript'
+        return this.type == 'json' && this.json_view == 'yaml' ? 'yaml' : 'javascript'
       },
       is_editing() {
         return this.code != this.orig_code
+      },
+      has_errors() {
+        return this.error_msg.length > 0
       }
     },
     methods: {
@@ -96,14 +117,18 @@
         var task = omitDeep(this.value, ['eid'])
 
         switch (this.type) {
+
           case 'json':
-            // stringify JSON; indent 2 spaces
-            this.code = JSON.stringify(task, null, 2)
+            if (this.json_view == 'yaml') {
+              // YAML view; stringify JSON into YAML
+              this.code = yaml.safeDump(task)
+            } else {
+              // JSON view; stringify JSON and indent 2 spaces
+              this.code = JSON.stringify(task, null, 2)
+            }
             break
 
-          case 'yaml':
-            // stringify JSON into YAML
-            this.code = yaml.safeDump(task)
+          case 'sdk-js':
             break
         }
 
@@ -114,9 +139,12 @@
         this.initFromPipeTask(true)
       },
       onErrorChange() {
-        this.$emit('update:hasErrors', this.error_msg.length > 0 ? true : false)
+        this.$emit('update:hasErrors', this.has_errors ? true : false)
       },
       onTypeChange() {
+        this.initFromPipeTask(true)
+      },
+      onJsonViewChange() {
         this.initFromPipeTask(true)
       },
       onChange() {
@@ -125,8 +153,15 @@
         switch (this.type) {
           case 'json':
             try {
-              task = JSON.parse(this.code)
-              this.error_msg = ''
+              if (this.json_view == 'yaml') {
+                // YAML view
+                task = yaml.safeLoad(this.code)
+                this.error_msg = ''
+              } else {
+                // JSON view
+                task = JSON.parse(this.code)
+                this.error_msg = ''
+              }
             }
             catch (e)
             {
@@ -134,15 +169,7 @@
             }
             break
 
-          case 'yaml':
-            try {
-              task = yaml.safeLoad(this.code)
-              this.error_msg = ''
-            }
-            catch(e)
-            {
-              this.error_msg = e.message
-            }
+          case 'sdk-js':
             break
         }
 
