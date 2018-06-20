@@ -103,7 +103,7 @@
     >
       <div
         class="child absolute right-0 mr4"
-        v-if="showDeleteButtons && !is_active"
+        v-show="showDeleteButtons && !is_active"
       >
         <el-button
           class="hint--top"
