@@ -176,7 +176,8 @@
         this.$emit('input', { op: 'sequence', items })
       },
       insertStep(idx) {
-        var items = _.cloneDeep(this.value.items)
+        var items = _.get(this.value, 'items', [])
+        items = _.cloneDeep(items)
         items.splice(idx, 0, { op: '' })
         this.is_editing = false
         this.$emit('input', { op: 'sequence', items })
