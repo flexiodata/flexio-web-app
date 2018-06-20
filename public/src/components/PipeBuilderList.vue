@@ -71,7 +71,8 @@
     watch: {
       value: {
         handler: 'initFromPipeTask',
-        immediate: true
+        immediate: true,
+        deep: true
       }
     },
     data() {

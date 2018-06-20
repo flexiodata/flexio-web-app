@@ -93,8 +93,17 @@
             </div>
 
             <!-- content -->
-            <div v-if="editor == 'sdk-js'">
+            <div v-if="editor == 'builder'">
+              <PipeBuilderList
+                class="mv3"
+                :container-id="doc_id"
+                @save="saveChanges"
+                v-model="edit_task_list"
+              />
+            </div>
+            <div v-else-if="editor == 'sdk-js'">
               <CodeEditor
+                ref="code-editor"
                 class="bg-white ba b--black-10 overflow-y-auto"
                 lang="javascript"
                 :options="{ minRows: 12, maxRows: 30 }"
@@ -104,35 +113,23 @@
                 <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt2" v-if="syntax_error.length > 0">Syntax error: {{syntax_error}}</div>
               </transition>
             </div>
-            <div v-else-if="editor == 'builder'">
-              <PipeBuilderList
-                class="mv3"
-                :container-id="doc_id"
+            <div v-else-if="editor == 'json'">
+              <PipeCodeEditor
+                ref="code-editor"
+                type="json"
+                :has-errors.sync="has_errors"
                 @save="saveChanges"
                 v-model="edit_task_list"
               />
             </div>
-            <div v-else-if="editor == 'json'">
-              <CodeEditor
-                class="bg-white ba b--black-10 overflow-y-auto"
-                lang="javascript"
-                :options="{ minRows: 12, maxRows: 30 }"
-                v-model="edit_json"
-              />
-              <transition name="el-zoom-in-top">
-                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="json_parse_error.length > 0">Parse error: {{json_parse_error}}</div>
-              </transition>
-            </div>
             <div v-else-if="editor == 'yaml'">
-              <CodeEditor
-                class="bg-white ba b--black-10 overflow-y-auto"
-                lang="yaml"
-                :options="{ minRows: 12, maxRows: 30 }"
-                v-model="edit_yaml"
+              <PipeCodeEditor
+                ref="code-editor"
+                type="yaml"
+                :has-errors.sync="has_errors"
+                @save="saveChanges"
+                v-model="edit_task_list"
               />
-              <transition name="el-zoom-in-top">
-                <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="yaml_parse_error.length > 0">Parse error: {{yaml_parse_error}}</div>
-              </transition>
             </div>
           </div>
 
@@ -196,11 +193,7 @@
             <div
               v-else
             >
-              <div
-                class="bg-white ba b--black-10 pa3"
-                style="height: 300px"
-              >
-              </div>
+              <div class="bg-white ba b--black-10 pa3" style="height: 300px"></div>
             </div>
           </div>
         </el-tab-pane>
@@ -248,8 +241,6 @@
 
 <script>
   import stickybits from 'stickybits'
-  import yaml from 'js-yaml'
-  import Flexio from 'flexio-sdk-js'
   import { mapState, mapGetters } from 'vuex'
   import {
     PROCESS_STATUS_RUNNING,
@@ -260,6 +251,7 @@
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
+  import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
@@ -276,23 +268,11 @@
   const PIPEDOC_EDITOR_JSON    = 'json'
   const PIPEDOC_EDITOR_YAML    = 'yaml'
 
-  // TODO: remove 'omitDeep' once we get rid of task eids
-  const omitDeep = (collection, excludeKeys) => {
-    function omitFn(val) {
-      if (val && typeof val === 'object') {
-        excludeKeys.forEach((key) => {
-          delete val[key]
-        })
-      }
-    }
-
-    return _.cloneDeepWith(collection, omitFn)
-  }
-
   export default {
     components: {
       Spinner,
       CodeEditor,
+      PipeCodeEditor,
       PipeBuilderList,
       PipeDocumentForm,
       PipeSchedulePanel,
@@ -335,15 +315,14 @@
         editor_options: [
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
           { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
-          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           }/*,
-          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
+          { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           },
+          { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }
         ],
         has_run_once: false,
+        has_errors: false,
         processes_fetched: false,
         show_pipe_schedule_dialog: false,
-        show_pipe_deploy_dialog: false,
-        json_parse_error: '',
-        yaml_parse_error: ''
+        show_pipe_deploy_dialog: false
       }
     },
     computed: {
@@ -391,55 +370,6 @@
           }
         }
       },
-      edit_json: {
-        get() {
-          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
-
-          // TODO: remove 'omitDeep' once we get rid of task eids
-          task = omitDeep(task, ['eid'])
-
-          // stringify JSON; indent 2 spaces
-          var task_str = JSON.stringify(task, null, 2)
-
-          return task_str
-        },
-        set(value) {
-          try {
-            var task = JSON.parse(value)
-            var pipe = _.cloneDeep(this.edit_pipe)
-            _.assign(pipe, { task })
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.json_parse_error = ''
-          }
-          catch(e)
-          {
-            this.json_parse_error = e.message
-          }
-        }
-      },
-      edit_yaml: {
-        get() {
-          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
-
-          // TODO: remove 'omitDeep' once we get rid of task eids
-          task = omitDeep(task, ['eid'])
-
-          return yaml.safeDump(task)
-        },
-        set(value) {
-          try {
-            var task = yaml.safeLoad(value)
-            var pipe = _.cloneDeep(this.edit_pipe)
-            _.assign(pipe, { task })
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.yaml_parse_error = ''
-          }
-          catch(e)
-          {
-            this.yaml_parse_error = e.message
-          }
-        }
-      },
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
@@ -451,9 +381,6 @@
       },
       show_save_cancel() {
         return this.is_changed && !(this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER)
-      },
-      has_errors() {
-        return this.syntax_error.length > 0 || this.json_parse_error.length > 0 || this.yaml_parse_error.length > 0
       },
 
       // -- all of the below computed values pertain to getting the preview --
@@ -571,6 +498,14 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.store_pipe)
+
+        this.$nextTick(() => {
+          // one of the few times we need to do something imperatively
+          var editor = this.$refs['code-editor']
+          if (editor && editor.revert) {
+            editor.revert()
+          }
+        })
       },
       saveChanges() {
         var doc_form = this.$refs['pipe-document-form']
