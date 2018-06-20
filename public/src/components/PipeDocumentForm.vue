@@ -26,6 +26,7 @@
     >
       <el-input
         placeholder="Enter alias"
+        class="mr1"
         style="max-width: 36rem"
         v-model="form_values.alias"
       >
@@ -39,7 +40,7 @@
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
-      <span class="ml1">
+      <span>
         <el-button
           type="text"
           @click="show_pipe_deploy_dialog = true"
