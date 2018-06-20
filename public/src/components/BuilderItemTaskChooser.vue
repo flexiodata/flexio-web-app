@@ -13,10 +13,10 @@
     >
     </div>
 
-    <div class="flex flex-row flex-wrap items-center nl1">
+    <div class="flex flex-row flex-wrap items-center nl2">
       <div
         class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
+        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
         :key="item.op"
         @click="itemClick(item)"
         v-for="(item, index) in items"
@@ -33,51 +33,51 @@
 
   const tasks = [
     {
-      op: 'create',
-      name: 'Create',
-      icon: 'photo_filter'
-    },{
       op: 'connect',
       name: 'Connect',
       icon: 'repeat'
-    },{
-      op: 'copy',
-      name: 'Copy',
-      icon: 'content_copy'
-    },{
-      op: 'read',
-      name: 'Read',
-      icon: 'input'
-    },{
-      op: 'convert',
-      name: 'Convert',
-      icon: 'settings'
-    },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote'
-    },{
-      op: 'execute',
-      name: 'Execute',
-      icon: 'code'
-    },{
-      op: 'email',
-      name: 'Email',
-      icon: 'mail_outline'
     },{
       op: 'request',
       name: 'Request',
       icon: 'http'
     },{
+      op: 'read',
+      name: 'Read',
+      icon: 'input'
+    },{
       op: 'write',
       name: 'Write',
       icon: 'input'
+    },{
+      op: 'copy',
+      name: 'Copy',
+      icon: 'content_copy'
+    },{
+      op: 'convert',
+      name: 'Convert',
+      icon: 'settings'
+    },{
+      op: 'execute',
+      name: 'Execute',
+      icon: 'code'
+    },{
+      op: 'echo',
+      name: 'Echo',
+      icon: 'settings_remote'
+    },{
+      op: 'email',
+      name: 'Email',
+      icon: 'mail_outline'
     }
   ]
 
   /*
   const tasks = [
     {
+      op: 'create',
+      name: 'Create',
+      icon: 'photo_filter'
+    },{
       op: 'delete',
       name: 'Delete',
       icon: 'delete'
