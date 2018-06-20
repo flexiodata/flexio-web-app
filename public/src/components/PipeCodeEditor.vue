@@ -23,7 +23,7 @@
       v-model="code"
     />
     <transition name="el-zoom-in-top">
-      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{errorPrefix}}{{error_msg}}</div>
+      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{error_msg}}</div>
     </transition>
   </div>
 </template>
@@ -60,10 +60,6 @@
       hasErrors: {
         type: Boolean,
         required: true
-      },
-      errorPrefix: {
-        type: String,
-        default: ''
       }
     },
     components: {
@@ -165,7 +161,7 @@
             }
             catch (e)
             {
-              this.error_msg = e.message
+              this.error_msg = 'Parse error: ' + e.message
             }
             break
 
@@ -192,6 +188,7 @@
           this.error_msg = ''
         }
         catch (e) {
+          this.$emit('input', { op: 'sequence', items: [] })
           this.error_msg = e.message
         }
       }, 50, { 'leading': true, 'trailing': false })
