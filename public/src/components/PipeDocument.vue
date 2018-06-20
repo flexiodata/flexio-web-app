@@ -330,11 +330,11 @@
     },
     data() {
       return {
-        active_tab_name: _.get(this.$route, 'params.view', PIPEDOC_VIEW_PROPERTIES),
-        editor: _.get(this.$route, 'query.editor', PIPEDOC_EDITOR_SDK_JS),
+        active_tab_name: _.get(this.$route, 'params.view', PIPEDOC_VIEW_CONFIGURE),
+        editor: _.get(this.$route, 'query.editor', PIPEDOC_EDITOR_BUILDER),
         editor_options: [
-          { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
+          { value: PIPEDOC_EDITOR_SDK_JS,  label: 'Javascript SDK' },
           { value: PIPEDOC_EDITOR_JSON,    label: 'JSON'           }/*,
           { value: PIPEDOC_EDITOR_YAML,    label: 'YAML'           }*/
         ],
