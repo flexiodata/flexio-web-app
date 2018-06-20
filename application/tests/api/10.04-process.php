@@ -174,7 +174,7 @@ class Test
             'method' => 'POST',
             'url' => "$apibase/$userid1/processes/$objeid3/run",
             'token' => $token1,
-            'content-type' => 'application/json',
+            'content_type' => 'application/json',
             'params' => '{
                 "noun": "Scott"
                 "verb": "continue"

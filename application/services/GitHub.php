@@ -135,8 +135,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function createFile(string $path, array $properties = []) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        $this->write([ 'path' => $path ], function($length) { return false; });
+        return true;
     }
 
     public function createDirectory(string $path, array $properties = []) : bool
@@ -205,6 +205,11 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         if (!$this->authenticated())
             return array();
+
+        if (isset($params['structure']))
+        {
+            $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
+        }
 
         // File Create:
         // Request: PUT https://api.github.com/repos/:owner/:repo/contents/:path

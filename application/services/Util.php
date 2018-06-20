@@ -61,7 +61,7 @@ class TableToCsvCallbackAdaptor
         }
 
         fseek($this->fp, 0);
-        $contents = stream_get_contents($fp);
+        $contents = stream_get_contents($this->fp);
         fclose($this->fp);
 
         $this->fp = fopen('php://memory', 'w');

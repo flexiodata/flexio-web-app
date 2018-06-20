@@ -180,7 +180,7 @@ class Test
             'method' => 'POST',
             'url' => "$apibase/$userid1/pipes/$objeid1/run",
             'token' => $token1,
-            'content-type' => 'application/json',
+            'content_type' => 'application/json',
             'params' => '{
                 "msg": "Hello, World!"
             }'

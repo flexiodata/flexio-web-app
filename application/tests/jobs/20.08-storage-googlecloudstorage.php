@@ -23,7 +23,7 @@ class Test
         // SETUP
         $process_owner = \Flexio\Tests\Util::getTestStorageOwner();
         $files = \Flexio\Tests\Util::getTestDataSamples();
-        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_DROPBOX . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
+        $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GOOGLECLOUDSTORAGE . "/" . 'job-tests-' . \Flexio\Tests\Util::getTimestampName() . "/";
 
 
         // TEST: Write/Read Job; Basic Copy
@@ -38,7 +38,7 @@ class Test
         // BEGIN TEST
         $idx = 1;
         foreach ($files as $filename)
-        {
+        { 
             $idx++;
 
             $filepath = \Flexio\Tests\Util::getOutputFilePath($folderpath, $filename);

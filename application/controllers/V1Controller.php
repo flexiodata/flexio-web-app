@@ -79,7 +79,7 @@ class V1Controller extends \Flexio\System\FxControllerAction
 
                     // only check for the existence of 'application/json' here instead of doing a
                     // straight up string comparison -- the reason for this is that there are cases
-                    // where the the content type looks like this: "application/json;charset=UTF-8"
+                    // where the content type looks like this: "application/json;charset=UTF-8"
                     if (strcasecmp($k, 'content-type') == 0 && strpos($v, 'application/json') !== false)
                     {
                         $input = file_get_contents('php://input');
