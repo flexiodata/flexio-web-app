@@ -450,7 +450,7 @@
         return this.isChanged()
       },
       show_save_cancel() {
-        return this.is_changed && this.editor != PIPEDOC_EDITOR_BUILDER
+        return this.is_changed && !(this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER)
       },
       has_errors() {
         return this.syntax_error.length > 0 || this.json_parse_error.length > 0 || this.yaml_parse_error.length > 0
