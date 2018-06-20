@@ -147,7 +147,7 @@
       onJsonViewChange() {
         this.initFromPipeTask(true)
       },
-      onChange() {
+      onChange: _.debounce(function() {
         var task = null
 
         switch (this.type) {
@@ -194,7 +194,7 @@
         catch (e) {
           this.error_msg = e.message
         }
-      }
+      }, 50, { 'leading': true, 'trailing': false })
     }
   }
 </script>

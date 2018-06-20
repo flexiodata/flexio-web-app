@@ -117,6 +117,7 @@
               <PipeCodeEditor
                 ref="code-editor"
                 type="json"
+                :options="{ minRows: 12, maxRows: 30 }"
                 :has-errors.sync="has_errors"
                 @save="saveChanges"
                 v-model="edit_task_list"
@@ -126,6 +127,7 @@
               <PipeCodeEditor
                 ref="code-editor"
                 type="yaml"
+                :options="{ minRows: 12, maxRows: 30 }"
                 :has-errors.sync="has_errors"
                 @save="saveChanges"
                 v-model="edit_task_list"
