@@ -9,9 +9,11 @@
       @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
       @delete-step="deleteStep"
+      @item-error-change="itemErrorChange"
       @item-change="itemChange"
       @item-cancel="itemCancel"
       @item-save="itemSave"
+      v-on="$listeners"
       v-if="prompts.length > 0"
     />
     <div class="pa5 ba b--black-10 br2 tc" v-else>
@@ -61,6 +63,10 @@
       },
       containerId: {
         type: String
+      },
+      hasErrors: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
@@ -73,11 +79,15 @@
         handler: 'initFromPipeTask',
         immediate: true,
         deep: true
+      },
+      has_errors: {
+        handler: 'onErrorChange'
       }
     },
     data() {
       return {
         is_editing: false,
+        has_errors: false,
         task_items: [],
         prompts: [],
         active_prompt_idx: -1
@@ -161,6 +171,7 @@
           tasks.push(_.cloneDeep(t))
         })
 
+        this.has_errors = false
         this.task_items = [].concat(tasks)
         this.prompts = [].concat(prompts)
         this.is_editing = false
@@ -196,6 +207,9 @@
           this.$emit('save')
         })
       },
+      itemErrorChange(has_errors, index) {
+        this.has_errors = has_errors
+      },
       itemChange(values, index) {
         var p = this.prompts[index]
         if (p) {
@@ -206,7 +220,6 @@
             this.task_items = [].concat(items)
             this.is_editing = true
             this.$emit('input', { op: 'sequence', items })
-            console.log(items)
           }
         }
       },
@@ -220,6 +233,9 @@
         this.is_editing = false
         this.active_prompt_idx = -1
         this.$emit('save')
+      },
+      onErrorChange() {
+        this.$emit('update:hasErrors', this.has_errors)
       }
     }
   }

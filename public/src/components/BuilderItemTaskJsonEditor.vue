@@ -114,6 +114,7 @@
         this.error_msg = ''
       },
       onErrorChange() {
+        this.$emit('item-error-change', this.has_errors, this.index)
         this.$emit('update:isNextAllowed', !this.has_errors)
       },
       onLangChange() {

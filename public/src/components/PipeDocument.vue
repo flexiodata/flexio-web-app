@@ -97,6 +97,7 @@
               <PipeBuilderList
                 class="mv3"
                 :container-id="doc_id"
+                :has-errors.sync="has_errors"
                 @save="saveChanges"
                 v-model="edit_task_list"
               />
