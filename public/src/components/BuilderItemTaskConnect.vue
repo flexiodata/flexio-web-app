@@ -18,6 +18,7 @@
       :active-item-idx="activeItemIdx"
       :builder-mode="'build'"
       :show-title="false"
+      :show-summary="connection.length > 0"
       :connection-eid.sync="connection"
       v-on="$listeners"
     />
@@ -96,6 +97,7 @@
     methods: {
       onChange: _.debounce(function() {
         this.$emit('item-change', this.$data, this.index)
+        this.$emit('active-item-change', this.index)
       }, 50)
     }
   }

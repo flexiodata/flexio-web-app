@@ -15,7 +15,7 @@
     >
     </div>
 
-    <div v-show="show_controls">
+    <div v-show="show_controls && !show_summary">
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
         class="mb3 overflow-auto"
@@ -99,6 +99,10 @@
         type: Boolean,
         default: true
       },
+      showSummary: {
+        type: Boolean,
+        default: false
+      },
       builderMode: {
         type: String
       },
@@ -156,7 +160,7 @@
         return this.show_controls && this.description.length > 0
       },
       show_summary() {
-        return this.builder__is_wizard && this.is_before_active
+        return (this.builder__is_wizard && this.is_before_active) || this.showSummary
       },
       title() {
         return _.get(this.item, 'title', '')
