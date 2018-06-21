@@ -128,6 +128,24 @@
           v-on="$listeners"
           v-if="item.element == 'task-chooser'"
         />
+        <BuilderItemTaskJsonEditor
+          :item="item"
+          :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'task-json-editor'"
+        />
+        <BuilderItemTaskConnect
+          :item="item"
+          :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'task-connect'"
+        />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
@@ -163,15 +181,6 @@
           :builder-mode="builderMode"
           v-on="$listeners"
           v-else-if="item.element == 'summary-prompt'"
-        />
-        <BuilderItemTaskJsonEditor
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'task-json-editor'"
         />
         <div
           v-else
@@ -234,6 +243,7 @@
   import TaskIcon from './TaskIcon.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
   import BuilderItemTaskJsonEditor from './BuilderItemTaskJsonEditor.vue'
+  import BuilderItemTaskConnect from './BuilderItemTaskConnect.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
@@ -286,6 +296,7 @@
       TaskIcon,
       BuilderItemTaskChooser,
       BuilderItemTaskJsonEditor,
+      BuilderItemTaskConnect,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,

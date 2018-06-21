@@ -121,10 +121,11 @@
             element: 'task-json-editor',
             value: task
           }
-        }
-
-        // for form builder items, assign the form item value by finding it in the task object
-        if (prompt.element == 'form') {
+        } else if (prompt.element.indexOf('task-') != -1) {
+          var task = _.omit(task, ['eid'])
+          prompt = _.assign({}, prompt, { form_values: task })
+        } else if (prompt.element == 'form') {
+          // for form builder items, assign the form item value by finding it in the task object
           prompt.form_items = _.map(prompt.form_items, fi => {
             if (!fi.variable || !_.has(task, fi.variable)) {
               return fi
@@ -134,10 +135,8 @@
               value: _.get(task, fi.variable, '')
             })
           })
-        }
 
-        // now set the form values from the form items
-        if (prompt.element == 'form') {
+          // now set the form values from the form items
           var form_values = {}
           _.each(prompt.form_items, fi => {
             if (fi.variable) {

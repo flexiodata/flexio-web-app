@@ -101,6 +101,9 @@
       },
       builderMode: {
         type: String
+      },
+      connectionEid: {
+        type: String
       }
     },
     mixins: [MixinConnection],
@@ -110,16 +113,19 @@
       ConnectionChooserItem
     },
     watch: {
-      is_active: {
-        handler: 'initSelf',
-        immediate: true
-      },
       is_changed: {
         handler: 'onChange'
+      },
+      is_active: {
+        handler: 'updatedAllowNext'
       },
       edit_connection: {
         handler: 'updateAllowNext',
         deep: true
+      },
+      connectionEid: {
+        handler: 'initSelf',
+        immediate: true
       }
     },
     data() {
@@ -188,7 +194,12 @@
         'getAvailableConnections'
       ]),
       initSelf() {
-        this.updateAllowNext()
+        var c = _.get(this.$store, 'state.objects[' + this.connectionEid + ']', undefined)
+        if (c) {
+          c = _.cloneDeep(c)
+          this.orig_connection = c
+          this.edit_connection = c
+        }
       },
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
@@ -196,6 +207,10 @@
         form_values[key] = connection.eid
         this.edit_connection = connection
         this.$emit('item-change', form_values, this.index)
+        this.$emit('update:connectionEid', connection.eid)
+        if (!this.builder__is_wizard) {
+          this.$emit('active-item-change', this.index)
+        }
       },
       fixConnection(connection) {
         this.chooseConnection(connection)
