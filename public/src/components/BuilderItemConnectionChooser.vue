@@ -192,7 +192,7 @@
       },
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
-        var form_values = {}
+        var form_values = _.get(this.item, 'extra_values', {})
         form_values[key] = connection.eid
         this.edit_connection = connection
         this.$emit('item-change', form_values, this.index)

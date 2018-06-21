@@ -5,3 +5,5 @@ prompt:
   element: connection-chooser
   title: Connect
   variable: connection
+  extra_values:
+    op: connect
