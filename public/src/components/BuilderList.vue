@@ -5,7 +5,7 @@
       :index="index"
       :items="items"
       :active-item-idx="activeItemIdx"
-      :key="item.id"
+      :key="getItemKey(item, index)"
       @active-item-change="onActiveItemChange"
       v-bind="$attrs"
       v-on="$listeners"
@@ -75,6 +75,9 @@
       },
       onActiveItemChange(index) {
         this.$emit('update:activeItemIdx', index)
+      },
+      getItemKey(item, index) {
+        return item.id ? item.id : 'builder-item-' + index
       }
     }
   }
