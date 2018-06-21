@@ -20,8 +20,8 @@
       <el-button type="primary" class="ttu b" :disabled="true">Pipe Share Modal</el-button>
       <div class="pa1 w-100 mb3 mt4 bb b--black-10 fw6">Other Modals</div>
       <el-button type="primary" class="ttu b" :disabled="true">Tall Modal</el-button>
-      <el-button type="primary" class="ttu b"@click="show_flexio_modal = true">Flexio Modal</el-button>
-      <el-button type="primary" class="ttu b"@click="show_flexio_signup_modal = true">Flexio Sign Up Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="show_flexio_modal = true">Flexio Modal</el-button>
+      <el-button type="primary" class="ttu b" @click="show_flexio_signup_modal = true">Flexio Sign Up Modal</el-button>
     </div>
 
     <flexio-modal
