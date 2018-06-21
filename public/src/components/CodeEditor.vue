@@ -1,17 +1,33 @@
 <template>
-  <CodeMirror
-    ref="editor"
-    :value="value"
-    :options="opts"
-    @input="onChange"
-    v-bind="$attrs"
-  />
+  <div class="relative">
+    <div
+      class="z-6 absolute right-0 ma2"
+      v-if="is_json_kind && showJsonViewToggle"
+    >
+      <el-radio-group
+        size="mini"
+        :disabled="!enableJsonViewToggle"
+        v-model="json_view"
+      >
+        <el-radio-button label="json"><span class="b">JSON</span></el-radio-button>
+        <el-radio-button label="yaml"><span class="b">YAML</span></el-radio-button>
+      </el-radio-group>
+    </div>
+    <CodeMirror
+      ref="editor"
+      class="h-100"
+      :value="value"
+      :options="opts"
+      @input="onChange"
+      v-bind="$attrs"
+    />
+  </div>
 </template>
 
 <script>
   // vue-codemirror includes
-  import { codemirror } from 'vue-codemirror'
   import 'codemirror/lib/codemirror.css'
+  import { codemirror } from 'vue-codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/yaml/yaml'
   import {} from 'codemirror/mode/python/python'
@@ -30,6 +46,14 @@
         type: String,
         default: 'javascript'
       },
+      showJsonViewToggle: {
+        type: Boolean,
+        default: true
+      },
+      enableJsonViewToggle: {
+        type: Boolean,
+        default: true
+      },
       options: {
         type: Object,
         default: () => { return {} }
@@ -38,9 +62,28 @@
     components: {
       CodeMirror: codemirror
     },
+    watch: {
+      json_view: {
+        handler: 'onJsonViewChange'
+      }
+    },
+    data() {
+      return {
+        json_view: 'json'
+      }
+    },
     computed: {
       mode() {
-        return this.lang == 'html' ? 'htmlmixed' : this.lang
+        switch (this.lang) {
+          case 'html':
+            return 'htmlmixed'
+          case 'json':
+            return 'javascript'
+        }
+        return this.lang
+      },
+      is_json_kind() {
+        return this.lang == 'json' || this.lang == 'yaml'
       },
       default_opts() {
         return {
@@ -100,6 +143,9 @@
       },
       onChange(value) {
         this.$emit('input', value)
+      },
+      onJsonViewChange(value) {
+        this.$emit('update:lang', value)
       }
     }
   }

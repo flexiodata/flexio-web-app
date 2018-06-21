@@ -15,7 +15,8 @@
     v-else-if="isHtml"
   />
   <CodeEditor
-    lang="application/json"
+    lang="json"
+    :show-json-view-toggle="false"
     :options="{
       lineNumbers: false,
       readOnly: true

@@ -170,7 +170,7 @@
             >
               <CodeEditor
                 class="bg-white ba b--black-10 overflow-y-auto"
-                lang="application/json"
+                lang="json"
                 :options="{
                   minRows: 12,
                   maxRows: 24,

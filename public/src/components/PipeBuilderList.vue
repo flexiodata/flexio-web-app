@@ -109,7 +109,7 @@
           var task = _.omit(task, ['eid'])
           prompt = {
             element: 'task-json-editor',
-            value: JSON.stringify(task, null, 2)
+            value: task
           }
         }
 
@@ -201,12 +201,12 @@
         if (p) {
           var t = _.get(this.task_items, '['+p.task_idx+ ']', null)
           if (t) {
-            t = _.assign(t, values)
             var items = _.cloneDeep(this.task_items)
-            _.set(items, '['+p.task_idx+ ']', t)
+            _.set(items, '['+p.task_idx+ ']', values)
             this.task_items = [].concat(items)
             this.is_editing = true
             this.$emit('input', { op: 'sequence', items })
+            console.log(items)
           }
         }
       },

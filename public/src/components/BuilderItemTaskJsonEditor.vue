@@ -15,17 +15,19 @@
 
     <CodeEditor
       class="bg-white ba b--black-10 overflow-y-auto"
-      lang="javascript"
-      :options="{ minRows: 12, maxRows: 30 }"
-      v-model="edit_json"
+      :lang.sync="lang"
+      :enable-json-view-toggle="!has_errors"
+      :options="{ minRows: 8, maxRows: 20 }"
+      v-model="edit_code"
     />
     <transition name="el-zoom-in-top">
-      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="json_parse_error.length > 0">Parse error: {{json_parse_error}}</div>
+      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{error_msg}}</div>
     </transition>
   </div>
 </template>
 
 <script>
+  import yaml from 'js-yaml'
   import marked from 'marked'
   import CodeEditor from './CodeEditor.vue'
 
@@ -42,6 +44,10 @@
       activeItemIdx: {
         type: Number,
         required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
       }
     },
     components: {
@@ -51,19 +57,28 @@
       is_changed: {
         handler: 'onChange'
       },
-      edit_json: {
+      edit_code: {
         handler: 'onEditJsonChange'
+      },
+      lang: {
+        handler: 'onLangChange'
+      },
+      has_errors: {
+        handler: 'onErrorChange'
       },
       'item.value': {
         handler: 'resetSelf',
+        immediate: true,
         deep: true
       }
     },
     data() {
       return {
-        edit_json: this.item.value,
-        orig_json: this.item.value,
-        json_parse_error: '',
+        task: this.item.value,
+        orig_code: '',
+        edit_code: '',
+        error_msg: '',
+        lang: 'json'
       }
     },
     computed: {
@@ -76,16 +91,33 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
+      has_errors() {
+        return this.error_msg.length > 0
+      },
       is_changed() {
-        return this.edit_json != this.orig_json
+        return this.edit_code != this.orig_code
       }
     },
     methods: {
       resetSelf() {
-        // reset the form
-        this.edit_json = this.item.value
-        this.orig_json = this.item.value
-        this.json_parse_error = ''
+        var task = this.task
+
+        if (this.lang == 'yaml') {
+          // YAML view; stringify JSON into YAML
+          this.edit_code = yaml.safeDump(task)
+        } else {
+          // JSON view; stringify JSON and indent 2 spaces
+          this.edit_code = JSON.stringify(task, null, 2)
+        }
+
+        this.orig_code = this.edit_code
+        this.error_msg = ''
+      },
+      onErrorChange() {
+        this.$emit('update:isNextAllowed', !this.has_errors)
+      },
+      onLangChange() {
+        this.resetSelf()
       },
       onChange(val) {
         if (val === true) {
@@ -93,14 +125,24 @@
         }
       },
       onEditJsonChange() {
+        var task = null
+
         try {
-          var task = JSON.parse(this.edit_json)
+          if (this.lang == 'yaml') {
+            // YAML view
+            task = yaml.safeLoad(this.edit_code)
+          } else {
+            // JSON view
+            task = JSON.parse(this.edit_code)
+          }
+
+          this.task = task
+          this.error_msg = ''
           this.$emit('item-change', task, this.index)
-          this.json_parse_error = ''
         }
         catch(e)
         {
-          this.json_parse_error = e.message
+          this.error_msg = 'Parse error: ' + e.message
         }
       }
     }

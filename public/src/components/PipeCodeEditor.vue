@@ -1,26 +1,13 @@
 <template>
   <div
-    class="relative"
     :value="value"
   >
-    <div
-      class="z-6 absolute right-0 ma2"
-      v-if="type == 'json'"
-    >
-      <el-radio-group
-        size="mini"
-        :disabled="has_errors"
-        v-model="json_view"
-      >
-        <el-radio-button label="json"><span class="b">JSON</span></el-radio-button>
-        <el-radio-button label="yaml"><span class="b">YAML</span></el-radio-button>
-      </el-radio-group>
-    </div>
     <CodeEditor
-      class="relative bg-white ba b--black-10 overflow-y-auto"
-      :lang="lang"
+      class="bg-white ba b--black-10 overflow-y-auto"
+      :lang.sync="lang"
+      :enable-json-view-toggle="!has_errors"
       v-bind="$attrs"
-      v-model="code"
+      v-model="edit_code"
     />
     <transition name="el-zoom-in-top">
       <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{error_msg}}</div>
@@ -75,10 +62,10 @@
       type: {
         handler: 'onTypeChange'
       },
-      json_view: {
-        handler: 'onJsonViewChange'
+      lang: {
+        handler: 'onLangChange'
       },
-      code: {
+      edit_code: {
         handler: 'onChange'
       },
       has_errors: {
@@ -88,17 +75,14 @@
     data() {
       return {
         orig_code: '',
-        code: '',
-        json_view: 'json',
+        edit_code: '',
+        lang: this.type == 'sdk-js' ? 'javascript' : this.type,
         error_msg: ''
       }
     },
     computed: {
-      lang() {
-        return this.type == 'json' && this.json_view == 'yaml' ? 'yaml' : 'javascript'
-      },
       is_editing() {
-        return this.code != this.orig_code
+        return this.edit_code != this.orig_code
       },
       has_errors() {
         return this.error_msg.length > 0
@@ -116,23 +100,24 @@
 
           switch (this.type) {
             case 'json':
-              if (this.json_view == 'yaml') {
+              if (this.lang == 'yaml') {
                 // YAML view; stringify JSON into YAML
-                this.code = yaml.safeDump(task)
+                this.edit_code = yaml.safeDump(task)
               } else {
                 // JSON view; stringify JSON and indent 2 spaces
-                this.code = JSON.stringify(task, null, 2)
+                this.edit_code = JSON.stringify(task, null, 2)
               }
               break
 
             case 'sdk-js':
               // Flex.io JS SDK view
-              this.code = Flexio.pipe(task).toCode()
+              this.edit_code = Flexio.pipe(task).toCode()
               break
           }
 
           // set original code so we know if we've edited it or not
-          this.orig_code = this.code
+          this.orig_code = this.edit_code
+          this.error_msg = ''
         }
         catch (e) {
           this.error_msg = e.message
@@ -147,7 +132,7 @@
       onTypeChange() {
         this.initFromPipeTask(true)
       },
-      onJsonViewChange() {
+      onLangChange() {
         this.initFromPipeTask(true)
       },
       onChange: _.debounce(function() {
@@ -156,15 +141,15 @@
         switch (this.type) {
           case 'json':
             try {
-              if (this.json_view == 'yaml') {
+              if (this.lang == 'yaml') {
                 // YAML view
-                task = yaml.safeLoad(this.code)
-                this.error_msg = ''
+                task = yaml.safeLoad(this.edit_code)
               } else {
                 // JSON view
-                task = JSON.parse(this.code)
-                this.error_msg = ''
+                task = JSON.parse(this.edit_code)
               }
+
+              this.error_msg = ''
             }
             catch (e)
             {
@@ -175,7 +160,7 @@
           case 'sdk-js':
             try {
               // get the pipe task JSON
-              task = utilSdkJs.getTaskJSON(this.code)
+              task = utilSdkJs.getTaskJSON(this.edit_code)
               this.error_msg = ''
             }
             catch(e)
