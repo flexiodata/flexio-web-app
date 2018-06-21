@@ -100,7 +100,7 @@
     },
     methods: {
       resetSelf() {
-        var task = this.task
+        var task = _.isObject(this.task) ? this.task : this.item.value
 
         if (this.lang == 'yaml') {
           // YAML view; stringify JSON into YAML
@@ -145,15 +145,16 @@
           this.error_msg = 'Parse error: ' + e.message
         }
 
-
         if (_.isNil(task)) {
           this.$emit('item-change', {}, this.index)
           return
         }
 
         try {
-          if (_.isNil(task.op)) {
-            throw({ message: 'Tasks must have an `op` node.' })
+          if (!_.isObject(task)) {
+            throw({ message: 'Task result must be an object' })
+          } else if (_.isNil(task.op)) {
+            throw({ message: 'Tasks must have an `op` node' })
           }
 
           this.$emit('item-change', task, this.index)
