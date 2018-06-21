@@ -178,13 +178,13 @@
 
         try {
           if (_.isNil(task.op)) {
-            throw({ message: 'Pipes must have an `op` node.' })
+            throw({ message: 'Pipes must have an `op` node' })
           } else if (task.op != 'sequence') {
-            throw({ message: 'The `op` node must be "sequence".' })
+            throw({ message: 'The `op` node must be "sequence"' })
           } else if (_.isNil(task.items)) {
-            throw({ message: 'Pipes must have an `items` node.' })
+            throw({ message: 'Pipes must have an `items` node' })
           } else if (!_.isArray(task.items)) {
-            throw({ message: 'The `items` node must be an array.' })
+            throw({ message: 'The `items` node must be an array' })
           }
 
           this.$emit('input', { op: 'sequence', items: task.items })
