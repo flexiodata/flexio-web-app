@@ -141,9 +141,9 @@
         scroller.style.minHeight = this.getMinHeight()
         scroller.style.maxHeight = this.getMaxHeight()
       },
-      onChange(value) {
+      onChange: _.debounce(function(value) {
         this.$emit('input', value)
-      },
+      }, 50),
       onJsonViewChange(value) {
         this.$emit('update:lang', value)
       }

@@ -135,7 +135,7 @@
       onLangChange() {
         this.initFromPipeTask(true)
       },
-      onEditCodeChange: _.debounce(function() {
+      onEditCodeChange() {
         var task = null
 
         switch (this.type) {
@@ -193,7 +193,7 @@
           this.$emit('input', { op: 'sequence', items: [] })
           this.error_msg = e.message
         }
-      }, 50)
+      }
     }
   }
 </script>
