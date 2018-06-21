@@ -1,11 +1,12 @@
 <template>
   <div class="relative">
     <div
-      class="z-6 absolute right-0 ma2"
+      class="z-6 absolute right-0 mt2 mr2"
+      :style="json_view_toggle_style"
       v-if="is_json_kind && showJsonViewToggle"
     >
       <el-radio-group
-        size="tiny"
+        size="micro"
         :disabled="!enableJsonViewToggle"
         v-model="json_view"
       >
@@ -18,7 +19,8 @@
       class="h-100"
       :value="value"
       :options="opts"
-      @input="onChange"
+      @input="onCmChange"
+      @update="onCmUpdate"
       v-bind="$attrs"
     />
   </div>
@@ -69,7 +71,9 @@
     },
     data() {
       return {
-        json_view: 'json'
+        json_view: 'json',
+        has_vertical_scrollbar: false,
+        scrollbar_width: 0
       }
     },
     computed: {
@@ -84,6 +88,10 @@
       },
       is_json_kind() {
         return this.lang == 'json' || this.lang == 'yaml'
+      },
+      json_view_toggle_style() {
+        var w = this.scrollbar_width
+        return this.has_vertical_scrollbar ? 'padding-right: '+w+'px' : ''
       },
       default_opts() {
         return {
@@ -141,9 +149,14 @@
         scroller.style.minHeight = this.getMinHeight()
         scroller.style.maxHeight = this.getMaxHeight()
       },
-      onChange: _.debounce(function(value) {
+      onCmChange: _.debounce(function(value) {
         this.$emit('input', value)
       }, 50),
+      onCmUpdate(cm) {
+        var info = cm.getScrollInfo()
+        this.has_vertical_scrollbar = info.height > info.clientHeight
+        this.scrollbar_width = cm.display.nativeBarWidth
+      },
       onJsonViewChange(value) {
         this.$emit('update:lang', value)
       }

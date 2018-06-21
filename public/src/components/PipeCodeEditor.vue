@@ -3,7 +3,7 @@
     :value="value"
   >
     <CodeEditor
-      class="bg-white ba b--black-10 overflow-y-auto"
+      class="bg-white ba b--black-10"
       :lang.sync="lang"
       :enable-json-view-toggle="!has_errors"
       v-bind="$attrs"

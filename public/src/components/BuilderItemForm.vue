@@ -32,7 +32,7 @@
           v-if="fi.element == 'markdown'"
         ></div>
         <CodeEditor
-          class="bg-white ba b--black-10 overflow-y-auto"
+          class="bg-white ba b--black-10"
           style="line-height: 1.15; font-size: 13px"
           :lang="fi.lang ? fi.lang : 'javascript'"
           :options="{ minRows: 8, maxRows: 20 }"

@@ -170,7 +170,7 @@
               v-else-if="has_run_once && is_superuser && is_process_failed"
             >
               <CodeEditor
-                class="bg-white ba b--black-10 overflow-y-auto"
+                class="bg-white ba b--black-10"
                 lang="json"
                 :options="{
                   minRows: 12,
