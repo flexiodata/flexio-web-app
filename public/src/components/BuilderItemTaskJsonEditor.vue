@@ -58,7 +58,7 @@
         handler: 'onChange'
       },
       edit_code: {
-        handler: 'onEditJsonChange'
+        handler: 'onEditCodeChange'
       },
       lang: {
         handler: 'onLangChange'
@@ -125,7 +125,7 @@
           this.$emit('active-item-change', this.index)
         }
       },
-      onEditJsonChange() {
+      onEditCodeChange() {
         var task = null
 
         try {
