@@ -138,11 +138,29 @@
 
           this.task = task
           this.error_msg = ''
-          this.$emit('item-change', task, this.index)
         }
         catch(e)
         {
           this.error_msg = 'Parse error: ' + e.message
+        }
+
+
+        if (_.isNil(task)) {
+          this.$emit('item-change', {}, this.index)
+          return
+        }
+
+        try {
+          if (_.isNil(task.op)) {
+            throw({ message: 'Tasks must have an `op` node.' })
+          }
+
+          this.$emit('item-change', task, this.index)
+          this.error_msg = ''
+        }
+        catch (e) {
+          this.$emit('item-change', {}, this.index)
+          this.error_msg = e.message
         }
       }
     }
