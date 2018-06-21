@@ -130,6 +130,7 @@
         this.$emit('update:hasErrors', this.has_errors ? true : false)
       },
       onTypeChange() {
+        this.lang = this.type == 'sdk-js' ? 'javascript' : this.type
         this.initFromPipeTask(true)
       },
       onLangChange() {
