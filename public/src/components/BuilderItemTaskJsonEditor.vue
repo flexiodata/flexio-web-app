@@ -67,7 +67,7 @@
         handler: 'onErrorChange'
       },
       'item.value': {
-        handler: 'resetSelf',
+        handler: 'initSelf',
         immediate: true,
         deep: true
       }
@@ -99,8 +99,12 @@
       }
     },
     methods: {
-      resetSelf() {
-        var task = _.isObject(this.task) ? this.task : this.item.value
+      initSelf() {
+        this.task = this.item.value
+        this.resetCodeFromTask()
+      },
+      resetCodeFromTask() {
+        var task = this.task
 
         if (this.lang == 'yaml') {
           // YAML view; stringify JSON into YAML
@@ -118,7 +122,7 @@
         this.$emit('update:isNextAllowed', !this.has_errors)
       },
       onLangChange() {
-        this.resetSelf()
+        this.resetCodeFromTask()
       },
       onChange(val) {
         if (val === true) {
