@@ -8,8 +8,8 @@
   .el-dialog__body
     padding-top: 20px
 
- .el-dialog__header
-   display: none
+  .el-dialog__header
+    display: none
 
 .el-dialog--no-footer
   .el-dialog__body
@@ -114,6 +114,19 @@
     font-weight: bold
   &.fw6
     font-weight: 600
+
+// -- el-radio-button --
+
+.el-radio-button--tiny
+  &:first-child .el-radio-button__inner
+    border-radius: 3px 0 0 3px
+  &:last-child .el-radio-button__inner
+    border-radius: 0 3px 3px 0
+  .el-radio-button__inner
+    padding: 5px 9px
+    font-size: 12px
+
+// -- el-input --
 
 .el-input.f5,
 .el-select.f5

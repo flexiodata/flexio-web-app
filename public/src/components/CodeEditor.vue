@@ -5,12 +5,12 @@
       v-if="is_json_kind && showJsonViewToggle"
     >
       <el-radio-group
-        size="mini"
+        size="tiny"
         :disabled="!enableJsonViewToggle"
         v-model="json_view"
       >
-        <el-radio-button label="json"><span class="b">JSON</span></el-radio-button>
-        <el-radio-button label="yaml"><span class="b">YAML</span></el-radio-button>
+        <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+        <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
       </el-radio-group>
     </div>
     <CodeMirror
