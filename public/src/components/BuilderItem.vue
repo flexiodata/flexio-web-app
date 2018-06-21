@@ -328,8 +328,9 @@
         return {
           'pa4 b--black-10': true,
           'bl br': !this.is_first && !this.is_last,
-          'bl br bt br2 br--top': this.is_first,
-          'bl br bb br2 br--bottom': this.is_last,
+          'bl br bt br2 br--top': this.is_first && !this.is_last,
+          'bl br bb br2 br--bottom': this.is_last && !this.is_first,
+          'ba br2': this.is_first && this.is_last,
           'css-active': this.is_active,
           'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         }
