@@ -66,7 +66,7 @@
         handler: 'onLangChange'
       },
       edit_code: {
-        handler: 'onChange'
+        handler: 'onEditCodeChange'
       },
       has_errors: {
         handler: 'onErrorChange'
@@ -135,7 +135,7 @@
       onLangChange() {
         this.initFromPipeTask(true)
       },
-      onChange: _.debounce(function() {
+      onEditCodeChange: _.debounce(function() {
         var task = null
 
         switch (this.type) {
