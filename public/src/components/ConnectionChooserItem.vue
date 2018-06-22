@@ -1,6 +1,10 @@
 <template>
   <article :class="cls" @click="onClick">
     <div class="tc css-valign" v-if="layout == 'grid'">
+      <div class="absolute z-1" style="top: -9px; right: 18px" v-if="showStatus">
+        <i class="el-icon-success dark-green bg-white ba bw1 b--white br-100 f5" v-if="is_available"></i>
+        <i class="el-icon-error dark-red bg-white ba bw1 b--white br-100 f5" v-else></i>
+      </div>
       <service-icon :type="ctype" class="dib v-mid br2 square-5" />
       <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.name}}</div>
     </div>
