@@ -56,7 +56,7 @@
         edit_mode: 'add',
         edit_connection: undefined,
         show_connection_dialog: false,
-        ops: ['request', 'execute', 'echo', 'email']
+        ops: ['request', 'execute', 'echo']
       }
     },
     methods: {
