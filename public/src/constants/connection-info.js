@@ -25,7 +25,7 @@ const BOX = {
 }
 
 const CUSTOM_API = {
-  service_name: 'Custom API',
+  service_name: 'API',
   service_description: 'Connect to any REST API',
   connection_type: types.CONNECTION_TYPE_HTTP,
   icon: require('../assets/icon/icon-custom-api-128.png'),
