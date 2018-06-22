@@ -241,6 +241,8 @@
             this.show_connection_dialog = true
           })
         } else {
+          this.edit_mode = 'add'
+          this.edit_connection = undefined
           this.show_connection_dialog = true
         }
       },
