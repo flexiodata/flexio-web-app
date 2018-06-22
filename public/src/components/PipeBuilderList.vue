@@ -16,35 +16,7 @@
       v-on="$listeners"
       v-if="prompts.length > 0"
     />
-    <div class="pa5 ba b--black-10 br2 tc" v-else>
-      <el-button
-        type="primary"
-        size="large"
-        class="ttu b"
-        @click="insertStep(0)"
-      >
-        This will actually be the thing that gets the user going instead of a button
-      </el-button>
-    </div>
-    <div
-      v-if="false"
-    >
-      <p class="ttu fw6 f7 moon-gray">Choose a starting connection</p>
-      <ConnectionChooserList
-        class="mb3 overflow-auto"
-        style="max-height: 277px"
-        :show-selection-checkmark="true"
-      />
-      <div class="mt3">
-        <el-button
-          class="ttu b"
-        >
-          Set up a new connection
-        </el-button>
-      </div>
-      <p class="mv4 ttu fw6 f7 moon-gray">&mdash; or start with one of the following tasks &mdash;</p>
-      <BuilderItemTaskChooser title="Choose a task" />
-    </div>
+    <PipeBuilderEmptyItem v-else />
   </div>
 </template>
 
@@ -52,8 +24,7 @@
   import { mapState } from 'vuex'
   import builder_defs from '../data/builder'
   import BuilderList from './BuilderList.vue'
-  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
+  import PipeBuilderEmptyItem from './PipeBuilderEmptyItem.vue'
 
   export default {
     props: {
@@ -71,8 +42,7 @@
     },
     components: {
       BuilderList,
-      BuilderItemTaskChooser,
-      ConnectionChooserList
+      PipeBuilderEmptyItem
     },
     watch: {
       value: {

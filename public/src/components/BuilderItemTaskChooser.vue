@@ -16,13 +16,13 @@
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
         class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
+        :class="'f6 fw6 ttu br2 ma2 h4 w4 pointer silver hover-blue bg-near-white darken-05'"
         :key="item.op"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
-        <i class="material-icons md-48">{{item.icon}}</i>
-        <div class="mt2">{{item.name}}</div>
+        <i class="material-icons" style="font-size: 32px">{{item.icon}}</i>
+        <div class="mt3">{{item.name}}</div>
       </div>
     </div>
   </div>
@@ -112,20 +112,10 @@
   export default {
     props: {
       item: {
-        type: Object,
-        required: true
+        type: Object
       },
       index: {
-        type: Number,
-        required: true
-      },
-      activeItemIdx: {
-        type: Number,
-        required: true
-      },
-      isNextAllowed: {
-        type: Boolean,
-        required: false
+        type: Number
       },
       showTitle: {
         type: Boolean,
@@ -138,6 +128,15 @@
       description: {
         type: String,
         default: ''
+      },
+      ops: {
+        type: Array,
+        required: false
+      }
+    },
+    data() {
+      return {
+        tasks
       }
     },
     computed: {
@@ -148,7 +147,7 @@
         return marked(this.description)
       },
       items() {
-        return tasks
+        return _.isArray(this.ops) ? _.filter(this.tasks, (t) => { return this.ops.indexOf(t.op) != -1 }) : tasks
       }
     },
     methods: {
