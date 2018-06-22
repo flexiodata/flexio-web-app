@@ -86,6 +86,9 @@
         immediate: true,
         deep: true
       },
+      has_available_connection() {
+        this.$emit('update:isNextAllowed', this.has_available_connection)
+      },
       is_changed: {
         handler: 'onChange'
       },
@@ -140,7 +143,6 @@
       },
       onEditValuesChange() {
         this.$emit('item-change', this.edit_values, this.index)
-        this.$emit('update:isNextAllowed', this.has_available_connection)
       }
     }
   }
