@@ -102,15 +102,26 @@
       :class="content_cls"
     >
       <div
-        class="child absolute right-0 mr4"
-        v-show="showDeleteButtons && !is_active"
+        class="child flex flex-row items-center absolute right-0 mr4"
+        v-show="!is_active"
       >
+        <el-button
+          class="hint--top"
+          style="border: 0; padding: 0"
+          type="text"
+          aria-label="Edit this step"
+          @click="$emit('edit-step', index)"
+          v-show="showEditButtons"
+        >
+          <i class="el-icon-edit-outline pointer f4 black-30 hover-black-60"></i>
+        </el-button>
         <el-button
           class="hint--top"
           style="border: 0; padding: 0"
           type="text"
           aria-label="Delete this step"
           @click="$emit('delete-step', index)"
+          v-show="showDeleteButtons"
         >
           <i class="el-icon-close pointer f3 black-30 hover-black-60"></i>
         </el-button>
@@ -276,6 +287,10 @@
         default: true
       },
       showInsertButtons: {
+        type: Boolean,
+        default: true
+      },
+      showEditButtons: {
         type: Boolean,
         default: true
       },

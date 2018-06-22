@@ -5,6 +5,7 @@
       :container-id="containerId"
       :active-item-idx.sync="active_prompt_idx"
       :show-insert-buttons="true"
+      :show-edit-buttons="false"
       :show-numbers="false"
       @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
