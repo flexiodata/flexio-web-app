@@ -21,7 +21,7 @@
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
-        <i class="material-icons" style="font-size: 32px">{{item.icon}}</i>
+        <i class="material-icons md-48">{{item.icon}}</i>
         <div class="mt3">{{item.name}}</div>
       </div>
     </div>
