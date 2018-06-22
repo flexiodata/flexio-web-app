@@ -38,6 +38,9 @@
       containerId: {
         type: String
       },
+      activeItemIdx: {
+        type: Number
+      },
       hasErrors: {
         type: Boolean,
         required: true
@@ -55,6 +58,9 @@
       },
       has_errors: {
         handler: 'onErrorChange'
+      },
+      active_prompt_idx: {
+        handler: 'onActivePromptIdxChange'
       }
     },
     data() {
@@ -212,6 +218,9 @@
       },
       onErrorChange() {
         this.$emit('update:hasErrors', this.has_errors)
+      },
+      onActivePromptIdxChange() {
+        this.$emit('update:activeItemIdx', this.active_prompt_idx)
       }
     }
   }

@@ -80,7 +80,7 @@
                 class="tr"
                 size="small"
                 style="width: 10rem"
-                :disabled="has_errors"
+                :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
                 v-model="editor"
               >
                 <el-option
@@ -98,6 +98,7 @@
                 class="mv3"
                 :container-id="doc_id"
                 :has-errors.sync="has_errors"
+                :active-item-idx.sync="active_item_idx"
                 @save="saveChanges"
                 v-model="edit_task_list"
               />
@@ -143,7 +144,7 @@
                 style="min-width: 5rem"
                 type="primary"
                 size="small"
-                :disabled="has_errors"
+                :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
                 @click.stop="runPipe"
               >
                 Run
@@ -186,7 +187,6 @@
             >
               <div
                 class="bg-white ba b--black-10 pa3 f6"
-                style="height: 300px"
               >
                 <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
               </div>
@@ -319,6 +319,7 @@
         ],
         has_run_once: false,
         has_errors: false,
+        active_item_idx: -1,
         processes_fetched: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false
