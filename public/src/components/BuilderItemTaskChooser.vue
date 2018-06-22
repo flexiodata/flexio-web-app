@@ -16,13 +16,13 @@
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
         class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma2 h4 w4 pointer silver hover-blue bg-near-white darken-05'"
+        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
         :key="item.op"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
         <i class="material-icons md-48">{{item.icon}}</i>
-        <div class="mt3">{{item.name}}</div>
+        <div class="mt2">{{item.name}}</div>
       </div>
     </div>
   </div>
