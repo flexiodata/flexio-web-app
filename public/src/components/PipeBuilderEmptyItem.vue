@@ -4,6 +4,7 @@
     <ConnectionChooserList
       class="mb2 overflow-auto"
       layout="grid"
+      @item-activate="selectConnection"
     />
     <el-button
       class="ttu b"
@@ -34,6 +35,13 @@
       }
     },
     methods: {
+      selectConnection(connection) {
+        this.$emit('insert-step', 0, {
+          op: 'connect',
+          connection: _.get(connection, 'eid', ''),
+          alias: 'my-alias'
+        })
+      },
       selectTask(task) {
         this.$emit('insert-step', 0, task)
       }
