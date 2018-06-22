@@ -133,12 +133,17 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             $worksheet_title = $spreadsheet->worksheets[0]->title;
         }
 
+        
+        $arr = \Flexio\Base\File::splitPath($path);
+        $name = '';
+        if (count($arr) > 0)
+            $name = $arr[count($arr)-1];
+
         $r = array('id'=> md5(strtolower(trim($path,'/'))) ?? null,
-                   'name' => trim($path,'/'),
+                   'name' => $name,
                    'size' => null,
                    'modified' => null,
                    'type' => 'FILE');
-        
 
         // figure out structure
         $url = "https://sheets.googleapis.com/v4/spreadsheets/".rawurlencode($spreadsheet_id)."/values/".rawurlencode($worksheet_title);
