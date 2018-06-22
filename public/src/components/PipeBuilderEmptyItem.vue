@@ -14,6 +14,7 @@
     <BuilderItemTaskChooser
       title="Choose a task"
       :ops="ops"
+      @task-chooser-select-task="selectTask"
     />
   </div>
 </template>
@@ -30,6 +31,11 @@
     data() {
       return {
         ops: ['request', 'execute', 'echo', 'email']
+      }
+    },
+    methods: {
+      selectTask(task) {
+        this.$emit('insert-step', 0, task)
       }
     }
   }

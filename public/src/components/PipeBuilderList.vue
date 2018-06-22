@@ -16,7 +16,10 @@
       v-on="$listeners"
       v-if="prompts.length > 0"
     />
-    <PipeBuilderEmptyItem v-else />
+    <PipeBuilderEmptyItem
+      @insert-step="insertStep"
+      v-else
+    />
   </div>
 </template>
 
@@ -156,10 +159,14 @@
 
         this.$emit('input', { op: 'sequence', items })
       },
-      insertStep(idx) {
+      insertStep(idx, task) {
         var items = _.get(this.value, 'items', [])
         items = _.cloneDeep(items)
-        items.splice(idx, 0, { op: '' })
+        if (task) {
+          items.splice(idx, 0, task)
+        } else {
+          items.splice(idx, 0, { op: '' })
+        }
         this.is_editing = false
         this.$emit('input', { op: 'sequence', items })
         this.$nextTick(() => {
