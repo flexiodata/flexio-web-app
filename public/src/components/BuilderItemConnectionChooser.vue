@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div v-if="show_summary">
+    <div v-if="show_summary && has_available_connection">
       <ConnectionChooserItem
         class="mb3 bt bb b--black-10"
         :item="store_connection"
@@ -121,7 +121,8 @@
         handler: 'onChange'
       },
       is_active: {
-        handler: 'updatedAllowNext'
+        handler: 'updateAllowNext',
+        immediate: true
       },
       edit_connection: {
         handler: 'updateAllowNext',
@@ -189,6 +190,9 @@
       store_connection() {
         return _.find(this.connections, { eid: this.ceid }, null)
       },
+      has_available_connection() {
+        return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
       service_name() {
         return this.$_Connection_getServiceName(this.ctype)
       },
@@ -198,7 +202,7 @@
         'getAvailableConnections'
       ]),
       initSelf() {
-        var c = _.get(this.$store, 'state.objects[' + this.connectionEid + ']', undefined)
+        var c = _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
         if (c) {
           c = _.cloneDeep(c)
           this.orig_connection = c
@@ -278,8 +282,7 @@
         }
       },
       updateAllowNext() {
-        var allow = _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
-        this.$emit('update:isNextAllowed', allow)
+        this.$emit('update:isNextAllowed', this.has_available_connection)
       }
     }
   }
