@@ -16,7 +16,7 @@
     />
     <el-form
       ref="form"
-      class="mt3 el-form-cozy el-form__label-tiny"
+      class="mt3 el-form--cozy el-form__label-tiny"
       :model="$data"
       :rules="rules"
     >

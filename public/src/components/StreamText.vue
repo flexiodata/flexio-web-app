@@ -3,7 +3,7 @@
     class="flex flex-column justify-center h-100"
     v-if="state.is_fetching && !state.has_fetched"
   >
-    <Spinner :message="state.loading_text" />
+    <Spinner size="large" :message="state.loading_text" />
   </div>
   <CodeEditor
     lang="text/html"
@@ -15,7 +15,8 @@
     v-else-if="isHtml"
   />
   <CodeEditor
-    lang="application/json"
+    lang="json"
+    :show-json-view-toggle="false"
     :options="{
       lineNumbers: false,
       readOnly: true

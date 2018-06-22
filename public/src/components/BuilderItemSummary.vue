@@ -12,17 +12,11 @@
       <div class="mt4">
         <el-button
           class="ttu b"
-          @click="gotoPipe"
+          type="primary"
+          size="large"
+          @click="openPipe"
         >
           View pipe
-        </el-button>
-        <span class="ph2">or</span>
-        <el-button
-          class="ttu b"
-          type="primary"
-          @click="runPipe"
-        >
-          Run now
         </el-button>
       </div>
     </div>
@@ -30,10 +24,6 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_PIPES } from '../constants/route'
-  import Flexio from 'flexio-sdk-js'
-
   export default {
     props: {
       item: {
@@ -43,71 +33,37 @@
       index: {
         type: Number,
         required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
       }
     },
     watch: {
       is_active() {
         if (this.is_active) {
-          this.createPipe()
+          this.$emit('create-pipe')
         }
       }
     },
     computed: {
-      ...mapState({
-        def: state => state.builder.def,
-        active_prompt_idx: state => state.builder.active_prompt_idx,
-        code: state => state.builder.code,
-        pipe: state => state.builder.pipe
-      }),
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
       },
       is_after_active() {
-        return this.index > this.active_prompt_idx
-      },
-      api_key() {
-        return this.getSdkKey()
-      },
-      sdk_options() {
-        return this.getSdkOptions()
-      },
-      save_code() {
-        var name = _.get(this.def, 'title', 'Untitled Pipe')
-        return this.code + '.save({ name: "' + name + '" }, callback)'
+        return this.index > this.activeItemIdx
       }
     },
     methods: {
-      ...mapGetters([
-        'getAllTokens',
-        'getSdkKey',
-        'getSdkOptions'
-      ]),
-      gotoPipe() {
-        var eid = this.pipe.eid
-        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-      },
-      runPipe() {
-        var eid = this.pipe.eid
-        this.$router.push({ name: ROUTE_PIPES, params: { eid, state: 'run' } })
-      },
-      createPipe() {
-        var pipe_fn = (Flexio, callback) => {
-          eval(this.save_code)
-        }
-
-        Flexio.setup(this.api_key, this.sdk_options)
-
-        pipe_fn.call(this, Flexio, (err, response) => {
-          // TODO: error reporting?
-          var pipe = response
-          this.$store.commit('builder/CREATE_PIPE', pipe)
-          this.$store.track('Finished Template', {
-            title: this.def.title
-          })
-        })
+      openPipe() {
+        this.$emit('open-pipe')
       }
     }
   }

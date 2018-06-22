@@ -6,34 +6,51 @@
     <div
       class="pb3 mid-gray marked"
       v-html="description"
-      v-show="is_active && description.length > 0"
+      v-show="show_description"
     >
     </div>
+
     <el-form
       ref="form"
-      :model="form_values"
+      :class="item.cls"
+      :model="flat_values"
       :label-position="label_position"
       :label-width="label_width"
-      v-if="is_active"
+      v-if="show_controls"
     >
       <el-form-item
+        :class="fi.cls"
         :label="fi.label"
-        :key="fi.variable"
-        :prop="fi.variable"
+        :label-width="fi.element == 'markdown' ? (fi.label_width || '0') : fi.label_width"
+        :key="getFlatKey(fi.variable)"
+        :prop="getFlatKey(fi.variable)"
+        v-show="fi.type !== 'hidden'"
         v-for="fi in form_items"
       >
+        <div
+          v-html="getMarkdown(fi.value)"
+          v-if="fi.element == 'markdown'"
+        ></div>
+        <CodeEditor
+          class="bg-white ba b--black-10"
+          style="line-height: 1.15; font-size: 13px"
+          :lang="fi.lang ? fi.lang : 'javascript'"
+          :options="{ minRows: 8, maxRows: 20 }"
+          v-model="flat_values[getFlatKey(fi.variable)]"
+          v-else-if="fi.element == 'code-editor'"
+        />
         <el-switch
-          v-model="form_values[fi.variable]"
-          v-if="fi.element == 'switch'"
+          v-model="flat_values[getFlatKey(fi.variable)]"
+          v-else-if="fi.element == 'switch'"
         />
         <el-checkbox
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'checkbox'"
         />
         <el-checkbox-group
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'checkbox-group'"
         >
           <el-checkbox
@@ -47,7 +64,7 @@
         </el-checkbox-group>
         <el-radio-group
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'radio-group'"
         >
           <el-radio
@@ -60,7 +77,7 @@
         </el-radio-group>
         <el-select
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'select'"
         >
           <el-option
@@ -75,23 +92,36 @@
           :type="fi.type"
           :editable="false"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'input' && isDatePickerType(fi.type)"
         />
         <el-input
           type="textarea"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'input' && fi.type == 'textarea'"
         />
         <el-input
+          type="number"
           :placeholder="fi.placeholder"
-          v-model="form_values[fi.variable]"
+          v-model.number="flat_values[getFlatKey(fi.variable)]"
+          v-else-if="fi.element == 'input' && fi.type == 'number'"
+        />
+        <el-input
+          type="hidden"
+          :placeholder="fi.placeholder"
+          v-model="flat_values[getFlatKey(fi.variable)]"
+          v-else-if="fi.element == 'input' && fi.type == 'hidden'"
+        />
+        <el-input
+          :placeholder="fi.placeholder"
+          v-model="flat_values[getFlatKey(fi.variable)]"
           v-else
         />
       </el-form-item>
     </el-form>
-    <div v-else if="is_before_active">
+
+    <div v-else-if="show_summary">
       <div class="mb2 bt b--black-10"></div>
       <table>
         <tbody>
@@ -99,8 +129,8 @@
             :key="key"
             v-for="(val, key) in form_values"
           >
-            <td class="v-top pa1"><span class="fw6">{{key}}:</span></td>
-            <td class="v-top pa1">{{ JSON.stringify(val, null, 2) }}</td>
+            <td class="v-top pa1 f6"><span class="fw6">{{key}}:</span></td>
+            <td class="v-top pa1 f6">{{ JSON.stringify(val, null, 2) }}</td>
           </tr>
         </tbody>
       </table>
@@ -111,7 +141,10 @@
 
 <script>
   import marked from 'marked'
-  import { mapState } from 'vuex'
+  import CodeEditor from './CodeEditor.vue'
+
+  const flatten = require('flat')
+  const unflatten = require('flat').unflatten
 
   export default {
     props: {
@@ -122,33 +155,73 @@
       index: {
         type: Number,
         required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: false
+      },
+      builderMode: {
+        type: String
       }
     },
+    components: {
+      CodeEditor
+    },
     watch: {
+      is_changed: {
+        handler: 'onChange'
+      },
       is_active: {
-        handler: 'autoFocus',
+        handler: 'initSelf',
         immediate: true
       },
       form_values: {
         handler: 'updateForm',
         immediate: true,
         deep: true
+      },
+      flat_values: {
+        handler: 'updateFlatValues',
+        deep: true
+      },
+      'item.form_values': {
+        handler: 'resetSelf',
+        deep: true
       }
     },
     data() {
       return {
-        form_values: null
+        is_inited: false,
+        flat_values: null,
+        form_values: null,
+        orig_form_values: null
       }
     },
     computed: {
-      ...mapState({
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
+      builder__is_wizard() {
+        return this.builderMode == 'wizard' ? true : false
+      },
       is_active() {
-        return this.index == this.active_prompt_idx
+        return this.index == this.activeItemIdx
       },
       is_before_active() {
-        return this.index < this.active_prompt_idx
+        return this.index < this.activeItemIdx
+      },
+      is_changed() {
+        return !_.isEqual(this.form_values, this.orig_form_values)
+      },
+      show_controls() {
+        return !this.builder__is_wizard || this.is_active
+      },
+      show_description() {
+        return this.show_controls && this.description.length > 0
+      },
+      show_summary() {
+        return this.builder__is_wizard && this.is_before_active
       },
       title() {
         return _.get(this.item, 'title', 'Choose values')
@@ -166,13 +239,24 @@
         return _.get(this.item, 'form_items', [])
       }
     },
-    mounted() {
-      this.autoFocus()
-    },
     methods: {
+      resetSelf() {
+        // reset the form
+        this.form_values = null
+        this.orig_form_values = null
+        this.updateForm()
+      },
+      initSelf(active) {
+        if (active) {
+          // focus first element in form and allow next step
+          this.$emit('update:isNextAllowed', true)
+          this.autoFocus()
+        }
+      },
       autoFocus() {
-        if (!this.is_active)
+        if (!this.is_active) {
           return
+        }
 
         this.$nextTick(() => {
           var form = this.$refs['form']
@@ -184,16 +268,45 @@
           }
         })
       },
+      getMarkdown(val) {
+        return marked(val)
+      },
+      // this is necessary since ElForm doesn't like periods in key values
+      getFlatKey(key) {
+        if (!key) return
+        return key.replace('.', '--')
+      },
+      // this is necessary since ElForm doesn't like periods in key values
+      getExpandedKey(key) {
+        if (!key) return
+        return key.replace('--', '.')
+      },
       updateForm() {
         if (this.form_values === null) {
-          var form_values = _.get(this.$store, 'state.builder.prompts[' + this.index + '].form_values')
+          var form_values = _.get(this.item, 'form_values', {})
           this.form_values = _.cloneDeep(form_values)
+          this.orig_form_values = _.cloneDeep(form_values)
+
+          var flat_values = flatten(this.form_values)
+          this.flat_values = _.mapKeys(flat_values, (val, key) => { return this.getFlatKey(key) })
+          this.is_inited = true
         } else {
-          this.$store.commit('builder/UPDATE_ACTIVE_ITEM', { form_values: this.form_values })
+          this.$emit('item-change', this.form_values, this.index)
+        }
+      },
+      updateFlatValues() {
+        if (this.is_inited) {
+          var form_values = _.mapKeys(this.flat_values, (val, key) => { return this.getExpandedKey(key) })
+          this.form_values = _.cloneDeep(unflatten(form_values))
         }
       },
       isDatePickerType(type) {
         return ['year','month','date','datetime','week','datetimerange','daterange'].indexOf(type) != -1
+      },
+      onChange(val) {
+        if (!this.builder__is_wizard && val === true) {
+          this.$emit('active-item-change', this.index)
+        }
       }
     }
   }

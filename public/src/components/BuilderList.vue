@@ -3,20 +3,30 @@
     <BuilderItem
       :item="item"
       :index="index"
-      :key="item.id"
+      :items="items"
+      :active-item-idx="activeItemIdx"
+      :key="getItemKey(item, index)"
+      @active-item-change="onActiveItemChange"
       v-bind="$attrs"
-      v-for="(item, index) in prompts"
+      v-on="$listeners"
+      v-for="(item, index) in items"
     />
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
   import BuilderItem from './BuilderItem.vue'
 
   export default {
     inheritAttrs: false,
     props: {
+      items: {
+        type: Array,
+        required: true
+      },
+      activeItemIdx: {
+        type: Number
+      },
       containerId: {
         type: String
       }
@@ -25,7 +35,7 @@
       BuilderItem
     },
     watch: {
-      active_prompt_idx: {
+      activeItemIdx: {
         handler: 'scrollToActive',
         immediate: true
       }
@@ -36,11 +46,9 @@
       }
     },
     computed: {
-      ...mapState({
-        prompts: state => state.builder.prompts,
-        active_prompt: state => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      })
+      active_item() {
+        return _.get(this.items, '[' + this.activeItemIdx + ']', null)
+      }
     },
     mounted() {
       setTimeout(() => { this.do_initial_scroll = true }, 500)
@@ -52,17 +60,24 @@
             this.$scrollTo('#'+item_id, {
                 container: '#'+this.containerId,
                 duration: 400,
-                offset: this.active_prompt_idx == 0 ? -100 : -32
+                offset: this.activeItemIdx == 0 ? -100 : -32
             })
           }, 10)
         }
       },
       scrollToActive() {
-        if (!this.do_initial_scroll)
+        if (!this.do_initial_scroll) {
           return
+        }
 
-        var item_id = _.get(this.active_prompt, 'id', null)
+        var item_id = _.get(this.active_item, 'id', null)
         this.scrollToItem(item_id)
+      },
+      onActiveItemChange(index) {
+        this.$emit('update:activeItemIdx', index)
+      },
+      getItemKey(item, index) {
+        return item.id ? item.id : 'builder-item-' + index
       }
     }
   }

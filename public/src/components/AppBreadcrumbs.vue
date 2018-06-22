@@ -6,14 +6,15 @@
   >
     <el-breadcrumb-item
       class="flex flex-row items-center"
-      :to="home_link"
+      to="/dashboard"
     >
-      <i
-        class="material-icons md-18 hint--bottom"
-        :aria-label="home_title"
-      >
-        home
-      </i>
+      <i class="material-icons md-18 hint--bottom" aria-label="Back to dashboard">home</i>
+    </el-breadcrumb-item>
+    <el-breadcrumb-item
+      to="/pipes"
+      v-if="is_pipes"
+    >
+      <span class="hint--bottom fw4" aria-label="Back to pipe list">Pipes</span>
     </el-breadcrumb-item>
     <el-breadcrumb-item>
       <span class="cursor-default">{{doc_name}}</span>
@@ -46,19 +47,8 @@
 
         return _.get(this.getActiveDocument(), 'name', '')
       },
-      home_title() {
-        switch (this.$route.name) {
-          case ROUTE_PIPES: return 'Back to pipe list'
-        }
-
-        return 'Back to dashboard'
-      },
-      home_link() {
-        switch (this.$route.name) {
-          case ROUTE_PIPES: return '/pipes'
-        }
-
-        return '/dashboard'
+      is_pipes() {
+        return this.$route.name == ROUTE_PIPES
       }
     },
     methods: {

@@ -1,13 +1,15 @@
 import _ from 'lodash'
-import api from '../../api'
+
+const VFS_TYPE_DIR = 'DIR'
 
 const state = {
   def: {},
   code: '',
   pipe: {},
   prompts: [],
+  attrs: {},
   active_prompt: {},
-  active_prompt_idx: null,
+  active_prompt_idx: -1,
   fetching: false,
   fetched: false
 }
@@ -18,24 +20,32 @@ const mutations = {
 
     if (fetching === true) {
       state.fetched = false
-      state.active_prompt_idx = null
+      state.active_prompt_idx = -1
       state.active_prompt = {}
     }
   },
 
   INIT_DEF (state, def) {
     state.def = def
-    state.code = _.get(def, 'pipe', '').trim()
+    state.fetched = true
+
+    // determine what was passed to us
+    var lang = _.get(def, 'pipe_language', 'json')
+    if (lang == 'javascript') {
+      var code = _.get(def, 'pipe', '')
+      state.code = code
+    } else {
+      state.code = ''
+    }
 
     var prompts = _.get(def, 'prompts', [])
 
-    // always include the summary item
-    var existing_summary = _.find(prompts, { element: 'summary-page' })
+    // include the summary item at the end
+    var existing_summary = _.find(prompts, { element: 'summary-prompt' })
     if (!existing_summary) {
-      prompts.push({ element: 'summary-page' })
+      prompts.push({ element: 'summary-prompt' })
     }
 
-    state.fetched = true
     state.prompts = _.map(prompts, p => {
       _.assign(p, { id: _.uniqueId('prompt-') })
 
@@ -49,7 +59,11 @@ const mutations = {
 
       if (p.element == 'form') {
         var form_values = {}
-        _.each(p.form_items, f => { form_values[f.variable] = f.value })
+        _.each(p.form_items, fi => {
+          if (fi.element != 'markdown') {
+            _.set(form_values, fi.variable, fi.value)
+          }
+        })
         return _.assign(p, { form_values })
       }
 
@@ -58,6 +72,22 @@ const mutations = {
 
     state.active_prompt_idx = 0
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+  },
+
+  UPDATE_ATTRS (state, attrs) {
+    state.attrs = _.assign({}, state.attrs, attrs)
+
+    state.prompts = _.map(state.prompts, p => {
+      // update file chooser connections with the associated connection if they match
+      if (p.element == 'file-chooser' && p.connection) {
+        return _.assign({}, p, {
+          connection_eid: _.get(state.attrs, p.connection, '')
+        })
+      }
+
+      // otherwise, just return the prompt as-is
+      return p
+    })
   },
 
   UPDATE_ACTIVE_ITEM (state, attrs) {
@@ -71,7 +101,7 @@ const mutations = {
       } else {
         // update file chooser connections with the active prompt's connection if they match
         if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
-          return _.assign(p, {
+          return _.assign({}, p, {
             connection_eid: ap.connection_eid,
             files: []
           })
@@ -82,28 +112,28 @@ const mutations = {
   },
 
   UPDATE_CODE (state) {
-    var code = state.def.pipe
-
-    const VFS_TYPE_DIR = 'DIR'
+    var code = state.def.code /* new format */ || state.def.pipe /* old format */ || ''
 
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
 
-      if (idx > state.active_prompt_idx)
+      if (idx > state.active_prompt_idx) {
         return
+      }
 
       switch (p.element) {
         case 'connection-chooser':
-          var eid = p.connection_eid
+          var eid = state.attrs[p.variable]
           if (!_.isNil(eid)) {
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
             var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
-            code = code.replace(regex, JSON.stringify(identifier, null, 2))
+            code = code.replace(regex, JSON.stringify(identifier))
           }
           break
+
         case 'file-chooser':
-          var files = _.get(p, 'files', [])
+          var files = state.attrs[p.variable]
           var connection_alias = _.get(p, 'connection_alias', false)
           var paths = []
 
@@ -132,16 +162,14 @@ const mutations = {
             paths = _.get(paths, '[0]', '')
           }
 
-          code = code.replace(regex, JSON.stringify(paths, null, 2))
-          break
-        case 'form':
-          var form_vals = _.get(p, 'form_values', {})
-          _.each(form_vals, (val, key) => {
-            var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-            code = code.replace(regex, JSON.stringify(val, null, 2))
-          })
+          code = code.replace(regex, JSON.stringify(paths))
           break
       }
+    })
+
+    _.each(state.attrs, (val, key) => {
+      var regex = new RegExp("\\$\\{" + key + "\\}", "g")
+      code = code.replace(regex, JSON.stringify(val))
     })
 
     state.code = code
@@ -149,6 +177,18 @@ const mutations = {
 
   CREATE_PIPE (state, attrs) {
     state.pipe = attrs
+  },
+
+  SET_ACTIVE_ITEM (state, idx) {
+    if (idx >= 0 && idx < state.prompts.length) {
+      state.active_prompt_idx = idx
+      state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
+    }
+  },
+
+  UNSET_ACTIVE_ITEM(state) {
+    state.active_prompt_idx = -1
+    state.active_prompt = {}
   },
 
   GO_PREV_ITEM (state) {

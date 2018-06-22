@@ -13,16 +13,16 @@
         <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" />
         <div class="flex-fill flex flex-column ml2">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
-          <div class="f6 fw4">{{service_description}}</div>
+          <div class="f6 fw4 mt1">{{service_description}}</div>
         </div>
         <div v-if="showSteps && mode != 'edit'">
-          <i class="material-icons v-mid nr1">chevron_left</i>
           <div
-            class="dib f5 fw6 underline-hover pointer v-mid"
+            class="flex flex-row items-center f5 fw6 hover-blue pointer"
             title="Back to Step 1"
             @click="reset()"
           >
-            Step 2 of 2
+            <i class="material-icons">chevron_left</i>
+            <span>Step 2 of 2</span>
           </div>
         </div>
       </div>
@@ -36,7 +36,7 @@
       <div v-if="has_connection">
         <el-form
           ref="form"
-          class="el-form-compact el-form__label-tiny"
+          class="el-form--compact el-form__label-tiny"
           :model="edit_connection"
           :rules="rules"
         >

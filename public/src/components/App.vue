@@ -6,7 +6,7 @@
     <!-- onboarding dialog -->
     <div v-if="config_show_onboarding">
       <el-dialog
-        custom-class="no-header no-footer"
+        custom-class="el-dialog--no-header el-dialog--no-footer"
         width="56rem"
         top="8vh"
         :modal-append-to-body="false"

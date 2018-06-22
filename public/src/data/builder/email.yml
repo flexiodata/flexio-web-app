@@ -1,0 +1,33 @@
+task:
+  op: email
+
+prompt:
+  element: form
+  title: Email
+  description: ''
+  cls: el-form--compact
+  label_position: left
+  label_width: 9rem
+  form_items:
+    - element: input
+      type: hidden
+      variable: op
+      value: email
+    - element: input
+      type: email
+      variable: to
+      label: To
+      placeholder: Enter email address
+      value: ''
+    - element: input
+      type: text
+      variable: subject
+      label: Subject
+      placeholder: Enter subject
+      value: ''
+    - element: input
+      type: textarea
+      variable: body
+      label: Message
+      placeholder: Enter message
+      value: ''

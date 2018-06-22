@@ -6,9 +6,9 @@
       <div class="mv3 f5 lh-copy">
         <span class="dib mr1">I want to</span>
         <el-select
-          placeholder="Select"
           class="f5"
-          style="width: 340px"
+          placeholder="select an onboarding item"
+          style="width: 360px"
           @change="onOnboardingItemChange"
           v-model="active_item_id"
         >
@@ -32,12 +32,8 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import items from '../data/onboarding'
   import OnboardingItem from './OnboardingItem.vue'
-
-  const item1 = require('json-loader!yaml-loader!../data/onboarding/copy-file-directory-to-cloud-storage.yml')
-  const item2 = require('json-loader!yaml-loader!../data/onboarding/collect-data-from-api.yml')
-  const item3 = require('json-loader!yaml-loader!../data/onboarding/process-tabular-data.yml')
-  const items = [item1, item2, item3]
 
   export default {
     components: {
@@ -45,7 +41,7 @@
     },
     data() {
       return {
-        items,
+        items: _.values(items),
         active_item_id: ''
       }
     },

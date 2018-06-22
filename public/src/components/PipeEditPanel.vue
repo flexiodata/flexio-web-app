@@ -10,7 +10,7 @@
     <div>
       <el-form
         ref="form"
-        class="el-form-compact el-form__label-tiny"
+        class="el-form--compact el-form__label-tiny"
         :model="edit_pipe"
         :rules="rules"
       >

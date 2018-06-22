@@ -1,18 +1,37 @@
 <template>
-  <CodeMirror
-    ref="editor"
-    :value="value"
-    :options="opts"
-    @input="onChange"
-    v-bind="$attrs"
-  />
+  <div class="relative">
+    <div
+      class="z-6 absolute right-0 mt2 mr2"
+      :style="json_view_toggle_style"
+      v-if="is_json_kind && showJsonViewToggle"
+    >
+      <el-radio-group
+        size="micro"
+        :disabled="!enableJsonViewToggle"
+        v-model="json_view"
+      >
+        <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+        <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
+      </el-radio-group>
+    </div>
+    <CodeMirror
+      ref="editor"
+      class="h-100"
+      :value="value"
+      :options="opts"
+      @input="onCmChange"
+      @update="onCmUpdate"
+      v-bind="$attrs"
+    />
+  </div>
 </template>
 
 <script>
   // vue-codemirror includes
-  import { codemirror } from 'vue-codemirror'
   import 'codemirror/lib/codemirror.css'
+  import { codemirror } from 'vue-codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
+  import {} from 'codemirror/mode/yaml/yaml'
   import {} from 'codemirror/mode/python/python'
   //import {} from 'codemirror/mode/css/css'
   //import {} from 'codemirror/mode/xml/xml'
@@ -29,6 +48,14 @@
         type: String,
         default: 'javascript'
       },
+      showJsonViewToggle: {
+        type: Boolean,
+        default: true
+      },
+      enableJsonViewToggle: {
+        type: Boolean,
+        default: true
+      },
       options: {
         type: Object,
         default: () => { return {} }
@@ -37,9 +64,34 @@
     components: {
       CodeMirror: codemirror
     },
+    watch: {
+      json_view: {
+        handler: 'onJsonViewChange'
+      }
+    },
+    data() {
+      return {
+        json_view: 'json',
+        has_vertical_scrollbar: false,
+        scrollbar_width: 0
+      }
+    },
     computed: {
       mode() {
-        return this.lang == 'html' ? 'htmlmixed' : this.lang
+        switch (this.lang) {
+          case 'html':
+            return 'htmlmixed'
+          case 'json':
+            return 'javascript'
+        }
+        return this.lang
+      },
+      is_json_kind() {
+        return this.lang == 'json' || this.lang == 'yaml'
+      },
+      json_view_toggle_style() {
+        var w = this.scrollbar_width
+        return this.has_vertical_scrollbar ? 'padding-right: '+w+'px' : ''
       },
       default_opts() {
         return {
@@ -70,6 +122,11 @@
       this.updateMinMaxHeight()
     },
     methods: {
+      focus() {
+        if (this.$refs.editor) {
+          this.$refs.editor.codemirror.focus()
+        }
+      },
       getMinHeight() {
         // `minHeight` overrides `minRows`
         var min_h = this.opts.minHeight || (this.opts.minRows * 14) + 8
@@ -92,8 +149,16 @@
         scroller.style.minHeight = this.getMinHeight()
         scroller.style.maxHeight = this.getMaxHeight()
       },
-      onChange(value) {
+      onCmChange: _.debounce(function(value) {
         this.$emit('input', value)
+      }, 50),
+      onCmUpdate(cm) {
+        var info = cm.getScrollInfo()
+        this.has_vertical_scrollbar = info.height > info.clientHeight
+        this.scrollbar_width = cm.display.nativeBarWidth
+      },
+      onJsonViewChange(value) {
+        this.$emit('update:lang', value)
       }
     }
   }

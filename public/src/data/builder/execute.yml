@@ -1,0 +1,30 @@
+task:
+  op: execute
+
+prompt:
+  element: form
+  title: Execute
+  description: ''
+  cls: el-form--compact
+  label_position: left
+  label_width: 9rem
+  form_items:
+    - element: input
+      type: hidden
+      variable: op
+      value: execute
+    - element: select
+      variable: lang
+      label: Language
+      placeholder: Select language
+      value: javascript
+      options:
+        - label: Javascript
+          value: javascript
+        - label: Python
+          value: python
+    - element: code-editor
+      lang: python
+      variable: code
+      label: Code
+      value: ''

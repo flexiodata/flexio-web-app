@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form
-      class="el-form-compact el-form__label-tiny"
+      class="el-form--compact el-form__label-tiny"
       :model="$data"
     >
       <div class="flex flex-column flex-row-ns">
@@ -48,7 +48,7 @@
           <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
           <div class="mv2 mh3 mw6">
             <el-form
-              class="el-form-compact"
+              class="el-form--compact"
               label-width="10rem"
               :model="$data"
             >

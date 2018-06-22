@@ -64,9 +64,16 @@
           style="top: -2px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
-          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-            <i class="db material-icons f3">add_circle</i>
-          </div>
+          <el-button
+            class="hint--right"
+            style="border: 0; padding: 0"
+            type="text"
+            aria-label="Insert a new step"
+            :disabled="!is_insert_allowed"
+            @click="$emit('insert-step', index)"
+          >
+            <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
+          </el-button>
         </div>
 
         <!-- insert after button -->
@@ -75,40 +82,120 @@
           style="bottom: -4px; right: 4px"
           v-if="showInsertButtons"
         >
-          <div class="pointer moon-gray hover-blue link hint--right" aria-label="Insert a new step">
-            <i class="db material-icons f3">add_circle</i>
-          </div>
+          <el-button
+            class="hint--right"
+            style="border: 0; padding: 0"
+            type="text"
+            aria-label="Insert a new step"
+            :disabled="!is_insert_allowed"
+            @click="$emit('insert-step', index+1)"
+          >
+            <i class="db material-icons f3 moon-gray hover-blue">add_circle</i>
+          </el-button>
         </div>
       </div>
     </div>
 
     <!-- main content -->
     <div
-      class="flex-fill flex flex-column bg-white pa4"
+      class="flex-fill flex flex-column bg-white hide-child relative"
       :class="content_cls"
     >
+      <div
+        class="child flex flex-row items-center absolute right-0 mr4"
+        v-show="!is_active"
+      >
+        <el-button
+          class="hint--top"
+          style="border: 0; padding: 0"
+          type="text"
+          aria-label="Edit this step"
+          @click="$emit('edit-step', index)"
+          v-show="showEditButtons"
+        >
+          <i class="el-icon-edit-outline pointer f4 black-30 hover-black-60"></i>
+        </el-button>
+        <el-button
+          class="hint--top"
+          style="border: 0; padding: 0"
+          type="text"
+          aria-label="Delete this step"
+          @click="$emit('delete-step', index)"
+          v-show="showDeleteButtons"
+        >
+          <i class="el-icon-close pointer f3 black-30 hover-black-60"></i>
+        </el-button>
+      </div>
+
       <div class="flex-fill">
+        <BuilderItemTaskChooser
+          title="Choose a task to insert"
+          :show-title="true"
+          :item="item"
+          :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-if="item.element == 'task-chooser'"
+        />
+        <BuilderItemTaskJsonEditor
+          :item="item"
+          :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'task-json-editor'"
+        />
+        <BuilderItemTaskConnect
+          :item="item"
+          :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'task-connect'"
+        />
         <BuilderItemConnectionChooser
           :item="item"
           :index="index"
-          v-if="item.element == 'connection-chooser'"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'connection-chooser'"
         />
         <BuilderItemFileChooser
           :item="item"
           :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
           v-else-if="item.element == 'file-chooser'"
         />
         <BuilderItemForm
           :item="item"
           :index="index"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
           v-else-if="item.element == 'form'"
         />
         <BuilderItemSummary
           :item="item"
           :index="index"
-          v-else-if="item.element == 'summary-page'"
+          :active-item-idx="activeItemIdx"
+          :is-next-allowed.sync="is_next_allowed"
+          :builder-mode="builderMode"
+          v-on="$listeners"
+          v-else-if="item.element == 'summary-prompt'"
         />
-        <div v-else>
+        <div
+          v-else
+        >
           <span class="silver">
             {{item.element}}
             <span v-if="item.variable">:</span>
@@ -118,11 +205,11 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="is_active && !is_last"
+        v-if="builder__is_wizard && is_active && !is_last"
       >
         <el-button
           class="ttu b"
-          @click="$store.commit('builder/GO_PREV_ITEM')"
+          @click="onPrevClick"
           v-show="!is_first"
         >
           Back
@@ -131,9 +218,29 @@
           class="ttu b"
           type="primary"
           :disabled="!is_next_allowed"
-          @click="$store.commit('builder/GO_NEXT_ITEM')"
+          @click="onNextClick"
         >
           Next
+        </el-button>
+      </div>
+      <div
+        class="flex-none mt4 flex flex-row justify-end"
+        v-if="!builder__is_wizard && is_active"
+      >
+        <el-button
+          class="ttu b"
+          @click="onCancelClick"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          :disabled="!is_next_allowed"
+          @click="onSaveClick"
+          v-if="show_save_button"
+        >
+          Save Changes
         </el-button>
       </div>
     </div>
@@ -142,10 +249,12 @@
 </template>
 
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
+  import { mapGetters } from 'vuex'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
+  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
+  import BuilderItemTaskJsonEditor from './BuilderItemTaskJsonEditor.vue'
+  import BuilderItemTaskConnect from './BuilderItemTaskConnect.vue'
   import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
   import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
   import BuilderItemForm from './BuilderItemForm.vue'
@@ -161,6 +270,14 @@
         type: Number,
         required: true
       },
+      items: {
+        type: Array,
+        required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        default: -1
+      },
       showNumbers: {
         type: Boolean,
         default: true
@@ -173,84 +290,108 @@
         type: Boolean,
         default: true
       },
+      showEditButtons: {
+        type: Boolean,
+        default: true
+      },
+      showDeleteButtons: {
+        type: Boolean,
+        default: true
+      },
       showLine: {
         type: Boolean,
         default: true
+      },
+      builderMode: {
+        type: String
       }
     },
     components: {
       ServiceIcon,
       TaskIcon,
+      BuilderItemTaskChooser,
+      BuilderItemTaskJsonEditor,
+      BuilderItemTaskConnect,
       BuilderItemConnectionChooser,
       BuilderItemFileChooser,
       BuilderItemForm,
       BuilderItemSummary
     },
+    data() {
+      return {
+        is_next_allowed: true
+      }
+    },
     computed: {
-      ...mapState({
-        def: state => state.builder.def,
-        prompts: state => state.builder.prompts,
-        active_prompt: state  => state.builder.active_prompt,
-        active_prompt_idx: state => state.builder.active_prompt_idx
-      }),
-      ceid() {
-        return _.get(this.item, 'connection_eid', null)
+      builder__is_wizard() {
+        return this.builderMode == 'wizard' ? true : false
       },
-      connections() {
-        return this.getAllConnections()
+      builder__is_editing() {
+        return this.activeItemIdx != -1
       },
-      store_connection() {
-        return _.find(this.connections, { eid: this.ceid }, null)
+      is_active() {
+        return this.index == this.activeItemIdx
+      },
+      is_before_active() {
+        return this.index < this.activeItemIdx
+      },
+      is_after_active() {
+        return this.index > this.activeItemIdx
       },
       is_first() {
         return this.index == 0
       },
       is_last() {
-        return this.index == this.prompts.length - 1
+        return this.index == this.items.length - 1
       },
-      is_active() {
-        return this.index == this.active_prompt_idx
+      is_insert_allowed() {
+        return !this.builder__is_editing
       },
-      is_next_allowed() {
-        if (this.item.element == 'connection-chooser') {
-          return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
-        }
-
-        if (this.item.element == 'file-chooser') {
-          return _.get(this.item, 'files', []).length > 0
-        }
-
-        return true
+      show_save_button() {
+        return this.item.element != 'task-chooser'
       },
       content_cls() {
         return {
-          'b--white-box': true,
+          'pa4 b--black-10': true,
           'bl br': !this.is_first && !this.is_last,
-          'bl br bt br2 br--top': this.is_first,
-          'bl br bb br2 br--bottom': this.is_last,
+          'bl br bt br2 br--top': this.is_first && !this.is_last,
+          'bl br bb br2 br--bottom': this.is_last && !this.is_first,
+          'ba br2': this.is_first && this.is_last,
           'css-active': this.is_active,
-          'o-40 no-pointer-events no-select': !this.is_active
+          'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         }
       },
       task_icon() {
         switch (this.item.element) {
-          case 'file-chooser': return 'insert_drive_file'
-          case 'form':         return 'edit'
-          case 'summary-page': return 'check'
+          case 'file-chooser':   return 'insert_drive_file'
+          case 'form':           return 'edit'
+          case 'summary-prompt': return 'check'
         }
       },
       task_color() {
         switch (this.item.element) {
-          case 'file-chooser': return '#0ab5f3'
-          case 'form':         return '#0ab5f3'
-          case 'summary-page': return '#009900'
+          case 'file-chooser':   return '#0ab5f3'
+          case 'form':           return '#0ab5f3'
+          case 'summary-prompt': return '#009900'
         }
       }
     },
     methods: {
       ...mapGetters([
         'getAllConnections'
-      ])
+      ]),
+      onPrevClick() {
+        this.$emit('item-prev', this.index)
+      },
+      onNextClick() {
+        this.$emit('item-next', this.index)
+      },
+      onCancelClick() {
+        this.$emit('item-cancel', this.index)
+      },
+      onSaveClick() {
+        this.$emit('item-save', this.index)
+      }
     }
   }
 </script>

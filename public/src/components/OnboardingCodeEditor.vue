@@ -89,6 +89,7 @@
 
 <script>
   import Flexio from 'flexio-sdk-js'
+  import utilSdkJs from '../utils/sdk-js'
   import CodeEditor from './CodeEditor.vue'
 
   export default {
@@ -290,19 +291,8 @@
       },
       getTaskJSON() {
         try {
-          // create a function to create the JS SDK code to call
-          var fn = (Flexio, callback) => { return eval(this.save_code) }
-
-          // get access to pipe object
-          var pipe = fn.call(this, Flexio)
-
-          // check pipe syntax
-          if (!Flexio.util.isPipeObject(pipe))
-            throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
-
           // get the pipe task JSON
-          var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', items: [] })
-
+          var task = utilSdkJs.getTaskJSON(this.save_code)
           return task
         }
         catch(e)

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import Flexio from 'flexio-sdk-js'
+import utilSdkJs from '../../utils/sdk-js'
 
 const state = {
   eid: '',
@@ -29,9 +30,18 @@ const mutations = {
     var task = _.get(pipe, 'task', {})
 
     state.orig_pipe = pipe
-    state.orig_code = Flexio.pipe(task).toCode()
     state.edit_pipe = pipe
-    state.edit_code = Flexio.pipe(task).toCode()
+
+    try {
+      state.orig_code = Flexio.pipe(task).toCode()
+      state.edit_code = Flexio.pipe(task).toCode()
+    }
+    catch (e) {
+      var msg = 'Flexio.pipe().echo("There was an error parsing the pipe JSON.")'
+      state.orig_code = msg
+      state.edit_code = msg
+    }
+
     state.syntax_error = ''
     state.fetched = true
   },
@@ -44,23 +54,21 @@ const mutations = {
     state.edit_code = Flexio.pipe(task).toCode()
   },
 
+  // task: { index, attrs }
+  UPDATE_EDIT_TASK (state, task) {
+    var pipe = _.pick(pipe, state.edit_keys)
+    _.set(pipe, 'task.items['+ task.index + ']', task.attrs)
+
+    state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
+    state.edit_code = Flexio.pipe(_.get(pipe, 'task', {})).toCode()
+  },
+
   UPDATE_CODE (state, code) {
     state.edit_code = code
 
     try {
-      // create a function to create the JS SDK code to call
-      var fn = (Flexio, callback) => { return eval(code) }
-
-      // get access to pipe object
-      var pipe = fn.call(this, Flexio)
-
-      // check pipe syntax
-      if (!Flexio.util.isPipeObject(pipe)) {
-        throw({ message: 'Invalid pipe syntax. Pipes must start with `Flexio.pipe()`.' })
-      }
-
       // get the pipe task JSON
-      var task = _.get(pipe.getJSON(), 'task', { op: 'sequence', params: {} })
+      var task = utilSdkJs.getTaskJSON(code)
 
       state.edit_pipe = _.assign({}, state.edit_pipe, { task })
       state.syntax_error = ''

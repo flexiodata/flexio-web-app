@@ -1,9 +1,8 @@
 <template>
   <el-form
     ref="form"
-    class="el-form-compact"
-    label-width="7rem"
-    size="small"
+    class="el-form--cozy"
+    label-width="9rem"
     :model="form_values"
     :rules="rules"
     v-if="form_values"
@@ -27,6 +26,7 @@
     >
       <el-input
         placeholder="Enter alias"
+        class="mr1"
         style="max-width: 36rem"
         v-model="form_values.alias"
       >
@@ -40,7 +40,7 @@
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
-      <span class="ml1">
+      <span>
         <el-button
           type="text"
           @click="show_pipe_deploy_dialog = true"
@@ -74,14 +74,14 @@
         type="textarea"
         placeholder="Enter description"
         style="max-width: 48rem"
-        :rows="2"
+        :rows="3"
         v-model="form_values.description"
       />
     </el-form-item>
 
     <!-- pipe schedule dialog -->
     <el-dialog
-      custom-class="no-header no-footer"
+      custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
@@ -97,7 +97,7 @@
 
     <!-- pipe deploy dialog -->
     <el-dialog
-      custom-class="no-header no-footer"
+      custom-class="el-dialog--no-header el-dialog--no-footer"
       width="56rem"
       top="8vh"
       :modal-append-to-body="false"

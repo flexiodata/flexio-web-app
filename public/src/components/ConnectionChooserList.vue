@@ -50,8 +50,10 @@
       ConnectionChooserItem
     },
     watch: {
-      connection(val) {
-        this.onItemActivate(val)
+      connection: {
+        handler: 'updateConnection',
+        immediate: true,
+        deep: true
       }
     },
     data() {
@@ -77,6 +79,9 @@
       ...mapGetters([
         'getAvailableConnections'
       ]),
+      updateConnection(item) {
+        this.connection_eid = _.get(item, 'eid', '')
+      },
       onItemActivate(item) {
         this.connection_eid = _.get(item, 'eid', '')
         this.$emit('item-activate', item)

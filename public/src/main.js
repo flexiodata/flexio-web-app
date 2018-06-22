@@ -22,9 +22,12 @@ import {
   MessageBox,
   Option,
   Radio,
+  RadioButton,
   RadioGroup,
   Select,
   Switch,
+  Table,
+  TableColumn,
   Tabs,
   TabPane
 } from 'element-ui'
@@ -67,9 +70,12 @@ Vue.use(Icon)
 Vue.use(Input)
 Vue.use(Option)
 Vue.use(Radio)
+Vue.use(RadioButton)
 Vue.use(RadioGroup)
 Vue.use(Select)
 Vue.use(Switch)
+Vue.use(Table)
+Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
 

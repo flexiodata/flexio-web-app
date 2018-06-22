@@ -7,10 +7,7 @@
       <div
         class="mt4 mb3 relative z-7 bg-nearer-white"
       >
-        <div
-          class="flex flex-row items-center center tc"
-          style="max-width: 1440px"
-        >
+        <div class="flex flex-row items-center center tc mw-doc">
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">Account Settings</h1>
         </div>
       </div>
