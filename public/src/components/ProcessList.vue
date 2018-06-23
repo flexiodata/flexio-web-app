@@ -8,27 +8,26 @@
       <el-table-column
         prop="eid"
         label="Process ID"
+        :min-width="120"
       />
       <el-table-column
         prop="fmt_started"
         label="Started"
+        :min-width="140"
         :sortable="true"
         :sort-by="'started'"
       />
       <el-table-column
         prop="fmt_finished"
         label="Finished"
+        :min-width="140"
         :sortable="true"
         :sort-by="'finished'"
       />
       <el-table-column
-        prop="fmt_duration"
-        label="Duration (in seconds)"
-        :sortable="true"
-      />
-      <el-table-column
         prop="fmt_process_status"
         label="Status"
+        :min-width="120"
         :sortable="true"
       >
         <template slot-scope="scope">
@@ -40,6 +39,13 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column
+        prop="fmt_duration"
+        label="Duration"
+        align="right"
+        :min-width="100"
+        :sortable="true"
+      />
     </el-table>
   </div>
 </template>
@@ -88,9 +94,9 @@
       fmt_processes() {
         return _.map(this.our_processes, (p) => {
           return _.assign({}, p, {
-            fmt_started: p.started ? moment(p.started).format('LL hh:mm:ss') : '--',
-            fmt_finished: p.finished ? moment(p.finished).format('LL hh:mm:ss') : '--',
-            fmt_duration: p.duration ? p.duration.toFixed(4) : '--',
+            fmt_started: p.started ? moment(p.started).format('l LT') : '--',
+            fmt_finished: p.finished ? moment(p.finished).format('l LT') : '--',
+            fmt_duration: p.duration ? p.duration.toFixed(2) + ' seconds' : '--',
             fmt_process_status: friendlyProcessStatus(p.process_status)
           })
         })
