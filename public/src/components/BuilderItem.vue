@@ -102,7 +102,8 @@
       :class="content_cls"
     >
       <div
-        class="child flex flex-row items-center absolute right-0 mr4"
+        class="child flex flex-row items-center absolute right-0"
+        :class="this.showContentBorder ? 'mr4' : ''"
         v-show="!is_active"
       >
         <el-button
@@ -302,6 +303,10 @@
         type: Boolean,
         default: true
       },
+      showContentBorder: {
+        type: Boolean,
+        default: true
+      },
       builderMode: {
         type: String
       }
@@ -350,16 +355,22 @@
       show_save_button() {
         return this.item.element != 'task-chooser'
       },
-      content_cls() {
-        return {
-          'pa4 b--black-10': true,
+      content_border_cls() {
+        return !this.showContentBorder ? {} : {
+          'b--black-10': true,
           'bl br': !this.is_first && !this.is_last,
-          'bl br bt br2 br--top': this.is_first && !this.is_last,
-          'bl br bb br2 br--bottom': this.is_last && !this.is_first,
-          'ba br2': this.is_first && this.is_last,
+          'bl br bt br--top': this.is_first && !this.is_last,
+          'bl br bb br--bottom': this.is_last && !this.is_first,
+          'ba br2': this.is_first && this.is_last
+        }
+      },
+      content_cls() {
+        return _.assign({}, this.content_border_cls, {
+          'pv4 br2 css-content': true,
+          'ph4': this.showContentBorder || this.is_active,
           'css-active': this.is_active,
           'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
-        }
+        })
       },
       task_icon() {
         switch (this.item.element) {
@@ -397,11 +408,13 @@
 </script>
 
 <style lang="stylus" scoped>
+  .css-content
+    transition: all 0.2s ease
+
   .css-active
     margin-left: -4px
     margin-right: -4px
     border-radius: 4px
     border-color: #fff
     box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)
-    transition: all 0.2s ease
 </style>

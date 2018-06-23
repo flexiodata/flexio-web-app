@@ -7,6 +7,7 @@
       :show-insert-buttons="true"
       :show-edit-buttons="false"
       :show-numbers="false"
+      :show-content-border="false"
       @task-chooser-select-task="selectNewTask"
       @insert-step="insertStep"
       @delete-step="deleteStep"
