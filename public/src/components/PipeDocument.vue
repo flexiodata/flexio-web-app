@@ -19,8 +19,8 @@
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
-          <div class="flex-none flex flex-row items-center pl2">
-            <transition name="el-zoom-in-top">
+          <transition name="el-zoom-in-top">
+            <div class="flex-none flex flex-row items-center pl2">
               <div class="flex flex-row pl3" v-if="show_save_cancel">
                 <el-button
                   size="medium"
@@ -40,8 +40,8 @@
                   Save
                 </el-button>
               </div>
-            </transition>
-          </div>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -68,6 +68,29 @@
             </div>
             <!-- content -->
             <PipeDocumentForm ref="pipe-document-form" />
+            <transition name="el-zoom-in-top">
+              <div class="flex flex-row items-center justify-end mt4" v-if="show_save_cancel">
+                <div class="flex flex-row pl3">
+                  <el-button
+                    size="medium"
+                    class="ttu b"
+                    :disabled="!is_changed"
+                    @click="cancelChanges"
+                  >
+                    Cancel
+                  </el-button>
+                  <el-button
+                    size="medium"
+                    type="primary"
+                    class="ttu b"
+                    :disabled="!is_changed || has_errors"
+                    @click="saveChanges"
+                  >
+                    Save
+                  </el-button>
+                </div>
+              </div>
+            </transition>
           </div>
         </el-tab-pane>
 
@@ -103,35 +126,38 @@
                 v-model="edit_task_list"
               />
             </div>
-            <div v-else-if="editor == 'sdk-js'">
+            <div v-else>
               <PipeCodeEditor
                 ref="code-editor"
-                type="sdk-js"
+                :type="editor"
                 :options="{ minRows: 12, maxRows: 30 }"
                 :has-errors.sync="has_errors"
                 @save="saveChanges"
                 v-model="edit_task_list"
               />
-            </div>
-            <div v-else-if="editor == 'json'">
-              <PipeCodeEditor
-                ref="code-editor"
-                type="json"
-                :options="{ minRows: 12, maxRows: 30 }"
-                :has-errors.sync="has_errors"
-                @save="saveChanges"
-                v-model="edit_task_list"
-              />
-            </div>
-            <div v-else-if="editor == 'yaml'">
-              <PipeCodeEditor
-                ref="code-editor"
-                type="yaml"
-                :options="{ minRows: 12, maxRows: 30 }"
-                :has-errors.sync="has_errors"
-                @save="saveChanges"
-                v-model="edit_task_list"
-              />
+              <transition name="el-zoom-in-top">
+                <div class="flex flex-row items-center justify-end mt3" v-if="show_save_cancel">
+                  <div class="flex flex-row pl3">
+                    <el-button
+                      size="medium"
+                      class="ttu b"
+                      :disabled="!is_changed"
+                      @click="cancelChanges"
+                    >
+                      Cancel
+                    </el-button>
+                    <el-button
+                      size="medium"
+                      type="primary"
+                      class="ttu b"
+                      :disabled="!is_changed || has_errors"
+                      @click="saveChanges"
+                    >
+                      Save
+                    </el-button>
+                  </div>
+                </div>
+              </transition>
             </div>
           </div>
 
@@ -374,7 +400,7 @@
         return this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER
       },
       show_save_cancel() {
-        return this.is_changed && !this.is_builder_view
+        return this.is_changed
       },
 
       // -- all of the below computed values pertain to getting the preview --
