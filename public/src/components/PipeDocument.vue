@@ -396,11 +396,8 @@
       is_changed() {
         return this.isChanged()
       },
-      is_builder_view() {
-        return this.active_tab_name == PIPEDOC_VIEW_CONFIGURE && this.editor == PIPEDOC_EDITOR_BUILDER
-      },
       show_save_cancel() {
-        return this.is_changed
+        return this.is_changed || this.is_code_changed
       },
 
       // -- all of the below computed values pertain to getting the preview --
