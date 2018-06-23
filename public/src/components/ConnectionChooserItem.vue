@@ -40,25 +40,28 @@
 
   export default {
     props: {
-      'item': {
+      item: {
         type: Object,
         required: true
       },
-      'layout': {
+      layout: {
         type: String,
         default: 'list'
       },
-      'connection-eid': {
+      connectionEid: {
         type: String,
         required: false
       },
-      'show-status': {
+      showStatus: {
         type: Boolean,
         default: true
       },
-      'show-selection-checkmark': {
+      showSelectionCheckmark: {
         type: Boolean,
         default: false
+      },
+      selectedCls: {
+        type: String
       }
     },
     components: {
@@ -85,7 +88,7 @@
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       cls() {
-        var sel_cls = this.showSelectionCheckmark ? 'bg-white' : 'bg-near-white'
+        var sel_cls = this.selectedCls ? this.selectedCls : 'bg-near-white'
         sel_cls = this.is_selected ? sel_cls : 'bg-white'
 
         if (_.get(this, 'layout', '') == 'list') {

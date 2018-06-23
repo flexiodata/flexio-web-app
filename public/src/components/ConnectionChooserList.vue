@@ -12,10 +12,9 @@
       v-for="(item, idx) in items"
       :key="item.eid"
       :item="item"
-      :layout="layout"
       :connection-eid="connection_eid"
-      :show-selection-checkmark="showSelectionCheckmark"
       @item-activate="onItemActivate"
+      v-bind="$attrs"
       v-on="$listeners"
     />
   </div>
@@ -27,22 +26,15 @@
   import ConnectionChooserItem from './ConnectionChooserItem.vue'
 
   export default {
+    inheritAttrs: false,
     props: {
-      'connection': {
+      connection: {
         type: Object,
         default: () => { return null }
       },
-      'connection-type-filter': {
+      connectionTypeFilter: {
         type: String,
         default: ''
-      },
-      'layout': {
-        type: String, // 'list' or 'grid'
-        default: 'list'
-      },
-      'show-selection-checkmark': {
-        type: Boolean,
-        default: false
       }
     },
     components: {

@@ -20,6 +20,7 @@
       <ConnectionChooserList
         class="mb3 overflow-auto"
         style="max-height: 277px"
+        selected-cls="bg-white"
         :connection="store_connection"
         :connection-type-filter="ctype"
         :show-selection-checkmark="true"
@@ -41,9 +42,9 @@
     <div v-if="show_summary && has_available_connection">
       <ConnectionChooserItem
         class="mb3 bt bb b--black-10"
+        selected-cls="bg-white"
         :item="store_connection"
         :connection-eid="ceid"
-        :show-selection-checkmark="true"
       />
     </div>
 
