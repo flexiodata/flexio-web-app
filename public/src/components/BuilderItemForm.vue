@@ -25,6 +25,7 @@
         :key="getFlatKey(fi.variable)"
         :prop="getFlatKey(fi.variable)"
         v-show="fi.type !== 'hidden'"
+        v-if="getShowFormItem(fi)"
         v-for="fi in form_items"
       >
         <div
@@ -280,6 +281,20 @@
       getExpandedKey(key) {
         if (!key) return
         return key.replace('--', '.')
+      },
+      getShowFormItem(form_item) {
+        var v = form_item.is_visible
+        if (!_.isObject(v)) {
+          return true
+        }
+
+        try {
+          return _.get(this.form_values, v.variable) == v.equals
+        }
+        catch (e) {
+          // if something fails, default to showing the form item
+          return true
+        }
       },
       updateForm() {
         if (this.form_values === null) {

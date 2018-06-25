@@ -22,18 +22,22 @@ prompt:
       variable: input.format
       label: Format
       placeholder: Select input format
-      value: 'delimited'
+      value: 'csv'
       options:
+        - label: CSV
+          value: 'csv'
+        - label: TSV
+          value: 'tsv'
         - label: Delimited
           value: 'delimited'
         - label: JSON
           value: 'json'
+        - label: PDF
+          value: 'pdf'
         - label: RSS
           value: 'rss'
         - label: Atom
           value: 'atom'
-        - label: PDF
-          value: 'pdf'
         - label: Table
           value: 'table'
 
@@ -41,23 +45,23 @@ prompt:
       variable: input.delimiter
       label: Delimiter
       placeholder: Select input delimiter
-      value: ','
+      value: '{comma}'
       options:
+        - label: None
+          value: '{none}'
         - label: Comma
-          value: ','
+          value: '{comma}'
         - label: Tab
-          value: \t
+          value: '{tab}'
         - label: Semicolon
-          value: ';'
+          value: '{semicolon}'
         - label: Pipe
-          value: '|'
+          value: '{pipe}'
         - label: Space
-          value: ' '
-
-    - element: switch
-      variable: input.header
-      label: First row header
-      value: false
+          value: '{space}'
+      is_visible:
+        variable: input.format
+        equals: delimited
 
     - element: select
       variable: input.qualifier
@@ -65,12 +69,23 @@ prompt:
       placeholder: Select input text qualifier
       value: '"'
       options:
-        - label: Double-quote
-          value: '"'
-        - label: Single-quote
-          value: "'"
         - label: None
-          value: ''
+          value: '{none}'
+        - label: Double-quote
+          value: '{double-quote}'
+        - label: Single-quote
+          value: '{single-quote}'
+      is_visible:
+        variable: input.format
+        equals: delimited
+
+    - element: switch
+      variable: input.header
+      label: First row header
+      value: false
+      is_visible:
+        variable: input.format
+        equals: delimited
 
     - element: markdown
       value: |
@@ -81,18 +96,22 @@ prompt:
       variable: output.format
       label: Format
       placeholder: Select output format
-      value: 'delimited'
+      value: 'json'
       options:
+        - label: CSV
+          value: 'csv'
+        - label: TSV
+          value: 'tsv'
         - label: Delimited
           value: 'delimited'
         - label: JSON
           value: 'json'
+        - label: PDF
+          value: 'pdf'
         - label: RSS
           value: 'rss'
         - label: Atom
           value: 'atom'
-        - label: PDF
-          value: 'pdf'
         - label: Table
           value: 'table'
 
@@ -100,23 +119,23 @@ prompt:
       variable: output.delimiter
       label: Delimiter
       placeholder: Select output delimiter
-      value: ','
+      value: '{comma}'
       options:
+        - label: None
+          value: '{none}'
         - label: Comma
-          value: ','
+          value: '{comma}'
         - label: Tab
-          value: \t
+          value: '{tab}'
         - label: Semicolon
-          value: ';'
+          value: '{semicolon}'
         - label: Pipe
-          value: '|'
+          value: '{pipe}'
         - label: Space
-          value: ' '
-
-    - element: switch
-      variable: output.header
-      label: First row header
-      value: false
+          value: '{space}'
+      is_visible:
+        variable: output.format
+        equals: delimited
 
     - element: select
       variable: output.qualifier
@@ -124,9 +143,20 @@ prompt:
       placeholder: Select output text qualifier
       value: '"'
       options:
-        - label: Double-quote
-          value: '"'
-        - label: Single-quote
-          value: "'"
         - label: None
-          value: ''
+          value: '{none}'
+        - label: Double-quote
+          value: '{double-quote}'
+        - label: Single-quote
+          value: '{single-quote}'
+      is_visible:
+        variable: output.format
+        equals: delimited
+
+    - element: switch
+      variable: output.header
+      label: First row header
+      value: false
+      is_visible:
+        variable: output.format
+        equals: delimited
