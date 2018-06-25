@@ -89,7 +89,6 @@ prompt:
 
     - element: markdown
       value: |
-        <div class="bt b--black-10 mv3"></div>
         <h3 class="mv0 mid-gray">Output</h3>
 
     - element: select
