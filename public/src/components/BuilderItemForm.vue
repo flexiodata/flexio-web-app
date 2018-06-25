@@ -36,6 +36,7 @@
           class="bg-white ba b--black-10"
           style="line-height: 1.15; font-size: 13px"
           :lang="fi.lang ? fi.lang : 'javascript'"
+          :transpose="fi.transpose || 'none'"
           :options="{ minRows: 8, maxRows: 20 }"
           v-model="flat_values[getFlatKey(fi.variable)]"
           v-else-if="fi.element == 'code-editor'"

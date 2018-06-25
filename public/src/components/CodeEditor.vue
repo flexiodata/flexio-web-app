@@ -17,7 +17,7 @@
     <CodeMirror
       ref="editor"
       class="h-100"
-      :value="value"
+      :value="calc_value"
       :options="opts"
       @input="onCmChange"
       @update="onCmUpdate"
@@ -48,6 +48,10 @@
         type: String,
         default: 'javascript'
       },
+      transpose: {
+        type: String,
+        default: 'none' // 'none' or 'base64'
+      },
       showJsonViewToggle: {
         type: Boolean,
         default: true
@@ -65,12 +69,17 @@
       CodeMirror: codemirror
     },
     watch: {
+      value: {
+        handler: 'transposeValue',
+        immediate: true
+      },
       json_view: {
         handler: 'onJsonViewChange'
       }
     },
     data() {
       return {
+        calc_value: '',
         json_view: 'json',
         has_vertical_scrollbar: false,
         scrollbar_width: 0
@@ -144,13 +153,20 @@
         // default to pixels if only a number is provided
         return _.isNumber(max_h) ? max_h + 'px' : max_h
       },
+      transposeValue() {
+        try {
+          this.calc_value = this.transpose == 'base64' ? atob(this.value) : this.value
+        }
+        catch (e) {
+        }
+      },
       updateMinMaxHeight() {
         var scroller = this.$refs.editor.codemirror.getScrollerElement()
         scroller.style.minHeight = this.getMinHeight()
         scroller.style.maxHeight = this.getMaxHeight()
       },
       onCmChange: _.debounce(function(value) {
-        this.$emit('input', value)
+        this.$emit('input', this.transpose == 'base64' ? btoa(value) : value)
       }, 50),
       onCmUpdate(cm) {
         var info = cm.getScrollInfo()

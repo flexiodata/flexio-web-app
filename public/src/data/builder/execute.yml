@@ -25,6 +25,7 @@ prompt:
           value: python
     - element: code-editor
       lang: python
+      transpose: base64
       variable: code
       label: Code
       value: ''
