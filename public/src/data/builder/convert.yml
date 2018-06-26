@@ -7,7 +7,7 @@ prompt:
   description: ''
   cls: el-form--compact
   label_position: left
-  label_width: 9rem
+  label_width: 8rem
   form_items:
     - element: input
       type: hidden
@@ -67,7 +67,7 @@ prompt:
       variable: input.qualifier
       label: Text qualifier
       placeholder: Select input text qualifier
-      value: '"'
+      value: '{double-quote}'
       options:
         - label: None
           value: '{none}'
@@ -140,7 +140,7 @@ prompt:
       variable: output.qualifier
       label: Text qualifier
       placeholder: Select output text qualifier
-      value: '"'
+      value: '{double-quote}'
       options:
         - label: None
           value: '{none}'
