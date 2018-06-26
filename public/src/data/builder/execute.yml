@@ -5,9 +5,7 @@ prompt:
   element: form
   title: Execute
   description: ''
-  cls: el-form--compact
-  label_position: right
-  label_width: 6rem
+  cls: el-form--compact el-form__label-tiny
   form_items:
     - element: input
       type: hidden
