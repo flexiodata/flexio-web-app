@@ -12,14 +12,9 @@
       v-show="show_description"
     >
     </div>
-    <BuilderItemConnectionChooser
-      :item="item"
-      :index="index"
-      :active-item-idx="-1"
-      :builder-mode="'build'"
-      :show-title="false"
-      :show-summary="has_available_connection"
+    <BuilderComponentConnectionChooser
       :connection-eid.sync="edit_values.connection"
+      :show-result="has_available_connection"
       v-on="$listeners"
     />
     <el-form
@@ -40,7 +35,6 @@
         </span>
       </el-form-item>
     </el-form>
-
   </div>
 </template>
 
@@ -48,7 +42,7 @@
   import marked from 'marked'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
+  import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
 
   const getDefaultValues = () => {
     return {
@@ -78,7 +72,7 @@
       }
     },
     components: {
-      BuilderItemConnectionChooser
+      BuilderComponentConnectionChooser
     },
     watch: {
       item: {
