@@ -21,7 +21,7 @@
           <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
           <transition name="el-zoom-in-top">
             <div class="flex-none flex flex-row items-center pl2">
-              <div class="flex flex-row pl3" v-if="show_save_cancel">
+              <div class="flex flex-row pl3" v-if="show_save_cancel && false">
                 <el-button
                   size="medium"
                   class="ttu b"
