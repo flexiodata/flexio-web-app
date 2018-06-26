@@ -88,6 +88,7 @@
       },
       edit_values: {
         handler: 'onEditValuesChange',
+        immediate: true,
         deep: true
       }
     },
