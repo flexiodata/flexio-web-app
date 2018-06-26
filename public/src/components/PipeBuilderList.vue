@@ -67,6 +67,7 @@
     },
     data() {
       return {
+        is_inited: false,
         is_editing: false,
         has_errors: false,
         task_items: [],
@@ -135,6 +136,9 @@
         return prompt
       },
       initFromPipeTask(task) {
+        // do this so that we don't fire a bunch of item change events when the items are re-rendered
+        this.is_inited = false
+
         var tasks = []
         var prompts = []
 
@@ -151,10 +155,11 @@
           tasks.push(_.cloneDeep(t))
         })
 
-        this.has_errors = false
         this.task_items = [].concat(tasks)
         this.prompts = [].concat(prompts)
+        this.has_errors = false
         this.is_editing = false
+        this.$nextTick(() => { this.is_inited = true })
       },
       selectNewTask(item, index) {
         var items = this.task_items
@@ -195,6 +200,10 @@
         this.has_errors = has_errors
       },
       itemChange(values, index) {
+        if (!this.is_inited) {
+          return
+        }
+
         var p = this.prompts[index]
         if (p) {
           var t = _.get(this.task_items, '['+p.task_idx+ ']', null)
