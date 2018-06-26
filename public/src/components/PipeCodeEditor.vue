@@ -1,7 +1,5 @@
 <template>
-  <div
-    :value="value"
-  >
+  <div>
     <CodeEditor
       class="bg-white ba b--black-10"
       :lang.sync="lang"
@@ -137,6 +135,12 @@
         this.initFromPipeTask(true)
       },
       onEditCodeChange() {
+        // avoid infinite loop (we emit a value change in this function which
+        // will cause the value watcher to call `initFromPipeTask`, etc.)
+        if (this.edit_code == this.orig_code) {
+          return
+        }
+
         var task = null
 
         switch (this.type) {
