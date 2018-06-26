@@ -18,16 +18,16 @@
       v-on="$listeners"
     />
     <el-form
-      class="el-form--compact"
+      class="el-form--compact el-form__label-tiny"
       :model="edit_values"
       v-if="has_available_connection"
     >
       <el-form-item
         key="alias"
         prop="alias"
+        label="How would you like to refer to this connection in this pipe?"
       >
-        <p class="mv0 mr2 dib">How would you like to refer to this connection in this pipe?</p>
-        <span class="dib w5">
+        <span class="db w5">
           <el-input
             placeholder="Alias"
             v-model="edit_values['alias']"
