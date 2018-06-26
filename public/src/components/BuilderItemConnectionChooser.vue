@@ -21,7 +21,7 @@
         class="mb3 overflow-auto"
         style="max-height: 277px"
         selected-cls="bg-white"
-        :connection="store_connection"
+        :connection-eid="ceid"
         :connection-type-filter="ctype"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
@@ -52,6 +52,7 @@
           size="tiny"
           class="ttu b"
           @click="chooseConnection(null)"
+          v-if="!builder__is_wizard"
         >
           Use Different Connection
         </el-button>

@@ -9,10 +9,10 @@
   </div>
   <div v-else>
     <ConnectionChooserItem
-      v-for="(item, idx) in items"
-      :key="item.eid"
+      v-for="(item, index) in items"
       :item="item"
-      :connection-eid="connection_eid"
+      :index="index"
+      :key="item.eid"
       @item-activate="onItemActivate"
       v-bind="$attrs"
       v-on="$listeners"
@@ -28,10 +28,6 @@
   export default {
     inheritAttrs: false,
     props: {
-      connection: {
-        type: Object,
-        default: () => { return null }
-      },
       connectionTypeFilter: {
         type: String,
         default: ''
@@ -41,18 +37,6 @@
       Spinner,
       ConnectionChooserItem
     },
-    watch: {
-      connection: {
-        handler: 'updateConnection',
-        immediate: true,
-        deep: true
-      }
-    },
-    data() {
-      return {
-        connection_eid: ''
-      }
-    },
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
@@ -60,22 +44,15 @@
       }),
       items() {
         var items = this.getAvailableConnections()
-
-        if (this.connectionTypeFilter.length == 0)
-          return items
-
-        return _.filter(items, { connection_type: this.connectionTypeFilter })
+        var connection_type = this.connectionTypeFilter
+        return connection_type.length == 0 ? items : _.filter(items, { connection_type })
       }
     },
     methods: {
       ...mapGetters([
         'getAvailableConnections'
       ]),
-      updateConnection(item) {
-        this.connection_eid = _.get(item, 'eid', '')
-      },
       onItemActivate(item) {
-        this.connection_eid = _.get(item, 'eid', '')
         this.$emit('item-activate', item)
       }
     }
