@@ -53,7 +53,7 @@
           class="ttu b"
           @click="chooseConnection(null)"
         >
-          Change Connection
+          Use Different Connection
         </el-button>
       </ConnectionChooserItem>
     </div>
