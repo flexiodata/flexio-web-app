@@ -7,12 +7,13 @@ prompt:
   description: ''
   cls: el-form--compact
   label_position: left
-  label_width: 9rem
+  label_width: 5rem
   form_items:
     - element: input
       type: hidden
       variable: op
       value: execute
+
     - element: select
       variable: lang
       label: Language
@@ -23,6 +24,7 @@ prompt:
           value: javascript
         - label: Python
           value: python
+
     - element: code-editor
       lang: python
       transpose: base64
