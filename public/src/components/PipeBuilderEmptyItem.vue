@@ -4,6 +4,7 @@
     <ConnectionChooserList
       class="mb2 overflow-auto"
       layout="grid"
+      :show-status="false"
       @item-activate="selectConnection"
     />
     <el-button
