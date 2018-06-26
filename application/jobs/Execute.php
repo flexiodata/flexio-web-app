@@ -498,6 +498,34 @@ class ScriptHost
         die($message);
     }
 
+    public function func_getConnections() // TODO: add return type
+    {
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // return the result
+        $results = array();
+
+        $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
+        $connections = \Flexio\Object\Connection::list($filter);
+
+        foreach ($connections as $c)
+        {
+            if ($c->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+                continue;
+
+            $properties = $c->get();
+            $results[] = [ 'eid' => $properties['eid'], 'name' => $properties['name'] ];
+        }
+
+        return $results;
+    }
+
+
     public function func_getEnv() // TODO: add return type
     {
         $res = [];
@@ -1029,8 +1057,6 @@ class Execute extends \Flexio\Jobs\Base
             {
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
-
-            return;
         }
         else if ($this->lang == 'javascript')
         {
@@ -1059,8 +1085,6 @@ class Execute extends \Flexio\Jobs\Base
                 //die("<pre>".$err);
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
-
-            return;
         }
         else if ($this->lang == 'html')
         {
@@ -1092,8 +1116,6 @@ class Execute extends \Flexio\Jobs\Base
             $outstream->set($outstream_properties);
             $streamwriter = $outstream->getWriter();
             $streamwriter->write($code);
-
-            return;
         }
     }
 

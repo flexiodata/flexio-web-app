@@ -186,6 +186,65 @@ env_vars_obj = EnvVars()
 
 
 
+
+class Connection(object):
+    def __init__(self, info):
+        self.eid = info['eid']
+        self.name = info['name']
+
+
+class ContextConnections(object):
+
+    def __init__(self):
+        self.fx_inited = False
+        self.fx_connections = {}
+
+    def initialize(self):
+        self.fx_connections = proxy.invoke('getConnections', [])
+        self.fx_inited = True
+
+    def __getitem__(self, key):
+        if not self.fx_inited:
+            self.initialize()
+        return self.fx_connections[key]
+
+    def __getattr__(self, key):
+        if not self.fx_inited:
+            self.initialize()
+        if key in self.fx_connections:
+            return self.fx_connections[key]
+        else:
+            return None
+
+    def __iter__(self):
+        if not self.fx_inited:
+            self.initialize()
+        return iter(self.fx_connections)
+
+    def items(self):
+        if not self.fx_inited:
+            self.initialize()
+        return self.fx_connections.items()
+
+    def keys(self):
+        if not self.fx_inited:
+            self.initialize()
+        return self.fx_connections.keys()
+
+    def values(self):
+        if not self.fx_inited:
+            self.initialize()
+        return self.fx_connections.values()
+
+context_connections_obj = ContextConnections()
+
+
+
+
+
+
+
+
 class ContextFs(object):
 
     def __init__(self):
@@ -555,6 +614,10 @@ class Context(object):
     @property
     def fs(self):
         return context_fs
+
+    @property
+    def connections(self):
+        return context_connections_obj
 
 def run(handler):
 
