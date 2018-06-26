@@ -7,12 +7,13 @@ prompt:
   description: ''
   cls: el-form--compact
   label_position: left
-  label_width: 9rem
+  label_width: 5rem
   form_items:
     - element: input
       type: hidden
       variable: op
       value: echo
+
     - element: input
       type: textarea
       variable: msg
