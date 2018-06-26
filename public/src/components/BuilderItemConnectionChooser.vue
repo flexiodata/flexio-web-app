@@ -45,7 +45,17 @@
         selected-cls="bg-white"
         :item="store_connection"
         :connection-eid="ceid"
-      />
+      >
+        <el-button
+          slot="buttons"
+          plain
+          size="tiny"
+          class="ttu b"
+          @click="chooseConnection(null)"
+        >
+          Change Connection
+        </el-button>
+      </ConnectionChooserItem>
     </div>
 
     <!-- connect to storage dialog -->
@@ -213,10 +223,19 @@
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
         var form_values = _.get(this.item, 'extra_values', {})
-        form_values[key] = connection.eid
-        this.edit_connection = connection
-        this.$emit('item-change', form_values, this.index)
-        this.$emit('update:connectionEid', connection.eid)
+
+        if (_.isNil(connection)) {
+          form_values[key] = ''
+          this.edit_connection = undefined
+          this.$emit('item-change', form_values, this.index)
+          this.$emit('update:connectionEid', '')
+        } else {
+          form_values[key] = connection.eid
+          this.edit_connection = connection
+          this.$emit('item-change', form_values, this.index)
+          this.$emit('update:connectionEid', connection.eid)
+        }
+
         if (!this.builder__is_wizard) {
           this.$emit('active-item-change', this.index)
         }

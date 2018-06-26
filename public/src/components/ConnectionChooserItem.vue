@@ -23,6 +23,7 @@
         <div class="light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
       </div>
       <el-button
+        plain
         size="tiny"
         class="ttu b"
         @click="$emit('item-fix', item)"
@@ -30,6 +31,7 @@
       >
         Fix Connection
       </el-button>
+      <slot name="buttons"></slot>
     </div>
   </article>
 </template>
