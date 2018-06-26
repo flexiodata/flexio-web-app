@@ -136,15 +136,15 @@
         return prompt
       },
       initFromPipeTask(task) {
+        if (this.is_editing) {
+          return
+        }
+
         // do this so that we don't fire a bunch of item change events when the items are re-rendered
         this.is_inited = false
 
         var tasks = []
         var prompts = []
-
-        if (this.is_editing) {
-          return
-        }
 
         // map existing tasks in model to prompts
         _.each(task.items, (t, task_idx) => {

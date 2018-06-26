@@ -72,6 +72,8 @@
     },
     data() {
       return {
+        is_inited: false,
+        is_editing: false,
         orig_code: '',
         edit_code: '',
         lang: this.type == 'sdk-js' ? 'javascript' : this.type,
@@ -79,9 +81,6 @@
       }
     },
     computed: {
-      is_editing() {
-        return this.edit_code != this.orig_code
-      },
       has_errors() {
         return this.error_msg.length > 0
       }
@@ -91,6 +90,8 @@
         if (this.is_editing && force != true) {
           return
         }
+
+        this.is_inited = false
 
         try {
           // TODO: remove 'omitDeep' once we get rid of task eids
@@ -120,6 +121,9 @@
         catch (e) {
           this.error_msg = e.message
         }
+
+        this.is_editing = false
+        this.$nextTick(() => { this.is_inited = true })
       },
       revert() {
         this.initFromPipeTask(true)
@@ -137,9 +141,11 @@
       onEditCodeChange() {
         // avoid infinite loop (we emit a value change in this function which
         // will cause the value watcher to call `initFromPipeTask`, etc.)
-        if (this.edit_code == this.orig_code) {
+        if (!this.is_inited) {
           return
         }
+
+        this.is_editing = true
 
         var task = null
 
