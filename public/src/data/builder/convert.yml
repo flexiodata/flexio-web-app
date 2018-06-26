@@ -7,7 +7,7 @@ prompt:
   description: ''
   cls: el-form--compact
   label_position: left
-  label_width: 9rem
+  label_width: 8rem
   form_items:
     - element: input
       type: hidden
