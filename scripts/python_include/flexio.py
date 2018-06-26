@@ -190,51 +190,61 @@ env_vars_obj = EnvVars()
 class Connection(object):
     def __init__(self, info):
         self.eid = info['eid']
+        self.alias = info['alias']
         self.name = info['name']
+
+    def get_access_token(self):
+        return proxy.invoke('getConnectionAccessToken', [self.eid])
 
 
 class ContextConnections(object):
 
     def __init__(self):
         self.fx_inited = False
-        self.fx_connections = {}
+        self.fx_connection_list = []
+        self.fx_connection_map = {}
 
     def initialize(self):
-        self.fx_connections = proxy.invoke('getConnections', [])
+        connections = proxy.invoke('getConnections', [])
+        for connection in connections:
+            connobj = Connection(connection)
+            self.fx_connection_map[connobj.eid] = connobj
+            self.fx_connection_map[connobj.alias] = connobj
+            self.fx_connection_list.append(connobj)
         self.fx_inited = True
 
     def __getitem__(self, key):
         if not self.fx_inited:
             self.initialize()
-        return self.fx_connections[key]
+        return self.fx_connection_map[key]
 
     def __getattr__(self, key):
         if not self.fx_inited:
             self.initialize()
-        if key in self.fx_connections:
-            return self.fx_connections[key]
+        if key in self.fx_connection_map:
+            return self.fx_connection_map[key]
         else:
             return None
 
     def __iter__(self):
         if not self.fx_inited:
             self.initialize()
-        return iter(self.fx_connections)
+        return iter(self.fx_connection_list)
 
     def items(self):
         if not self.fx_inited:
             self.initialize()
-        return self.fx_connections.items()
+        return self.fx_connection_list.items()
 
     def keys(self):
         if not self.fx_inited:
             self.initialize()
-        return self.fx_connections.keys()
+        return self.fx_connection_list.keys()
 
     def values(self):
         if not self.fx_inited:
             self.initialize()
-        return self.fx_connections.values()
+        return self.fx_connection_list.values()
 
 context_connections_obj = ContextConnections()
 

@@ -519,12 +519,31 @@ class ScriptHost
                 continue;
 
             $properties = $c->get();
-            $results[] = [ 'eid' => $properties['eid'], 'name' => $properties['name'] ];
+            $results[] = [ 'eid' => $properties['eid'], 'alias' => $properties['alias'], 'name' => $properties['name'] ];
         }
 
         return $results;
     }
 
+    public function func_getConnectionAccessToken($identifier) // TODO: add return type
+    {
+        $owner_user_eid = $this->getProcess()->getOwner();
+
+        // make sure the owner exists
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // load the object; make sure the eid is associated with the owner
+        // as an additional check
+        $connection = \Flexio\Object\Connection::load($identifier);
+        if ($owner_user_eid !== $connection->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        return $connection->getAccessToken();
+    }
+
+    
 
     public function func_getEnv() // TODO: add return type
     {
