@@ -27,12 +27,12 @@
         prop="alias"
         label="How would you like to refer to this connection in this pipe?"
       >
-        <span class="db w5">
+        <div class="w5">
           <el-input
             placeholder="Alias"
             v-model="edit_values['alias']"
           />
-        </span>
+        </div>
       </el-form-item>
     </el-form>
   </div>
