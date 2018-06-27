@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="ttu fw6 f7 moon-gray">Choose a starting connection</p>
+    <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting connection</p>
     <ConnectionChooserList
       class="mb2 overflow-auto"
       layout="grid"
