@@ -7,15 +7,7 @@
         :item="edit_connection"
         :connection-eid="ceid"
       >
-        <el-button
-          slot="buttons"
-          plain
-          size="tiny"
-          class="ttu b"
-          @click="chooseConnection(null)"
-        >
-          Use Different Connection
-        </el-button>
+        <slot name="buttons" slot="buttons"></slot>
       </ConnectionChooserItem>
     </div>
     <div v-else>
@@ -123,11 +115,11 @@
         }
         return this.connections.length > 0
       },
-      our_connection() {
-        return _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
-      },
       has_available_connection() {
         return _.get(this.our_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
+      our_connection() {
+        return _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
       },
       service_name() {
         return this.$_Connection_getServiceName(this.connectionTypeFilter)

@@ -16,7 +16,17 @@
       :connection-eid.sync="edit_values.connection"
       :show-result="has_available_connection"
       v-on="$listeners"
-    />
+    >
+      <el-button
+        slot="buttons"
+        plain
+        size="tiny"
+        class="ttu b"
+        @click="clearConnection"
+      >
+        Use Different Connection
+      </el-button>
+    </BuilderComponentConnectionChooser>
     <el-form
       class="el-form--compact el-form__label-tiny"
       :model="edit_values"
@@ -129,6 +139,9 @@
         var form_values = _.get(this.item, 'form_values', {})
         this.orig_values = _.assign(getDefaultValues(), form_values)
         this.edit_values = _.assign(getDefaultValues(), form_values)
+      },
+      clearConnection() {
+        this.edit_values = _.assign({}, this.edit_values, { connection: '' })
       },
       onChange(val) {
         if (val) {
