@@ -23,41 +23,39 @@
       class="center mw-doc"
       v-if="is_fetched"
     >
-      <div class="flex flex-row">
-        <BuilderList
-          class="flex-fill"
-          builder-mode="wizard"
-          :items="prompts"
-          :container-id="doc_id"
-          :active-item-idx.sync="active_prompt_idx"
-          :show-insert-buttons="false"
-          :show-edit-buttons="false"
-          :show-delete-buttons="false"
-          @item-prev="goPrev"
-          @item-next="goNext"
-          @item-change="updateItemState"
-          @create-pipe="createPipe"
-          @open-pipe="openPipe"
-        />
-        <div
-          class="dn db-l ml4 pa3 bg-white br2 css-white-box sticky"
-          style="min-width: 20rem; max-width: 33%; max-height: 30rem"
-          v-show="false"
-        >
-          <div class="h-100 flex flex-column">
-            <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
-              <div class="flex-fill fw6 mid-gray">Output</div>
-            </div>
-            <CodeEditor
-              class="flex-fill"
-              lang="javascript"
-              :options="{
-                lineNumbers: false,
-                readOnly: true
-              }"
-              v-model="code"
-            />
+      <BuilderList
+        class="flex-fill"
+        builder-mode="wizard"
+        :items="prompts"
+        :container-id="doc_id"
+        :active-item-idx.sync="active_prompt_idx"
+        :show-insert-buttons="false"
+        :show-edit-buttons="false"
+        :show-delete-buttons="false"
+        @item-prev="goPrev"
+        @item-next="goNext"
+        @item-change="updateItemState"
+        @create-pipe="createPipe"
+        @open-pipe="openPipe"
+      />
+
+      <div
+        class="fixed z-8 dn db-l ml4 pa3 bg-white br2 css-white-box css-output"
+        v-if="false"
+      >
+        <div class="h-100 flex flex-column">
+          <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
+            <div class="flex-fill fw6 mid-gray">Output</div>
           </div>
+          <CodeEditor
+            class="flex-fill"
+            lang="javascript"
+            :options="{
+              lineNumbers: false,
+              readOnly: true
+            }"
+            v-model="code"
+          />
         </div>
       </div>
     </div>
@@ -223,3 +221,18 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .css-output
+    top: 66px
+    right: 28px
+    min-width: 20rem
+    max-width: 20%
+    max-height: 30rem
+    opacity: 0.5
+    transition: all 0.4s ease-in-out
+    &:hover
+      max-width: 60rem
+      max-height: 60rem
+      opacity: 1
+</style>
