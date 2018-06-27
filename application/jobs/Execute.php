@@ -519,7 +519,7 @@ class ScriptHost
                 continue;
 
             $properties = $c->get();
-            $results[] = [ 'eid' => $properties['eid'], 'alias' => $properties['alias'], 'name' => $properties['name'] ];
+            $results[] = [ 'eid' => $properties['eid'], 'alias' => $properties['alias'], 'name' => $properties['name'], 'description' => $properties['description']  ];
         }
 
         return $results;

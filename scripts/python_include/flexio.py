@@ -192,6 +192,7 @@ class Connection(object):
         self.eid = info['eid']
         self.alias = info['alias']
         self.name = info['name']
+        self.description = info['description']
 
     def get_access_token(self):
         return proxy.invoke('getConnectionAccessToken', [self.eid])
