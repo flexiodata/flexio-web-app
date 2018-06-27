@@ -6,6 +6,7 @@
     <Spinner size="large" :message="state.loading_text" />
   </div>
   <CodeEditor
+    class="h-100 overflow-auto"
     lang="text/html"
     :options="{
       lineNumbers: false,
@@ -15,6 +16,7 @@
     v-else-if="isHtml"
   />
   <CodeEditor
+    class="h-100 overflow-auto"
     lang="json"
     :show-json-view-toggle="false"
     :options="{
