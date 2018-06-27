@@ -16,7 +16,7 @@ declare(strict_types=1);
 namespace Flexio\Controllers;
 
 
-class AController extends \Flexio\System\FxControllerAction
+class Oauth2Controller extends \Flexio\System\FxControllerAction
 {
     public function init() : void
     {
