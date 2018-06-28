@@ -125,12 +125,19 @@
         title: state => state.builder.def.title,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
-        active_prompt_idx: state => state.builder.active_prompt_idx,
         prompts: state => state.builder.prompts,
         pipe: state => state.builder.pipe
       }),
       slug() {
         return _.get(this.$route, 'params.template', undefined)
+      },
+      active_prompt_idx: {
+        get() {
+          return this.$store.state.builder.active_prompt_idx
+        },
+        set(value) {
+          // read only
+        }
       },
       code: {
         get() {

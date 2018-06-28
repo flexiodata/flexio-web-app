@@ -30,6 +30,7 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
+  import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
@@ -58,11 +59,9 @@
       showTitle: {
         type: Boolean,
         default: true
-      },
-      connectionEid: {
-        type: String
       }
     },
+    mixins: [MixinConnection],
     components: {
       BuilderComponentConnectionChooser
     },
@@ -74,10 +73,6 @@
       edit_connection: {
         handler: 'updateAllowNext',
         deep: true
-      },
-      connectionEid: {
-        handler: 'initSelf',
-        immediate: true
       }
     },
     data() {
@@ -132,13 +127,6 @@
       ...mapGetters([
         'getAvailableConnections'
       ]),
-      initSelf() {
-        var c = _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
-        if (c) {
-          c = _.cloneDeep(c)
-          this.edit_connection = c
-        }
-      },
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
         var form_values = _.get(this.item, 'extra_values', {})

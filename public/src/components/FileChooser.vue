@@ -34,7 +34,6 @@
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS
   } from '../constants/connection-type'
-  import { TASK_OP_INPUT, TASK_OP_OUTPUT } from '../constants/task-op'
   import * as connections from '../constants/connection-info'
   import FileExplorerBar from './FileExplorerBar.vue'
   import FileChooserList from './FileChooserList.vue'
