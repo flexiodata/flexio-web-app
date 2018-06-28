@@ -212,6 +212,10 @@ class ContextConnections(object):
             self.fx_connection_map[connobj.eid] = connobj
             self.fx_connection_map[connobj.alias] = connobj
             self.fx_connection_list.append(connobj)
+        connections = proxy.invoke('getLocalConnections', [])
+        for connection in connections:
+            connobj = Connection(connection)
+            self.fx_connection_map[connobj.alias] = connobj
         self.fx_inited = True
 
     def __getitem__(self, key):

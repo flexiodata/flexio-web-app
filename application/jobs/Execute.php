@@ -507,7 +507,6 @@ class ScriptHost
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        // return the result
         $results = array();
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
@@ -525,22 +524,50 @@ class ScriptHost
         return $results;
     }
 
+
+    public function func_getLocalConnections() // TODO: add return type
+    {
+        $results = array();
+
+        $local_connections = $this->getProcess()->getLocalConnections();
+        foreach ($local_connections as $key => $value)
+        {
+            $results[] = [ 'eid' => $key, 'alias' => $key, 'name' => $key, 'description' => '' ];
+        }
+
+        return $results;
+    }
+
     public function func_getConnectionAccessToken($identifier) // TODO: add return type
     {
-        $owner_user_eid = $this->getProcess()->getOwner();
+        // first, check the process's local connections for a hit
+        $local_connection_properties = $this->getProcess()->getLocalConnection($identifier);
+        if ($local_connection_properties)
+        {
+            $service = \Flexio\Services\Factory::create($local_connection_properties);
+            if (!$service)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
 
-        // make sure the owner exists
-        $owner_user = \Flexio\Object\User::load($owner_user_eid);
-        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            $tokens = $service->getTokens();
+            return $tokens['access_token'];
+        }
+         else
+        {
+            $owner_user_eid = $this->getProcess()->getOwner();
 
-        // load the object; make sure the eid is associated with the owner
-        // as an additional check
-        $connection = \Flexio\Object\Connection::load($identifier);
-        if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            // make sure the owner exists
+            $owner_user = \Flexio\Object\User::load($owner_user_eid);
+            if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
-        return $connection->getAccessToken();
+            // load the object; make sure the eid is associated with the owner
+            // as an additional check
+            $connection = \Flexio\Object\Connection::load($identifier);
+            if ($owner_user_eid !== $connection->getOwner())
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+            return $connection->getAccessToken();
+        }
     }
 
     
