@@ -58,9 +58,6 @@
       showTitle: {
         type: Boolean,
         default: true
-      },
-      connectionEid: {
-        type: String
       }
     },
     components: {
@@ -74,10 +71,6 @@
       edit_connection: {
         handler: 'updateAllowNext',
         deep: true
-      },
-      connectionEid: {
-        handler: 'initSelf',
-        immediate: true
       }
     },
     data() {
@@ -132,13 +125,6 @@
       ...mapGetters([
         'getAvailableConnections'
       ]),
-      initSelf() {
-        var c = _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
-        if (c) {
-          c = _.cloneDeep(c)
-          this.edit_connection = c
-        }
-      },
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
         var form_values = _.get(this.item, 'extra_values', {})
