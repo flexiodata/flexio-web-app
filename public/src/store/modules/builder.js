@@ -31,11 +31,12 @@ const mutations = {
 
     // determine what was passed to us
     var lang = _.get(def, 'pipe_language', 'json')
-    if (lang == 'javascript') {
+    if (lang == 'javascript' || lang == 'sdk-js') {
       var code = _.get(def, 'pipe', '')
       state.code = code
     } else {
-      state.code = ''
+      var code = _.get(def, 'pipe', {})
+      state.code = JSON.stringify(code, null, 2)
     }
 
     var prompts = _.get(def, 'prompts', [])
@@ -112,10 +113,19 @@ const mutations = {
   },
 
   UPDATE_CODE (state) {
-    var code = state.def.code /* new format */ || state.def.pipe /* old format */ || ''
+    var code
+
+    // determine what was passed to us
+    var lang = _.get(state.def, 'pipe_language', 'json')
+    if (lang == 'javascript' || lang == 'sdk-js') {
+      code = _.get(state.def, 'pipe', '')
+    } else {
+      code = _.get(state.def, 'pipe', {})
+      code = JSON.stringify(code, null, 2)
+    }
 
     _.each(state.prompts, (p, idx) => {
-      var regex = new RegExp("\\$\\{" + p.variable + "\\}", "g")
+      var regex = new RegExp("\"?\\$\\{" + p.variable + "\\}\"?", "g")
 
       if (idx > state.active_prompt_idx) {
         return

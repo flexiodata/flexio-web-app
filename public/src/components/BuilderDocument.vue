@@ -139,6 +139,9 @@
           // read only
         }
       },
+      code_language() {
+        return this.def.code_language || this.def.pipe_language || 'javascript'
+      },
       code: {
         get() {
           return this.$store.state.builder.code
@@ -147,9 +150,23 @@
           // read only
         }
       },
+      save_name() {
+        return _.get(this.def, 'title', 'Untitled Pipe')
+      },
       save_code() {
-        var name = _.get(this.def, 'title', 'Untitled Pipe')
-        return this.code + '.save({ name: "' + name + '" }, callback)'
+        if (this.code_language == 'javascript' || this.code_language == 'sdk-js') {
+          return this.code + '.save({ name: "' + this.save_name + '" }, callback)'
+        } else {
+          try {
+            return {
+              name: this.save_name,
+              task: JSON.parse(this.code)
+            }
+          }
+          catch (e) {
+            return false
+          }
+        }
       },
       api_key() {
         return this.getSdkKey()
@@ -193,20 +210,35 @@
         this.$store.commit('builder/GO_NEXT_ITEM')
       },
       createPipe() {
-        var pipe_fn = (Flexio, callback) => {
-          eval(this.save_code)
-        }
+        if (this.code_language == 'javascript' || this.code_language == 'sdk-js') {
+          var pipe_fn = (Flexio, callback) => {
+            eval(this.save_code)
+          }
 
-        Flexio.setup(this.api_key, this.sdk_options)
+          Flexio.setup(this.api_key, this.sdk_options)
 
-        pipe_fn.call(this, Flexio, (err, response) => {
-          // TODO: error reporting?
-          var pipe = response
-          this.$store.commit('builder/CREATE_PIPE', pipe)
-          this.$store.track('Finished Template', {
-            title: this.def.title
+          pipe_fn.call(this, Flexio, (err, response) => {
+            // TODO: error reporting?
+            var pipe = response
+            this.$store.commit('builder/CREATE_PIPE', pipe)
+            this.$store.track('Finished Template', {
+              title: this.def.title
+            })
           })
-        })
+        } else {
+          var attrs = this.save_code
+          this.$store.dispatch('createPipe', { attrs }).then(response => {
+            if (response.ok) {
+              var pipe = response.body
+              this.$store.commit('builder/CREATE_PIPE', pipe)
+              this.$store.track('Finished Template', {
+                title: this.def.title
+              })
+            } else {
+              // TODO: add error handling
+            }
+          })
+        }
       },
       openPipe() {
         var eid = this.pipe.eid
