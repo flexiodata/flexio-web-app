@@ -30,6 +30,7 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
+  import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
@@ -60,6 +61,7 @@
         default: true
       }
     },
+    mixins: [MixinConnection],
     components: {
       BuilderComponentConnectionChooser
     },
