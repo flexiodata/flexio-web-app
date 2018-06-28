@@ -130,79 +130,17 @@
       </div>
 
       <div class="flex-fill">
-        <BuilderItemTaskChooser
-          title="Choose a task to insert"
-          :show-title="true"
+        <component
+          :is="content_component"
           :item="item"
           :index="index"
           :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
           v-on="$listeners"
-          v-if="item.element == 'task-chooser'"
+          v-if="has_content_component"
         />
-        <BuilderItemTaskJsonEditor
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'task-json-editor'"
-        />
-        <BuilderItemTaskConnect
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'task-connect'"
-        />
-        <BuilderItemConnectionChooser
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'connection-chooser'"
-        />
-        <BuilderItemFileChooser
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'file-chooser'"
-        />
-        <BuilderItemForm
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'form'"
-        />
-        <BuilderItemSummary
-          :item="item"
-          :index="index"
-          :active-item-idx="activeItemIdx"
-          :is-next-allowed.sync="is_next_allowed"
-          :builder-mode="builderMode"
-          v-on="$listeners"
-          v-else-if="item.element == 'summary-prompt'"
-        />
-        <div
-          v-else
-        >
-          <span class="silver">
-            {{item.element}}
-            <span v-if="item.variable">:</span>
-          </span>
-          {{item.variable}}
+        <div v-else>
+          Unknown Element: {{item.element}}
         </div>
       </div>
       <div
@@ -254,13 +192,14 @@
   import { mapGetters } from 'vuex'
   import ServiceIcon from './ServiceIcon.vue'
   import TaskIcon from './TaskIcon.vue'
-  import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
-  import BuilderItemTaskJsonEditor from './BuilderItemTaskJsonEditor.vue'
-  import BuilderItemTaskConnect from './BuilderItemTaskConnect.vue'
-  import BuilderItemConnectionChooser from './BuilderItemConnectionChooser.vue'
-  import BuilderItemFileChooser from './BuilderItemFileChooser.vue'
-  import BuilderItemForm from './BuilderItemForm.vue'
-  import BuilderItemSummary from './BuilderItemSummary.vue'
+  import builder_components from './builder-components'
+
+  const components = _.assign({
+    ServiceIcon,
+    TaskIcon
+  }, builder_components)
+
+  const available_components = _.keys(components)
 
   export default {
     props: {
@@ -312,20 +251,11 @@
         type: String
       }
     },
-    components: {
-      ServiceIcon,
-      TaskIcon,
-      BuilderItemTaskChooser,
-      BuilderItemTaskJsonEditor,
-      BuilderItemTaskConnect,
-      BuilderItemConnectionChooser,
-      BuilderItemFileChooser,
-      BuilderItemForm,
-      BuilderItemSummary
-    },
+    components,
     data() {
       return {
-        is_next_allowed: true
+        is_next_allowed: true,
+        available_components
       }
     },
     computed: {
@@ -373,18 +303,27 @@
           'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         })
       },
+      content_component() {
+        var element = this.item.element
+        element = _.startCase(element)
+        element = element.replace(/\s/g, '')
+        return 'BuilderItem' + element
+      },
+      has_content_component() {
+        return this.available_components.indexOf(this.content_component) != -1
+      },
       task_icon() {
         switch (this.item.element) {
           case 'file-chooser':   return 'insert_drive_file'
           case 'form':           return 'edit'
-          case 'summary-prompt': return 'check'
+          case 'summary':        return 'check'
         }
       },
       task_color() {
         switch (this.item.element) {
           case 'file-chooser':   return '#0ab5f3'
           case 'form':           return '#0ab5f3'
-          case 'summary-prompt': return '#009900'
+          case 'summary':        return '#009900'
         }
       }
     },
