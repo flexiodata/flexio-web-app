@@ -1,0 +1,9 @@
+task:
+  op: read
+
+prompt:
+  element: task-read
+  title: Read
+  form_values:
+    op: read
+    path: ''

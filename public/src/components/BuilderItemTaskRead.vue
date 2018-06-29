@@ -12,11 +12,11 @@
       v-show="show_description"
     >
     </div>
+    <h4 class="mid-gray">1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
-      :connection-eid.sync="edit_values.connection"
+      :connection-eid.sync="connection_eid"
       :show-result="has_available_connection"
-      v-on="$listeners"
     >
       <el-button
         slot="buttons"
@@ -28,24 +28,16 @@
         Use Different Connection
       </el-button>
     </BuilderComponentConnectionChooser>
-    <el-form
-      class="el-form--compact el-form__label-tiny"
-      :model="edit_values"
-      v-if="has_available_connection"
-    >
-      <el-form-item
-        key="alias"
-        prop="alias"
-        label="How would you like to refer to this connection in this pipe?"
-      >
-        <div class="w5">
-          <el-input
-            placeholder="Alias"
-            v-model="edit_values['alias']"
-          />
-        </div>
-      </el-form-item>
-    </el-form>
+    <template v-if="has_available_connection">
+      <h4 class="mid-gray">2. Choose files</h4>
+      <BuilderComponentFileChooser
+        :connection-eid="connection_eid"
+        :show-result="!is_active"
+        @open-folder="updateFolder"
+        @selection-change="updateFiles"
+      />
+    </template>
+
   </div>
 </template>
 
@@ -54,12 +46,12 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
+  import BuilderComponentFileChooser from './BuilderComponentFileChooser.vue'
 
   const getDefaultValues = () => {
     return {
       op: 'connect',
-      connection: '',
-      alias: ''
+      path: ''
     }
   }
 
@@ -83,7 +75,8 @@
       }
     },
     components: {
-      BuilderComponentConnectionChooser
+      BuilderComponentConnectionChooser,
+      BuilderComponentFileChooser
     },
     watch: {
       item: {
@@ -94,8 +87,8 @@
       has_available_connection() {
         this.$emit('update:isNextAllowed', this.has_available_connection)
       },
-      is_changed: {
-        handler: 'onChange'
+      connection_eid() {
+        this.$emit('active-item-change', this.index)
       },
       edit_values: {
         handler: 'onEditValuesChange',
@@ -105,6 +98,7 @@
     },
     data() {
       return {
+        connection_eid: '',
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues()
       }
@@ -114,19 +108,16 @@
         return this.description.length > 0
       },
       title() {
-        return _.get(this.item, 'title', 'Connect')
+        return _.get(this.item, 'title', 'Read')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
-      is_changed() {
-        return !_.isEqual(this.edit_values, this.orig_values)
-      },
-      ceid() {
-        return _.get(this.edit_values, 'connection', null)
+      is_active() {
+        return this.index == this.activeItemIdx
       },
       store_connection() {
-        return _.find(this.getAvailableConnections(), { eid: this.ceid }, null)
+        return _.find(this.getAvailableConnections(), { eid: this.connection_eid }, null)
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
@@ -138,18 +129,40 @@
       ]),
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
+
+        // set connection eid
+        var path = _.get(form_values, 'path', '')
+        if (path.length == 0) {
+          this.connection_eid = ''
+        } else {
+          if (_.isArray(path)) {
+            path = _.get(path, '[0]', '')
+          }
+
+          path = path.substring(1)
+          var ceid = path.substring(0, path.indexOf('/'))
+          this.connection_eid = ceid
+        }
+
         this.orig_values = _.assign(getDefaultValues(), form_values)
         this.edit_values = _.assign(getDefaultValues(), form_values)
       },
       clearConnection() {
-        this.edit_values = _.assign({}, this.edit_values, { connection: '' })
+        this.connection_eid = ''
       },
-      onChange(val) {
-        if (val) {
-          this.$emit('active-item-change', this.index)
-        }
+      updateFolder(files, path) {
+        this.edit_values = _.assign({}, this.edit_values, { path: '' })
+      },
+      updateFiles(files, path) {
+        var file_paths = _.map(files, (f) => { return f.path })
+        this.edit_values = _.assign({}, this.edit_values, { path: file_paths })
       },
       onEditValuesChange() {
+        if (_.isEqual(this.edit_values, this.orig_values)) {
+          return
+        }
+
+        this.$emit('active-item-change', this.index)
         this.$emit('item-change', this.edit_values, this.index)
       }
     }

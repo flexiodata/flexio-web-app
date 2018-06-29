@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="showResult">
+    <template v-if="showResult">
       <div class="mb2 bt b--black-10"></div>
       <table class="w-100">
         <tbody>
@@ -12,7 +12,7 @@
         </tbody>
       </table>
       <div class="mt2 bt b--black-10"></div>
-    </div>
+    </template>
     <div v-show="!showResult">
       <FileChooser
         class="bb b--light-gray"

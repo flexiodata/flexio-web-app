@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div v-if="showResult && ceid.length > 0">
+    <template v-if="showResult && ceid.length > 0">
       <ConnectionChooserItem
-        class="mb3 bt bb b--black-10"
+        class="bt bb b--black-10"
         selected-cls="bg-white"
         :item="edit_connection"
         :connection-eid="ceid"
       >
         <slot name="buttons" slot="buttons"></slot>
       </ConnectionChooserItem>
-    </div>
-    <div v-else>
+    </template>
+    <template v-else>
       <p class="ttu fw6 f7 moon-gray" v-if="has_connections">Use an existing connection</p>
       <ConnectionChooserList
         class="mb3 overflow-auto"
@@ -32,7 +32,7 @@
           Set up a new connection
         </el-button>
       </div>
-    </div>
+    </template>
 
     <!-- connect to storage dialog -->
     <el-dialog
