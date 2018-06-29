@@ -32,7 +32,7 @@
       <h4 class="mid-gray">2. Choose files</h4>
       <div class="mb3" v-show="paths.length > 0">
         <div class="bt b--black-10"></div>
-        <div class="overflow-y-auto" style="max-height: 270px">
+        <div class="overflow-y-auto" style="max-height: 260px">
           <div
             class="flex flex-row items-center no-select cursor-default darken-05 css-item"
             :key="path"
@@ -80,7 +80,7 @@
           class="ttu b"
           @click="show_file_chooser_dialog = false"
         >
-          Close
+          Cancel
         </el-button>
         <el-button
           class="ttu b"
@@ -187,7 +187,7 @@
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
 
-        // set connection eid
+        // set connection identifier
         var path = _.get(form_values, 'path', '')
         if (path.length == 0) {
           this.connection_identifier = ''
@@ -197,8 +197,8 @@
           }
 
           path = path.substring(1)
-          var ceid = path.substring(0, path.indexOf('/'))
-          this.connection_identifier = ceid
+          var cid = path.substring(0, path.indexOf('/'))
+          this.connection_identifier = cid
         }
 
         var values = _.assign({}, getDefaultValues(), form_values)
@@ -241,6 +241,7 @@
 
 <style lang="stylus">
   .css-item
+    padding: 1px 0
     .css-remove
       visibility: hidden
     &:hover
