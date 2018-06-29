@@ -37,9 +37,6 @@
       },
       index: {
         type: Number
-      },
-      connection: {
-        type: Object
       }
     },
     data() {
