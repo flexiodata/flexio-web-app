@@ -20,7 +20,9 @@
     </table>
     <input type="text"
       ref="input"
-      class="input-reset border-box w-100 mh0 mv1 ph1 pv0 f6" placeholder="Enter or paste URLs here..." spellcheck="false"
+      class="input-reset border-box w-100 mh0 mv1 ph1 pv0 f6"
+      placeholder="Enter or paste URLs here..."
+      spellcheck="false"
       @keydown.esc="clearInput"
       @keyup.enter.space="addUrl"
       @input="onInputChange"
