@@ -91,8 +91,8 @@
 
   buildPipeCode(test_def.prompts)
 
-  test_def.code_language = 'javascript'
-  test_def.code = pipe_arr.join('\n  .')
+  test_def.pipe_language = 'javascript'
+  test_def.pipe = pipe_arr.join('\n  .')
 
   export default {
     components: {
@@ -139,8 +139,8 @@
           // read only
         }
       },
-      code_language() {
-        return this.def.code_language || this.def.pipe_language || 'javascript'
+      pipe_language() {
+        return this.def.pipe_language || 'javascript'
       },
       code: {
         get() {
@@ -154,7 +154,7 @@
         return _.get(this.def, 'title', 'Untitled Pipe')
       },
       save_code() {
-        if (this.code_language == 'javascript' || this.code_language == 'sdk-js') {
+        if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
           return this.code + '.save({ name: "' + this.save_name + '" }, callback)'
         } else {
           try {
@@ -210,7 +210,7 @@
         this.$store.commit('builder/GO_NEXT_ITEM')
       },
       createPipe() {
-        if (this.code_language == 'javascript' || this.code_language == 'sdk-js') {
+        if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
           var pipe_fn = (Flexio, callback) => {
             eval(this.save_code)
           }
@@ -269,7 +269,7 @@
     max-width: 20%
     max-height: 30rem
     opacity: 0.5
-    transition: all 0.4s ease-in-out
+    transition: all 0.3s ease-in-out
     &:hover
       max-width: 60rem
       max-height: 60rem
