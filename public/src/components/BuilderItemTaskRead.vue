@@ -239,7 +239,7 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   .css-item
     padding: 1px 0
     .css-remove
