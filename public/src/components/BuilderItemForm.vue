@@ -248,8 +248,8 @@
         this.orig_form_values = null
         this.updateForm()
       },
-      initSelf(active) {
-        if (active) {
+      initSelf() {
+        if (this.is_active) {
           // focus first element in form and allow next step
           this.$emit('update:isNextAllowed', true)
           this.autoFocus()

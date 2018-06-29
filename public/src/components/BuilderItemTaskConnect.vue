@@ -140,8 +140,8 @@
       ]),
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
-        this.orig_values = _.assign(getDefaultValues(), form_values)
-        this.edit_values = _.assign(getDefaultValues(), form_values)
+        this.orig_values = _.assign({}, getDefaultValues(), form_values)
+        this.edit_values = _.assign({}, getDefaultValues(), form_values)
       },
       clearConnection() {
         this.edit_values = _.assign({}, this.edit_values, { connection: '' })

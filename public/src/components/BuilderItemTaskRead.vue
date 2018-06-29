@@ -34,16 +34,16 @@
         <div class="bt b--black-10"></div>
         <div class="overflow-y-auto" style="max-height: 270px">
           <div
-            class="flex flex-row items-center no-select cursor-default darken-05"
+            class="flex flex-row items-center no-select cursor-default darken-05 css-item"
             :key="path"
             v-for="(path, index) in paths"
           >
-            <div class="flex-fill ph2 f7 lh-1">{{path}}</div>
+            <div class="flex-fill ph2 f7 lh-copy">{{path}}</div>
             <div
-              class="pointer f3 black-30 hover-black-60 ph2"
+              class="pointer black-30 hover-black-60 ph1 css-remove"
               @click="removeFile(index)"
             >
-              &times;
+              <i class="db material-icons md-24">close</i>
             </div>
           </div>
         </div>
@@ -201,13 +201,15 @@
           this.connection_identifier = ceid
         }
 
-        this.orig_values = _.assign(getDefaultValues(), form_values)
-        this.edit_values = _.assign(getDefaultValues(), form_values)
+        var values = _.assign({}, getDefaultValues(), form_values)
+        this.orig_values = _.cloneDeep(values)
+        this.edit_values = _.cloneDeep(values)
 
         this.$emit('update:isNextAllowed', this.has_available_connection)
       },
       clearConnection() {
         this.connection_identifier = ''
+        this.edit_values = _.assign({}, this.edit_values, { path: [] })
       },
       onEditValuesChange() {
         if (_.isEqual(this.edit_values, this.orig_values)) {
@@ -236,3 +238,12 @@
     }
   }
 </script>
+
+<style lang="stylus">
+  .css-item
+    .css-remove
+      visibility: hidden
+    &:hover
+      .css-remove
+        visibility: visible
+</style>
