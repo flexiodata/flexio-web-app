@@ -17,11 +17,11 @@
       <FileChooser
         class="bb b--light-gray"
         style="max-height: 24rem"
-        :connection="our_connection"
+        :connection="store_connection"
         @open-folder="updateFolder"
         @selection-change="selectionChange"
         v-bind="$attrs"
-        v-if="our_connection"
+        v-if="store_connection"
       />
       <div class="flex flex-row items-center mt2 f7" v-if="is_single_folder_select || is_single_file_select">
         <div class="mr2" v-if="is_single_folder_select">Folder:</div>
@@ -37,13 +37,14 @@
 <script>
   import FileChooser from './FileChooser.vue'
   import FileChooserItem from './FileChooserItem.vue'
+  import MixinConnection from './mixins/connection'
 
   const VFS_TYPE_DIR = 'DIR'
 
   export default {
     inheritAttrs: false,
     props: {
-      connectionEid: {
+      connectionIdentifier: {
         type: String
       },
       showResult: {
@@ -56,6 +57,7 @@
       filetypeFilter
       */
     },
+    mixins: [MixinConnection],
     components: {
       FileChooser,
       FileChooserItem
@@ -66,8 +68,8 @@
       }
     },
     computed: {
-      our_connection() {
-        return _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
+      store_connection() {
+        return this.$_Connection_getConnectionByIdentifier(this.connectionIdentifier)
       },
       is_single_folder_select() {
         return this.foldersOnly === true && this.allowMultiple === false

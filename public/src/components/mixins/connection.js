@@ -1,7 +1,12 @@
+import { OBJECT_TYPE_CONNECTION } from '../../constants/object-type'
 import * as connections from '../../constants/connection-info'
 
 export default {
   methods: {
+    $_Connection_getConnectionByIdentifier(id) {
+      var connections = _.filter(this.$store.state.objects, { eid_type: OBJECT_TYPE_CONNECTION })
+      return _.find(connections, (c) => { return c.eid == id || c.alias == id })
+    },
     $_Connection_getInfo(c, key, def) {
       var connection_type = c.connection_type || c
       var info = _.find(connections, { connection_type })

@@ -15,7 +15,7 @@
     <h4 class="mid-gray">1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
-      :connection-eid.sync="connection_eid"
+      :connection-identifier.sync="connection_identifier"
       :show-result="has_available_connection"
     >
       <el-button
@@ -71,7 +71,7 @@
     >
       <BuilderComponentFileChooser
         ref="file-chooser"
-        :connection-eid="connection_eid"
+        :connection-identifier="connection_identifier"
         :show-result="false"
         v-if="show_file_chooser_dialog"
       />
@@ -100,6 +100,7 @@
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
   import BuilderComponentFileChooser from './BuilderComponentFileChooser.vue'
+  import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
@@ -127,6 +128,7 @@
         required: true
       }
     },
+    mixins: [MixinConnection],
     components: {
       BuilderComponentConnectionChooser,
       BuilderComponentFileChooser
@@ -140,7 +142,7 @@
       has_available_connection() {
         this.$emit('update:isNextAllowed', this.has_available_connection)
       },
-      connection_eid() {
+      connection_identifier() {
         this.$emit('active-item-change', this.index)
       },
       edit_values: {
@@ -151,7 +153,7 @@
     },
     data() {
       return {
-        connection_eid: '',
+        connection_identifier: '',
         orig_values: getDefaultValues(),
         edit_values: getDefaultValues(),
         show_file_chooser_dialog: false
@@ -175,23 +177,20 @@
         return paths
       },
       store_connection() {
-        return _.find(this.getAvailableConnections(), { eid: this.connection_eid }, null)
+        return this.$_Connection_getConnectionByIdentifier(this.connection_identifier)
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
       }
     },
     methods: {
-      ...mapGetters([
-        'getAvailableConnections'
-      ]),
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
 
         // set connection eid
         var path = _.get(form_values, 'path', '')
         if (path.length == 0) {
-          this.connection_eid = ''
+          this.connection_identifier = ''
         } else {
           if (_.isArray(path)) {
             path = _.get(path, '[0]', '')
@@ -199,7 +198,7 @@
 
           path = path.substring(1)
           var ceid = path.substring(0, path.indexOf('/'))
-          this.connection_eid = ceid
+          this.connection_identifier = ceid
         }
 
         this.orig_values = _.assign(getDefaultValues(), form_values)
@@ -208,7 +207,7 @@
         this.$emit('update:isNextAllowed', this.has_available_connection)
       },
       clearConnection() {
-        this.connection_eid = ''
+        this.connection_identifier = ''
       },
       onEditValuesChange() {
         if (_.isEqual(this.edit_values, this.orig_values)) {

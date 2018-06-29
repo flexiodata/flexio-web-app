@@ -13,7 +13,7 @@
     </div>
 
     <BuilderComponentFileChooser
-      :connection-eid="item.connection_eid"
+      :connection-identifier="item.connection_eid"
       :show-result="is_before_active"
       @open-folder="updateFiles"
       @selection-change="updateFiles"

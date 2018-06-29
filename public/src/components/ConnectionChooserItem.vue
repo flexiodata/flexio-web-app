@@ -50,7 +50,7 @@
         type: String,
         default: 'list'
       },
-      connectionEid: {
+      connectionIdentifier: {
         type: String,
         required: false
       },
@@ -73,6 +73,9 @@
       eid() {
         return _.get(this.item, 'eid', '')
       },
+      alias() {
+        return _.get(this.item, 'alias', '')
+      },
       ctype() {
         return _.get(this.item, 'connection_type', '')
       },
@@ -80,11 +83,11 @@
         return _.get(this.item, 'connection_status', '')
       },
       identifier() {
-        var cid = _.get(this.item, 'alias', '')
-        return cid.length > 0 ? cid : this.eid
+        return this.alias.length > 0 ? this.alias : this.eid
       },
       is_selected() {
-        return this.eid.length > 0 ? this.connectionEid == this.eid : false
+        var cid = this.connectionIdentifier
+        return cid == this.eid || cid == this.alias
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE

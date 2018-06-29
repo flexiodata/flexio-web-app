@@ -16,7 +16,7 @@
     </div>
 
     <BuilderComponentConnectionChooser
-      :connection-eid.sync="edit_connection.eid"
+      :connection-identifier.sync="edit_connection.eid"
       :connection-type-filter="ctype"
       :show-result="is_before_active"
       @choose-connection="chooseConnection"
@@ -135,12 +135,13 @@
           form_values[key] = ''
           this.edit_connection = undefined
           this.$emit('item-change', form_values, this.index)
-          this.$emit('update:connectionEid', '')
+          this.$emit('update:connectionIdentifier', '')
         } else {
-          form_values[key] = connection.eid
-          this.edit_connection = connection
+          var cid = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+          form_values[key] = cid
+          this.edit_connection = _.cloneDeep(connection)
           this.$emit('item-change', form_values, this.index)
-          this.$emit('update:connectionEid', connection.eid)
+          this.$emit('update:connectionIdentifier', cid)
         }
       },
       updateAllowNext() {

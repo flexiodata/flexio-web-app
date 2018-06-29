@@ -1,11 +1,11 @@
 <template>
   <div>
-    <template v-if="showResult && ceid.length > 0">
+    <template v-if="showResult && cid.length > 0">
       <ConnectionChooserItem
         class="bt bb b--black-10"
         selected-cls="bg-white"
         :item="edit_connection"
-        :connection-eid="ceid"
+        :connection-identifier="cid"
       >
         <slot name="buttons" slot="buttons"></slot>
       </ConnectionChooserItem>
@@ -16,7 +16,7 @@
         class="mb3 overflow-auto"
         style="max-height: 277px"
         selected-cls="bg-white"
-        :connection-eid="connectionEid"
+        :connection-identifier="connectionIdentifier"
         :connection-type-filter="connectionTypeFilter"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
@@ -65,7 +65,7 @@
 
   export default {
     props: {
-      connectionEid: {
+      connectionIdentifier: {
         type: String
       },
       connectionTypeFilter: {
@@ -84,7 +84,7 @@
       ConnectionChooserItem
     },
     watch: {
-      our_connection: {
+      store_connection: {
         handler: 'initSelf',
         immediate: true,
         deep: true
@@ -99,8 +99,9 @@
       }
     },
     computed: {
-      ceid() {
-        return _.get(this.edit_connection, 'eid', '')
+      cid() {
+        var conn = this.edit_connection
+        return _.get(conn, 'alias', '') || _.get(conn, 'eid', '')
       },
       connections() {
         return this.getAvailableConnections()
@@ -115,11 +116,11 @@
         }
         return this.connections.length > 0
       },
-      has_available_connection() {
-        return _.get(this.our_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      store_connection() {
+        return this.$_Connection_getConnectionByIdentifier(this.connectionIdentifier)
       },
-      our_connection() {
-        return _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
+      has_available_connection() {
+        return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
       },
       service_name() {
         return this.$_Connection_getServiceName(this.connectionTypeFilter)
@@ -129,11 +130,11 @@
       ...mapGetters([
         'getAvailableConnections'
       ]),
-      getOurConnection() {
-        return _.get(this.$store, 'state.objects[' + this.connectionEid + ']', null)
+      getStoreConnection() {
+        return this.$_Connection_getConnectionByIdentifier(this.connectionIdentifier)
       },
       initSelf() {
-        var c = this.getOurConnection()
+        var c = this.getStoreConnection()
         if (c) {
           c = _.cloneDeep(c)
           this.orig_connection = _.assign({}, c)
@@ -144,11 +145,12 @@
         if (_.isNil(connection)) {
           this.edit_connection = undefined
           this.$emit('choose-connection', null)
-          this.$emit('update:connectionEid', '')
+          this.$emit('update:connectionIdentifier', '')
         } else {
+          var cid = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
           this.edit_connection = connection
           this.$emit('choose-connection', connection)
-          this.$emit('update:connectionEid', connection.eid)
+          this.$emit('update:connectionIdentifier', cid)
         }
       },
       fixConnection(connection) {

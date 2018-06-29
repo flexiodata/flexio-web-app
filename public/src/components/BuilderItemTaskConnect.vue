@@ -14,7 +14,7 @@
     </div>
     <BuilderComponentConnectionChooser
       class="mb3"
-      :connection-eid.sync="edit_values.connection"
+      :connection-identifier.sync="edit_values.connection"
       :show-result="has_available_connection"
       v-on="$listeners"
     >
@@ -54,6 +54,7 @@
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
+  import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
@@ -82,6 +83,7 @@
         required: true
       }
     },
+    mixins: [MixinConnection],
     components: {
       BuilderComponentConnectionChooser
     },
@@ -122,11 +124,11 @@
       is_changed() {
         return !_.isEqual(this.edit_values, this.orig_values)
       },
-      ceid() {
+      cid() {
         return _.get(this.edit_values, 'connection', null)
       },
       store_connection() {
-        return _.find(this.getAvailableConnections(), { eid: this.ceid }, null)
+        return this.$_Connection_getConnectionByIdentifier(this.cid)
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
