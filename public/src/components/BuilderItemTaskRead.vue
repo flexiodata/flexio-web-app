@@ -146,6 +146,8 @@
 
         this.orig_values = _.assign(getDefaultValues(), form_values)
         this.edit_values = _.assign(getDefaultValues(), form_values)
+
+        this.$emit('update:isNextAllowed', this.has_available_connection)
       },
       clearConnection() {
         this.connection_eid = ''
