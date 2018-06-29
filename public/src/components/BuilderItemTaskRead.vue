@@ -29,7 +29,7 @@
       </el-button>
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
-      <h4 class="mid-gray">2. Add/remove files</h4>
+      <h4 class="mid-gray">2. Choose files</h4>
       <div class="mb3" v-show="paths.length > 0">
         <div class="bt b--black-10"></div>
         <div class="overflow-y-auto" style="max-height: 270px">
