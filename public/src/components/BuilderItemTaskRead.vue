@@ -29,15 +29,68 @@
       </el-button>
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
-      <h4 class="mid-gray">2. Choose files</h4>
-      <BuilderComponentFileChooser
-        :connection-eid="connection_eid"
-        :show-result="!is_active"
-        @open-folder="updateFolder"
-        @selection-change="updateFiles"
-      />
+      <h4 class="mid-gray">2. Add/remove files</h4>
+      <div class="mb3" v-show="paths.length > 0">
+        <div class="bt b--black-10"></div>
+        <div class="overflow-y-auto" style="max-height: 270px">
+          <div
+            class="flex flex-row items-center no-select cursor-default darken-05"
+            :key="path"
+            v-for="(path, index) in paths"
+          >
+            <div class="flex-fill ph2 f7 lh-1">{{path}}</div>
+            <div
+              class="pointer f3 black-30 hover-black-60 ph2"
+              @click="removeFile(index)"
+            >
+              &times;
+            </div>
+          </div>
+        </div>
+        <div class="bt b--black-10"></div>
+      </div>
+      <div>
+        <el-button
+          class="ttu b"
+          size="small"
+          @click="show_file_chooser_dialog = true"
+        >
+          Add files
+        </el-button>
+      </div>
     </template>
 
+    <!-- file chooser dialog -->
+    <el-dialog
+      custom-class="el-dialog--compressed-body"
+      title="Choose files"
+      width="51rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_file_chooser_dialog"
+    >
+      <BuilderComponentFileChooser
+        ref="file-chooser"
+        :connection-eid="connection_eid"
+        :show-result="false"
+        v-if="show_file_chooser_dialog"
+      />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          class="ttu b"
+          @click="show_file_chooser_dialog = false"
+        >
+          Close
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click="addFiles"
+        >
+          Add files
+        </el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -50,8 +103,8 @@
 
   const getDefaultValues = () => {
     return {
-      op: 'connect',
-      path: ''
+      op: 'read',
+      path: []
     }
   }
 
@@ -100,7 +153,8 @@
       return {
         connection_eid: '',
         orig_values: getDefaultValues(),
-        edit_values: getDefaultValues()
+        edit_values: getDefaultValues(),
+        show_file_chooser_dialog: false
       }
     },
     computed: {
@@ -113,8 +167,12 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
-      is_active() {
-        return this.index == this.activeItemIdx
+      paths() {
+        var paths = _.get(this.edit_values, 'path', [])
+        if (!_.isArray(paths)) {
+          return [paths]
+        }
+        return paths
       },
       store_connection() {
         return _.find(this.getAvailableConnections(), { eid: this.connection_eid }, null)
@@ -152,13 +210,6 @@
       clearConnection() {
         this.connection_eid = ''
       },
-      updateFolder(files, path) {
-        this.edit_values = _.assign({}, this.edit_values, { path: '' })
-      },
-      updateFiles(files, path) {
-        var file_paths = _.map(files, (f) => { return f.path })
-        this.edit_values = _.assign({}, this.edit_values, { path: file_paths })
-      },
       onEditValuesChange() {
         if (_.isEqual(this.edit_values, this.orig_values)) {
           return
@@ -166,6 +217,22 @@
 
         this.$emit('active-item-change', this.index)
         this.$emit('item-change', this.edit_values, this.index)
+      },
+      addFiles() {
+        var files = this.$refs['file-chooser'].getSelectedFiles()
+        files = _.map(files, (f) => { return f.path })
+        var existing_files = _.get(this.edit_values, 'path', [])
+        if (!_.isArray(existing_files)) {
+          existing_files = [existing_files]
+        }
+        files = existing_files.concat(files)
+        this.edit_values = _.assign({}, this.edit_values, { path: files })
+        this.show_file_chooser_dialog = false
+      },
+      removeFile(idx) {
+        var files = _.get(this.edit_values, 'path', [])
+        files.splice(idx, 1)
+        this.edit_values = _.assign({}, this.edit_values, { path: files })
       }
     }
   }
