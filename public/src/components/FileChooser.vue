@@ -1,15 +1,14 @@
 <template>
   <div class="flex flex-column h-100">
-    <file-explorer-bar
+    <FileExplorerBar
       class="flex-none fw4 f6 ba b--black-10 mb2" style="padding: 0.125rem"
       :connection="connection"
       :path="connection_path"
       @open-folder="openFolder"
       v-if="file_chooser_mode == 'filechooser'"
     />
-
     <div class="flex-fill overflow-y-auto">
-      <file-chooser-list
+      <FileChooserList
         ref="file-chooser"
         :path="connection_path"
         @open-folder="openFolder"
@@ -17,7 +16,7 @@
         v-bind="$attrs"
         v-if="file_chooser_mode == 'filechooser'"
       />
-      <url-input-list
+      <UrlInputList
         ref="url-input-list"
         class="ba b--black-10 pa1"
         style="min-height: 16rem; max-height: 16rem"
@@ -76,12 +75,6 @@
         }
 
         return 'filechooser'
-      },
-      title() {
-        return 'Choose Files'
-      },
-      submit_label() {
-        return 'Add files'
       }
     },
     methods: {
