@@ -121,6 +121,9 @@
 
         this.files = files
         this.$emit('selection-change', files, path)
+      },
+      getSelectedFiles() {
+        return this.files
       }
     }
   }
