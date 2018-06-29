@@ -129,7 +129,7 @@
       ]),
       chooseConnection(connection) {
         var key = _.get(this.item, 'variable', 'connection_eid')
-        var form_values = _.get(this.item, 'extra_values', {})
+        var form_values = _.get(this.item, 'form_values', {})
 
         if (_.isNil(connection)) {
           form_values[key] = ''
