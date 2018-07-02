@@ -86,7 +86,13 @@ class Email extends \Flexio\Jobs\Base
         {
             $connection = $process->getConnection($connection);
 
-            $email = \Flexio\Services\Email::create($connection['connection_info'] ?? []);
+            $email_params = $connection['connection_info'] ?? [];
+
+            // let email service know what connection type we're talking about (special handling for gmail)
+            if (isset($connection['connection_type']))
+                $email_params['connection_type'] = $connection['connection_type'];
+
+            $email = \Flexio\Services\Email::create($email_params);
 
             $from_addresses = $email->getFrom();
             if (count($from_addresses) == 0)
