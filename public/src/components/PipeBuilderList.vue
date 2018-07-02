@@ -104,6 +104,12 @@
             element: 'task-json-editor',
             value: task
           }
+        } else if (task.op == 'copy' || task.op == 'request') {
+          var task = _.omit(task, ['eid'])
+          prompt = {
+            element: 'task-json-editor',
+            value: task
+          }
         } else if (prompt.element.indexOf('task-') != -1) {
           var task = _.omit(task, ['eid'])
           prompt = _.assign({}, prompt, { form_values: task })
