@@ -19,6 +19,7 @@
       @selection-change="updateFiles"
       v-bind="chooser_options"
       v-on="$listeners"
+      v-show="is_active || is_before_active"
     />
   </div>
 </template>

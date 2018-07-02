@@ -21,6 +21,7 @@
       :show-result="is_before_active"
       @choose-connection="chooseConnection"
       v-on="$listeners"
+      v-show="is_active || is_before_active"
     />
   </div>
 </template>
