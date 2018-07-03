@@ -263,12 +263,26 @@ class Email
             $from = ($params['email'] ?? '');
 
         $this->setFrom($from);
-        $this->protocol = ($params['protocol'] ?? '');              // none, smtp
-        $this->security = ($params['security'] ?? '');              // none, ssl, tls
-        $this->authentication = ($params['authentication'] ?? '');  // none, password, encpassword, kerberos, ntlm, oauth2
-        $this->host = ($params['host'] ?? '');
-        $this->username = ($params['username'] ?? '');
-        $this->password = ($params['password'] ?? '');
+
+
+        if (($params['connection_type'] ?? '') == 'gmail')
+        {
+            $this->protocol = 'smtp';
+            $this->security = 'ssl';
+            $this->authentication = 'oauth2';
+            $this->host = 'smtp.gmail.com';
+            $this->username = $from;
+            $this->password = ($params['password'] ?? '');
+        }
+         else
+        {
+            $this->protocol = ($params['protocol'] ?? '');              // none, smtp
+            $this->security = ($params['security'] ?? '');              // none, ssl, tls
+            $this->authentication = ($params['authentication'] ?? '');  // none, password, encpassword, kerberos, ntlm, oauth2
+            $this->host = ($params['host'] ?? '');
+            $this->username = ($params['username'] ?? '');
+            $this->password = ($params['password'] ?? '');
+        }
     }
 
     public function send() : bool

@@ -103,6 +103,26 @@ class Gmail implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     }
 
 
+    public function retrieveEmailAddress()
+    {
+        if (!$this->authenticated())
+            return array();
+
+        $url = "https://www.googleapis.com/gmail/v1/users/me/profile";
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token));
+        curl_setopt($ch, CURLOPT_HTTPGET, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = @json_decode($result, true);
+
+        return $result['emailAddress'];
+    }
+
 
     public function getTokens() : array
     {

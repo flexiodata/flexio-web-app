@@ -408,6 +408,12 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         {
             $properties['connection_info']['expires'] = $tokens['expires'];
         }
+
+        if ($connection_type == 'gmail')
+        {
+            $properties['connection_info']['email'] = $service_object->retrieveEmailAddress();
+        }
+
         $this->set($properties);
 
         return true;
