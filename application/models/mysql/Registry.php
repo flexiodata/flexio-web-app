@@ -189,6 +189,24 @@ class Registry extends ModelBase
         return true;
     }
 
+    public function purge($object_eid) : bool
+    {
+        // this function deletes rows associated with a given object
+        $db = $this->getDatabase();
+        try
+        {
+            $qobject_eid = $db->quote($object_eid);
+            $sql = "delete from tbl_registry where object_eid = $object_eid";
+            $rows_affected = $db->exec($sql);
+
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
+    }
+
    /**
      * sets a variable; if the variable doesn't exist, it is
      * added; if it already exists, the value is set to the

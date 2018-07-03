@@ -88,6 +88,24 @@ class Connection extends ModelBase
         return $this->set($eid, $params);
     }
 
+    public function purge(string $owner_eid) : bool
+    {
+        // this function deletes rows for a given owner
+        $db = $this->getDatabase();
+        try
+        {
+            $qowner_eid = $db->quote($owner_eid);
+            $sql = "delete from tbl_connection where owned_by = $qowner_eid";
+            $rows_affected = $db->exec($sql);
+
+            return ($rows_affected > 0 ? true : false);
+        }
+        catch (\Exception $e)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
+        }
+    }
+
     public function set(string $eid, array $params) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
