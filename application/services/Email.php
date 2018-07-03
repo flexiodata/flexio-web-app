@@ -16,6 +16,34 @@ declare(strict_types=1);
 namespace Flexio\Services;
 
 
+
+class OauthHelper extends \PHPMailer\PHPMailer\OAuth
+{
+    private $email;
+    private $token;
+
+    public function __construct()
+    {
+    }
+
+    public function set($email, $token)
+    {
+        $this->email = $email;
+        $this->token = $token;
+    }
+
+    public function getOauth64()
+    {
+        return base64_encode(
+            'user=' .
+            $this->email .
+            "\001auth=Bearer " .
+            $this->token .
+            "\001\001"
+        );
+    }
+}
+
 class Email
 {
     private $from_addresses;
@@ -34,6 +62,7 @@ class Email
     private $port;
     private $username;
     private $password;
+    private $oauth;
 
     public static function create(array $params = null) : \Flexio\Services\Email
     {
@@ -247,6 +276,8 @@ class Email
 
     private function initialize($params = []) : void
     {
+        $this->oauth = null;
+  
         $this->from_addresses = array();
         $this->to_addresses = array();
         $this->cc_addresses = array();
@@ -271,8 +302,10 @@ class Email
             $this->security = 'ssl';
             $this->authentication = 'oauth2';
             $this->host = 'smtp.gmail.com';
-            $this->username = $from;
-            $this->password = ($params['password'] ?? '');
+            $this->username = '';
+            $this->password = '';
+            $this->oauth = new OauthHelper();
+            $this->oauth->set($from, $params['access_token']);
         }
          else
         {
@@ -305,12 +338,18 @@ class Email
             //$mail->SMTPDebug = 2;                // enable verbose debug output
             $mail->isSMTP();                     // set mailer to use SMTP
             $mail->Host = $this->host;           // specify main and backup SMTP servers
-            $mail->SMTPAuth = strlen($this->username) > 0 ? true:false; // Enable SMTP authentication
+            $mail->SMTPAuth = (strlen($this->username) > 0 || $this->oauth !== null) ? true:false; // Enable SMTP authentication
             $mail->Username = $this->username;    // SMTP username
             $mail->Password = $this->password;    // SMTP password
             $mail->SMTPSecure = $this->security;  // '', 'ssl', or 'tls'
             $mail->Port = $port;
             $mail->Timeout = 60;                  // timeout in seconds
+
+            if ($this->oauth !== null)
+            {
+                $mail->AuthType = 'XOAUTH2';
+                $mail->setOAuth($this->oauth);
+            }
 
             $from = count($this->from_addresses) > 0 ? $this->from_addresses[0] : '';
             $mail->setFrom($from);
@@ -330,7 +369,7 @@ class Email
 
             $mail->send();
         }
-        catch (Exception $e)
+        catch (\Exception $e)
         {
             //echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
             return false;
