@@ -49,7 +49,6 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::delete(); return false with invalid input',  $actual, $expected, $results);
 
 
-
         // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
@@ -57,7 +56,6 @@ class Test
         $actual = $model->delete($eid);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
-
 
 
         // TEST: valid eid input, and object exists

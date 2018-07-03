@@ -88,7 +88,6 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Model\User::create(); throw an exception if an email isn\'t specified',  $actual, $expected, $results);
 
 
-
         // TEST: creation with basic username input
 
         // BEGIN TEST
