@@ -129,7 +129,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
 
         $auth_params = array();
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
+        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
 
         if (isset($params['code']))
             $auth_params['code'] = $params['code'];
