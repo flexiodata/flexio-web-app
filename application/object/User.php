@@ -147,7 +147,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             // first set the delete flag on the user to disable access
             $this->getModel()->user->delete($user_eid);
 
-            // next, physically delete the database records owned by the user
+            // next physically delete the database records owned by the user
             $this->getModel()->action->purge($owner_eid);
             $this->getModel()->comment->purge($owner_eid);
             $this->getModel()->connection->purge($owner_eid);

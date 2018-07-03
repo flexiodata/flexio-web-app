@@ -89,6 +89,10 @@ class Pipe extends ModelBase
     public function purge(string $owner_eid) : bool
     {
         // this function deletes rows for a given owner
+
+        if (!\Flexio\Base\Eid::isValid($owner_eid))
+            return false;
+
         $db = $this->getDatabase();
         try
         {
