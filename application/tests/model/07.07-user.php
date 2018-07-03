@@ -20,10 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-
-
-
-
         // FUNCTION: \Flexio\Model\User::checkPasswordHash()
 
 

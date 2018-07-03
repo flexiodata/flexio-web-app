@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::create(); user creation with invalid input
+        // TEST: creation with invalid input
 
         // BEGIN TEST
         $actual = array();
@@ -86,7 +89,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::create(); user creation with basic username input
+        // TEST: creation with basic username input
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();

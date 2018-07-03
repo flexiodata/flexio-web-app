@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::create(); when creating a user, make sure the required parameters are valid
+        // TEST: make sure the required parameters are valid
 
         // BEGIN TEST
         $actual = array();

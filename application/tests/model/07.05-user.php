@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::delete()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::delete(); delete tests with non-eid input
+        // TEST: non-eid input
 
         // BEGIN TEST
         $actual = '';
@@ -47,7 +50,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::delete(); delete tests with valid eid input, but object doesn't exist
+        // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -57,7 +60,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::delete(); delete tests with valid eid input, and object exists
+        // TEST: valid eid input, and object exists
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();

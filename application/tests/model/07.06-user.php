@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::set()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::set(); set tests with non-eid input
+        // TEST: non-eid input
 
         // BEGIN TEST
         $actual = '';
@@ -55,7 +58,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::set(); set tests with valid eid input, but object doesn't exist
+        // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -83,7 +86,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::set(); set tests on an object that exists
+        // TEST: object that exists
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -172,7 +175,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::set(); make sure that non-specified properties aren't changed
+        // TEST: make sure that non-specified properties aren't changed
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -196,7 +199,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::set(); make settable properties are set
+        // TEST: make sure settable properties are set
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();

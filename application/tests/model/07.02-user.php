@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::create(); multiple unique user creation
+        // TEST: multiple unique user creation
 
         // BEGIN TEST
         $total_count = 1000;

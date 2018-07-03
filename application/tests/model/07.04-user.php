@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::create(); when creating a user, reject invalid parameters
+        // TEST: reject invalid parameters
 
         // BEGIN TEST
         $input_eid = 'xxxxxxxxxxxx';
@@ -71,7 +74,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::create(); make sure the password isn't returned in the output
+        // TEST: make sure the password isn't returned in the output
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_UNDEFINED;
@@ -91,7 +94,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::create(); when creating a user, make sure it has the essential fields
+        // TEST: make sure creation output has the essential fields
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -144,7 +147,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::create(); make sure fields that are specified are properly set
+        // TEST: make sure fields that are specified are properly set
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
