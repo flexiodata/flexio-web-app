@@ -90,7 +90,18 @@ class Email extends \Flexio\Jobs\Base
 
             // let email service know what connection type we're talking about (special handling for gmail)
             if (isset($connection['connection_type']))
+            {
                 $email_params['connection_type'] = $connection['connection_type'];
+
+                if ($connection['connection_type'] == 'gmail')
+                {
+                    $service = \Flexio\Services\Factory::create($connection);
+                    if (!$service)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
+                    $tokens = $service->getTokens();
+                    $email_params['access_token'] = $tokens['access_token'];
+                }
+            }
 
             $email = \Flexio\Services\Email::create($email_params);
 
