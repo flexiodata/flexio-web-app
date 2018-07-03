@@ -1,34 +1,60 @@
 <template>
   <div>
-    <div v-if="is_oauth && !is_connected">
-      <div class="lh-copy" v-if="">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="mt3 tc">
-        <el-button
-          class="ttu b"
-          type="primary"
-          @click="onConnectClick"
-        >
-          Authenticate your {{service_name}} account
-        </el-button>
+    <div v-if="is_oauth">
+      <div v-if="!is_connected">
+        <div class="lh-copy" v-if="">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+        <div class="mv3 tc">
+          <el-button
+            class="ttu b"
+            type="primary"
+            @click="onConnectClick"
+          >
+            Authenticate your {{service_name}} account
+          </el-button>
+        </div>
+      </div>
+      <div v-else>
+        <div class="flex flex-row items-center justify-center lh-copy" v-if="is_connected">
+          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
+          <span class="dn dib-ns">You are connected to {{service_name}}!</span>
+        </div>
+        <div class="mv3 tc">
+          <el-button
+            class="ttu b"
+            @click="onDisconnectClick"
+            v-if="is_connected"
+          >
+            Disconnect from your {{service_name}} account
+          </el-button>
+        </div>
+      </div>
+      <div class="br2 bg-near-white mt3 pa3" v-if="is_google_cloud_storage && is_connected">
+        <div class="w-60-ns center">
+          <el-form
+            ref="form"
+            class="flex flex-column el-form--compact el-form__label-tiny"
+            label-position="top"
+            :model="cinfo"
+            :rules="rules"
+          >
+            <!-- google cloud storage -->
+            <el-form-item
+              label="What Google Cloud Storage bucket would you like to use?"
+              key="bucket"
+              prop="bucket"
+              :class="getClass('bucket')"
+              v-if="showInput('bucket')"
+            >
+              <el-input
+                placeholder="Bucket"
+                spellcheck="false"
+                v-model="cinfo.bucket"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
     </div>
-
-    <div v-else-if="is_oauth && is_connected">
-      <div class="flex flex-row items-center justify-center lh-copy" v-if="is_connected">
-        <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-        <span class="dn dib-ns">You are connected to {{service_name}}!</span>
-      </div>
-      <div class="mt3 tc">
-        <el-button
-          class="ttu b"
-          @click="onDisconnectClick"
-          v-if="is_connected"
-        >
-          Disconnect from your {{service_name}} account
-        </el-button>
-      </div>
-    </div>
-
     <div v-else>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div class="w-two-thirds-ns center mt3">
@@ -377,6 +403,9 @@
       is_gmail() {
         return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
       },
+      is_google_cloud_storage() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE
+      },
       is_oauth() {
         switch (this.ctype)
         {
@@ -392,6 +421,10 @@
         return false
       },
       key_values() {
+        if (this.is_google_cloud_storage) {
+          return ['bucket']
+        }
+
         if (this.is_oauth) {
           return []
         }

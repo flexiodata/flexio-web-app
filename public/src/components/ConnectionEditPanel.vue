@@ -106,7 +106,6 @@
           </div>
           <ConnectionAuthenticationPanel
             ref="connection-authentication-panel"
-            class="mb2"
             :connection="edit_connection"
             :mode="mode"
             @change="updateConnection"
