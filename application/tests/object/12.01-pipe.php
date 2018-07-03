@@ -39,8 +39,6 @@ class Test
         \Flexio\Tests\Check::assertString('B.5', 'Pipe::load(); make sure the eid is set when an object is loaded',  $actual, $expected, $results);
 
 
-return;
-
 
         // TEST: object creation
 
