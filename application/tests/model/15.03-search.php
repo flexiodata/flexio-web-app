@@ -24,7 +24,7 @@ class Test
         $search_model = \Flexio\Tests\Util::getModel()->search;
         $pipe_model = \Flexio\Tests\Util::getModel()->pipe;
 
-        // TEST: \Flexio\Model\Search::search(); search tests when results for single eid
+        // TEST: \Flexio\Model\Search::exec(); search tests when results for single eid
 
         // BEGIN TEST
         $info = array(
@@ -36,6 +36,6 @@ class Test
         $expected = array(
             $eid
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::search(); search for single eid that exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::exec(); search for single eid that exists',  $actual, $expected, $results);
     }
 }

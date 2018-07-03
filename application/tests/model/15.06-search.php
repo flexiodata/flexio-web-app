@@ -26,7 +26,7 @@ class Test
         $base_model = \Flexio\Tests\Util::getModel();
 
 
-        // TEST: \Flexio\Model\Search::search(); search tests for multi-level eid/association combinations
+        // TEST: \Flexio\Model\Search::exec(); search tests for multi-level eid/association combinations
 
         // BEGIN TEST
         $info = array(
@@ -45,7 +45,7 @@ class Test
         $expected = array(
             $eid3,
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::exec(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -64,7 +64,7 @@ class Test
         $expected = array(
             $eid3,
         );
-        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::exec(); search eids multiple levels deep',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -87,6 +87,6 @@ class Test
         $expected = array(
             $eid3,
         );
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::search(); search eids multiple levels deep',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::exec(); search eids multiple levels deep',  $actual, $expected, $results);
     }
 }

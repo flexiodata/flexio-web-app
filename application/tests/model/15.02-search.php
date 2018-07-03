@@ -25,7 +25,7 @@ class Test
         $pipe_model = \Flexio\Tests\Util::getModel()->pipe;
 
 
-        // TEST: \Flexio\Model\Search::search(); search tests when results can't be found
+        // TEST: \Flexio\Model\Search::exec(); search tests when results can't be found
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -34,7 +34,7 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::exec(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -46,7 +46,7 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::exec(); return empty array when results can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -58,6 +58,6 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::search(); return empty array when results can\'t be found',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::exec(); return empty array when results can\'t be found',  $actual, $expected, $results);
     }
 }
