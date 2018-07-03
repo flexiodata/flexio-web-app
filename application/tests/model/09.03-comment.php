@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Comment::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::create(); comment creation with no parameters
+        // TEST: comment creation with no parameters
 
         // BEGIN TEST
         $info = array(
@@ -33,6 +36,5 @@ class Test
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
-
     }
 }

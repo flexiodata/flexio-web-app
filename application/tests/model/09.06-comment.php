@@ -20,11 +20,13 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Comment::set()
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::set(); set tests with non-eid input
+        // TEST: non-eid input
 
         // BEGIN TEST
         $actual = '';
@@ -54,8 +56,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Comment::set(); return false with invalid input',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::set(); set tests with valid eid input, but object doesn't exist
+        // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -80,8 +81,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Comment::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::set(); set tests on an object that exists
+        // TEST: tests on an object that exists
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -156,8 +156,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\Comment::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::set(); make sure that non-specified properties aren't changed
+        // TEST: make sure that non-specified properties aren't changed
 
         // BEGIN TEST
         $info = array(
@@ -176,8 +175,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\Comment::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::set(); make settable properties are set
+        // TEST: make sure settable properties are set
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();

@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Comment::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::create(); when creating a comment, reject invalid parameters
+        // TEST: when creating a comment, reject invalid parameters
 
         // BEGIN TEST
         $input_eid = 'xxxxxxxxxxxx';
@@ -63,8 +66,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Comment::create(); in comment creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::create(); when creating a comment, make sure it has the essential fields and
+        // TEST: when creating a comment, make sure it has the essential fields and
         // make sure these are set when specified in the input
 
         // BEGIN TEST
@@ -94,8 +96,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\Comment::create(); in comment creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::create(); make sure fields that are specified are properly set
+        // TEST: make sure fields that are specified are properly set
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();

@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Comment::delete()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::delete(); delete tests with non-eid input
+        // TEST: non-eid input
 
         // BEGIN TEST
         $actual = '';
@@ -46,8 +49,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Comment::delete(); return false with invalid input',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::delete(); delete tests with valid eid input, but object doesn't exist
+        // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -56,8 +58,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Comment::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
 
 
-
-        // TEST: \Flexio\Model\Comment::delete(); delete tests with valid eid input, and object exists
+        // TEST: valid eid input, and object exists
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();

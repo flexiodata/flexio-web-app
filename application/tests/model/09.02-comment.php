@@ -20,11 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Comment::create()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::create(); multiple unique comment creation
+        // TEST: multiple unique comment creation
 
         // BEGIN TEST
         $total_count = 1000;
@@ -44,6 +47,5 @@ class Test
         $actual = count($created_eids) == $total_count && $failed_comment_creation == 0;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment::create(); creating comments should succeed and produce a unique eid for each new comment',  $actual, $expected, $results);
-
     }
 }
