@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-// TODO: disable HEAD tests for now until implemented
+// TODO: disable OPTIONS tests for now until implemented
 return;
 
 

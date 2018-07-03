@@ -42,7 +42,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Registry::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -60,14 +60,14 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.2', 'Registry\Model::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Model\Registry::deleteEntryByName(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
         $actual = $model->deleteEntryByName($object_eid, $name);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', 'Registry\Model::deleteEntryByName(); return false when an entry can\'t be found', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Registry::deleteEntryByName(); return false when an entry can\'t be found', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -76,7 +76,7 @@ class Test
         $creation = $model->setString($object_eid, $name, $value);
         $actual = $model->deleteEntryByName($object_eid, $name);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.4', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\Registry::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -85,7 +85,7 @@ class Test
         $creation = $model->setString($object_eid, $name, $value);
         $actual = $model->deleteEntryByName($object_eid, $name);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.5', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Model\Registry::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -96,7 +96,7 @@ class Test
         $second_deletion = $model->deleteEntryByName($object_eid, $name);
         $actual = $first_deletion === true && $second_deletion === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.6', 'Registry\Model::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.6', '\Flexio\Model\Registry::deleteEntryByName(); return true when an entry is deleted', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -108,7 +108,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === true && $second_exists === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.7', 'Registry\Model::deleteEntryByName(); make sure entry is deleted', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.7', '\Flexio\Model\Registry::deleteEntryByName(); make sure entry is deleted', $actual, $expected, $results);
 
 
 
@@ -124,7 +124,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Registry::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -136,7 +136,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Registry::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -148,7 +148,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.3', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\Registry::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -160,6 +160,6 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $deletion === false && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.4', 'Registry\Model::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Model\Registry::deleteEntryByName(); make sure entry deletion is sensitive to both object_eid and name', $actual, $expected, $results);
     }
 }

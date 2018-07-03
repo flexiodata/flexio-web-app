@@ -41,7 +41,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', 'Registry\Model::setBinary(); throw an error with invalid input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Registry::setBinary(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -49,7 +49,7 @@ class Test
         $value = '';
         $actual = $model->setBinary($object_eid, $name, $value);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.2', 'Registry\Model::setBinary(); return false when no name is specified', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Registry::setBinary(); return false when no name is specified', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -66,7 +66,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.3', 'Registry\Model::setBinary(); throw an error with invalid input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.3', '\Flexio\Model\Registry::setBinary(); throw an error with invalid input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -74,7 +74,7 @@ class Test
         $value = '';
         $actual = $model->setBinary($object_eid, $name, $value);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.4', 'Registry\Model::setBinary(); don\'t require an object to be specified', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\Registry::setBinary(); don\'t require an object to be specified', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -91,7 +91,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.5', 'Registry\Model::setBinary(); if object is specified, it should be an eid', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.5', '\Flexio\Model\Registry::setBinary(); if object is specified, it should be an eid', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -109,7 +109,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.6', 'Registry\Model::setBinary(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', '\Flexio\Model\Registry::setBinary(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -127,7 +127,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.7', 'Registry\Model::setBinary(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.7', '\Flexio\Model\Registry::setBinary(); when specified, expiration time should be non-negative integer', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -136,7 +136,7 @@ class Test
         $expires = null;
         $actual = $model->setBinary($object_eid, $name, $value, $expires);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.8', 'Registry\Model::setBinary(); ignore null expiration times', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.8', '\Flexio\Model\Registry::setBinary(); ignore null expiration times', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -145,7 +145,7 @@ class Test
         $expires = 3600;
         $actual = $model->setBinary($object_eid, $name, $value, $expires);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.9', 'Registry\Model::setBinary(); set expiration time if it\'s a positive integer', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.9', '\Flexio\Model\Registry::setBinary(); set expiration time if it\'s a positive integer', $actual, $expected, $results);
 
 
 
@@ -165,14 +165,14 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('B.1', 'Registry\Model::entryExists(); throw an error with null input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('B.1', '\Flexio\Model\Registry::entryExists(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
         $name = \Flexio\Base\Util::generateHandle();
         $actual = $model->entryExists($object_eid, $name);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Registry\Model::entryExists(); with no entry', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Registry::entryExists(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -181,7 +181,7 @@ class Test
         $result = $model->setBinary($object_eid, $name, $value, null);
         $actual = $model->entryExists($object_eid, $name);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.3', 'Registry\Model::entryExists(); with existing entry', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\Registry::entryExists(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -190,7 +190,7 @@ class Test
         $result = $model->setBinary($object_eid, $name, $value, null);
         $actual = $model->entryExists($object_eid, 'a');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.4', 'Registry\Model::entryExists(); should be sensitive to the name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Model\Registry::entryExists(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -199,7 +199,7 @@ class Test
         $result = $model->setBinary($object_eid, $name, $value, null);
         $actual = $model->entryExists('', $name);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.5', 'Registry\Model::entryExists(); should be sensitive to the object', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Model\Registry::entryExists(); should be sensitive to the object', $actual, $expected, $results);
 
 
 
@@ -220,7 +220,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('C.1', 'Registry\Model::getBinary(); throw an error with null input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Model\Registry::getBinary(); throw an error with null input', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -229,7 +229,7 @@ class Test
         $entry = $model->getBinary($object_eid, $name, $mime_type);
         $actual = !isset($entry);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.2', 'Registry\Model::getBinary(); with no entry', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Registry::getBinary(); with no entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -239,7 +239,7 @@ class Test
         $result = $model->setBinary($object_eid, $name, $value, null, $mime_type);
         $actual = $model->getBinary($object_eid, $name, $mime_type);
         $expected = "\e\f\n";
-        \Flexio\Tests\Check::assertString('C.3', 'Registry\Model::getBinary(); with existing entry', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.3', '\Flexio\Model\Registry::getBinary(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = '';
@@ -249,7 +249,7 @@ class Test
         $result = $model->setBinary($object_eid, $name, $value, null, $mime_type);
         $actual = $model->getBinary($object_eid, $name, $mime_type);
         $expected = chr(7);
-        \Flexio\Tests\Check::assertString('C.4', 'Registry\Model::getBinary(); with existing entry', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('C.4', '\Flexio\Model\Registry::getBinary(); with existing entry', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -260,7 +260,7 @@ class Test
         $entry = $model->getBinary($object_eid, 'a', $mime_type);
         $actual = !isset($entry);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.5', 'Registry\Model::getBinary(); should be sensitive to the name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.5', '\Flexio\Model\Registry::getBinary(); should be sensitive to the name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -271,7 +271,7 @@ class Test
         $entry = $model->getBinary('', $name, $mime_type);
         $actual = !isset($entry);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.6', 'Registry\Model::getBinary(); should be sensitive to the object', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.6', '\Flexio\Model\Registry::getBinary(); should be sensitive to the object', $actual, $expected, $results);
 
 
 
@@ -284,7 +284,7 @@ class Test
         $entry = $model->getBinary($object_eid, $name, $mime_type);
         $actual = $mime_type;
         $expected = '';
-        \Flexio\Tests\Check::assertString('D.1', 'Registry\Model::getBinary(); test default mime type', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.1', '\Flexio\Model\Registry::getBinary(); test default mime type', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -295,7 +295,7 @@ class Test
         $entry = $model->getBinary($object_eid, $name, $mime_type);
         $actual = $mime_type;
         $expected = 'a';
-        \Flexio\Tests\Check::assertString('D.2', 'Registry\Model::getBinary(); test mime type with a value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('D.2', '\Flexio\Model\Registry::getBinary(); test mime type with a value', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -306,6 +306,6 @@ class Test
         $entry = $model->getBinary($object_eid, $name, $mime_type);
         $actual = $entry === "a,b,c\n1,2,3" && $mime_type === 'text/csv';
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('D.3', 'Registry\Model::getBinary(); test mime type with a value', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('D.3', '\Flexio\Model\Registry::getBinary(); test mime type with a value', $actual, $expected, $results);
     }
 }

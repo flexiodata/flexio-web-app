@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: when creating a user, reject invalid parameters
+        // TEST: \Flexio\Model\User::create(); when creating a user, reject invalid parameters
 
         // BEGIN TEST
         $input_eid = 'xxxxxxxxxxxx';
@@ -38,7 +38,7 @@ class Test
         $eid = $model->create($info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); don\'t allow the eid to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::create(); don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_UNDEFINED;
@@ -53,7 +53,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_USER;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::create(); don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -67,11 +67,11 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['xyz']);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); don\'t allow random parameters to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\User::create(); don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
-        // TEST: make sure the password isn't returned in the output
+        // TEST: \Flexio\Model\User::create(); make sure the password isn't returned in the output
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_UNDEFINED;
@@ -87,11 +87,11 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['password']);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); password shouldn\'t be returned in the output',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::create(); password shouldn\'t be returned in the output',  $actual, $expected, $results);
 
 
 
-        // TEST: when creating a user, make sure it has the essential fields
+        // TEST: \Flexio\Model\User::create(); when creating a user, make sure it has the essential fields
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -104,7 +104,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::create(); when creating user, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\User::create(); when creating user, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -140,11 +140,11 @@ class Test
             'owned_by' => '',
             'created_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\User::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
-        // TEST: make sure fields that are specified are properly set
+        // TEST: \Flexio\Model\User::create(); make sure fields that are specified are properly set
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -159,7 +159,7 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        \Flexio\Tests\Check::assertInArray('D.1', '\Model::create(); when creating user, allow eid_status to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\User::create(); when creating user, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -174,7 +174,7 @@ class Test
             'username' => $handle1,
             'email' => $handle2
         );
-        \Flexio\Tests\Check::assertInArray('D.2', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.2', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -189,7 +189,7 @@ class Test
         $expected = array(
             'first_name' => 'John'
         );
-        \Flexio\Tests\Check::assertInArray('D.3', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.3', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -204,7 +204,7 @@ class Test
         $expected = array(
             'last_name' => 'Williams'
         );
-        \Flexio\Tests\Check::assertInArray('D.4', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.4', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -221,7 +221,7 @@ class Test
             'last_name' => '',
             'full_name' => 'John Williams'
         );
-        \Flexio\Tests\Check::assertInArray('D.5', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.5', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -240,7 +240,7 @@ class Test
             'last_name' => 'Williams',
             'full_name' => 'Another Name'
         );
-        \Flexio\Tests\Check::assertInArray('D.6', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.6', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -254,7 +254,7 @@ class Test
         $expected = array(
             'email' => $handle2
         );
-        \Flexio\Tests\Check::assertInArray('D.7', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.7', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -269,7 +269,7 @@ class Test
         $expected = array(
             'phone' => '123-456-7890'
         );
-        \Flexio\Tests\Check::assertInArray('D.8', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.8', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -284,7 +284,7 @@ class Test
         $expected = array(
             'locale_language' => 'e'
         );
-        \Flexio\Tests\Check::assertInArray('D.9', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.9', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -299,7 +299,7 @@ class Test
         $expected = array(
             'locale_decimal' => 'd'
         );
-        \Flexio\Tests\Check::assertInArray('D.10', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.10', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -314,7 +314,7 @@ class Test
         $expected = array(
             'locale_thousands' => 't'
         );
-        \Flexio\Tests\Check::assertInArray('D.11', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.11', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -329,7 +329,7 @@ class Test
         $expected = array(
             'locale_dateformat' => 'f',
         );
-        \Flexio\Tests\Check::assertInArray('D.12', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.12', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -344,7 +344,7 @@ class Test
         $expected = array(
             'timezone' => 'CDT'
         );
-        \Flexio\Tests\Check::assertInArray('D.13', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.13', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle1 = \Flexio\Base\Util::generateHandle();
@@ -359,7 +359,7 @@ class Test
             'owned_by' => '',
             'created_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('D.14', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.14', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -378,6 +378,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('D.14', '\Model::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.14', '\Flexio\Model\User::create(); when creating user, make sure parameter is set',  $actual, $expected, $results);
     }
 }

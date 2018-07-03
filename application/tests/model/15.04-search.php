@@ -26,7 +26,7 @@ class Test
         $base_model = \Flexio\Tests\Util::getModel();
 
 
-        // TEST: search tests for basic paths
+        // TEST: \Flexio\Model\Search::exec(); search tests for basic paths
 
         // BEGIN TEST
         $info = array(
@@ -43,7 +43,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -66,7 +66,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -87,7 +87,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -109,7 +109,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.4', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -131,7 +131,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.5', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -151,7 +151,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.6', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -172,7 +172,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.7', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -196,7 +196,7 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.8', '\Model::search(); search for eids specified by basic path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.8', '\Flexio\Model\Search::exec(); search for eids specified by basic path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -223,6 +223,6 @@ class Test
         );
         sort($actual);
         sort($expected);
-        \Flexio\Tests\Check::assertArray('A.9', '\Model::search(); search for eids specified by basic path; return unique eids',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.9', '\Flexio\Model\Search::exec(); search for eids specified by basic path; return unique eids',  $actual, $expected, $results);
     }
 }

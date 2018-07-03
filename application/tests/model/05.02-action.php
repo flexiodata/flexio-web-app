@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->action;
 
 
-        // TEST: \Model::create(); action creation with no parameters
+        // TEST: \Flexio\Model\Action::create(); action creation with no parameters
 
         // BEGIN TEST
         $info = array(
@@ -32,11 +32,11 @@ class Test
         $eid = $model->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', 'Action::create(); for action creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Action::create(); for action creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
 
-        // TEST: Action::create(); action creation with basic input
+        // TEST: \Flexio\Model\Action::create(); action creation with basic input
 
         // BEGIN TEST
         $info = array(
@@ -79,6 +79,6 @@ class Test
             'owned_by' => 'cxxxxxxxxxxx',
             'created_by' => 'dxxxxxxxxxxx'
         );
-        \Flexio\Tests\Check::assertInArray('B.1', 'Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', '\Flexio\Model\Action::create(); make sure parameters can be set on creation',  $actual, $expected, $results);
     }
 }

@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->process;
 
 
-        // TEST: \Model::create(); process creation with no parameters
+        // TEST: \Flexio\Model\Process::create(); process creation with no parameters
 
         // BEGIN TEST
         $info = array(
@@ -32,11 +32,11 @@ class Test
         $eid = $model->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Process::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
 
-        // TEST: when creating a pipe, make sure it has the essential fields
+        // TEST: \Flexio\Model\Process::create(); when creating a pipe, make sure it has the essential fields
         // and make sure these are set when specified in the input
 
         // BEGIN TEST
@@ -47,7 +47,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in process creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Process::create(); in process creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -75,11 +75,11 @@ class Test
             'owned_by' => '',
             'created_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in process creation, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\Process::create(); in process creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
-        // TEST: \Model::create(); process creation with basic parameters
+        // TEST: \Flexio\Model\Process::create(); process creation with basic parameters
 
         // TODO: add tests
 
@@ -91,7 +91,7 @@ class Test
         $expected = array(
             'owned_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('C.11', '\Model::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.11', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -106,11 +106,11 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
 
 
-        // TEST: \Model::set(); make settable properties are set
+        // TEST: \Flexio\Model\Process::set(); make settable properties are set
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -130,6 +130,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('E.1', '\Model::set(); make sure properties are updated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Model\Process::set(); make sure properties are updated',  $actual, $expected, $results);
     }
 }

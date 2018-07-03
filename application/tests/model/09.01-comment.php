@@ -20,11 +20,11 @@ class Test
 {
     public function run(&$results)
     {
-        // TEST: misc comment functions
+        // TEST: \Flexio\Model\Comment; misc comment functions
 
         // BEGIN TEST
         $actual = true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', 'Misc comment functions; TODO: fill out',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment; Misc comment functions; TODO: fill out',  $actual, $expected, $results);
     }
 }
