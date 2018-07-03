@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Model::create(); multiple unique user creation
+        // TEST: \Flexio\Model\User::create(); multiple unique user creation
 
         // BEGIN TEST
         $total_count = 1000;
@@ -45,6 +45,6 @@ class Test
         }
         $actual = count($created_eids) == $total_count && $failed_user_creation == 0;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
     }
 }

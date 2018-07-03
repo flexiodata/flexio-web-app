@@ -24,7 +24,7 @@ class Test
         $search_model = \Flexio\Tests\Util::getModel()->search;
 
 
-        // TEST: search tests with invalid search path
+        // TEST: \Flexio\Model\Search::exec(); search tests with invalid search path
 
         // BEGIN TEST
         $actual = '';
@@ -39,7 +39,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Search::exec(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = '';
@@ -54,21 +54,21 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.2', '\Model::search(); throw an error with and invalid search parameter',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.2', '\Flexio\Model\Search::exec(); throw an error with and invalid search parameter',  $actual, $expected, $results);
 
         // BEGIN TEST
         $path = "";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $path = "->";
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.4', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -76,7 +76,7 @@ class Test
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.5', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
@@ -84,11 +84,11 @@ class Test
         $result = $search_model->exec($path);
         $actual = $result;
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.6', '\Model::search(); return false with invalid search path',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.6', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
 
 
-        // TEST: search tests with text parameters that aren't valid eids or edges in appropriate places
+        // TEST: \Flexio\Model\Search::exec(); search tests with text parameters that aren't valid eids or edges in appropriate places
 
         // BEGIN TEST
         $path = "abc";
@@ -96,7 +96,7 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('B.1', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Model\Search::exec(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $edge_copied_to = \Model::EDGE_COPIED_TO;
@@ -105,7 +105,7 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('B.2', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Model\Search::exec(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
 
         // BEGIN TEST
         $edge_copied_to = \Model::EDGE_COPIED_TO;
@@ -114,6 +114,6 @@ class Test
         $actual = $result;
         $expected = array(
         );
-        \Flexio\Tests\Check::assertArray('B.3', '\Model::search(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Model\Search::exec(); tolerate text as a search term; return empty if term can\'t be interpreted',  $actual, $expected, $results);
     }
 }
