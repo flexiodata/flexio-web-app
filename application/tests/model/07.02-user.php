@@ -24,135 +24,95 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::create(); user creation with invalid input
+        // TEST: \Flexio\Model\User::create(); multiple unique user creation
 
         // BEGIN TEST
-        $actual = array();
-        try
+        $total_count = 1000;
+        $created_eids = array();
+        $failed_user_creation = 0;
+        for ($i = 0; $i < $total_count; $i++)
         {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
             $info = array(
+                'username' => $handle1,
+                'email' => $handle2
             );
             $eid = $model->create($info);
+            $created_eids[$eid] = 1;
+            if (!\Flexio\Base\Eid::isValid($eid))
+                $failed_user_creation++;
         }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
-        );
-        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Model\User::create(); throw an exception with invalid input',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle = \Flexio\Tests\Util::createEmailAddress();
-            $info = array(
-                'email' => $handle
-            );
-            $eid = $model->create($info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
-        );
-        \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Model\User::create(); throw an exception if a username isn\'t specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle = \Flexio\Base\Util::generateHandle();
-            $info = array(
-                'username' => $handle
-            );
-            $eid = $model->create($info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
-        );
-        \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Model\User::create(); throw an exception if an email isn\'t specified',  $actual, $expected, $results);
-
-
-
-        // TEST: \Flexio\Model\User::create(); user creation with basic username input
-
-        // BEGIN TEST
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Tests\Util::createEmailAddress();
-        $info = array(
-            'username' => $handle1,
-            'email' => $handle2
-        );
-        $eid = $model->create($info);
-        $actual = \Flexio\Base\Eid::isValid($eid);
+        $actual = count($created_eids) == $total_count && $failed_user_creation == 0;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::create(); make sure a valid eid is returned when user is created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::create(); creating users should succeed and produce a unique eid for each new user',  $actual, $expected, $results);
+
+
+
+
+        // FUNCTION: \Flexio\Model\User::checkPasswordHash()
+
+
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->user;
+
+
+        // TEST: tests for empty string input
 
         // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = \Flexio\Tests\Util::createEmailAddress();
-            $info1 = array(
-                'username' => $handle1,
-                'email' => $handle2
-            );
-            $info2 = array(
-                'username' => $handle1,
-                'email' => $handle2
-            );
-            $eid_first_time_creation = $model->create($info1);
-            $eid_second_time_creation = $model->create($info2);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::CREATE_FAILED
-        );
-        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\User::create(); do not allow multiple users with the same username',  $actual, $expected, $results);
+        $actual = $model->checkPasswordHash('','');
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::checkPasswordHash(): empty string input', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle1 = \Flexio\Base\Util::generateHandle();
-            $handle2 = \Flexio\Tests\Util::createEmailAddress();
-            $info1 = array(
-                'username' => $handle1 . 'a',
-                'email' => $handle2
-            );
-            $info2 = array(
-                'username' => $handle1 . 'b',
-                'email' => $handle2
-            );
-            $eid_first_time_creation = $model->create($info1);
-            $eid_second_time_creation = $model->create($info2);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::CREATE_FAILED
-        );
-        \Flexio\Tests\Check::assertInArray('B.3', '\Flexio\Model\User::create(); do not allow multiple users with the same email',  $actual, $expected, $results);
+        $actual = $model->checkPasswordHash('{SSHA}b5e06a0994664b8674c182864515de4dc44333b0','');
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::checkPasswordHash(): hash for empty string input', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}b5e06a0994664b8674c182864515de4dc44333b0',' '); // check for trimming
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\User::checkPasswordHash(): single space password; check that spaces arent trimmed', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('b5e06a0994664b8674c182864515de4dc44333b0',''); // check for leading SSHA prefix
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\User::checkPasswordHash(): check for hash identifier', $actual, $expected, $results);
+
+
+
+        // TEST: tests for non-empty string input
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542','test');
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::checkPasswordHash(): basic non-empty string input', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542','test '); // don't allow trimming after
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\User::checkPasswordHash(): non-empty string input; check that spaces after password are not trimmed', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542',' test'); // don't allow trimming before
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\User::checkPasswordHash(): non-empty string input; check that spaces before password are not trimmed', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99tc');
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99tcd');
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check; password length sensitivity', $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99t');
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.6', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check; password length sensitivity', $actual, $expected, $results);
+
 
 
 
