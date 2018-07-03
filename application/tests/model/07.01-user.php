@@ -20,10 +20,14 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::checkPasswordHash()
+
+
+        // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: \Flexio\Model\User::checkPasswordHash(); tests for empty string input
+        // TEST: tests for empty string input
 
         // BEGIN TEST
         $actual = $model->checkPasswordHash('','');
@@ -47,7 +51,7 @@ class Test
 
 
 
-        // TEST: \Flexio\Model\User::checkPasswordHash():; tests for non-empty string input
+        // TEST: tests for non-empty string input
 
         // BEGIN TEST
         $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542','test');
