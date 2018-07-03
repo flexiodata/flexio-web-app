@@ -20,229 +20,81 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\Pipe::delete()
+
+
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->pipe;
 
 
-        // TEST: \Flexio\Model\Pipe::create(); when creating a pipe, reject invalid parameters
+        // TEST: non-eid input
 
         // BEGIN TEST
-        $input_eid = 'xxxxxxxxxxxx';
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'eid' => $input_eid,
-            'name' => $handle
-        );
-        $eid = $model->create($info);
-        $actual = $eid !== $input_eid;
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $eid_type = \Model::TYPE_STREAM;  // try something besides \Model::TYPE_UNDEFINED
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'eid_type' => $eid_type,
-            'name' => $handle
-        );
-        $eid = $model->create($info);
-        $info = $model->get($eid);
-        $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PIPE;
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'xxx' => $handle
-        );
-        $eid = $model->create($info);
-        $info = $model->get($eid);
-        $actual = isset($info['xxx']);
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
-
-
-
-        // TEST: \Flexio\Model\Pipe::create(); when creating a pipe, make sure it has the essential fields
-        // and make sure these are set when specified in the input
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-        );
-        $eid = $model->create($info);
-        $info = $model->get($eid);
-        $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Pipe::create(); in pipe creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'eid' => $eid,
-            'eid_type' => \Model::TYPE_PIPE,
-            'eid_status' => \Model::STATUS_AVAILABLE,
-            'alias' => '',
-            'name' => '',
-            'description'  => '',
-            'input' => '{}',
-            'output' => '{}',
-            'task' => '{}',
-            'schedule' => '',
-            'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
-            'owned_by' => '',
-            'created_by' => ''
-        );
-        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\Pipe::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
-
-
-
-        // TEST: \Flexio\Model\Pipe::create(); make sure fields that are specified are properly set
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'eid_status' => \Model::STATUS_PENDING // currently, items are created in active state
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'eid_status' => \Model::STATUS_PENDING
-        );
-        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Model\Pipe::create(); in pipe creation, allow eid_status to be set',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'name' => 'Test pipe name'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'name' => 'Test pipe name'
-        );
-        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'description' => 'Test pipe description'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'description' => 'Test pipe description'
-        );
-        \Flexio\Tests\Check::assertInArray('C.3', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'input' => '{}'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'input' => '{}'
-        );
-        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'output' => '{}'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'output' => '{}'
-        );
-        \Flexio\Tests\Check::assertInArray('C.6', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'task' => '{}'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'task' => '{}'
-        );
-        \Flexio\Tests\Check::assertInArray('C.7', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'schedule' => '{}'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'schedule' => '{}'
-        );
-        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'schedule_status' => 'A'
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'schedule_status' => \Model::PIPE_STATUS_ACTIVE
-        );
-        \Flexio\Tests\Check::assertInArray('C.9', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = array();
+        $actual = '';
         try
         {
-            $handle = \Flexio\Base\Util::generateHandle();
-            $info = array(
-                'schedule_status' => 'D' // valid inputs are A and I
-            );
-            $eid = $model->create($info);
+            $model->delete(null);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
-        catch (\Flexio\Base\Exception $e)
+        catch (\Error $e)
         {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
-        );
-        \Flexio\Tests\Check::assertInArray('C.10', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Pipe::delete(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'owned_by' => ''
-        );
-        \Flexio\Tests\Check::assertInArray('C.11', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        $actual = $model->delete('');
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Pipe::delete(); return false with invalid input',  $actual, $expected, $results);
+
+
+        // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
-        $random_eid1 = \Flexio\Base\Eid::generate();
-        $random_eid2 = \Flexio\Base\Eid::generate();
+        $eid = \Flexio\Base\Eid::generate();
+        $actual = $model->delete($eid);
+        $expected = false;
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Pipe::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
+
+
+        // TEST: valid eid input, and object exists
+
+        // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
+            'name' => $handle
         );
         $eid = $model->create($info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
+        $actual = $model->delete($eid);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\Pipe::delete(); return true when deleting an object that exists',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
+        $info = array(
+            'name' => $handle
         );
-        \Flexio\Tests\Check::assertInArray('C.12', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        $eid = $model->create($info);
+        $status_before_deletion = $model->getStatus($eid);
+        $delete_result = $model->delete($eid);
+        $status_after_deletion = $model->getStatus($eid);
+        $actual = $delete_result === true && $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Pipe::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle = \Flexio\Base\Util::generateHandle();
+        $info = array(
+            'name' => $handle
+        );
+        $eid = $model->create($info);
+        $status_before_deletion = $model->getStatus($eid);
+        $first_deletion = $model->delete($eid);
+        $second_deletion = $model->delete($eid);
+        $status_after_deletion = $model->getStatus($eid);
+        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === true;
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('C.3', '\Flexio\Model\Pipe::delete(); multiple deletion should succeed',  $actual, $expected, $results);
     }
 }
