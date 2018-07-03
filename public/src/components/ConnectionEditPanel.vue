@@ -259,6 +259,7 @@
           case ctypes.CONNECTION_TYPE_BOX:
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
+          case ctypes.CONNECTION_TYPE_GMAIL:
           case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
           case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
           case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
@@ -288,8 +289,9 @@
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
       has_errors() {
-        if (this.is_oauth && !this.is_connected)
+        if (this.is_oauth && !this.is_connected) {
           return true
+        }
 
         return false
       }

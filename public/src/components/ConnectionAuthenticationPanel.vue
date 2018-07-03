@@ -36,7 +36,7 @@
           ref="form"
           class="flex flex-column el-form--compact"
           label-width="8rem"
-          :model="$data"
+          :model="cinfo"
           :rules="rules"
         >
           <!-- amazon s3 -->
@@ -51,7 +51,7 @@
               placeholder="AWS Access Key"
               spellcheck="false"
               :autofocus="true"
-              v-model="aws_key"
+              v-model="cinfo.aws_key"
             />
           </el-form-item>
 
@@ -66,7 +66,7 @@
             <el-input
               placeholder="AWS Secret Key"
               spellcheck="false"
-              v-model="aws_secret"
+              v-model="cinfo.aws_secret"
             />
           </el-form-item>
 
@@ -81,7 +81,7 @@
             <el-input
               placeholder="Bucket"
               spellcheck="false"
-              v-model="bucket"
+              v-model="cinfo.bucket"
             />
           </el-form-item>
 
@@ -95,7 +95,7 @@
           >
             <el-select
               placeholder="Region"
-              v-model="region"
+              v-model="cinfo.region"
             >
               <el-option
                 :label="option.label"
@@ -117,7 +117,7 @@
             <el-input
               placeholder="Token"
               spellcheck="false"
-              v-model="token"
+              v-model="cinfo.token"
             />
           </el-form-item>
 
@@ -133,7 +133,7 @@
             <el-input
               placeholder="Email address"
               :autofocus="true"
-              v-model="email"
+              v-model="cinfo.email"
             />
           </el-form-item>
 
@@ -147,7 +147,7 @@
           >
             <el-select
               placeholder="Security"
-              v-model="security"
+              v-model="cinfo.security"
             >
               <el-option label="None" value="" />
               <el-option label="TLS" value="tls" />
@@ -166,7 +166,7 @@
             <el-input
               placeholder="Host"
               spellcheck="false"
-              v-model="host"
+              v-model="cinfo.host"
             />
           </el-form-item>
 
@@ -181,7 +181,7 @@
             <el-input
               placeholder="Port"
               spellcheck="false"
-              v-model="port"
+              v-model="cinfo.port"
             />
           </el-form-item>
 
@@ -196,7 +196,7 @@
             <el-input
               placeholder="Username"
               spellcheck="false"
-              v-model="username"
+              v-model="cinfo.username"
             />
           </el-form-item>
 
@@ -212,7 +212,7 @@
               type="password"
               placeholder="Password"
               spellcheck="false"
-              v-model="password"
+              v-model="cinfo.password"
             />
           </el-form-item>
 
@@ -227,7 +227,7 @@
             <el-input
               placeholder="Database"
               spellcheck="false"
-              v-model="database"
+              v-model="cinfo.database"
             />
           </el-form-item>
 
@@ -242,7 +242,7 @@
             <el-input
               placeholder="Base Path"
               spellcheck="false"
-              v-model="base_path"
+              v-model="cinfo.base_path"
             />
           </el-form-item>
 
@@ -317,63 +317,42 @@
 
   export default {
     props: {
-      'connection': {
+      connection: {
         type: Object,
         required: true
       },
-      'mode': {
+      mode: {
         type: String,
         default: 'add'
       }
     },
     mixins: [MixinOauth],
     watch: {
-      connection() { this.reset() },
-
-      token()      { this.emitChange() },
-      host()       { this.emitChange() },
-      port()       { this.emitChange() },
-      username()   { this.emitChange() },
-      password()   { this.emitChange() },
-      database()   { this.emitChange() },
-      base_path()  { this.emitChange() },
-
-      // aws
-      aws_key()    { this.emitChange() },
-      aws_secret() { this.emitChange() },
-      bucket()     { this.emitChange() },
-      region()     { this.emitChange() },
-
-      // smtp
-      email()      { this.emitChange() },
-      security()   { this.emitChange() }
+      connection: {
+        handler: 'reset',
+        immediate: true,
+        deep: true
+      },
+      cinfo: {
+        handler: 'emitChange',
+        immediate: true,
+        deep: true
+      }
     },
     data() {
-      var c = _.get(this.connection, 'connection_info', {})
-      c = _.assign({}, defaultConnectionInfo(), c)
+      var cinfo = _.get(this.connection, 'connection_info', {})
+      cinfo = _.assign({}, defaultConnectionInfo(), cinfo)
+
+      if (this.mode == 'add') {
+        cinfo.port = this.getDefaultPort()
+        cinfo.region = 'us-east-1'
+        cinfo.security = 'ssl'
+      }
 
       return {
-        test_state: 'none', // none, testing, error, success
+        cinfo,
         region_options,
-
-        token: _.get(c, 'token', ''),
-        host: _.get(c, 'host', ''),
-        port: this.mode == 'edit' ? _.get(c, 'port', '') : this.getDefaultPort(),
-        username: _.get(c, 'username', ''),
-        password: _.get(c, 'password', ''),
-        database: _.get(c, 'database', ''),
-        base_path: _.get(c, 'base_path', ''),
-
-        // aws
-        aws_key: _.get(c, 'aws_key', ''),
-        aws_secret: _.get(c, 'aws_secret', ''),
-        bucket: _.get(c, 'bucket', ''),
-        region: this.mode == 'edit' ? _.get(c, 'region', '') : 'us-east-1',
-
-        // email
-        email: _.get(c, 'email', ''),
-        security: this.mode == 'edit' ? _.get(c, 'security', '') : 'ssl',
-
+        test_state: 'none', // none, testing, error, success
         rules: {
           email: [
             { required: true, message: 'Please input an email address', trigger: 'blur' },
@@ -384,18 +363,39 @@
     },
     computed: {
       eid() {
-        return _.get(this, 'connection.eid', '')
+        return _.get(this.connection, 'eid', '')
       },
       ctype() {
-        return _.get(this, 'connection.connection_type', '')
+        return _.get(this.connection, 'connection_type', '')
       },
       cstatus() {
-        return _.get(this, 'connection.connection_status', '')
+        return _.get(this.connection, 'connection_status', '')
       },
-      connection_info() {
-        return _.pick(this.$data, this.key_values)
+      is_smtp() {
+        return this.ctype == ctypes.CONNECTION_TYPE_SMTP
+      },
+      is_gmail() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
+      },
+      is_oauth() {
+        switch (this.ctype)
+        {
+          case ctypes.CONNECTION_TYPE_BOX:
+          case ctypes.CONNECTION_TYPE_DROPBOX:
+          case ctypes.CONNECTION_TYPE_GITHUB:
+          case ctypes.CONNECTION_TYPE_GMAIL:
+          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
+          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
+            return true
+        }
+        return false
       },
       key_values() {
+        if (this.is_oauth) {
+          return []
+        }
+
         switch (this.getConnectionType()) {
           default:
             return ['host', 'port', 'username', 'password', 'database']
@@ -415,13 +415,16 @@
             return ['username', 'password']
         }
       },
+      connection_info() {
+        return _.pick(this.cinfo, this.key_values)
+      },
       is_connected() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       service_name() {
         return this.is_gmail ? 'Gmail' :
           this.is_smtp ? 'your email account' :
-          _.result(this, 'cinfo.service_name', '')
+          _.result(this, 'getConnectionInfo.service_name', '')
       },
       test_btn_type() {
         switch (this.test_state) {
@@ -453,36 +456,10 @@
 
         return 'Test connection'
       },
-      is_smtp() {
-        return this.ctype == ctypes.CONNECTION_TYPE_SMTP
-      },
-      is_gmail() {
-        return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
-      },
-      is_oauth() {
-        switch (this.ctype)
-        {
-          case ctypes.CONNECTION_TYPE_BOX:
-          case ctypes.CONNECTION_TYPE_DROPBOX:
-          case ctypes.CONNECTION_TYPE_GITHUB:
-          case ctypes.CONNECTION_TYPE_GMAIL:
-          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
-          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
-          case ctypes.CONNECTION_TYPE_GOOGLESHEETS:
-            return true
-        }
-        return false
-      },
       oauth_url() {
         var eid =  _.get(this, 'connection.eid', '')
         return 'https://' + HOSTNAME + '/a/connectionauth' + '?service=' + this.ctype + '&eid=' + eid
       }
-    },
-    mounted() {
-      // TODO: this is crude, but it's the best way right now of getting the connection info
-      //       back to the connection edit panel (even if we never edit anything)
-      this.reset()
-      this.$nextTick(() => { this.emitChange() })
     },
     methods: {
       validate(callback) {
@@ -492,12 +469,12 @@
           callback(true)
         }
       },
-      cinfo() {
+      getConnectionInfo() {
         return _.find(connections, { connection_type: this.ctype })
       },
       reset() {
         _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
-          this[key] = val
+          this.cinfo[key] = val
         })
 
         if (this.$refs.form) {
@@ -513,8 +490,7 @@
       },
       getDefaultPort() {
         // we use a method here since we can't use computed values in the data()
-        switch (this.getConnectionType())
-        {
+        switch (this.getConnectionType()) {
           case ctypes.CONNECTION_TYPE_ELASTICSEARCH: return '443'
           case ctypes.CONNECTION_TYPE_MYSQL:         return '3306'
           case ctypes.CONNECTION_TYPE_POSTGRES:      return '5432'
@@ -529,13 +505,17 @@
         return _.includes(this.key_values, key)
       },
       onDisconnectClick() {
-        this.tryDisconnect(_.assign({}, this.connection, { connection_info: this.connection_info }))
+        var attrs = _.cloneDeep(this.connection)
+        _.assign(attrs, { connection_info: this.connection_info })
+        this.tryDisconnect(attrs)
       },
       onConnectClick() {
         this.tryOauthConnect()
       },
       onTestClick() {
-        this.tryTest(_.assign({}, this.connection, { connection_info: this.connection_info }))
+        var attrs = _.cloneDeep(this.connection)
+        _.assign(attrs, { connection_info: this.connection_info })
+        this.tryTest(attrs)
       },
       tryDisconnect(attrs) {
         var eid = attrs.eid
