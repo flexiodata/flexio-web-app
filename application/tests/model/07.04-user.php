@@ -73,7 +73,6 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\User::create(); don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
-
         // TEST: make sure the password isn't returned in the output
 
         // BEGIN TEST
@@ -91,7 +90,6 @@ class Test
         $actual = isset($info['password']);
         $expected = false;
         \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::create(); password shouldn\'t be returned in the output',  $actual, $expected, $results);
-
 
 
         // TEST: make sure creation output has the essential fields
@@ -144,7 +142,6 @@ class Test
             'created_by' => ''
         );
         \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\User::create(); when creating user, make sure essential fields are created',  $actual, $expected, $results);
-
 
 
         // TEST: make sure fields that are specified are properly set

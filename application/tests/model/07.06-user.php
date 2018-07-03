@@ -57,7 +57,6 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::set(); return false with invalid input',  $actual, $expected, $results);
 
 
-
         // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
@@ -83,7 +82,6 @@ class Test
         $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\User::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
-
 
 
         // TEST: object that exists
@@ -174,7 +172,6 @@ class Test
         \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\User::set(); throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
-
         // TEST: make sure that non-specified properties aren't changed
 
         // BEGIN TEST
@@ -196,7 +193,6 @@ class Test
             'company_name' => 'Express Kitchen'
         );
         \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\User::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
-
 
 
         // TEST: make sure settable properties are set
