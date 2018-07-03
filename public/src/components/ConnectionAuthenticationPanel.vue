@@ -491,7 +491,7 @@
       },
       oauth_url() {
         var eid =  _.get(this, 'connection.eid', '')
-        return 'https://' + HOSTNAME + '/a/connectionauth' + '?service=' + this.ctype + '&eid=' + eid
+        return 'https://' + HOSTNAME + '/oauth2/connect' + '?service=' + this.ctype + '&eid=' + eid
       }
     },
     methods: {
