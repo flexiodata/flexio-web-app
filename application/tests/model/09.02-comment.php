@@ -24,39 +24,26 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->comment;
 
 
-        // TEST: \Flexio\Model\Comment::create(); comment creation with no parameters
+        // TEST: \Flexio\Model\Comment::create(); multiple unique comment creation
 
         // BEGIN TEST
-        $info = array(
-        );
-        $eid = $model->create($info);
-        $actual = \Flexio\Base\Eid::isValid($eid);
+        $total_count = 1000;
+        $created_eids = array();
+        $failed_comment_creation = 0;
+        for ($i = 0; $i < $total_count; $i++)
+        {
+            $handle = \Flexio\Base\Util::generateHandle();
+            $info = array(
+                'comment' => "Test comment $i"
+            );
+            $eid = $model->create($info);
+            $created_eids[$eid] = 1;
+            if (!\Flexio\Base\Eid::isValid($eid))
+                $failed_comment_creation++;
+        }
+        $actual = count($created_eids) == $total_count && $failed_comment_creation == 0;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment::create(); creating comments should succeed and produce a unique eid for each new comment',  $actual, $expected, $results);
 
-
-
-        // TEST: \Flexio\Model\Comment::create(); comment creation with basic parameter input
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => 'This is a test comment'
-        );
-        $eid = $model->create($info);
-        $actual = \Flexio\Base\Eid::isValid($eid);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Comment::create(); make sure valid eid is returned when comment is created',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
-        $eid_first_time_creation = $model->create($info);
-        $eid_second_time_creation = $model->create($info);
-        $actual = (\Flexio\Base\Eid::isValid($eid_first_time_creation) && \Flexio\Base\Eid::isValid($eid_second_time_creation));
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Comment::create(); allow multiple comments with the same value',  $actual, $expected, $results);
     }
 }
