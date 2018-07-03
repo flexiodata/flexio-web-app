@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->connection;
 
 
-        // TEST: set tests with non-eid input
+        // TEST: \Flexio\Model\Connection::set(); set tests with non-eid input
 
         // BEGIN TEST
         $actual = '';
@@ -42,7 +42,7 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', '\Model::set(); throw an error with null input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Connection::set(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -51,11 +51,11 @@ class Test
         );
         $actual = $model->set('', $info);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::set(); return false with invalid input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Connection::set(); return false with invalid input',  $actual, $expected, $results);
 
 
 
-        // TEST: set tests with valid eid input, but object doesn't exist
+        // TEST: \Flexio\Model\Connection::set(); set tests with valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -65,7 +65,7 @@ class Test
         $eid = \Flexio\Base\Eid::generate();
         $actual = $model->set($eid, $info);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Connection::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -77,11 +77,11 @@ class Test
         $set_result = $model->set($eid, $info);
         $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Model::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Connection::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
 
 
 
-        // TEST: set tests on an object that exists
+        // TEST: \Flexio\Model\Connection::set(); set tests on an object that exists
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -90,7 +90,7 @@ class Test
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.1', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\Connection::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -103,7 +103,7 @@ class Test
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.2', '\Model::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Connection::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -116,7 +116,7 @@ class Test
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.3', '\Model::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.3', '\Flexio\Model\Connection::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -129,7 +129,7 @@ class Test
         );
         $actual = $model->set($eid, $info);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.4', '\Model::set(); return true when parameters are set successfully',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.4', '\Flexio\Model\Connection::set(); return true when parameters are set successfully',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -153,11 +153,11 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('C.5', '\Model::set(); return false and throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\Connection::set(); return false and throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
 
 
 
-        // TEST: \Model::set(); make sure that non-specified properties aren't changed
+        // TEST: \Flexio\Model\Connection::set(); make sure that non-specified properties aren't changed
 
         // BEGIN TEST
         $info = array(
@@ -173,11 +173,11 @@ class Test
             'name' => 'Test connection',
             'description' => 'This is a test'
         );
-        \Flexio\Tests\Check::assertInArray('D.1', '\Model::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\Connection::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
 
 
 
-        // TEST: \Model::set(); make settable properties are set
+        // TEST: \Flexio\Model\Connection::set(); make settable properties are set
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -197,6 +197,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('E.1', '\Model::set(); make sure properties are updated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Model\Connection::set(); make sure properties are updated',  $actual, $expected, $results);
     }
 }

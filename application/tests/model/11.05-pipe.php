@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->pipe;
 
 
-        // TEST: when creating a pipe, reject invalid parameters
+        // TEST: \Flexio\Model\Pipe::create(); when creating a pipe, reject invalid parameters
 
         // BEGIN TEST
         $input_eid = 'xxxxxxxxxxxx';
@@ -36,7 +36,7 @@ class Test
         $eid = $model->create($info);
         $actual = $eid !== $input_eid;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow the eid to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid_type = \Model::TYPE_STREAM;  // try something besides \Model::TYPE_UNDEFINED
@@ -49,7 +49,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid_type']) && $info['eid_type'] === \Model::TYPE_PIPE;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Model::create(); in pipe creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow the eid_type to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -60,11 +60,11 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['xxx']);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Model::create(); in pipe creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Pipe::create(); in pipe creation, don\'t allow random parameters to be set',  $actual, $expected, $results);
 
 
 
-        // TEST: when creating a pipe, make sure it has the essential fields
+        // TEST: \Flexio\Model\Pipe::create(); when creating a pipe, make sure it has the essential fields
         // and make sure these are set when specified in the input
 
         // BEGIN TEST
@@ -75,7 +75,7 @@ class Test
         $info = $model->get($eid);
         $actual = isset($info['eid']) && isset($info['eid_type']) && isset($info['created']) && isset($info['updated']);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Model::create(); in pipe creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Pipe::create(); in pipe creation, make sure the identifier and date fields are returned',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -98,11 +98,11 @@ class Test
             'owned_by' => '',
             'created_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('B.2', '\Model::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\Pipe::create(); in name creation, make sure essential fields are created',  $actual, $expected, $results);
 
 
 
-        // TEST: make sure fields that are specified are properly set
+        // TEST: \Flexio\Model\Pipe::create(); make sure fields that are specified are properly set
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -114,7 +114,7 @@ class Test
         $expected = array(
             'eid_status' => \Model::STATUS_PENDING
         );
-        \Flexio\Tests\Check::assertInArray('C.1', '\Model::create(); in pipe creation, allow eid_status to be set',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Model\Pipe::create(); in pipe creation, allow eid_status to be set',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -126,7 +126,7 @@ class Test
         $expected = array(
             'name' => 'Test pipe name'
         );
-        \Flexio\Tests\Check::assertInArray('C.2', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -138,7 +138,7 @@ class Test
         $expected = array(
             'description' => 'Test pipe description'
         );
-        \Flexio\Tests\Check::assertInArray('C.3', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.3', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -150,7 +150,7 @@ class Test
         $expected = array(
             'input' => '{}'
         );
-        \Flexio\Tests\Check::assertInArray('C.5', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -162,7 +162,7 @@ class Test
         $expected = array(
             'output' => '{}'
         );
-        \Flexio\Tests\Check::assertInArray('C.6', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.6', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -174,7 +174,7 @@ class Test
         $expected = array(
             'task' => '{}'
         );
-        \Flexio\Tests\Check::assertInArray('C.7', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.7', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -186,7 +186,7 @@ class Test
         $expected = array(
             'schedule' => '{}'
         );
-        \Flexio\Tests\Check::assertInArray('C.8', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
@@ -198,7 +198,7 @@ class Test
         $expected = array(
             'schedule_status' => \Model::PIPE_STATUS_ACTIVE
         );
-        \Flexio\Tests\Check::assertInArray('C.9', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.9', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = array();
@@ -218,7 +218,7 @@ class Test
         $expected = array(
             'code' => \Flexio\Base\Error::INVALID_PARAMETER
         );
-        \Flexio\Tests\Check::assertInArray('C.10', '\Model::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.10', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -228,7 +228,7 @@ class Test
         $expected = array(
             'owned_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('C.11', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.11', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -243,6 +243,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('C.12', '\Model::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.12', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }

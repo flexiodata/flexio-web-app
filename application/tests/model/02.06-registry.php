@@ -36,7 +36,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', 'Registry\Model::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Registry::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -49,7 +49,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.2', 'Registry\Model::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Registry::cleanupExpiredEntries(); clean up entries that have expired', $actual, $expected, $results);
 
 
 
@@ -67,7 +67,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', 'Registry\Model::expireKey(); make sure key expiration value is valid', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Registry::expireKey(); make sure key expiration value is valid', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -82,7 +82,7 @@ class Test
         $third_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists == true && $third_exists === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', 'Registry\Model::expireKey(); make sure keys can be expired immediately', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Registry::expireKey(); make sure keys can be expired immediately', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -96,7 +96,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.3', 'Registry\Model::expireKey(); make sure keys expire for time that\'s set', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\Registry::expireKey(); make sure keys expire for time that\'s set', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -109,7 +109,7 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists == true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.4', 'Registry\Model::expireKey(); make sure expiration is sensitive to name', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Model\Registry::expireKey(); make sure expiration is sensitive to name', $actual, $expected, $results);
 
         // BEGIN TEST
         $object_eid = \Flexio\Base\Eid::generate();
@@ -122,6 +122,6 @@ class Test
         $second_exists = $model->entryExists($object_eid, $name);
         $actual = $first_exists === true && $second_exists == true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.5', 'Registry\Model::expireKey(); make sure expiration is sensitive to object', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Model\Registry::expireKey(); make sure expiration is sensitive to object', $actual, $expected, $results);
     }
 }

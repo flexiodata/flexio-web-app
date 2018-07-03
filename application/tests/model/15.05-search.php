@@ -25,7 +25,7 @@ class Test
         $pipe_model = \Flexio\Tests\Util::getModel()->pipe;
 
 
-        // TEST: make sure that duplicate edges and eids are removed in search
+        // TEST: \Flexio\Model\Search::search(); make sure that duplicate edges and eids are removed in search
 
         // BEGIN TEST
         $info = array(
@@ -37,7 +37,7 @@ class Test
         $expected = array(
             $eid
         );
-        \Flexio\Tests\Check::assertArray('A.1', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Model\Search::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -49,7 +49,7 @@ class Test
         $expected = array(
             $eid
         );
-        \Flexio\Tests\Check::assertArray('A.2', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Model\Search::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
 
         // BEGIN TEST
         $info = array(
@@ -61,6 +61,6 @@ class Test
         $expected = array(
             $eid
         );
-        \Flexio\Tests\Check::assertArray('A.3', '\Model::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Model\Search::search(); make sure that duplicate edges and eids are removed in search',  $actual, $expected, $results);
     }
 }

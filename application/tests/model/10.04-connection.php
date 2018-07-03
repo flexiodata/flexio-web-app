@@ -24,7 +24,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->connection;
 
 
-        // TEST: \Model::create(); connection creation with no parameters
+        // TEST: \Flexio\Model\Connection::create(); connection creation with no parameters
 
         // BEGIN TEST
         $info = array(
@@ -32,6 +32,6 @@ class Test
         $eid = $model->create($info);
         $actual = \Flexio\Base\Eid::isValid($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Model::create(); for connection creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Connection::create(); for connection creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
     }
 }
