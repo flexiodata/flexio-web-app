@@ -23,7 +23,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         parent::init();
     }
 
-    public function connectionauthAction() : void
+    public function connectAction() : void
     {
         // TODO: route this request through the UI?
 
@@ -31,7 +31,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         $params = $this->getRequest()->getParams();
 
         $auth_params = array();
-        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/a/connectionauthcallback';
+        $auth_params['redirect'] = (IS_SECURE() ? 'https':'http') . '://' . $_SERVER['HTTP_HOST'] . '/oauth2/callback';
 
         if (isset($params['service']))
             $auth_params['service'] = $params['service'];
@@ -124,7 +124,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         }
     }
 
-    public function connectionauthcallbackAction() : void
+    public function callbackAction() : void
     {
         $params = $this->getRequest()->getParams();
 
