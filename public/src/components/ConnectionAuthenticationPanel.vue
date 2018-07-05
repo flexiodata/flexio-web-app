@@ -75,7 +75,7 @@
             <template slot="label">
               AWS Access Key
               <span class="lh-1 hint--top" aria-label="The access token for your AWS account">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -96,7 +96,7 @@
             <template slot="label">
               AWS Secret Key
               <span class="lh-1 hint--top" aria-label="The secret key for your AWS account">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -116,7 +116,7 @@
             <template slot="label">
               Bucket
               <span class="lh-1 hint--top" aria-label="The AWS bucket name to which you wish to connect">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -136,7 +136,7 @@
             <template slot="label">
               Region
               <span class="lh-1 hint--top" aria-label="The region your AWS services are located">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-select
@@ -178,7 +178,7 @@
             <template slot="label">
               Email address
               <span class="lh-1 hint--top" aria-label="Your email address">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -198,7 +198,7 @@
             <template slot="label">
               Security
               <span class="lh-1 hint--top" aria-label="The security type, if any, required for your account">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-select
@@ -221,7 +221,7 @@
             <template slot="label">
               Host
               <span class="lh-1 hint--top" aria-label="The host name or IP address">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -241,7 +241,7 @@
             <template slot="label">
               Port
               <span class="lh-1 hint--top" aria-label="The port required for data transmission">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -261,7 +261,7 @@
             <template slot="label">
               Username
               <span class="lh-1 hint--top" aria-label="The login associated with your account">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -281,7 +281,7 @@
             <template slot="label">
               Password
               <span class="lh-1 hint--top" aria-label="The password associated with your account">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -303,7 +303,7 @@
             <template slot="label">
               Database
               <span class="lh-1 hint--top" aria-label="The database name to which you wish to connect">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
@@ -324,7 +324,7 @@
             <template slot="label">
               Base path
               <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
-                <i class="el-icon-info blue f8"></i>
+                <i class="el-icon-info blue"></i>
               </span>
             </template>
             <el-input
