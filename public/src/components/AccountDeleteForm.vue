@@ -157,7 +157,7 @@
           }
 
           var eid = this.active_user_eid
-          var attrs = _.pick(this.$data, ['username', 'password'])
+          var attrs = _.pick(this.edit_info, ['username', 'password'])
           this.$store.dispatch('deleteUser', { eid, attrs }).then(response => {
             if (response.ok) {
               this.signOut()
