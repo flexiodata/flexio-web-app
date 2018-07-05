@@ -76,7 +76,6 @@ class FlexioPlugin extends \Flexio\System\FrameworkPlugin
             }
 
             // standard controllers
-            case 'a':
             case 'oauth2':
             case 'install':
             case 'phantom':
