@@ -25,7 +25,7 @@ class Right extends ModelBase
                 'object_eid'  => array('type' => 'string', 'required' => false, 'default' => ''),
                 'access_type' => array('type' => 'string', 'required' => false, 'default' => ''),
                 'access_code' => array('type' => 'string', 'required' => false, 'default' => ''),
-                'actions'     => array('type' => 'string', 'required' => false, 'default' => ''),
+                'actions'     => array('type' => 'string', 'required' => false, 'default' => '[]'),
                 'owned_by'    => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'  => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -53,7 +53,7 @@ class Right extends ModelBase
         }
         catch (\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, $t);
         }
     }
 
