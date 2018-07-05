@@ -113,6 +113,7 @@ class Api
         // users
         'POS /:userid/account'                        => '\Flexio\Api\User::set',
         'GET /:userid/account'                        => '\Flexio\Api\User::get',
+        'DEL /:userid/account'                        => '\Flexio\Api\User::purge',
         'POS /:userid/account/credentials'            => '\Flexio\Api\User::changepassword',
 
         // authorization

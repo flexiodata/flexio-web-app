@@ -218,6 +218,58 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function purge(\Flexio\Api\Request $request) : void
+    {
+        // purge will permanently delete all database records associated
+        // with the given owner; username and password confirmation is
+        // required as a precaution
+
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'username' => array('type' => 'identifier', 'required' => true),
+                'password' => array('type' => 'password', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $username = $post_params['username'];
+        $password = $post_params['password'];
+
+        // make sure we have a valid user
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user_eid !== $owner_user->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+
+        // make sure the supplied username matches the username of the user that's to be deleted
+        $owner_user_properties = $owner_user->get();
+        if ($owner_user_properties['username'] !== $username)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The username entered doesn\'t match the username of the user to delete'));
+
+        // make sure the supplied password matches the password of the user that's to be deleted
+        if ($owner_user->checkPassword($password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The passwored entered doesn\'t match the password of the user to delete'));
+
+        // permanently delete the user (purge)
+        $owner_user->purge();
+
+        // clear the login identity (equivalent to logging out)
+        \Flexio\System\System::clearLoginIdentity();
+        @session_destroy();
+        @setcookie('FXSESSID', '', time()-86400, '/');
+
+        // return empty "about" info
+        $result = array();
+        $result['eid'] = '';
+        $result['eid_type'] = \Model::TYPE_USER;
+
+        $request->setResponseParams($result);
+        $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+        $request->track();
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
