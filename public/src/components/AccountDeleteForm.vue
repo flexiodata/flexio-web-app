@@ -58,7 +58,7 @@
         type="danger"
         class="ttu b w-100"
         :disabled="!is_delete_allowed"
-        @click="doDelete"
+        @click="deleteUser"
       >
         Yes, delete this account
       </el-button>
@@ -68,6 +68,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { ROUTE_SIGNIN } from '../constants/route'
   import Validation from './mixins/validation'
 
   const defaultInfo = () => {
@@ -149,21 +150,30 @@
           this.is_delete_allowed = valid
         })
       }, 500),
-      doDelete() {
+      deleteUser() {
         this.$refs.form.validate((valid) => {
           if (!valid) {
             return
           }
 
           var eid = this.active_user_eid
-          var attrs = _.pick(this.$data, ['username', 'confirm_text', 'password'])
-          this.$store.dispatch('changePassword', { eid, attrs }).then(response => {
+          var attrs = _.pick(this.$data, ['username', 'password'])
+          this.$store.dispatch('deleteUser', { eid, attrs }).then(response => {
             if (response.ok) {
-              setTimeout(() => { this.show_success = false }, 4000)
+              this.signOut()
             } else {
-              this.error_msg = _.get(response, 'data.error.message', '')
+            // TODO: add error handling
             }
           })
+        })
+      },
+      signOut() {
+        this.$store.dispatch('signOut').then(response => {
+          if (response.ok) {
+            this.$router.push({ name: ROUTE_SIGNIN })
+          } else {
+            // TODO: add error handling
+          }
         })
       }
     }
