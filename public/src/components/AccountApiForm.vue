@@ -1,6 +1,6 @@
 <template>
   <div>
-    <EmptyItem class="mv4" v-if="tokens.length == 0">
+    <EmptyItem v-if="tokens.length == 0">
       <span slot="text">No API keys to show</span>
     </EmptyItem>
     <div v-else>
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <div :class="tokens.length == 0 ? 'tc' : 'mt3'" v-if="showCreateButton">
+    <div :class="tokens.length == 0 ? 'mt2 tc' : 'mt2'" v-if="showCreateButton">
       <el-button type="primary" class="ttu b" @click="createApiKey">Create API Key</el-button>
     </div>
   </div>

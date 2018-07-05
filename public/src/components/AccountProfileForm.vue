@@ -17,7 +17,7 @@
     <el-form
       ref="form"
       class="mt3 el-form--cozy el-form__label-tiny"
-      :model="$data"
+      :model="edit_info"
       :rules="rules"
     >
       <el-form-item
@@ -30,7 +30,7 @@
           autocomplete="off"
           spellcheck="false"
           :autofocus="true"
-          v-model="first_name"
+          v-model="edit_info.first_name"
         />
       </el-form-item>
 
@@ -43,7 +43,7 @@
           placeholder="Last Name"
           autocomplete="off"
           spellcheck="false"
-          v-model="last_name"
+          v-model="edit_info.last_name"
         />
       </el-form-item>
 
@@ -56,7 +56,7 @@
           placeholder="Username"
           autocomplete="off"
           spellcheck="false"
-          v-model="username"
+          v-model="edit_info.username"
         />
       </el-form-item>
 
@@ -74,7 +74,13 @@
       </el-form-item>
     </el-form>
     <div class="mt3">
-      <el-button type="primary" class="ttu b" @click="trySaveChanges">Save Changes</el-button>
+      <el-button
+        type="primary"
+        class="ttu b"
+        @click="trySaveChanges"
+      >
+        Update profile
+      </el-button>
     </div>
   </div>
 </template>
@@ -83,13 +89,20 @@
   import { mapState, mapGetters } from 'vuex'
   import Validation from './mixins/validation'
 
+  const defaultInfo = () => {
+    return {
+      first_name: ' ',
+      last_name: ' ',
+      username: ' '
+    }
+  }
+
   export default {
     mixins: [Validation],
     data() {
       return {
-        first_name: ' ',
-        last_name: ' ',
-        username: ' ',
+        orig_info: defaultInfo(),
+        edit_info: defaultInfo(),
         show_success: false,
         show_error: false,
         rules: {
@@ -128,9 +141,9 @@
       ]),
       initFromActiveUser() {
         var user = this.getActiveUser()
-        this.first_name = _.get(user, 'first_name', ' ')
-        this.last_name = _.get(user, 'last_name', ' ')
-        this.username = _.get(user, 'username', ' ')
+        var user_info = _.pick(user, ['first_name', 'last_name', 'username'])
+        this.orig_info = _.assign({}, user_info)
+        this.edit_info = _.assign({}, user_info)
       },
       formValidateUsername(rule, value, callback) {
         var current_username = _.get(this.getActiveUser(), 'username', ' ')
@@ -156,7 +169,7 @@
 
           var user = this.getActiveUser()
           var old_username = _.get(user, 'username', ' ')
-          var new_username = _.get(this.$data, 'username')
+          var new_username = _.get(this.edit_info, 'username')
 
           if (new_username == old_username) {
             this.saveChanges()
@@ -171,7 +184,7 @@
             return
 
           var eid = this.active_user_eid
-          var attrs = _.pick(this.$data, ['first_name', 'last_name', 'username'])
+          var attrs = _.pick(this.edit_info, ['first_name', 'last_name', 'username'])
           this.$store.dispatch('updateUser', { eid, attrs }).then(response => {
             if (response.ok)
             {
