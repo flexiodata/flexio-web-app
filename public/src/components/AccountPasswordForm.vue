@@ -64,11 +64,16 @@
       </el-form-item>
     </el-form>
     <div class="mt3">
-      <el-button type="primary" class="ttu b" @click="saveChanges">Update password</el-button>
+      <el-button
+        type="primary"
+        class="ttu b"
+        @click="saveChanges"
+      >
+        Update password
+      </el-button>
       <router-link class="ml2 blue f6 no-underline underline-hover" to="/forgotpassword">
         I forgot my password
       </router-link>
-
     </div>
   </div>
 </template>

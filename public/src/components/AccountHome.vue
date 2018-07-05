@@ -6,7 +6,7 @@
     <div class="center" style="max-width: 42rem">
       <div class="mt4 mt5-ns bg-white css-white-box br2">
         <el-tabs
-          class="bg-white br2 pv4 pl2"
+          class="bg-white br2 pv4 pl3"
           tab-position="left"
           @tab-click="onTabClick"
           v-model="active_tab_name"
@@ -27,6 +27,17 @@
               <div class="h3"></div>
               <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Regional settings</h3>
               <AccountRegionForm />
+              <div class="h3"></div>
+              <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
+              <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
+              <el-button
+                class="ttu b"
+                type="danger"
+                @click="show_account_delete_dialog = true"
+              >
+                Delete your account
+              </el-button>
+              <div class="h2"></div>
             </div>
           </el-tab-pane>
 
@@ -41,6 +52,21 @@
         </el-tabs>
       </div>
     </div>
+
+    <!-- account delete dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-footer"
+      width="32rem"
+      top="8vh"
+      title="Really delete your account?"
+      :modal-append-to-body="false"
+      :visible.sync="show_account_delete_dialog"
+    >
+      <AccountDeleteForm
+        class="nt3"
+        v-if="show_account_delete_dialog"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -50,17 +76,20 @@
   import AccountRegionForm from './AccountRegionForm.vue'
   import AccountApiForm from './AccountApiForm.vue'
   import AccountPasswordForm from './AccountPasswordForm.vue'
+  import AccountDeleteForm from './AccountDeleteForm.vue'
 
   export default {
     components: {
       AccountProfileForm,
       AccountRegionForm,
       AccountApiForm,
-      AccountPasswordForm
+      AccountPasswordForm,
+      AccountDeleteForm
     },
     data() {
       return {
-        active_tab_name: this.getTabName()
+        active_tab_name: this.getTabName(),
+        show_account_delete_dialog: false
       }
     },
     computed: {
