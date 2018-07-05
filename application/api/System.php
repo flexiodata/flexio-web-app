@@ -43,7 +43,7 @@ class System
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($post_params, array(
-                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/password
+                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
                 'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
