@@ -36,7 +36,8 @@
       <div v-if="has_connection">
         <el-form
           ref="form"
-          class="el-form--compact el-form__label-tiny"
+          class="el-form--compact el-form__label-tiny relative"
+          label-position="top"
           :model="edit_connection"
           :rules="rules"
         >
@@ -44,9 +45,14 @@
             <el-form-item
               class="flex-fill mr3"
               key="name"
-              label="Name"
               prop="name"
             >
+              <template slot="label">
+                Name
+                <span class="lh-1 hint--top" aria-label="The name of your connection">
+                  <i class="el-icon-info blue"></i>
+                </span>
+              </template>
               <el-input
                 placeholder="Name"
                 autocomplete="off"
@@ -58,31 +64,33 @@
             <el-form-item
               class="flex-fill"
               key="alias"
-              label="Alias"
               prop="alias"
             >
+              <template slot="label">
+                Alias
+                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its EID">
+                  <i class="el-icon-info blue"></i>
+                </span>
+              </template>
               <el-input
                 placeholder="Alias"
                 autocomplete="off"
                 spellcheck="false"
                 v-model="edit_connection.alias"
-              >
-                <span
-                  slot="suffix"
-                  class="h-100 hint--bottom-left hint--large cursor-default"
-                  aria-label="Connections can be referenced via an alias in the Flex.io command line interface (CLI), all SDKs as well as the REST API."
-                >
-                  <i class="material-icons md-24 blue v-mid">info</i>
-                </span>
-              </el-input>
+              />
             </el-form-item>
           </div>
 
           <el-form-item
             key="description"
-            label="Description"
             prop="description"
           >
+            <template slot="label">
+              Description
+              <span class="lh-1 hint--top" aria-label="A description of your connection">
+                <i class="el-icon-info blue"></i>
+              </span>
+            </template>
             <el-input
               type="textarea"
               placeholder="Description"

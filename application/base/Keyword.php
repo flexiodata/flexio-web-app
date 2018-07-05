@@ -97,10 +97,12 @@ class Keyword
         // controller-related names
         'account' => '',
         'api' => '',
+        'callback' => '',
         'common' => '',
         'debug' => '',
         'default' => '',
         'install' => '',
+        'oauth2' => '',
         'phantom' => '',
         'test' => '',
         'ui' => '',

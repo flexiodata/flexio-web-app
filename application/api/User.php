@@ -218,6 +218,61 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public static function purge(\Flexio\Api\Request $request) : void
+    {
+        // purge will permanently delete all database records associated
+        // with the given owner; username and password confirmation is
+        // required as a precaution
+
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        $validator = \Flexio\Base\Validator::create();
+        if (($validator->check($post_params, array(
+                'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
+                'password' => array('type' => 'password', 'required' => true)
+            ))->hasErrors()) === true)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        $entered_username = $post_params['username'];
+        $entered_password = $post_params['password'];
+
+        // make sure the requesting user has delete rights for the owner
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        // as an additional check, confirm that the username and password for the intended
+        // user to delete match the username and password of the user being deleted
+        $entered_user_eid = \Flexio\Object\User::getEidFromIdentifier($entered_username); // get eid from username or email
+
+        if ($owner_user->getEid() !== $entered_user_eid)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The username entered doesn\'t match the username of the user to delete'));
+
+        if ($owner_user->checkPassword($entered_password) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The passwored entered doesn\'t match the password of the user to delete'));
+
+        // permanently delete the user (purge)
+        $owner_user->purge();
+
+        // if the requesting user is the same as the user being deleted,
+        // clear the login identity (equivalent to logging out)
+        if ($owner_user_eid === $requesting_user_eid)
+        {
+            \Flexio\System\System::clearLoginIdentity();
+            @session_destroy();
+            @setcookie('FXSESSID', '', time()-86400, '/');
+        }
+
+        // return the information for the deleted user
+        $result = array();
+        $result['eid'] = $owner_user_eid;
+        $result['eid_type'] = \Model::TYPE_USER;
+
+        $request->setResponseParams($result);
+        \Flexio\Api\Response::sendContent($result);
+    }
+
     public static function set(\Flexio\Api\Request $request) : void
     {
         $post_params = $request->getPostParams();
