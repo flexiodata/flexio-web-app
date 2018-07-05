@@ -39,6 +39,19 @@ export const updateUser = ({ commit }, { eid, attrs }) => {
   })
 }
 
+export const deleteUser = ({ commit }, { eid, attrs }) => {
+  commit(types.DELETING_USER, { eid, attrs })
+
+  return api.deleteUser({ eid, attrs }).then(response => {
+    // success callback
+    commit(types.DELETED_USER, { eid, attrs })
+    return response
+  }, response => {
+    // error callback
+    return response
+  })
+}
+
 // ----------------------------------------------------------------------- //
 
 export const changePassword = ({ commit, dispatch }, { eid, attrs }) => {

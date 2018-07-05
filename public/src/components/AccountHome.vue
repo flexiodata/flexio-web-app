@@ -19,7 +19,7 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane name="account">
+          <el-tab-pane name="settings">
             <div slot="label">Account</div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Change password</h3>

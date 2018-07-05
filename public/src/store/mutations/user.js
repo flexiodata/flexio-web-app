@@ -31,6 +31,12 @@ export default {
     updateUser(state, eid, attrs)
   },
 
+  [types.DELETING_USER] (state, { eid, attrs }) {},
+
+  [types.DELETED_USER] (state, { eid, attrs }) {
+    resetState(state)
+  },
+
   // ----------------------------------------------------------------------- //
 
   [types.CHANGING_PASSWORD]: (state) => {},
