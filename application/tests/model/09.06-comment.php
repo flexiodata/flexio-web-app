@@ -20,7 +20,8 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\Comment::set()
+        // FUNCTION: \Flexio\Model\Comment::purge()
+
 
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->comment;
@@ -32,11 +33,7 @@ class Test
         $actual = '';
         try
         {
-            $handle = \Flexio\Base\Util::generateHandle();
-            $info = array(
-                'comment' => $handle
-            );
-            $model->set(null, $info);
+            $model->purge(null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -44,157 +41,47 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Comment::set(); throw an error with null input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\Comment::purge(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
-        $actual = $model->set('', $info);
+        $actual = $model->purge('');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Comment::set(); return false with invalid input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\Comment::purge(); return false with invalid input',  $actual, $expected, $results);
 
 
         // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
         $eid = \Flexio\Base\Eid::generate();
-        $actual = $model->set($eid, $info);
+        $actual = $model->purge($eid);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Comment::set(); return false after trying to set parameters on an object that doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\Comment::purge(); return false after trying to purge an object that doesn\'t exist',  $actual, $expected, $results);
+
+
+        // TEST: valid eid input, and object exists
 
         // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
+        $info = array();
         $eid = $model->create($info);
-        $delete_result = $model->delete($eid);
-        $set_result = $model->set($eid, $info);
-        $actual = \Flexio\Base\Eid::isValid($eid) && $delete_result === true && $set_result === true;
+        $model->set($eid, array('owned_by' => $eid));
+        $actual = $model->purge($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\Comment::set(); return true when setting parameters on an object that\'s been deleted; allowed in the model',  $actual, $expected, $results);
-
-
-        // TEST: tests on an object that exists
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\Comment::purge(); return true when purging an object that exists',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $eid = $model->create($info);
-        $info = array(
-        );
-        $actual = $model->set($eid, $info);
+        $info1 = array();
+        $eid1 = $model->create($info1);
+        $model->set($eid1, array('owned_by' => $eid1));
+        $info2 = array();
+        $eid2 = $model->create($info2);
+        $model->set($eid2, array('owned_by' => $eid2));
+        $info1_before_deletion = $model->get($eid1);
+        $info2_before_deletion = $model->get($eid2);
+        $delete1_result = $model->purge($eid1);
+        $info1_after_deletion = $model->get($eid1);
+        $info2_after_deletion = $model->get($eid2);
+        $actual = $info1_before_deletion['eid'] === $eid1 && $info1_after_deletion === false && $info2_before_deletion['eid'] === $eid2 && $info2_after_deletion['eid'] === $eid2;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\Comment::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
-        $eid = $model->create($info);
-        $info = array(
-            'comment' => $handle
-        );
-        $actual = $model->set($eid, $info);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Comment::set(); return true when setting parameters that affect an eid but don\'t change anything',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
-        $eid = $model->create($info);
-        $info = array(
-            'xxx' => $handle
-        );
-        $actual = $model->set($eid, $info);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.3', '\Flexio\Model\Comment::set(); return true when trying to set parameters that don\'t exist',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle = \Flexio\Base\Util::generateHandle();
-        $info = array(
-            'comment' => $handle
-        );
-        $eid = $model->create($info);
-        $info = array(
-            'comment' => 'This is a test'
-        );
-        $actual = $model->set($eid, $info);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.4', '\Flexio\Model\Comment::set(); return true when parameters are set successfully',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = array();
-        try
-        {
-            $handle = \Flexio\Base\Util::generateHandle();
-            $info = array(
-                'comment' => $handle
-            );
-            $eid = $model->create($info);
-            $info = array(
-                'comment' => null
-            );
-            $result = $model->set($eid, $info);
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-            $message = $e->getMessage();
-            $actual = json_decode($message,true);
-        }
-        $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
-        );
-        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\Comment::set(); return false and flag an error when a parameter is set to a bad value',  $actual, $expected, $results);
-
-
-        // TEST: make sure that non-specified properties aren't changed
-
-        // BEGIN TEST
-        $info = array(
-            'eid_status' => \Model::STATUS_PENDING
-        );
-        $eid = $model->create($info);
-        $info = array(
-            'comment' => 'Test comment'
-        );
-        $result = $model->set($eid, $info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'eid_status' => \Model::STATUS_PENDING,
-            'comment' => 'Test comment'
-        );
-        \Flexio\Tests\Check::assertInArray('D.1', '\Flexio\Model\Comment::set(); for object update, make sure non-specified properties aren\'t changed',  $actual, $expected, $results);
-
-
-        // TEST: make sure settable properties are set
-
-        // BEGIN TEST
-        $random_eid1 = \Flexio\Base\Eid::generate();
-        $random_eid2 = \Flexio\Base\Eid::generate();
-        $info = array(
-        );
-        $eid = $model->create($info);
-        $info = array(
-            'eid_status' => \Model::STATUS_PENDING,
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
-        );
-        $result = $model->set($eid, $info);
-        $actual = $model->get($eid);
-        $expected = array(
-            'eid_status' => \Model::STATUS_PENDING,
-            'owned_by' => $random_eid1,
-            'created_by' => $random_eid2
-        );
-        \Flexio\Tests\Check::assertInArray('E.1', '\Flexio\Model\Comment::set(); make sure properties are updated',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Comment::purge(); when purging, make sure object being purged is physically and that other objects are not effected',  $actual, $expected, $results);
     }
 }
