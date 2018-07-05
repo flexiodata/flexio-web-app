@@ -3,38 +3,40 @@
     class="bg-nearer-white ph4 overflow-y-scroll relative"
     style="padding-bottom: 8rem"
   >
-    <div class="center" style="max-width: 36rem">
-      <div
-        class="mt4 mb3 relative z-7 bg-nearer-white"
-      >
-        <div class="flex flex-row items-center center tc mw-doc">
-          <h1 class="flex-fill mv0 pv3 fw6 mid-gray">Account Settings</h1>
-        </div>
-      </div>
-      <div class="bg-white css-white-box br2">
+    <div class="center" style="max-width: 42rem">
+      <div class="mt4 mt5-ns bg-white css-white-box br2">
         <el-tabs
-          class="bg-white br2 ph4 pt3 pb4 el-tabs--allow-overflow"
+          class="bg-white br2 pv4 pl2"
+          tab-position="left"
           @tab-click="onTabClick"
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
-            <div slot="label" class="tc" style="min-width: 3rem">Profile</div>
-            <AccountProfileForm class="mt3" />
+            <div slot="label">Profile</div>
+            <div class="ml3 mr4">
+              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Profile</h3>
+              <AccountProfileForm />
+            </div>
           </el-tab-pane>
 
-          <el-tab-pane name="region">
-            <div slot="label" class="tc" style="min-width: 3rem">Region</div>
-            <AccountRegionForm class="mt3" />
+          <el-tab-pane name="account">
+            <div slot="label">Account</div>
+            <div class="ml3 mr4">
+              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Change password</h3>
+              <AccountPasswordForm />
+              <div class="h3"></div>
+              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Regional settings</h3>
+              <AccountRegionForm />
+            </div>
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label" class="tc" style="min-width: 3rem">API</div>
-            <AccountApiForm class="mt3" v-if="has_user" />
-          </el-tab-pane>
-
-          <el-tab-pane name="password">
-            <div slot="label" class="tc" style="min-width: 3rem">Password</div>
-            <AccountPasswordForm class="mt3" />
+            <div slot="label">API</div>
+            <div class="ml3 mr4" v-if="has_user">
+              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">API keys</h3>
+              <p class="lh-copy f6">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
+              <AccountApiForm class="pa3 ba b--black-10 br2" />
+            </div>
           </el-tab-pane>
         </el-tabs>
       </div>
