@@ -224,6 +224,7 @@ class User
         // with the given owner; username and password confirmation is
         // required as a precaution
 
+        $post_params = $request->getPostParams();
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
 
