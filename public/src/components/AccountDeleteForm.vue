@@ -6,7 +6,7 @@
       title="Your account and all associated data cannot be recovered once it is deleted! Please make sure you really want to continue."
       :closable="false"
     />
-    <div class="h1"></div>
+    <p class="lh-copy">Please enter the following information to confirm you would like to delete your account.</p>
     <el-form
       ref="form"
       class="el-form--cozy el-form__label-tiny"
