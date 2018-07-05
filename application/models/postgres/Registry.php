@@ -191,7 +191,7 @@ class Registry extends ModelBase
         try
         {
             $qobject_eid = $db->quote($object_eid);
-            $sql = "delete from tbl_registry where object_eid = $object_eid";
+            $sql = "delete from tbl_registry where object_eid = $qobject_eid";
             $rows_affected = $db->exec($sql);
 
             return ($rows_affected > 0 ? true : false);
