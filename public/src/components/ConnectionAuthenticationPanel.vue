@@ -57,22 +57,27 @@
     </div>
     <div v-else>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
-      <div class="w-two-thirds-ns center mt3">
+      <div class="w-50-ns center mt3">
         <el-form
           ref="form"
-          class="flex flex-column el-form--compact"
-          label-width="8rem"
+          class="flex flex-column el-form--compact el-form__label-tiny"
+          label-position="top"
           :model="cinfo"
           :rules="rules"
         >
           <!-- amazon s3 -->
           <el-form-item
-            label="AWS Access Key"
             key="aws_key"
             prop="aws_key"
             :class="getClass('aws_key')"
             v-if="showInput('aws_key')"
           >
+            <template slot="label">
+              AWS Access Key
+              <span class="lh-1 hint--top" aria-label="The access token for your AWS account">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="AWS Access Key"
               spellcheck="false"
@@ -83,12 +88,17 @@
 
           <!-- amazon s3 -->
           <el-form-item
-            label="AWS Secret Key"
             key="aws_secret"
             prop="aws_secret"
             :class="getClass('aws_secret')"
             v-if="showInput('aws_secret')"
           >
+            <template slot="label">
+              AWS Secret Key
+              <span class="lh-1 hint--top" aria-label="The secret key for your AWS account">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="AWS Secret Key"
               spellcheck="false"
@@ -98,12 +108,17 @@
 
           <!-- amazon s3 -->
           <el-form-item
-            label="Bucket"
             key="bucket"
             prop="bucket"
             :class="getClass('bucket')"
             v-if="showInput('bucket')"
           >
+            <template slot="label">
+              Bucket
+              <span class="lh-1 hint--top" aria-label="The AWS bucket name to which you wish to connect">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Bucket"
               spellcheck="false"
@@ -113,12 +128,17 @@
 
           <!-- amazon s3 -->
           <el-form-item
-            label="Region"
             key="region"
             prop="region"
             :class="getClass('region')"
             v-if="showInput('region')"
           >
+            <template slot="label">
+              Region
+              <span class="lh-1 hint--top" aria-label="The region your AWS services are located">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-select
               placeholder="Region"
               v-model="cinfo.region"
@@ -149,13 +169,18 @@
 
           <!-- smtp -->
           <el-form-item
-            label="Email address"
             key="email"
             prop="email"
             spellcheck="false"
             :class="getClass('email')"
             v-if="showInput('email')"
           >
+            <template slot="label">
+              Email address
+              <span class="lh-1 hint--top" aria-label="Your email address">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Email address"
               :autofocus="true"
@@ -165,12 +190,17 @@
 
           <!-- smtp -->
           <el-form-item
-            label="Security"
             key="security"
             prop="security"
             :class="getClass('security')"
             v-if="showInput('security')"
           >
+            <template slot="label">
+              Security
+              <span class="lh-1 hint--top" aria-label="The security type, if any, required for your account">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-select
               placeholder="Security"
               v-model="cinfo.security"
@@ -183,12 +213,17 @@
 
           <!-- shared -->
           <el-form-item
-            label="Host"
             key="host"
             prop="host"
             :class="getClass('host')"
             v-if="showInput('host')"
           >
+            <template slot="label">
+              Host
+              <span class="lh-1 hint--top" aria-label="The host name or IP address">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Host"
               spellcheck="false"
@@ -198,12 +233,17 @@
 
           <!-- shared -->
           <el-form-item
-            label="Port"
             key="port"
             prop="port"
             :class="getClass('port')"
             v-if="showInput('port')"
           >
+            <template slot="label">
+              Port
+              <span class="lh-1 hint--top" aria-label="The port required for data transmission">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Port"
               spellcheck="false"
@@ -213,12 +253,17 @@
 
           <!-- shared -->
           <el-form-item
-            label="Username"
             key="username"
             prop="username"
             :class="getClass('username')"
             v-if="showInput('username')"
           >
+            <template slot="label">
+              Username
+              <span class="lh-1 hint--top" aria-label="The login associated with your account">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Username"
               spellcheck="false"
@@ -228,12 +273,17 @@
 
           <!-- shared -->
           <el-form-item
-            label="Password"
             key="password"
             prop="password"
             :class="getClass('password')"
             v-if="showInput('password')"
           >
+            <template slot="label">
+              Password
+              <span class="lh-1 hint--top" aria-label="The password associated with your account">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               type="password"
               placeholder="Password"
@@ -250,6 +300,12 @@
             :class="getClass('database')"
             v-if="showInput('database')"
           >
+            <template slot="label">
+              Database
+              <span class="lh-1 hint--top" aria-label="The database name to which you wish to connect">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Database"
               spellcheck="false"
@@ -265,6 +321,12 @@
             :class="getClass('base_path')"
             v-if="showInput('base_path')"
           >
+            <template slot="label">
+              Base path
+              <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
+                <i class="el-icon-info blue f8"></i>
+              </span>
+            </template>
             <el-input
               placeholder="Base Path"
               spellcheck="false"
@@ -272,7 +334,7 @@
             />
           </el-form-item>
 
-          <el-form-item class="order-last">
+          <el-form-item class="mt2 order-last">
             <el-button
               class="ttu b"
               :type="test_btn_type"
