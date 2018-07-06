@@ -52,7 +52,7 @@
       },
       connectionIdentifier: {
         type: String,
-        required: false
+        default: ''
       },
       showStatus: {
         type: Boolean,
@@ -63,7 +63,8 @@
         default: false
       },
       selectedCls: {
-        type: String
+        type: String,
+        required: false
       }
     },
     components: {
@@ -87,7 +88,7 @@
       },
       is_selected() {
         var cid = this.connectionIdentifier
-        return cid == this.eid || cid == this.alias
+        return cid.length > 0 && (cid == this.eid || cid == this.alias)
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
