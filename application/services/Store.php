@@ -57,7 +57,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $entry =  $folder_stream->get();
-        if ($entry['stream_type'] != 'SD')
+        if ($entry['stream_type'] != \Flexio\Object\Stream::TYPE_DIRECTORY)
         {
             // not a folder -- single file listing
             return [
@@ -66,7 +66,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                   'path' => $path,
                   'size' => $entry['size'] ?? '',
                   'modified' => $entry['updated'] ?? '',
-                  'type' => ($entry['stream_type'] == 'SD' ? 'DIR' : 'FILE') ]
+                  'type' => ($entry['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY ? 'DIR' : 'FILE') ]
             ];
         }
 
@@ -81,7 +81,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $fullpath .= '/';
             $fullpath .= $entry['name'];
 
-            if ($entry['stream_type'] == 'SD')
+            if ($entry['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY)
                 $type = 'DIR';
             else if ($entry['mime_type'] == 'application/vnd.flexio.table')
                 $type = 'TABLE';
@@ -118,7 +118,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $entry = $stream->get();
 
-        if ($entry['stream_type'] == 'SD')
+        if ($entry['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY)
             $type = 'DIR';
         else if ($entry['mime_type'] == 'application/vnd.flexio.table')
             $type = 'TABLE';
@@ -176,7 +176,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $stream_properties = [
                 'parent_eid' => $parent_stream->getEid(),
                 'name' => $name,
-                'stream_type' => 'SF',
+                'stream_type' => \Flexio\Object\Stream::TYPE_FILE,
                 'path' => \Flexio\Base\Util::generateRandomString(20)
             ];
 
@@ -200,7 +200,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             // make sure the existant stream has a type of file (SF) as opposed to directory (SD)
             $stream_properties = $stream->get();
-            if ($stream_properties['stream_type'] != 'SF')
+            if ($stream_properties['stream_type'] != \Flexio\Object\Stream::TYPE_FILE)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             // stream doesn't exist yet; create one
@@ -246,7 +246,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $info = $stream->get();
-        if ($info['stream_type'] == 'SD')
+        if ($info['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::OPEN_FAILED);
 
         return $stream;
@@ -308,7 +308,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($stream !== null)
         {
             $info = $stream->get();
-            if ($info['stream_type'] == 'SD')
+            if ($info['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
         }
 
@@ -319,7 +319,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $stream = \Flexio\Object\Stream::create([
                 'parent_eid' => $parent_stream->getEid(),
                 'name' => $name,
-                'stream_type' => 'SF',
+                'stream_type' => \Flexio\Object\Stream::TYPE_FILE,
                 'path' => \Flexio\Base\Util::generateRandomString(20)
             ]);
         }
@@ -404,7 +404,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                     $child = \Flexio\Object\Stream::create([
                         'parent_eid' => $stream->getEid(),
                         'name' => $part,
-                        'stream_type' => 'SD',
+                        'stream_type' => \Flexio\Object\Stream::TYPE_DIRECTORY,
                         'path' => \Flexio\Base\Util::generateRandomString(20)
                     ]);
                     if (!$child)
