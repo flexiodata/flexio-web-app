@@ -15,7 +15,7 @@
       class="mt4 mb3 relative z-7 bg-nearer-white"
       v-if="is_fetched"
     >
-      <div class="flex flex-row items-center center tc mw-doc">
+      <div class="flex flex-row items-center center tc mw-doc" v-if="show_title">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
       </div>
     </div>
@@ -29,6 +29,8 @@
         :items="prompts"
         :container-id="doc_id"
         :active-item-idx.sync="active_prompt_idx"
+        :show-numbers="true"
+        :show-icons="true"
         :show-insert-buttons="false"
         :show-edit-buttons="false"
         :show-delete-buttons="false"
@@ -173,6 +175,9 @@
       },
       sdk_options() {
         return this.getSdkOptions()
+      },
+      show_title() {
+        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'show_title', true)
       }
     },
     methods: {

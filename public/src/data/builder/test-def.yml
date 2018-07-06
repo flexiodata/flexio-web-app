@@ -7,7 +7,20 @@ content: |
 
   Example template for rendering all components
 
+show_title: false
 prompts:
+  - element: message
+    description: |
+      # Copy files from Dropbox to Google Drive
+
+      This template steps you through the process of setting up a data feed to transfer files from Dropbox to Google Drive that you can schedule or deploy in your own code. You'll be ready to go in a few short steps:
+
+        * Connect to Dropbox and select source files
+        * Connect to Google Drive and select the destination folder
+        * Schedule the data feed or choose other options to run the pipe
+    connections:
+      - dropbox
+      - googledrive
   - element: form
     title: Standard form
     description: This is the form description. Text is written in Markdown so it can be quite descriptive.
