@@ -133,11 +133,13 @@ const mutations = {
 
       switch (p.element) {
         case 'connection-chooser':
-          var eid = state.attrs[p.variable]
-          if (!_.isNil(eid)) {
+          var identifier = state.attrs[p.variable]
+          if (_.isString(identifier)) {
+            /*
             var root_state = this.state
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
             var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
+            */
             code = code.replace(regex, JSON.stringify(identifier))
           }
           break
