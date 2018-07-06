@@ -2,12 +2,19 @@ title: Test Prompts
 description: ''
 keywords: []
 connections: []
+
+####
+
 content: |
   # Test prompts
 
   Example template for rendering all components
 
-show_title: false
+####
+
+builder:
+  show_title: false
+
 prompts:
   - element: message
     description: |

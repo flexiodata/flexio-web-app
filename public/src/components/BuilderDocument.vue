@@ -18,6 +18,7 @@
       <div class="flex flex-row items-center center tc mw-doc" v-if="show_title">
         <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
       </div>
+      <div class="h1" v-else></div>
     </div>
     <div
       class="center mw-doc"
@@ -177,7 +178,7 @@
         return this.getSdkOptions()
       },
       show_title() {
-        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'show_title', true)
+        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'builder.show_title', true)
       }
     },
     methods: {
