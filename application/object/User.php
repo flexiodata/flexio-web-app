@@ -139,30 +139,21 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // purges all rows a given user owns, including the user itself;
         // note: can't be undone; this is a physical delete
 
-        try
-        {
-            $user_eid = $this->getEid();
-            $owner_eid = $user_eid;
+        $owner_eid = $this->getEid();
 
-            // first set the delete flag on the user to disable access
-            $this->getModel()->user->delete($user_eid);
+        // physically delete the database records owned by the user
+        $this->getModel()->action->purge($owner_eid);
+        $this->getModel()->comment->purge($owner_eid);
+        $this->getModel()->connection->purge($owner_eid);
+        $this->getModel()->pipe->purge($owner_eid);
+        $this->getModel()->process->purge($owner_eid);
+        $this->getModel()->registry->purge($owner_eid);
+        $this->getModel()->right->purge($owner_eid);
+        $this->getModel()->stream->purge($owner_eid);
+        $this->getModel()->token->purge($owner_eid);
 
-            // next physically delete the database records owned by the user
-            $this->getModel()->action->purge($owner_eid);
-            $this->getModel()->comment->purge($owner_eid);
-            $this->getModel()->connection->purge($owner_eid);
-            $this->getModel()->pipe->purge($owner_eid);
-            $this->getModel()->process->purge($owner_eid);
-            $this->getModel()->registry->purge($owner_eid);
-            $this->getModel()->right->purge($owner_eid);
-            $this->getModel()->stream->purge($owner_eid);
-            $this->getModel()->token->purge($owner_eid);
-            $this->getModel()->user->purge($owner_eid);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::DELETE_FAILED);
-        }
+        // delete user last since this is the last hook
+        $this->getModel()->user->purge($owner_eid);
 
         return true;
     }
