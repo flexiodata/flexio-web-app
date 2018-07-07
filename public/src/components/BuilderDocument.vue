@@ -21,7 +21,7 @@
       <div class="h1" v-else></div>
     </div>
     <div
-      class="center mw-doc"
+      class="center mw-builder-doc"
       v-if="is_fetched"
     >
       <BuilderList
