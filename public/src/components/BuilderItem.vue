@@ -5,11 +5,31 @@
   >
     <!-- numbers, icons and vertical lines -->
     <div class="flex flex-row relative">
-      <!-- number -->
+      <!-- stylized number w/o icons -->
+      <div
+        class="flex-none pv4 pl1 pl3-l pr3 pr4-l"
+        v-if="showNumbers && !showIcons"
+      >
+        <div
+          style="width: 32px; height: 32px"
+          class="br-100 ba flex flex-row justify-center items-center"
+          :class="is_active ? 'b--blue' : 'b--transparent'"
+        >
+          <div
+            style="width: 26px; height: 26px"
+            class="br-100 white flex flex-row justify-center items-center"
+            :class="is_active ? 'bg-blue' : 'bg-silver o-30'"
+          >
+            {{index+1}}
+          </div>
+        </div>
+      </div>
+
+      <!-- number with icons -->
       <div
         class="flex-none pv4 mt2 tr"
         style="width: 24px"
-        v-if="showNumbers"
+        v-if="showNumbers && showIcons"
       >
         {{index+1}}.
       </div>
@@ -33,10 +53,10 @@
         />
       </div>
 
-      <!-- vertical line and insert buttons -->
+      <!-- vertical line -->
       <div
         class="absolute w-100 h-100"
-        v-if="(showLine || showInsertButtons) && showIcons"
+        v-if="showLine"
       >
         <!-- vertical line w/o buttons -->
         <div
@@ -58,7 +78,13 @@
           style="top: 69px; bottom: 26px; right: -1px"
           v-if="showLine && showInsertButtons"
         ></div>
+      </div>
 
+      <!-- insert buttons -->
+      <div
+        class="absolute w-100 h-100"
+        v-if="showInsertButtons"
+      >
         <!-- insert before button -->
         <div
           class="absolute cursor-default pr3 pr4-l"
