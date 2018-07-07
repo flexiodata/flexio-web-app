@@ -55,40 +55,40 @@
 
       <!-- vertical line -->
       <div
-        class="absolute w-100 h-100"
+        class="absolute w-100 h-100 mv4"
         v-if="showLine"
       >
         <!-- vertical line w/o buttons -->
         <div
           class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
-          style="top: 69px; bottom: -27px; right: -1px"
+          style="top: 37px; bottom: 5px; right: -1px"
           v-if="!is_last && showLine && !showInsertButtons"
         ></div>
 
         <!-- vertical line (above icon) w/buttons -->
         <div
           class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
-          style="top: 4px; height: 23px; right: -1px"
+          style="top: -28px; height: 23px; right: -1px"
           v-if="!is_first && showLine && showInsertButtons"
         ></div>
 
         <!-- vertical line (below icon) w/buttons -->
         <div
           class="bl bw1 b--black-10 pl3 absolute pr3 pr4-l"
-          style="top: 69px; bottom: 26px; right: -1px"
+          style="top: 37px; bottom: 58px; right: -1px"
           v-if="showLine && showInsertButtons"
         ></div>
       </div>
 
       <!-- insert buttons -->
       <div
-        class="absolute w-100 h-100"
+        class="absolute w-100 h-100 mv4"
         v-if="showInsertButtons"
       >
         <!-- insert before button -->
         <div
           class="absolute cursor-default pr3 pr4-l"
-          style="top: -2px; right: 4px"
+          style="top: -34px; right: 4px"
           v-if="is_first && showInsertButtons"
         >
           <el-button
@@ -106,7 +106,7 @@
         <!-- insert after button -->
         <div
           class="absolute cursor-default pr3 pr4-l"
-          style="bottom: -4px; right: 4px"
+          style="bottom: 28px; right: 4px"
           v-if="showInsertButtons"
         >
           <el-button

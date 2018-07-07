@@ -32,7 +32,7 @@
         :active-item-idx.sync="active_prompt_idx"
         :show-numbers="true"
         :show-icons="true"
-        :show-insert-buttons="false"
+        :show-insert-buttons="true"
         :show-edit-buttons="false"
         :show-delete-buttons="false"
         @item-prev="goPrev"
