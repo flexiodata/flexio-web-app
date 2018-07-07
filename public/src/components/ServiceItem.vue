@@ -5,11 +5,11 @@
   >
     <div class="flex flex-row items-center" v-if="layout == 'list'">
       <service-icon :type="item.connection_type" class="br1 square-3 mr3"></service-icon>
-      <div class="mid-gray f5 fw6 cursor-default">{{item.service_name}}</div>
+      <div class="f5 fw6 cursor-default">{{item.service_name}}</div>
     </div>
     <div class="tc css-valign" v-else>
       <service-icon :type="item.connection_type" class="dib v-mid br2 square-5"></service-icon>
-      <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.service_name}}</div>
+      <div class="f6 fw6 mt2 cursor-default">{{item.service_name}}</div>
     </div>
   </article>
 </template>

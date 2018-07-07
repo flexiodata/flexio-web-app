@@ -16,7 +16,7 @@
       v-if="is_fetched"
     >
       <div class="flex flex-row items-center center tc mw-builder-doc" v-if="show_title">
-        <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+        <h1 class="flex-fill mv0 pv3 fw6">{{title}}</h1>
       </div>
       <div class="h1" v-else></div>
     </div>
@@ -48,7 +48,7 @@
       >
         <div class="h-100 flex flex-column">
           <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
-            <div class="flex-fill fw6 mid-gray">Output</div>
+            <div class="flex-fill fw6">Output</div>
           </div>
           <CodeEditor
             class="flex-fill"

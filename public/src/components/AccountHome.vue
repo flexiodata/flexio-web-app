@@ -14,7 +14,7 @@
           <el-tab-pane name="profile">
             <div slot="label">Profile</div>
             <div class="ml3 mr4">
-              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Profile</h3>
+              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Profile</h3>
               <AccountProfileForm />
             </div>
           </el-tab-pane>
@@ -22,10 +22,10 @@
           <el-tab-pane name="settings">
             <div slot="label">Account</div>
             <div class="ml3 mr4">
-              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Change password</h3>
+              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Change password</h3>
               <AccountPasswordForm />
               <div class="h3"></div>
-              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">Regional settings</h3>
+              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Regional settings</h3>
               <AccountRegionForm />
               <div class="h3"></div>
               <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
@@ -44,7 +44,7 @@
           <el-tab-pane name="api">
             <div slot="label">API</div>
             <div class="ml3 mr4" v-if="has_user">
-              <h3 class="mt0 mb3 pb2 mid-gray fw6 bb b--black-10">API keys</h3>
+              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
               <p class="lh-copy f6">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm class="pa3 ba b--black-10 br2" />
             </div>

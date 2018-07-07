@@ -1,5 +1,5 @@
 <template>
-  <div class="mid-gray">
+  <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">{{our_title}}</span>
