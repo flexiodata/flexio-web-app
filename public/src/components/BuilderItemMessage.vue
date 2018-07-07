@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="flex flex-row items-center justify-center mb3">
+    <div
+      class="flex flex-row items-center justify-center mb3"
+      v-if="connections.length > 0"
+    >
       <template
         v-for="type in connections"
       >
@@ -17,7 +20,17 @@
         />
       </template>
     </div>
-    <div class="marked" v-html="description"></div>
+    <h1
+      class="fw4"
+      v-if="item.title"
+    >
+      {{item.title}}
+    </h1>
+    <div
+      class="marked"
+      v-html="description"
+      v-if="!is_before_active"
+    ></div>
   </div>
 </template>
 
@@ -61,7 +74,7 @@
       },
       connections() {
         var items = _.get(this.item, 'connections', [])
-        return items.join(',separator,').split(',')
+        return items.length > 0 ? items.join(',separator,').split(',') : []
       }
     }
   }

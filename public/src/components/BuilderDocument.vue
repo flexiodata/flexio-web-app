@@ -31,7 +31,7 @@
         :container-id="doc_id"
         :active-item-idx.sync="active_prompt_idx"
         :show-numbers="true"
-        :show-icons="true"
+        :show-icons="false"
         :show-insert-buttons="false"
         :show-edit-buttons="false"
         :show-delete-buttons="false"
