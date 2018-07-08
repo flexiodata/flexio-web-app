@@ -568,7 +568,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
         'trim'         => [ 'types' => [ 's(s)', 's(ss)', 's(n)', 's(ns)', 's(b)', 's(bs)', 's(N)', 's(Ns)' ], 'func' => 'func_trim' ],
         'trunc'        => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_trunc' ],
-        'unix_timestamp'=>[ 'types' => [ 'i(d)', 'i(t)' ], 'func' => 'func_unix_timestamp' ],
+        'unix_timestamp'=>[ 'types' => [ 'i()', 'i(d)', 'i(t)', 'i(s)' ], 'func' => 'func_unix_timestamp' ],
         'upper'        => [ 'types' => [ 's(s)', 's(n)', 's(b)', 's(N)' ], 'func' => 'func_upper' ],
         'year'         => [ 'types' => [ 'f(d)', 'f(t)', 'f(N)', 'f(s)' ], 'func' => 'func_year' ],
 
@@ -2729,6 +2729,8 @@ TODO: remove deprecated implementation; following was split into two functions,
                 $retval = strtotime($param0);
             }
         }
+
+        return true;
     }
 
     public function func_upper($func, $params, &$retval)
