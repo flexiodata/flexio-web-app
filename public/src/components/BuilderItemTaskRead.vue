@@ -4,15 +4,15 @@
       class="tl pb3"
       v-if="title.length > 0"
     >
-      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
+      <h3 class="fw6 f3 mt0 mb2">{{title}}</h3>
     </div>
     <div
-      class="pb3 mid-gray marked"
+      class="pb3 marked"
       v-html="description"
       v-show="show_description"
     >
     </div>
-    <h4 class="mid-gray">1. Choose connection</h4>
+    <h4>1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
       :connection-identifier.sync="connection_identifier"
@@ -29,7 +29,7 @@
       </el-button>
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
-      <h4 class="mid-gray">2. Choose files</h4>
+      <h4>2. Choose files</h4>
       <div class="mb3" v-show="paths.length > 0">
         <div class="mb1 bt b--black-10"></div>
         <div class="overflow-y-auto" style="max-height: 260px">

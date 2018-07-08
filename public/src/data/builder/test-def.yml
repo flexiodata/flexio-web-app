@@ -17,9 +17,8 @@ builder:
 
 prompts:
   - element: message
+    title: Copy files from Dropbox to Google Drive
     description: |
-      # Copy files from Dropbox to Google Drive
-
       This template steps you through the process of setting up a data feed to transfer files from Dropbox to Google Drive that you can schedule or deploy in your own code. You'll be ready to go in a few short steps:
 
         * Connect to Dropbox and select source files

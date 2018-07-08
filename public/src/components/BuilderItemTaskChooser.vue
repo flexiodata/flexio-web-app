@@ -4,10 +4,10 @@
       class="tl pb3"
       v-if="showTitle && title.length > 0"
     >
-      <h3 class="fw6 f3 mid-gray mt0 mb2">{{title}}</h3>
+      <h3 class="fw6 f3 mt0 mb2">{{title}}</h3>
     </div>
     <div
-      class="pb3 mid-gray marked"
+      class="pb3 marked"
       v-html="marked_description"
       v-show="show_description"
     >

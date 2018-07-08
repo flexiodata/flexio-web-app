@@ -6,11 +6,11 @@
   >
     <div class="tc css-valign cursor-default" v-if="layout == 'grid'">
       <service-icon :type="ctype" class="dib v-mid br2 square-5"></service-icon>
-      <div class="mid-gray f6 fw6 mt2">{{cname}}</div>
+      <div class="f6 fw6 mt2">{{cname}}</div>
     </div>
     <div class="flex flex-row items-center cursor-default" v-else>
-      <i class="material-icons mid-gray md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
-      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
+      <i class="material-icons md-18 b mr3" v-if="showCheckmark && is_selected">check</i>
+      <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
         <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_home">
@@ -20,7 +20,7 @@
       </div>
 
       <div class="flex-fill flex flex-column">
-        <div class="mid-gray f5 fw6 cursor-default">{{cname}}</div>
+        <div class="f5 fw6 cursor-default">{{cname}}</div>
         <div class="light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>

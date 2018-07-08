@@ -1,5 +1,5 @@
 <template>
-  <div class="mid-gray">
+  <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showTitle">
         <span class="flex-fill f4">{{our_title}}</span>
@@ -109,7 +109,7 @@
           class="mt3 pa3 ba b--black-10 br2"
           v-else
         >
-          <div class="flex flex-row items-center mb3 mid-gray lh-copy ttu fw6 f6">
+          <div class="flex flex-row items-center mb3 lh-copy ttu fw6 f6">
             <i class="material-icons mr1 f4">lock</i> Authentication
           </div>
           <ConnectionAuthenticationPanel

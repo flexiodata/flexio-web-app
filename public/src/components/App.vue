@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
-    <AppNavbar class="flex-none" v-if="show_intercom_button && show_navbar" />
+    <AppNavbar v-if="show_intercom_button && show_navbar" />
     <router-view class="flex-fill"></router-view>
 
     <!-- onboarding dialog -->

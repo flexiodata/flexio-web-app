@@ -18,7 +18,7 @@
     >
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
-          <h1 class="flex-fill mv0 pv3 fw6 mid-gray">{{title}}</h1>
+          <h1 class="flex-fill mv0 pv3 fw6">{{title}}</h1>
           <transition name="el-zoom-in-top">
             <div class="flex-none flex flex-row items-center pl2">
               <div class="flex flex-row pl3" v-if="show_save_cancel && false">
@@ -58,7 +58,7 @@
           <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
             <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 fw6 f4 mid-gray">Properties</h3>
+              <h3 class="flex-fill mv0 fw6 f4">Properties</h3>
               <el-button
                 class="ttu b invisible"
                 size="small"
@@ -98,7 +98,7 @@
           <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
             <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Configuration</h3>
+              <h3 class="flex-fill mv0 mr3 fw6 f4">Configuration</h3>
               <el-select
                 class="tr"
                 size="small"
@@ -164,7 +164,7 @@
           <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
             <!-- title bar -->
             <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 mr3 fw6 f4 mid-gray">Output</h3>
+              <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
               <el-button
                 class="ttu b"
                 style="min-width: 5rem"

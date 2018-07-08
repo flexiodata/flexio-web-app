@@ -6,11 +6,11 @@
         <i class="el-icon-error dark-red bg-white ba bw1 b--white br-100" v-else></i>
       </div>
       <service-icon :type="ctype" class="dib v-mid br2 square-5" />
-      <div class="mid-gray f6 fw6 mt2 cursor-default">{{item.name}}</div>
+      <div class="f6 fw6 mt2 cursor-default">{{item.name}}</div>
     </div>
     <div class="flex flex-row items-center" v-else>
-      <i class="material-icons mid-gray md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
-      <i class="material-icons mid-gray md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
+      <i class="material-icons md-18 b mr3" v-if="showSelectionCheckmark && is_selected">check</i>
+      <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showSelectionCheckmark">check</i>
       <div class="flex flex-row items-center relative mr3">
         <service-icon class="br1 square-3" :type="ctype" :empty-cls="''" />
         <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus">
@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="flex-fill flex flex-column">
-        <div class="mid-gray f5 fw6">{{item.name}}</div>
+        <div class="f5 fw6">{{item.name}}</div>
         <div class="light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
       </div>
       <el-button
@@ -52,7 +52,7 @@
       },
       connectionIdentifier: {
         type: String,
-        required: false
+        default: ''
       },
       showStatus: {
         type: Boolean,
@@ -63,7 +63,8 @@
         default: false
       },
       selectedCls: {
-        type: String
+        type: String,
+        required: false
       }
     },
     components: {
@@ -87,7 +88,7 @@
       },
       is_selected() {
         var cid = this.connectionIdentifier
-        return cid == this.eid || cid == this.alias
+        return cid.length > 0 && (cid == this.eid || cid == this.alias)
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE

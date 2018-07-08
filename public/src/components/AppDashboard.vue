@@ -6,7 +6,7 @@
 
     <div class="ma4">
       <div class="flex flex-row items-center pv2">
-        <div class="flex-fill fw6 gray">Getting Started</div>
+        <div class="flex-fill fw6">Getting Started</div>
         <!-- placeholder for consistent spacing -->
         <i class="invisible material-icons">chevron_right</i>
       </div>
@@ -25,7 +25,7 @@
 
     <div class="ma4">
       <div class="flex flex-row items-center pv2">
-        <div class="flex-fill fw6 gray">API Keys</div>
+        <div class="flex-fill fw6">API Keys</div>
         <router-link
           to="/account#api"
           class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns f6 fw6 link blue dim"
@@ -48,7 +48,7 @@
 
     <div class="ma4">
       <div class="flex flex-row items-center pv2">
-        <div class="flex-fill fw6 gray">Pipe Activity</div>
+        <div class="flex-fill fw6">Pipe Activity</div>
         <!-- placeholder for consistent spacing -->
         <i class="invisible material-icons">chevron_right</i>
         <router-link
