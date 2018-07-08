@@ -1,5 +1,5 @@
 <template>
-  <div class="mid-gray">
+  <div>
     <div class="w-100 mb4">
       <div class="cf" v-if="isOnboarding">
         <i class="el-icon-close pointer f3 black-30 hover-black-60 fr" @click="$emit('close')"></i>
