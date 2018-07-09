@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row items-stretch relative">
-    <div class="w-third-ns flex flex-column bl b--black-20" style="min-width: 200px">
+    <div class="w-40-ns flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">YAML</div>
       <CodeEditor
         class="flex-fill"
@@ -13,8 +13,7 @@
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">Builder</div>
       <div class="flex-fill bg-nearer-white pa4 overflow-y-auto" :id="doc_id">
         <BuilderList
-        class="center"
-          style="max-width: 880px"
+          class="center mw-builder-doc"
           builder-mode="wizard"
           :items="items"
           :container-id="doc_id"
@@ -37,6 +36,12 @@
   import CodeEditor from './CodeEditor.vue'
   import BuilderList from './BuilderList.vue'
 
+  import test_def from '../data/builder/test-def.yml'
+  // easy way to get rid of a bunch of elements for quick testing
+  //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
+
+  const edit_code = yaml.safeDump(test_def)
+
   export default {
     components: {
       CodeEditor,
@@ -45,7 +50,7 @@
     data() {
       return {
         lang: 'yaml',
-        edit_code: '',
+        edit_code,
         active_prompt_idx: 0,
         doc_id: _.uniqueId('admin-builder-')
       }
