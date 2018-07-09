@@ -240,6 +240,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties['name'] = '';
         $properties['path'] = '';
         $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
+        $properties['owned_by'] = $user_eid;
         $stream = \Flexio\Object\Stream::create($properties);
 
         $this->getModel()->assoc_add($user_eid, \Model::EDGE_HAS_STORE, $stream->getEid());

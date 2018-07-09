@@ -177,7 +177,8 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'parent_eid' => $parent_stream->getEid(),
                 'name' => $name,
                 'stream_type' => \Flexio\Object\Stream::TYPE_FILE,
-                'path' => \Flexio\Base\Util::generateRandomString(20)
+                'path' => \Flexio\Base\Util::generateRandomString(20),
+                'owned_by' => $parent_stream->getOwner()
             ];
 
             if (isset($properties['mime_type']))
@@ -320,7 +321,8 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'parent_eid' => $parent_stream->getEid(),
                 'name' => $name,
                 'stream_type' => \Flexio\Object\Stream::TYPE_FILE,
-                'path' => \Flexio\Base\Util::generateRandomString(20)
+                'path' => \Flexio\Base\Util::generateRandomString(20),
+                'owned_by' => $parent_stream->getOwner()
             ]);
         }
 
@@ -405,7 +407,8 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                         'parent_eid' => $stream->getEid(),
                         'name' => $part,
                         'stream_type' => \Flexio\Object\Stream::TYPE_DIRECTORY,
-                        'path' => \Flexio\Base\Util::generateRandomString(20)
+                        'path' => \Flexio\Base\Util::generateRandomString(20),
+                        'owned_by' => $stream->getOwner()
                     ]);
                     if (!$child)
                         return null;
