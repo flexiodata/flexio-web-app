@@ -160,6 +160,7 @@
           :is="content_component"
           :item="item"
           :index="index"
+          :builder-mode="builderMode"
           :active-item-idx="activeItemIdx"
           :is-next-allowed.sync="is_next_allowed"
           v-on="$listeners"

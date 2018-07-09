@@ -41,6 +41,32 @@ const mutations = {
 
     var prompts = _.get(def, 'prompts', [])
 
+    // include the naming item at the end
+    var existing_name = _.find(prompts, { element_identifier: 'name' })
+    if (!existing_name) {
+      prompts.push({
+        element: 'form',
+        element_identifier: 'name',
+        title: 'Enter a name for your pipe',
+        cls: 'el-form--cozy el-form__label-tiny',
+        form_items: [{
+          element: 'input',
+          type: 'text',
+          variable: 'pipe.name',
+          label: 'Name',
+          placeholder: 'Name',
+          value: _.get(def, 'title', '')
+        },{
+          element: 'input',
+          type: 'textarea',
+          variable: 'pipe.description',
+          label: 'Description',
+          placeholder: 'Description (optional)',
+          value: ''
+        }]
+      })
+    }
+
     // include the summary item at the end
     var existing_summary = _.find(prompts, { element: 'summary' })
     if (!existing_summary) {
