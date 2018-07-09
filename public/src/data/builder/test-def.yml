@@ -12,7 +12,7 @@ content: |
 
 ####
 
-builder:
+settings:
   show_title: false
 
 prompts:

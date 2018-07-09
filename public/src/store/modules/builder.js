@@ -47,7 +47,7 @@ const mutations = {
       prompts.push({
         element: 'form',
         element_identifier: 'name',
-        title: 'Enter a name for your pipe',
+        title: 'Name your pipe',
         cls: 'el-form--cozy el-form__label-tiny',
         form_items: [{
           element: 'input',

@@ -196,7 +196,7 @@
         return this.getSdkOptions()
       },
       show_title() {
-        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'builder.show_title', true)
+        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'settings.show_title', true)
       }
     },
     methods: {

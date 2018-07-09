@@ -343,6 +343,7 @@
         switch (this.item.element) {
           case 'file-chooser':   return 'insert_drive_file'
           case 'form':           return 'edit'
+          case 'schedule':       return 'date_range'
           case 'summary':        return 'check'
         }
       },
@@ -350,6 +351,7 @@
         switch (this.item.element) {
           case 'file-chooser':   return '#0ab5f3'
           case 'form':           return '#0ab5f3'
+          case 'schedule':       return '#0ab5f3'
           case 'summary':        return '#009900'
         }
       }
