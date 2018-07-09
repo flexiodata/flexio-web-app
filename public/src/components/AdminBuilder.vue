@@ -1,9 +1,22 @@
 <template>
   <div class="flex flex-row items-stretch relative">
-    <div class="w-40-ns flex flex-column bl b--black-20">
-      <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">YAML</div>
+    <div
+      class="flex flex-column bl b--black-20 trans-w"
+      :style="code_expanded ? 'width: 40%' : 'width: 66px'"
+    >
+      <div class="flex flex-row items-center pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">
+        <div class="flex-fill">YAML</div>
+        <el-button
+          class="ttu fw6"
+          type="text"
+          :icon="code_expanded ? 'el-icon-caret-left' : 'el-icon-caret-right'"
+          style="margin: -4px; padding: 4px; border: 0; font-size: 13px"
+          @click="code_expanded = !code_expanded"
+        />
+      </div>
       <CodeEditor
         class="flex-fill"
+        :class="!code_expanded ? 'o-40 no-pointer-events no-select' : ''"
         :show-json-view-toggle="false"
         :lang.sync="lang"
         v-model="edit_code"
@@ -19,7 +32,7 @@
         v-show="error_msg.length > 0"
       />
       <BuilderDocument
-        :class="error_msg.length > 0 ? 'o-40 no-pointer-events' : ''"
+        :class="error_msg.length > 0 ? 'o-40 no-pointer-events no-select' : ''"
         :definition="edit_json"
       />
     </div>
@@ -52,7 +65,8 @@
       return {
         lang: 'yaml',
         edit_code,
-        error_msg: ''
+        error_msg: '',
+        code_expanded: true
       }
     },
     methods: {
