@@ -568,6 +568,7 @@ TODO: remove deprecated implementation; following was split into two functions,
         'to_timestamp' => [ 'types' => [ 't(s[s])', 't(n[s])', 't(d[s])', 't(b[s])', 't(N[s])' ], 'func' => 'func_to_timestamp' ],
         'trim'         => [ 'types' => [ 's(s)', 's(ss)', 's(n)', 's(ns)', 's(b)', 's(bs)', 's(N)', 's(Ns)' ], 'func' => 'func_trim' ],
         'trunc'        => [ 'types' => [ 'f(n)', 'f(s)', 'f(N)' ], 'func' => 'func_trunc' ],
+        'unix_timestamp'=>[ 'types' => [ 'i()', 'i(d)', 'i(t)', 'i(s)' ], 'func' => 'func_unix_timestamp' ],
         'upper'        => [ 'types' => [ 's(s)', 's(n)', 's(b)', 's(N)' ], 'func' => 'func_upper' ],
         'year'         => [ 'types' => [ 'f(d)', 'f(t)', 'f(N)', 'f(s)' ], 'func' => 'func_year' ],
 
@@ -2703,6 +2704,35 @@ TODO: remove deprecated implementation; following was split into two functions,
         return true;
     }
 
+    public function func_unix_timestamp($func, $params, &$retval)
+    {
+        if (count($params) == 0)
+        {
+            $retval = time();
+        }
+         else
+        {
+            if (!$this->doEval($params[0], $param0)) return false;
+
+            if (is_null($param0))
+            {
+                $retval = null;
+                return true;
+            }
+
+            if ($param0 instanceof ExprDateTime)
+            {
+                $retval = $param0->getUnixTime();
+            }
+             else
+            {
+                $retval = strtotime($param0);
+            }
+        }
+
+        return true;
+    }
+
     public function func_upper($func, $params, &$retval)
     {
         if (!$this->doEval($params[0], $param0))
@@ -2994,6 +3024,19 @@ class ExprDateTime
         }
 
         return true;
+    }
+
+    public function getUnixTime()
+    {
+        if ($this->hasTimePart())
+        {
+            return mktime($this->values['hour'], $this->values['minute'], $this->values['second'],
+                          $this->values['month'], $this->values['day'], $this->values['year']);
+        }
+         else
+        {
+            return mktime(0,0,0, $this->values['month'], $this->values['day'], $this->values['year']);
+        }
     }
 
     public function setToCurrentDate()
