@@ -98,6 +98,12 @@
   test_def.pipe = pipe_arr.join('\n  .')
 
   export default {
+    props: {
+      definition: {
+        type: Object,
+        required: false
+      }
+    },
     components: {
       Spinner,
       BuilderList,
@@ -107,6 +113,10 @@
       slug: {
         handler: 'loadTemplate',
         immediate: true
+      },
+      definition: {
+        handler: 'initFromDefiniton',
+        deep: true
       },
       active_prompt_idx: {
         handler: 'updateCode',
@@ -125,6 +135,7 @@
     computed: {
       ...mapState({
         def: state => state.builder.def,
+        attrs: state => state.builder.attrs,
         title: state => state.builder.def.title,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
@@ -153,18 +164,25 @@
           // read only
         }
       },
-      save_name() {
-        return _.get(this.def, 'title', 'Untitled Pipe')
+      save_attrs() {
+        var default_name = _.get(this.def, 'title', 'Untitled Pipe')
+        var name = _.get(this.attrs, 'pipe.name', default_name)
+        var description = _.get(this.attrs, 'pipe.description', '')
+
+        return {
+          name,
+          description
+        }
       },
       save_code() {
         if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
-          return this.code + '.save({ name: "' + this.save_name + '" }, callback)'
+          var save_attrs_str = JSON.stringify(this.save_attrs)
+          return this.code + '.save(' + save_attrs_str + ', callback)'
         } else {
           try {
-            return {
-              name: this.save_name,
+            return _.assign({}, save_attrs, {
               task: JSON.parse(this.code)
-            }
+            })
           }
           catch (e) {
             return false
@@ -189,7 +207,12 @@
       loadTemplate() {
         this.$store.commit('builder/FETCHING_DEF', true)
 
-        if (this.slug == 'test') {
+        if (!_.isNil(this.definition)) {
+          // definition initialization handled in watcher
+          this.initFromDefiniton()
+          this.$store.commit('builder/FETCHING_DEF', false)
+          this.initSticky()
+        } else if (this.slug == 'test') {
           this.$store.commit('builder/INIT_DEF', test_def)
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
@@ -253,6 +276,9 @@
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
         this.$store.commit('builder/UPDATE_CODE')
+      },
+      initFromDefiniton() {
+        this.$store.commit('builder/INIT_DEF', this.definition)
       },
       initSticky() {
         setTimeout(() => {

@@ -23,6 +23,11 @@
       icon: 'gavel'
     },
     {
+      route: 'builder',
+      name: 'Builder',
+      icon: 'build'
+    },
+    {
       route: 'translator',
       name: 'Code Translator',
       icon: 'translate'
