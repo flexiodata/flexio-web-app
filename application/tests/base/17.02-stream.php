@@ -734,6 +734,28 @@ class Test
         \Flexio\Tests\Check::assertArray('D.8', 'StreamReader/StreamWriter; single null value with non-zero-length string',  $actual, $expected, $results);
 
 
+        // BEGIN TEST
+        $stream_info = array();
+        $stream_info['path'] = \Flexio\Base\Util::generateHandle();
+        $stream_info['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
+        $stream_info['structure'] = \Flexio\Base\Structure::create(json_decode('
+        [
+            { "name": "f1", "type": "text"}
+        ]
+        ',true))->get();
+        $stream = \Flexio\Base\Stream::create($stream_info);
+        $writer = $stream->getWriter();
+        $writer->write(json_decode('{ "f1" : "a"}',true));
+        $writer->write(json_decode('{ "f1" : "b"}',true));
+        $writer->close();
+        $reader = $stream->getReader();
+        $actual = array($reader->readRow(), $reader->readRow(), $reader->readRow());
+        $reader->close();
+        $expected = json_decode('[{ "f1" : "a"}, {"f1": "b"}, false]',true);
+        \Flexio\Tests\Check::assertArray('D.8', 'StreamReader/StreamWriter; multiple values; also check that eof readRow() returns false',  $actual, $expected, $results);
+
+
+
 
         // TEST: problem values
 
