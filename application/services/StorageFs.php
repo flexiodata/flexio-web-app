@@ -396,6 +396,10 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
 
         $sql .= 'values ';
 
+        $all_values = [];
+        $all_types = [];
+        $count = 0;
+
         $first = true;
         foreach ($this->insert_rows as $row)
         {
@@ -410,6 +414,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                         $val = null;
                 }
 
+                /*
                 if (is_null($val))
                 {
                     $val = 'null';
@@ -427,6 +432,27 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                     }
                     $val = "'$val'";
                 }
+                */
+
+
+                if (is_null($val))
+                {
+                    $type = SQLITE3_NULL;
+                }
+                 else if (is_bool($val))
+                {
+                    $val = $val ? 1 : 0;
+                    $type = SQLITE3_INTEGER;
+                }
+                 else
+                {
+                    $val = (string)$val;
+                    $type = SQLITE3_TEXT;
+                }
+
+                $all_values[] = $val;
+                $all_types[] = $type;
+                $count++;
 
                 ++$colidx;
             }
@@ -440,7 +466,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 $sql .= ',';
             }
 
-            $sql .= '(' . join(',', $row) . ')';
+            $sql .= '(' . rtrim(str_repeat('?,', count($row)),',') . ')';
         }
 
         //var_dump($this->fspath);
@@ -449,7 +475,19 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         //die();
 
 
-        $res = @$this->sqlite->exec($sql);
+        $stmt = @$this->sqlite->prepare($sql);
+        $res = false;
+
+        if ($stmt)
+        {
+            for ($i = 0; $i < $count; ++$i)
+            {
+                $stmt->bindValue($i+1, $all_values[$i], $all_types[$i]);
+            }
+            $res = @$stmt->execute();
+        }
+
+        //$res = @$this->sqlite->exec($sql);
 
         if (!$res)
         {
@@ -460,6 +498,9 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 $bad_field = trim(substr($errstr, $marker + 20));
                 foreach ($this->insert_rows as &$row)
                     unset($row[$bad_field]);
+
+                unset($all_values);
+                unset($all_types);
 
                 return $this->flushRows();
             }
