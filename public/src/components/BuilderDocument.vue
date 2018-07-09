@@ -98,6 +98,12 @@
   test_def.pipe = pipe_arr.join('\n  .')
 
   export default {
+    props: {
+      definition: {
+        type: Object,
+        required: false
+      }
+    },
     components: {
       Spinner,
       BuilderList,
@@ -107,6 +113,10 @@
       slug: {
         handler: 'loadTemplate',
         immediate: true
+      },
+      definition: {
+        handler: 'initFromDefiniton',
+        deep: true
       },
       active_prompt_idx: {
         handler: 'updateCode',
@@ -197,7 +207,12 @@
       loadTemplate() {
         this.$store.commit('builder/FETCHING_DEF', true)
 
-        if (this.slug == 'test') {
+        if (!_.isNil(this.definition)) {
+          // definition initialization handled in watcher
+          this.initFromDefiniton()
+          this.$store.commit('builder/FETCHING_DEF', false)
+          this.initSticky()
+        } else if (this.slug == 'test') {
           this.$store.commit('builder/INIT_DEF', test_def)
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
@@ -261,6 +276,9 @@
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
         this.$store.commit('builder/UPDATE_CODE')
+      },
+      initFromDefiniton() {
+        this.$store.commit('builder/INIT_DEF', this.definition)
       },
       initSticky() {
         setTimeout(() => {

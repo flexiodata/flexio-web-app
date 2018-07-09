@@ -11,22 +11,17 @@
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">Builder</div>
-      <div class="flex-fill bg-nearer-white pa4 overflow-y-auto" :id="doc_id">
-        <BuilderList
-          class="center mw-builder-doc"
-          builder-mode="wizard"
-          :items="items"
-          :container-id="doc_id"
-          :active-item-idx.sync="active_prompt_idx"
-          :show-numbers="true"
-          :show-icons="false"
-          :show-insert-buttons="false"
-          :show-edit-buttons="false"
-          :show-delete-buttons="false"
-          @item-prev="active_prompt_idx--"
-          @item-next="active_prompt_idx++"
-        />
-      </div>
+      <el-alert
+        type="error"
+        show-icon
+        :title="error_msg"
+        :closable="false"
+        v-show="error_msg.length > 0"
+      />
+      <BuilderDocument
+        :class="error_msg.length > 0 ? 'o-40 no-pointer-events' : ''"
+        :definition="edit_json"
+      />
     </div>
   </div>
 </template>
@@ -34,7 +29,7 @@
 <script>
   import yaml from 'js-yaml'
   import CodeEditor from './CodeEditor.vue'
-  import BuilderList from './BuilderList.vue'
+  import BuilderDocument from './BuilderDocument.vue'
 
   import test_def from '../data/builder/test-def.yml'
   // easy way to get rid of a bunch of elements for quick testing
@@ -45,18 +40,23 @@
   export default {
     components: {
       CodeEditor,
-      BuilderList
+      BuilderDocument
+    },
+    watch: {
+      edit_code: {
+        handler: 'updateJSON',
+        immediate: true
+      }
     },
     data() {
       return {
         lang: 'yaml',
         edit_code,
-        active_prompt_idx: 0,
-        doc_id: _.uniqueId('admin-builder-')
+        error_msg: ''
       }
     },
-    computed: {
-      edit_json() {
+    methods: {
+      updateJSON() {
         var res = ''
         try {
           if (this.lang == 'yaml') {
@@ -67,15 +67,13 @@
             res = JSON.parse(this.edit_code)
           }
 
-          return res
+          this.error_msg = ''
+          this.edit_json = res
         }
         catch(e)
         {
-          return { error: true, message: 'Parse error: ' + e.message }
+          this.error_msg = 'Parse error: ' + e.message
         }
-      },
-      items() {
-        return _.get(this.edit_json, 'prompts', [])
       }
     }
   }
