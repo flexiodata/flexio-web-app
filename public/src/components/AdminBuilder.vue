@@ -2,15 +2,16 @@
   <div class="flex flex-row items-stretch relative">
     <div
       class="flex flex-column bl b--black-20 trans-w"
-      :style="code_expanded ? 'width: 40%' : 'width: 66px'"
+      :style="code_expanded ? 'width: 40%' : 'width: 30px'"
     >
       <div class="flex flex-row items-center pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">
-        <div class="flex-fill">YAML</div>
+        <div class="flex-fill" v-show="code_expanded">YAML</div>
         <el-button
           class="ttu fw6"
           type="text"
+          :title="code_expanded ? 'Hide YAML' : 'Show YAML'"
           :icon="code_expanded ? 'el-icon-caret-left' : 'el-icon-caret-right'"
-          style="margin: -4px; padding: 4px; border: 0; font-size: 13px"
+          style="margin: -4px; padding: 5px 4px 4px; border: 0; font-size: 13px"
           @click="code_expanded = !code_expanded"
         />
       </div>
@@ -19,6 +20,7 @@
         :class="!code_expanded ? 'o-40 no-pointer-events no-select' : ''"
         :show-json-view-toggle="false"
         :lang.sync="lang"
+        v-show="code_expanded"
         v-model="edit_code"
       />
     </div>
