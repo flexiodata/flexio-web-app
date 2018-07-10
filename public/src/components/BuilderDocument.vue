@@ -15,10 +15,13 @@
       class="mt4 mb3 relative z-7 bg-nearer-white"
       v-if="is_fetched"
     >
-      <div class="flex flex-row items-center center tc mw-builder-doc" v-if="show_title">
-        <h1 class="flex-fill mv0 pv3 fw6">{{title}}</h1>
+      <div class="center tc mw-builder-doc" v-if="show_title">
+        <h1 class="mv0 pv3 fw6">{{title}}</h1>
       </div>
       <div class="h1" v-else></div>
+      <div class="center mw-builder-doc" v-if="show_description">
+        <p class="mt0 mb4 pv3 lh-copy">{{description}}</p>
+      </div>
     </div>
     <div
       class="center mw-builder-doc"
@@ -137,6 +140,7 @@
         def: state => state.builder.def,
         attrs: state => state.builder.attrs,
         title: state => state.builder.def.title,
+        description: state => state.builder.def.description,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         prompts: state => state.builder.prompts,
@@ -192,6 +196,9 @@
       },
       show_title() {
         return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'settings.show_title', true)
+      },
+      show_description() {
+        return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'settings.show_description', false)
       }
     },
     methods: {
