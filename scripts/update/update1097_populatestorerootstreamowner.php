@@ -48,11 +48,10 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: for each of the store root associations, set the owner of
-    // the stream object to be the user that has the store
-    // public const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
-    // public const EDGE_HAS_STORE     = 'HST';  // object A has a store that is object B
-    $db->exec("update tbl_stream as tar set owned_by = src.source_eid from tbl_association as src where tar.eid = src.target_eid and src.association_type = 'HST'");
+    // STEP 1: populate empty stream_type with 'SF'
+    // public const TYPE_DIRECTORY = 'SD';
+    // public const TYPE_FILE = 'SF';
+    $db->exec("update tbl_stream set stream_type = 'SF' where stream_type = ''");
 }
 catch(\Exception $e)
 {

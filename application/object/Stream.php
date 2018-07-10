@@ -92,6 +92,10 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         if (!isset($properties['path']))
             $properties['path'] = \Flexio\Base\Util::generateHandle();
 
+        // default stream type
+        if (!isset($properties['stream_type']))
+            $properties['stream_type'] = \Flexio\Object\Stream::TYPE_FILE;
+
         $object = new static();
         $stream_model = $object->getModel()->stream;
         $local_eid = $stream_model->create($properties);
