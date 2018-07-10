@@ -221,18 +221,11 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // get the store root for the current user; if we can't find one, create one
         $user_eid = $this->getEid();
 
-        // see if we already have a store root; if we do, return it
-        $items = $this->getModel()->assoc_range($user_eid, \Model::EDGE_HAS_STORE);
-        if (count($items) > 0)
-        {
-            $store_root_eid = $items[0]['eid'];
-            $stream = \Flexio\Object\Stream::load($store_root_eid);
-
-            // the following line makes sure that tbl_stream record actually exists
-            // and will throw an exception if it doesn't
-            $stream->get();
-            return $stream;
-        }
+        $filter = array('parent_eid' => '', 'stream_type' => \Flexio\Object\Stream::TYPE_DIRECTORY,
+                        'eid_status' => \Model::STATUS_AVAILABLE, 'owned_by' => $user_eid);
+        $streams = \Flexio\Object\Stream::list($filter);
+        if (count($streams) > 0)
+            return $streams[0];
 
         // we don't have a root; so create one
         $properties = array();
@@ -241,9 +234,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $properties['stream_type'] = \Flexio\Object\Stream::TYPE_DIRECTORY;
         $properties['owned_by'] = $user_eid;
         $stream = \Flexio\Object\Stream::create($properties);
-
-        $this->getModel()->assoc_add($user_eid, \Model::EDGE_HAS_STORE, $stream->getEid());
-        $this->getModel()->assoc_add($stream->getEid(), \Model::EDGE_STORE_FOR, $user_eid);
 
         return $stream;
     }
