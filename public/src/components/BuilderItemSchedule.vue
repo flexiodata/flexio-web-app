@@ -14,6 +14,7 @@
       :show-header="false"
       :show-footer="false"
       @change="updatePipe"
+      v-show="is_active"
     />
   </div>
 </template>

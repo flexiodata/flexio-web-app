@@ -34,6 +34,7 @@
         v-show="error_msg.length > 0"
       />
       <BuilderDocument
+        class="h-100"
         :class="error_msg.length > 0 ? 'o-40 no-pointer-events no-select' : ''"
         :definition="edit_json"
       />
