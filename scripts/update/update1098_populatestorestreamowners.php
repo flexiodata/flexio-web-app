@@ -51,16 +51,15 @@ try
     // STEP 1: get the root store directories
     // public const TYPE_DIRECTORY = 'SD';
     // public const TYPE_FILE = 'SF';
-    $query = $db->query("select eid, owned_by from tbl_stream where stream_type = 'SD' and name = ''");
+    $result = $db->query("select eid, owned_by from tbl_stream where stream_type = 'SD' and name = ''");
 
     // STEP 2: populate the owner info from the parent
     while ($result && ($row = $result->fetch()))
     {
         $eid = $row['eid'];
         $owned_by = $row['owned_by'];
-        populateChildStreamOwner($db, $eid, $owned_by);
+        populateChildrenStreamOwners($db, $eid, $owned_by);
     }
-
 }
 catch(\Exception $e)
 {
@@ -76,7 +75,7 @@ $current_version = \Flexio\System\System::getUpdateVersionFromFilename(__FILE__)
 echo '{ "success": true, "msg": "Operation completed successfully." }';
 
 
-function populateChildStreamOwner($db, $parent_eid, $owned_by)
+function populateChildrenStreamOwners($db, $parent_eid, $owned_by)
 {
     if (\Flexio\Base\Eid::isValid($parent_eid) === false)
         return;
@@ -94,6 +93,6 @@ function populateChildStreamOwner($db, $parent_eid, $owned_by)
     {
         $eid = $row['eid'];
         $owned_by = $row['owned_by'];
-        populateChildStreamOwner($db, $eid, $owned_by);
+        populateChildrenStreamOwners($db, $eid, $owned_by);
     }
 }
