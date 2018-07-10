@@ -14,8 +14,6 @@ content: |
 
 settings:
   show_title: false
-  show_name_step: true
-  show_schedule_step: true
 
 prompts:
   - element: message
