@@ -165,14 +165,9 @@
         }
       },
       save_attrs() {
-        var default_name = _.get(this.def, 'title', 'Untitled Pipe')
-        var name = _.get(this.attrs, 'pipe.name', default_name)
-        var description = _.get(this.attrs, 'pipe.description', '')
-
-        return {
-          name,
-          description
-        }
+        return _.assign({
+          name: _.get(this.def, 'title', 'Untitled Pipe')
+        }, _.get(this.attrs, 'pipe', {}))
       },
       save_code() {
         if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {

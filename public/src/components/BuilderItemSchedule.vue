@@ -78,7 +78,6 @@
         this.edit_pipe = _.assign({}, pipe)
       },
       emitItemChange() {
-        debugger
         this.$emit('item-change', { pipe: this.edit_pipe }, this.index)
       }
     }
