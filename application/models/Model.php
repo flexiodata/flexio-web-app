@@ -40,16 +40,22 @@ class Filter
         if (isset($filter_items['alias']) && array_key_exists('alias', $allowed_item_keys))
             $filter_expr .= (' and (alias = ' . $db->quote($filter_items['alias']) . ')');
 
-        if (isset($filter_items['username']))
+        if (isset($filter_items['username']) && array_key_exists('username', $allowed_item_keys))
             $filter_expr .= (' and (username = ' . $db->quote($filter_items['username']) . ')');
 
-        if (isset($filter_items['email']))
+        if (isset($filter_items['email']) && array_key_exists('email', $allowed_item_keys))
             $filter_expr .= (' and (email = ' . $db->quote($filter_items['email']) . ')');
+
+        if (isset($filter_items['name']) && array_key_exists('name', $allowed_item_keys))
+            $filter_expr .= (' and (name = ' . $db->quote($filter_items['name']) . ')');
+
+        if (isset($filter_items['stream_type']) && array_key_exists('stream_type', $allowed_item_keys))
+            $filter_expr .= (' and (stream_type = ' . $db->quote($filter_items['stream_type']) . ')');
 
         if (isset($filter_items['object_eid']) && array_key_exists('object_eid', $allowed_item_keys))
             $filter_expr .= (' and (object_eid = ' . $db->quote($filter_items['object_eid']) . ')');
 
-        if (isset($filter_items['access_code']))
+        if (isset($filter_items['access_code']) && array_key_exists('access_code', $allowed_item_keys))
             $filter_expr .= (' and (access_code = ' . $db->quote($filter_items['access_code']) . ')');
 
         if (isset($filter_items['connection_eid']) && array_key_exists('connection_eid', $allowed_item_keys))

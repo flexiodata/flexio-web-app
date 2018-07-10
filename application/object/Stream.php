@@ -335,22 +335,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         if (!is_null($name))
             $where['name'] = $name;
 
-        $arr = $this->getModel()->stream->queryStreams($where);
-
-        $results = [];
-        foreach ($arr as $a)
-        {
-            $object = new static();
-            $object->properties = $a;
-            $structure = @json_decode($a['structure'],true);
-            if (is_null($structure))
-                $structure = [];
-            $object->properties['structure'] = $structure;
-            $object->setEid($a['eid']);
-            $results[] = $object;
-        }
-
-        return $results;
+        $arr = $this->list($where);
+        return $arr;
     }
 
     public function getReader() : \Flexio\IFace\IStreamReader

@@ -200,8 +200,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
             // filelist
             // params
 
-            $storable_stdin = self::createStorableStream($this->engine->getStdin());
-            $storable_stdout = self::createStorableStream($this->engine->getStdout());
+            $owned_by = $this->getOwner();
+            $storable_stdin = self::createStorableStream($this->engine->getStdin(), $owned_by);
+            $storable_stdout = self::createStorableStream($this->engine->getStdout(), $owned_by);
 
             $input = [
                 'params' => $this->engine->getParams(),
@@ -306,8 +307,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
         $task = $process_info['task'] ?? array();
 /*
         // no need to save the stdin/stdout for the input
-        $storable_stdin = self::createStorableStream($process_info['stdin']);
-        $storable_stdout = self::createStorableStream($process_info['stdout']);
+        $owned_by = $this->getOwner();
+        $storable_stdin = self::createStorableStream($process_info['stdin'], $owned_by);
+        $storable_stdout = self::createStorableStream($process_info['stdout'], $owned_by);
         $storable_stream_info = array();
         $storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
         $storable_stream_info['stdout'] = array('eid' => $storable_stdout->getEid());
@@ -327,8 +329,9 @@ class StoredProcess implements \Flexio\IFace\IProcess
     private function finishLog(array $process_info) : void
     {
         $task = $process_info['task'] ?? array();
-        //$storable_stdin = self::createStorableStream($process_info['stdin']);
-        $storable_stdout = self::createStorableStream($process_info['stdout']);
+        $owned_by = $this->getOwner();
+        //$storable_stdin = self::createStorableStream($process_info['stdin'], $owned_by);
+        $storable_stdout = self::createStorableStream($process_info['stdout'], $owned_by);
 
         $storable_stream_info = array();
         //$storable_stream_info['stdin'] = array('eid' => $storable_stdin->getEid());
@@ -357,9 +360,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
         // TODO: proxy other information
     }
 
-    private static function createStorableStream(\Flexio\IFace\IStream $stream) : \Flexio\Object\Stream
+    private static function createStorableStream(\Flexio\IFace\IStream $stream, string $owned_by) : \Flexio\Object\Stream
     {
         $properties['path'] = \Flexio\Base\Util::generateHandle();
+        $properties['owned_by'] = $owned_by;
         $properties = array_merge($stream->get(), $properties);
         $storable_stream = \Flexio\Object\Stream::create($properties);
 
