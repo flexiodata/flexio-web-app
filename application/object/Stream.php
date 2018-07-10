@@ -339,7 +339,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         if (!is_null($name))
             $where['name'] = $name;
 
-        $arr = $this->list($where);
+        $arr = self::list($where);
         return $arr;
     }
 
