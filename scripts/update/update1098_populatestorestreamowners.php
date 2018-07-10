@@ -87,7 +87,7 @@ function populateChildrenStreamOwners($db, $parent_eid, $owned_by)
     $qowned_by = $db->quote($owned_by);
     $result = $db->query("update tbl_stream set owned_by = $qowned_by where parent_eid = $qparent_eid");
 
-    // get the list of children and populate the their owner info
+    // get the list of children and populate their owner info
     $result = $db->query("select eid, owned_by from tbl_stream where stream_type = 'SD' and name = ''");
     while ($result && ($row = $result->fetch()))
     {
