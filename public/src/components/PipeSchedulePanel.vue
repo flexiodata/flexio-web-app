@@ -12,7 +12,6 @@
       <div class="el-form-item flex flex-row items-center">
         <el-switch
           class="hint--bottom"
-          active-color="#009900"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
           v-model="is_scheduled"
         />

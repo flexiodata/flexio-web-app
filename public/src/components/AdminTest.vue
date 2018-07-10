@@ -33,7 +33,6 @@
         </el-button>
         <el-switch
           class="ml3 mr1"
-          active-color="#009900"
           v-model="show_errors_only"
         />
         <span

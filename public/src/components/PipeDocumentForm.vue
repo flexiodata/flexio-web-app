@@ -53,7 +53,6 @@
       label="Scheduled"
     >
       <el-switch
-        active-color="#009900"
         v-model="is_scheduled"
       />
       <span class="ml1">

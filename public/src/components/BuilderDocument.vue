@@ -175,7 +175,7 @@
           return this.code + '.save(' + save_attrs_str + ', callback)'
         } else {
           try {
-            return _.assign({}, save_attrs, {
+            return _.assign({}, this.save_attrs, {
               task: JSON.parse(this.code)
             })
           }
