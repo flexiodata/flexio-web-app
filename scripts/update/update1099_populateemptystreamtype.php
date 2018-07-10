@@ -48,7 +48,10 @@ if (is_null($db))
 
 try
 {
-
+    // STEP 1: populate empty stream_type with 'SF'
+    // public const TYPE_DIRECTORY = 'SD';
+    // public const TYPE_FILE = 'SF';
+    $db->exec("update tbl_stream set stream_type = 'SF' where stream_type = ''");
 }
 catch(\Exception $e)
 {
