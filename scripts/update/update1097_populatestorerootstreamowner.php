@@ -48,7 +48,6 @@ if (is_null($db))
 
 try
 {
-
     // STEP 1: for each of the store root associations, set the owner of
     // the stream object to be the user that has the store
     // public const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
