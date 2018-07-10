@@ -231,7 +231,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             // the following line makes sure that tbl_stream record actually exists
             // and will throw an exception if it doesn't
             $stream->get();
-
             return $stream;
         }
 

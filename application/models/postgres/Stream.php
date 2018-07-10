@@ -144,7 +144,7 @@ class Stream extends ModelBase
     public function list(array $filter) : array
     {
         $db = $this->getDatabase();
-        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'parent_eid', 'connection_eid');
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'parent_eid', 'connection_eid', 'name', 'stream_type');
         $filter_expr = \Filter::build($db, $filter, $allowed_items);
         $limit_expr = \Limit::build($db, $filter);
 
@@ -231,102 +231,5 @@ class Stream extends ModelBase
             return \Model::STATUS_UNDEFINED;
 
         return $result;
-    }
-
-    public function queryStreams(array $conditions) : array
-    {
-        $row = false;
-        $db = $this->getDatabase();
-        try
-        {
-            $where = '';
-            $where_arr = [];
-            if (isset($conditions['parent_eid']))
-            {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'parent_eid = ?';
-                $where_arr[] = $conditions['parent_eid'];
-                unset($conditions['parent_eid']);
-            }
-            if (isset($conditions['name']))
-            {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'name = ?';
-                $where_arr[] = $conditions['name'];
-                unset($conditions['name']);
-            }
-            if (isset($conditions['stream_type']))
-            {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'stream_type = ?';
-                $where_arr[] = $conditions['stream_type'];
-                unset($conditions['stream_type']);
-            }
-            if (isset($conditions['eid_status']))
-            {
-                $where .= (strlen($where) > 0 ? ' and ' : ' ') . 'eid_status = ?';
-                $where_arr[] = $conditions['eid_status'];
-                unset($conditions['eid_status']);
-            }
-
-            if (count($where_arr) == 0 || count($conditions) > 0)
-            {
-                // refuse to query with no conditions;
-                // also refuse to query if unknown conditions are specified
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-            }
-
-            $rows = $db->fetchAll("select eid as eid,
-                                          eid_status as eid_status,
-                                          parent_eid as parent_eid,
-                                          stream_type as stream_type,
-                                          name as name,
-                                          path as path,
-                                          size as size,
-                                          hash as hash,
-                                          mime_type as mime_type,
-                                          structure as structure,
-                                          file_created as file_created,
-                                          file_modified as file_modified,
-                                          connection_eid as connection_eid,
-                                          expires as expires,
-                                          owned_by as owned_by,
-                                          created_by as created_by,
-                                          created as created,
-                                          updated as updated
-                                from tbl_stream
-                                where $where
-                                ", $where_arr);
-        }
-        catch (\Exception $e)
-        {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-        }
-
-        if (!$rows)
-            return array(); // don't flag an error, but acknowledge that object doesn't exist
-
-        $output = array();
-        foreach ($rows as $row)
-        {
-            $output[] =  array('eid'                  => $row['eid'],
-                               'eid_type'             => \Model::TYPE_STREAM,
-                               'eid_status'           => $row['eid_status'],
-                               'parent_eid'           => $row['parent_eid'],
-                               'stream_type'          => $row['stream_type'],
-                               'name'                 => $row['name'],
-                               'path'                 => $row['path'],
-                               'size'                 => $row['size'],
-                               'hash'                 => $row['hash'],
-                               'mime_type'            => $row['mime_type'],
-                               'structure'            => $row['structure'],
-                               'file_created'         => $row['file_created'],
-                               'file_modified'        => $row['file_modified'],
-                               'connection_eid'       => $row['connection_eid'],
-                               'expires'              => $row['expires'],
-                               'owned_by'             => $row['owned_by'],
-                               'created_by'           => $row['created_by'],
-                               'created'              => \Flexio\Base\Util::formatDate($row['created']),
-                               'updated'              => \Flexio\Base\Util::formatDate($row['updated']));
-        }
-
-        return $output;
     }
 }
