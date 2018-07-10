@@ -335,7 +335,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
         // note this function will only return non-deleted child streams; that's what the query for eid_status does
 
-        $where = [ 'parent_eid' => $this->getEid(), 'eid_status' => 'A' /* \Model::STATUS_AVAILABLE */ ];
+        $where = [ 'parent_eid' => $this->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE ];
         if (!is_null($name))
             $where['name'] = $name;
 
