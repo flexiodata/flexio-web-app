@@ -146,16 +146,6 @@ class Test
         $expected = 'HCM';
         \Flexio\Tests\Check::assertString('C.19', 'Model edge constant',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $actual = \Model::EDGE_STORE_FOR;
-        $expected = 'STF';
-        \Flexio\Tests\Check::assertString('C.22', 'Model edge constant',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::EDGE_HAS_STORE;
-        $expected = 'HST';
-        \Flexio\Tests\Check::assertString('C.23', 'Model edge constant',  $actual, $expected, $results);
-
 
 
         // TEST: Model status constants; the database stores raw values for

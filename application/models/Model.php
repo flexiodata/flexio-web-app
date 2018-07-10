@@ -141,8 +141,6 @@ class Model
     public const EDGE_COPIED_FROM   = 'CPF';  // object A copied from object B
     public const EDGE_COMMENT_ON    = 'CMO';  // comment A is a comment on object B
     public const EDGE_HAS_COMMENT   = 'HCM';  // object A has comment B
-    public const EDGE_STORE_FOR     = 'STF';  // object A is a store for object B
-    public const EDGE_HAS_STORE     = 'HST';  // object A has a store that is object B
 
     public const STATUS_UNDEFINED = '';
     public const STATUS_PENDING   = 'P';
@@ -256,8 +254,6 @@ class Model
             case \Model::EDGE_COPIED_FROM:
             case \Model::EDGE_COMMENT_ON:
             case \Model::EDGE_HAS_COMMENT:
-            case \Model::EDGE_STORE_FOR:
-            case \Model::EDGE_HAS_STORE:
                 return true;
         }
     }

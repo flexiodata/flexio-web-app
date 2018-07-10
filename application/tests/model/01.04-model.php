@@ -286,16 +286,6 @@ class Test
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('B.25', '\Flexio\Model\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
 
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_STORE_FOR);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.28', '\Flexio\Model\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Model::isValidEdge(\Model::EDGE_HAS_STORE);
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.29', '\Flexio\Model\Model::isValidEdge(); return true for valid edges',  $actual, $expected, $results);
-
 
         // TEST: valid status function
 
