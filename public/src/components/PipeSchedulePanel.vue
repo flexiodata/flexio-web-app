@@ -205,8 +205,12 @@
     },
     watch: {
       pipe: {
-        handler: 'updatePipe',
+        handler: 'initPipe',
         immediate: true,
+        deep: true
+      },
+      edit_pipe: {
+        handler: 'updatePipe',
         deep: true
       },
       'edit_pipe.schedule.frequency'(val) {
@@ -246,7 +250,7 @@
         },
         set() {
           var status = this.is_scheduled ? schedule.SCHEDULE_STATUS_INACTIVE : schedule.SCHEDULE_STATUS_ACTIVE
-          _.set(this.edit_pipe, 'schedule_status', status)
+          this.edit_pipe = _.assign({}, this.edit_pipe, { 'schedule_status': status })
         }
       },
       show_times() {
@@ -261,32 +265,21 @@
       submit() {
         this.$emit('submit', this.edit_pipe)
       },
-      reset(attrs) {
-        if (_.isObject(attrs))
-        {
-          // we need to do a deep clone here since we have nested objects in the pipe
-          // and Javascript objects keep their reference even when using _.assign()
-          var p = _.cloneDeep(attrs)
-
-          // pipes that have never been scheduled have a null schedule object
-          if (_.isNil(_.get(p, 'schedule')))
-            p = _.assign(p, defaultAttrs())
-
-          this.edit_pipe = _.cloneDeep(p)
-        }
-         else
-        {
-          this.pipe = _.assign({}, defaultAttrs())
-        }
-      },
-      updatePipe() {
+      initPipe() {
         var edit_pipe = _.cloneDeep(this.pipe)
-        var default_schedule = _.get(defaultAttrs(), 'schedule')
 
-        if (_.isNil(_.get(edit_pipe, 'schedule')))
-          _.set(edit_pipe, 'schedule', default_schedule)
+        if (_.isNil(_.get(edit_pipe, 'schedule'))) {
+          _.set(edit_pipe, 'schedule', _.get(defaultAttrs(), 'schedule'))
+        }
+
+        if (_.isNil(_.get(edit_pipe, 'schedule_status'))) {
+          _.set(edit_pipe, 'schedule_status', _.get(defaultAttrs(), 'schedule_status'))
+        }
 
         this.edit_pipe = edit_pipe
+      },
+      updatePipe() {
+        this.$emit('change', this.edit_pipe)
       },
       updateTime(item, index) {
         var times = _.get(this.edit_pipe, 'schedule.times', [])

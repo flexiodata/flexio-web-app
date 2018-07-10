@@ -102,7 +102,14 @@ const mutations = {
   },
 
   UPDATE_ATTRS (state, attrs) {
-    state.attrs = _.assign({}, state.attrs, attrs)
+    var new_attrs = _.cloneDeep(attrs)
+
+    // extend the pipe object, don't overwrite it
+    if (_.isObject(new_attrs, 'pipe')) {
+      new_attrs.pipe = _.assign({}, _.get(state.attrs, 'pipe', {}), new_attrs.pipe)
+    }
+
+    state.attrs = _.assign({}, state.attrs, new_attrs)
 
     state.prompts = _.map(state.prompts, p => {
       // update file chooser connections with the associated connection if they match
