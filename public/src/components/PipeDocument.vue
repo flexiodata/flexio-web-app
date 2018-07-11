@@ -18,8 +18,41 @@
     >
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
-          <div class="flex-fill">
-            <h1 class="mv0 pv3 fw6">{{title}}</h1>
+          <div class="flex-fill flex flex-row items-center pv3">
+            <h1 class="dib mv0 fw6">{{title}}</h1>
+            <el-popover
+              placement="bottom"
+              :width="440"
+              trigger="hover"
+            >
+              <template v-if="alias.length > 0">
+                <h3 class="mv0 fw6">Pipe Alias</h3>
+                <p class="mb0">This is your pipe's alias. It is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</p>
+              </template>
+              <template v-else>
+                <h3 class="mv0 fw6">Pipe ID</h3>
+                <p>This is your pipe's ID. It is an auto-generated identifier that can be used to reference this pipe as an API endpoint as well as from one of our SDKs.</p>
+                <el-alert
+                  class="f8"
+                  title=""
+                  type="info-blue"
+                  :closable="false"
+                >
+                  <div class="flex flex-row" style="margin: -2px -12px">
+                    <i class="el-icon-info" style="margin: 2px 4px 0 0"></i>
+                    <span>You should consider assigning an alias to this pipe. An alias is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</span>
+                  </div>
+                </el-alert>
+              </template>
+              <el-tag
+                class="ml2 mt1 fw6 cursor-default"
+                size="medium"
+                type="info"
+                slot="reference"
+              >
+                {{identifier}} <i class="el-icon-info blue" style="margin: 0 -2px 0 2px"></i>
+              </el-tag>
+            </el-popover>
           </div>
           <transition name="el-zoom-in-top">
             <div class="flex-none flex flex-row items-center pl2">
@@ -365,6 +398,15 @@
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
+      },
+      alias() {
+        return _.get(this.orig_pipe, 'alias', '')
+      },
+      identifier() {
+        return this.alias.length > 0 ? this.alias : this.eid
+      },
+      api_endpoint() {
+        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
       },
       doc_id() {
         return 'pipe-doc-' + this.eid

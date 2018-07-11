@@ -21,6 +21,7 @@ import {
   Message,
   MessageBox,
   Option,
+  Popover,
   Radio,
   RadioButton,
   RadioGroup,
@@ -29,7 +30,8 @@ import {
   Table,
   TableColumn,
   Tabs,
-  TabPane
+  TabPane,
+  Tag
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
@@ -69,6 +71,7 @@ Vue.use(FormItem)
 Vue.use(Icon)
 Vue.use(Input)
 Vue.use(Option)
+Vue.use(Popover)
 Vue.use(Radio)
 Vue.use(RadioButton)
 Vue.use(RadioGroup)
@@ -78,6 +81,7 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Tabs)
 Vue.use(TabPane)
+Vue.use(Tag)
 
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox
