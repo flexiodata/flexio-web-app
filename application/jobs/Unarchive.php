@@ -125,10 +125,8 @@ class Unarchive extends \Flexio\Jobs\Base
 
             while (!gzeof($f)) {
                 $buf = gzread($f, 16384);
-                if (strlen($buf) > 0)
-                {
+                if ($buf !== false && $buf !== null)
                     $writer->write($buf);
-                }
             }
             
             gzclose($f);
