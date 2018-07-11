@@ -452,7 +452,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": false
+            "params": "false"
         }
         ';
         \Flexio\Tests\Check::assertInArray('B.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
@@ -470,7 +470,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": true
+            "params": "true"
         }
         ';
         \Flexio\Tests\Check::assertInArray('B.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
@@ -506,7 +506,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": 10
+            "params": "10"
         }
         ';
         \Flexio\Tests\Check::assertInArray('B.7', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
@@ -524,7 +524,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": -2.1
+            "params": "-2.1"
         }
         ';
         \Flexio\Tests\Check::assertInArray('B.8', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
@@ -784,7 +784,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": [ "field2", "${v1}", "field2", "${v1}" ]
+            "params": [ "field2", "", "field2", "" ]
         }
         ';
         \Flexio\Tests\Check::assertInArray('C.4', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
@@ -1117,14 +1117,14 @@ class Test
                         {
                             "name": "f1",
                             "type": "numeric",
-                            "width": 14,
-                            "scale": 4
+                            "width": "14",
+                            "scale": "4"
                         },
                         {
                             "name": "f2",
                             "type": "numeric",
-                            "width": 14,
-                            "scale": 4
+                            "width": "14",
+                            "scale": "4"
                         }
                     ]
                 }
