@@ -803,10 +803,10 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": {"a": "b"}
+            "params": {"${key}": "b"}
         }
         ';
-        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of two variables; key-side remains unaffected', $actual, $expected, $results);
 
         // BEGIN TEST
         $properties = json_decode('
