@@ -160,7 +160,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": "${ v1}"
+            "params": ""
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.8', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
@@ -178,7 +178,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": "${v1 }"
+            "params": ""
         }
         ';
         \Flexio\Tests\Check::assertInArray('A.9', '\Flexio\Jobs\Base::replaceParameterTokens(); variables need to follow format of ${}; check for bad variable syntax', $actual, $expected, $results);
@@ -416,7 +416,7 @@ class Test
         $actual = \Flexio\Jobs\Base::create($properties)->replaceParameterTokens($variables)->getProperties();
         $expected = '
         {
-            "params": null
+            "params": ""
         }
         ';
         \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Jobs\Base::replaceParameterTokens(); basic replacement of single variable; preserve type if variable is whole value', $actual, $expected, $results);
