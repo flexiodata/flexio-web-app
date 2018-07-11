@@ -42,13 +42,7 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         }
          else
         {
-            $buflen = strlen($this->stream->buffer);
-            if ($this->offset == $buflen)
-            {
-                $this->offset++;
-                return '';
-            }
-            if ($this->offset > $buflen)
+            if ($this->offset >= strlen($this->stream->buffer))
                 return false;
 
             $str = substr($this->stream->buffer, $this->offset, $length);
