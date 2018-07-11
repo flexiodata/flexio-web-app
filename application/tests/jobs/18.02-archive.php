@@ -69,7 +69,8 @@ class Test
         $archivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($archivetask)->getStdout();
         $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($archivestream)->execute($unarchivetask)->getStdout();
         $actual = $unarchivestream->getReader()->read();
-        $expected = "f1\r\n";
+        $actual = trim($actual);  // test files are in source control, so \r\n gets modified by git; trim the string so line endings don't interfere
+        $expected = "f1";
         \Flexio\Tests\Check::assertString('A.1', 'Archive; basic file',  $actual, $expected, $results);
     }
 }
