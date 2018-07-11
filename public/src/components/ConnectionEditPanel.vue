@@ -68,7 +68,7 @@
             >
               <template slot="label">
                 Alias
-                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its EID">
+                <span class="lh-1 hint--top hint--large" aria-label="A unique identifier that can be used to reference this connection in a pipe definition, instead of directly referencing it by its ID">
                   <i class="el-icon-info blue"></i>
                 </span>
               </template>
