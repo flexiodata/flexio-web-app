@@ -18,7 +18,9 @@
     >
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
-          <h1 class="flex-fill mv0 pv3 fw6">{{title}}</h1>
+          <div class="flex-fill">
+            <h1 class="mv0 pv3 fw6">{{title}}</h1>
+          </div>
           <transition name="el-zoom-in-top">
             <div class="flex-none flex flex-row items-center pl2">
               <div class="flex flex-row pl3" v-if="show_save_cancel && false">

@@ -8,6 +8,17 @@
     v-if="form_values"
   >
     <el-form-item
+      key="eid"
+      label="ID"
+      prop="eid"
+    >
+      <el-input
+        style="max-width: 16rem"
+        :disabled="true"
+        v-model="form_values.eid"
+      />
+    </el-form-item>
+    <el-form-item
       key="name"
       label="Name"
       prop="name"
