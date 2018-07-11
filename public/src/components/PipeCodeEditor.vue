@@ -153,6 +153,7 @@
 
         switch (this.type) {
           case 'json':
+          case 'yaml':
             try {
               if (this.lang == 'yaml') {
                 // YAML view
