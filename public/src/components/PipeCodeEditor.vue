@@ -4,6 +4,7 @@
       class="bg-white ba b--black-10"
       :lang.sync="lang"
       :enable-json-view-toggle="!has_errors"
+      :show-json-view-toggle="false"
       v-bind="$attrs"
       v-model="edit_code"
     />
@@ -99,6 +100,7 @@
 
           switch (this.type) {
             case 'json':
+            case 'yaml':
               if (this.lang == 'yaml') {
                 // YAML view; stringify JSON into YAML
                 this.edit_code = yaml.safeDump(task)
@@ -151,6 +153,7 @@
 
         switch (this.type) {
           case 'json':
+          case 'yaml':
             try {
               if (this.lang == 'yaml') {
                 // YAML view

@@ -73,6 +73,10 @@
         handler: 'transposeValue',
         immediate: true
       },
+      lang: {
+        handler: 'updateJsonFromLang',
+        immediate: true
+      },
       json_view: {
         handler: 'onJsonViewChange'
       }
@@ -80,7 +84,7 @@
     data() {
       return {
         calc_value: '',
-        json_view: 'json',
+        json_view: this.lang == 'yaml' ? 'yaml' : 'json',
         has_vertical_scrollbar: false,
         scrollbar_width: 0
       }
@@ -164,6 +168,9 @@
         var scroller = this.$refs.editor.codemirror.getScrollerElement()
         scroller.style.minHeight = this.getMinHeight()
         scroller.style.maxHeight = this.getMaxHeight()
+      },
+      updateJsonFromLang() {
+        this.json_view = this.lang == 'yaml' ? 'yaml' : 'json'
       },
       onCmChange: _.debounce(function(value) {
         this.$emit('input', this.transpose == 'base64' ? btoa(value) : value)
