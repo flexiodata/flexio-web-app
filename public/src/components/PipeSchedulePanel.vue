@@ -16,7 +16,7 @@
           v-model="is_scheduled"
         />
         <span
-          class="fw6 f5 pl2 pointer"
+          class="f5 pl2 pointer"
           @click.stop="is_scheduled = !is_scheduled"
         >
           <transition name="el-zoom-in-center" mode="out-in">

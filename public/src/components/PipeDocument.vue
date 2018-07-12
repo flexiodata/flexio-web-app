@@ -22,35 +22,34 @@
             <h1 class="dib mv0 fw6">{{title}}</h1>
             <el-popover
               placement="bottom"
-              :width="440"
+              :width="400"
               trigger="hover"
             >
-              <template v-if="alias.length > 0">
-                <h3 class="mv0 fw6">Pipe Alias</h3>
-                <p class="mb0">This is your pipe's alias. It is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</p>
-              </template>
-              <template v-else>
-                <h3 class="mv0 fw6">Pipe ID</h3>
-                <p>This is your pipe's ID. It is an auto-generated identifier that can be used to reference this pipe as an API endpoint as well as from one of our SDKs.</p>
-                <el-alert
-                  class="f8"
-                  title=""
-                  type="info-blue"
-                  :closable="false"
-                >
-                  <div class="flex flex-row" style="margin: -2px -12px">
-                    <i class="el-icon-info" style="margin: 2px 4px 0 0"></i>
-                    <span>You should consider assigning an alias to this pipe. An alias is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</span>
-                  </div>
-                </el-alert>
-              </template>
+              <div class="ma1 tl">
+                <template v-if="alias.length > 0">
+                  <h3 class="mv0 fw6">Pipe Alias</h3>
+                  <p class="mb0">A unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</p>
+                </template>
+                <template v-else>
+                  <h3 class="mv0 fw6">Pipe ID</h3>
+                  <p>An auto-generated identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs.</p>
+                  <el-alert
+                    class="f8"
+                    title=""
+                    type="info-blue"
+                    :closable="false"
+                  >
+                    You should consider assigning an alias to this pipe. An alias is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.
+                  </el-alert>
+                </template>
+              </div>
               <el-tag
-                class="ml2 mt1 fw6 cursor-default"
+                class="ml3 fw6 cursor-default"
                 size="medium"
                 type="info"
                 slot="reference"
               >
-                {{identifier}} <i class="el-icon-info blue" style="margin: 0 -2px 0 2px"></i>
+                {{identifier}} <i class="el-icon-info blue" style="margin-left: 2px"></i>
               </el-tag>
             </el-popover>
           </div>
@@ -77,6 +76,14 @@
               </div>
             </div>
           </transition>
+          <PipeDocumentDropdown
+            class="ml3"
+            :editor="editor"
+            @switch-editor="switchEditor"
+            @view-properties="active_tab_name = 'properties'"
+            @view-configure="active_tab_name = 'configure'"
+            @view-history="active_tab_name = 'history'"
+          />
         </div>
       </div>
     </div>
@@ -316,6 +323,7 @@
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import PipeDocumentForm from './PipeDocumentForm.vue'
+  import PipeDocumentDropdown from './PipeDocumentDropdown.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import PipeContent from './PipeContent.vue'
@@ -337,6 +345,7 @@
       PipeCodeEditor,
       PipeBuilderList,
       PipeDocumentForm,
+      PipeDocumentDropdown,
       PipeSchedulePanel,
       PipeDeployPanel,
       PipeContent,
@@ -504,6 +513,9 @@
       },
       onEditorChange(val) {
         this.updateRoute()
+      },
+      switchEditor(val) {
+        this.editor = val
       },
       updateRoute() {
         // update the route
