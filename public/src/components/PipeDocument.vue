@@ -269,6 +269,15 @@
         </div>
         <!-- content -->
         <ProcessList />
+        <div class="flex flex-row justify-end mt4">
+          <el-button
+            size="medium"
+            class="ttu b"
+            @click="show_history = false"
+          >
+            Close
+          </el-button>
+        </div>
       </div>
     </div>
 
@@ -356,6 +365,9 @@
       active_tab_name: {
         handler: 'onTabChange',
         immediate: true
+      },
+      show_history: {
+        handler: 'fetchProcesses'
       },
       editor: {
         handler: 'onEditorChange',
@@ -498,14 +510,8 @@
         'getActiveUser'
       ]),
       onTabChange(val) {
-        if (!this.processes_fetched && val == PIPEDOC_VIEW_HISTORY) {
-          this.$store.dispatch('fetchProcesses', { parent_eid: this.eid }).then(response => {
-            if (response.ok) {
-              this.processes_fetched = true
-            } else {
-              // TODO: add error handling
-            }
-          })
+        if (val == PIPEDOC_VIEW_HISTORY) {
+          this.fetchProcesses()
         }
 
         this.updateRoute()
@@ -515,6 +521,17 @@
       },
       switchEditor(val) {
         this.editor = val
+      },
+      fetchProcesses() {
+        if (!this.processes_fetched) {
+          this.$store.dispatch('fetchProcesses', { parent_eid: this.eid }).then(response => {
+            if (response.ok) {
+              this.processes_fetched = true
+            } else {
+              // TODO: add error handling
+            }
+          })
+        }
       },
       updateRoute() {
         // update the route
