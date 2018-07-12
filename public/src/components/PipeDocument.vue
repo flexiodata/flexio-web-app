@@ -229,6 +229,14 @@
             :height="300"
             :stream-eid="last_stream_eid"
           />
+          <div class="mt4 mb2 tc">
+            <a
+              class="el-button el-button--primary ttu b no-underline"
+              :href="download_url"
+            >
+              Download
+            </a>
+          </div>
         </div>
         <div
           v-else-if="has_run_once && is_superuser && is_process_failed"
@@ -317,6 +325,7 @@
 <script>
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
+  import { API_V2_ROOT } from '../api/resources'
   import {
     PROCESS_STATUS_RUNNING,
     PROCESS_STATUS_FAILED,
@@ -497,6 +506,9 @@
       },
       last_stream_eid() {
         return _.get(this.last_process_log, 'output.stdout.eid', '')
+      },
+      download_url() {
+        return API_V2_ROOT + '/me/streams/' + this.last_stream_eid + '/content?download=true'
       }
     },
     methods: {
