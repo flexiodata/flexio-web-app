@@ -97,72 +97,74 @@ class Stream
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // if a filename is supplied, use the stream name as the basis for the output filename;
-        // otherwise, create a default filename
-        if ($filename === false)
-            $filename = 'download';
-
-        // if the caller wants to override the mime type that will be returned, they may
+        // set the response type
         $response_content_type = $stream_info['mime_type'];
+
+        // if the response type is a flexio table, convert it to CSV
+        $is_flexio_table = false;
+        if ($response_content_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            $is_flexio_table = true;
+            $response_content_type = \Flexio\Base\ContentType::CSV;
+        }
+
+        // if the user supplies a content type, override the response content type
         if ($content_type !== false)
             $response_content_type = $content_type;
 
-        // if we have a flexio table, the convert it to a CSV for download;
-        // otherwise, simply return the content as-is
-        switch ($response_content_type)
+        // if a filename is supplied, use the stream name as the basis for the output filename;
+        // otherwise, create a default filename
+        if ($filename === false)
         {
-            default:
+            $filename = 'download';
+            $filename = $filename . '.' . \Flexio\Base\ContentType::getExtensionFromMimeType($response_content_type);
+        }
+
+        if ($is_flexio_table === true)
+        {
+            // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            if ($headers_set === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $handle = fopen('php://output', 'w');
+            if (!$handle)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // write header row
+            $row = $stream->getStructure()->getNames();
+            fputcsv($handle, $row);
+
+            $streamreader = $stream->getReader();
+            while (true)
             {
-                // TODO: set the filename extension based on the mime type
+                $data = $streamreader->readRow();
+                if ($data === false)
+                    break;
 
-                // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
-                $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
-                if ($headers_set === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-                $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
-                if (isset($encode))
-                {
-                    // user wants us to re-encode the data payload on a preview-only basis
-                    $encoding = mb_detect_encoding($result, 'UTF-8,ISO-8859-1');
-                    if ($encoding != 'UTF-8')
-                        $result = iconv($encoding, 'UTF-8', $result);
-                }
-                echo($result);
-                exit(0);
+                fputcsv($handle, array_values($data));
             }
 
-            case \Flexio\Base\ContentType::FLEXIO_TABLE:
+            fclose($handle);
+            exit(0);
+        }
+         else
+        {
+            // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            if ($headers_set === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            if (isset($encode))
             {
-                // flexio table; return text/csv in place of internal mime
-                $response_content_type = \Flexio\Base\ContentType::CSV;
-
-                // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
-                $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
-                if ($headers_set === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-                $handle = fopen('php://output', 'w');
-                if (!$handle)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-                // write header row
-                $row = $stream->getStructure()->getNames();
-                fputcsv($handle, $row);
-
-                $streamreader = $stream->getReader();
-                while (true)
-                {
-                    $data = $streamreader->readRow();
-                    if ($data === false)
-                        break;
-
-                    fputcsv($handle, array_values($data));
-                }
-
-                fclose($handle);
-                exit(0);
+                // user wants us to re-encode the data payload on a preview-only basis
+                $encoding = mb_detect_encoding($result, 'UTF-8,ISO-8859-1');
+                if ($encoding != 'UTF-8')
+                    $result = iconv($encoding, 'UTF-8', $result);
             }
+            echo($result);
+            exit(0);
         }
     }
 
