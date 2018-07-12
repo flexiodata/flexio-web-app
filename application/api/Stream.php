@@ -79,6 +79,96 @@ class Stream
         if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        if ($download === true)
+            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit);
+              else
+            self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
+    }
+
+    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit) :  void
+    {
+        // TODO: get the user agent from the request object
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+        // get the stream info
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // use the stream name as the basis for the output filename
+        $filename = $stream_info['name'];
+        if (strlen($filename) === 0)
+            $filename = 'download';
+
+        $filename = \Flexio\Base\File::getFilename($filename);
+
+        // if the caller wants to override the mime type that will be returned, they may
+        $response_content_type = $stream_info['mime_type'];
+        if ($content_type !== false)
+            $response_content_type = $content_type;
+
+        // if we have a flexio table, the convert it to a CSV for download;
+        // otherwise, simply return the content as-is
+        switch ($response_content_type)
+        {
+            default:
+            {
+                // TODO: set the filename extension based on the mime type
+
+                // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+                $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+                if ($headers_set === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+                $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+                if (isset($encode))
+                {
+                    // user wants us to re-encode the data payload on a preview-only basis
+                    $encoding = mb_detect_encoding($result, 'UTF-8,ISO-8859-1');
+                    if ($encoding != 'UTF-8')
+                        $result = iconv($encoding, 'UTF-8', $result);
+                }
+                echo($result);
+                exit(0);
+            }
+
+            case \Flexio\Base\ContentType::FLEXIO_TABLE:
+            {
+                // flexio table; return text/csv in place of internal mime
+                $response_content_type = \Flexio\Base\ContentType::CSV;
+                $filename = $filename . '.csv';
+
+                // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+                $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+                if ($headers_set === false)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+                $handle = fopen('php://output', 'w');
+                if (!$handle)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+                // write header row
+                $row = $stream->getStructure()->getNames();
+                fputcsv($handle, $row);
+
+                $streamreader = $stream->getReader();
+                while (true)
+                {
+                    $data = $streamreader->readRow();
+                    if ($data === false)
+                        break;
+
+                    fputcsv($handle, array_values($data));
+                }
+
+                fclose($handle);
+                exit(0);
+            }
+        }
+    }
+
+    private static function echoContent(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit) : void
+    {
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
