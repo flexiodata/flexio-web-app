@@ -145,5 +145,109 @@ class Test
         $actual = \Flexio\Base\ContentType::FLEXIO_TABLE;
         $expected = 'application/vnd.flexio.table';
         \Flexio\Tests\Check::assertString('B.2', '\ContentType mime type constant',  $actual, $expected, $results);
+
+
+
+        // TEST: extensions for mime types
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::BMP);
+        $expected = 'bmp';
+        \Flexio\Tests\Check::assertString('C.1', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::CSS);
+        $expected = 'css';
+        \Flexio\Tests\Check::assertString('C.2', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::DOC);
+        $expected = 'doc';
+        \Flexio\Tests\Check::assertString('C.3', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::DOCX);
+        $expected = 'docx';
+        \Flexio\Tests\Check::assertString('C.4', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::GIF);
+        $expected = 'gif';
+        \Flexio\Tests\Check::assertString('C.5', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::GZIP);
+        $expected = 'gz';
+        \Flexio\Tests\Check::assertString('C.6', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::HTML);
+        $expected = 'html';
+        \Flexio\Tests\Check::assertString('C.7', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::JPEG);
+        $expected = 'jpg';
+        \Flexio\Tests\Check::assertString('C.8', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::JAVASCRIPT);
+        $expected = 'js';
+        \Flexio\Tests\Check::assertString('C.9', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::JSON);
+        $expected = 'json';
+        \Flexio\Tests\Check::assertString('C.10', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::MARKDOWN);
+        $expected = 'md';
+        \Flexio\Tests\Check::assertString('C.11', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::PDF);
+        $expected = 'pdf';
+        \Flexio\Tests\Check::assertString('C.12', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::PNG);
+        $expected = 'png';
+        \Flexio\Tests\Check::assertString('C.13', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::SVG);
+        $expected = 'svg';
+        \Flexio\Tests\Check::assertString('C.14', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::TIFF);
+        $expected = 'tif';
+        \Flexio\Tests\Check::assertString('C.15', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::TEXT);
+        $expected = 'txt';
+        \Flexio\Tests\Check::assertString('C.16', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::XLS);
+        $expected = 'xls';
+        \Flexio\Tests\Check::assertString('C.17', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::XLSX);
+        $expected = 'xlsx';
+        \Flexio\Tests\Check::assertString('C.18', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::XML);
+        $expected = 'xml';
+        \Flexio\Tests\Check::assertString('C.19', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Flexio\Base\ContentType::getExtensionFromMimeType(\Flexio\Base\ContentType::ZIP);
+        $expected = 'zip';
+        \Flexio\Tests\Check::assertString('C.20', '\Flexio\Base\ContentType::getExtensionFromMimeType();check extension for mime type',  $actual, $expected, $results);
     }
 }

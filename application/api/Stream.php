@@ -25,20 +25,16 @@ class Stream
         $stream_eid = $request->getObjectFromUrl();
 
         // load the object; make sure the eid is associated with the owner
-        // as an additional check;
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
+        // as an additional check
         $stream = \Flexio\Object\Stream::load($stream_eid);
-        //if ($owner_user_eid !== $stream->getOwner())
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user_eid !== $stream->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $stream->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -58,7 +54,9 @@ class Stream
                 'limit'        => array('type' => 'integer', 'required' => false),
                 'metadata'     => array('type' => 'string',  'required' => false),
                 'content_type' => array('type' => 'string',  'required' => false),
-                'encode'       => array('type' => 'string',  'required' => false)
+                'encode'       => array('type' => 'string',  'required' => false),
+                'download'     => array('type' => 'boolean', 'required' => false),
+                'filename'     => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -68,23 +66,110 @@ class Stream
         $metadata = isset($validated_query_params['metadata']) ? \toBoolean($validated_query_params['metadata']) : false;
         $content_type = isset($validated_query_params['content_type']) ? $validated_query_params['content_type'] : false;
         $encode = $validated_query_params['encode'] ?? null;
+        $download = $validated_query_params['download'] ?? false;
+        $filename = $validated_query_params['filename'] ?? false;
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check;
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         $stream = \Flexio\Object\Stream::load($stream_eid);
-        //if ($owner_user_eid !== $stream->getOwner())
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user_eid !== $stream->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
+        if ($download === true)
+            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename);
+              else
+            self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
+    }
+
+    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit, $filename) :  void
+    {
+        // TODO: get the user agent from the request object
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+        // get the stream info
+        $stream_info = $stream->get();
+        if ($stream_info === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // set the response type
+        $response_content_type = $stream_info['mime_type'];
+
+        // if the response type is a flexio table, convert it to CSV
+        $is_flexio_table = false;
+        if ($response_content_type === \Flexio\Base\ContentType::FLEXIO_TABLE)
+        {
+            $is_flexio_table = true;
+            $response_content_type = \Flexio\Base\ContentType::CSV;
+        }
+
+        // if the user supplies a content type, override the response content type
+        if ($content_type !== false)
+            $response_content_type = $content_type;
+
+        // if a filename is supplied, use the stream name as the basis for the output filename;
+        // otherwise, create a default filename
+        if ($filename === false)
+        {
+            $filename = 'download';
+            $filename = $filename . '.' . \Flexio\Base\ContentType::getExtensionFromMimeType($response_content_type);
+        }
+
+        if ($is_flexio_table === true)
+        {
+            // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            if ($headers_set === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $handle = fopen('php://output', 'w');
+            if (!$handle)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            // write header row
+            $row = $stream->getStructure()->getNames();
+            fputcsv($handle, $row);
+
+            $streamreader = $stream->getReader();
+            while (true)
+            {
+                $data = $streamreader->readRow();
+                if ($data === false)
+                    break;
+
+                fputcsv($handle, array_values($data));
+            }
+
+            fclose($handle);
+            exit(0);
+        }
+         else
+        {
+            // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
+            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            if ($headers_set === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+            $result = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
+            if (isset($encode))
+            {
+                // user wants us to re-encode the data payload on a preview-only basis
+                $encoding = mb_detect_encoding($result, 'UTF-8,ISO-8859-1');
+                if ($encoding != 'UTF-8')
+                    $result = iconv($encoding, 'UTF-8', $result);
+            }
+            echo($result);
+            exit(0);
+        }
+    }
+
+    private static function echoContent(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit) : void
+    {
         $stream_info = $stream->get();
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);

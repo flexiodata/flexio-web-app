@@ -45,11 +45,11 @@
 
   export default {
     props: {
-      'stream-eid': {
+      streamEid: {
         type: String,
         default: ''
       },
-      'height': {
+      height: {
         type: Number,
         default: 360
       }
@@ -63,33 +63,27 @@
       stream() {
         return _.get(this.$store, 'state.objects.'+this.streamEid)
       },
-
       stream_content_url() {
         if (this.is_flexio_html)
           return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content?content_type=text/html'
 
         return API_V2_ROOT+'/me/streams/'+this.streamEid+'/content'
       },
-
       stream_query_params() {
         return containsSubstrings([
           mt.MIMETYPE_TEXT_PLAIN,
           mt.MIMETYPE_TEXT_CSV
         ], this.mime_type) ? { encode: 'UTF-8' } : {}
       },
-
       is_fetched() {
         return _.get(this.stream, 'is_fetched', false)
       },
-
       is_fetching() {
         return _.get(this.stream, 'is_fetching', false)
       },
-
       mime_type() {
         return _.get(this.stream, 'mime_type', '')
       },
-
       is_image() {
         return containsSubstrings([
           mt.MIMETYPE_IMAGE_JPG,
@@ -99,23 +93,18 @@
           mt.MIMETYPE_IMAGE_TIFF
         ], this.mime_type)
       },
-
       is_flexio_html() {
         return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_VND_HTML) != -1
       },
-
       is_pdf() {
         return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_PDF) != -1
       },
-
       is_html() {
         return this.mime_type.indexOf(mt.MIMETYPE_TEXT_HTML) != -1
       },
-
       is_json() {
         return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_JSON) != -1
       },
-
       is_text() {
         return containsSubstrings([
           mt.MIMETYPE_APPLICATION_XML,
@@ -124,11 +113,9 @@
           mt.MIMETYPE_TEXT_CSV
         ], this.mime_type)
       },
-
       is_table() {
         return this.mime_type.indexOf(mt.MIMETYPE_APPLICATION_VND_FLEXIO_TABLE) != -1
       },
-
       inner_style() {
         if (this.height <= 0)
           return ''

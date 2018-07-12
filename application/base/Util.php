@@ -776,13 +776,13 @@ class Util
     }
 
     // mode should be either 'inline' or 'download'
-    public static function headersPdf(string $output_filename, string $file_location, string $mode = 'inline') : bool
+    public static function headersPdf(string $user_agent, string $output_filename, string $file_location, string $mode = 'inline') : bool
     {
         if ($mode != 'inline' && $mode != 'download')
             return false;
 
-        if (stripos($_SERVER['HTTP_USER_AGENT'], 'bot') !== false)
-            die('Invalid credentials.  Failure.');
+        if (stripos($user_agent, 'bot') !== false)
+            return false;
 
         if ($mode == 'inline')
         {
@@ -802,7 +802,7 @@ class Util
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Cache-Control: private', false);
 
-            //$ie = (stripos($agent, 'win') !== false && stripos($agent, 'msie') !== false) ? true : false;
+            //$ie = (stripos($user_agent, 'win') !== false && stripos($user_agent, 'msie') !== false) ? true : false;
             //if ($ie)
             //    header('Content-Disposition: filename="'.$output_filename.'"');
             //     else
@@ -812,27 +812,21 @@ class Util
         return true;
     }
 
-    public static function headersCsv(string $output_filename) : bool
+    public static function headersDownload(string $user_agent, string $output_filename, string $content_type) : bool
     {
-        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+        if (stripos($user_agent, 'bot') !== false)
+            return false;
 
-        if (stripos($agent, 'bot') === false)
-        {
-            header('Pragma: public');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Cache-Control: private', false);
-            header('Content-Type: text/csv');
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Type: ' . $content_type);
 
-            if (stripos($agent, 'win') !== false && stripos($agent, 'msie') !== false)
-                header('Content-Disposition: filename="' . $output_filename . '"');
-                 else
-                header('Content-Disposition: attachment; filename="' . $output_filename . '"');
-        }
-         else
-        {
-            die('Invalid credentials.  Failure.');
-        }
+        if (stripos($user_agent, 'win') !== false && stripos($user_agent, 'msie') !== false)
+            header('Content-Disposition: filename="' . $output_filename . '"');
+                else
+            header('Content-Disposition: attachment; filename="' . $output_filename . '"');
 
         return true;
     }

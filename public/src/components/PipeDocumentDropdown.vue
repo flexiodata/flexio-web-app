@@ -7,15 +7,18 @@
   >
     <el-button
       class="ttu b"
-      type="text"
+      type="plain"
       size="tiny"
       slot="reference"
+      title="Pipe settings"
     >
-      <i class="material-icons v-mid black-30 md-24">menu</i>
-      <i class="material-icons v-mid black-30 nl1 md-18">expand_more</i>
+      <div>
+        <i class="material-icons v-mid md-24">menu</i>
+        <i class="material-icons v-mid nl1 md-18">expand_more</i>
+      </div>
     </el-button>
     <div class="menu-content">
-      <div class="ttu fw6 f8 moon-gray menu-header">Editor</div>
+      <div class="ttu fw6 f7 moon-gray menu-header">Editor view</div>
       <div
         class="flex flex-row items-center f7 el-dropdown-menu__item editor-item"
         @click="emitEditorChange(view)"
@@ -26,9 +29,8 @@
         <span>{{view.label}}</span>
       </div>
       <div class="mv2 bt b--black-05"></div>
-      <div class="el-dropdown-menu__item" @click="emitMenuItem('view-properties')">Properties</div>
-      <div class="el-dropdown-menu__item" @click="emitMenuItem('view-configure')">Build &amp; Test</div>
       <div class="el-dropdown-menu__item" @click="emitMenuItem('view-history')">History</div>
+      <div class="el-dropdown-menu__item" @click="emitMenuItem('view-properties')">Properties</div>
     </div>
   </el-popover>
 </template>
@@ -81,7 +83,7 @@
     margin: -12px
     padding: 10px 0
   .menu-header
-    padding: 0 20px 4px
+    padding: 4px 20px
   .editor-item
-    line-height: 28px
+    line-height: 26px
 </style>

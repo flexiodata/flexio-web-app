@@ -83,11 +83,11 @@
           </transition>
           <PipeDocumentDropdown
             class="ml3"
+            :class="is_changed || show_properties || show_history ? 'o-40 no-pointer-events' : ''"
             :editor="editor"
             @switch-editor="switchEditor"
-            @view-properties="active_tab_name = 'properties'"
-            @view-configure="active_tab_name = 'configure'"
-            @view-history="active_tab_name = 'history'"
+            @view-properties="show_properties = true"
+            @view-history="show_history = true"
           />
         </div>
       </div>
@@ -97,187 +97,196 @@
       class="center mw-doc"
       v-if="is_fetched"
     >
-      <el-tabs
-        class="el-tabs--allow-overflow"
-        v-model="active_tab_name"
-      >
-        <el-tab-pane name="properties" label="Properties">
-          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
-            <!-- title bar -->
-            <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 fw6 f4">Properties</h3>
-              <el-button
-                class="ttu b invisible"
-                size="small"
-              >
-                Spacer
-              </el-button>
-            </div>
-            <!-- content -->
-            <PipeDocumentForm ref="pipe-document-form" />
-            <transition name="el-zoom-in-top">
-              <div class="flex flex-row items-center justify-end mt4" v-if="show_save_cancel">
-                <div class="flex flex-row pl3">
-                  <el-button
-                    size="medium"
-                    class="ttu b"
-                    :disabled="!is_changed"
-                    @click="cancelChanges"
-                  >
-                    Cancel
-                  </el-button>
-                  <el-button
-                    size="medium"
-                    type="primary"
-                    class="ttu b"
-                    :disabled="!is_changed || has_errors"
-                    @click="saveChanges"
-                  >
-                    Save
-                  </el-button>
-                </div>
-              </div>
-            </transition>
+      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="show_properties">
+        <!-- title bar -->
+        <div class="flex flex-row items-center pt1 pb3">
+          <h3 class="flex-fill mv0 fw6 f4">Properties</h3>
+          <el-button
+            class="ttu b invisible"
+            size="small"
+          >
+            Spacer
+          </el-button>
+        </div>
+        <!-- content -->
+        <PipeDocumentForm ref="pipe-document-form" />
+        <div class="flex flex-row items-center justify-end mt4" >
+          <div class="flex flex-row pl3">
+            <el-button
+              size="medium"
+              class="ttu b"
+              @click="revertProperties"
+            >
+              Cancel
+            </el-button>
+            <el-button
+              size="medium"
+              type="primary"
+              class="ttu b"
+              :disabled="!is_changed || has_errors"
+              @click="saveProperties"
+            >
+              Save
+            </el-button>
           </div>
-        </el-tab-pane>
+        </div>
+      </div>
 
-        <el-tab-pane name="configure" :label="'Build & Test'">
-          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
-            <!-- title bar -->
-            <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 mr3 fw6 f4">Configuration</h3>
-              <el-select
-                class="tr"
-                size="small"
-                style="width: 10rem"
-                :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
-                v-model="editor"
-              >
-                <el-option
-                  :label="option.label"
-                  :value="option.value"
-                  :key="option.value"
-                  v-for="option in editor_options"
-                />
-              </el-select>
-            </div>
+      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="!show_properties && !show_history">
+        <!-- title bar -->
+        <div class="flex flex-row items-center pt1 pb3">
+          <h3 class="flex-fill mv0 mr3 fw6 f4">Configuration</h3>
+          <el-select
+            class="tr"
+            size="small"
+            style="width: 10rem"
+            :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
+            v-model="editor"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.value"
+              :key="option.value"
+              v-for="option in editor_options"
+            />
+          </el-select>
+        </div>
 
-            <!-- content -->
-            <div v-if="editor == 'builder'">
-              <PipeBuilderList
-                class="mv3"
-                :container-id="doc_id"
-                :has-errors.sync="has_errors"
-                :active-item-idx.sync="active_item_idx"
-                @save="saveChanges"
-                v-model="edit_task_list"
-              />
-            </div>
-            <div v-else>
-              <PipeCodeEditor
-                ref="code-editor"
-                :type="editor"
-                :options="{ minRows: 12, maxRows: 30 }"
-                :has-errors.sync="has_errors"
-                @save="saveChanges"
-                v-model="edit_task_list"
-              />
-              <transition name="el-zoom-in-top">
-                <div class="flex flex-row items-center justify-end mt3" v-if="show_save_cancel">
-                  <div class="flex flex-row pl3">
-                    <el-button
-                      size="medium"
-                      class="ttu b"
-                      :disabled="!is_changed"
-                      @click="cancelChanges"
-                    >
-                      Cancel
-                    </el-button>
-                    <el-button
-                      size="medium"
-                      type="primary"
-                      class="ttu b"
-                      :disabled="!is_changed || has_errors"
-                      @click="saveChanges"
-                    >
-                      Save
-                    </el-button>
-                  </div>
-                </div>
-              </transition>
-            </div>
-          </div>
-
-          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
-            <!-- title bar -->
-            <div class="flex flex-row items-center pt1 pb3">
-              <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
-              <el-button
-                class="ttu b"
-                style="min-width: 5rem"
-                type="primary"
-                size="small"
-                :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
-                @click.stop="runPipe"
-              >
-                Run
-              </el-button>
-            </div>
-
-            <!-- content -->
-            <div
-              class="bg-white ba b--black-10 flex flex-column justify-center"
-              style="height: 300px"
-              v-if="is_process_running"
-            >
-              <Spinner size="large" message="Running pipe..." />
-            </div>
-            <div
-              v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
-            >
-              <PipeContent
-                :height="300"
-                :stream-eid="last_stream_eid"
-              />
-            </div>
-            <div
-              v-else-if="has_run_once && is_superuser && is_process_failed"
-            >
-              <CodeEditor
-                class="bg-white ba b--black-10"
-                lang="json"
-                :options="{
-                  minRows: 12,
-                  maxRows: 24,
-                  lineNumbers: false,
-                  readOnly: true
-                }"
-                v-model="active_process_info_str"
-              />
-            </div>
-            <div
-              v-else-if="!has_run_once"
-            >
-              <div
-                class="bg-white ba b--black-10 pa3 f6"
-              >
-                <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
+        <!-- content -->
+        <div v-if="editor == 'builder'">
+          <PipeBuilderList
+            class="mv3"
+            :container-id="doc_id"
+            :has-errors.sync="has_errors"
+            :active-item-idx.sync="active_item_idx"
+            @save="saveChanges"
+            v-model="edit_task_list"
+          />
+        </div>
+        <div v-else>
+          <PipeCodeEditor
+            ref="code-editor"
+            :type="editor"
+            :options="{ minRows: 12, maxRows: 30 }"
+            :has-errors.sync="has_errors"
+            @save="saveChanges"
+            v-model="edit_task_list"
+          />
+          <transition name="el-zoom-in-top">
+            <div class="flex flex-row items-center justify-end mt3" v-if="show_save_cancel">
+              <div class="flex flex-row pl3">
+                <el-button
+                  size="medium"
+                  class="ttu b"
+                  :disabled="!is_changed"
+                  @click="cancelChanges"
+                >
+                  Cancel
+                </el-button>
+                <el-button
+                  size="medium"
+                  type="primary"
+                  class="ttu b"
+                  :disabled="!is_changed || has_errors"
+                  @click="saveChanges"
+                >
+                  Save
+                </el-button>
               </div>
             </div>
-            <div
-              v-else
-            >
-              <div class="bg-white ba b--black-10 pa3" style="height: 300px"></div>
-            </div>
-          </div>
-        </el-tab-pane>
+          </transition>
+        </div>
+      </div>
 
-        <el-tab-pane name="history" label="History">
-          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
-            <ProcessList />
+      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="!show_properties && !show_history">
+        <!-- title bar -->
+        <div class="flex flex-row items-center pt1 pb3">
+          <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
+          <el-button
+            class="ttu b"
+            style="min-width: 5rem"
+            type="primary"
+            size="small"
+            :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
+            @click.stop="runPipe"
+          >
+            Run
+          </el-button>
+        </div>
+
+        <!-- content -->
+        <div
+          class="bg-white ba b--black-10 flex flex-column justify-center"
+          style="height: 300px"
+          v-if="is_process_running"
+        >
+          <Spinner size="large" message="Running pipe..." />
+        </div>
+        <div
+          v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
+        >
+          <PipeContent
+            :height="300"
+            :stream-eid="last_stream_eid"
+          />
+          <div class="mt4 mb2 tc">
+            <a
+              class="el-button el-button--primary ttu b no-underline"
+              :href="download_url"
+            >
+              Download
+            </a>
           </div>
-        </el-tab-pane>
-      </el-tabs>
+        </div>
+        <div
+          v-else-if="has_run_once && is_superuser && is_process_failed"
+        >
+          <CodeEditor
+            class="bg-white ba b--black-10"
+            lang="json"
+            :options="{
+              minRows: 12,
+              maxRows: 24,
+              lineNumbers: false,
+              readOnly: true
+            }"
+            v-model="active_process_info_str"
+          />
+        </div>
+        <div
+          v-else-if="!has_run_once"
+        >
+          <div
+            class="bg-white ba b--black-10 pa3 f6"
+          >
+            <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
+          </div>
+        </div>
+        <div
+          v-else
+        >
+          <div class="bg-white ba b--black-10 pa3" style="height: 300px"></div>
+        </div>
+      </div>
+
+      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="show_history">
+        <!-- title bar -->
+        <div class="flex flex-row items-center pt1 pb3">
+          <h3 class="flex-fill mv0 fw6 f4">History</h3>
+          <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="show_history = false"></i>
+        </div>
+        <!-- content -->
+        <ProcessList />
+        <div class="flex flex-row justify-end mt4">
+          <el-button
+            size="medium"
+            class="ttu b"
+            @click="show_history = false"
+          >
+            Close
+          </el-button>
+        </div>
+      </div>
     </div>
 
     <!-- pipe schedule dialog -->
@@ -316,6 +325,7 @@
 <script>
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
+  import { API_V2_ROOT } from '../api/resources'
   import {
     PROCESS_STATUS_RUNNING,
     PROCESS_STATUS_FAILED,
@@ -365,6 +375,9 @@
         handler: 'onTabChange',
         immediate: true
       },
+      show_history: {
+        handler: 'fetchProcesses'
+      },
       editor: {
         handler: 'onEditorChange',
         immediate: true
@@ -398,6 +411,8 @@
         has_errors: false,
         active_item_idx: -1,
         processes_fetched: false,
+        show_properties: false,
+        show_history: false,
         show_pipe_schedule_dialog: false,
         show_pipe_deploy_dialog: false
       }
@@ -491,6 +506,9 @@
       },
       last_stream_eid() {
         return _.get(this.last_process_log, 'output.stdout.eid', '')
+      },
+      download_url() {
+        return API_V2_ROOT + '/me/streams/' + this.last_stream_eid + '/content?download=true'
       }
     },
     methods: {
@@ -504,14 +522,8 @@
         'getActiveUser'
       ]),
       onTabChange(val) {
-        if (!this.processes_fetched && val == PIPEDOC_VIEW_HISTORY) {
-          this.$store.dispatch('fetchProcesses', { parent_eid: this.eid }).then(response => {
-            if (response.ok) {
-              this.processes_fetched = true
-            } else {
-              // TODO: add error handling
-            }
-          })
+        if (val == PIPEDOC_VIEW_HISTORY) {
+          this.fetchProcesses()
         }
 
         this.updateRoute()
@@ -521,6 +533,17 @@
       },
       switchEditor(val) {
         this.editor = val
+      },
+      fetchProcesses() {
+        if (!this.processes_fetched) {
+          this.$store.dispatch('fetchProcesses', { parent_eid: this.eid }).then(response => {
+            if (response.ok) {
+              this.processes_fetched = true
+            } else {
+              // TODO: add error handling
+            }
+          })
+        }
       },
       updateRoute() {
         // update the route
@@ -588,31 +611,40 @@
         })
       },
       saveChanges() {
+        var eid = this.eid
+        var attrs = _.pick(this.edit_pipe, this.edit_keys)
+
+        // don't POST null values
+        attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
+
+        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok) {
+            this.$message({
+              message: 'The pipe was updated successfully.',
+              type: 'success'
+            })
+
+            this.$store.commit('pipe/INIT_PIPE', response.body)
+          } else {
+            this.$message({
+              message: 'There was a problem updating the pipe.',
+              type: 'error'
+            })
+          }
+        })
+      },
+      revertProperties() {
+        this.cancelChanges()
+        this.show_properties = false
+      },
+      saveProperties() {
         var doc_form = this.$refs['pipe-document-form']
         doc_form.validate((valid) => {
           if (!valid)
             return
 
-          var eid = this.eid
-          var attrs = _.pick(this.edit_pipe, this.edit_keys)
-
-          // don't POST null values
-          attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
-
-          return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-            if (response.ok) {
-              this.$message({
-                message: 'The pipe was updated successfully.',
-                type: 'success'
-              })
-
-              this.$store.commit('pipe/INIT_PIPE', response.body)
-            } else {
-              this.$message({
-                message: 'There was a problem updating the pipe.',
-                type: 'error'
-              })
-            }
+          this.saveChanges().then(() => {
+            this.show_properties = false
           })
         })
       },
