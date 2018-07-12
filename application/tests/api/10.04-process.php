@@ -174,17 +174,16 @@ class Test
             'method' => 'POST',
             'url' => "$apibase/$userid1/processes/$objeid3/run",
             'token' => $token1,
-            'content_type' => 'application/json',
-            'params' => '{
-                "noun": "Scott"
-                "verb": "continue"
-            }'
+            'params' => [
+                "noun" => "Scott",
+                "verb" => "continue"
+            ]
         );
         $result = \Flexio\Tests\Util::callApi($params);
         $response = $result['response'];
         $actual = $response;
         $expected = 'Hello, Scott. Would you like to continue?';
-        \Flexio\Tests\Check::assertString('A.6', 'POST /:userid/processes/:objeid/run; return the results of running a process with posted variables using json content type',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.6', 'POST /:userid/processes/:objeid/run; return the results of running a process with posted variables',  $actual, $expected, $results);
 
 
         // TEST: run process with extra parameters
@@ -432,7 +431,7 @@ class Test
         $result = \Flexio\Tests\Util::callApi($params);
         $response = $result['response'];
         $actual = $response;
-        $expected = 'true';
+        $expected = '1';
         \Flexio\Tests\Check::assertString('C.6', 'POST /:userid/processes/:objeid/run; return the results of running a process with posted variables; variable boolean value type handling',  $actual, $expected, $results);
 /*
 // TODO: fix callApi so it can handle a parameter with an array value
