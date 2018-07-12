@@ -18,7 +18,7 @@
       </div>
     </el-button>
     <div class="menu-content">
-      <div class="ttu fw6 f7 moon-gray menu-header">Editor</div>
+      <div class="ttu fw6 f7 moon-gray menu-header">Editor view</div>
       <div
         class="flex flex-row items-center f7 el-dropdown-menu__item editor-item"
         @click="emitEditorChange(view)"
