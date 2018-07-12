@@ -271,7 +271,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $plain_filename = $info['name'];
         $plain_filename = trim($plain_filename, '/');
-        $sl = strpos($plain_filename,'/');
+        $sl = strrpos($plain_filename,'/');
         if ($sl !== false)
             $plain_filename = substr($plain_filename, $sl+1);
 
@@ -358,7 +358,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         if (!$this->authenticated())
             return false;
 
-        // S3 directories are created by adding an object with a '/' as the last character
+        // GCS directories are created by adding an object with a '/' as the last character
         if (substr($path,-1) != '/')
             $path .= '/';
 
@@ -530,7 +530,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         if (isset($params['structure']))
         {
-
             $callback = \Flexio\Services\Util::tableToCsvCallbackAdaptor($params['structure'], $callback);
         }
 
@@ -547,8 +546,14 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $bucket_path = trim($bucket_path,'/');
         $bucket_path = ltrim($bucket_path, '/');
-        $bucket_path_len = strlen($bucket_path);
 
+        if (substr($path, -1) == '/')
+        {
+            // caller wants to create a directory
+            $bucket_path .= '/';
+        }
+
+        $bucket_path_len = strlen($bucket_path);
 
 
         // store a copy, because GCS needs to know content length
