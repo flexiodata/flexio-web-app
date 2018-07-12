@@ -83,7 +83,7 @@
           </transition>
           <PipeDocumentDropdown
             class="ml3"
-            :class="show_properties || show_history ? 'o-40 no-pointer-events' : ''"
+            :class="is_changed || show_properties || show_history ? 'o-40 no-pointer-events' : ''"
             :editor="editor"
             @switch-editor="switchEditor"
             @view-properties="show_properties = true"
