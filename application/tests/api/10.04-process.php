@@ -432,7 +432,7 @@ class Test
         $result = \Flexio\Tests\Util::callApi($params);
         $response = $result['response'];
         $actual = $response;
-        $expected = 'true';
+        $expected = '1';
         \Flexio\Tests\Check::assertString('C.6', 'POST /:userid/processes/:objeid/run; return the results of running a process with posted variables; variable boolean value type handling',  $actual, $expected, $results);
 /*
 // TODO: fix callApi so it can handle a parameter with an array value
