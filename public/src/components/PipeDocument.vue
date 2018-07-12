@@ -269,6 +269,15 @@
         </div>
         <!-- content -->
         <ProcessList />
+        <div class="flex flex-row justify-end mt4">
+          <el-button
+            size="medium"
+            class="ttu b"
+            @click="show_history = false"
+          >
+            Close
+          </el-button>
+        </div>
       </div>
     </div>
 
