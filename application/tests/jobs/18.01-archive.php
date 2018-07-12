@@ -83,6 +83,7 @@ class Test
         $inputstream = \Flexio\Tests\Util::createStream('/zip/02.03-minimum.txt.gz');
         $unarchivestream = \Flexio\Jobs\Process::create()->setStdin($inputstream)->execute($unarchivetask)->getStdout();
         $actual = $unarchivestream->getReader()->read();
+        if ($actual === false) { $actual = ''; } // eof condition
         $expected = '';
         \Flexio\Tests\Check::assertString('A.3', 'Unarchive; valid gz file with no content',  $actual, $expected, $results);
 
