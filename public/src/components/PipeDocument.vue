@@ -22,24 +22,28 @@
             <h1 class="dib mv0 fw6">{{title}}</h1>
             <el-popover
               placement="bottom"
-              :width="400"
+              :width="360"
               trigger="hover"
             >
               <div class="ma1 tl">
                 <template v-if="alias.length > 0">
                   <h3 class="mv0 fw6">Pipe Alias</h3>
-                  <p class="mb0">A unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.</p>
+                  <p class="mb0">A unique identifier that can be used to reference this pipe via an API endpoint or from one of our SDKs, instead of directly referencing it by its ID.</p>
                 </template>
                 <template v-else>
                   <h3 class="mv0 fw6">Pipe ID</h3>
-                  <p>An auto-generated identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs.</p>
+                  <p>An auto-generated identifier that can be used to reference this pipe via an API endpoint or from one of our SDKs.</p>
                   <el-alert
                     class="f8"
                     title=""
+                    size="small"
                     type="info-blue"
                     :closable="false"
                   >
-                    You should consider assigning an alias to this pipe. An alias is a unique identifier that can be used to reference this pipe in an API endpoint as well as from one of our SDKs, instead of directly referencing it by its ID.
+                    <div class="flex flex-row nl2 nr2">
+                      <i class="el-icon-info" style="margin: 2px 8px 0 0"></i>
+                      <span>Assigning an alias to this pipe will make it easier to remember</span>
+                    </div>
                   </el-alert>
                 </template>
               </div>
@@ -48,8 +52,9 @@
                 size="medium"
                 type="info"
                 slot="reference"
+                :disable-transitions="true"
               >
-                {{identifier}} <i class="el-icon-info blue" style="margin-left: 2px"></i>
+                {{identifier}}
               </el-tag>
             </el-popover>
           </div>
