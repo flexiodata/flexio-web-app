@@ -143,6 +143,37 @@ class ContentType
         }
     }
 
+    public static function getExtensionFromMimeType(string $mime_type) : string
+    {
+        switch ($mime_type)
+        {
+            default:
+                return 'txt';
+
+            case ContentType::BMP:        return 'bmp';
+            case ContentType::CSS:        return 'css';
+            case ContentType::CSV:        return 'csv';
+            case ContentType::DOC:        return 'doc';
+            case ContentType::DOCX:       return 'docx';
+            case ContentType::GIF:        return 'gif';
+            case ContentType::GZIP:       return 'gz';
+            case ContentType::HTML:       return 'html';
+            case ContentType::JPEG:       return 'jpg';
+            case ContentType::JAVASCRIPT: return 'js';
+            case ContentType::JSON:       return 'json';
+            case ContentType::MARKDOWN:   return 'md';
+            case ContentType::PDF:        return 'pdf';
+            case ContentType::PNG:        return 'png';
+            case ContentType::SVG:        return 'svg';
+            case ContentType::TIFF:       return 'tif';
+            case ContentType::TEXT:       return 'txt';
+            case ContentType::XLS:        return 'xls';
+            case ContentType::XLSX:       return 'xlsx';
+            case ContentType::XML:        return 'xml';
+            case ContentType::ZIP:        return 'zip';
+        }
+    }
+
     public static function getMimeTypeFromExtension($ext, $def_return = ContentType::STREAM) : string
     {
         // handle flexible input types for convenience
