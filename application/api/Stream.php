@@ -25,20 +25,16 @@ class Stream
         $stream_eid = $request->getObjectFromUrl();
 
         // load the object; make sure the eid is associated with the owner
-        // as an additional check;
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
+        // as an additional check
         $stream = \Flexio\Object\Stream::load($stream_eid);
-        //if ($owner_user_eid !== $stream->getOwner())
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user_eid !== $stream->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $result = $stream->get();
         $request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
@@ -58,7 +54,8 @@ class Stream
                 'limit'        => array('type' => 'integer', 'required' => false),
                 'metadata'     => array('type' => 'string',  'required' => false),
                 'content_type' => array('type' => 'string',  'required' => false),
-                'encode'       => array('type' => 'string',  'required' => false)
+                'encode'       => array('type' => 'string',  'required' => false),
+                'download'     => array('type' => 'boolean', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -68,22 +65,19 @@ class Stream
         $metadata = isset($validated_query_params['metadata']) ? \toBoolean($validated_query_params['metadata']) : false;
         $content_type = isset($validated_query_params['content_type']) ? $validated_query_params['content_type'] : false;
         $encode = $validated_query_params['encode'] ?? null;
+        $download = $validated_query_params['download'] ?? false;
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check;
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         $stream = \Flexio\Object\Stream::load($stream_eid);
-        //if ($owner_user_eid !== $stream->getOwner())
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+        if ($owner_user_eid !== $stream->getOwner())
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
 
         // check the rights on the object
-        // TODO: re-add; to do this, need to add owner/rights info when streams
-        // are created
         if ($stream->getStatus() === \Model::STATUS_DELETED)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
-        //if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
-        //    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $stream_info = $stream->get();
         if ($stream_info === false)
