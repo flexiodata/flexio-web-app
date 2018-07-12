@@ -55,7 +55,8 @@ class Stream
                 'metadata'     => array('type' => 'string',  'required' => false),
                 'content_type' => array('type' => 'string',  'required' => false),
                 'encode'       => array('type' => 'string',  'required' => false),
-                'download'     => array('type' => 'boolean', 'required' => false)
+                'download'     => array('type' => 'boolean', 'required' => false),
+                'filename'     => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
@@ -66,6 +67,7 @@ class Stream
         $content_type = isset($validated_query_params['content_type']) ? $validated_query_params['content_type'] : false;
         $encode = $validated_query_params['encode'] ?? null;
         $download = $validated_query_params['download'] ?? false;
+        $filename = $validated_query_params['filename'] ?? false;
 
         // load the object; make sure the eid is associated with the owner
         // as an additional check;
@@ -80,12 +82,12 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($download === true)
-            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit);
+            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename);
               else
             self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
     }
 
-    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit) :  void
+    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit, $filename) :  void
     {
         // TODO: get the user agent from the request object
         $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
@@ -95,12 +97,10 @@ class Stream
         if ($stream_info === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        // use the stream name as the basis for the output filename
-        $filename = $stream_info['name'];
-        if (strlen($filename) === 0)
+        // if a filename is supplied, use the stream name as the basis for the output filename;
+        // otherwise, create a default filename
+        if ($filename === false)
             $filename = 'download';
-
-        $filename = \Flexio\Base\File::getFilename($filename);
 
         // if the caller wants to override the mime type that will be returned, they may
         $response_content_type = $stream_info['mime_type'];
@@ -136,7 +136,6 @@ class Stream
             {
                 // flexio table; return text/csv in place of internal mime
                 $response_content_type = \Flexio\Base\ContentType::CSV;
-                $filename = $filename . '.csv';
 
                 // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
                 $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
