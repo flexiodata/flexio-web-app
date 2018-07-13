@@ -91,7 +91,7 @@ class Test
             'alias' => '',
             'name' => '',
             'description'  => '',
-            'interface' => '{}',
+            'ui' => '{}',
             'task' => '{}',
             'schedule' => '',
             'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
@@ -142,12 +142,12 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'interface' => '{}'
+            'ui' => '{}'
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'interface' => '{}'
+            'ui' => '{}'
         );
         \Flexio\Tests\Check::assertInArray('C.4', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 

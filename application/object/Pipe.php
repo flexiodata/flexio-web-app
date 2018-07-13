@@ -77,13 +77,13 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
-        // if the interface is set, make sure it's an object and then encode it as JSON for storage
-        if (isset($properties) && isset($properties['interface']))
+        // if the ui is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['ui']))
         {
-            if (!is_array($properties['interface']))
+            if (!is_array($properties['ui']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-            $properties['interface'] = json_encode($properties['interface']);
+            $properties['ui'] = json_encode($properties['ui']);
         }
 
         // if the task is set, make sure it's an object and then encode it as JSON for storage
@@ -146,13 +146,13 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         // TODO: add properties check
 
-        // if the interface is set, make sure it's an object and then encode it as JSON for storage
-        if (isset($properties) && isset($properties['interface']))
+        // if the ui is set, make sure it's an object and then encode it as JSON for storage
+        if (isset($properties) && isset($properties['ui']))
         {
-            if (!is_array($properties['interface']))
+            if (!is_array($properties['ui']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
 
-            $properties['interface'] = json_encode($properties['interface']);
+            $properties['ui'] = json_encode($properties['ui']);
         }
 
         // if the task is set, make sure it's an object and then encode it as JSON for storage
@@ -212,19 +212,19 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_PIPE;
     }
 
-    public function setInterface(array $interface) : \Flexio\Object\Pipe
+    public function setUi(array $ui) : \Flexio\Object\Pipe
     {
         // shorthand for setting task info
         $properties = array();
-        $properties['interface'] = $interface;
+        $properties['ui'] = $ui;
         return $this->set($properties);
     }
 
-    public function getInterface() : array
+    public function getUi() : array
     {
         // shorthand for getting task info
         $local_properties = $this->get();
-        return $local_properties['interface'];
+        return $local_properties['ui'];
     }
 
     public function setTask(array $task) : \Flexio\Object\Pipe
@@ -327,7 +327,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "alias" => null,
                 "name" => null,
                 "description" => null,
-                "interface" => null,
+                "ui" => null,
                 "task" => null,
                 "schedule" => null,
                 "schedule_status" => null,
@@ -347,17 +347,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             'eid_type' => \Model::TYPE_USER
         );
 
-        // unpack the interface json
-        if (isset($mapped_properties['interface']))
+        // unpack the ui json
+        if (isset($mapped_properties['ui']))
         {
-            $interface = @json_decode($mapped_properties['interface'],true);
-            if ($interface === false)
+            $ui = @json_decode($mapped_properties['ui'],true);
+            if ($ui === false)
             {
-                $mapped_properties['interface'] = array();
+                $mapped_properties['ui'] = array();
             }
             else
             {
-                $mapped_properties['interface'] = $interface;
+                $mapped_properties['ui'] = $ui;
             }
         }
 

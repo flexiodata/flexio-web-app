@@ -162,7 +162,7 @@ CREATE TABLE tbl_pipe (
   alias text default '',
   name text default '',
   description text default '',
-  params text default '',
+  ui text default '',
   task text default '',
   schedule text default '',
   schedule_status char(1) NOT NULL default 'I',

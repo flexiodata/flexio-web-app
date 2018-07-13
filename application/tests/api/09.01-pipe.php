@@ -85,7 +85,7 @@ class Test
                 "name": "Test Pipe",
                 "alias": "",
                 "description": "Test Pipe Description",
-                "interface": {
+                "ui": {
                     "a": "b"
                 },
                 "task": {
@@ -114,7 +114,7 @@ class Test
             "alias": "",
             "name": "Test Pipe",
             "description": "Test Pipe Description",
-            "interface": {
+            "ui": {
                 "a": "b"
             },
             "task": {
