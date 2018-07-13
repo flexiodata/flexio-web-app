@@ -41,10 +41,10 @@ const mutations = {
 
     var prompts = _.get(def, 'prompts', [])
 
-    // include the naming item at the end
-    var existing_name = _.find(prompts, { element_identifier: 'name' })
-    if (!existing_name) {
-      prompts.push({
+    // replace name element with form element
+    var existing_name = _.findIndex(prompts, { element: 'name' })
+    if (existing_name != -1) {
+      prompts[existing_name] = {
         element: 'form',
         element_identifier: 'name',
         title: 'Name your pipe',
@@ -64,13 +64,15 @@ const mutations = {
           placeholder: 'Description (optional)',
           value: ''
         }]
-      })
+      }
     }
 
-    // include the summary item at the end
-    var existing_summary = _.find(prompts, { element: 'summary' })
-    if (!existing_summary) {
-      prompts.push({ element: 'summary' })
+    if (false) {
+      // include the summary item at the end
+      var existing_summary = _.find(prompts, { element: 'summary' })
+      if (!existing_summary) {
+        prompts.push({ element: 'summary' })
+      }
     }
 
     state.prompts = _.map(prompts, p => {

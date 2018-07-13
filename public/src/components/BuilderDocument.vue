@@ -40,6 +40,7 @@
         :show-delete-buttons="false"
         @item-prev="goPrev"
         @item-next="goNext"
+        @item-finish="onFinish"
         @item-change="updateItemState"
         @create-pipe="createPipe"
         @open-pipe="openPipe"
@@ -239,6 +240,9 @@
       },
       goNext() {
         this.$store.commit('builder/GO_NEXT_ITEM')
+      },
+      onFinish() {
+        this.createPipe()
       },
       createPipe() {
         if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
