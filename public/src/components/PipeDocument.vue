@@ -271,57 +271,15 @@
         </div>
 
         <!-- content -->
+        <ProcessContent
+          :process-eid="active_process_eid"
+          v-if="active_process_eid && has_run_once"
+        />
         <div
-          class="bg-white ba b--black-10 flex flex-column justify-center"
-          style="height: 300px"
-          v-if="is_process_running"
-        >
-          <Spinner size="large" message="Running pipe..." />
-        </div>
-        <div
-          v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
-        >
-          <StreamContent
-            :height="300"
-            :stream-eid="last_stream_eid"
-          />
-          <div class="mt4 mb2 tc">
-            <a
-              class="el-button el-button--primary ttu b no-underline"
-              :href="download_url"
-            >
-              Download
-            </a>
-          </div>
-        </div>
-        <div
-          v-else-if="has_run_once && is_superuser && is_process_failed"
-        >
-          <CodeEditor
-            class="bg-white ba b--black-10"
-            lang="json"
-            :options="{
-              minRows: 12,
-              maxRows: 24,
-              lineNumbers: false,
-              readOnly: true
-            }"
-            v-model="active_process_info_str"
-          />
-        </div>
-        <div
+          class="bg-white ba b--black-10 pa3 f6"
           v-else-if="!has_run_once"
         >
-          <div
-            class="bg-white ba b--black-10 pa3 f6"
-          >
-            <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
-          </div>
-        </div>
-        <div
-          v-else
-        >
-          <div class="bg-white ba b--black-10 pa3" style="height: 300px"></div>
+          <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
         </div>
       </div>
 
@@ -382,12 +340,7 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import { API_V2_ROOT } from '../api/resources'
-  import {
-    PROCESS_STATUS_RUNNING,
-    PROCESS_STATUS_FAILED,
-    PROCESS_STATUS_COMPLETED,
-    PROCESS_MODE_BUILD
-  } from '../constants/process'
+  import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
@@ -397,7 +350,7 @@
   import PipeDocumentDropdown from './PipeDocumentDropdown.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
-  import StreamContent from './StreamContent.vue'
+  import ProcessContent from './ProcessContent.vue'
   import ProcessList from './ProcessList.vue'
 
   const PIPEDOC_VIEW_PROPERTIES = 'properties'
@@ -419,7 +372,7 @@
       PipeDocumentDropdown,
       PipeSchedulePanel,
       PipeDeployPanel,
-      StreamContent,
+      ProcessContent,
       ProcessList
     },
     watch: {
@@ -441,16 +394,6 @@
       is_fetched: {
         handler: 'initSticky',
         immediate: true
-      },
-      is_process_running(val, old_val) {
-        if (val === false && old_val === true) {
-          this.fetchProcessLog()
-        }
-      },
-      active_process(val, old_val) {
-        if (_.get(val, 'eid', '') != _.get(old_val, 'eid', '')) {
-          this.fetchProcessLog()
-        }
       }
     },
     data() {
@@ -531,41 +474,9 @@
       show_save_cancel() {
         return this.is_changed || this.is_code_changed
       },
-
-      // -- all of the below computed values pertain to getting the preview --
-
-      is_superuser() {
-        // limit to @flex.io users for now
-        var user_email = _.get(this.getActiveUser(), 'email', '')
-        return _.includes(user_email, '@flex.io')
-      },
-      active_process() {
-        return _.last(this.getActiveDocumentProcesses())
-      },
-      active_process_status() {
-        return _.get(this.active_process, 'process_status', '')
-      },
-      active_process_info() {
-        return _.get(this.active_process, 'process_info', {})
-      },
-      active_process_info_str() {
-        return JSON.stringify(this.active_process_info, null, 2)
-      },
-      is_process_running() {
-        return this.active_process_status == PROCESS_STATUS_RUNNING
-      },
-      is_process_failed() {
-        return this.active_process_status == PROCESS_STATUS_FAILED
-      },
-      last_process_log() {
-        var log = _.get(this.active_process, 'log', [])
-        return _.last(log)
-      },
-      last_stream_eid() {
-        return _.get(this.last_process_log, 'output.stdout.eid', '')
-      },
-      download_url() {
-        return API_V2_ROOT + '/me/streams/' + this.last_stream_eid + '/content?download=true'
+      active_process_eid() {
+        var process = _.last(this.getActiveDocumentProcesses())
+        return _.get(process, 'eid', false)
       }
     },
     methods: {
@@ -717,16 +628,6 @@
             this.show_properties = false
           })
         })
-      },
-      fetchProcessLog() {
-        if (!this.has_run_once) {
-          return
-        }
-
-        var eid = _.get(this.active_process, 'eid', '')
-        if (eid.length > 0) {
-          this.$store.dispatch('fetchProcessLog', { eid })
-        }
       },
       initSticky() {
         setTimeout(() => {
