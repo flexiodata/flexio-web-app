@@ -348,14 +348,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         );
 
         // unpack the interface json
-        $interface = @json_decode($mapped_properties['interface'],true);
-        if ($interface === false)
+        if (isset($mapped_properties['interface']))
         {
-            $mapped_properties['interface'] = array();
-        }
-         else
-        {
-            $mapped_properties['interface'] = $interface;
+            $interface = @json_decode($mapped_properties['interface'],true);
+            if ($interface === false)
+            {
+                $mapped_properties['interface'] = array();
+            }
+            else
+            {
+                $mapped_properties['interface'] = $interface;
+            }
         }
 
         // unpack the task json
