@@ -244,7 +244,6 @@ class Test
 
 
 
-
         // TEST: Model pipe constants; the database stores raw values for
         // some of these constants, so these tests ensure that the constants
         // are consistent between various models and the values in the
@@ -264,6 +263,21 @@ class Test
         $actual = \Model::PIPE_STATUS_INACTIVE;
         $expected = 'I';
         \Flexio\Tests\Check::assertString('I.3', 'Pipe status constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PIPE_MODE_UNDEFINED;
+        $expected = '';
+        \Flexio\Tests\Check::assertString('I.4', 'Pipe mode constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PIPE_MODE_BUILD;
+        $expected = 'B';
+        \Flexio\Tests\Check::assertString('I.5', 'Pipe mode constant',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = \Model::PIPE_MODE_RUN;
+        $expected = 'R';
+        \Flexio\Tests\Check::assertString('I.6', 'Pipe mode constant',  $actual, $expected, $results);
 
 
 

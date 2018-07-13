@@ -231,6 +231,7 @@ class Test
             },
             "task" : {
             },
+            "pipe_mode" : "B",
             "schedule" : null,
             "schedule_status" : null,
             "owned_by" : {

@@ -164,6 +164,7 @@ CREATE TABLE tbl_pipe (
   description text default '',
   ui text default '',
   task text default '',
+  pipe_mode char(1) NOT NULL default '',
   schedule text default '',
   schedule_status char(1) NOT NULL default 'I',
   owned_by char(12) NOT NULL default '',

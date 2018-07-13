@@ -47,6 +47,7 @@ class Pipe
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
+                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -207,6 +208,7 @@ class Pipe
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
+                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)

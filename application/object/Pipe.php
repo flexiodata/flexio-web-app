@@ -98,6 +98,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
+        // if the pipe mode is set, make sure it's valid; otherwise default to 'build'
+        if (isset($properties) && isset($properties['pipe_mode']))
+        {
+            switch ($properties['pipe_mode'])
+            {
+                default:
+                    $properties['pipe_mode'] = \Model::PIPE_MODE_BUILD;
+                    break;
+
+                case \Model::PIPE_MODE_BUILD:
+                case \Model::PIPE_MODE_RUN:
+                    // leave what's there
+                    break;
+            }
+        }
+
         // if the schedule is set, make sure it's valid and then encode it as JSON for storage
         if (isset($properties) && isset($properties['schedule']))
         {
@@ -165,6 +181,22 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::flattenParams($properties['task']);
             $properties['task'] = json_encode($properties['task']);
+        }
+
+        // if the pipe mode is set, make sure it's valid; otherwise default to 'build'
+        if (isset($properties) && isset($properties['pipe_mode']))
+        {
+            switch ($properties['pipe_mode'])
+            {
+                default:
+                    $properties['pipe_mode'] = \Model::PIPE_MODE_BUILD;
+                    break;
+
+                case \Model::PIPE_MODE_BUILD:
+                case \Model::PIPE_MODE_RUN:
+                    // leave what's there
+                    break;
+            }
         }
 
         // if the schedule is set, make sure it's valid and then encode it as JSON for storage
@@ -329,6 +361,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "description" => null,
                 "ui" => null,
                 "task" => null,
+                "pipe_mode" => null,
                 "schedule" => null,
                 "schedule_status" => null,
                 "owned_by" => null,
