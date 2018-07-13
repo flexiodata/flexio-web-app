@@ -172,12 +172,12 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="builder__is_wizard && is_active && !is_last"
+        v-if="builder__is_wizard && is_active"
       >
         <el-button
           class="ttu b"
           @click="onPrevClick"
-          v-show="!is_first"
+          v-show="!is_first && !is_last"
         >
           Back
         </el-button>
@@ -186,8 +186,17 @@
           type="primary"
           :disabled="!is_next_allowed"
           @click="onNextClick"
+          v-if="!is_last"
         >
           Next
+        </el-button>
+        <el-button
+          class="ttu b"
+          type="primary"
+          @click="onFinishClick"
+          v-if="is_last"
+        >
+          Run
         </el-button>
       </div>
       <div
@@ -365,6 +374,9 @@
       },
       onNextClick() {
         this.$emit('item-next', this.index)
+      },
+      onFinishClick() {
+        this.$emit('item-finish', this.index)
       },
       onCancelClick() {
         this.$emit('item-cancel', this.index)

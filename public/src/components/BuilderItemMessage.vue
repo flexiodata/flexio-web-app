@@ -1,7 +1,8 @@
 <template>
   <div>
     <div
-      class="flex flex-row items-center justify-center mb3"
+      class="flex flex-row items-center justify-center"
+      style="margin-bottom: 1.5rem"
       v-if="connections.length > 0"
     >
       <template
@@ -21,15 +22,21 @@
       </template>
     </div>
     <h1
-      class="fw4"
-      v-if="item.title"
+      class="fw4 mt0"
+      v-if="item.title && index == 0"
     >
       {{item.title}}
     </h1>
+    <h3
+      class="fw6 f3 mt0"
+      v-else-if="item.title"
+    >
+      {{item.title}}
+    </h3>
     <div
       class="marked"
       v-html="description"
-      v-if="!is_before_active"
+      v-if="is_active"
     ></div>
   </div>
 </template>

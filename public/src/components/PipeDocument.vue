@@ -427,8 +427,8 @@
         handler: 'loadPipe',
         immediate: true
       },
-      active_tab_name: {
-        handler: 'onTabChange',
+      active_view: {
+        handler: 'onViewChange',
         immediate: true
       },
       show_history: {
@@ -455,7 +455,7 @@
     },
     data() {
       return {
-        active_tab_name: _.get(this.$route, 'params.view', PIPEDOC_VIEW_CONFIGURE),
+        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_CONFIGURE),
         editor: _.get(this.$route, 'query.editor', PIPEDOC_EDITOR_BUILDER),
         editor_options: [
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
@@ -578,7 +578,7 @@
         'getActiveDocumentProcesses',
         'getActiveUser'
       ]),
-      onTabChange(val) {
+      onViewChange(val) {
         if (val == PIPEDOC_VIEW_HISTORY) {
           this.fetchProcesses()
         }
@@ -618,7 +618,7 @@
       updateRoute() {
         // update the route
         var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        var view = this.active_tab_name
+        var view = this.active_view
         var editor = this.editor
         _.set(new_route, 'params.view', view)
         _.set(new_route, 'query', { editor })

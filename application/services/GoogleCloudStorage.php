@@ -59,6 +59,9 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $path = ltrim($path,'/');
 
         // list on single file
         $arr = $this->getFileInfo($path);
@@ -68,7 +71,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $arr['path'] = $path;
             return [ $arr ];
         }
-
 
         /*
         if (strlen($this->bucket) == 0 && ($path == '' || $path == '/'))
@@ -226,6 +228,10 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     public function getFileInfo(string $path) : array
     {
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $path = ltrim($path,'/');
+
         if (!$this->authenticated())
             return false;
 
@@ -264,23 +270,61 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $info = @json_decode($result,true);
 
-        if (!isset($info['name']))
+        if (isset($info['name']))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            $plain_filename = $info['name'];
+            $plain_filename = trim($plain_filename, '/');
+            $sl = strrpos($plain_filename,'/');
+            if ($sl !== false)
+                $plain_filename = substr($plain_filename, $sl+1);
+    
+            return [
+                'name' => $plain_filename,
+                'size' => $info['size'] ?? null,
+                'modified' => $info['updated'] ?? '',
+                'type' => (substr($info['name'], -1) == '/' ? 'DIR' : 'FILE')
+            ];
         }
+         else
+        {
+            // perhaps it's a directory without a directory 'file'
 
-        $plain_filename = $info['name'];
-        $plain_filename = trim($plain_filename, '/');
-        $sl = strrpos($plain_filename,'/');
-        if ($sl !== false)
-            $plain_filename = substr($plain_filename, $sl+1);
+            $ch = curl_init();
 
-        return [
-            'name' => $plain_filename,
-            'size' => $info['size'] ?? null,
-            'modified' => $info['updated'] ?? '',
-            'type' => (substr($info['name'], -1) == '/' ? 'DIR' : 'FILE')
-        ];
+            $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o";
+
+            $bucket_path = rtrim($bucket_path,'/') . '/';
+            $url .= "?prefix=" . rawurlencode($bucket_path);
+    
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
+            curl_setopt($ch, CURLOPT_HTTPGET, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+    
+            $result = json_decode($result,true);
+            if (isset($result['items']) && count($result['items']) > 0)
+            {
+                $plain_filename = $path;
+                $plain_filename = trim($plain_filename, '/');
+                $sl = strrpos($plain_filename,'/');
+                if ($sl !== false)
+                    $plain_filename = substr($plain_filename, $sl+1);
+
+                return [
+                    'name' => $plain_filename,
+                    'size' => null,
+                    'modified' => null,
+                    'type' => 'DIR'
+                ];
+            }
+             else
+            {
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            }
+        }
     }
 
     private function internalGetFileInfo(string $path)
