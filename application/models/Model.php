@@ -170,6 +170,10 @@ class Model
     public const PIPE_STATUS_ACTIVE     = 'A';
     public const PIPE_STATUS_INACTIVE   = 'I';
 
+    public const PIPE_MODE_UNDEFINED  = '';
+    public const PIPE_MODE_BUILD      = 'B';
+    public const PIPE_MODE_RUN        = 'R';
+
     public const ROLE_UNDEFINED     = '';
     public const ROLE_ADMINISTRATOR = 'A';
 

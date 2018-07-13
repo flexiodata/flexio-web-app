@@ -27,6 +27,7 @@ class Pipe extends ModelBase
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
+                'pipe_mode'       => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_MODE_BUILD),
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'schedule_status' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_STATUS_INACTIVE),
                 'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
@@ -37,6 +38,9 @@ class Pipe extends ModelBase
         $process_arr = $validator->getParams();
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+
+        if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
 
         if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
@@ -120,6 +124,7 @@ class Pipe extends ModelBase
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
+                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'string', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false),
                 'owned_by'        => array('type' => 'string', 'required' => false),
@@ -167,6 +172,13 @@ class Pipe extends ModelBase
                     if ($existing_eid !== false && $existing_eid !== $eid)
                         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
                 }
+            }
+
+            // make sure the pipe mode is valid
+            if (isset($process_arr['pipe_mode']))
+            {
+                if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
             }
 
             // make sure the schedule status is an 'A' or an 'I'
@@ -220,6 +232,7 @@ class Pipe extends ModelBase
                               'description'     => $row['description'],
                               'ui'              => $row['ui'],
                               'task'            => $row['task'],
+                              'pipe_mode'       => $row['pipe_mode'],
                               'schedule'        => $row['schedule'],
                               'schedule_status' => $row['schedule_status'],
                               'owned_by'        => $row['owned_by'],

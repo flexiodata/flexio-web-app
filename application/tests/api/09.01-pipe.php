@@ -91,6 +91,7 @@ class Test
                 "task": {
                     "op": "echo"
                 },
+                "pipe_mode": "B",
                 "schedule": {
                     "frequency": "",
                     "timezone": "UTC",
@@ -120,6 +121,7 @@ class Test
             "task": {
                 "op": "echo"
             },
+            "pipe_mode": "B",
             "schedule": {
                 "timezone": "UTC",
                 "days": ["mon","tue","wed","thu","fri"],
