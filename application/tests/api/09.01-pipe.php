@@ -85,6 +85,9 @@ class Test
                 "name": "Test Pipe",
                 "alias": "",
                 "description": "Test Pipe Description",
+                "interface": {
+                    "a": "b"
+                },
                 "task": {
                     "op": "echo"
                 },
@@ -111,6 +114,9 @@ class Test
             "alias": "",
             "name": "Test Pipe",
             "description": "Test Pipe Description",
+            "interface": {
+                "a": "b"
+            },
             "task": {
                 "op": "echo"
             },

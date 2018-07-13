@@ -29,22 +29,15 @@ const mutations = {
     state.def = def
     state.fetched = true
 
-    // determine what was passed to us
-    var lang = _.get(def, 'pipe_language', 'json')
-    if (lang == 'javascript' || lang == 'sdk-js') {
-      var code = _.get(def, 'pipe', '')
-      state.code = code
-    } else {
-      var code = _.get(def, 'pipe', {})
-      state.code = JSON.stringify(code, null, 2)
-    }
+    var code = _.get(def, 'task', {})
+    state.code = JSON.stringify(code, null, 2)
 
-    var prompts = _.get(def, 'prompts', [])
+    var prompts = _.get(def, 'ui.prompts', [])
 
-    // include the naming item at the end
-    var existing_name = _.find(prompts, { element_identifier: 'name' })
-    if (!existing_name) {
-      prompts.push({
+    // replace name element with form element
+    var existing_name = _.findIndex(prompts, { element: 'name' })
+    if (existing_name != -1) {
+      prompts[existing_name] = {
         element: 'form',
         element_identifier: 'name',
         title: 'Name your pipe',
@@ -64,26 +57,32 @@ const mutations = {
           placeholder: 'Description (optional)',
           value: ''
         }]
-      })
+      }
     }
 
-    // include the summary item at the end
-    var existing_summary = _.find(prompts, { element: 'summary' })
-    if (!existing_summary) {
-      prompts.push({ element: 'summary' })
+    if (_.get(def, 'ui.settings.show_summary') !== false) {
+      // include the summary item at the end
+      var existing_summary = _.find(prompts, { element: 'summary' })
+      if (!existing_summary) {
+        prompts.push({ element: 'summary' })
+      }
     }
 
     state.prompts = _.map(prompts, p => {
+      // necessary for scrollTo
       _.assign(p, { id: _.uniqueId('prompt-') })
 
+      // add `connection_eid` attribute to connection chooser elements
       if (p.element == 'connection-chooser') {
         return _.assign(p, { connection_eid: null })
       }
 
+      // add `connection_eid` attribute to file chooser elements
       if (p.element == 'file-chooser') {
         return _.assign(p, { connection_eid: null })
       }
 
+      // add `form_values` object to form elements
       if (p.element == 'form') {
         var form_values = {}
         _.each(p.form_items, fi => {
@@ -112,7 +111,8 @@ const mutations = {
     state.attrs = _.assign({}, state.attrs, new_attrs)
 
     state.prompts = _.map(state.prompts, p => {
-      // update file chooser connections with the associated connection if they match
+      // update all file chooser element connections
+      // with the associated connection if they match
       if (p.element == 'file-chooser' && p.connection) {
         return _.assign({}, p, {
           connection_eid: _.get(state.attrs, p.connection, '')
@@ -124,38 +124,8 @@ const mutations = {
     })
   },
 
-  UPDATE_ACTIVE_ITEM (state, attrs) {
-    var ap = _.assign({}, state.active_prompt, attrs)
-    ap = _.cloneDeep(ap)
-    state.active_prompt = ap
-
-    state.prompts = _.map(state.prompts, p => {
-      if (p.id == ap.id) {
-        return ap
-      } else {
-        // update file chooser connections with the active prompt's connection if they match
-        if (p.element == 'file-chooser' && p.connection && p.connection == ap.variable) {
-          return _.assign({}, p, {
-            connection_eid: ap.connection_eid,
-            files: []
-          })
-        }
-        return p
-      }
-    })
-  },
-
   UPDATE_CODE (state) {
-    var code
-
-    // determine what was passed to us
-    var lang = _.get(state.def, 'pipe_language', 'json')
-    if (lang == 'javascript' || lang == 'sdk-js') {
-      code = _.get(state.def, 'pipe', '')
-    } else {
-      code = _.get(state.def, 'pipe', {})
-      code = JSON.stringify(code, null, 2)
-    }
+    var code = _.get(state.def, 'task', '')
 
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\"?\\$\\{" + p.variable + "\\}\"?", "g")
@@ -222,18 +192,6 @@ const mutations = {
 
   CREATE_PIPE (state, attrs) {
     state.pipe = attrs
-  },
-
-  SET_ACTIVE_ITEM (state, idx) {
-    if (idx >= 0 && idx < state.prompts.length) {
-      state.active_prompt_idx = idx
-      state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
-    }
-  },
-
-  UNSET_ACTIVE_ITEM(state) {
-    state.active_prompt_idx = -1
-    state.active_prompt = {}
   },
 
   GO_PREV_ITEM (state) {

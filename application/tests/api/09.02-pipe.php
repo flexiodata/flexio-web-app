@@ -232,6 +232,9 @@ class Test
                 "name": "Test Pipe Updated",
                 "alias": "alias1-updated",
                 "description": "Test Pipe Description Updated",
+                "interface": {
+                    "a": "b"
+                },
                 "task": {
                     "op": "echo"
                 },
@@ -259,6 +262,9 @@ class Test
             "alias": "alias1-updated",
             "name": "Test Pipe Updated",
             "description": "Test Pipe Description Updated",
+            "interface": {
+                "a": "b"
+            },
             "task": {
                 "op": "echo"
             },
