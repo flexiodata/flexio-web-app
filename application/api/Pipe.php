@@ -45,6 +45,7 @@ class Pipe
                 'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'interface'       => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)
@@ -133,6 +134,7 @@ class Pipe
         $new_pipe_properties = array();
         $new_pipe_properties['name'] = $original_pipe_properties['name'] . ' copy';
         $new_pipe_properties['description'] = $original_pipe_properties['description'];
+        $new_pipe_properties['interface'] = $original_pipe_properties['interface'];
         $new_pipe_properties['task'] = $original_pipe_properties['task'];
         $new_pipe_properties['owned_by'] = $owner_user_eid;
         $new_pipe_properties['created_by'] = $requesting_user_eid;
@@ -203,6 +205,7 @@ class Pipe
                 'alias'           => array('type' => 'alias',  'required' => false),
                 'name'            => array('type' => 'string', 'required' => false),
                 'description'     => array('type' => 'string', 'required' => false),
+                'interface'       => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
                 'schedule_status' => array('type' => 'string', 'required' => false)

@@ -227,6 +227,8 @@ class Test
             "alias" : null,
             "name" : null,
             "description" : null,
+            "interface" : {
+            },
             "task" : {
             },
             "schedule" : null,
