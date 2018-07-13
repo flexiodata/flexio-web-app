@@ -18,166 +18,170 @@ content: |
 
 ####
 
-settings:
-  show_title: false
+ui:
+  settings:
+    show_title: false
 
-prompts:
-  - element: message
-    title: Copy files from Dropbox to Google Drive
-    description: |
-      This template steps you through the process of setting up a data feed to transfer files from Dropbox to Google Drive that you can schedule or deploy in your own code. You'll be ready to go in a few short steps:
+  prompts:
+    - element: message
+      title: Copy files from Dropbox to Google Drive
+      description: |
+        This template steps you through the process of setting up a data feed to transfer files from Dropbox to Google Drive that you can schedule or deploy in your own code. You'll be ready to go in a few short steps:
 
-        * Connect to Dropbox and select source files
-        * Connect to Google Drive and select the destination folder
-        * Schedule the data feed or choose other options to run the pipe
-    connections:
-      - dropbox
-      - googledrive
+          * Connect to Dropbox and select source files
+          * Connect to Google Drive and select the destination folder
+          * Schedule the data feed or choose other options to run the pipe
+      connections:
+        - dropbox
+        - googledrive
 
-  - element: form
-    title: Standard form
-    description: This is the form description. Text is written in Markdown so it can be quite descriptive.
-    cls: el-form--cozy
-    label_position: left
-    label_width: 9rem
-    form_items:
-      - element: input
-        type: text
-        variable: input_text
-        label: Text Input
-        placeholder: Text Input
-        value: ''
+    - element: form
+      title: Standard form
+      description: This is the form description. Text is written in Markdown so it can be quite descriptive.
+      cls: el-form--cozy
+      label_position: left
+      label_width: 9rem
+      form_items:
+        - element: input
+          type: text
+          variable: input_text
+          label: Text Input
+          placeholder: Text Input
+          value: ''
 
-      - element: input
-        type: textarea
-        variable: input_textarea
-        label: Textarea
-        placeholder: Textarea
-        value: ''
+        - element: input
+          type: textarea
+          variable: input_textarea
+          label: Textarea
+          placeholder: Textarea
+          value: ''
 
-      - element: code-editor
-        lang: javascript
-        variable: code
-        label: Code
-        value: ''
+        - element: code-editor
+          lang: javascript
+          variable: code
+          label: Code
+          value: ''
 
-      - element: input
-        type: date
-        variable: input_date
-        label: Date Input
-        placeholder: Date Input
-        value: ''
+        - element: input
+          type: date
+          variable: input_date
+          label: Date Input
+          placeholder: Date Input
+          value: ''
 
-      - element: input
-        type: daterange
-        variable: input_daterange
-        label: Date Range Input
-        placeholder: Date Range Input
-        value: ''
+        - element: input
+          type: daterange
+          variable: input_daterange
+          label: Date Range Input
+          placeholder: Date Range Input
+          value: ''
 
-      - element: select
-        variable: input_select
-        label: Select
-        placeholder: Select
-        value: IL
-        options:
-          - label: California
-            value: CA
-          - label: Illinois
-            value: IL
-          - label: Wyoming
-            value: WY
+        - element: select
+          variable: input_select
+          label: Select
+          placeholder: Select
+          value: IL
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
 
-      - element: radio-group
-        variable: radio_group
-        label: Radio Group
-        placeholder: Radio Group
-        value: []
-        options:
-          - label: California
-            value: CA
-          - label: Illinois
-            value: IL
-          - label: Wyoming
-            value: WY
+        - element: radio-group
+          variable: radio_group
+          label: Radio Group
+          placeholder: Radio Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
 
-      - element: checkbox-group
-        variable: checkbox_group
-        label: Checkbox Group
-        placeholder: Checkbox Group
-        value: []
-        options:
-          - label: California
-            value: CA
-          - label: Illinois
-            value: IL
-          - label: Wyoming
-            value: WY
+        - element: checkbox-group
+          variable: checkbox_group
+          label: Checkbox Group
+          placeholder: Checkbox Group
+          value: []
+          options:
+            - label: California
+              value: CA
+            - label: Illinois
+              value: IL
+            - label: Wyoming
+              value: WY
 
-      - element: checkbox
-        variable: checkbox
-        label: Checkbox
-        placeholder: Checkbox
-        value: false
+        - element: checkbox
+          variable: checkbox
+          label: Checkbox
+          placeholder: Checkbox
+          value: false
 
-      - element: switch
-        variable: switch
-        label: Switch
-        placeholder: Switch
-        value: false
+        - element: switch
+          variable: switch
+          label: Switch
+          placeholder: Switch
+          value: false
 
-  - element: connection-chooser
-    title: Connection chooser with single connection type
-    variable: connection_dropbox
-    connection_type: dropbox
+    - element: connection-chooser
+      title: Connection chooser with single connection type
+      variable: connection_dropbox
+      connection_type: dropbox
 
-  - element: connection-chooser
-    title: Connection chooser with all connection
-    variable: connection_any
-    connection_type: ''
+    - element: connection-chooser
+      title: Connection chooser with all connection
+      variable: connection_any
+      connection_type: ''
 
-  - element: file-chooser
-    title: Default file chooser
-    description: This is the default file chooser. Multiple files and folder can be selected at the same time.
-    variable: file_chooser_default
-    connection: connection_any
+    - element: file-chooser
+      title: Default file chooser
+      description: This is the default file chooser. Multiple files and folder can be selected at the same time.
+      variable: file_chooser_default
+      connection: connection_any
 
-  - element: file-chooser
-    title: File chooser with CSVs only
-    description: This file chooser only allows CSV files to be selected.
-    variable: file_chooser_csv_only
-    connection: connection_dropbox
-    filetype_filter:
-      - csv
-    allow_folders: false
+    - element: file-chooser
+      title: File chooser with CSVs only
+      description: This file chooser only allows CSV files to be selected.
+      variable: file_chooser_csv_only
+      connection: connection_dropbox
+      filetype_filter:
+        - csv
+      allow_folders: false
 
-  - element: file-chooser
-    title: File chooser with a connection alias
-    description: This file chooser uses a connection alias `my-foo-alias`.
-    variable: file_chooser_alias
-    connection: connection_dropbox
-    connection_alias: my-foo-alias
+    - element: file-chooser
+      title: File chooser with a connection alias
+      description: This file chooser uses a connection alias `my-foo-alias`.
+      variable: file_chooser_alias
+      connection: connection_dropbox
+      connection_alias: my-foo-alias
 
-  - element: file-chooser
-    title: Single file selection file chooser
-    description: This file chooser only allows a single file to be selected.
-    variable: file_chooser_single_file
-    connection: connection_dropbox
-    allow_multiple: false
-    allow_folders: false
+    - element: file-chooser
+      title: Single file selection file chooser
+      description: This file chooser only allows a single file to be selected.
+      variable: file_chooser_single_file
+      connection: connection_dropbox
+      allow_multiple: false
+      allow_folders: false
 
-  - element: file-chooser
-    description: Folder only file chooser
-    variable: folder_chooser_folders_only
-    connection: connection_dropbox
-    folders_only: true
+    - element: file-chooser
+      description: Folder only file chooser
+      variable: folder_chooser_folders_only
+      connection: connection_dropbox
+      folders_only: true
 
-  - element: file-chooser
-    description: Single folder selection file chooser
-    variable: folder_chooser_single_folder
-    connection: connection_dropbox
-    folders_only: true
-    allow_multiple: false
+    - element: file-chooser
+      description: Single folder selection file chooser
+      variable: folder_chooser_single_folder
+      connection: connection_dropbox
+      folders_only: true
+      allow_multiple: false
 
-pipe_language: javascript
-pipe: ''
+####
+
+task:
+  op: sequence
+  items: []

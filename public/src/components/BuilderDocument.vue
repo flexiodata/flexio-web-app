@@ -50,20 +50,18 @@
         class="fixed z-8 dn db-l ml4 pa3 bg-white br2 css-white-box css-output"
         v-if="false"
       >
-        <div class="h-100 flex flex-column">
-          <div class="flex flex-row items-center pb2 mb2 bb b--black-10">
-            <div class="flex-fill fw6">Output</div>
-          </div>
-          <CodeEditor
-            class="flex-fill"
-            lang="javascript"
-            :options="{
-              lineNumbers: false,
-              readOnly: true
-            }"
-            v-model="code"
-          />
+        <div class="flex-none pb2 mb2 bb b--black-10">
+          <div class="fw6">Output</div>
         </div>
+        <CodeEditor
+          style="height: 24rem"
+          lang="javascript"
+          :options="{
+            lineNumbers: false,
+            readOnly: true
+          }"
+          v-model="code"
+        />
       </div>
     </div>
   </div>
@@ -83,23 +81,22 @@
   // easy way to get rid of a bunch of elements for quick testing
   //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
 
-  var pipe_arr = [ "Flexio.pipe()" ]
+  var pipe_arr = [ "op: sequence\nitems:" ]
 
   var buildPipeCode = (arr) => {
     _.each(arr, p => {
       if (p.element == 'form') {
         buildPipeCode(p.form_items)
       } else if (p.variable) {
-        var echo_str = "echo('" + p.variable + ": ${" + p.variable + "}')"
+        var echo_str = "- op: echo\n    msg: '" + p.variable + ": ${" + p.variable + "}'"
         pipe_arr.push(echo_str)
       }
     })
   }
 
-  buildPipeCode(test_def.prompts)
+  buildPipeCode(test_def.ui.prompts)
 
-  test_def.pipe_language = 'javascript'
-  test_def.pipe = pipe_arr.join('\n  .')
+  test_def.task = pipe_arr.join('\n  ')
 
   export default {
     props: {
@@ -196,10 +193,10 @@
         return this.getSdkOptions()
       },
       show_title() {
-        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'settings.show_title', true)
+        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'ui.settings.show_title', true)
       },
       show_description() {
-        return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'settings.show_description', false)
+        return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'ui.settings.show_description', false)
       }
     },
     methods: {
@@ -304,8 +301,7 @@
     top: 66px
     right: 28px
     min-width: 20rem
-    max-width: 20%
-    max-height: 30rem
+    max-width: 10%
     opacity: 0.5
     transition: all 0.3s ease-in-out
     &:hover
