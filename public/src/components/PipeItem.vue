@@ -140,8 +140,7 @@
         this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
       },
       onCommand(cmd) {
-        switch (cmd)
-        {
+        switch (cmd) {
           case 'open':      return this.openPipe()
           case 'edit':      return this.$emit('edit', this.item)
           case 'duplicate': return this.$emit('duplicate', this.item)

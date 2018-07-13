@@ -19,11 +19,33 @@
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
           <div class="flex-fill flex flex-row items-center pv3">
-            <h1 class="dib mv0 fw6">{{title}}</h1>
+            <div class="dib">
+              <h1 class="mv0 fw6">{{title}}</h1>
+            </div>
+            <el-switch
+              class="ml3 hint--bottom"
+              active-color="#13ce66"
+              :aria-label="is_pipe_active ? 'Active' : 'Not Active'"
+              v-model="is_pipe_active"
+            />
+            <span
+              class="ttu b f6 pl1 pointer"
+              @click.stop="is_pipe_active = !is_pipe_active"
+            >
+              <transition name="el-zoom-in-center" mode="out-in">
+                <span
+                  :style="is_pipe_active ? 'color: #13ce66' : 'color: #dcdfe6'"
+                  v-bind:key="is_pipe_active"
+                >
+                  {{is_pipe_active ? 'Active' : 'Not Active'}}
+                </span>
+              </transition>
+            </span>
             <el-popover
               placement="bottom"
               :width="360"
               trigger="hover"
+              v-if="false"
             >
               <div class="ma1 tl">
                 <template v-if="alias.length > 0">
@@ -81,14 +103,36 @@
               </div>
             </div>
           </transition>
-          <PipeDocumentDropdown
+          <el-select
             class="ml3"
-            :class="is_changed || show_properties || show_history ? 'o-40 no-pointer-events' : ''"
-            :editor="editor"
-            @switch-editor="switchEditor"
-            @view-properties="show_properties = true"
-            @view-history="show_history = true"
-          />
+            style="width: 10rem"
+            :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1 || show_properties || show_history"
+            v-show="!is_pipe_active"
+            v-model="editor"
+          >
+            <el-option
+              :label="option.label"
+              :value="option.value"
+              :key="option.value"
+              v-for="option in editor_options"
+            />
+          </el-select>
+          <el-dropdown
+            class="ml2"
+            trigger="click"
+            @command="onCommand"
+            v-show="!is_pipe_active"
+          >
+            <el-button style="padding: 6px 8px">
+              <i class="material-icons">more_vert</i>
+            </el-button>
+            <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+              <el-dropdown-item class="flex flex-row items-center ph2" command="schedule"><i class="material-icons mr3">date_range</i> Schedule</el-dropdown-item>
+              <el-dropdown-item class="flex flex-row items-center ph2" command="deploy"><i class="material-icons mr3">archive</i> Deploy</el-dropdown-item>
+              <el-dropdown-item divided></el-dropdown-item>
+              <el-dropdown-item class="flex flex-row items-center ph2" command="properties"><i class="material-icons mr3">edit</i> Properties</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </div>
     </div>
@@ -142,6 +186,7 @@
             style="width: 10rem"
             :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1"
             v-model="editor"
+            v-if="false"
           >
             <el-option
               :label="option.label"
@@ -414,7 +459,8 @@
         show_properties: false,
         show_history: false,
         show_pipe_schedule_dialog: false,
-        show_pipe_deploy_dialog: false
+        show_pipe_deploy_dialog: false,
+        is_pipe_active: true
       }
     },
     computed: {
@@ -530,6 +576,19 @@
       },
       onEditorChange(val) {
         this.updateRoute()
+      },
+      onCommand(cmd) {
+        switch (cmd) {
+          case 'schedule':
+            this.show_pipe_schedule_dialog = true
+            return
+          case 'deploy':
+            this.show_pipe_deploy_dialog = true
+            return
+          case 'properties':
+            this.show_properties = true
+            return
+        }
       },
       switchEditor(val) {
         this.editor = val
