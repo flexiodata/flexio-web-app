@@ -281,7 +281,7 @@
         <div
           v-else-if="has_run_once && last_stream_eid.length > 0 && !is_process_failed"
         >
-          <PipeContent
+          <StreamContent
             :height="300"
             :stream-eid="last_stream_eid"
           />
@@ -397,7 +397,7 @@
   import PipeDocumentDropdown from './PipeDocumentDropdown.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
-  import PipeContent from './PipeContent.vue'
+  import StreamContent from './StreamContent.vue'
   import ProcessList from './ProcessList.vue'
 
   const PIPEDOC_VIEW_PROPERTIES = 'properties'
@@ -419,7 +419,7 @@
       PipeDocumentDropdown,
       PipeSchedulePanel,
       PipeDeployPanel,
-      PipeContent,
+      StreamContent,
       ProcessList
     },
     watch: {
