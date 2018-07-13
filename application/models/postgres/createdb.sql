@@ -147,7 +147,7 @@ CREATE TABLE tbl_pipe (
   alias text default '',
   name text default '',
   description text default '',
-  interface json,
+  ui json,
   task json,
   schedule text default '',
   schedule_status varchar(1) NOT NULL default 'I',

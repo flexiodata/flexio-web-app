@@ -48,12 +48,12 @@ if (is_null($db))
 
 try
 {
-    // STEP 2: remove old input/output columns; add new interface column
+    // STEP 1: remove old input/output columns; add new ui column
     $sql = <<<EOT
         alter table tbl_pipe
             drop column input,
             drop column output,
-            add column interface json;
+            add column ui json;
 EOT;
     $db->exec($sql);
 
