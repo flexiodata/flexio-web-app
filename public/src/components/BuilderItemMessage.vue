@@ -36,7 +36,7 @@
     <div
       class="marked"
       v-html="description"
-      v-if="!is_before_active"
+      v-if="is_active"
     ></div>
   </div>
 </template>
