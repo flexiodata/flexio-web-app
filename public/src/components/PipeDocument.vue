@@ -176,7 +176,13 @@
         </div>
       </div>
 
-      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="!show_properties && !show_history">
+      <div
+        class="mb4 pa4 pt3 bg-white br2 css-white-box"
+        :class="{
+          'o-40 no-pointer-events': show_properties || show_history
+        }"
+        v-show="!is_pipe_active"
+      >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
           <h3 class="flex-fill mv0 mr3 fw6 f4">Configuration</h3>
@@ -243,7 +249,12 @@
         </div>
       </div>
 
-      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="!show_properties && !show_history">
+      <div
+        class="mb4 pa4 pt3 bg-white br2 css-white-box"
+        :class="{
+          'o-40 no-pointer-events': show_properties || show_history
+        }"
+      >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
           <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
