@@ -29,8 +29,16 @@
         <span>{{view.label}}</span>
       </div>
       <div class="mv2 bt b--black-05"></div>
-      <div class="el-dropdown-menu__item" @click="emitMenuItem('view-history')">History</div>
-      <div class="el-dropdown-menu__item" @click="emitMenuItem('view-properties')">Properties</div>
+      <div class="flex flex-row items-center el-dropdown-menu__item" @click="emitMenuItem('schedule')">
+        <i class="material-icons md-18 mr2">date_range</i> Schedule
+      </div>
+      <div class="flex flex-row items-center el-dropdown-menu__item" @click="emitMenuItem('deploy')">
+        <i class="material-icons md-18 mr2">archive</i> Deploy
+      </div>
+      <div class="flex flex-row items-center el-dropdown-menu__item" @click="emitMenuItem('properties')">
+        <i class="material-icons md-18 mr2">edit</i> Properties
+      </div>
+
     </div>
   </el-popover>
 </template>
