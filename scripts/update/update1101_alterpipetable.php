@@ -50,7 +50,7 @@ try
 {
     // STEP 2: remove old input/output columns; add new interface column
     $sql = <<<EOT
-        alter table tbl_pipt
+        alter table tbl_pipe
             drop column input,
             drop column output,
             add column interface json;
