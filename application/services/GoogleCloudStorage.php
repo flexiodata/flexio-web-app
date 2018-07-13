@@ -442,11 +442,12 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     {
         $path = $params['path'] ?? '';
 
-        
         if (!$this->authenticated())
             return false;
 
-
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        
         $bucket = '';
         $bucket_path = '';
         if (!$this->getPathParts($path, $bucket, $bucket_path))
@@ -578,6 +579,10 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
 
         $path = $params['path'] ?? '';
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+
+
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $content_type = "text/plain";
 
