@@ -353,6 +353,10 @@
   import ProcessContent from './ProcessContent.vue'
   import ProcessList from './ProcessList.vue'
 
+  const PIPE_MODE_UNDEFINED = ''
+  const PIPE_MODE_BUILD     = 'B'
+  const PIPE_MODE_RUN       = 'R'
+
   const PIPEDOC_VIEW_PROPERTIES = 'properties'
   const PIPEDOC_VIEW_CONFIGURE  = 'configure'
   const PIPEDOC_VIEW_HISTORY    = 'history'
@@ -413,8 +417,7 @@
         show_properties: false,
         show_history: false,
         show_pipe_schedule_dialog: false,
-        show_pipe_deploy_dialog: false,
-        is_pipe_active: true
+        show_pipe_deploy_dialog: false
       }
     },
     computed: {
@@ -436,6 +439,9 @@
       },
       api_endpoint() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
+      title() {
+        return _.get(this.orig_pipe, 'name', '')
       },
       doc_id() {
         return 'pipe-doc-' + this.eid
@@ -462,8 +468,33 @@
           }
         }
       },
-      title() {
-        return _.get(this.orig_pipe, 'name', '')
+      is_pipe_active: {
+        get() {
+          return _.get(this.edit_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+        },
+        set() {
+          var doSet = () => {
+            var pipe_mode = this.is_pipe_active ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { pipe_mode })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.saveChanges()
+          }
+
+          if (this.is_pipe_active) {
+            this.$confirm('This pipe is currently active and could be in use in a production environment. Are you sure you want to continue?', 'Really change active status?', {
+              confirmButtonText: 'CHANGE TO NOT ACTIVE',
+              cancelButtonText: 'CANCEL',
+              type: 'warning'
+            }).then(() => {
+              doSet()
+            }).catch(() => {
+              // do nothing
+            })
+          } else {
+            doSet()
+          }
+        }
       },
       is_code_changed() {
         return this.isCodeChanged()
