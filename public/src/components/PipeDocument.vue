@@ -273,7 +273,7 @@
         <!-- content -->
         <ProcessContent
           :process-eid="active_process_eid"
-          v-if="active_process_eid && has_run_once"
+          v-if="active_process_eid.length > 0 && has_run_once"
         />
         <div
           class="bg-white ba b--black-10 pa3 f6"
@@ -476,7 +476,7 @@
       },
       active_process_eid() {
         var process = _.last(this.getActiveDocumentProcesses())
-        return _.get(process, 'eid', false)
+        return _.get(process, 'eid', '')
       }
     },
     methods: {
