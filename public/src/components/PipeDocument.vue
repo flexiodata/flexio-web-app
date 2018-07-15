@@ -22,87 +22,12 @@
             <div class="dib">
               <h1 class="mv0 fw6">{{title}}</h1>
             </div>
-            <el-switch
-              class="ml3 hint--bottom"
+            <LabelSwitch
+              class="ml3"
               active-color="#13ce66"
-              :aria-label="is_pipe_active ? 'Active' : 'Not Active'"
               v-model="is_pipe_active"
             />
-            <span
-              class="ttu b f6 pl1 pointer"
-              @click.stop="is_pipe_active = !is_pipe_active"
-            >
-              <transition name="el-zoom-in-center" mode="out-in">
-                <span
-                  :style="is_pipe_active ? 'color: #13ce66' : 'color: #dcdfe6'"
-                  v-bind:key="is_pipe_active"
-                >
-                  {{is_pipe_active ? 'Active' : 'Not Active'}}
-                </span>
-              </transition>
-            </span>
-            <el-popover
-              placement="bottom"
-              :width="360"
-              trigger="hover"
-              v-if="false"
-            >
-              <div class="ma1 tl">
-                <template v-if="alias.length > 0">
-                  <h3 class="mv0 fw6">Pipe Alias</h3>
-                  <p class="mb0">A unique identifier that can be used to reference this pipe via an API endpoint or from one of our SDKs, instead of directly referencing it by its ID.</p>
-                </template>
-                <template v-else>
-                  <h3 class="mv0 fw6">Pipe ID</h3>
-                  <p>An auto-generated identifier that can be used to reference this pipe via an API endpoint or from one of our SDKs.</p>
-                  <el-alert
-                    class="f8"
-                    title=""
-                    size="small"
-                    type="info-blue"
-                    :closable="false"
-                  >
-                    <div class="flex flex-row nl2 nr2">
-                      <i class="el-icon-info" style="margin: 2px 8px 0 0"></i>
-                      <span>Assigning an alias to this pipe will make it easier to remember</span>
-                    </div>
-                  </el-alert>
-                </template>
-              </div>
-              <el-tag
-                class="ml3 fw6 cursor-default"
-                size="medium"
-                type="info"
-                slot="reference"
-                :disable-transitions="true"
-              >
-                {{identifier}}
-              </el-tag>
-            </el-popover>
           </div>
-          <transition name="el-zoom-in-top">
-            <div class="flex-none flex flex-row items-center pl2">
-              <div class="flex flex-row pl3" v-if="show_save_cancel && false">
-                <el-button
-                  size="medium"
-                  class="ttu b"
-                  :disabled="!is_changed"
-                  @click="cancelChanges"
-                >
-                  Cancel
-                </el-button>
-                <el-button
-                  size="medium"
-                  type="primary"
-                  class="ttu b"
-                  :disabled="!is_changed || has_errors"
-                  @click="saveChanges"
-                >
-                  Save
-                </el-button>
-              </div>
-            </div>
-          </transition>
           <el-select
             class="ml3"
             style="width: 10rem"
@@ -343,6 +268,7 @@
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import Spinner from 'vue-simple-spinner'
+  import LabelSwitch from './LabelSwitch.vue'
   import CodeEditor from './CodeEditor.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -369,6 +295,7 @@
   export default {
     components: {
       Spinner,
+      LabelSwitch,
       CodeEditor,
       PipeCodeEditor,
       PipeBuilderList,
@@ -482,8 +409,8 @@
           }
 
           if (this.is_pipe_active) {
-            this.$confirm('This pipe is currently active and could be in use in a production environment. Are you sure you want to continue?', 'Really change active status?', {
-              confirmButtonText: 'CHANGE TO NOT ACTIVE',
+            this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
+              confirmButtonText: 'TURN PIPE OFF',
               cancelButtonText: 'CANCEL',
               type: 'warning'
             }).then(() => {
