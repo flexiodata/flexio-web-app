@@ -1,11 +1,12 @@
 <template>
   <div class="relative">
     <el-switch
+      ref="switch"
       :value="value"
       :width="text_width"
       @input="onChange"
       v-bind="$attrs"
-      v-if="text_width"
+      v-show="text_width"
     />
     <transition name="el-zoom-in-center" mode="out-in">
       <span
@@ -28,6 +29,14 @@
       value: {
         type: Boolean,
         required: true
+      },
+      width: {
+        type: Number,
+        required: false
+      },
+      height: {
+        type: Number,
+        required: false
       },
       activeLabel: {
         type: String,
@@ -54,14 +63,27 @@
       inactiveLabel: {
         handler: 'measureText',
         immediate: true
+      },
+      width: {
+        handler: 'updateTextWidth'
+      },
+      text_width: {
+        handler: 'updateTextWidth'
       }
     },
     data() {
       return {
-        text_width: 0
+        active_text_width: 0,
+        inactive_text_width: 0
       }
     },
     computed: {
+      text_width() {
+        var spacing = 28
+        var atw = this.active_text_width + spacing
+        var itw = this.inactive_text_width + spacing
+        return _.isNumber(this.width) ? this.width : this.value ? atw : itw
+      },
       text_style() {
         var styles = []
         styles.push(this.value ? 'color: ' + this.activeLabelColor : 'color: ' + this.inactiveLabelColor)
@@ -79,8 +101,12 @@
         this.$nextTick(() => {
           var w1 = this.$refs['active-text'].clientWidth
           var w2 = this.$refs['inactive-text'].clientWidth
-          this.text_width = Math.max(w1, w2) + 26
+          this.active_text_width = w1
+          this.inactive_text_width = w2
         })
+      },
+      updateTextWidth() {
+        this.$refs.switch.$data.coreWidth = this.text_width
       }
     }
   }
