@@ -95,10 +95,12 @@ class Transform extends \Flexio\Jobs\Base
     public const COLUMN_TYPE_CHARACTER      = 'character';
     public const COLUMN_TYPE_WIDECHARACTER  = 'widecharacter';
     public const COLUMN_TYPE_NUMERIC        = 'numeric';
+    public const COLUMN_TYPE_FLOAT          = 'float';
     public const COLUMN_TYPE_DOUBLE         = 'double';
     public const COLUMN_TYPE_INTEGER        = 'integer';
     public const COLUMN_TYPE_DATE           = 'date';
     public const COLUMN_TYPE_DATETIME       = 'datetime';
+    public const COLUMN_TYPE_TIMESTAMP      = 'timestamp';
     public const COLUMN_TYPE_BOOLEAN        = 'boolean';
 
     // character classes
@@ -396,7 +398,7 @@ class Transform extends \Flexio\Jobs\Base
         $structure = array(
             array(
                 'name' => 'xdrow',
-                'type' => 'text'
+                'type' => self::COLUMN_TYPE_TEXT
             )
         );
 
@@ -631,12 +633,14 @@ class Transform extends \Flexio\Jobs\Base
         return $new_expr;
     }
 
-    private static function getChangeTypeExpr(array $operation, string $expr, array $column, array &$new_structure) // TODO: add return type
+    private static function getChangeTypeExpr(array $operation, string $expr, array $old_structure, array &$new_structure) // TODO: add return type
     {
-        $type = $column['type'];
-        $width = $column['width'] ?? -1;
-        $scale = $column['scale'] ?? -1;
-        $new_type = $operation['type'] ?? self::COLUMN_TYPE_NONE;
+        $old_structure['width'] = $old_structure['width'] ?? -1;
+        $old_structure['scale'] = $old_structure['scale'] ?? -1;
+
+        $new_structure['type'] = $operation['type'] ?? self::COLUMN_TYPE_NONE;
+        $new_structure['width'] = $old_structure['width'];
+        $new_structure['scale'] = $old_structure['scale'];
 
         // make sure it's a valid type
         $column_types = array(
@@ -651,106 +655,106 @@ class Transform extends \Flexio\Jobs\Base
             self::COLUMN_TYPE_BOOLEAN
         );
 
-        if (!array_search($new_type, $column_types))
+        if (!array_search($new_structure['type'], $column_types))
             return false;
 
-        if ($new_type == self::COLUMN_TYPE_CHARACTER)
+        if ($new_structure['type'] == self::COLUMN_TYPE_CHARACTER)
         {
-            if ($type == self::COLUMN_TYPE_DATE)
+            switch ($old_structure['type'])
             {
-                $new_width = 10; $width = $new_width;
-            }
-            else if ($type == self::COLUMN_TYPE_DATETIME)
-            {
-                $new_width = 20; $width = $new_width;
-            }
-            else if ($type == self::COLUMN_TYPE_NUMERIC || $type == self::COLUMN_TYPE_DOUBLE)
-            {
-                if ($width < 0)
-                {
-                    $new_width = 20; $width = $new_width;
-                }
-                else
-                {
-                    $new_width = $width+2; $width = $new_width;
-                }
-            }
-            else if ($type == self::COLUMN_TYPE_INTEGER)
-            {
-                $new_width = 20; $width = $new_width;
-            }
-            else if ($type == self::COLUMN_TYPE_BOOLEAN)
-            {
-                $new_width = 5; $width = $new_width; // enough to hold "true"/"false"
+                case self::COLUMN_TYPE_DATE:
+                    $new_structure['width'] = 10;
+                    break;
+
+                case self::COLUMN_TYPE_DATETIME:
+                    $new_structure['width'] = 20;
+                    break;
+
+                case self::COLUMN_TYPE_NUMERIC:
+                case self::COLUMN_TYPE_DOUBLE:
+                    if ($old_structure['width'] < 0)
+                        $new_structure['width'] = 20;
+                        else
+                        $new_structure['width'] = $old_structure['width'] + 2;
+                    break;
+
+                case self::COLUMN_TYPE_INTEGER:
+                    $new_structure['width'] = 20;
+                    break;
+
+                case self::COLUMN_TYPE_BOOLEAN:
+                    $new_structure['width'] = 5; // enough to hold "true"/"false"
+                    break;
             }
         }
 
-        if ($new_type == self::COLUMN_TYPE_NUMERIC)
+        if ($new_structure['type'] == self::COLUMN_TYPE_NUMERIC)
         {
-            if ($type == self::COLUMN_TYPE_DATE)
+            switch ($old_structure['type'])
             {
-                $new_width = 8; $width = $new_width;
-            }
-            else if ($type == self::COLUMN_TYPE_DATETIME)
-            {
-                $new_width = 14; $width = $new_width;
+                case self::COLUMN_TYPE_DATE:
+                    $new_structure['width'] = 8;
+                    break;
+
+                case self::COLUMN_TYPE_DATETIME:
+                    $new_structure['width'] = 14;
+                    break;
             }
         }
 
-        $old_type = $type;
-        $expr = self::getChangeTypeExprDetail($column['name'], $old_type, $new_type, $width, $scale, $new_structure);
+        $expr = self::getChangeTypeExprDetail($old_structure, $new_structure);
         return $expr;
     }
 
-    private static function getChangeTypeExprDetail(string $name, string $old_type, string $new_type, $new_width, $new_scale, &$new_structure) // TODO: add return type; TODO: add parameter type
+    private static function getChangeTypeExprDetail($old_structure, &$new_structure) // TODO: add return type; TODO: add parameter type
     {
-        $width = $new_width;
-        $scale = $new_scale;
+        $old_name = $old_structure['name'];
+        $old_type = $old_structure['type'];
 
-        $expr = $name;
+        $new_type = $new_structure['type'];
+        $new_width = $new_structure['width'];
+        $new_scale = $new_structure['scale'];
+
+        $expr = $old_name;
 
         // if the type is the same return the same thing; TODO: for now, ignore width changes
         if ($old_type === $new_type)
             return $expr;
 
-        $new_structure['type'] = $new_type;
-        $new_structure['width'] = $new_width;
-        $new_structure['scale'] = $new_scale;
-
         switch ($new_type)
         {
-            case 'text':
-            case 'character':
-            case 'widecharacter':
+            case self::COLUMN_TYPE_TEXT:
+            case self::COLUMN_TYPE_CHARACTER:
+            case self::COLUMN_TYPE_WIDECHARACTER:
                 if ($new_width == -1 || is_null($new_width))
                     $expr = "to_char($expr)";
                      else
-                    $expr = "substr(to_char($expr),1,$width)";
+                    $expr = "substr(to_char($expr),1,$new_width)";
                 break;
 
-            case 'numeric':
-            case 'float':
-            case 'double':
-            case 'integer':
+            case self::COLUMN_TYPE_NUMERIC:
+            case self::COLUMN_TYPE_FLOAT:
+            case self::COLUMN_TYPE_DOUBLE:
+            case self::COLUMN_TYPE_INTEGER:
                 $expr = "to_number($expr)";
                 break;
 
-            case 'date':
+            case self::COLUMN_TYPE_DATE:
                 $expr = "to_date($expr)";
                 break;
 
-            case 'timestamp':
-            case 'datetime':
+            case self::COLUMN_TYPE_TIMESTAMP:
+            case self::COLUMN_TYPE_DATETIME:
                 $expr = "to_timestamp($expr)";
                 break;
 
-            case 'boolean':
+            case self::COLUMN_TYPE_BOOLEAN:
                 {
-                    if ($old_type === 'text' || $old_type === 'character' || $old_type === 'widecharacter')
+                    if ($old_type === self::COLUMN_TYPE_TEXT || $old_type === self::COLUMN_TYPE_CHARACTER || $old_type === self::COLUMN_TYPE_WIDECHARACTER)
                         $expr = "if(lower($expr) = 'true' or lower($expr) = 't', true, false)";
-                    if ($old_type === 'numeric' || $old_type === 'float' || $old_type === 'double' || $old_type === 'integer')
+                    if ($old_type === self::COLUMN_TYPE_NUMERIC || $old_type === self::COLUMN_TYPE_FLOAT || $old_type === self::COLUMN_TYPE_DOUBLE || $old_type === self::COLUMN_TYPE_INTEGER)
                         $expr = "if($expr != 0, true, false)";
-                    if ($old_type === 'date' || $old_type === 'datetime' || $old_type === 'timestamp')
+                    if ($old_type === self::COLUMN_TYPE_DATE || $old_type === self::COLUMN_TYPE_DATETIME || $old_type === self::COLUMN_TYPE_TIMESTAMP)
                         $expr = "if(isnull($expr), true, false)";
                 }
                 break;
