@@ -172,6 +172,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($result === false)
             return;
 
+
+
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
         $contents = '';
@@ -195,10 +197,28 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!is_array($result))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
-        if (!isset($result['content']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        $url = $result['download_url'];
 
-        $callback(base64_decode($result['content']));
+
+
+
+        $contents = '';
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+            $headers[] = $data;
+            return strlen($data);
+        });
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $callback($result);
     }
 
     public function write(array $params, callable $callback)

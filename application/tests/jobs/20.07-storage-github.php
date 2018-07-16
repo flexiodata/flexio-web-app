@@ -50,6 +50,7 @@ class Test
 
             $actual = md5($actual_contents);
             $expected = md5($expected_contents);
+            
             \Flexio\Tests\Check::assertString("D.$idx", 'Read/Write; check write/read to/from ' . $filepath, $actual, $expected, $results);
         }
 
