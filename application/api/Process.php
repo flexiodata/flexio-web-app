@@ -67,6 +67,19 @@ class Process
             if ($pipe->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_EXECUTE) === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         }
+        else
+        {
+            // TODO: should we add some type of execute write to users and use
+            // that instead?
+
+            // check the rights on the owner; ability to create an object is governed
+            // currently by user write privileges
+            $owner_user = \Flexio\Object\User::load($owner_user_eid);
+            if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+        }
 
         if ($pipe !== false)
         {
