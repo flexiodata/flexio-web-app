@@ -138,7 +138,7 @@
         def: state => state.builder.def,
         task: state => state.builder.task,
         attrs: state => state.builder.attrs,
-        title: state => state.builder.def.title,
+        title: state => state.builder.def.name,
         description: state => state.builder.def.description,
         active_prompt: state => state.builder.active_prompt,
         is_fetching: state => state.builder.fetching,
@@ -173,7 +173,7 @@
       },
       save_attrs() {
         return _.assign({
-          name: _.get(this.def, 'title', 'Untitled Pipe'),
+          name: _.get(this.def, 'name', 'Untitled Pipe'),
           task: this.task,
         }, _.get(this.attrs, 'pipe', {}))
       },
@@ -184,7 +184,7 @@
         return this.getSdkOptions()
       },
       show_title() {
-        return _.get(this.def, 'title', '').length > 0 && _.get(this.def, 'ui.settings.show_title', true)
+        return _.get(this.def, 'name', '').length > 0 && _.get(this.def, 'ui.settings.show_title', true)
       },
       show_description() {
         return _.get(this.def, 'description', '').length > 0 && _.get(this.def, 'ui.settings.show_description', false)
@@ -213,7 +213,7 @@
             this.$store.commit('builder/INIT_DEF', def)
             this.$store.commit('builder/FETCHING_DEF', false)
             this.$store.track('Started Template', {
-              title: def.title
+              title: def.name
             })
           }).catch(error => {
             this.$store.commit('builder/FETCHING_DEF', false)
@@ -248,7 +248,7 @@
             var pipe = response.body
             this.$store.commit('builder/CREATE_PIPE', pipe)
             this.$store.track('Created Pipe From Template', {
-              title: this.def.title
+              title: this.def.name
             })
 
             if (run_process === true) {
@@ -271,7 +271,7 @@
             var process = response.body
             this.$store.commit('builder/CREATE_PROCESS', process)
             this.$store.track('Ran Process From Template', {
-              title: this.def.title
+              title: this.def.name
             })
           } else {
             // TODO: add error handling
