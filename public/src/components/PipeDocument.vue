@@ -25,7 +25,7 @@
             <LabelSwitch
               class="ml3"
               active-color="#13ce66"
-              v-model="is_pipe_active"
+              v-model="is_run_view"
             />
           </div>
           <el-select
@@ -33,7 +33,7 @@
             size="small"
             style="width: 10rem"
             :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1 || show_properties || show_history"
-            v-show="!is_pipe_active"
+            v-show="!is_run_view"
             v-model="editor"
           >
             <el-option
@@ -47,7 +47,7 @@
             class="ml2"
             trigger="click"
             @command="onCommand"
-            v-show="!is_pipe_active"
+            v-show="!is_run_view"
           >
             <el-button
               size="small"
@@ -70,7 +70,56 @@
       class="center mw-doc"
       v-if="is_fetched"
     >
-      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="show_properties">
+      <div
+        class="mb4 pa4 pt3 bg-white br2 css-white-box"
+        v-if="is_run_view"
+      >
+        <div class="tc">
+          <div class="dib mv3 pv1">
+            <i class="el-icon-success v-mid f1" style="color: #13ce66"></i>
+          </div>
+          <h3 class="fw6 f3 mt0 mb4">Your pipe is working.</h3>
+          <p class="mv4">Click the button below or use the following link to run your pipe in a browser.</p>
+          <div class="mv4 mw7 center">
+            <el-input
+              :readonly="true"
+              v-model="runtime_link"
+            >
+              <template slot="append">
+                <el-button
+                  class="hint--top"
+                  aria-label="Copy to Clipboard"
+                  :data-clipboard-text="runtime_link"
+                ><span class="ttu b">Copy</span></el-button>
+              </template>
+            </el-input>
+          </div>
+          <div class="mv4">
+            <el-button
+              size="large"
+              type="primary"
+              class="ttu b"
+            >
+              Run pipe
+            </el-button>
+          </div>
+          <div class="bb b--black-05 mv4"></div>
+          <div class="flex flex-row items-center justify-center">
+            <span class="ttu f6 fw6">Your pipe is</span>
+            <LabelSwitch
+              class="dib ml2"
+              active-color="#13ce66"
+              v-model="is_run_view"
+            />
+          </div>
+          <p class="moon-gray f8 i">(turn this pipe off to edit it)</p>
+        </div>
+      </div>
+
+      <div
+        class="mb4 pa4 pt3 bg-white br2 css-white-box"
+        v-if="show_properties && !is_run_view"
+      >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
           <h3 class="flex-fill mv0 fw6 f4">Properties</h3>
@@ -108,9 +157,8 @@
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
         :class="{
-          'o-40 no-pointer-events': show_properties || show_history
+          'o-40 no-pointer-events': show_properties || show_history || is_run_view
         }"
-        v-show="!is_pipe_active"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -180,9 +228,7 @@
 
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
-        :class="{
-          'o-40 no-pointer-events': show_properties || show_history
-        }"
+        v-if="!is_run_view && !show_properties && !show_history"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -212,7 +258,10 @@
         </div>
       </div>
 
-      <div class="mb4 pa4 pt3 bg-white br2 css-white-box" v-if="show_history">
+      <div
+        class="mb4 pa4 pt3 bg-white br2 css-white-box"
+        v-if="show_history && !is_run_view"
+      >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
           <h3 class="flex-fill mv0 fw6 f4">History</h3>
@@ -287,9 +336,8 @@
   const PIPE_MODE_BUILD     = 'B'
   const PIPE_MODE_RUN       = 'R'
 
-  const PIPEDOC_VIEW_PROPERTIES = 'properties'
-  const PIPEDOC_VIEW_CONFIGURE  = 'configure'
-  const PIPEDOC_VIEW_HISTORY    = 'history'
+  const PIPEDOC_VIEW_BUILD  = 'build'
+  const PIPEDOC_VIEW_RUN    = 'run'
 
   const PIPEDOC_EDITOR_SDK_JS  = 'sdk-js'
   const PIPEDOC_EDITOR_BUILDER = 'builder'
@@ -333,7 +381,7 @@
     },
     data() {
       return {
-        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_CONFIGURE),
+        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
         editor: _.get(this.$route, 'query.editor', PIPEDOC_EDITOR_BUILDER),
         editor_options: [
           { value: PIPEDOC_EDITOR_BUILDER, label: 'Visual Builder' },
@@ -371,6 +419,9 @@
       api_endpoint() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
       },
+      runtime_link() {
+        return 'https://www.flex.io/app/pipes/' + this.eid + '/run'
+      },
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
@@ -399,20 +450,20 @@
           }
         }
       },
-      is_pipe_active: {
+      is_run_view: {
         get() {
           return _.get(this.edit_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
         set() {
           var doSet = () => {
-            var pipe_mode = this.is_pipe_active ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var pipe_mode = this.is_run_view ? PIPE_MODE_BUILD : PIPE_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { pipe_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
 
-          if (this.is_pipe_active) {
+          if (this.is_run_view) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
               confirmButtonText: 'TURN PIPE OFF',
               cancelButtonText: 'CANCEL',
@@ -452,10 +503,6 @@
         'getActiveUser'
       ]),
       onViewChange(val) {
-        if (val == PIPEDOC_VIEW_HISTORY) {
-          this.fetchProcesses()
-        }
-
         this.updateRoute()
       },
       onEditorChange(val) {

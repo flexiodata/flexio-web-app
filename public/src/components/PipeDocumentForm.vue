@@ -44,7 +44,6 @@
         <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
         <template slot="append">
           <el-button
-            slot="append"
             class="hint--top"
             aria-label="Copy to Clipboard"
             :data-clipboard-text="path"
