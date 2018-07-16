@@ -9,7 +9,7 @@
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
-      <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">SDK to JSON</div>
+      <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON</div>
       <CodeEditor
         class="flex-fill"
         lang="application/json"
@@ -17,6 +17,15 @@
       />
     </div>
     <div class="flex-fill flex flex-column bl b--black-20">
+      <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">YAML</div>
+      <CodeEditor
+        class="flex-fill"
+        lang="yaml"
+        :show-json-view-toggle="false"
+        v-model="yaml_str"
+      />
+    </div>
+    <div class="flex-fill flex flex-column bl b--black-20" v-show="false">
       <div class="pa2 f7 silver ttu fw6 bb b--black-05 bg-nearer-white">JSON to SDK</div>
       <CodeEditor
         class="flex-fill"
@@ -28,6 +37,7 @@
 </template>
 
 <script>
+  import yaml from 'js-yaml'
   import Flexio from 'flexio-sdk-js'
   import utilSdkJs from '../utils/sdk-js'
   import CodeEditor from './CodeEditor.vue'
@@ -42,7 +52,7 @@
         immediate: true
       },
       json_str: {
-        handler: 'updateReverseSDK',
+        handler: 'updateOutput',
         immediate: true
       }
     },
@@ -50,6 +60,7 @@
       return {
         sdk_str: 'Flexio.pipe()\n  .request("https://httpbin.org/ip")',
         json_str: '',
+        yaml_str: '',
         reverse_sdk_str: ''
       }
     },
@@ -72,6 +83,13 @@
         {
           // TODO: add error handling
         }
+      },
+      updateOutput(json) {
+        this.updateYAML(json)
+        this.updateReverseSDK(json)
+      },
+      updateYAML(json) {
+        this.yaml_str = yaml.safeDump(JSON.parse(json))
       },
       updateReverseSDK(json) {
         try {
