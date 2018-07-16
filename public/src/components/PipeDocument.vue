@@ -460,6 +460,7 @@
       },
       onEditorChange(val) {
         this.updateRoute()
+        this.initSticky()
       },
       onCommand(cmd) {
         switch (cmd) {
