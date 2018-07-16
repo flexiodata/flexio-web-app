@@ -30,6 +30,7 @@
           </div>
           <el-select
             class="ml3"
+            size="small"
             style="width: 10rem"
             :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1 || show_properties || show_history"
             v-show="!is_pipe_active"
@@ -48,7 +49,10 @@
             @command="onCommand"
             v-show="!is_pipe_active"
           >
-            <el-button style="padding: 6px 8px">
+            <el-button
+              size="small"
+              style="padding: 2px 8px"
+            >
               <i class="material-icons">more_vert</i>
             </el-button>
             <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
