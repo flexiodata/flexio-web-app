@@ -38,9 +38,8 @@
         :show-insert-buttons="false"
         :show-edit-buttons="false"
         :show-delete-buttons="false"
-        @item-prev="goPrev"
-        @item-next="goNext"
-        @item-finish="onFinish"
+        @item-prev="onPrev"
+        @item-next="onNext"
         @item-change="updateItemState"
         @create-pipe="createPipe"
         @open-pipe="openPipe"
@@ -141,6 +140,7 @@
         attrs: state => state.builder.attrs,
         title: state => state.builder.def.title,
         description: state => state.builder.def.description,
+        active_prompt: state => state.builder.active_prompt,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         prompts: state => state.builder.prompts,
@@ -149,6 +149,7 @@
       slug() {
         return _.get(this.$route, 'params.template', undefined)
       },
+      // NOTE: this needs to be a computed value with a getter/setter since we're using '.sync'
       active_prompt_idx: {
         get() {
           return this.$store.state.builder.active_prompt_idx
@@ -222,58 +223,60 @@
       updateTask() {
         this.$store.commit('builder/UPDATE_TASK')
       },
-      goPrev() {
+      onPrev() {
         this.$store.commit('builder/GO_PREV_ITEM')
       },
-      goNext() {
+      onNext() {
+        var actions = _.get(this.active_prompt, 'next_button.actions', [])
+        var create_pipe = actions.indexOf('create_pipe') != -1
+        var run_process = actions.indexOf('run_process') != -1
+
+        if (create_pipe) {
+          this.createPipe(run_process)
+        } else if (run_process) {
+          this.runProcess(this.save_attrs)
+        } else if (actions.indexOf('open_pipe') != -1) {
+          this.openPipe()
+        }
+
         this.$store.commit('builder/GO_NEXT_ITEM')
       },
-      onFinish() {
-        if (_.get(this.def, 'ui.settings.create_pipe', true)) {
-          this.createPipe()
-        } else {
-          var attrs = this.save_attrs
-          this.tryRunProcess(attrs)
-        }
-      },
-      createPipe() {
+      createPipe(run_process) {
         var attrs = this.save_attrs
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok) {
             var pipe = response.body
             this.$store.commit('builder/CREATE_PIPE', pipe)
-            this.$store.track('Finished Template', {
+            this.$store.track('Created Pipe From Template', {
               title: this.def.title
             })
 
-            this.$nextTick(() => {
-              this.tryRunProcess(attrs, pipe.eid)
-            })
+            if (run_process === true) {
+              this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
+            }
           } else {
             // TODO: add error handling
           }
         })
       },
-      tryRunProcess(attrs, parent_eid) {
-        if (_.get(this.def, 'ui.settings.run_process', true)) {
-          _.assign(attrs, {
-            parent_eid,
-            process_mode: PROCESS_MODE_BUILD,
-            run: true // this will automatically run the process and start polling the process
-          })
+      runProcess(attrs, parent_eid) {
+        _.assign(attrs, {
+          parent_eid,
+          process_mode: PROCESS_MODE_BUILD,
+          run: true // this will automatically run the process and start polling the process
+        })
 
-          this.$store.dispatch('createProcess', { attrs }).then(response => {
-            if (response.ok) {
-              var process = response.body
-              var process_eid = process.eid
-
-              this.$store.commit('builder/ADD_RESULT_PROMPT', { process_eid })
-              this.$store.commit('builder/GO_NEXT_ITEM')
-            } else {
-              // TODO: add error handling
-            }
-          })
-        }
+        this.$store.dispatch('createProcess', { attrs }).then(response => {
+          if (response.ok) {
+            var process = response.body
+            this.$store.commit('builder/CREATE_PROCESS', process)
+            this.$store.track('Ran Process From Template', {
+              title: this.def.title
+            })
+          } else {
+            // TODO: add error handling
+          }
+        })
       },
       openPipe() {
         var eid = this.pipe.eid
