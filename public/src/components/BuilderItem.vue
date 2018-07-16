@@ -172,31 +172,23 @@
       </div>
       <div
         class="flex-none mt4 flex flex-row justify-end"
-        v-if="builder__is_wizard && is_active"
+        v-if="builder__is_wizard && is_active && show_buttons"
       >
         <el-button
           class="ttu b"
           @click="onPrevClick"
-          v-show="!is_first && !is_last"
+          v-show="(!is_first && !is_last) || show_back_button"
         >
-          Back
+          {{back_btn_label}}
         </el-button>
         <el-button
           class="ttu b"
           type="primary"
           :disabled="!is_next_allowed"
           @click="onNextClick"
-          v-if="!is_last"
+          v-if="!is_last || show_next_button"
         >
-          Next
-        </el-button>
-        <el-button
-          class="ttu b"
-          type="primary"
-          @click="onFinishClick"
-          v-if="is_last"
-        >
-          Run
+          {{next_btn_label}}
         </el-button>
       </div>
       <div
@@ -319,6 +311,21 @@
       is_insert_allowed() {
         return !this.builder__is_editing
       },
+      back_btn_label() {
+        return _.get(this.item, 'back_button.label', 'Back')
+      },
+      next_btn_label() {
+        return _.get(this.item, 'next_button.label', 'Next')
+      },
+      show_back_button() {
+        return _.get(this.item, 'back_button.show', false)
+      },
+      show_next_button() {
+        return _.get(this.item, 'next_button.show', false)
+      },
+      show_buttons() {
+        return _.get(this.item, 'show_buttons', true)
+      },
       show_save_button() {
         return this.item.element != 'task-chooser'
       },
@@ -374,9 +381,6 @@
       },
       onNextClick() {
         this.$emit('item-next', this.index)
-      },
-      onFinishClick() {
-        this.$emit('item-finish', this.index)
       },
       onCancelClick() {
         this.$emit('item-cancel', this.index)

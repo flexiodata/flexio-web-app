@@ -6,6 +6,7 @@ const state = {
   def: {},
   task: {},
   pipe: {},
+  process: {},
   prompts: [],
   attrs: {},
   active_prompt: {},
@@ -203,7 +204,6 @@ const mutations = {
       task_str = task_str.replace(regex, JSON.stringify(val))
     })
 
-    console.log(task_str)
     try {
       state.task = _.assign({}, JSON.parse(task_str))
     }
@@ -219,6 +219,33 @@ const mutations = {
 
   CREATE_PIPE (state, attrs) {
     state.pipe = attrs
+  },
+
+  CREATE_PROCESS (state, attrs) {
+    state.process = attrs
+
+    var prompts = [].concat(state.prompts)
+    var result_step = _.find(prompts, { element: 'result' })
+    var result_step_idx = _.findIndex(prompts, { element: 'result' })
+
+    // assign the process to the result step
+    var new_result_step = _.cloneDeep(result_step)
+    new_result_step = _.assign({
+      element: 'result',
+      id: _.uniqueId('prompt-')
+    }, new_result_step, { process_eid: attrs.eid })
+
+    if (result_step_idx == -1) {
+      // insert the result step
+      debugger
+      prompts.splice(state.active_prompt_idx, 0, new_result_step)
+    } else {
+      // replace the existing result step
+      debugger
+      prompts.splice(result_step_idx, 1, new_result_step)
+    }
+
+    state.prompts = prompts
   },
 
   GO_PREV_ITEM (state) {
