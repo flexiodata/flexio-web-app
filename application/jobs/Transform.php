@@ -726,10 +726,40 @@ class Transform extends \Flexio\Jobs\Base
             case self::COLUMN_TYPE_TEXT:
             case self::COLUMN_TYPE_CHARACTER:
             case self::COLUMN_TYPE_WIDECHARACTER:
-                if ($new_width == -1 || is_null($new_width))
-                    $expr = "to_char($expr)";
-                     else
-                    $expr = "substr(to_char($expr),1,$new_width)";
+                {
+                    // if we're converting from a numeric, format the the numeric
+                    // string using the to_char() format string format (leave
+                    // float, double, and integer as-is)
+                    $format = '';
+                    if ($old_type === self::COLUMN_TYPE_NUMERIC
+                        // || $old_type === self::COLUMN_TYPE_FLOAT
+                        // || $old_type === self::COLUMN_TYPE_DOUBLE
+                        // || $old_type === self::COLUMN_TYPE_INTEGER
+                        )
+                    {
+                        // build up a format string
+                        $integer_width = $new_width - $new_scale;
+                        $fractional_width = $new_scale;
+
+                        $format .= ',';
+                        $format .= "'";
+                        $format .= "FM"; // trim leading spaces when printing out number
+                        $format .= str_repeat('9',max($integer_width-1,0)); // if we're in the tens place greater, include non-zero numbers
+                        $format .= "0"; // if we're in the ones place, include any number including zero
+                        if ($new_scale > 0)
+                        {
+                            $format .= ".";
+                            $format .= str_repeat('0',$fractional_width); // if we have a decimal part, include any number including zero
+                        }
+                        $format .= "'";
+                    }
+
+                    // create the expression
+                    if ($new_width == -1 || is_null($new_width))
+                        $expr = "to_char($expr$format)";
+                        else
+                        $expr = "substr(to_char($expr$format),1,$new_width)";
+                }
                 break;
 
             case self::COLUMN_TYPE_NUMERIC:
