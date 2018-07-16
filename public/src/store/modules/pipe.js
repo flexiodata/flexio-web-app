@@ -61,22 +61,6 @@ const mutations = {
 
     state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
     state.edit_code = Flexio.pipe(_.get(pipe, 'task', {})).toCode()
-  },
-
-  UPDATE_CODE (state, code) {
-    state.edit_code = code
-
-    try {
-      // get the pipe task JSON
-      var task = utilSdkJs.getTaskJSON(code)
-
-      state.edit_pipe = _.assign({}, state.edit_pipe, { task })
-      state.syntax_error = ''
-    }
-    catch(e)
-    {
-      state.syntax_error = e.message
-    }
   }
 }
 

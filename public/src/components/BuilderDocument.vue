@@ -38,9 +38,8 @@
         :show-insert-buttons="false"
         :show-edit-buttons="false"
         :show-delete-buttons="false"
-        @item-prev="goPrev"
-        @item-next="goNext"
-        @item-finish="onFinish"
+        @item-prev="onPrev"
+        @item-next="onNext"
         @item-change="updateItemState"
         @create-pipe="createPipe"
         @open-pipe="openPipe"
@@ -60,7 +59,7 @@
             lineNumbers: false,
             readOnly: true
           }"
-          v-model="code"
+          v-model="task_str"
         />
       </div>
     </div>
@@ -72,6 +71,7 @@
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_PIPES } from '../constants/route'
+  import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
@@ -120,7 +120,7 @@
         deep: true
       },
       active_prompt_idx: {
-        handler: 'updateCode',
+        handler: 'updateTask',
         immediate: true
       },
       is_fetched: {
@@ -136,9 +136,11 @@
     computed: {
       ...mapState({
         def: state => state.builder.def,
+        task: state => state.builder.task,
         attrs: state => state.builder.attrs,
         title: state => state.builder.def.title,
         description: state => state.builder.def.description,
+        active_prompt: state => state.builder.active_prompt,
         is_fetching: state => state.builder.fetching,
         is_fetched: state => state.builder.fetched,
         prompts: state => state.builder.prompts,
@@ -147,6 +149,7 @@
       slug() {
         return _.get(this.$route, 'params.template', undefined)
       },
+      // NOTE: this needs to be a computed value with a getter/setter since we're using '.sync'
       active_prompt_idx: {
         get() {
           return this.$store.state.builder.active_prompt_idx
@@ -155,12 +158,14 @@
           // read only
         }
       },
-      pipe_language() {
-        return this.def.pipe_language || 'javascript'
-      },
-      code: {
+      task_str: {
         get() {
-          return this.$store.state.builder.code
+          try {
+            return JSON.stringify(this.task, null, 2)
+          }
+          catch (e) {
+            return ''
+          }
         },
         set(value) {
           // read only
@@ -168,23 +173,9 @@
       },
       save_attrs() {
         return _.assign({
-          name: _.get(this.def, 'title', 'Untitled Pipe')
+          name: _.get(this.def, 'title', 'Untitled Pipe'),
+          task: this.task,
         }, _.get(this.attrs, 'pipe', {}))
-      },
-      save_code() {
-        if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
-          var save_attrs_str = JSON.stringify(this.save_attrs)
-          return this.code + '.save(' + save_attrs_str + ', callback)'
-        } else {
-          try {
-            return _.assign({}, this.save_attrs, {
-              task: JSON.parse(this.code)
-            })
-          }
-          catch (e) {
-            return false
-          }
-        }
       },
       api_key() {
         return this.getSdkKey()
@@ -229,48 +220,63 @@
           })
         }
       },
-      updateCode() {
-        this.$store.commit('builder/UPDATE_CODE')
+      updateTask() {
+        this.$store.commit('builder/UPDATE_TASK')
       },
-      goPrev() {
+      onPrev() {
         this.$store.commit('builder/GO_PREV_ITEM')
       },
-      goNext() {
+      onNext() {
+        var actions = _.get(this.active_prompt, 'next_button.actions', [])
+        var create_pipe = actions.indexOf('create_pipe') != -1
+        var run_process = actions.indexOf('run_process') != -1
+
+        if (create_pipe) {
+          this.createPipe(run_process)
+        } else if (run_process) {
+          this.runProcess(this.save_attrs)
+        } else if (actions.indexOf('open_pipe') != -1) {
+          this.openPipe()
+        }
+
         this.$store.commit('builder/GO_NEXT_ITEM')
       },
-      onFinish() {
-        this.createPipe()
-      },
-      createPipe() {
-        if (this.pipe_language == 'javascript' || this.pipe_language == 'sdk-js') {
-          var pipe_fn = (Flexio, callback) => {
-            eval(this.save_code)
-          }
-
-          Flexio.setup(this.api_key, this.sdk_options)
-
-          pipe_fn.call(this, Flexio, (err, response) => {
-            // TODO: error reporting?
-            var pipe = response
+      createPipe(run_process) {
+        var attrs = this.save_attrs
+        this.$store.dispatch('createPipe', { attrs }).then(response => {
+          if (response.ok) {
+            var pipe = response.body
             this.$store.commit('builder/CREATE_PIPE', pipe)
-            this.$store.track('Finished Template', {
+            this.$store.track('Created Pipe From Template', {
               title: this.def.title
             })
-          })
-        } else {
-          var attrs = this.save_code
-          this.$store.dispatch('createPipe', { attrs }).then(response => {
-            if (response.ok) {
-              var pipe = response.body
-              this.$store.commit('builder/CREATE_PIPE', pipe)
-              this.$store.track('Finished Template', {
-                title: this.def.title
-              })
-            } else {
-              // TODO: add error handling
+
+            if (run_process === true) {
+              this.$nextTick(() => { this.runProcess(attrs, pipe.eid) })
             }
-          })
-        }
+          } else {
+            // TODO: add error handling
+          }
+        })
+      },
+      runProcess(attrs, parent_eid) {
+        _.assign(attrs, {
+          parent_eid,
+          process_mode: PROCESS_MODE_BUILD,
+          run: true // this will automatically run the process and start polling the process
+        })
+
+        this.$store.dispatch('createProcess', { attrs }).then(response => {
+          if (response.ok) {
+            var process = response.body
+            this.$store.commit('builder/CREATE_PROCESS', process)
+            this.$store.track('Ran Process From Template', {
+              title: this.def.title
+            })
+          } else {
+            // TODO: add error handling
+          }
+        })
       },
       openPipe() {
         var eid = this.pipe.eid
@@ -278,7 +284,7 @@
       },
       updateItemState(values, index) {
         this.$store.commit('builder/UPDATE_ATTRS', values)
-        this.$store.commit('builder/UPDATE_CODE')
+        this.$store.commit('builder/UPDATE_TASK')
       },
       initFromDefiniton() {
         this.$store.commit('builder/INIT_DEF', this.definition)

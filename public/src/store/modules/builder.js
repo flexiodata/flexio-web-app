@@ -4,8 +4,9 @@ const VFS_TYPE_DIR = 'DIR'
 
 const state = {
   def: {},
-  code: '',
+  task: {},
   pipe: {},
+  process: {},
   prompts: [],
   attrs: {},
   active_prompt: {},
@@ -29,9 +30,7 @@ const mutations = {
     state.def = def
     state.fetched = true
 
-    var code = _.get(def, 'task', {})
-    state.code = JSON.stringify(code, null, 2)
-
+    // get prompts from definition
     var prompts = _.get(def, 'ui.prompts', [])
 
     // replace name element with form element
@@ -60,6 +59,7 @@ const mutations = {
       }
     }
 
+    // optionally show the summary prompt
     if (_.get(def, 'ui.settings.show_summary') !== false) {
       // include the summary item at the end
       var existing_summary = _.find(prompts, { element: 'summary' })
@@ -68,6 +68,7 @@ const mutations = {
       }
     }
 
+    // map prompt objects
     state.prompts = _.map(prompts, p => {
       // necessary for scrollTo
       _.assign(p, { id: _.uniqueId('prompt-') })
@@ -96,6 +97,21 @@ const mutations = {
       return p
     })
 
+    // reset task object
+    try {
+
+      var task = _.get(def, 'task', {})
+      task = _.cloneDeep(task)
+      state.task = _.assign({}, task)
+    }
+    catch (e) {
+
+    }
+
+    // reset attributes
+    state.attrs = {}
+
+    // reset active prompt
     state.active_prompt_idx = 0
     state.active_prompt = _.get(state.prompts, '['+state.active_prompt_idx+']', {})
   },
@@ -124,8 +140,9 @@ const mutations = {
     })
   },
 
-  UPDATE_CODE (state) {
-    var code = _.get(state.def, 'task', '')
+  UPDATE_TASK (state) {
+    var task = _.get(state.def, 'task', {})
+    var task_str = JSON.stringify(task, null, 2)
 
     _.each(state.prompts, (p, idx) => {
       var regex = new RegExp("\"?\\$\\{" + p.variable + "\\}\"?", "g")
@@ -143,7 +160,7 @@ const mutations = {
             var connection = _.get(root_state, 'objects[' + eid + ']', null)
             var identifier = _.get(connection, 'alias', '') || _.get(connection, 'eid', '')
             */
-            code = code.replace(regex, JSON.stringify(identifier))
+            task_str = task_str.replace(regex, JSON.stringify(identifier))
           }
           break
 
@@ -177,21 +194,58 @@ const mutations = {
             paths = _.get(paths, '[0]', '')
           }
 
-          code = code.replace(regex, JSON.stringify(paths))
+          task_str = task_str.replace(regex, JSON.stringify(paths))
           break
       }
     })
 
     _.each(state.attrs, (val, key) => {
       var regex = new RegExp("\\$\\{" + key + "\\}", "g")
-      code = code.replace(regex, JSON.stringify(val))
+      task_str = task_str.replace(regex, JSON.stringify(val))
     })
 
-    state.code = code
+    try {
+      state.task = _.assign({}, JSON.parse(task_str))
+    }
+    catch (e) {
+
+    }
+  },
+
+  ADD_RESULT_PROMPT (state, attrs) {
+    var prompt = _.assign({ element: 'result' }, attrs)
+    state.prompts = [].concat(state.prompts, [prompt])
   },
 
   CREATE_PIPE (state, attrs) {
     state.pipe = attrs
+  },
+
+  CREATE_PROCESS (state, attrs) {
+    state.process = attrs
+
+    var prompts = [].concat(state.prompts)
+    var result_step = _.find(prompts, { element: 'result' })
+    var result_step_idx = _.findIndex(prompts, { element: 'result' })
+
+    // assign the process to the result step
+    var new_result_step = _.cloneDeep(result_step)
+    new_result_step = _.assign({
+      element: 'result',
+      id: _.uniqueId('prompt-')
+    }, new_result_step, { process_eid: attrs.eid })
+
+    if (result_step_idx == -1) {
+      // insert the result step
+      debugger
+      prompts.splice(state.active_prompt_idx, 0, new_result_step)
+    } else {
+      // replace the existing result step
+      debugger
+      prompts.splice(result_step_idx, 1, new_result_step)
+    }
+
+    state.prompts = prompts
   },
 
   GO_PREV_ITEM (state) {

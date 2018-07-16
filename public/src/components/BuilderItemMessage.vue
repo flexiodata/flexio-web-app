@@ -21,17 +21,11 @@
         />
       </template>
     </div>
-    <h1
-      class="fw4 mt0"
-      v-if="item.title && index == 0"
-    >
-      {{item.title}}
-    </h1>
     <h3
       class="fw6 f3 mt0"
-      v-else-if="item.title"
+      v-if="title.length > 0"
     >
-      {{item.title}}
+      {{title}}
     </h3>
     <div
       class="marked"
@@ -75,6 +69,9 @@
       },
       is_before_active() {
         return this.index < this.activeItemIdx
+      },
+      title() {
+        return _.get(this.item, 'title', '')
       },
       description() {
         return marked(_.get(this.item, 'description', ''))

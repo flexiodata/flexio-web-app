@@ -451,14 +451,14 @@ class Test
                 "op" => "create",
                 "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
                 "columns" => [
-                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 0]
+                    ["name" => "f", "type" => "numeric", "width" => 10, "scale" => 2]
                 ],
                 "content" => [
-                    ["1"],
+                    ["1.23"],
                     [null],
-                    ["0"],
-                    ["-1"],
-                    ["987"]
+                    ["0.00"],
+                    ["-1.00"],
+                    ["987.60"]
                 ]
             ],
             [
@@ -918,10 +918,10 @@ class Test
         		{"name":"f","type":"character"}
         	],
         	"content": [
-        		{"f": "1"},
+        		{"f": "1.00"},
         		{"f": null},
-        		{"f": "2"},
-        		{"f": "123"}
+        		{"f": "2.00"},
+        		{"f": "123.00"}
         	]
         }
         ';
