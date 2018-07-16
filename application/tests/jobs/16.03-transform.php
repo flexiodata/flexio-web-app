@@ -423,7 +423,7 @@ class Test
                 "op" => "create",
                 "content_type" => \Flexio\Base\ContentType::FLEXIO_TABLE,
                 "columns" => [
-                    ["name" => "f", "type" => "date", "width" => 8, "scale" => 0]
+                    ["name" => "f", "type" => "datetime", "width" => 8, "scale" => 0]
                 ],
                 "content" => [
                     ["2001-02-03 00:00:00"],
