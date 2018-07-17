@@ -52,15 +52,6 @@ const mutations = {
 
     state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
     state.edit_code = Flexio.pipe(task).toCode()
-  },
-
-  // task: { index, attrs }
-  UPDATE_EDIT_TASK (state, task) {
-    var pipe = _.pick(pipe, state.edit_keys)
-    _.set(pipe, 'task.items['+ task.index + ']', task.attrs)
-
-    state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
-    state.edit_code = Flexio.pipe(_.get(pipe, 'task', {})).toCode()
   }
 }
 
