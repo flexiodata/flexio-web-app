@@ -54,6 +54,47 @@
           </el-form>
         </div>
       </div>
+      <div class="br2 bg-near-white mt3 pa3" v-if="is_github && is_connected">
+        <div class="w-60-ns center">
+          <el-form
+            ref="form"
+            class="flex flex-column el-form--compact el-form__label-tiny"
+            label-position="top"
+            :model="cinfo"
+            :rules="rules"
+          >
+            <p>What GitHub owner and repository would you like to use?</p>
+
+            <!-- github -->
+            <el-form-item
+              label="Owner"
+              key="owner"
+              prop="owner"
+              :class="getClass('owner')"
+              v-if="showInput('owner')"
+            >
+              <el-input
+                placeholder="Owner"
+                spellcheck="false"
+                v-model="cinfo.owner"
+              />
+            </el-form-item>
+            <el-form-item
+              label="Repository"
+              key="repository"
+              prop="repository"
+              :class="getClass('repository')"
+              v-if="showInput('repository')"
+            >
+              <el-input
+                placeholder="Repository"
+                spellcheck="false"
+                v-model="cinfo.repository"
+              />
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
     </div>
     <div v-else>
       <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
@@ -387,6 +428,10 @@
       bucket: '',
       region: '',
 
+      // github
+      owner: '',
+      repository: '',
+
       // smtp
       email: '',
       security: 'ssl'
@@ -482,6 +527,9 @@
       is_google_cloud_storage() {
         return this.ctype == ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE
       },
+      is_github() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
+      },
       is_oauth() {
         switch (this.ctype)
         {
@@ -499,6 +547,10 @@
       key_values() {
         if (this.is_google_cloud_storage) {
           return ['bucket']
+        }
+
+        if (this.is_github) {
+          return ['owner', 'repository']
         }
 
         if (this.is_oauth) {
