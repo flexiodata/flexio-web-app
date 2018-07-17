@@ -181,8 +181,9 @@
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
         :class="{
-          'o-40 no-pointer-events': show_properties || show_history || is_pipe_mode_run
+          'o-40 no-pointer-events': show_properties || show_history
         }"
+        v-show="!is_pipe_mode_run"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -220,9 +221,21 @@
             ref="code-editor"
             :type="editor"
             :options="{ minRows: 12, maxRows: 30 }"
+            :task-only="true"
             :has-errors.sync="has_errors"
             @save="saveChanges"
             v-model="edit_task_list"
+            v-if="editor == 'sdk-js'"
+          />
+          <PipeCodeEditor
+            ref="code-editor"
+            :type="editor"
+            :options="{ minRows: 12, maxRows: 30 }"
+            :task-only="false"
+            :has-errors.sync="has_errors"
+            @save="saveChanges"
+            v-model="edit_pipe"
+            v-else
           />
           <transition name="el-zoom-in-top">
             <div class="flex flex-row items-center justify-end mt3" v-if="show_save_cancel">
@@ -428,7 +441,6 @@
     computed: {
       ...mapState({
         orig_pipe: state => state.pipe.orig_pipe,
-        edit_pipe: state => state.pipe.edit_pipe,
         edit_keys: state => state.pipe.edit_keys,
         is_fetching: state => state.pipe.fetching,
         is_fetched: state => state.pipe.fetched
@@ -457,6 +469,22 @@
       store_pipe() {
         return this.getStorePipe()
       },
+      edit_pipe: {
+        get() {
+          var pipe = _.get(this.$store.state.pipe, 'edit_pipe', {})
+          return pipe
+        },
+        set(value) {
+          try {
+            var pipe = _.cloneDeep(value)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
+        }
+      },
       edit_task_list: {
         get() {
           var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
@@ -468,7 +496,6 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            // TODO: add clear error handling
           }
           catch(e)
           {
@@ -484,7 +511,7 @@
       // if we're in build mode, but `pipe_mode == 'R'`
       is_pipe_mode_run: {
         get() {
-          return _.get(this.edit_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
         set() {
           var doSet = () => {

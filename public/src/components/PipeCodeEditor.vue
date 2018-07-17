@@ -44,6 +44,10 @@
         type: String,
         default: 'sdk-js' // 'sdk-js', 'json', 'yaml'
       },
+      taskOnly: {
+        type: Boolean,
+        default: true
+      },
       hasErrors: {
         type: Boolean,
         required: true
@@ -149,7 +153,9 @@
 
         this.is_editing = true
 
+        var obj = null
         var task = null
+        var pipe = null
 
         switch (this.type) {
           case 'json':
@@ -157,10 +163,10 @@
             try {
               if (this.lang == 'yaml') {
                 // YAML view
-                task = yaml.safeLoad(this.edit_code)
+                obj = yaml.safeLoad(this.edit_code)
               } else {
                 // JSON view
-                task = JSON.parse(this.edit_code)
+                obj = JSON.parse(this.edit_code)
               }
 
               this.error_msg = ''
@@ -174,7 +180,7 @@
           case 'sdk-js':
             try {
               // get the pipe task JSON
-              task = utilSdkJs.getTaskJSON(this.edit_code)
+              obj = utilSdkJs.getTaskJSON(this.edit_code)
               this.error_msg = ''
             }
             catch(e)
@@ -184,28 +190,40 @@
             break
         }
 
-        if (_.isNil(task)) {
-          this.$emit('input', { op: 'sequence', items: [] })
-          return
-        }
+        if (this.taskOnly) {
+          // we're only dealing with the task JSON
+          task = _.cloneDeep(obj)
 
-        try {
-          if (_.isNil(task.op)) {
-            throw({ message: 'Pipes must have an `op` node' })
-          } else if (task.op != 'sequence') {
-            throw({ message: 'The `op` node must be "sequence"' })
-          } else if (_.isNil(task.items)) {
-            throw({ message: 'Pipes must have an `items` node' })
-          } else if (!_.isArray(task.items)) {
-            throw({ message: 'The `items` node must be an array' })
+          if (_.isNil(task)) {
+            this.$emit('input', { op: 'sequence', items: [] })
+            return
           }
 
-          this.$emit('input', { op: 'sequence', items: task.items })
-          this.error_msg = ''
-        }
-        catch (e) {
-          this.$emit('input', { op: 'sequence', items: [] })
-          this.error_msg = e.message
+          try {
+            if (_.isNil(task.op)) {
+              throw({ message: 'Pipes must have an `op` node' })
+            } else if (task.op != 'sequence') {
+              throw({ message: 'The `op` node must be "sequence"' })
+            } else if (_.isNil(task.items)) {
+              throw({ message: 'Pipes must have an `items` node' })
+            } else if (!_.isArray(task.items)) {
+              throw({ message: 'The `items` node must be an array' })
+            }
+
+            this.$emit('input', { op: 'sequence', items: task.items })
+            this.error_msg = ''
+          }
+          catch (e) {
+            this.$emit('input', { op: 'sequence', items: [] })
+            this.error_msg = e.message
+          }
+        } else {
+          // we're dealing with the full pipe JSON
+          pipe = _.cloneDeep(obj)
+
+          // TODO: add try/catch error checking here
+
+          this.$emit('input', pipe)
         }
       }
     }
