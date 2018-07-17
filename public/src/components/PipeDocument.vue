@@ -122,6 +122,7 @@
               size="large"
               type="primary"
               class="ttu b"
+              @click="openPipeNewWindow"
             >
               Run pipe
             </el-button>
@@ -445,7 +446,7 @@
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
       },
       runtime_link() {
-        return 'https://www.flex.io/app/pipes/' + this.eid + '/run'
+        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
@@ -617,6 +618,9 @@
             this.$nextTick(() => { this.is_running = false })
           }
         })
+      },
+      openPipeNewWindow() {
+        window.open(this.runtime_link, '_blank')
       },
       updatePipeSchedule(attrs) {
         attrs = _.pick(attrs, ['schedule', 'schedule_status'])
