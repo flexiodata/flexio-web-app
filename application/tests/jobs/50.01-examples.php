@@ -111,7 +111,7 @@ class Test
             ],
             [
                 "op" => "filter",
-                "where" => "strpart(birthday, \"\/\", 1) = \"1980\""
+                "where" => "strpart(birthday, \"/\", 1) = \"1980\""
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
