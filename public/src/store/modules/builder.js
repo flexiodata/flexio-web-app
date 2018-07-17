@@ -206,7 +206,7 @@ const mutations = {
     })
 
     _.each(state.attrs, (val, key) => {
-      var regex = new RegExp("\\$\\{" + key + "\\}", "g")
+      var regex = new RegExp("\"?\\$\\{" + key + "\\}\"?", "g")
       task_str = task_str.replace(regex, JSON.stringify(val))
     })
 
@@ -214,7 +214,7 @@ const mutations = {
       state.task = _.assign({}, JSON.parse(task_str))
     }
     catch (e) {
-
+      console.log(e)
     }
   },
 

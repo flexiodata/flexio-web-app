@@ -47,7 +47,7 @@
 
       <div
         class="fixed z-8 dn db-l ml4 pa3 bg-white br2 css-white-box css-output"
-        v-if="false"
+        v-if="true"
       >
         <div class="flex-none pb2 mb2 bb b--black-10">
           <div class="fw6">Output</div>
@@ -85,20 +85,27 @@
     //def.ui.prompts = _.filter(def.ui.prompts, { element: 'form' })
 
     // builder up mock task array for variable replacement
-    var task_arr = [ "op: sequence\nitems:" ]
+    var task_obj = {
+      op: 'sequence',
+      items: []
+    }
+
     var buildPipeCode = (arr) => {
       _.each(arr, p => {
         if (p.element == 'form') {
           buildPipeCode(p.form_items)
         } else if (p.variable) {
-          var echo_str = "- op: echo\n    msg: '" + p.variable + ": ${" + p.variable + "}'"
-          task_arr.push(echo_str)
+          var echo_obj = {
+             op: 'echo',
+             msg: p.variable + ': ${' + p.variable + '}'
+          }
+          task_obj.items.push(echo_obj)
         }
       })
     }
     buildPipeCode(def.ui.prompts)
 
-    def.task = task_arr.join('\n  ')
+    def.task = task_obj
     return def
   }
 
