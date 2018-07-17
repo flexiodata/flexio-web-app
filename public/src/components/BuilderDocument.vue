@@ -70,33 +70,37 @@
   import axios from 'axios'
   import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
-  import { ROUTE_PIPES } from '../constants/route'
+  import { ROUTE_BUILDER, ROUTE_PIPES } from '../constants/route'
   import { PROCESS_MODE_BUILD } from '../constants/process'
   import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
   import BuilderList from './BuilderList.vue'
   import CodeEditor from './CodeEditor.vue'
-
   import test_def from '../data/builder/test-def.yml'
-  // easy way to get rid of a bunch of elements for quick testing
-  //test_def.prompts = _.filter(test_def.prompts, { element: 'form' })
 
-  var pipe_arr = [ "op: sequence\nitems:" ]
+  const buildTestDefinition = () => {
+    var def = _.cloneDeep(test_def)
 
-  var buildPipeCode = (arr) => {
-    _.each(arr, p => {
-      if (p.element == 'form') {
-        buildPipeCode(p.form_items)
-      } else if (p.variable) {
-        var echo_str = "- op: echo\n    msg: '" + p.variable + ": ${" + p.variable + "}'"
-        pipe_arr.push(echo_str)
-      }
-    })
+    // easy way to get rid of a bunch of elements for quick testing
+    //def.prompts = _.filter(def.prompts, { element: 'form' })
+
+    // builder up mock task array for variable replacement
+    var task_arr = [ "op: sequence\nitems:" ]
+    var buildPipeCode = (arr) => {
+      _.each(arr, p => {
+        if (p.element == 'form') {
+          buildPipeCode(p.form_items)
+        } else if (p.variable) {
+          var echo_str = "- op: echo\n    msg: '" + p.variable + ": ${" + p.variable + "}'"
+          task_arr.push(echo_str)
+        }
+      })
+    }
+    buildPipeCode(def.ui.prompts)
+
+    def.task = task_arr.join('\n  ')
+    return def
   }
-
-  buildPipeCode(test_def.ui.prompts)
-
-  test_def.task = pipe_arr.join('\n  ')
 
   export default {
     props: {
@@ -146,8 +150,15 @@
         prompts: state => state.builder.prompts,
         pipe: state => state.builder.pipe
       }),
+      is_builder_document() {
+        return this.$route.name == ROUTE_BUILDER
+      },
       slug() {
-        return _.get(this.$route, 'params.template', undefined)
+        if (this.is_builder_document) {
+          return undefined
+        } else {
+          return _.get(this.$route, 'params.template', undefined)
+        }
       },
       // NOTE: this needs to be a computed value with a getter/setter since we're using '.sync'
       active_prompt_idx: {
@@ -174,6 +185,8 @@
       save_attrs() {
         return _.assign({
           name: _.get(this.def, 'name', 'Untitled Pipe'),
+          description: _.get(this.def, 'description', ''),
+          ui: _.get(this.def, 'ui', {}),
           task: this.task,
         }, _.get(this.attrs, 'pipe', {}))
       },
@@ -204,11 +217,12 @@
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else if (this.slug == 'test') {
-          this.$store.commit('builder/INIT_DEF', test_def)
+          this.$store.commit('builder/INIT_DEF', buildTestDefinition())
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else {
-          axios.get('/def/templates/' + this.slug + '.json').then(response => {
+          var template_url = '/def/templates/' + this.slug + '.json'
+          axios.get(template_url).then(response => {
             var def = response.data
             this.$store.commit('builder/INIT_DEF', def)
             this.$store.commit('builder/FETCHING_DEF', false)
@@ -231,7 +245,8 @@
         var create_pipe = actions.indexOf('create_pipe') != -1
         var run_process = actions.indexOf('run_process') != -1
 
-        if (create_pipe) {
+        // only create pipes in builder document
+        if (create_pipe && this.is_builder_document) {
           this.createPipe(run_process)
         } else if (run_process) {
           this.runProcess(this.save_attrs)

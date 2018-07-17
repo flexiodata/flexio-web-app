@@ -1,21 +1,47 @@
 <template>
+  <!-- Spinner -->
+  <div
+    class="bg-nearer-white"
+    v-if="is_fetching"
+  >
+    <div class="h-100 flex flex-row items-center justify-center">
+      <Spinner size="large" message="Loading..." />
+    </div>
+  </div>
+
+  <!-- runtime view for pipe's still in build mode -->
+  <div
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    v-else-if="is_fetched && is_runtime_view && !is_pipe_mode_run"
+  >
+    <div class="mv5 center mw-doc">
+      <div class="pv4 bg-white br2 css-white-box">
+        <div class="tc">
+          <div class="dib mb3 pv1">
+            <i class="el-icon-warning v-mid f1" style="color: #ec7713"></i>
+          </div>
+          <h3 class="fw6 f3 mt0 mb4">This pipe cannot be run in a browser.</h3>
+          <p class="center lh-copy mv4 mw7">If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BuilderDocument -->
+  <BuilderDocument
+    v-else-if="is_fetched && is_runtime_view && is_pipe_mode_run"
+    :definition="edit_pipe"
+  />
+
+  <!-- PipeDocument -->
   <div
     class="bg-nearer-white ph4 overflow-y-scroll relative"
     style="padding-bottom: 8rem"
     :id="doc_id"
+    v-else-if="is_fetched && !is_runtime_view"
   >
-    <div
-      class="h-100 flex flex-row items-center justify-center"
-      v-if="is_fetching"
-    >
-      <Spinner size="large" message="Loading..." />
-    </div>
-
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-    <div
-      class="mt4 mb2 nl4 nr4 relative z-7 bg-nearer-white sticky"
-      v-if="is_fetched"
-    >
+    <div class="mt4 mb2 nl4 nr4 relative z-7 bg-nearer-white sticky">
       <div class="ph4">
         <div class="flex flex-row items-center center mw-doc">
           <div class="flex-fill flex flex-row items-center pv3">
@@ -25,7 +51,7 @@
             <LabelSwitch
               class="ml3"
               active-color="#13ce66"
-              v-model="is_run_view"
+              v-model="is_pipe_mode_run"
             />
           </div>
           <el-select
@@ -33,7 +59,7 @@
             size="small"
             style="width: 10rem"
             :disabled="is_changed || is_code_changed || has_errors || active_item_idx != -1 || show_properties || show_history"
-            v-show="!is_run_view"
+            v-show="!is_pipe_mode_run"
             v-model="editor"
           >
             <el-option
@@ -47,7 +73,7 @@
             class="ml2"
             trigger="click"
             @command="onCommand"
-            v-show="!is_run_view"
+            v-show="!is_pipe_mode_run"
           >
             <el-button
               size="small"
@@ -66,13 +92,10 @@
       </div>
     </div>
 
-    <div
-      class="center mw-doc"
-      v-if="is_fetched"
-    >
+    <div class="center mw-doc">
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
-        v-if="is_run_view"
+        v-if="is_pipe_mode_run"
       >
         <div class="tc">
           <div class="dib mv3 pv1">
@@ -107,9 +130,9 @@
           <div class="flex flex-row items-center justify-center">
             <span class="ttu f6 fw6">Your pipe is</span>
             <LabelSwitch
-              class="dib ml2"
+              class="dib ml1"
               active-color="#13ce66"
-              v-model="is_run_view"
+              v-model="is_pipe_mode_run"
             />
           </div>
           <p class="moon-gray f8 i">(turn this pipe off to edit it)</p>
@@ -118,7 +141,7 @@
 
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
-        v-if="show_properties && !is_run_view"
+        v-if="show_properties && !is_pipe_mode_run"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -157,7 +180,7 @@
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
         :class="{
-          'o-40 no-pointer-events': show_properties || show_history || is_run_view
+          'o-40 no-pointer-events': show_properties || show_history || is_pipe_mode_run
         }"
       >
         <!-- title bar -->
@@ -228,7 +251,7 @@
 
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
-        v-if="!is_run_view && !show_properties && !show_history"
+        v-if="!is_pipe_mode_run && !show_properties && !show_history"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -260,7 +283,7 @@
 
       <div
         class="mb4 pa4 pt3 bg-white br2 css-white-box"
-        v-if="show_history && !is_run_view"
+        v-if="show_history && !is_pipe_mode_run"
       >
         <!-- title bar -->
         <div class="flex flex-row items-center pt1 pb3">
@@ -331,6 +354,7 @@
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
   import ProcessList from './ProcessList.vue'
+  import BuilderDocument from './BuilderDocument.vue'
 
   const PIPE_MODE_UNDEFINED = ''
   const PIPE_MODE_BUILD     = 'B'
@@ -356,7 +380,8 @@
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
-      ProcessList
+      ProcessList,
+      BuilderDocument
     },
     watch: {
       eid: {
@@ -450,20 +475,26 @@
           }
         }
       },
-      is_run_view: {
+
+      // if we're in runtime mode or not...
+      is_runtime_view() {
+        return this.active_view == PIPEDOC_VIEW_RUN
+      },
+      // if we're in build mode, but `pipe_mode == 'R'`
+      is_pipe_mode_run: {
         get() {
           return _.get(this.edit_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
         set() {
           var doSet = () => {
-            var pipe_mode = this.is_run_view ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var pipe_mode = this.is_pipe_mode_run ? PIPE_MODE_BUILD : PIPE_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { pipe_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
 
-          if (this.is_run_view) {
+          if (this.is_pipe_mode_run) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
               confirmButtonText: 'TURN PIPE OFF',
               cancelButtonText: 'CANCEL',
@@ -542,7 +573,13 @@
         var view = this.active_view
         var editor = this.editor
         _.set(new_route, 'params.view', view)
-        _.set(new_route, 'query', { editor })
+
+        if (this.active_view == PIPEDOC_VIEW_BUILD) {
+          _.set(new_route, 'query', { editor })
+        } else {
+          _.set(new_route, 'query', { editor: undefined })
+        }
+
         this.$router.replace(new_route)
       },
       loadPipe() {
