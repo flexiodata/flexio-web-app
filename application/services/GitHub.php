@@ -75,6 +75,9 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return array();
 
+        while (false !== strpos($full_path,'//'))
+            $full_path = str_replace('//','/',$full_path);
+
         $repository = '';
         $path = '';
         $result = self::getPathParts($full_path, $repository, $path);
@@ -166,6 +169,10 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return array();
 
         $full_path = $params['path'] ?? '';
+
+        while (false !== strpos($full_path,'//'))
+            $full_path = str_replace('//','/',$full_path);
+
         $repository = '';
         $path = '';
         $result = self::getPathParts($full_path, $repository, $path);
@@ -244,6 +251,10 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
 
         $full_path = $params['path'] ?? '';
+
+        while (false !== strpos($full_path,'//'))
+            $full_path = str_replace('//','/',$full_path);
+
         $repository = '';
         $path = '';
         $result = self::getPathParts($full_path, $repository, $path);
@@ -252,6 +263,34 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $url = "https://api.github.com/repos/$repository/contents/$path";
 
+
+
+        // get old blob id -- this is needed for replacing an existing file
+        $contents = '';
+        $headers = array();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Token '.$this->access_token,
+                                              'Accept: application/vnd.github.v3+json',
+                                              'User-Agent: Flex.io']);
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($ch, $data) use (&$headers) {
+            $headers[] = $data;
+            return strlen($data);
+        });
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        $result = @json_decode($result, true);
+        //var_dump($result);
+        $blob_sha = $result['sha'] ?? '';
+
+
+
+
+        // get entire file into a buffer
         $content = '';
         while (($chunk = $callback(16384)) !== false)
         {
@@ -259,11 +298,21 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
 
-        $payload = json_encode([
+        $params = [
             'path' => $path,
             'message' => 'Commit from flex.io',
             'content' => base64_encode($content)
-        ]);
+        ];
+        
+        if (strlen($blob_sha) > 0)
+        {
+            $params['sha'] = $blob_sha;
+        }
+        $payload = json_encode($params);
+
+        //var_dump($params);
+
+
 
 
         // put the file
@@ -279,6 +328,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         $result = curl_exec($ch);
+        //var_dump($result);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
