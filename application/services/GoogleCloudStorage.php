@@ -155,7 +155,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $full_path = rtrim($full_path, '/');
 
             $f = array(
-                'name' => $file,
+                'name' => trim($file,'/'),
                 'path' => $full_path,
                 'size' => (int)$row['size'],
                 'modified' => $row['updated'],
