@@ -17,6 +17,7 @@
       <div class="mt4 mb2 tc">
         <a
           class="el-button el-button--primary ttu b no-underline"
+          size="large"
           :href="download_url"
         >
           Download

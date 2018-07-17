@@ -59,15 +59,6 @@ const mutations = {
       }
     }
 
-    // optionally show the summary prompt
-    if (_.get(def, 'ui.settings.show_summary') !== false) {
-      // include the summary item at the end
-      var existing_summary = _.find(prompts, { element: 'summary' })
-      if (!existing_summary) {
-        prompts.push({ element: 'summary' })
-      }
-    }
-
     // map prompt objects
     state.prompts = _.map(prompts, p => {
       // necessary for scrollTo
@@ -212,9 +203,26 @@ const mutations = {
     }
   },
 
+  ADD_SUMMARY_PROMPT (state) {
+    var existing = _.find(state.prompts, { element: 'summary' })
+    if (!existing) {
+      var prompt = { element: 'summary' }
+      state.prompts = [].concat(state.prompts, [prompt])
+    }
+  },
+
   ADD_RESULT_PROMPT (state, attrs) {
     var prompt = _.assign({ element: 'result' }, attrs)
     state.prompts = [].concat(state.prompts, [prompt])
+  },
+
+  REMOVE_RESULT_PROMPT (state) {
+    var idx = _.findIndex(state.prompts, { element: 'result' })
+    if (idx != -1) {
+      var prompts = [].concat(state.prompts)
+      prompts.splice(idx, 1)
+      state.prompts = prompts
+    }
   },
 
   CREATE_PIPE (state, attrs) {
@@ -237,11 +245,9 @@ const mutations = {
 
     if (result_step_idx == -1) {
       // insert the result step
-      debugger
       prompts.splice(state.active_prompt_idx, 0, new_result_step)
     } else {
       // replace the existing result step
-      debugger
       prompts.splice(result_step_idx, 1, new_result_step)
     }
 

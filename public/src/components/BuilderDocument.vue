@@ -218,6 +218,10 @@
           this.initSticky()
         } else if (this.slug == 'test') {
           this.$store.commit('builder/INIT_DEF', buildTestDefinition())
+          if (this.is_builder_document) {
+            this.$store.commit('builder/ADD_SUMMARY_PROMPT')
+            this.$store.commit('builder/REMOVE_RESULT_PROMPT')
+          }
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else {
@@ -225,6 +229,10 @@
           axios.get(template_url).then(response => {
             var def = response.data
             this.$store.commit('builder/INIT_DEF', def)
+            if (this.is_builder_document) {
+              this.$store.commit('builder/ADD_SUMMARY_PROMPT')
+              this.$store.commit('builder/REMOVE_RESULT_PROMPT')
+            }
             this.$store.commit('builder/FETCHING_DEF', false)
             this.$store.track('Started Template', {
               title: def.name
@@ -303,6 +311,10 @@
       },
       initFromDefiniton() {
         this.$store.commit('builder/INIT_DEF', this.definition)
+        if (this.is_builder_document) {
+          this.$store.commit('builder/ADD_SUMMARY_PROMPT')
+          this.$store.commit('builder/REMOVE_RESULT_PROMPT')
+        }
       },
       initSticky() {
         setTimeout(() => {

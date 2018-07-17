@@ -1,4 +1,4 @@
-title: Test Prompts
+name: Test Prompts
 description: >
   Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
   tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
@@ -21,7 +21,6 @@ content: |
 ui:
   settings:
     show_title: false
-
   prompts:
     - element: message
       title: Copy files from Dropbox to Google Drive
@@ -34,7 +33,6 @@ ui:
       connections:
         - dropbox
         - googledrive
-
     - element: form
       title: Standard form
       description: This is the form description. Text is written in Markdown so it can be quite descriptive.
@@ -48,34 +46,29 @@ ui:
           label: Text Input
           placeholder: Text Input
           value: ''
-
         - element: input
           type: textarea
           variable: input_textarea
           label: Textarea
           placeholder: Textarea
           value: ''
-
         - element: code-editor
           lang: javascript
           variable: code
           label: Code
           value: ''
-
         - element: input
           type: date
           variable: input_date
           label: Date Input
           placeholder: Date Input
           value: ''
-
         - element: input
           type: daterange
           variable: input_daterange
           label: Date Range Input
           placeholder: Date Range Input
           value: ''
-
         - element: select
           variable: input_select
           label: Select
@@ -88,7 +81,6 @@ ui:
               value: IL
             - label: Wyoming
               value: WY
-
         - element: radio-group
           variable: radio_group
           label: Radio Group
@@ -101,7 +93,6 @@ ui:
               value: IL
             - label: Wyoming
               value: WY
-
         - element: checkbox-group
           variable: checkbox_group
           label: Checkbox Group
@@ -114,35 +105,29 @@ ui:
               value: IL
             - label: Wyoming
               value: WY
-
         - element: checkbox
           variable: checkbox
           label: Checkbox
           placeholder: Checkbox
           value: false
-
         - element: switch
           variable: switch
           label: Switch
           placeholder: Switch
           value: false
-
     - element: connection-chooser
       title: Connection chooser with single connection type
       variable: connection_dropbox
       connection_type: dropbox
-
     - element: connection-chooser
       title: Connection chooser with all connection
       variable: connection_any
       connection_type: ''
-
     - element: file-chooser
       title: Default file chooser
       description: This is the default file chooser. Multiple files and folder can be selected at the same time.
       variable: file_chooser_default
       connection: connection_any
-
     - element: file-chooser
       title: File chooser with CSVs only
       description: This file chooser only allows CSV files to be selected.
@@ -151,14 +136,12 @@ ui:
       filetype_filter:
         - csv
       allow_folders: false
-
     - element: file-chooser
       title: File chooser with a connection alias
       description: This file chooser uses a connection alias `my-foo-alias`.
       variable: file_chooser_alias
       connection: connection_dropbox
       connection_alias: my-foo-alias
-
     - element: file-chooser
       title: Single file selection file chooser
       description: This file chooser only allows a single file to be selected.
@@ -166,13 +149,11 @@ ui:
       connection: connection_dropbox
       allow_multiple: false
       allow_folders: false
-
     - element: file-chooser
       description: Folder only file chooser
       variable: folder_chooser_folders_only
       connection: connection_dropbox
       folders_only: true
-
     - element: file-chooser
       description: Single folder selection file chooser
       variable: folder_chooser_single_folder
