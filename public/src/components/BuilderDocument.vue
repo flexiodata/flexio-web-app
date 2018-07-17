@@ -217,22 +217,16 @@
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else if (this.slug == 'test') {
+          this.$store.commit('builder/INIT_ROUTE', this.$route.name)
           this.$store.commit('builder/INIT_DEF', buildTestDefinition())
-          if (this.is_builder_document) {
-            this.$store.commit('builder/ADD_SUMMARY_PROMPT')
-            this.$store.commit('builder/REMOVE_RESULT_PROMPT')
-          }
           this.$store.commit('builder/FETCHING_DEF', false)
           this.initSticky()
         } else {
           var template_url = '/def/templates/' + this.slug + '.json'
           axios.get(template_url).then(response => {
             var def = response.data
+            this.$store.commit('builder/INIT_ROUTE', this.$route.name)
             this.$store.commit('builder/INIT_DEF', def)
-            if (this.is_builder_document) {
-              this.$store.commit('builder/ADD_SUMMARY_PROMPT')
-              this.$store.commit('builder/REMOVE_RESULT_PROMPT')
-            }
             this.$store.commit('builder/FETCHING_DEF', false)
             this.$store.track('Started Template', {
               title: def.name
@@ -310,11 +304,8 @@
         this.$store.commit('builder/UPDATE_TASK')
       },
       initFromDefiniton() {
+        this.$store.commit('builder/INIT_ROUTE', this.$route.name)
         this.$store.commit('builder/INIT_DEF', this.definition)
-        if (this.is_builder_document) {
-          this.$store.commit('builder/ADD_SUMMARY_PROMPT')
-          this.$store.commit('builder/REMOVE_RESULT_PROMPT')
-        }
       },
       initSticky() {
         setTimeout(() => {

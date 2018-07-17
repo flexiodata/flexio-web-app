@@ -1,8 +1,10 @@
 import _ from 'lodash'
+import { ROUTE_BUILDER } from '../../constants/route'
 
 const VFS_TYPE_DIR = 'DIR'
 
 const state = {
+  route: '',
   def: {},
   task: {},
   pipe: {},
@@ -24,6 +26,10 @@ const mutations = {
       state.active_prompt_idx = -1
       state.active_prompt = {}
     }
+  },
+
+  INIT_ROUTE (state, route) {
+    state.route = route
   },
 
   INIT_DEF (state, def) {
@@ -59,6 +65,16 @@ const mutations = {
       }
     }
 
+    // if we're in the builder, remove all runtime-only steps and add a summary step
+    if (state.route == ROUTE_BUILDER) {
+      prompts = _.reject(prompts, { runtime_only: true })
+
+      var existing_summary = _.find(prompts, { element: 'summary' })
+      if (!existing_summary) {
+        prompts.push({ element: 'summary' })
+      }
+    }
+
     // map prompt objects
     state.prompts = _.map(prompts, p => {
       // necessary for scrollTo
@@ -90,7 +106,6 @@ const mutations = {
 
     // reset task object
     try {
-
       var task = _.get(def, 'task', {})
       task = _.cloneDeep(task)
       state.task = _.assign({}, task)
