@@ -79,8 +79,8 @@ class Test
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->getRows(0,1);
-        $expected = json_decode('[{"repository":"flexiodata\/examples","commit.author.date":"2017-11-18T12:16:39Z","commit.author.name":"Ben Williams","commit.author.email":"ben@flex.io","commit.committer.name":"Ben Williams","commit.committer.email":"ben@flex.io","commit.message":"missing comma"}]',true);
-        \Flexio\Tests\Check::assertArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
+        $expected = json_decode('[{"repository":"flexiodata\/examples"}]',true);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
 
 
 
