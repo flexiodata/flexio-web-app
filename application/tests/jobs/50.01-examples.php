@@ -115,7 +115,7 @@ class Test
             ]
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
-        $actual = $process->getStdout()->getReader()->readRow(0);
+        $actual = $process->getStdout()->getReader()->readRow(0,1);
         $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980\/12\/29"}',true);
         \Flexio\Tests\Check::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
 
@@ -186,12 +186,13 @@ class Test
         // Blog Link: https://www.flex.io/blog/adding-dynamic-content-static-web-page/
         // Repository: https://github.com/flexiodata/examples/tree/master/saastr-podcast-search
         // Note: updated 20170322; use new data input path
+        // Note: updated 20180717; use new data input path in test below
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "url" => "https://raw.githubusercontent.com/flexiodata/examples/master/saastr-podcast-search/saastr-podcast-20170205.csv"
+                "url" => "https://raw.githubusercontent.com/flexiodata/examples/master/demo-saastr-podcast-search/source-data/saastr-podcast-20170205.csv"
             ],
             [
                 "op" => "convert",
