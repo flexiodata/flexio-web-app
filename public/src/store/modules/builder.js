@@ -47,7 +47,7 @@ const mutations = {
           variable: 'pipe.name',
           label: 'Name',
           placeholder: 'Name',
-          value: _.get(def, 'title', '')
+          value: _.get(def, 'name', '')
         },{
           element: 'input',
           type: 'textarea',

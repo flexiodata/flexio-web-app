@@ -214,8 +214,8 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         foreach ($arr as $a)
         {
             $objects[] = array(
-                'name' => $a['name'],
-                'path' => $a['path'],
+                'name' => trim($a['name'],'/'),
+                'path' => rtrim($a['path'],'/'),
                 'size' => (int)$a['size'],
                 'modified' => $a['modified'],
                 'type' => ($a['type'] == 'DIR') ? 'DIR':'FILE'

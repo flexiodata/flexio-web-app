@@ -26,6 +26,7 @@ class Test
         $folderpath = "/" . \Flexio\Tests\Base::STORAGE_GITHUB . '/' . \Flexio\Tests\Base::STORAGE_GITHUB_OWNER . '/' . \Flexio\Tests\Base::STORAGE_GITHUB_REPO . '/job-tests-' . \Flexio\Tests\Util::getTimestampName() . '/';
 
 
+
         // TEST: Write/Read Job; Basic Copy
 
         // BEGIN TEST
@@ -56,25 +57,45 @@ class Test
 
 
         // TEST: Write/Read Job; Overwrite
+        //
+        // please note that Github, at least the web APIs, aren't entirely write/read consistent,
+        // therefore we've added sleep() calls to this test
 
-        // BEGIN TEST
+
         $filename = \Flexio\Base\Util::generateHandle() . '.txt';
         $filepath = $folderpath . '/' . $filename;
-        $contents = ["", "abc", "cba", "", "abcd"];
 
-        $idx = 0;
-        foreach ($contents as $c)
+        $original_content = "abc";
+        $new_content = "aaabbbccc";
+
+        $stream = \Flexio\Base\Stream::create();
+        $stream->getWriter()->write($original_content);
+        $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
+
+        sleep(60);
+
+        $stream = \Flexio\Base\Stream::create();
+        $stream->getWriter()->write($new_content);
+        $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
+
+
+        // wait up to five minutes for new content; if, after five minutes, the content
+        // hasn't been updated, then let the test fail
+        for ($i = 0; $i < 5; ++$i)
         {
-            $idx++;
-            $stream = \Flexio\Base\Stream::create();
-            $stream->getWriter()->write($c);
-            $process_write = \Flexio\Tests\Process::write($process_owner, $filepath, $stream);
             $process_read = \Flexio\Tests\Process::read($process_owner, $filepath);
             $actual = \Flexio\Base\Util::getStreamContents($process_read->getStdout());
-            $expected = $c;
-            \Flexio\Tests\Check::assertString("E.$idx", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
+            if ($actual == $new_content)
+                break;
+            sleep(60);
         }
 
+        $expected = $new_content;
+        \Flexio\Tests\Check::assertString("E.1", 'Read/Write; overwrite check; write/read to/from ' . $filepath, $actual, $expected, $results);
+
+
+
+        
 
         // TEST: Write/Read Job; Implicit Format Conversion
         $create = [
