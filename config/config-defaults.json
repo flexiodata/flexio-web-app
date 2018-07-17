@@ -36,9 +36,12 @@
 
     "gmail_client_id": "",
     "gmail_client_secret": "",
-    
+
     "googledrive_client_id": "",
     "googledrive_client_secret": "",
+
+    "googlecloudstorage_client_id": "",
+    "googlecloudstorage_client_secret": "",
 
     "dropbox_client_id": "",
     "dropbox_client_secret": "",
