@@ -155,9 +155,9 @@
       },
       slug() {
         if (this.is_builder_document) {
-          return undefined
-        } else {
           return _.get(this.$route, 'params.template', undefined)
+        } else {
+          return undefined
         }
       },
       // NOTE: this needs to be a computed value with a getter/setter since we're using '.sync'
