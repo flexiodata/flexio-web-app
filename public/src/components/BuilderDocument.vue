@@ -82,7 +82,7 @@
     var def = _.cloneDeep(test_def)
 
     // easy way to get rid of a bunch of elements for quick testing
-    //def.prompts = _.filter(def.prompts, { element: 'form' })
+    //def.ui.prompts = _.filter(def.ui.prompts, { element: 'form' })
 
     // builder up mock task array for variable replacement
     var task_arr = [ "op: sequence\nitems:" ]
