@@ -195,7 +195,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             if (strpos($part, '*') !== false)
             {
                 // only the last part of the path may contain a wildcard
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
             }
         }
 

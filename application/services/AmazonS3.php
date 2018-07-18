@@ -36,7 +36,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'accesskey' => array('type' => 'string', 'required' => true),
                 'secretkey' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
         $region = $validated_params['region'];

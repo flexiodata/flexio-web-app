@@ -30,7 +30,7 @@ if (($validator->check($params, array(
         'code'       => array('required' => false, 'type' => 'integer'),
         'response'   => array('required' => false, 'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Exit1 extends \Flexio\Jobs\Base

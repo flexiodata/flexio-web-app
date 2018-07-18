@@ -31,7 +31,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['settype'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class SetType extends \Flexio\Jobs\Base
@@ -71,7 +71,7 @@ class SetType extends \Flexio\Jobs\Base
         $scale = $job_params['decimals'] ?? null;
 
         if (!isset($columns) || !is_array($columns))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (isset($width) && !is_integer($width))
             $width = (int)$width;
         if (isset($scale) && !is_integer($scale))

@@ -27,7 +27,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['merge'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Merge extends \Flexio\Jobs\Base
@@ -54,7 +54,7 @@ class Merge extends \Flexio\Jobs\Base
         $paths = $params['files'] ?? [];
 
         if (count($paths) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Missing/empty 'files' array");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing/empty 'files' array");
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);

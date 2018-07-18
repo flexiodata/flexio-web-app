@@ -27,7 +27,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['foreach'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Foreach1 extends \Flexio\Jobs\Base
@@ -63,7 +63,7 @@ class Foreach1 extends \Flexio\Jobs\Base
 
             if (count($parts) != 2)
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid forspec. The forspec must have two parts, separate by a colon");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid forspec. The forspec must have two parts, separate by a colon");
             }
 
             $this->varname = $parts[0];

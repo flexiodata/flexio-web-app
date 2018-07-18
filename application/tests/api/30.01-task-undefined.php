@@ -41,11 +41,11 @@ class Test
         $actual = $result;
         $actual['response'] = $response;
         $expected = '{
-            "code": 404,
+            "code": 400,
             "content_type": "application/json",
             "response": {
                 "error": {
-                    "code": "missing-parameter",
+                    "code": "invalid-syntax",
                     "message": "Missing operation \'op\' task parameter"
                 }
             }
@@ -61,11 +61,11 @@ class Test
         $actual = $result;
         $actual['response'] = $response;
         $expected = '{
-            "code": 404,
+            "code": 400,
             "content_type": "application/json",
             "response": {
                 "error": {
-                    "code": "invalid-parameter",
+                    "code": "invalid-syntax",
                     "message": "Invalid operation \'op\' task parameter"
                 }
             }
@@ -81,11 +81,11 @@ class Test
         $actual = $result;
         $actual['response'] = $response;
         $expected = '{
-            "code": 404,
+            "code": 400,
             "content_type": "application/json",
             "response": {
                 "error": {
-                    "code": "invalid-parameter",
+                    "code": "invalid-syntax",
                     "message": "Invalid operation \'op\' task parameter"
                 }
             }

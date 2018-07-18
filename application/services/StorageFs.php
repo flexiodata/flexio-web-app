@@ -290,7 +290,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         if ($this->sqlite)
         {
             if (!is_array($data))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "data must be presented in array format");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "data must be presented in array format");
 
             // check if the column schema being inserted is the same as the last;
             // if it's different, flush rows in buffer
@@ -585,9 +585,9 @@ class StorageFs
     private function initialize($params) : bool
     {
         if (!isset($params['base_path']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "'base_path' must be specified in StorageFs::create()");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "'base_path' must be specified in StorageFs::create()");
         if (!is_dir($params['base_path']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "'base_path' does not exist");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "'base_path' does not exist");
 
         $this->base_path = $params['base_path'];
 
@@ -604,7 +604,7 @@ class StorageFs
         if (isset($params['structure']))
         {
             if (!is_array($params['structure']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "params['structure'] must be an array");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "params['structure'] must be an array");
 
             $is_memory_database = $params['memory'] ?? false;
             if ($is_memory_database)
@@ -771,7 +771,7 @@ class StorageFs
         foreach (explode('/', $path) as $part)
         {
             if ($part == '..')
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "relative paths not allowed");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "relative paths not allowed");
         }
 
         $str = $this->base_path . DIRECTORY_SEPARATOR . $path;

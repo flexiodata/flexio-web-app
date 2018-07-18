@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array(required' => true,  'enum' => ['filter']),
         'where'      => array(required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Filter extends \Flexio\Jobs\Base
@@ -73,7 +73,7 @@ class Filter extends \Flexio\Jobs\Base
         else if (isset($params['on']))
             $filter_expression = $params['on'];
         else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($exclude)
         {
@@ -117,7 +117,7 @@ class Filter extends \Flexio\Jobs\Base
         $success = $expreval->prepare($filter_expression, $input_structure);
 
         if ($success === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
 
         $results = [];
@@ -152,7 +152,7 @@ class Filter extends \Flexio\Jobs\Base
         else if (isset($params['on']))
             $filter_expression = $params['on'];
         else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($exclude)
         {
@@ -165,11 +165,11 @@ class Filter extends \Flexio\Jobs\Base
         $success = $expreval->prepare($filter_expression, $input_structure);
 
         if ($success === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // if we don't have a filter expression, then there's no output; we're done
         if ($filter_expression === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing where parameter");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing where parameter");
 
         $outstream->set(['mime_type' => \Flexio\Base\ContentType::FLEXIO_TABLE,
                          'structure' => $input_structure ]);

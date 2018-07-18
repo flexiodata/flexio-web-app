@@ -31,7 +31,7 @@ class MailJet implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'username' => array('type' => 'string', 'required' => true),
                 'password' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
         $username = $validated_params['username'];

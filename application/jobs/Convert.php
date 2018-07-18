@@ -35,7 +35,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['convert'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Convert extends \Flexio\Jobs\Base
@@ -791,7 +791,7 @@ class Convert extends \Flexio\Jobs\Base
             {
                 $row = iconv($encoding, 'UTF-8', $row);
                 if ($row === false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Conversion from $encoding to UTF-8 failed");
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Conversion from $encoding to UTF-8 failed");
             }
 
             // parse the row
@@ -1041,10 +1041,10 @@ class Convert extends \Flexio\Jobs\Base
         $columns = $job_params['columns'] ?? [];
 
         if ($row_width == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if (count($columns) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // get the input
         $streamreader = $instream->getReader();

@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['write']),
         'path'       => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Write extends \Flexio\Jobs\Base
@@ -44,7 +44,7 @@ class Write extends \Flexio\Jobs\Base
         $path = $job_params['path'] ?? null;
 
         if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
         $stream_properties = $instream->get();
 

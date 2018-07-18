@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['echo'])
         'msg'        => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Echo1 extends \Flexio\Jobs\Base

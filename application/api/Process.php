@@ -37,7 +37,7 @@ class Process
                 'debug'        => array('type' => 'boolean', 'required' => false, 'default' => false),
                 'run'          => array('type' => 'boolean', 'required' => false, 'default' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $process_params = $validated_post_params;
@@ -169,7 +169,7 @@ class Process
         if (($validator->check($post_params, array(
                 'task' => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
 
@@ -207,7 +207,7 @@ class Process
                 'wait'   => array('type' => 'integer', 'required' => false), // how long to block (milliseconds) until a change is detected
                 'status' => array('type' => 'boolean', 'required' => false, 'default' => false) // false returns everything; true only the process info
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
         $process_info_only = toBoolean($validated_query_params['status']);
@@ -289,7 +289,7 @@ class Process
                 'created_min' => array('type' => 'date',    'required' => false),
                 'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
 
@@ -345,7 +345,7 @@ class Process
                 'created_min' => array('type' => 'date',    'required' => false),
                 'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
 

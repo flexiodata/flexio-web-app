@@ -30,7 +30,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['create'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Create extends \Flexio\Jobs\Base
@@ -97,7 +97,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $content = $job_params['content'];
             if (!is_string($content))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $content = base64_decode($content);
         }
@@ -135,7 +135,7 @@ class Create extends \Flexio\Jobs\Base
         {
             $rows = $job_params['content'];
             if (!is_array($rows))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             foreach ($rows as $row)
             {

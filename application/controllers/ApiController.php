@@ -101,7 +101,7 @@ class ApiController extends \Flexio\System\FxControllerAction
                             // as 'application/json' but the data that was posted is something else;
                             // in this case, throw a normal invalid parameter response
                             if ($obj === null)
-                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _("Content-Type header is 'application/json' but posted data isn't properly formatted JSON"));
+                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Content-Type header is 'application/json' but posted data isn't properly formatted JSON"));
 
                             $post_params = $obj; // if we're posting JSON, this will take the place of the post params
                         }

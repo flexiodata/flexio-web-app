@@ -30,7 +30,7 @@ if (($validator->check($params, array(
         'path'       => array('required' => true, 'type' => 'string'),
         'to'         => array('required' => true, 'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Copy extends \Flexio\Jobs\Base
@@ -51,15 +51,15 @@ class Copy extends \Flexio\Jobs\Base
         $this->recursive = $params['options']['recursive'] ?? false; // recursive (similar to cp -r) is off by default
 
         if (is_null($from))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'from'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'from'");
         if (is_null($to))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'to'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'to'");
         if (is_string($from) && strlen($from) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid/empty value specified in parameter 'from'");
         if (is_array($from) && count($from) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid/empty value specified in parameter 'from'");
         if (strlen($to) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'to'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid/empty value specified in parameter 'to'");
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
@@ -77,7 +77,7 @@ class Copy extends \Flexio\Jobs\Base
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid/empty value specified in parameter 'from'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid/empty value specified in parameter 'from'");
         }
     }
 
@@ -91,7 +91,7 @@ class Copy extends \Flexio\Jobs\Base
 
         if (strpos($base, '*') !== false)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'from'. Only the last part of the path may contain a wildcard");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid parameter 'from'. Only the last part of the path may contain a wildcard");
         }
 
         if (strpos($base, '://') === false && substr($base, 0, 1) != '/')

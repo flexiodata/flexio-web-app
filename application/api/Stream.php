@@ -58,7 +58,7 @@ class Stream
                 'download'     => array('type' => 'boolean', 'required' => false),
                 'filename'     => array('type' => 'string',  'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
         $start = isset($validated_query_params['start']) ? (int)$validated_query_params['start'] : 0;  // start isn't specified, start at the beginning

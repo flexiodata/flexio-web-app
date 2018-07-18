@@ -34,7 +34,7 @@ if (($validator->check($params, array(
         'connection_type' => array('required' => false, 'type' => 'string'), // either 'connection' or 'connection_type' is required
         'connection_info' => array('required' => false, 'type' => 'object')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Connect extends \Flexio\Jobs\Base
@@ -57,11 +57,11 @@ class Connect extends \Flexio\Jobs\Base
         // get the alias to use to reference the connection; must be a valid identifier (no strictly necessary
         // here, but enforced to parallel the requirements of 'alias')
         if ($alias === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'alias' parameter.");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing connection 'alias' parameter.");
         if ($connection_identifier === false && $connection_type === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing connection 'connection' or 'type' parameter.");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing connection 'connection' or 'type' parameter.");
         if (\Flexio\Base\Identifier::isValid($alias) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid connection 'alias' parameter; 'alias' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid connection 'alias' parameter; 'alias' must be a valid identifier (lowercase string between 3 and 80 chars made up of only letters, numbers, hyphens and underscores)");
 
         $connection_properties = array();
 

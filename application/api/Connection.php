@@ -38,7 +38,7 @@ class Connection
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
 
@@ -129,7 +129,7 @@ class Connection
                 'connection_status' => array('type' => 'string', 'required' => false),
                 'connection_info'   => array('type' => 'object', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
 
@@ -196,7 +196,7 @@ class Connection
                 'created_min' => array('type' => 'date',    'required' => false),
                 'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
 

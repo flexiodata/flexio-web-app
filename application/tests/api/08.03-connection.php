@@ -151,7 +151,7 @@ class Test
         {
             "error": {
                 "code":"unavailable",
-                "message":"Object not available"
+                "message":"Unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/connections/:objeid; make sure a connection is deleted',  $actual, $expected, $results);

@@ -34,7 +34,7 @@ if (($validator->check($params, array(
         'path'       => array('required' => false, 'type' => 'string'),
         'integrity'  => array('required' => false, 'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class BinaryData
@@ -954,7 +954,7 @@ class Execute extends \Flexio\Jobs\Base
         $jobs_params = $this->getJobParameters();
 
         if (!isset($jobs_params['op']))
-            $errors[] = array('code' => \Flexio\Base\Error::INVALID_PARAMETER, 'message' => '');
+            $errors[] = array('code' => \Flexio\Base\Error::INVALID_SYNTAX, 'message' => '');
 
         if (count($errors) > 0)
             return $errors;
@@ -1010,7 +1010,7 @@ class Execute extends \Flexio\Jobs\Base
             // in a remote location
             $file = $jobs_params['path'] ?? false;
             if ($file === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $this->code = self::getFileContents($file);
             $this->code_base64 = base64_encode($this->code);
@@ -1024,12 +1024,12 @@ class Execute extends \Flexio\Jobs\Base
             // if a hash of the code using the provided algorithm doesn't match the value in
             // the integrity check, throw an exception
             if (!is_string($integrity))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             // use ":" as format/code separator
             $parts = explode(':', $integrity);
             if (count($parts) !== 2)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $integrity_hashformat = strtolower($parts[0]);
             $integrity_hashvalue = strtolower($parts[1]);
@@ -1041,7 +1041,7 @@ class Execute extends \Flexio\Jobs\Base
                 // in the standard are sha256, sha384, and sha512, and weak formats, such as md5
                 // and sha1 should be refused
                 default:
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
                 case 'sha256':
                     $code_hashvalue = hash('sha256', $this->code, false); // false = use lowercase base64 encoded output
@@ -1079,7 +1079,7 @@ class Execute extends \Flexio\Jobs\Base
 
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 30s python3 /fxpython/script.py)'";
 
@@ -1114,7 +1114,7 @@ class Execute extends \Flexio\Jobs\Base
 
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
@@ -1177,7 +1177,7 @@ class Execute extends \Flexio\Jobs\Base
 
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $cmd = "$dockerbin run --net none --rm -i fxruntime python3 -c 'import py_compile; import base64; code=base64.b64decode(\"$code\"); f=open(\"script.py\",\"wb\"); f.write(code); f.close(); py_compile.compile(\"script.py\");'";
 
@@ -1197,7 +1197,7 @@ class Execute extends \Flexio\Jobs\Base
          else
         {
             // unknown language
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
     }
 }

@@ -58,19 +58,9 @@ class Test
         \Flexio\Tests\Check::assertString('A.7', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Error::MISSING_PARAMETER;
-        $expected = 'missing-parameter';
-        \Flexio\Tests\Check::assertString('A.8', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = \Flexio\Base\Error::INVALID_PARAMETER;
-        $expected = 'invalid-parameter';
-        \Flexio\Tests\Check::assertString('A.9', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Base\Error::INVALID_SYNTAX;
         $expected = 'invalid-syntax';
-        \Flexio\Tests\Check::assertString('A.10', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.8', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Error::INTEGRITY_FAILED;

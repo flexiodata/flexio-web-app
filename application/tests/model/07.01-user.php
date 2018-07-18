@@ -43,7 +43,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Model\User::create(); throw an exception with invalid input',  $actual, $expected, $results);
 
@@ -63,7 +63,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Model\User::create(); throw an exception if a username isn\'t specified',  $actual, $expected, $results);
 
@@ -83,7 +83,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Model\User::create(); throw an exception if an email isn\'t specified',  $actual, $expected, $results);
 

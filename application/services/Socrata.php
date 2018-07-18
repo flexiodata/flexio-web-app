@@ -30,7 +30,7 @@ class Socrata implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'host' => array('type' => 'string', 'required' => true),
                 'port' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
         $host = $validated_params['host'];

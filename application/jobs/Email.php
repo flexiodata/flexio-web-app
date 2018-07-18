@@ -42,7 +42,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['email'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Email extends \Flexio\Jobs\Base
@@ -107,7 +107,7 @@ class Email extends \Flexio\Jobs\Base
 
             $from_addresses = $email->getFrom();
             if (count($from_addresses) == 0)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'from' address must be specified");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "'from' address must be specified");
 
             if (strlen($from) > 0)
             {
@@ -126,7 +126,7 @@ class Email extends \Flexio\Jobs\Base
         if (isset($params['attachments']))
         {
             if (!is_array($params['attachments']) || \Flexio\Base\Util::isAssociativeArray($params['attachments']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "'attachments' parameter must be an array");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "'attachments' parameter must be an array");
 
             foreach ($params['attachments'] as $attachment)
             {

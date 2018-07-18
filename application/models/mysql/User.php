@@ -51,12 +51,12 @@ class User extends ModelBase
                 'owned_by'          => array('type' => 'string',     'required' => false, 'default' => ''),
                 'created_by'        => array('type' => 'string',     'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // if a password is supplied, encrypt it; otherwise write out an empty string
         if (isset($process_arr['password']))
@@ -72,7 +72,7 @@ class User extends ModelBase
             $qemail = $db->quote($process_arr['email']);
             $existing_item = $db->fetchOne("select eid from tbl_user where username = $qusername or email = $qemail");
             if ($existing_item !== false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $eid = $this->getModel()->createObjectBase(\Model::TYPE_USER, $process_arr);
             $timestamp = \Flexio\System\System::getTimestamp();
@@ -156,13 +156,13 @@ class User extends ModelBase
                 'owned_by'          => array('type' => 'string',     'required' => false),
                 'created_by'        => array('type' => 'string',     'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // encode the password
         if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
@@ -185,7 +185,7 @@ class User extends ModelBase
                 $qusername = $db->quote($process_arr['username']);
                 $existing_eid = $db->fetchOne("select eid from tbl_user where username = $qusername");
                 if ($existing_eid !== false && $existing_eid !== $eid)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             if (isset($process_arr['email']))
@@ -193,7 +193,7 @@ class User extends ModelBase
                 $qemail = $db->quote($process_arr['email']);
                 $existing_eid = $db->fetchOne("select eid from tbl_user where email = $qemail");
                 if ($existing_eid !== false && $existing_eid !== $eid)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             // set the properties

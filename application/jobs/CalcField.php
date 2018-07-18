@@ -36,7 +36,7 @@ if (($validator->check($params, array(
         'decimals'   => array('required' => false, 'type' => 'integer'),
         'expression' => array('required' => false, 'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class CalcField extends \Flexio\Jobs\Base
@@ -87,7 +87,7 @@ class CalcField extends \Flexio\Jobs\Base
         $success = $expreval->prepare($expression, $input_structure);
 
         if ($success === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // create the output
         $outstream->set($instream->get());
@@ -100,7 +100,7 @@ class CalcField extends \Flexio\Jobs\Base
             'scale' => $scale
         ));
         if ($added_field === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $name = $added_field['name']; // get the name of the field that was added (in case it was adjusted for duplicate, for example)
         $outstream->setStructure($output_structure);

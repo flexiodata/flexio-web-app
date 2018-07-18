@@ -77,13 +77,12 @@ class Response
         // return the associated http error code
         switch ($error_code)
         {
-            // TODO: for now, map the default and ERROR_GENERAL to 400, which
-            // is what we've been using for all error codes up 'till now; however,
-            // we may want to switch to 500, in which case we'll need to properly
-            // assign ERROR_GENERAL to other categories when appropriate
+            // "BAD REQUEST" type errors; there's some type of syntax error
+            // in the request (e.g. missing parameter or invalid parameter)
             default:
             case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::GENERAL:
+            case \Flexio\Base\Error::INVALID_SYNTAX:
                 return 400;
 
             // "UNAUTHORIZED" type errors; the user might have access to the object
@@ -103,9 +102,6 @@ class Response
                 return 404;
 
             // "UNPROCESSABLE ENTITY"; request can't be processed for some reason
-            case \Flexio\Base\Error::MISSING_PARAMETER:
-            case \Flexio\Base\Error::INVALID_PARAMETER:
-            case \Flexio\Base\Error::INVALID_SYNTAX:
             case \Flexio\Base\Error::INTEGRITY_FAILED:
             case \Flexio\Base\Error::CONNECTION_FAILED:
             case \Flexio\Base\Error::CREATE_FAILED:

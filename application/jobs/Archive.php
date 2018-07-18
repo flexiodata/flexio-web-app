@@ -46,12 +46,12 @@ class Archive extends \Flexio\Jobs\Base
         if ($format == 'zip')
         {
             if (!isset($files) || !is_array($files) || count($files) == 0)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "No files specified.");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "No files specified.");
 
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $archive_fname = $storage_tmpbase . "tmparchive-" . \Flexio\Base\Util::generateRandomString(30);
             $this->to_delete[] = $archive_fname;
-    
+
             $zip = new \ZipArchive();
             $zip->open($archive_fname, \ZipArchive::CREATE);
 
@@ -110,7 +110,7 @@ class Archive extends \Flexio\Jobs\Base
             $storage_tmpbase = $GLOBALS['g_config']->storage_root . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             $archive_fname = $storage_tmpbase . "tmpgz-" . \Flexio\Base\Util::generateRandomString(30) . ".gz";
             $this->to_delete[] = $archive_fname;
-    
+
 
             $f = gzopen($archive_fname, 'wb9');
 
@@ -160,7 +160,7 @@ class Archive extends \Flexio\Jobs\Base
         else
         {
             // unknown format
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Unknown value for 'format' parameter.");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Unknown value for 'format' parameter.");
 
 
 

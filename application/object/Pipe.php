@@ -175,7 +175,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (isset($properties) && isset($properties['task']))
         {
             if (!is_array($properties['task']))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $properties['task'] = \Flexio\Jobs\Base::addEids($properties['task']);
             $properties['task'] = \Flexio\Jobs\Base::fixEmptyParams($properties['task']);
@@ -204,7 +204,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         {
             $schedule = $properties['schedule'];
             if (\Flexio\Base\ValidatorSchema::check($schedule, self::SCHEDULE_SCHEMA)->hasErrors())
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $properties['schedule'] = json_encode($schedule);
         }

@@ -47,7 +47,7 @@ class Segment
         if (($validator->check($query_params, array(
                 'action' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $action = $query_params['action'];
         self::track_request($action, $requesting_user_eid, $query_params);

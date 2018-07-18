@@ -47,7 +47,7 @@ class Trigger
         }
 
         if (!$user_and_pipe)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Email address must specify user and pipe identifier");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Email address must specify user and pipe identifier");
 
         $user = $user_and_pipe[0];
         $pipe = $user_and_pipe[1];

@@ -33,7 +33,7 @@ if (($validator->check($params, array(
         'method'     => array('required' => true,  'enum' => ['get','post','put','patch','delete','head','options']),
         'url'        => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Request extends \Flexio\Jobs\Base
@@ -152,7 +152,7 @@ class Request extends \Flexio\Jobs\Base
         switch ($method)
         {
             default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             case 'head':    curl_setopt($ch, CURLOPT_NOBODY, true); break;
             case 'get':     curl_setopt($ch, CURLOPT_HTTPGET, true); break;
@@ -167,7 +167,7 @@ class Request extends \Flexio\Jobs\Base
     private static function setUrl($ch, string $url, array $get_params) : void
     {
         if (strlen($url) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter: 'url'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter: 'url'");
 
         if (count($get_params) > 0)
         {

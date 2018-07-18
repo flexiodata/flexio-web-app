@@ -30,7 +30,7 @@ if (($validator->check($params, array(
         'code'       => array('required' => false, 'type' => 'string'),
         'message'    => array('required' => false, 'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Fail extends \Flexio\Jobs\Base
@@ -55,8 +55,6 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::NO_DATABASE:
             case \Flexio\Base\Error::NO_MODEL:
             case \Flexio\Base\Error::NO_SERVICE:
-            case \Flexio\Base\Error::MISSING_PARAMETER:
-            case \Flexio\Base\Error::INVALID_PARAMETER:
             case \Flexio\Base\Error::INVALID_SYNTAX:
             case \Flexio\Base\Error::INTEGRITY_FAILED;
             case \Flexio\Base\Error::CONNECTION_FAILED:

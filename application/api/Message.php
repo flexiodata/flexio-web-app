@@ -35,7 +35,7 @@ class Message
         switch ($type)
         {
             default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             case self::TYPE_EMAIL_WELCOME:
             case self::TYPE_EMAIL_RESET_PASSWORD:

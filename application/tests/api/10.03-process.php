@@ -145,7 +145,7 @@ class Test
         {
             "error": {
                 "code":"unavailable",
-                "message":"Object not available"
+                "message":"Unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/processes/:objeid; make sure a process is deleted',  $actual, $expected, $results);

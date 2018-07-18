@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['delete']),
         'path'       => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Delete extends \Flexio\Jobs\Base
@@ -41,7 +41,7 @@ class Delete extends \Flexio\Jobs\Base
         $path = $params['path'] ?? null;
 
         if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);

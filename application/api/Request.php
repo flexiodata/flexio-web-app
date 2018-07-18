@@ -87,7 +87,7 @@ class Request
         }
 
         if (!isset($action_type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // the action hasn't been set yet; create a new action
         $this->action_type = $action_type;

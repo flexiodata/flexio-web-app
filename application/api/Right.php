@@ -40,7 +40,7 @@ class Right
                 'rights'  => array('type' => 'object', 'required' => true),
                 'message' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $rights = $validated_post_params['rights'];
@@ -55,11 +55,11 @@ class Right
             $actions = $r['actions'] ?? false;
 
             if (!is_string($object_eid))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             if (!is_string($access_code))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             if (!is_array($actions))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             // make sure we're allowed to modify the rights
             $object = \Flexio\Object\Store::load($object_eid);
@@ -176,7 +176,7 @@ class Right
         if (($validator->check($post_params, array(
                 'actions' => array('type' => 'object', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $actions = $validated_post_params['actions'];
@@ -287,7 +287,7 @@ class Right
                 'created_min' => array('type' => 'date',    'required' => false),
                 'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
 

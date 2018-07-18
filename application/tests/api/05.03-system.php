@@ -57,7 +57,7 @@ class Test
         $expected = '
         {
             "error" : {
-                "code":"invalid-parameter",
+                "code":"unauthorized",
                 "message":"Invalid username or password."
             }
         }';
@@ -80,7 +80,7 @@ class Test
         $expected = '
         {
             "error" : {
-                "code":"invalid-parameter",
+                "code":"unauthorized",
                 "message":"Invalid username or password."
             }
         }';

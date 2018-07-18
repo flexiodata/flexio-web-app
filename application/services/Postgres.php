@@ -36,7 +36,7 @@ class Postgres implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'database' => array('type' => 'string', 'required' => true),
                 'path'     => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_params = $validator->getParams();
         $host = $validated_params['host'];

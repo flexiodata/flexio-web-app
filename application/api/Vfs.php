@@ -28,7 +28,7 @@ class Vfs
         if (($validator->check($query_params, array(
                 'q' => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
         $path = $validated_query_params['q'] ?? '';

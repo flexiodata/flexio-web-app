@@ -112,7 +112,7 @@ class Token
                 'created_min' => array('type' => 'date',    'required' => false),
                 'created_max' => array('type' => 'date',    'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_query_params = $validator->getParams();
 

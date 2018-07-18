@@ -38,12 +38,12 @@ class Process extends ModelBase
                 'owned_by'       => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'     => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         try
@@ -117,13 +117,13 @@ class Process extends ModelBase
                 'owned_by'       => array('type' => 'string', 'required' => false),
                 'created_by'     => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         try
@@ -347,7 +347,7 @@ class Process extends ModelBase
                     'log_type'     => array('type' => 'string',  'required' => false),
                     'message'      => array('type' => 'string',  'required' => false)
                 ))->hasErrors()) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             $db = $this->getDatabase();
             $db->beginTransaction();

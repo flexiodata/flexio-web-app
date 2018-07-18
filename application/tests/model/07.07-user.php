@@ -167,7 +167,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('C.5', '\Flexio\Model\User::set(); throw an exception when a parameter is set to a bad value',  $actual, $expected, $results);
 

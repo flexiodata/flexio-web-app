@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['limit']),
         'rows'       => array('required' => true,  'type' => 'integer')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Limit extends \Flexio\Jobs\Base

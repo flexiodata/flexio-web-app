@@ -34,8 +34,6 @@ class Error
     public const UNAVAILABLE            =  'unavailable'; // object isn't found or is outside scope of requesting user
 
     // processing type errors (422)
-    public const MISSING_PARAMETER      =  'missing-parameter';
-    public const INVALID_PARAMETER      =  'invalid-parameter';
     public const INVALID_SYNTAX         =  'invalid-syntax';
     public const INTEGRITY_FAILED       =  'integrity-failed';
     public const CONNECTION_FAILED      =  'connection-failed';
@@ -78,8 +76,6 @@ class Error
             case self::INTEGRITY_FAILED:       return 'Integrity check failed';
             case self::CONNECTION_FAILED:      return 'Could not connect';
             case self::INVALID_SYNTAX:         return 'Invalid syntax';
-            case self::MISSING_PARAMETER:      return 'Missing parameter';
-            case self::INVALID_PARAMETER:      return 'Invalid parameter';
             case self::CREATE_FAILED:          return 'Could not create object';
             case self::DELETE_FAILED:          return 'Could not delete object';
             case self::WRITE_FAILED:           return 'Could not write to object';

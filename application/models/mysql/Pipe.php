@@ -33,18 +33,18 @@ class Pipe extends ModelBase
                 'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'      => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -57,7 +57,7 @@ class Pipe extends ModelBase
                 $qalias = $db->quote($process_arr['alias']);
                 $existing_item = $db->fetchOne("select eid from tbl_pipe where owned_by = $qownedby and alias = $qalias");
                 if ($existing_item !== false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             // create the object base
@@ -130,13 +130,13 @@ class Pipe extends ModelBase
                 'owned_by'        => array('type' => 'string', 'required' => false),
                 'created_by'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         $db->beginTransaction();
@@ -170,7 +170,7 @@ class Pipe extends ModelBase
                     // (but if the alias is passed for the same eid, it's ok, because it's
                     // just setting it to what it already is)
                     if ($existing_eid !== false && $existing_eid !== $eid)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
                 }
             }
 
@@ -178,14 +178,14 @@ class Pipe extends ModelBase
             if (isset($process_arr['pipe_mode']))
             {
                 if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             // make sure the schedule status is an 'A' or an 'I'
             if (isset($process_arr['schedule_status']))
             {
                 if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             // set the properties

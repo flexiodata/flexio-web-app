@@ -215,7 +215,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('C.9', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameters are valid',  $actual, $expected, $results);
 

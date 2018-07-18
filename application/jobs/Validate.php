@@ -37,7 +37,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['validate'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 
@@ -52,11 +52,11 @@ class Validate extends \Flexio\Jobs\Base
         $validator = (object)$job_params['validator'] ?? null;
 
         if (is_null($validator))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'validator'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'validator'");
 
         // make sure the validator is a valid validator schema
         if (\Flexio\Base\ValidatorSchema::checkSchema($validator)->hasErrors())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid validator format");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid validator format");
 
         $instream = $process->getStdin();
         $info = $instream->get();
@@ -70,7 +70,7 @@ class Validate extends \Flexio\Jobs\Base
         );
 
         if (\Flexio\Base\ValidatorSchema::check($info_to_validate, $validator)->hasErrors())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid file");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid file");
     }
 }
 

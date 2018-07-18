@@ -47,7 +47,7 @@ class User
                 'create_examples'      => array('type' => 'boolean',    'required' => false, 'default' => true),
                 'require_verification' => array('type' => 'boolean',    'required' => false, 'default' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
 
@@ -233,7 +233,7 @@ class User
                 'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
                 'password' => array('type' => 'password', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $entered_username = $post_params['username'];
         $entered_password = $post_params['password'];
@@ -248,10 +248,10 @@ class User
         $entered_user_eid = \Flexio\Object\User::getEidFromIdentifier($entered_username); // get eid from username or email
 
         if ($owner_user->getEid() !== $entered_user_eid)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The username entered doesn\'t match the username of the user to delete'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('The username entered doesn\'t match the username of the user to delete'));
 
         if ($owner_user->checkPassword($entered_password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The passwored entered doesn\'t match the password of the user to delete'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('The passwored entered doesn\'t match the password of the user to delete'));
 
         // permanently delete the user (purge)
         $owner_user->purge();
@@ -304,7 +304,7 @@ class User
                 'timezone'          => array('type' => 'string',     'required' => false),
                 'config'            => array('type' => 'object',     'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // note: password parameter is allowed in this call; it's used in some
         // type of workflow (such as when sharing with a user that doesn't exist)
@@ -371,7 +371,7 @@ class User
                 'old_password' => array('type' => 'password', 'required' => true),
                 'new_password' => array('type' => 'password', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $old_password = $validated_post_params['old_password'];
@@ -387,7 +387,7 @@ class User
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($owner_user->checkPassword($old_password) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The current password entered was incorrect'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, _('The current password entered was incorrect'));
 
         $new_params = array(
             'password' => $new_password
@@ -413,7 +413,7 @@ class User
                 'password'    => array('type' => 'password', 'required' => true),
                 'verify_code' => array('type' => 'string',   'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
@@ -434,7 +434,7 @@ class User
         }
 
         if ($user->getVerifyCode() !== $code)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('The credentials do not match'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('The credentials do not match'));
 
         if ($user->set(array('password' => $password, 'eid_status' => \Model::STATUS_AVAILABLE, 'verify_code' => '')) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, _('Could not update user at this time'));
@@ -456,7 +456,7 @@ class User
                 'email'       => array('type' => 'email',  'required' => true),
                 'verify_code' => array('type' => 'string', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
@@ -498,7 +498,7 @@ class User
         if (($validator->check($post_params, array(
                 'email' => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];
@@ -521,7 +521,7 @@ class User
 
         $verify_code = $user->getVerifyCode();
         if (!isset($verify_code))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing verification code'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing verification code'));
 
         $message_type = \Flexio\Api\Message::TYPE_EMAIL_WELCOME;
         $email_params = array('email' => $email, 'verify_code' => $verify_code);
@@ -542,7 +542,7 @@ class User
         if (($validator->check($post_params, array(
                 'email' => array('type' => 'email', 'required' => true)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $email = $validated_post_params['email'];

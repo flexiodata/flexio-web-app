@@ -27,7 +27,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['grep'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Grep extends \Flexio\Jobs\Base
@@ -69,7 +69,7 @@ class Grep extends \Flexio\Jobs\Base
         $params = $this->getJobParameters();
         $grepexpr = $params['expression'] ?? '';
         if (strlen($grepexpr) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // build command line
         $cmd = \Flexio\System\System::getBinaryPath('grep') . ' ' . $grepexpr;

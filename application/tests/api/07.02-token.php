@@ -136,7 +136,7 @@ class Test
         {
             "error": {
                 "code":"unavailable",
-                "message":"Object not available"
+                "message":"Unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/auth/keys/:objeid; make sure a token is deleted',  $actual, $expected, $results);

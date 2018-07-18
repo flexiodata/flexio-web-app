@@ -38,7 +38,7 @@ if (($validator->check($params, array(
         'height'     => array('required' => false, 'type' => 'integer'),
         'scrollbars' => array('required' => false, 'type' => 'boolean')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Render extends \Flexio\Jobs\Base
@@ -82,18 +82,18 @@ class Render extends \Flexio\Jobs\Base
             $format = 'jpeg';
         }
         else
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid 'format' parameter. Value must be 'pdf', 'jpeg', or 'pdf'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid 'format' parameter. Value must be 'pdf', 'jpeg', or 'pdf'");
 
         // get docker binary
         $dockerbin = \Flexio\System\System::getBinaryPath('docker');
         if (is_null($dockerbin))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if ($url === null && isset($items[0]['path']))
             $url = $items[0]['path'];
 
         if ($url === null || strlen($url) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $outstream = $process->getStdout();
         $outstream_properties = array(

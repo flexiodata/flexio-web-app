@@ -28,7 +28,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['sequence'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Sequence extends \Flexio\Jobs\Base
@@ -43,7 +43,7 @@ class Sequence extends \Flexio\Jobs\Base
         $job_sequence_tasks = $job_params['items'] ?? false;
 
         if ($job_sequence_tasks === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         foreach ($job_sequence_tasks as $task)
         {

@@ -151,7 +151,7 @@ class Test
         {
             "error": {
                 "code":"unavailable",
-                "message":"Object not available"
+                "message":"Unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.5', 'DELETE /:userid/pipes/:objeid; make sure a pipe is deleted',  $actual, $expected, $results);

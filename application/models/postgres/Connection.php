@@ -32,15 +32,15 @@ class Connection extends ModelBase
                 'owned_by'          => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'        => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
 
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if (self::isValidConnectionStatus($process_arr['connection_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // encrypt the connection info
         $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
@@ -56,7 +56,7 @@ class Connection extends ModelBase
                 $qalias = $db->quote($process_arr['alias']);
                 $existing_item = $db->fetchOne("select eid from tbl_connection where owned_by = $qownedby and alias = $qalias");
                 if ($existing_item !== false)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
             // create the object base
@@ -128,16 +128,16 @@ class Connection extends ModelBase
                 'owned_by'          => array('type' => 'string', 'required' => false),
                 'created_by'        => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $process_arr = $validator->getParams();
         $process_arr['updated'] = \Flexio\System\System::getTimestamp();
 
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if (isset($params['connection_status']) && self::isValidConnectionStatus($params['connection_status']) === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // encrypt the connection info
         if (isset($process_arr['connection_info']))
@@ -175,7 +175,7 @@ class Connection extends ModelBase
                     // (but if the alias is passed for the same eid, it's ok, because it's
                     // just setting it to what it already is)
                     if ($existing_eid !== false && $existing_eid !== $eid)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
                 }
             }
 

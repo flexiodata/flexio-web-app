@@ -124,19 +124,19 @@ class Process implements \Flexio\IFace\IProcess
     public static function createTask(array $task) : \Flexio\IFace\IJob
     {
         if (!isset($task['op']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, _('Missing operation \'op\' task parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Missing operation \'op\' task parameter'));
 
         $operation = $task['op'];
 
         if (!is_string($operation))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid operation \'op\' task parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
 
         // make sure the job is registered; note: this isn't strictly necessary,
         // but gives us a convenient way of limiting what jobs are available for
         // processing
         $job_class_name = self::$manifest[$operation] ?? false;
         if ($job_class_name === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, _('Invalid operation \'op\' task parameter'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _('Invalid operation \'op\' task parameter'));
 
         // try to find the job file
         $class_name_parts = explode("\\", $job_class_name);
@@ -330,7 +330,7 @@ class Process implements \Flexio\IFace\IProcess
         catch (\Error $e)
         {
             $errors = array();
-            $errors[] = array('code' => \Flexio\Base\Errors::INVALID_PARAMETER, 'message' => 'Missing or invalid task operation or parameter.');
+            $errors[] = array('code' => \Flexio\Base\Error::INVALID_SYNTAX, 'message' => 'Missing or invalid task operation or parameter.');
             return $errors;
         }
     }

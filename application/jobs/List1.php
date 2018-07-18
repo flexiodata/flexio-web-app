@@ -28,7 +28,7 @@ if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['list']),
         'path'       => array('required' => true,  'type' => 'string')
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class List1 extends \Flexio\Jobs\Base
@@ -43,7 +43,7 @@ class List1 extends \Flexio\Jobs\Base
         $path = $params['path'] ?? null;
 
         if (is_null($path))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER, "Missing parameter 'path'");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Missing parameter 'path'");
 
         $parts = \Flexio\Base\File::splitPath($path);
         $lastpart = array_pop($parts);
@@ -54,7 +54,7 @@ class List1 extends \Flexio\Jobs\Base
             if (strpos($part, '*') !== false)
             {
                 // only the last part of the path may contain a wildcard
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, "Invalid parameter 'path'. Only the last part of the path may contain a wildcard");
             }
         }
 

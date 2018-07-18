@@ -93,7 +93,7 @@ class Test
         $expected = '
         {
             "error" : {
-                "code": "invalid-parameter"
+                "code": "unauthorized"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.3', 'POST /:userid/account/credentials; fail if old password doesn\'t match',  $actual, $expected, $results);
@@ -114,7 +114,7 @@ class Test
         $expected = '
         {
             "error" : {
-                "code": "invalid-parameter"
+                "code": "invalid-syntax"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.4', 'POST /:userid/account/credentials; fail if new password is a bad parameter',  $actual, $expected, $results);

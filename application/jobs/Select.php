@@ -28,7 +28,7 @@ $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['select'])
     ))->hasErrors()) === true)
-    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+    throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 */
 
 class Select extends \Flexio\Jobs\Base
@@ -65,7 +65,7 @@ class Select extends \Flexio\Jobs\Base
         $params = $this->getJobParameters();
         $columns = $params['columns'] ?? null;
         if (!is_array($columns))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // get the input's payload
         $payload = '';
@@ -114,7 +114,7 @@ class Select extends \Flexio\Jobs\Base
         $params = $this->getJobParameters();
         $columns = $params['columns'] ?? null;
         if (!is_array($columns))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::MISSING_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $output_structure = $instream->getStructure()->enum($columns);
         if (count($output_structure) == 0)

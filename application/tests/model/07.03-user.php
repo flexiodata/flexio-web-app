@@ -48,7 +48,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
@@ -71,7 +71,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
@@ -94,7 +94,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 
@@ -117,7 +117,7 @@ class Test
             $actual = json_decode($message,true);
         }
         $expected = array(
-            'code' => \Flexio\Base\Error::INVALID_PARAMETER
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
         );
         \Flexio\Tests\Check::assertInArray('A.4', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
 

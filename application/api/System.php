@@ -46,7 +46,7 @@ class System
                 'username' => array('type' => 'string', 'required' => true), // allow string here to accomodate username/email
                 'password' => array('type' => 'string', 'required' => true)  // allow string here to fall through to general error message below
             ))->hasErrors()) === true)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $validated_post_params = $validator->getParams();
         $username = $validated_post_params['username'];
@@ -59,7 +59,7 @@ class System
         if (!$result)
         {
             sleep(1);
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER, $error_message);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, $error_message);
         }
 
         // return "about" info
@@ -136,10 +136,10 @@ class System
 
         // make sure params is an array
         if (!is_array($post_params))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         if (count($post_params) === 0 || count($post_params) > 10)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // make sure each of the items in the array has the required params
         foreach ($post_params as $p)
@@ -152,7 +152,7 @@ class System
                     'type'     => array('type' => 'string', 'required' => true),
                     'eid_type' => array('type' => 'string', 'required' => false)
                 ))->hasErrors()) === true)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         }
 
         // build up the return object of results

@@ -295,7 +295,7 @@ class Model
     {
         // make sure we have a valid type
         if (!\Model::isValidType($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // $eid = $this->generateUniqueEid();
         $eid = \Flexio\Base\Eid::generate(); // simply generate an eid; if it isn't unique, the insert will fail because of the unique condition
@@ -329,13 +329,13 @@ class Model
 
         // make sure we have a valid association type
         if (!\Model::isValidEdge($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (!\Flexio\Base\Eid::isValid($target_eid))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         try
         {
@@ -405,9 +405,9 @@ class Model
 
         // make sure we have an association type and a new type
         if (!\Model::isValidEdge($type))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (!\Model::isValidEdge($newtype))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // invalid eids can't be associated with each other
         if (!\Flexio\Base\Eid::isValid($source_eid))
@@ -671,7 +671,7 @@ class Model
     public function setDbVersionNumber(string $version) : bool
     {
         if (strlen($version) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         try
@@ -758,7 +758,7 @@ class Model
     public function setTimezone(string $tz) : bool
     {
         if (strlen($tz) <= 1)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_PARAMETER);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
         try
