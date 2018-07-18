@@ -46,7 +46,7 @@ class Connection
         // currently by user write privileges
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -88,11 +88,11 @@ class Connection
         // as an additional check
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -137,11 +137,11 @@ class Connection
         // as an additional check
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -167,11 +167,11 @@ class Connection
         // as an additional check
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -203,7 +203,7 @@ class Connection
         // make sure the owner exists
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // return the result
         $result = array();
@@ -237,11 +237,11 @@ class Connection
         // as an additional check
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
@@ -281,11 +281,11 @@ class Connection
         // as an additional check
         $connection = \Flexio\Object\Connection::load($connection_eid);
         if ($owner_user_eid !== $connection->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($connection->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

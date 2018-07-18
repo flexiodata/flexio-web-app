@@ -103,7 +103,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
         {
             $connection = \Flexio\Object\Connection::load($eid);
             if ($connection->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -147,7 +147,7 @@ class Oauth2Controller extends \Flexio\System\FxControllerAction
                 $eid = $state['eid'] ?? false;
                 $connection = \Flexio\Object\Connection::load($eid);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
             }
         }
         catch (\Flexio\Base\Exception $e)

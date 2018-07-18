@@ -250,7 +250,7 @@ class Request extends \Flexio\Jobs\Base
             }
             $connection = \Flexio\Object\Connection::load($connection_identifier);
             if ($connection->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         }
          else
         {
@@ -261,12 +261,12 @@ class Request extends \Flexio\Jobs\Base
                 {
                     $eid_from_identifier = \Flexio\Object\Connection::getEidFromName($owner_user_eid, $eid_from_identifier);
                     if ($eid_from_identifier === false)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
                 }
 
                 $connection = \Flexio\Object\Connection::load($eid_from_identifier);
                 if ($connection->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
                 $url = ''; // use connection info instead
             }

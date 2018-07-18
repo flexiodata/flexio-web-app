@@ -379,7 +379,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $user = \Flexio\Object\User::load($owner_user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         }
         catch (\Flexio\Base\Exception $e)
         {

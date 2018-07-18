@@ -25,7 +25,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -56,7 +56,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -105,7 +105,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -144,7 +144,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -183,7 +183,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -222,7 +222,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -262,7 +262,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -360,7 +360,7 @@ class Admin
         // only allow users from flex.io to get this info
         $requesting_user = \Flexio\Object\User::load($requesting_user_eid);
         if ($requesting_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($requesting_user->isAdministrator() !== true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

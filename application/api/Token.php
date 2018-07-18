@@ -29,7 +29,7 @@ class Token
         // currently by user write privileges
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -58,11 +58,11 @@ class Token
         // as an additional check
         $token = \Flexio\Object\Token::load($token_eid);
         if ($owner_user_eid !== $token->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($token->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_DELETE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -85,11 +85,11 @@ class Token
         // as an additional check
         $token = \Flexio\Object\Token::load($token_eid);
         if ($owner_user_eid !== $token->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // check the rights on the object
         if ($token->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         if ($token->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -119,7 +119,7 @@ class Token
         // make sure the owner exists
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         // get the tokens
         $result = array();

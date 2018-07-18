@@ -86,7 +86,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 $path = substr($path,1);
             $spreadsheet = $this->getSpreadsheetByTitle($path);
             if (!$spreadsheet)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot locate spreadsheet '$path'");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Cannot locate spreadsheet '$path'");
             $worksheets = $spreadsheet->getWorksheets();
 
             $files = [];
@@ -116,11 +116,11 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             $spreadsheet_id = $ids['spreadsheet_id'];
              else
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-        
+
         $spreadsheet = $this->getSpreadsheetById($spreadsheet_id);
         if (!$spreadsheet)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
-        
+
         if (isset($ids['worksheet_title']))
         {
             $worksheet_title = $ids['worksheet_title'];
@@ -133,7 +133,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             $worksheet_title = $spreadsheet->worksheets[0]->title;
         }
 
-        
+
         $arr = \Flexio\Base\File::splitPath($path);
         $name = '';
         if (count($arr) > 0)
@@ -185,7 +185,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 $r['structure'][] = [ 'name' => $column, 'type' => 'text' ];
             }
         }
-        
+
         return $r;
     }
 
@@ -834,7 +834,7 @@ class GoogleSpreadsheet
             if ($http_response_code == 401)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAUTHORIZED, "Access unauthorized");
                  else
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT, "Cannot access sheet's worksheets");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Cannot access sheet's worksheets");
         }
 
         $result = json_decode($result,true);

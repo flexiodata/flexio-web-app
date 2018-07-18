@@ -58,7 +58,6 @@ class Fail extends \Flexio\Jobs\Base
             case \Flexio\Base\Error::MISSING_PARAMETER:
             case \Flexio\Base\Error::INVALID_PARAMETER:
             case \Flexio\Base\Error::INVALID_SYNTAX:
-            case \Flexio\Base\Error::NO_OBJECT:
             case \Flexio\Base\Error::INTEGRITY_FAILED;
             case \Flexio\Base\Error::CONNECTION_FAILED:
             case \Flexio\Base\Error::CREATE_FAILED:

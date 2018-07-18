@@ -57,7 +57,7 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         $properties = $comment_model->get($eid);
         if ($properties === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $object->setEid($eid);
         $object->clearCache();

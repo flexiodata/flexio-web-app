@@ -68,12 +68,6 @@ class Test
         \Flexio\Tests\Check::assertNumber('A.7', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::NO_OBJECT;
-        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
-        $expected = 404;
-        \Flexio\Tests\Check::assertNumber('A.8', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $flexio_error_code = \Flexio\Base\Error::MISSING_PARAMETER;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 422;

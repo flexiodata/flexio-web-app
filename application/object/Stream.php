@@ -63,7 +63,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
         $properties = $stream_model->get($eid);
         if ($properties === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         $object->setEid($eid);
         $object->clearCache();

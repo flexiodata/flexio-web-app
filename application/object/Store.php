@@ -27,7 +27,7 @@ class Store
         switch ($eid_type)
         {
             default:
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
             case \Model::TYPE_COMMENT:
                 return \Flexio\Object\Comment::load($eid);

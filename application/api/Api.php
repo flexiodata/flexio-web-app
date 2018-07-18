@@ -216,7 +216,7 @@ class Api
             {
                 $user = \Flexio\Object\User::load($token_info['owned_by']);
                 if ($user->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
                 $user_eid_from_token = $user->getEid();
             }

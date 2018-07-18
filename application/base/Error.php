@@ -32,7 +32,6 @@ class Error
     public const INVALID_VERSION        =  'invalid-version';
     public const INVALID_REQUEST        =  'invalid-request';
     public const NOT_FOUND              =  'not-found';
-    public const NO_OBJECT              =  'no-object';
 
     // processing type errors (422)
     public const MISSING_PARAMETER      =  'missing-parameter';
@@ -77,7 +76,6 @@ class Error
             case self::NO_DATABASE:            return 'Database not available';
             case self::NO_MODEL:               return 'Model not available';
             case self::NO_SERVICE:             return 'Service not available';
-            case self::NO_OBJECT:              return 'Object not available';
             case self::INTEGRITY_FAILED:       return 'Integrity check failed';
             case self::CONNECTION_FAILED:      return 'Could not connect';
             case self::INVALID_SYNTAX:         return 'Invalid syntax';

@@ -73,11 +73,6 @@ class Test
         \Flexio\Tests\Check::assertString('A.10', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Error::NO_OBJECT;
-        $expected = 'no-object';
-        \Flexio\Tests\Check::assertString('A.11', '\Flexio\Base\Error; constant check', $actual, $expected, $results);
-
-        // BEGIN TEST
         $actual = \Flexio\Base\Error::INTEGRITY_FAILED;
         $expected = 'integrity-failed';
         \Flexio\Tests\Check::assertString('A.12', '\Flexio\Base\Error; constant check', $actual, $expected, $results);

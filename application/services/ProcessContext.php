@@ -258,7 +258,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         $file = $parts[1] ?? '';
 
         if ($file == '')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
 
         if ($folder == 'params' || $folder == 'var')
         {
@@ -274,7 +274,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_OBJECT);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
         }
     }
 
