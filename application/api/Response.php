@@ -95,16 +95,14 @@ class Response
             case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
                 return 403;
 
-            // "NOT FOUND" type errors; invalid requests, invalid
-            // parameters, or valid requests for objects that can't
-            // be found
+            // "NOT FOUND" type errors; invalid requests, invalid parameters, or
+            // valid requests for objects that can't be found
             case \Flexio\Base\Error::INVALID_VERSION:
             case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::UNAVAILABLE:
                 return 404;
 
-            // "UNPROCESSABLE ENTITY"; request can't be processed
-            // for some reason
+            // "UNPROCESSABLE ENTITY"; request can't be processed for some reason
             case \Flexio\Base\Error::MISSING_PARAMETER:
             case \Flexio\Base\Error::INVALID_PARAMETER:
             case \Flexio\Base\Error::INVALID_SYNTAX:

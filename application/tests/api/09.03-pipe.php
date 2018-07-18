@@ -104,7 +104,7 @@ class Test
         $expected = '
         {
             "error": {
-                "code": "no-object"
+                "code": "unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'DELETE /:userid/pipes/:objeid; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
@@ -150,7 +150,7 @@ class Test
         $expected = '
         {
             "error": {
-                "code":"no-object",
+                "code":"unavailable",
                 "message":"Object not available"
             }
         }';

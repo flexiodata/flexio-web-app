@@ -122,7 +122,7 @@ class Test
         $expected = '
         {
             "error": {
-                "code": "no-object"
+                "code": "unavailable"
             }
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'POST /:userid/pipes/:objeid/run; fail if object isn\'t owned by specified owner',  $actual, $expected, $results);
