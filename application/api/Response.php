@@ -115,9 +115,13 @@ class Response
             case \Flexio\Base\Error::WRITE_FAILED:
             case \Flexio\Base\Error::READ_FAILED:
             case \Flexio\Base\Error::EXECUTE_FAILED:
-            case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:
             case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
                 return 422;
+
+            // "TOO MANY REQUESTS"; too many requests in a given
+            // period of time
+            case \Flexio\Base\Error::RATE_LIMIT_EXCEEDED:
+                return 429;
 
             // "INTERNAL SERVER ERROR"; something is wrong internally
             case \Flexio\Base\Error::UNDEFINED:

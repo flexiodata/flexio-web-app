@@ -82,7 +82,7 @@ class Test
         // BEGIN TEST
         $flexio_error_code = \Flexio\Base\Error::RATE_LIMIT_EXCEEDED;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
-        $expected = 422;
+        $expected = 429;
         \Flexio\Tests\Check::assertNumber('A.10', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
