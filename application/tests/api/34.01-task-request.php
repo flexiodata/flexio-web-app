@@ -72,7 +72,7 @@ class Test
             "response": {
                 "error": {
                     "code": "invalid-syntax",
-                    "message": "Invalid parameter"
+                    "message": "Invalid syntax"
                 }
             }
         }';
