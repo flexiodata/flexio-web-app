@@ -179,10 +179,13 @@ class Base implements \Flexio\IFace\IJob
 
 
 
-        if (!$stream)
+
+        if ($stream === null)
         {
             return null;
         }
+
+
 
         if (count($parts) == 0)
         {
@@ -192,6 +195,7 @@ class Base implements \Flexio\IFace\IJob
 
         if (is_string($stream))
         {
+
             $data = @json_decode($stream);
         }
          else
