@@ -239,7 +239,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
         catch(\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
         }
 
         return $service->getFileInfo($rpath);
@@ -484,7 +484,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             {
                 $service = \Flexio\Services\Factory::create($connection_properties);
                 if (!$service)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
 
                 $this->service_map[$connection_identifier] = $service;
                 return $service;

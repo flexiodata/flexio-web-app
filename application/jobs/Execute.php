@@ -546,7 +546,7 @@ class ScriptHost
         {
             $service = \Flexio\Services\Factory::create($local_connection_properties);
             if (!$service)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
 
             $tokens = $service->getTokens();
             return $tokens['access_token'];
@@ -570,7 +570,7 @@ class ScriptHost
         }
     }
 
-    
+
 
     public function func_getEnv() // TODO: add return type
     {

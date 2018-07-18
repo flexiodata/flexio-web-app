@@ -97,7 +97,7 @@ class Email extends \Flexio\Jobs\Base
                 {
                     $service = \Flexio\Services\Factory::create($connection);
                     if (!$service)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Process-local service not found");
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE, "Process-local service not found");
                     $tokens = $service->getTokens();
                     $email_params['access_token'] = $tokens['access_token'];
                 }
