@@ -66,14 +66,14 @@ class Test
             {
                 $vfs->getFileInfo(\Flexio\Base\Util::generateHandle()); // name outside storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
-                $expected = 'Exception: ' . \Flexio\Base\Error::NO_SERVICE;
+                $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $s,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $error = json_decode($e->getMessage(),true);
                 $actual = $error['code'];
-                $expected = \Flexio\Base\Error::NO_SERVICE;
+                $expected = \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $s,  $actual, $expected, $results);
             }
 
@@ -83,14 +83,14 @@ class Test
             {
                 $vfs->getFileInfo($folderpath . \Flexio\Base\Util::generateHandle() . '.txt'); // name within storage namespace
                 $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
-                $expected = 'Exception: ' . \Flexio\Base\Error::NO_SERVICE;
+                $expected = 'Exception: ' . \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); file path check on folder that doesn\'t exist should throw an exception' . $s,  $actual, $expected, $results);
             }
             catch (\Flexio\Base\Exception $e)
             {
                 $error = json_decode($e->getMessage(),true);
                 $actual = $error['code'];
-                $expected = \Flexio\Base\Error::NO_SERVICE;
+                $expected = \Flexio\Base\Error::UNAVAILABLE;
                 \Flexio\Tests\Check::assertString("B.$idx", '\Flexio\Services\Vfs::getFileInfo(); check exception code' . $s,  $actual, $expected, $results);
             }
 

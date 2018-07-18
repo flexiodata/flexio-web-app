@@ -239,7 +239,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
         catch(\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE); // use unavailable rather than 'no-service' so path behavior is consistent
         }
 
         return $service->getFileInfo($rpath);
