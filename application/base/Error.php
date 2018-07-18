@@ -18,34 +18,50 @@ namespace Flexio\Base;
 
 class Error
 {
+    // general error types (400)
     public const UNDEFINED              =  '';
     public const GENERAL                =  'general';
-    public const UNIMPLEMENTED          =  'unimplemented';
-    public const DEPRECATED             =  'deprecated';
+
+    // authorization error types (401)
+    public const UNAUTHORIZED           =  'unauthorized';
+
+    // forbidden error types (403)
+    public const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
+
+    // invalid request type errors (404)
     public const INVALID_VERSION        =  'invalid-version';
     public const INVALID_REQUEST        =  'invalid-request';
-    public const INVALID_SYNTAX         =  'invalid-syntax';
-    public const INVALID_FORMAT         =  'invalid-format';
+    public const NOT_FOUND              =  'not-found';
+    public const NO_OBJECT              =  'no-object';
+
+    // processing type errors (422)
     public const MISSING_PARAMETER      =  'missing-parameter';
     public const INVALID_PARAMETER      =  'invalid-parameter';
-    public const UNAUTHORIZED           =  'unauthorized';
-    public const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
-    public const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
-    public const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+    public const INVALID_SYNTAX         =  'invalid-syntax';
     public const INTEGRITY_FAILED       =  'integrity-failed';
     public const CONNECTION_FAILED      =  'connection-failed';
     public const CREATE_FAILED          =  'create-failed';
-    public const OPEN_FAILED            =  'open-failed';
-    public const READ_FAILED            =  'read-failed';
-    public const WRITE_FAILED           =  'write-failed';
     public const DELETE_FAILED          =  'delete-failed';
+    public const OPEN_FAILED            =  'open-failed';
+    public const WRITE_FAILED           =  'write-failed';
+    public const READ_FAILED            =  'read-failed';
     public const EXECUTE_FAILED         =  'execute-failed';
+    public const INVALID_FORMAT         =  'invalid-format';
+    public const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
+    public const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
+
+    // rate limit type errors (429)
+    public const RATE_LIMIT_EXCEEDED    =  'rate-limit-exceeded';
+
+    // internal server error types (500)
+    public const UNIMPLEMENTED          =  'unimplemented';
+    public const DEPRECATED             =  'deprecated';
     public const NO_DATABASE            =  'no-database';
     public const NO_MODEL               =  'no-model';
     public const NO_SERVICE             =  'no-service';
-    public const NO_OBJECT              =  'no-object';
-    public const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
-    public const NOT_FOUND              =  'not-found';  // generic not found (404)
+
+    // note: if additional items are added here; add appropriate
+    // http status code in \Flexio\Api\Response
 
     public static function getDefaultMessage($code) : string
     {

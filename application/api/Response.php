@@ -82,6 +82,7 @@ class Response
             // we may want to switch to 500, in which case we'll need to properly
             // assign ERROR_GENERAL to other categories when appropriate
             default:
+            case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::GENERAL:
                 return 400;
 
@@ -99,21 +100,26 @@ class Response
             // be found
             case \Flexio\Base\Error::INVALID_VERSION:
             case \Flexio\Base\Error::INVALID_REQUEST:
-            case \Flexio\Base\Error::MISSING_PARAMETER:
-            case \Flexio\Base\Error::INVALID_PARAMETER:
+            case \Flexio\Base\Error::NOT_FOUND:
             case \Flexio\Base\Error::NO_OBJECT:
                 return 404;
 
             // "UNPROCESSABLE ENTITY"; request can't be processed
             // for some reason
+            case \Flexio\Base\Error::MISSING_PARAMETER:
+            case \Flexio\Base\Error::INVALID_PARAMETER:
+            case \Flexio\Base\Error::INVALID_SYNTAX:
+            case \Flexio\Base\Error::INVALID_FORMAT:
             case \Flexio\Base\Error::INTEGRITY_FAILED:
             case \Flexio\Base\Error::CONNECTION_FAILED:
             case \Flexio\Base\Error::CREATE_FAILED:
             case \Flexio\Base\Error::DELETE_FAILED:
+            case \Flexio\Base\Error::OPEN_FAILED:
             case \Flexio\Base\Error::WRITE_FAILED:
             case \Flexio\Base\Error::READ_FAILED:
             case \Flexio\Base\Error::EXECUTE_FAILED:
             case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
+            case \Flexio\Base\Error::OBJECT_ALREADY_EXISTS:
                 return 422;
 
             // "TOO MANY REQUESTS"; too many requests in a given
@@ -122,7 +128,6 @@ class Response
                 return 429;
 
             // "INTERNAL SERVER ERROR"; something is wrong internally
-            case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::UNIMPLEMENTED: // 501 isn't appropriate as that applies to HTTP request methods
             case \Flexio\Base\Error::DEPRECATED:
             case \Flexio\Base\Error::NO_DATABASE:
