@@ -31,7 +31,7 @@ class Error
     // forbidden error types (403)
     public const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
 
-    // invalid request type errors (404)
+    // not found type errors (404)
     public const UNAVAILABLE            =  'unavailable'; // object isn't found or is outside scope of requesting user
 
     // processing type errors (422)
@@ -66,28 +66,43 @@ class Error
             default:
                 return 'Operation failed';
 
+            // general error types (400)
             case self::UNDEFINED:              return 'Operation failed';
             case self::GENERAL:                return 'General error';
+            case self::INVALID_VERSION:        return 'Invalid version';
+            case self::INVALID_REQUEST:        return 'Invalid request';
+            case self::INVALID_SYNTAX:         return 'Invalid syntax';
+
+            // authorization error types (401)
+            case self::UNAUTHORIZED:           return 'Unauthorized';
+
+            // forbidden error types (403)
+            case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
+
+            // not found type errors (404)
+            case self::UNAVAILABLE:            return 'Unavailable';
+
+            // processing type errors (422)
+            case self::INTEGRITY_FAILED:       return 'Integrity check failed';
+            case self::CONNECTION_FAILED:      return 'Could not connect';
+            case self::CREATE_FAILED:          return 'Could not create object';
+            case self::DELETE_FAILED:          return 'Could not delete object';
+            case self::OPEN_FAILED:            return 'Could not open object';
+            case self::WRITE_FAILED:           return 'Could not write to object';
+            case self::READ_FAILED:            return 'Could not read from object';
+            case self::EXECUTE_FAILED:         return 'Could not execute process';
+            case self::OBJECT_ALREADY_EXISTS:  return 'Object already exists';
+            case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
+
+            // rate limit type errors (429)
+            case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';
+
+            // internal server error types (500)
             case self::UNIMPLEMENTED:          return 'Unimplemented';
             case self::DEPRECATED:             return 'Deprecated';
             case self::NO_DATABASE:            return 'Database not available';
             case self::NO_MODEL:               return 'Model not available';
             case self::NO_SERVICE:             return 'Service not available';
-            case self::INTEGRITY_FAILED:       return 'Integrity check failed';
-            case self::CONNECTION_FAILED:      return 'Could not connect';
-            case self::INVALID_SYNTAX:         return 'Invalid syntax';
-            case self::CREATE_FAILED:          return 'Could not create object';
-            case self::DELETE_FAILED:          return 'Could not delete object';
-            case self::WRITE_FAILED:           return 'Could not write to object';
-            case self::READ_FAILED:            return 'Could not read from object';
-            case self::EXECUTE_FAILED:         return 'Could not execute process';
-            case self::UNAUTHORIZED:           return 'Unauthorized';
-            case self::INSUFFICIENT_RIGHTS:    return 'Insufficient rights';
-            case self::RATE_LIMIT_EXCEEDED:    return 'Rate limit exceeded';
-            case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
-            case self::INVALID_VERSION:        return 'Invalid version';
-            case self::INVALID_REQUEST:        return 'Invalid request';
-            case self::UNAVAILABLE:            return 'Unavailable';
         }
     }
 }
