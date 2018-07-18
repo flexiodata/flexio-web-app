@@ -190,7 +190,7 @@ class Email extends \Flexio\Jobs\Base
             $stream = $vfs->open($attachment['file']);
             if (!$stream)
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
 
 

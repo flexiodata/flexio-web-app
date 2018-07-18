@@ -100,7 +100,7 @@ class Response
             // be found
             case \Flexio\Base\Error::INVALID_VERSION:
             case \Flexio\Base\Error::INVALID_REQUEST:
-            case \Flexio\Base\Error::NOT_FOUND:
+            case \Flexio\Base\Error::UNAVAILABLE:
                 return 404;
 
             // "UNPROCESSABLE ENTITY"; request can't be processed

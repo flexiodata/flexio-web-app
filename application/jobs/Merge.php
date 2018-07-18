@@ -67,7 +67,7 @@ class Merge extends \Flexio\Jobs\Base
                 $stream = $vfs->open($path);
                 if (!$stream)
                 {
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
                 }
 
                 $streams[] = $stream;

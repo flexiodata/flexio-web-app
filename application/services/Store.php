@@ -113,7 +113,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
 
         $entry = $stream->get();
@@ -232,7 +232,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $stream->delete();
 
@@ -244,7 +244,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $path = $path['path'] ?? (is_string($path) ? $path : '');
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $info = $stream->get();
         if ($info['stream_type'] == \Flexio\Object\Stream::TYPE_DIRECTORY)
@@ -258,7 +258,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $path = $params['path'] ?? (is_string($params) ? $params : '');
         $stream = $this->getStreamFromPath($path);
         if (!$stream)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
 
         $entry = $stream->get();
@@ -379,7 +379,7 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $user = \Flexio\Object\User::load($owner_user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         catch (\Flexio\Base\Exception $e)
         {

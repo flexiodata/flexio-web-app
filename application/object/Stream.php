@@ -63,7 +63,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
         $properties = $stream_model->get($eid);
         if ($properties === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -383,7 +383,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         }
         catch (\Flexio\Base\Exception $e)
         {
-            if ($e->getCode() == \Flexio\Base\Error::NOT_FOUND)
+            if ($e->getCode() == \Flexio\Base\Error::UNAVAILABLE)
             {
                 // underlying data file is missing -- recreate
                 if (strlen($this->properties['path']) > 0)

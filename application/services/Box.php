@@ -93,7 +93,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $info = $this->internalGetFileInfo($path);
         if (!isset($info['id']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         $fileid = $info['id'];
 
         if (($info['content_type'] ?? '') == \Flexio\Base\ContentType::FLEXIO_FOLDER)
@@ -125,7 +125,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         if (($info['code'] ?? '') === 'not_found')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         if (!isset($info['name']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);

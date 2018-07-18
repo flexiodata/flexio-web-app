@@ -28,11 +28,11 @@ class Stream
         // as an additional check
         $stream = \Flexio\Object\Stream::load($stream_eid);
         if ($owner_user_eid !== $stream->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights on the object
         if ($stream->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -73,11 +73,11 @@ class Stream
         // as an additional check;
         $stream = \Flexio\Object\Stream::load($stream_eid);
         if ($owner_user_eid !== $stream->getOwner())
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights on the object
         if ($stream->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($stream->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

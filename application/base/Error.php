@@ -31,7 +31,7 @@ class Error
     // invalid request type errors (404)
     public const INVALID_VERSION        =  'invalid-version';
     public const INVALID_REQUEST        =  'invalid-request';
-    public const NOT_FOUND              =  'not-found';
+    public const UNAVAILABLE            =  'unavailable'; // object isn't found or is outside scope of requesting user
 
     // processing type errors (422)
     public const MISSING_PARAMETER      =  'missing-parameter';
@@ -93,7 +93,7 @@ class Error
             case self::SIZE_LIMIT_EXCEEDED:    return 'Size limit exceeded';
             case self::INVALID_VERSION:        return 'Invalid version';
             case self::INVALID_REQUEST:        return 'Invalid request';
-            case self::NOT_FOUND:              return 'Not found';
+            case self::UNAVAILABLE:            return 'Unavailable';
         }
     }
 }

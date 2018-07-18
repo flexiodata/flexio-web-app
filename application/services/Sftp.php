@@ -183,7 +183,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         if (!isset($info['type']))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
 
         $arr = \Flexio\Base\File::splitBasePathAndName($path);
@@ -274,7 +274,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         stream_wrapper_unregister('sftpcapture');
 
         if ($res === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
     }
 
     public function write(array $params, callable $callback) // TODO: add return type

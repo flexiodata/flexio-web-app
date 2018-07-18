@@ -88,7 +88,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             // load the object
             $user = \Flexio\Object\User::load($owner_user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             // get the connections
             $filter = array('owned_by' => $user->getEid(), 'eid_status' => \Model::STATUS_AVAILABLE);
@@ -333,7 +333,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
 
         if (strlen(trim($path)) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $arr = $this->splitPath($path);
         $connection_identifier = $arr[0];
@@ -354,7 +354,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
 
         if (strlen(trim($pathstr)) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
 
         $arr = $this->splitPath($pathstr);
@@ -505,13 +505,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         // check the rights on the connection
         if ($connection->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($connection->allows($owner_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         $connection_info = $connection->get();
         if (!self::isStorageConnectionType($connection_info['connection_type'] ?? ''))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $service = $connection->getService();
         $this->service_map[$connection_identifier] = $service;

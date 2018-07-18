@@ -110,7 +110,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         if ($httpcode == 404)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
 
         if ($httpcode >= 200 && $httpcode <= 299)
@@ -303,7 +303,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             'message' => 'Commit from flex.io',
             'content' => base64_encode($content)
         ];
-        
+
         if (strlen($blob_sha) > 0)
         {
             $params['sha'] = $blob_sha;

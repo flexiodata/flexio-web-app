@@ -314,7 +314,7 @@ class User
         // load the user
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         // check the rights, but only if the object isn't pending;
         // TODO: proper approach is to always check rights; right now, \Flexio\Api\User::set()
@@ -347,7 +347,7 @@ class User
 
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -382,7 +382,7 @@ class User
 
         // check the rights on the object
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
@@ -426,11 +426,11 @@ class User
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         catch (\Flexio\Base\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
         if ($user->getVerifyCode() !== $code)
@@ -468,11 +468,11 @@ class User
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         catch (\Flexio\Base\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
         if ($user->getStatus() != \Model::STATUS_PENDING)
@@ -509,11 +509,11 @@ class User
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         catch (\Flexio\Base\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
         // TODO: if the verify code is a set, but blank, should we regenerate
@@ -554,11 +554,11 @@ class User
             $user_eid = \Flexio\Object\User::getEidFromEmail($email);
             $user = \Flexio\Object\User::load($user_eid);
             if ($user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
         catch (\Flexio\Base\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, _('This user is unavailable'));
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, _('This user is unavailable'));
         }
 
         if ($user->set(array('verify_code' => $verify_code)) === false)
@@ -587,7 +587,7 @@ class User
         // load the user
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_WRITE) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 

@@ -117,7 +117,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $url .= "?prefix=" . rawurlencode($bucket_path);
         }
 
- 
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -146,7 +146,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 continue;
             if (substr($file, 0, $bucket_path_len) == $bucket_path)
                 $file = substr($file, $bucket_path_len);
-            
+
             $full_path = $base_path;
             if (substr($full_path, -1) != '/')
                 $full_path .= '/';
@@ -254,7 +254,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         {
             $encoded_path = rawurlencode($bucket_path . ($i == 0 ? '/':''));
             $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o/" . $encoded_path . "";
-    
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);  // 30 seconds connection timeout
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $this->access_token]);
@@ -277,7 +277,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $sl = strrpos($plain_filename,'/');
             if ($sl !== false)
                 $plain_filename = substr($plain_filename, $sl+1);
-    
+
             return [
                 'name' => $plain_filename,
                 'size' => $info['size'] ?? null,
@@ -295,7 +295,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
             $bucket_path = rtrim($bucket_path,'/') . '/';
             $url .= "?prefix=" . rawurlencode($bucket_path);
-    
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
             curl_setopt($ch, CURLOPT_HTTPGET, true);
@@ -303,7 +303,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
             $result = curl_exec($ch);
             curl_close($ch);
-    
+
             $result = json_decode($result,true);
             if (isset($result['items']) && count($result['items']) > 0)
             {
@@ -322,7 +322,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             }
              else
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
         }
     }
@@ -335,7 +335,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
 
 
-        $path = trim($path, '/'); 
+        $path = trim($path, '/');
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
         $parts = explode('/', $path);
@@ -447,7 +447,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
-        
+
         $bucket = '';
         $bucket_path = '';
         if (!$this->getPathParts($path, $bucket, $bucket_path))
@@ -466,7 +466,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $encoded_path = rawurlencode($bucket_path);
         $url = "https://www.googleapis.com/storage/v1/b/" . urlencode($bucket) . "/o/" . $encoded_path . "?alt=media";
-  
+
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -643,7 +643,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         curl_close($ch);
 
         if ($httpcode == 404)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "Google Cloud Storage Bucket not found");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Google Cloud Storage Bucket not found");
 
         if ($httpcode < 200 || $httpcode >= 300)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED, "Could not upload to GCS");
@@ -892,7 +892,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         {
             $has_leading_slash = (substr($full_path, 0, 1) == '/');
             $has_trailing_slash = (substr($full_path, -1) == '/');
-    
+
             $full_path = trim($full_path,'/');
 
             $parts = \Flexio\Base\File::splitPath($path);

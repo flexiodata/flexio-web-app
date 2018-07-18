@@ -68,7 +68,7 @@ class System
             $current_user_eid = \Flexio\Object\User::getEidFromIdentifier($username);
             $current_user = \Flexio\Object\User::load($current_user_eid);
             if ($current_user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $result = $current_user->get();
 
             $request->setRequestingUser($current_user_eid);

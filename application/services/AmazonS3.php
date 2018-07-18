@@ -340,7 +340,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL);
         }
 
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
     }
 
     public function exists(string $path) : bool

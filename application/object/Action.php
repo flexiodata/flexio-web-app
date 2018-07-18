@@ -57,7 +57,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
         $properties = $action_model->get($eid);
         if ($properties === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();

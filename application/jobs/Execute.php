@@ -505,7 +505,7 @@ class ScriptHost
         // make sure the owner exists
         $owner_user = \Flexio\Object\User::load($owner_user_eid);
         if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $results = array();
 
@@ -558,13 +558,13 @@ class ScriptHost
             // make sure the owner exists
             $owner_user = \Flexio\Object\User::load($owner_user_eid);
             if ($owner_user->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             // load the object; make sure the eid is associated with the owner
             // as an additional check
             $connection = \Flexio\Object\Connection::load($identifier);
             if ($owner_user_eid !== $connection->getOwner())
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             return $connection->getAccessToken();
         }

@@ -114,7 +114,7 @@ class MySql implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $structure = $this->describeTable($path);
         if ($structure === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         return [
             'name' => $path,

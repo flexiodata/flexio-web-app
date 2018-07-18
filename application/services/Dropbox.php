@@ -84,7 +84,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             }
             else if (substr($result['error_summary'], 0, 14) == 'path/not_found')
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
 
         }
@@ -159,7 +159,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             if (substr($result['error_summary'], 0, 14) == 'path/not_found')
             {
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
             else
             {
@@ -319,7 +319,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             {
                 $error_summary = $result['error_summary'] ?? '';
                 if (substr($error_summary, 0, 14) == 'path/not_found')
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
                      else
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
             }

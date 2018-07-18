@@ -185,7 +185,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         $file = $parts[1] ?? '';
 
         if ($file == '')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $val = null;
 
@@ -193,7 +193,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params[$file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $val = $params[$file];
         }
@@ -201,7 +201,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params['query.' . $file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $val = $params['query.' . $file];
         }
@@ -209,7 +209,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getParams();
             if (!isset($params['form.' . $file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $val = $params['form.' . $file];
         }
@@ -217,13 +217,13 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         {
             $params = $this->process->getFiles();
             if (!isset($params[$file]))
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
             $val = $params[$file];
         }
         else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
 
         if ($val instanceof \Flexio\Base\Stream)
@@ -258,7 +258,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         $file = $parts[1] ?? '';
 
         if ($file == '')
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         if ($folder == 'params' || $folder == 'var')
         {
@@ -274,7 +274,7 @@ class ProcessContext implements \Flexio\IFace\IFileSystem
         }
          else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
     }
 

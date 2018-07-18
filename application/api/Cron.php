@@ -289,7 +289,7 @@ class Cron
         {
             $pipe = \Flexio\Object\Pipe::load($pipe_eid);
             if ($pipe->getStatus() === \Model::STATUS_DELETED)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND);
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             $pipe_properties = $pipe->get();
         }
         catch (\Flexio\Base\Exception $e)

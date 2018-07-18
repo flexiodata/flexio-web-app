@@ -657,7 +657,7 @@ class StorageFs
 
         if (!@file_exists($fspath))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, IS_DEBUG() ? "File '$path' does not exist" : null);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, IS_DEBUG() ? "File '$path' does not exist" : null);
         }
 
         $file = new StorageFsFile();
@@ -691,7 +691,7 @@ class StorageFs
 
         if (!@file_exists($old_fspath))
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NOT_FOUND, "File '$old_fspath' does not exist");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "File '$old_fspath' does not exist");
         }
 
         if (@file_exists($new_fspath))
