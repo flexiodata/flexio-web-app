@@ -190,7 +190,7 @@ class Convert extends \Flexio\Jobs\Base
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_FORMAT, "Input file must be a table");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "Input file must be a table");
         }
 
         $job_params = $this->getJobParameters();

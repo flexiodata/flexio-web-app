@@ -95,7 +95,7 @@ class Filter extends \Flexio\Jobs\Base
         unset($payload);
 
         if (!is_array($data))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_FORMAT, "The input JSON must be a valid JSON array");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "The input JSON must be a valid JSON array");
 
         // scan through the whole array and generate a structure from it
         $input_structure = [];

@@ -45,7 +45,6 @@ class Error
     public const WRITE_FAILED           =  'write-failed';
     public const READ_FAILED            =  'read-failed';
     public const EXECUTE_FAILED         =  'execute-failed';
-    public const INVALID_FORMAT         =  'invalid-format';
     public const OBJECT_ALREADY_EXISTS  =  'object-already-exists';
     public const SIZE_LIMIT_EXCEEDED    =  'size-limit-exceeded';
 
@@ -81,7 +80,6 @@ class Error
             case self::INVALID_SYNTAX:         return 'Invalid syntax';
             case self::MISSING_PARAMETER:      return 'Missing parameter';
             case self::INVALID_PARAMETER:      return 'Invalid parameter';
-            case self::INVALID_FORMAT:         return 'Invalid format';
             case self::CREATE_FAILED:          return 'Could not create object';
             case self::DELETE_FAILED:          return 'Could not delete object';
             case self::WRITE_FAILED:           return 'Could not write to object';

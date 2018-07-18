@@ -98,7 +98,7 @@ class Select extends \Flexio\Jobs\Base
         }
         else
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_FORMAT, "The input JSON must be a valid JSON array");
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "The input JSON must be a valid JSON array");
         }
 
         $payload = json_encode($output);

@@ -86,12 +86,6 @@ class Test
         \Flexio\Tests\Check::assertNumber('A.11', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::INVALID_FORMAT;
-        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
-        $expected = 422;
-        \Flexio\Tests\Check::assertNumber('A.12', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
-
-        // BEGIN TEST
         $flexio_error_code = \Flexio\Base\Error::INTEGRITY_FAILED;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 422;
