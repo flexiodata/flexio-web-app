@@ -48,7 +48,7 @@ class Test
             $actual = $result;
             $actual['response'] = $response;
             $expected = '{
-                "code": 404,
+                "code": 400,
                 "content_type": "application/json",
                 "response": {
                     "error": {
