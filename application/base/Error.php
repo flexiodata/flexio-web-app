@@ -21,6 +21,9 @@ class Error
     // general error types (400)
     public const UNDEFINED              =  '';
     public const GENERAL                =  'general';
+    public const INVALID_VERSION        =  'invalid-version';
+    public const INVALID_REQUEST        =  'invalid-request';
+    public const INVALID_SYNTAX         =  'invalid-syntax';
 
     // authorization error types (401)
     public const UNAUTHORIZED           =  'unauthorized';
@@ -29,12 +32,9 @@ class Error
     public const INSUFFICIENT_RIGHTS    =  'insufficient-rights';
 
     // invalid request type errors (404)
-    public const INVALID_VERSION        =  'invalid-version';
-    public const INVALID_REQUEST        =  'invalid-request';
     public const UNAVAILABLE            =  'unavailable'; // object isn't found or is outside scope of requesting user
 
     // processing type errors (422)
-    public const INVALID_SYNTAX         =  'invalid-syntax';
     public const INTEGRITY_FAILED       =  'integrity-failed';
     public const CONNECTION_FAILED      =  'connection-failed';
     public const CREATE_FAILED          =  'create-failed';

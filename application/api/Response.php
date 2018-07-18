@@ -82,6 +82,8 @@ class Response
             default:
             case \Flexio\Base\Error::UNDEFINED:
             case \Flexio\Base\Error::GENERAL:
+            case \Flexio\Base\Error::INVALID_VERSION:
+            case \Flexio\Base\Error::INVALID_REQUEST:
             case \Flexio\Base\Error::INVALID_SYNTAX:
                 return 400;
 
@@ -94,10 +96,8 @@ class Response
             case \Flexio\Base\Error::INSUFFICIENT_RIGHTS:
                 return 403;
 
-            // "NOT FOUND" type errors; invalid requests, invalid parameters, or
-            // valid requests for objects that can't be found
-            case \Flexio\Base\Error::INVALID_VERSION:
-            case \Flexio\Base\Error::INVALID_REQUEST:
+            // "NOT FOUND" type errors; valid requests, but object can't
+            // be found, is deleted, is outside a user's scope, etc.
             case \Flexio\Base\Error::UNAVAILABLE:
                 return 404;
 

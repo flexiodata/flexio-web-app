@@ -38,33 +38,33 @@ class Test
         \Flexio\Tests\Check::assertNumber('A.2', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::INVALID_SYNTAX;
+        $flexio_error_code = \Flexio\Base\Error::INVALID_VERSION;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 400;
         \Flexio\Tests\Check::assertNumber('A.3', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
+        $flexio_error_code = \Flexio\Base\Error::INVALID_REQUEST;
+        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
+        $expected = 400;
+        \Flexio\Tests\Check::assertNumber('A.4', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $flexio_error_code = \Flexio\Base\Error::INVALID_SYNTAX;
+        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
+        $expected = 400;
+        \Flexio\Tests\Check::assertNumber('A.5', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
+
+        // BEGIN TEST
         $flexio_error_code = \Flexio\Base\Error::UNAUTHORIZED;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 401;
-        \Flexio\Tests\Check::assertNumber('A.4', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertNumber('A.6', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
         $flexio_error_code = \Flexio\Base\Error::INSUFFICIENT_RIGHTS;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 403;
-        \Flexio\Tests\Check::assertNumber('A.5', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::INVALID_VERSION;
-        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
-        $expected = 404;
-        \Flexio\Tests\Check::assertNumber('A.6', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::INVALID_REQUEST;
-        $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
-        $expected = 404;
         \Flexio\Tests\Check::assertNumber('A.7', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
