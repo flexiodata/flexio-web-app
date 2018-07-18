@@ -47,7 +47,7 @@
 
       <div
         class="fixed z-8 dn db-l ml4 pa3 bg-white br2 css-white-box css-output"
-        v-if="true"
+        v-if="false"
       >
         <div class="flex-none pb2 mb2 bb b--black-10">
           <div class="fw6">Output</div>
