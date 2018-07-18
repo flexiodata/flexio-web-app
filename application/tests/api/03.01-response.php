@@ -122,13 +122,13 @@ class Test
         \Flexio\Tests\Check::assertNumber('A.16', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
+        $flexio_error_code = \Flexio\Base\Error::OBJECT_ALREADY_EXISTS;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 422;
         \Flexio\Tests\Check::assertNumber('A.17', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $flexio_error_code = \Flexio\Base\Error::OBJECT_ALREADY_EXISTS;
+        $flexio_error_code = \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED;
         $actual = \Flexio\Api\Response::getHttpErrorCode($flexio_error_code);
         $expected = 422;
         \Flexio\Tests\Check::assertNumber('A.18', '\Flexio\Api\Response::getHttpErrorCode(); check http error code mapping',  $actual, $expected, $results);

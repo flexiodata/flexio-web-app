@@ -110,8 +110,8 @@ class Response
             case \Flexio\Base\Error::WRITE_FAILED:
             case \Flexio\Base\Error::READ_FAILED:
             case \Flexio\Base\Error::EXECUTE_FAILED:
-            case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
             case \Flexio\Base\Error::OBJECT_ALREADY_EXISTS:
+            case \Flexio\Base\Error::SIZE_LIMIT_EXCEEDED:
                 return 422;
 
             // "TOO MANY REQUESTS"; too many requests in a given
