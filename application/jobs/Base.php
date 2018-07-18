@@ -71,7 +71,12 @@ class Base implements \Flexio\IFace\IJob
         }
          else
         {
-            $data = (string)$stream;
+            if ($stream === true)
+                $data = 'true';
+            else if ($stream === false)
+                $data = 'false';
+            else
+                $data = (string)$stream;
         }
 
         $res = \Flexio\Base\Stream::create();
