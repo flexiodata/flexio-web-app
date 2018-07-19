@@ -185,8 +185,8 @@ class Api
         try
         {
             // STEP 4: set the url params
-            $request_url_params = $server_request->getUrlParts();
-            $mapped_url_params = self::extractUrlParams($request_url_params);
+            $request_url_parts = $server_request->getUrlParts();
+            $mapped_url_params = self::extractUrlParams($request_url_parts);
             if (!isset($mapped_url_params['apiversion']))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
 
@@ -247,24 +247,9 @@ class Api
                     $api_request->setPostParams($new_post_params);
             }
         }
-        catch (\Flexio\Base\Exception $e)
+        catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
-
-            $error = array();
-            $error['code'] = $info['code'];
-            $error['message'] = $info['message'];
-
-            if (IS_DEBUG() !== false)
-            {
-                $error['type'] = 'flexio exception';
-                $error['file'] = $e->getFile();
-                $error['line'] = $e->getLine();
-                $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTraceAsString();
-            }
-
+            $error = self::createError($e);
             \Flexio\Api\Response::sendError($error);
             return;
         }
@@ -291,12 +276,6 @@ class Api
             return;
         }
 
-        // process the request
-        $error = array(
-            'code' => \Flexio\Base\Error::GENERAL,
-            'message' => ''
-        );
-
         try
         {
             // find the api implementation function associated with the api request
@@ -308,64 +287,23 @@ class Api
             $function($api_request);
             return; // success; if not, fall through to try/catch and error handler code
         }
-        catch (\Flexio\Base\Exception $e)
+        catch (\Flexio\Base\Exception | \Exception | \Error $e)
         {
-            $info = $e->getMessage(); // exception info is packaged up in message
-            $info = json_decode($info,true);
+            $error = self::createError($e);
 
-            $error['code'] = $info['code'];
-            $error['message'] = $info['message'];
-
-            if (IS_DEBUG())
+            // we have an error; if an action has been set, set the response type and info
+            if ($api_request->getActionType() !== \Flexio\Api\Action::TYPE_UNDEFINED)
             {
-                $error['type'] = 'flexio exception';
-                $error['module'] = $e->getFile();
-                $error['line'] = $e->getLine();
-                $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTraceAsString();
+                $http_error_code = (string)\Flexio\Api\Response::getHttpErrorCode($error['code']);
+                $api_request->setResponseCode($http_error_code);
+                $api_request->setResponseParams($error);
+                $api_request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
+                $api_request->track();
             }
-        }
-        catch (\Exception $e)
-        {
-            $error['code'] = \Flexio\Base\Error::GENERAL;
-            $error['message'] = '';
 
-            if (IS_DEBUG())
-            {
-                $error['type'] = 'system exception';
-                $error['module'] = $e->getFile();
-                $error['line'] = $e->getLine();
-                $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTraceAsString();
-            }
+            // send the error info
+            \Flexio\Api\Response::sendError($error);
         }
-        catch (\Error $e)
-        {
-            $error['code'] = \Flexio\Base\Error::GENERAL;
-            $error['message'] = '';
-
-            if (IS_DEBUG())
-            {
-                $error['type'] = 'system error';
-                $error['module'] = $e->getFile();
-                $error['line'] = $e->getLine();
-                $error['debug_message'] = $e->getMessage();
-                $error['trace'] = $e->getTraceAsString();
-            }
-        }
-
-        // we have an error; if an action has been set, set the response type and info
-        if ($api_request->getActionType() !== \Flexio\Api\Action::TYPE_UNDEFINED)
-        {
-            $http_error_code = (string)\Flexio\Api\Response::getHttpErrorCode($error['code']);
-            $api_request->setResponseCode($http_error_code);
-            $api_request->setResponseParams($error);
-            $api_request->setResponseCreated(\Flexio\Base\Util::getCurrentTimestamp());
-            $api_request->track();
-        }
-
-        // send the error info
-        \Flexio\Api\Response::sendError($error);
     }
 
     private static function getApiEndpoint(\Flexio\Api\Request $request) : string
@@ -635,5 +573,47 @@ class Api
         }
 
         return $url_params;
+    }
+
+    private static function createError($e) : array
+    {
+        $type = '';
+        $code = '';
+        $message = '';
+
+        if ($e instanceof \Flexio\Base\Exception)
+        {
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+
+            $type = 'flexio exception';
+            $code = $info['code'];
+            $message = $info['message'];
+        }
+        elseif ($e instanceof \Exception)
+        {
+            $type = 'system exception';
+            $code = \Flexio\Base\Error::GENERAL;
+        }
+        elseif ($e instanceof \Error)
+        {
+            $type = 'system error';
+            $code = \Flexio\Base\Error::GENERAL;
+        }
+
+        $error = array();
+        $error['code'] = $code;
+        $error['message'] = $message;
+
+        if (IS_DEBUG())
+        {
+            $error['type'] = $type;
+            $error['module'] = $e->getFile();
+            $error['line'] = $e->getLine();
+            $error['debug_message'] = $e->getMessage();
+            $error['trace'] = $e->getTraceAsString();
+        }
+
+        return $error;
     }
 }
