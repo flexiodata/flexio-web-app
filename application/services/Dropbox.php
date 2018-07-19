@@ -410,29 +410,6 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         return true;
-
-/*
-        $dropbox_args = json_encode(array('path' => $path, 'mode' => 'overwrite'));
-
-        // upload/write the file
-        $ch = curl_init();
-
-        $filename = rawurlencode($path);
-        curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload");
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer '.$this->access_token, "Dropbox-API-Arg: $dropbox_args", "Content-Type: application/octet-stream", "Content-Length: 500" ));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_READFUNCTION, function($ch, $fp, $length) use (&$callback) {
-            $res = $callback($length);
-            if ($res === false) return '';
-            return $res;
-        });
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-*/
-
     }
 
     ////////////////////////////////////////////////////////////

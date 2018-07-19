@@ -355,27 +355,6 @@ class Flexio
             }
         }
 
-/*
-        // check idle
-        if (!\self::checkIdle())
-        {
-            \Flexio\System\System::clearLoginIdentity();
-            @session_destroy();
-
-            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest')
-            {
-                // TODO: send error response code through api:
-                // (\Flexio\Base\Error::INSUFFICIENT_RIGHTS, _('Session expired'));
-            }
-             else
-            {
-                header('Location: /app/signin');
-            }
-
-            exit(0);
-        }
-*/
-
         // check for calls that need to write to the session, like login, logout, etc
 
         if (false === strstr($uri, '/signin') &&
@@ -402,50 +381,6 @@ class Flexio
         $framework->registerPlugin(new \Flexio\System\FlexioPlugin);
         $framework->dispatch();
     }
-/*
-    public static function checkIdle()
-    {
-        // checkIdle() returns true if idle is ok
-
-        // check if we aren't logged in at all; if not, return ok
-        if (!isset($_SESSION['env']['user_eid']))
-            return true;
-        if (strlen($_SESSION['env']['user_eid']) == 0)
-            return true;
-
-        // check if idle time checking is disabled for this session
-        if (isset($_SESSION['no_idle_timeout']) && toBoolean($_SESSION['no_idle_timeout']))
-            return true;
-
-        // round the time to the nearest 1000 seconds so that we don't update session data so much
-        $curtime = round(time(), -3);
-
-        // if last activity session value doesn't exist, set it and return ok
-        if (!isset($_SESSION['last_activity']))
-        {
-            $_SESSION['last_activity'] = $curtime;
-            return true;
-        }
-
-        $last_activity = $_SESSION['last_activity'];
-        $idletime = $curtime - $last_activity;
-
-        // default session timeout of 2 hours
-        $session_timeout = 7200;
-        if (isset($GLOBALS['g_config']->session_timeout))
-            $session_timeout = $GLOBALS['g_config']->session_timeout;
-
-        if ($idletime > $session_timeout)
-            return false;
-
-        // update last activity time stamp
-        if ($last_activity != $curtime)
-        {
-            $_SESSION['last_activity'] = $curtime;
-        }
-
-        return true;
-    }*/
 
     public static function getInstance()
     {

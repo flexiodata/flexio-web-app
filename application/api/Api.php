@@ -18,71 +18,13 @@ namespace Flexio\Api;
 
 class Api
 {
-    // changelog between v1 and v2:
-    // * new users are created by posting to signup endpoint:
-    //   v1: POST /users => v2: POST /signup
-    // * all connections, pipes, processes, streams, vfs, statistics endpoints prefixed with owner;
-    //   following are examples:
-    //   v1: POS /connections => v2: POS /:userid/connections
-    //   v1: DEL /pipes/:eid  => v2: DEL /:userid/pipes/:eid
-    // * /users/:eid/tokens/* api endpoints are now /:userid/auth/keys/*:
-    //   v1: GET /users/:eid/tokens      => v2: GET /:userid/auth/keys
-    //   v1: POS /users/:eid/tokens      => v2: POS /:userid/auth/keys
-    //   v1: GET /users/:eid/tokens/:eid => v2: GET /:userid/auth/keys/:eid
-    //   v1: DEL /users/:eid/tokens/:eid => v2: DEL /:userid/auth/keys/:eid
-    // * /rights/* api endpoints are now /:userid/auth/rights/*:
-    //   v1: GET /rights      => v2: GET /:userid/auth/rights
-    //   v1: POS /rights      => v2: POS /:userid/auth/rights
-    //   v1: POS /rights/:eid => v2: POS /:userid/auth/rights/:eid
-    //   v1: GET /rights/:eid => v2: GET /:userid/auth/rights/:eid
-    //   v1: DEL /rights/:eid => v2: DEL /:userid/auth/rights/:eid
-    // * removed /users/me; this info is given by /:ownerid/account
-    //   v1: GET /users/me' => v2: GET /:ownerid/account
-    // * endpoints for setting/getting user info are now under /:ownerid/account:
-    //   v1: POS /users/:eid => v2: POS /:ownerid/account
-    //   v2: GET /users/:eid => v2: GET /:ownerid/account
-    // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
-    //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
-    //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
-    // * removed internal /process/debug endpoint:
-    //   v1: GET /processes/debug => v2: (removed)
-    // * renamed /tests/* endpoints to /admin/tests/*:
-    //   v1: GET /tests/configure => v2: /admin/tests/configure
-    //   v1: GET /tests/run       => v2: /admin/tests/run
-    // * removed /admin/extract:
-    //   v1: GET /admin/extract => v2: (removed)
-    // * removed /connections/:eid/describe; connection items are now retrieved through VFS
-    //   v1: GET /connections/:eid/describe => v2: (removed)
-    // * most list-type API endpoints now allow created_min and created_max for date range limits, and start/limit;
-    //   tail is allowed as a parameter, but is currently not implemented
-    // * process statistic api endpint moved to process/summary endpoint:
-    //   v1: 'GET /:userid/statistics/processes' => v2: 'GET /:userid/processes/summary'
-    // * renamed some admin endpoints:
-    //   v1: 'GET /admin/configuration' => v2: 'GET /admin/info/system'
-    //   v1: 'GET /admin/list/users' => v2: 'GET /admin/info/users'
-    //   v1: 'GET /admin/statistics/users' => v2: 'GET /admin/info/processes/summary'
-    // * removed some admin endpoints:
-    //   v1: 'GET /admin/resetconfig' => v2: (removed)
-    //   v1: 'GET /admin/createexamples' => v2: (removed)
-    // * added endpoints for getting action history and summary
-    //   v1: (doesn't exist) => v2: 'GET /:userid/actions'
-    //   v2: (doesn't exist) => v2: 'GET /:userid/actions/summary'
-    // * removed pipe endpoint for getting process list; use process list directly with query param of parent_eid=<pipe_eid>
-    //   this will help give us consistent behavior with the list and summary version of processes (e.g. get a summary view
-    //   of the list using the same params)
-    //   v1: 'GET /pipes/:eid/processes' => v2: (removed) use: GET /:userid/processes
-    // * removed pipe endpoint for creating a process; use process creation endpoint with parent_eid (in POST params) for getting info from pipe
-    //   v1: 'POS /pipes/:eid/processes' => v2: (removed) use: POST /:userid/processes with parent_eid as POST parameter
-    // * changed endpoint for resetting password
-    //   v1: 'POS /users/requestpasswordreset' => v2: '\Flexio\Api\User::forgotpassword'
-
     // TODO: migrate VFS api endpoints over to new user scheme?
 
     // TODO: figure out how to handle these endpoints:
     // 'POS /users/resendverify'         => '\Flexio\Api\User::resendverify'
     // 'POS /users/activate'             => '\Flexio\Api\User::activate'
 
-    // TODO: rename vfs endpoint to files?
+    // TODO: rename vfs endpoint to files or storage or something else?
 
     // TODO: should processes run with pipe owner privileges; what about case where two
     // users are running the same pipe; doesn't seem like each should see the output for
@@ -93,6 +35,8 @@ class Api
     // 'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api\Pipe::processes',
 
     // TODO: do we need the stream API, or can we get the content exclusively through VFS
+
+    // TODO: implement tail query parameter
 
 
     private static $endpoints = array(
@@ -188,119 +132,166 @@ class Api
         'GET /admin/action/test'                      => '\Flexio\Api\Action::test'
     );
 
-    public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params) : void
+    public static function request(\Flexio\System\FrameworkRequest $server_request) : void
     {
-        // API v2 request can currently come from one of two patterns
-        // TODO: handle both for now, but remove /api/v2 when appropriate
-        // https://api.host.io/v1
-        // https://www.host.io/api/v2
-
-
-        // before anything else, find the requesting user from the request params;
-        // if we can find a requesting user from the params, set the system session
-        // user to that user; if we can't find the requesting user from the request
-        // params, then try to get the requesting user from the system session info;
-        // if we can't, it's a public request
-
-        $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
-        $requesting_user_token = '';
-
-        $header_params = $server_request->getHeaders();
-        $user_eid_from_token = '';
-
-        try
-        {
-            $requesting_user_token = self::getTokenFromRequestParams($header_params, $query_params);
-            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
-            if ($token_info)
-            {
-                $user = \Flexio\Object\User::load($token_info['owned_by']);
-                if ($user->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-                $user_eid_from_token = $user->getEid();
-            }
-        }
-        catch (\Flexio\Base\Exception $e)
-        {
-        }
-
-        $user_eid_from_session = \Flexio\System\System::getCurrentUserEid();
-
-        if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
-        {
-            \Flexio\System\System::setCurrentUserEid($user_eid_from_token);
-            $requesting_user_eid = $user_eid_from_token;
-        }
-        else
-        {
-            if (\Flexio\Base\Eid::isValid($user_eid_from_session) === true)
-                $requesting_user_eid = $user_eid_from_session;
-        }
-
-        // get the url parts and map them to the api parameters
-        $url_params = array();
-        $url_part0 = $server_request->getUrlPathPart(0) ?? '';
-        $url_part1 = $server_request->getUrlPathPart(1) ?? '';
-
-        if ($url_part0 === 'v1')
-        {
-            $url_params['apiversion'] = $server_request->getUrlPathPart(0) ?? '';
-            $url_params['apiparam1']  = $server_request->getUrlPathPart(1) ?? '';
-            $url_params['apiparam2']  = $server_request->getUrlPathPart(2) ?? '';
-            $url_params['apiparam3']  = $server_request->getUrlPathPart(3) ?? '';
-            $url_params['apiparam4']  = $server_request->getUrlPathPart(4) ?? '';
-            $url_params['apiparam5']  = $server_request->getUrlPathPart(5) ?? '';
-            $url_params['apiparam6']  = $server_request->getUrlPathPart(6) ?? '';
-        }
-
-        if ($url_part0 === 'api' && $url_part1 === 'v2')
-        {
-            $url_params['apiversion'] = $server_request->getUrlPathPart(1) ?? '';
-            $url_params['apiparam1']  = $server_request->getUrlPathPart(2) ?? '';
-            $url_params['apiparam2']  = $server_request->getUrlPathPart(3) ?? '';
-            $url_params['apiparam3']  = $server_request->getUrlPathPart(4) ?? '';
-            $url_params['apiparam4']  = $server_request->getUrlPathPart(5) ?? '';
-            $url_params['apiparam5']  = $server_request->getUrlPathPart(6) ?? '';
-            $url_params['apiparam6']  = $server_request->getUrlPathPart(7) ?? '';
-        }
-
-        // unhandled case
-        if (count($url_params) === 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
-
-        // get other request info
-        $request_ip_address = strtolower($server_request->getIpAddress());
+        // STEP 1: get basic, cleaned-up, request info
         $request_user_agent = $server_request->getUserAgent();
+        $request_ip_address = strtolower($server_request->getIpAddress());
         $request_url = $server_request->getUri(); // leave URL as-is to match param handling
         $request_method = strtoupper($server_request->getMethod());
         $request_timestamp = \Flexio\System\System::getTimestamp();
+        $request_header_params = $server_request->getHeaders();
+        $request_query_params = $server_request->getQueryParams();
+        $request_post_params = $server_request->getPostParams();
 
-        // package the request info
+
+        // STEP 2: set basic response headers
+        if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
+        {
+            header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
+            header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN']??'*'));
+            header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+            header('Access-Control-Max-Age: 1000');
+            header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
+        }
+        else
+        {
+            $host = GET_HTTP_HOST();
+            if (substr($host, 0, 4) == 'api.' && substr($host, -8) == '.flex.io')
+            {
+                header('Access-Control-Allow-Origin: *');
+                header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
+                header('Access-Control-Allow-Headers: authorization, content-type');
+            }
+        }
+
+        if ($request_method == 'OPTIONS')
+            return;
+
+
+        // STEP 3: create a request object and set basic request info
         $api_request = \Flexio\Api\Request::create();
+
         $api_request->setUserAgent($request_user_agent);
         $api_request->setIpAddress($request_ip_address);
         $api_request->setUrl($request_url);
         $api_request->setMethod($request_method);
-        $api_request->setToken($requesting_user_token);
-        $api_request->setRequestingUser($requesting_user_eid);
         $api_request->setRequestCreated($request_timestamp);
-        $api_request->setHeaderParams($header_params);
-        $api_request->setUrlParams($url_params);
-        $api_request->setQueryParams($query_params);
-        $api_request->setPostParams($post_params);
+        $api_request->setHeaderParams($request_header_params);
+        $api_request->setQueryParams($request_query_params);
+        $api_request->setPostParams($request_post_params);
 
 
+        try
+        {
+            // STEP 4: set the url params
+            $request_url_params = $server_request->getUrlParts();
+            $mapped_url_params = self::extractUrlParams($request_url_params);
+            if (!isset($mapped_url_params['apiversion']))
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_VERSION);
+
+            $api_request->setUrlParams($mapped_url_params);
+
+
+            // STEP 5: set the requesting user; if we can find a requesting user from
+            // the params, set the system session user to that user; if we can't find
+            // the requesting user from the request params, then try to get the requesting
+            // user from the system session info; if we can't, it's a public request
+
+            $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
+            $requesting_user_token = '';
+            $user_eid_from_token = '';
+
+            try
+            {
+                $requesting_user_token = self::getTokenFromRequestParams($request_header_params, $request_query_params);
+                $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
+                if ($token_info)
+                {
+                    $user = \Flexio\Object\User::load($token_info['owned_by']);
+                    if ($user->getStatus() === \Model::STATUS_DELETED)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+                    $user_eid_from_token = $user->getEid();
+                }
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+            }
+
+            $user_eid_from_session = \Flexio\System\System::getCurrentUserEid();
+
+            if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
+            {
+                \Flexio\System\System::setCurrentUserEid($user_eid_from_token);
+                $requesting_user_eid = $user_eid_from_token;
+            }
+            else
+            {
+                if (\Flexio\Base\Eid::isValid($user_eid_from_session) === true)
+                    $requesting_user_eid = $user_eid_from_session;
+            }
+
+            $api_request->setRequestingUser($requesting_user_eid);
+            $api_request->setToken($requesting_user_token);
+
+
+            // STEP 6: if JSON is sent as part of a POST body, set the request posted
+            // parameters with the converted JSON; the check for enable_post_data_reading
+            // is for calls that 'want' the json payload as their body, such as
+            // /pipe/:eid/run and /process/:eid/run
+            if ($request_method != 'GET' && ini_get('enable_post_data_reading') == '1')
+            {
+                $new_post_params = self::getPostContent($request_header_params, 'php://input');
+                if (isset($new_post_params))
+                    $api_request->setPostParams($new_post_params);
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $info = $e->getMessage(); // exception info is packaged up in message
+            $info = json_decode($info,true);
+
+            $error = array();
+            $error['code'] = $info['code'];
+            $error['message'] = $info['message'];
+
+            if (IS_DEBUG() !== false)
+            {
+                $error['type'] = 'flexio exception';
+                $error['file'] = $e->getFile();
+                $error['line'] = $e->getLine();
+                $error['debug_message'] = $e->getMessage();
+                $error['trace'] = $e->getTraceAsString();
+            }
+
+            \Flexio\Api\Response::sendError($error);
+            return;
+        }
+
+
+        // STEP 7: process the request
+        self::processRequest($api_request);
+    }
+
+    public static function processRequest(\Flexio\Api\Request $api_request) : void
+    {
         if (!IS_PROCESSTRYCATCH())
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in \Flexio\Jobs\Process
-            self::processRequest($api_request);
+
+            // find the api implementation function associated with the api request
+            $function = self::getApiEndpoint($api_request);
+            if (is_callable($function) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+            // invoke the api implementation function
+            $function($api_request);
             return;
         }
 
         // process the request
-
         $error = array(
             'code' => \Flexio\Base\Error::GENERAL,
             'message' => ''
@@ -308,10 +299,14 @@ class Api
 
         try
         {
-            self::processRequest($api_request);
+            // find the api implementation function associated with the api request
+            $function = self::getApiEndpoint($api_request);
+            if (is_callable($function) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
-            // success
-            return;
+            // invoke the api implementation function
+            $function($api_request);
+            return; // success; if not, fall through to try/catch and error handler code
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -359,7 +354,7 @@ class Api
             }
         }
 
-        // we have an error, if an action has been set, set the response type and info
+        // we have an error; if an action has been set, set the response type and info
         if ($api_request->getActionType() !== \Flexio\Api\Action::TYPE_UNDEFINED)
         {
             $http_error_code = (string)\Flexio\Api\Response::getHttpErrorCode($error['code']);
@@ -371,24 +366,6 @@ class Api
 
         // send the error info
         \Flexio\Api\Response::sendError($error);
-    }
-
-    private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type
-    {
-        $request_method = $request->getMethod();
-        $url_params = $request->getUrlParams();
-        $query_params = $request->getQueryParams();
-        $post_params = $request->getPostParams();
-
-        if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
-
-        $function = self::getApiEndpoint($request);
-        if (is_callable($function) === true)
-            return $function($request);
-
-        // we can't find the specified api endpoint
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
     }
 
     private static function getApiEndpoint(\Flexio\Api\Request $request) : string
@@ -577,5 +554,86 @@ class Api
         }
 
         return '';
+    }
+
+    private static function getPostContent(array $header_params, string $input) : ?array
+    {
+        // TODO: currently, in some configurations (e.g. the test site but not localhost),
+        // two content-type headers are being returned; one of them is null, and the
+        // other has the correct value; for now, check both, but we should find out
+        // why two are being returned, get it so that only one is being returned, and
+        // then convert all keys to lowercase and do a lookup on the lowercase (headers
+        // are case insensitive, so there's no guarantee of case in the key, but to
+        // convert everything to lowercase, we have to make sure there's only one so
+        // we don't overwrite a good value for a given key with a bad one)
+
+        foreach ($header_params as $k => $v)
+        {
+            $k = strtolower($k);
+
+            // only check for the existence of 'application/json' here instead of doing a
+            // straight up string comparison -- the reason for this is that there are cases
+            // where the content type looks like this: "application/json;charset=UTF-8"
+            if (strcasecmp($k, 'content-type') == 0 && strpos($v, 'application/json') !== false)
+            {
+                $content = file_get_contents($input);
+                if (strlen($content) > 0)
+                {
+                    $urlencoding_test = substr($content, 0, 3);
+                    if ($urlencoding_test == '%7B' || $urlencoding_test == '%7b')
+                        $content = rawurldecode($content);
+
+                    $obj = @json_decode($content, true);
+
+                    // note: input might not be parsable if the content type was specified
+                    // as 'application/json' but the data that was posted is something else;
+                    // in this case, throw a normal invalid syntax response
+                    if ($obj === null)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Content-Type header is 'application/json' but posted data isn't properly formatted JSON"));
+
+                    return $obj;
+                }
+
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    private static function extractUrlParams(array $url_parts) : array
+    {
+        // API v2 request can currently come from one of two patterns
+        // TODO: handle both for now, but remove /api/v2 when appropriate
+        // https://api.host.io/v1
+        // https://www.host.io/api/v2
+
+        $url_params = array();
+        $url_part0 = $url_parts[0] ?? '';
+        $url_part1 = $url_parts[1] ?? '';
+
+        if ($url_part0 === 'v1')
+        {
+            $url_params['apiversion'] = $url_parts[0] ?? '';
+            $url_params['apiparam1']  = $url_parts[1] ?? '';
+            $url_params['apiparam2']  = $url_parts[2] ?? '';
+            $url_params['apiparam3']  = $url_parts[3] ?? '';
+            $url_params['apiparam4']  = $url_parts[4] ?? '';
+            $url_params['apiparam5']  = $url_parts[5] ?? '';
+            $url_params['apiparam6']  = $url_parts[6] ?? '';
+        }
+
+        if ($url_part0 === 'api' && $url_part1 === 'v2')
+        {
+            $url_params['apiversion'] = $url_parts[1] ?? '';
+            $url_params['apiparam1']  = $url_parts[2] ?? '';
+            $url_params['apiparam2']  = $url_parts[3] ?? '';
+            $url_params['apiparam3']  = $url_parts[4] ?? '';
+            $url_params['apiparam4']  = $url_parts[5] ?? '';
+            $url_params['apiparam5']  = $url_parts[6] ?? '';
+            $url_params['apiparam6']  = $url_parts[7] ?? '';
+        }
+
+        return $url_params;
     }
 }
