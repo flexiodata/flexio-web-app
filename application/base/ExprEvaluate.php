@@ -33,32 +33,6 @@ class ExprEvaluate
             return false;
 
         return $obj->execute($data, $retval);
-
-/*
-TODO: remove deprecated implementation; following was split into two functions,
-// prepare() and execute() to allow the expression to be parsed once and then
-// evaluated again and again against new sets of data
-
-        $obj->setData($data);
-        $obj->setStructure($structure);
-        if (!$obj->parse($expr))
-            return false;
-
-
-        $ret = $obj->doEval($obj->parse_result, $retval);
-        if (!$ret)
-            return false;
-
-        $type = $obj->getType();
-        if ($type == ExprParser::TYPE_DATE || $type == ExprParser::TYPE_DATETIME)
-        {
-            if ($retval)
-                $retval = $retval->toString();
-            return true;
-        }
-
-        return true;
-*/
     }
 
     public static function getLastError()
