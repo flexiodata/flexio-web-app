@@ -43,6 +43,11 @@ class FrameworkRequest
         return $this->controller;
     }
 
+    public function getUrlParts() : array
+    {
+        return $this->url_parts;
+    }
+
     public function getUrlPathPart($idx, $default = null) // TODO: add return type
     {
         if ($idx >= count($this->url_parts))
