@@ -326,25 +326,7 @@ class Api
         // send the error info
         \Flexio\Api\Response::sendError($error);
     }
-/*
-    private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type
-    {
-        $request_method = $request->getMethod();
-        $url_params = $request->getUrlParams();
-        $query_params = $request->getQueryParams();
-        $post_params = $request->getPostParams();
 
-        if (isset($query_params['testfail']) && strlen($query_params['testfail']) > 0 && (IS_DEBUG() || IS_TESTING()))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, $query_params['testfail']);
-
-        $function = self::getApiEndpoint($request);
-        if (is_callable($function) === true)
-            return $function($request);
-
-        // we can't find the specified api endpoint
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
-    }
-*/
     private static function getApiEndpoint(\Flexio\Api\Request $request) : string
     {
         // note: creates an api endpoint string that's used to lookup the appropriate api implementation
