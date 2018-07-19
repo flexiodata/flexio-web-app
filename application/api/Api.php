@@ -38,7 +38,6 @@ class Api
 
     // TODO: implement tail query parameter
 
-
     private static $endpoints = array(
 
         // PUBLIC ENDPOINTS:
@@ -134,18 +133,7 @@ class Api
 
     public static function request(\Flexio\System\FrameworkRequest $server_request) : void
     {
-        // STEP 1: get basic, cleaned-up, request info
-        $request_user_agent = $server_request->getUserAgent();
-        $request_ip_address = strtolower($server_request->getIpAddress());
-        $request_url = $server_request->getUri(); // leave URL as-is to match param handling
-        $request_method = strtoupper($server_request->getMethod());
-        $request_timestamp = \Flexio\System\System::getTimestamp();
-        $request_header_params = $server_request->getHeaders();
-        $request_query_params = $server_request->getQueryParams();
-        $request_post_params = $server_request->getPostParams();
-
-
-        // STEP 2: set basic response headers
+        // STEP 1: set basic response headers
         if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
@@ -165,11 +153,21 @@ class Api
             }
         }
 
+        // STEP 2: get basic, cleaned-up, request info
+        $request_user_agent = $server_request->getUserAgent();
+        $request_ip_address = strtolower($server_request->getIpAddress());
+        $request_url = $server_request->getUri(); // leave URL as-is to match param handling
+        $request_method = strtoupper($server_request->getMethod());
+        $request_timestamp = \Flexio\System\System::getTimestamp();
+        $request_header_params = $server_request->getHeaders();
+        $request_query_params = $server_request->getQueryParams();
+        $request_post_params = $server_request->getPostParams();
+
+        // STEP 3: if we have an options request, we're done
         if ($request_method == 'OPTIONS')
             return;
 
-
-        // STEP 3: create a request object and set basic request info
+        // STEP 4: create a request object and set basic api request info
         $api_request = \Flexio\Api\Request::create();
 
         $api_request->setUserAgent($request_user_agent);
@@ -181,10 +179,9 @@ class Api
         $api_request->setQueryParams($request_query_params);
         $api_request->setPostParams($request_post_params);
 
-
         try
         {
-            // STEP 4: set the url params
+            // STEP 5: set the api request url params
             $request_url_parts = $server_request->getUrlParts();
             $mapped_url_params = self::extractUrlParams($request_url_parts);
             if (!isset($mapped_url_params['apiversion']))
@@ -192,51 +189,20 @@ class Api
 
             $api_request->setUrlParams($mapped_url_params);
 
+            // STEP 6: set the api request user token
+            $requesting_user_token = self::getTokenFromRequestParams($request_header_params, $request_query_params);
+            $api_request->setToken($requesting_user_token);
 
-            // STEP 5: set the requesting user; if we can find a requesting user from
+            // STEP 7: set the api request requesting user; if we can find a requesting user from
             // the params, set the system session user to that user; if we can't find
             // the requesting user from the request params, then try to get the requesting
             // user from the system session info; if we can't, it's a public request
-
-            $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
-            $requesting_user_token = '';
-            $user_eid_from_token = '';
-
-            try
-            {
-                $requesting_user_token = self::getTokenFromRequestParams($request_header_params, $request_query_params);
-                $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
-                if ($token_info)
-                {
-                    $user = \Flexio\Object\User::load($token_info['owned_by']);
-                    if ($user->getStatus() === \Model::STATUS_DELETED)
-                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
-                    $user_eid_from_token = $user->getEid();
-                }
-            }
-            catch (\Flexio\Base\Exception $e)
-            {
-            }
-
-            $user_eid_from_session = \Flexio\System\System::getCurrentUserEid();
-
-            if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
-            {
-                \Flexio\System\System::setCurrentUserEid($user_eid_from_token);
-                $requesting_user_eid = $user_eid_from_token;
-            }
-            else
-            {
-                if (\Flexio\Base\Eid::isValid($user_eid_from_session) === true)
-                    $requesting_user_eid = $user_eid_from_session;
-            }
-
+            $current_session_user_eid = \Flexio\System\System::getCurrentUserEid();
+            $requesting_user_eid = self::getRequestingUser($requesting_user_token, $current_session_user_eid);
             $api_request->setRequestingUser($requesting_user_eid);
-            $api_request->setToken($requesting_user_token);
+            \Flexio\System\System::setCurrentUserEid($requesting_user_eid);
 
-
-            // STEP 6: if JSON is sent as part of a POST body, set the request posted
+            // STEP 8: if JSON is sent as part of a POST body, set the api request posted
             // parameters with the converted JSON; the check for enable_post_data_reading
             // is for calls that 'want' the json payload as their body, such as
             // /pipe/:eid/run and /process/:eid/run
@@ -254,18 +220,16 @@ class Api
             return;
         }
 
-
-        // STEP 7: process the request
+        // STEP 8: process the request
         self::processRequest($api_request);
     }
 
     public static function processRequest(\Flexio\Api\Request $api_request) : void
     {
+        // during debugging, sometimes try/catch needs to be turned
+        // of completely; this switch is implemented here and in \Flexio\Jobs\Process
         if (!IS_PROCESSTRYCATCH())
         {
-            // during debugging, sometimes try/catch needs to be turned
-            // of completely; this switch is implemented here and in \Flexio\Jobs\Process
-
             // find the api implementation function associated with the api request
             $function = self::getApiEndpoint($api_request);
             if (is_callable($function) === false)
@@ -276,6 +240,7 @@ class Api
             return;
         }
 
+        // normal handler
         try
         {
             // find the api implementation function associated with the api request
@@ -318,7 +283,6 @@ class Api
         // now, see if the first part of the path is an owner, which we'll use below; this
         // allows us to only have to try to identify the owner once
         $user_eid = self::resolveOwnerIdentifier($requesting_user, $url_params['apiparam1']);
-
 
         // PATH POSSIBILITY 1: there are no identifiers of any kind; match on the raw path
         $api_params = $url_params;
@@ -492,6 +456,41 @@ class Api
         }
 
         return '';
+    }
+
+    private static function getRequestingUser(string $requesting_user_token, string $current_session_user_eid) : string
+    {
+        $requesting_user_eid = \Flexio\Object\User::MEMBER_PUBLIC; // default
+        $user_eid_from_token = '';
+
+        try
+        {
+            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
+            if ($token_info)
+            {
+                $user = \Flexio\Object\User::load($token_info['owned_by']);
+                if ($user->getStatus() === \Model::STATUS_DELETED)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+                $user_eid_from_token = $user->getEid();
+            }
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            // fall through
+        }
+
+        if (\Flexio\Base\Eid::isValid($user_eid_from_token) === true)
+        {
+            $requesting_user_eid = $user_eid_from_token;
+        }
+        else
+        {
+            if (\Flexio\Base\Eid::isValid($current_session_user_eid) === true)
+                $requesting_user_eid = $current_session_user_eid;
+        }
+
+        return $requesting_user_eid;
     }
 
     private static function getPostContent(array $header_params, string $input) : ?array
