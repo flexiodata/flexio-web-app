@@ -161,55 +161,18 @@ class Api
         if ($method == 'OPTIONS')
             return;
 
-
-        // allow JSON to be sent as POST body; the check for enable_post_data_reading
-        // is for calls that 'want' the json payload as their body, such as /pipe/:eid/run and
-        // /process/:eid/run
-
         try
         {
+            // allow JSON to be sent as POST body; the check for enable_post_data_reading
+            // is for calls that 'want' the json payload as their body, such as /pipe/:eid/run and
+            // /process/:eid/run
             if ($method != 'GET' && ini_get('enable_post_data_reading') == '1')
             {
-                $all_headers = $server_request->getHeaders();
+                $headers = $server_request->getHeaders();
+                $new_post_params = self::getPostContent($headers,'php://input');
 
-                // TODO: currently, in some configurations (e.g. the test site but not localhost),
-                // two content-type headers are being returned; one of them is null, and the
-                // other has the correct value; for now, check both, but we should find out
-                // why two are being returned, get it so that only one is being returned, and
-                // then convert all keys to lowercase and do a lookup on the lowercase (headers
-                // are case insensitive, so there's no guarantee of case in the key, but to
-                // convert everything to lowercase, we have to make sure there's only one so
-                // we don't overwrite a good value for a given key with a bad one)
-                foreach ($all_headers as $k => $v)
-                {
-                    $k = strtolower($k);
-
-                    // only check for the existence of 'application/json' here instead of doing a
-                    // straight up string comparison -- the reason for this is that there are cases
-                    // where the content type looks like this: "application/json;charset=UTF-8"
-                    if (strcasecmp($k, 'content-type') == 0 && strpos($v, 'application/json') !== false)
-                    {
-                        $input = file_get_contents('php://input');
-                        if (strlen($input) > 0)
-                        {
-                            $urlencoding_test = substr($input, 0, 3);
-                            if ($urlencoding_test == '%7B' || $urlencoding_test == '%7b')
-                                $input = rawurldecode($input);
-
-                            $obj = @json_decode($input, true);
-
-                            // note: input might not be parsable if the content type was specified
-                            // as 'application/json' but the data that was posted is something else;
-                            // in this case, throw a normal invalid parameter response
-                            if ($obj === null)
-                                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Content-Type header is 'application/json' but posted data isn't properly formatted JSON"));
-
-                            $post_params = $obj; // if we're posting JSON, this will take the place of the post params
-                        }
-
-                        break;
-                    }
-                }
+                if (isset($new_post_params))
+                    $post_params = $new_post_params; // if we're posting JSON, this will take the place of the post params
             }
 
             self::processRequest($server_request, $query_params, $post_params);
@@ -617,5 +580,50 @@ class Api
         }
 
         return '';
+    }
+
+    private static function getPostContent(array $header_params, string $input) : ?array
+    {
+        // TODO: currently, in some configurations (e.g. the test site but not localhost),
+        // two content-type headers are being returned; one of them is null, and the
+        // other has the correct value; for now, check both, but we should find out
+        // why two are being returned, get it so that only one is being returned, and
+        // then convert all keys to lowercase and do a lookup on the lowercase (headers
+        // are case insensitive, so there's no guarantee of case in the key, but to
+        // convert everything to lowercase, we have to make sure there's only one so
+        // we don't overwrite a good value for a given key with a bad one)
+
+        foreach ($header_params as $k => $v)
+        {
+            $k = strtolower($k);
+
+            // only check for the existence of 'application/json' here instead of doing a
+            // straight up string comparison -- the reason for this is that there are cases
+            // where the content type looks like this: "application/json;charset=UTF-8"
+            if (strcasecmp($k, 'content-type') == 0 && strpos($v, 'application/json') !== false)
+            {
+                $content = file_get_contents($input);
+                if (strlen($content) > 0)
+                {
+                    $urlencoding_test = substr($content, 0, 3);
+                    if ($urlencoding_test == '%7B' || $urlencoding_test == '%7b')
+                        $content = rawurldecode($content);
+
+                    $obj = @json_decode($content, true);
+
+                    // note: input might not be parsable if the content type was specified
+                    // as 'application/json' but the data that was posted is something else;
+                    // in this case, throw a normal invalid syntax response
+                    if ($obj === null)
+                        throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, _("Content-Type header is 'application/json' but posted data isn't properly formatted JSON"));
+
+                    return $obj;
+                }
+
+                break;
+            }
+        }
+
+        return null;
     }
 }
