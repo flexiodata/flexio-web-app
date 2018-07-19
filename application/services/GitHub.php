@@ -19,6 +19,8 @@ namespace Flexio\Services;
 class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $access_token = '';
+    private $owner = '';
+    private $repository = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
@@ -45,7 +47,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return 0;
     }
 
-    public function list(string $path = '', array $options = []) : array
+    public function list(string $full_path = '', array $options = []) : array
     {
         // returns the directory tree for all repositories the user
         // has access to, starting with the repository as the root
@@ -53,21 +55,19 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return array();
 
-        // note: the base path for a repository is :owner/:repository
-        $path = trim($path,'/');
+        while (false !== strpos($full_path,'//'))
+            $full_path = str_replace('//','/',$full_path);
+
+        $owner_repository = '';
+        $path = '';
+        $result = $this->getPathParts($full_path, $owner_repository, $path);
+
+        if ($result === false)
+            return [];
+
         $path_parts = explode('/', $path);
 
-        // if there isn't any path, return the repositories
-        if (strlen($path) === 0)
-            return $this->getRepositories();
-
-        // see if we can get the path parts; if we can't, return an empty array
-        $repository_to_find = '';
-        $folder_path = '';
-        if ($this->getPathParts($path, $repository_to_find, $folder_path) === false)
-            return array();
-
-        return $this->getFolderItems($repository_to_find, $folder_path);
+        return $this->getFolderItems($owner_repository, $path);
     }
 
     public function getFileInfo(string $full_path) : array
@@ -347,7 +347,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                  'expires' => 0  ];
     }
 
-    private function getRepositories() : array
+    private function getRepositories($username = null) : array
     {
         // General Request Notes:
         // Headers:
@@ -383,7 +383,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             return array();
 
         // note: get the repositories for the user
-        $url = "https://api.github.com/user/repos?per_page=100";
+        $url = "https://api.github.com/users/repos?per_page=100";
 
         $repository_items = array();
 
@@ -417,17 +417,9 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
             foreach ($result as $entry)
             {
-                $repository_items[] = array('id'=> null, // TODO: available?
-                                            'name' => $entry['name'],
-                                            'path' => $entry['full_name'],
-                                            'size' => null,
-                                            'modified' => '',  // TODO: available?
-                                            'type' => 'DIR');
+                $repository_items[] = $entry;
             }
 
-            // find out if there's another page of results, and if so, get the url
-            // for the next request and keep making requests
-            // TODO: implement getNextPageUrl()
             $next_url = '';
             $finished = self::getNextPageUrl($headers, $url, $next_url);
             if ($finished === false)
@@ -579,6 +571,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $object = new self;
             $object->access_token = $params['access_token'];
+            $object->owner = $params['owner'] ?? '';
+            $object->repository = $params['repository'] ?? '';
             return $object;
         }
 
@@ -610,6 +604,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $object = new self;
             $token = $service->requestAccessToken($params['code']);
             $object->access_token = $token->getAccessToken();
+            $object->owner = $params['owner'] ?? '';
+            $object->repository = $param['repository'] ?? '';
             return $object;
         }
 
@@ -627,16 +623,36 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // note: the base path for a repository is :owner/:repository
         $full_path = trim($full_path,'/');
         $path_parts = explode('/', $full_path);
+        $path_parts = array_filter($path_parts, 'strlen');
 
-        if (count($path_parts) < 2)
-            return false;
+        if (strlen($this->owner) == 0 && strlen($this->repository) == 0)
+        {
+            if (count($path_parts) < 2)
+                return false;
+            
+            $repository = implode('/', array_splice($path_parts,0,2));
+            $path = implode('/', $path_parts); // everything left over
+            return true;
+        }
 
-        // split the string into it's repository parts
-        $folder_path = '';
-        $repository = implode('/', array_splice($path_parts,0,2));
-        $path = implode('/', $path_parts); // everything left over
+        if (strlen($this->owner) > 0 && strlen($this->repository) == 0)
+        {
+            if (count($path_parts) < 2)
+                return true;
+            
+            $repository = $this->owner . '/' . array_splice($path_parts,0,1)[0];
+            $path = implode('/', $path_parts); // everything left over
+            return true;
+        }
 
-        return true;
+        if (strlen($this->owner) > 0 && strlen($this->repository) > 0)
+        {   
+            $repository = $this->owner . '/' . $this->repository;
+            $path = trim($full_path,'/');
+            return true;
+        }
+
+        return false;
     }
 
     private static function getNextPageUrl(array $headers, string $url, string &$next_url) : bool
