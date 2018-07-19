@@ -239,12 +239,18 @@ class Api
         {
             // during debugging, sometimes try/catch needs to be turned
             // of completely; this switch is implemented here and in \Flexio\Jobs\Process
-            self::processRequest($api_request);
+
+            // find the api implementation function associated with the api request
+            $function = self::getApiEndpoint($api_request);
+            if (is_callable($function) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
+
+            // invoke the api implementation function
+            $function($api_request);
             return;
         }
 
         // process the request
-
         $error = array(
             'code' => \Flexio\Base\Error::GENERAL,
             'message' => ''
@@ -252,10 +258,14 @@ class Api
 
         try
         {
-            self::processRequest($api_request);
+            // find the api implementation function associated with the api request
+            $function = self::getApiEndpoint($api_request);
+            if (is_callable($function) === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
 
-            // success
-            return;
+            // invoke the api implementation function
+            $function($api_request);
+            return; // success; if not, fall through to try/catch and error handler code
         }
         catch (\Flexio\Base\Exception $e)
         {
@@ -303,7 +313,7 @@ class Api
             }
         }
 
-        // we have an error, if an action has been set, set the response type and info
+        // we have an error; if an action has been set, set the response type and info
         if ($api_request->getActionType() !== \Flexio\Api\Action::TYPE_UNDEFINED)
         {
             $http_error_code = (string)\Flexio\Api\Response::getHttpErrorCode($error['code']);
@@ -316,7 +326,7 @@ class Api
         // send the error info
         \Flexio\Api\Response::sendError($error);
     }
-
+/*
     private static function processRequest(\Flexio\Api\Request $request) // TODO: add return type
     {
         $request_method = $request->getMethod();
@@ -334,7 +344,7 @@ class Api
         // we can't find the specified api endpoint
         throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_REQUEST);
     }
-
+*/
     private static function getApiEndpoint(\Flexio\Api\Request $request) : string
     {
         // note: creates an api endpoint string that's used to lookup the appropriate api implementation
