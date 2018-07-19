@@ -134,6 +134,11 @@ class Api
 
     public static function request(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params) : void
     {
+        self::processRequest($server_request, $query_params, $post_params);
+    }
+
+    public static function processRequest(\Flexio\System\FrameworkRequest $server_request, array $query_params, array $post_params) : void
+    {
         // API v2 request can currently come from one of two patterns
         // TODO: handle both for now, but remove /api/v2 when appropriate
         // https://api.host.io/v1
