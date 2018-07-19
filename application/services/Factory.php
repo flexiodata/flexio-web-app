@@ -180,7 +180,9 @@ class Factory
             case self::TYPE_GITHUB:
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
-                    'refresh_token' => $connection_info['refresh_token'] ?? ''
+                    'refresh_token' => $connection_info['refresh_token'] ?? '',
+                    'owner' => $connection_info['owner'] ?? '',
+                    'repository' => $connection_info['repository'] ?? ''
                 );
                 if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                 $service = \Flexio\Services\GitHub::create($auth_params);
