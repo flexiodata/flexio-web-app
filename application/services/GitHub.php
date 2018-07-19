@@ -64,7 +64,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         // see if we can get the path parts; if we can't, return an empty array
         $repository_to_find = '';
         $folder_path = '';
-        if (self::getPathParts($path, $repository_to_find, $folder_path) === false)
+        if ($this->getPathParts($path, $repository_to_find, $folder_path) === false)
             return array();
 
         return $this->getFolderItems($repository_to_find, $folder_path);
@@ -80,7 +80,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $repository = '';
         $path = '';
-        $result = self::getPathParts($full_path, $repository, $path);
+        $result = $this->getPathParts($full_path, $repository, $path);
         if ($result === false)
             return [];
 
@@ -175,7 +175,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $repository = '';
         $path = '';
-        $result = self::getPathParts($full_path, $repository, $path);
+        $result = $this->getPathParts($full_path, $repository, $path);
         if ($result === false)
             return;
 
@@ -257,7 +257,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $repository = '';
         $path = '';
-        $result = self::getPathParts($full_path, $repository, $path);
+        $result = $this->getPathParts($full_path, $repository, $path);
         if ($result === false)
             return;
 
@@ -622,7 +622,7 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $service->getAuthorizationUri($additional_params)->getAbsoluteUri();
     }
 
-    private static function getPathParts(string $full_path, &$repository, &$path) : bool
+    private function getPathParts(string $full_path, &$repository, &$path) : bool
     {
         // note: the base path for a repository is :owner/:repository
         $full_path = trim($full_path,'/');
