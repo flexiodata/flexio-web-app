@@ -18,71 +18,13 @@ namespace Flexio\Api;
 
 class Api
 {
-    // changelog between v1 and v2:
-    // * new users are created by posting to signup endpoint:
-    //   v1: POST /users => v2: POST /signup
-    // * all connections, pipes, processes, streams, vfs, statistics endpoints prefixed with owner;
-    //   following are examples:
-    //   v1: POS /connections => v2: POS /:userid/connections
-    //   v1: DEL /pipes/:eid  => v2: DEL /:userid/pipes/:eid
-    // * /users/:eid/tokens/* api endpoints are now /:userid/auth/keys/*:
-    //   v1: GET /users/:eid/tokens      => v2: GET /:userid/auth/keys
-    //   v1: POS /users/:eid/tokens      => v2: POS /:userid/auth/keys
-    //   v1: GET /users/:eid/tokens/:eid => v2: GET /:userid/auth/keys/:eid
-    //   v1: DEL /users/:eid/tokens/:eid => v2: DEL /:userid/auth/keys/:eid
-    // * /rights/* api endpoints are now /:userid/auth/rights/*:
-    //   v1: GET /rights      => v2: GET /:userid/auth/rights
-    //   v1: POS /rights      => v2: POS /:userid/auth/rights
-    //   v1: POS /rights/:eid => v2: POS /:userid/auth/rights/:eid
-    //   v1: GET /rights/:eid => v2: GET /:userid/auth/rights/:eid
-    //   v1: DEL /rights/:eid => v2: DEL /:userid/auth/rights/:eid
-    // * removed /users/me; this info is given by /:ownerid/account
-    //   v1: GET /users/me' => v2: GET /:ownerid/account
-    // * endpoints for setting/getting user info are now under /:ownerid/account:
-    //   v1: POS /users/:eid => v2: POS /:ownerid/account
-    //   v2: GET /users/:eid => v2: GET /:ownerid/account
-    // * endpionts for setting/resetting user password info are now under /:ownerid/account/credentials
-    //   v1: POS /users/:eid/changepassword => v2: POS /:userid/account/credentials
-    //   v1: POS /users/resetpassword       => v2: DEL /:userid/account/credentials
-    // * removed internal /process/debug endpoint:
-    //   v1: GET /processes/debug => v2: (removed)
-    // * renamed /tests/* endpoints to /admin/tests/*:
-    //   v1: GET /tests/configure => v2: /admin/tests/configure
-    //   v1: GET /tests/run       => v2: /admin/tests/run
-    // * removed /admin/extract:
-    //   v1: GET /admin/extract => v2: (removed)
-    // * removed /connections/:eid/describe; connection items are now retrieved through VFS
-    //   v1: GET /connections/:eid/describe => v2: (removed)
-    // * most list-type API endpoints now allow created_min and created_max for date range limits, and start/limit;
-    //   tail is allowed as a parameter, but is currently not implemented
-    // * process statistic api endpint moved to process/summary endpoint:
-    //   v1: 'GET /:userid/statistics/processes' => v2: 'GET /:userid/processes/summary'
-    // * renamed some admin endpoints:
-    //   v1: 'GET /admin/configuration' => v2: 'GET /admin/info/system'
-    //   v1: 'GET /admin/list/users' => v2: 'GET /admin/info/users'
-    //   v1: 'GET /admin/statistics/users' => v2: 'GET /admin/info/processes/summary'
-    // * removed some admin endpoints:
-    //   v1: 'GET /admin/resetconfig' => v2: (removed)
-    //   v1: 'GET /admin/createexamples' => v2: (removed)
-    // * added endpoints for getting action history and summary
-    //   v1: (doesn't exist) => v2: 'GET /:userid/actions'
-    //   v2: (doesn't exist) => v2: 'GET /:userid/actions/summary'
-    // * removed pipe endpoint for getting process list; use process list directly with query param of parent_eid=<pipe_eid>
-    //   this will help give us consistent behavior with the list and summary version of processes (e.g. get a summary view
-    //   of the list using the same params)
-    //   v1: 'GET /pipes/:eid/processes' => v2: (removed) use: GET /:userid/processes
-    // * removed pipe endpoint for creating a process; use process creation endpoint with parent_eid (in POST params) for getting info from pipe
-    //   v1: 'POS /pipes/:eid/processes' => v2: (removed) use: POST /:userid/processes with parent_eid as POST parameter
-    // * changed endpoint for resetting password
-    //   v1: 'POS /users/requestpasswordreset' => v2: '\Flexio\Api\User::forgotpassword'
-
     // TODO: migrate VFS api endpoints over to new user scheme?
 
     // TODO: figure out how to handle these endpoints:
     // 'POS /users/resendverify'         => '\Flexio\Api\User::resendverify'
     // 'POS /users/activate'             => '\Flexio\Api\User::activate'
 
-    // TODO: rename vfs endpoint to files?
+    // TODO: rename vfs endpoint to files or storage or something else?
 
     // TODO: should processes run with pipe owner privileges; what about case where two
     // users are running the same pipe; doesn't seem like each should see the output for
@@ -93,6 +35,8 @@ class Api
     // 'GET /:userid/pipes/:objeid/processes'        => '\Flexio\Api\Pipe::processes',
 
     // TODO: do we need the stream API, or can we get the content exclusively through VFS
+
+    // TODO: implement tail query parameter
 
 
     private static $endpoints = array(
