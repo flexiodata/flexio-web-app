@@ -259,6 +259,20 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->user->isAdministrator($this->getEid());
     }
 
+    public function setProfilePicture(string $filename, string $mime_type) : void
+    {
+        $eid = $this->getEid();
+        $size = @filesize($filename);
+        if ($size === false)
+            return;
+
+        if ($size > 2097152) // 2MB
+            return;
+
+        $contents = file_get_contents($filename);
+        $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+    }
+
     public function getProfilePicture() : void
     {
         $eid = $this->getEid();
@@ -282,7 +296,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         echo $data;
     }
 
-    public function setProfilePicture(string $filename, string $mime_type) : void
+    public function setProfileBackground(string $filename, string $mime_type) : void
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -293,7 +307,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             return;
 
         $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+        $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
     }
 
     public function getProfileBackground() : void
@@ -317,20 +331,6 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!is_null($etag))
             header("Etag: $etag");
         echo $data;
-    }
-
-    public function setProfileBackground(string $filename, string $mime_type) : void
-    {
-        $eid = $this->getEid();
-        $size = @filesize($filename);
-        if ($size === false)
-            return;
-
-        if ($size > 2097152) // 2MB
-            return;
-
-        $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
     }
 
     public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : void
