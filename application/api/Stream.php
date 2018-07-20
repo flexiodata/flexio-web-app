@@ -47,6 +47,7 @@ class Stream
         $requesting_user_eid = $request->getRequestingUser();
         $owner_user_eid = $request->getOwnerFromUrl();
         $stream_eid = $request->getObjectFromUrl();
+        $user_agent = $request->getUserAgent();
 
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($query_params, array(
@@ -82,16 +83,13 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($download === true)
-            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename);
+            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename, $useragent);
               else
             self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
     }
 
-    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit, $filename) :  void
+    private static function echoDownload(\Flexio\IFace\IStream $stream, $content_type, $encode, $metadata, $start, $limit, $filename, $user_agent) :  void
     {
-        // TODO: get the user agent from the request object
-        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-
         // get the stream info
         $stream_info = $stream->get();
         if ($stream_info === false)
