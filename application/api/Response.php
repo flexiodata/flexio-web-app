@@ -145,8 +145,8 @@ class Response
         if (stripos($user_agent, 'bot') !== false)
             return false;
 
+        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
         header('Pragma: public');
-        header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Type: ' . $content_type);
@@ -179,10 +179,10 @@ class Response
         }
          else
         {
+            header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
             header('Content-Type: application/pdf');
             header('Content-Length: '. filesize($file_location));
             header('Pragma: public');
-            header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
             header('Cache-Control: private', false);
 
