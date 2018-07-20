@@ -287,6 +287,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
          else
         {
+
             // perhaps it's a directory without a directory 'file'
 
             $ch = curl_init();
@@ -373,6 +374,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     public function exists(string $path) : bool
     {
+        $info = null;
+
         try
         {
             $info = $this->getFileInfo($path);
@@ -585,6 +588,27 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $content_type = "text/plain";
+
+
+
+        $dest_is_folder = false;
+        try
+        {
+            $info = $this->getFileInfo($path);
+            if (isset($info['type']) && $info['type'] == 'DIR')
+                $dest_is_folder = true;
+        }
+        catch (\Exception $e)
+        {
+        }
+        if ($dest_is_folder)
+        {
+            // destination path is a folder
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        }
+
+
+
 
         $bucket = '';
         $bucket_path = '';
