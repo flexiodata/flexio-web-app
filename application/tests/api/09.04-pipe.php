@@ -325,7 +325,7 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes/$objeid4/run",
+            'url' => "$apibase/$userid1/pipes/$objeid1/run",
             'token' => $token1,
             'params' => array(
                 "msg" => true
@@ -334,7 +334,7 @@ class Test
         $result = \Flexio\Tests\Util::callApi($params);
         $response = $result['response'];
         $actual = $response;
-        $expected = 'true';
+        $expected = '1'; // booleans are not casted to 'true' in callApi()
         \Flexio\Tests\Check::assertString('C.6', 'POST /:userid/pipes/:objeid/run; return the results of running a pipe with posted variables; variable boolean value type handling',  $actual, $expected, $results);
 /*
 // TODO: fix callApi so it can handle a parameter with an array value
