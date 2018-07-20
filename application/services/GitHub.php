@@ -118,24 +118,46 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        $entry = @json_decode($result, true);
-        if (!is_array($entry))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
         if ($httpcode == 404)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
         }
 
+        $entry = @json_decode($result);
+
+        if ($entry === null)
+        {
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+        }
+
+        if (is_array($entry))
+        {
+            $trimmed_full_path = trim($full_path,'/');
+            $name = $trimmed_full_path;
+            $sl = strrpos($name, '/');
+            if ($sl !== false)
+                $name = substr($name, $sl+1);
+
+            // item is a directory
+            $res = array('id'=> md5($trimmed_full_path),
+                         'name' => $name,
+                         'size' => null,
+                         'modified' => '',
+                         'type' => 'DIR');
+
+            return $res;
+        }
+
+        $entry = (array)$entry;
+        
+
         if ($httpcode >= 200 && $httpcode <= 299)
         {
             $res = array('id'=> md5($entry['git_url']),
-                        'name' => $entry['name'],
-                        'size' => $entry['size'] ?? null,
-                        'modified' => '',
-                        'type' => ($result['type'] ?? 'file') ? 'FILE' : 'DIR');  // github api will return json {} for file, [] for directory
-
-            return $res;
+                         'name' => $entry['name'],
+                         'size' => $entry['size'] ?? null,
+                         'modified' => '',
+                         'type' => 'FILE');
         }
          else
         {
