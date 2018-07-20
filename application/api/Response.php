@@ -25,7 +25,7 @@ class Response
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        // set the HTTP header content type to json; note: IE's behaves badly if
+        // set the HTTP header content type to json; note: IE behaves badly if
         // content-type json is returned in response to multi-part uploads
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
@@ -44,7 +44,7 @@ class Response
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        // set the HTTP header content type to json; note: IE's behaves badly if
+        // set the HTTP header content type to json; note: IE behaves badly if
         // content-type json is returned in response to multi-part uploads
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
