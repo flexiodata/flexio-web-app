@@ -138,8 +138,7 @@ class Trigger
                 $content = json_encode($content);
             }
 
-            echo($content);
-            return; // TODO: exit(0) in equivalent pipe run code; return here so we can call function directly in test suite
+            \Flexio\Api\Response::sendRaw($content);
         }
     }
 

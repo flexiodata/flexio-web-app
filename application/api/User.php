@@ -599,6 +599,78 @@ class User
         \Flexio\Api\Response::sendContent($result);
     }
 
+    public function setProfilePicture(\Flexio\Api\Request $request) : void
+    {
+        // TODO: patch through to implementation in \Flexio\Object\User
+    }
+
+    public function getProfilePicture(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $content = '';
+        $etag = $owner_user->getProfilePicture($content);
+
+        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
+        {
+            header("HTTP/1.1 304 Not Modified");
+            exit(0);
+        }
+
+        $mime_type = 'text/plain';
+        header('Content-Type: ' . $mime_type);
+        if (!is_null($etag))
+            header("Etag: $etag");
+
+        \Flexio\Api\Response::sendRaw($content);
+    }
+
+    public function setProfileBackground(\Flexio\Api\Request $request) : void
+    {
+        // TODO: patch through to implementation in \Flexio\Object\User
+    }
+
+    public function getProfileBackground(\Flexio\Api\Request $request) : void
+    {
+        $requesting_user_eid = $request->getRequestingUser();
+        $owner_user_eid = $request->getOwnerFromUrl();
+
+        // load the object
+        $owner_user = \Flexio\Object\User::load($owner_user_eid);
+
+        // check the rights on the object
+        if ($owner_user->getStatus() === \Model::STATUS_DELETED)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+        if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
+
+        $content = '';
+        $etag = $owner_user->getProfileBackground($content);
+
+        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
+        {
+            header("HTTP/1.1 304 Not Modified");
+            exit(0);
+        }
+
+        $mime_type = 'text/plain';
+        header('Content-Type: ' . $mime_type);
+        if (!is_null($etag))
+            header("Etag: $etag");
+
+        \Flexio\Api\Response::sendRaw($content);
+    }
+
     public static function createExampleObjects(string $user_eid) : array
     {
         // create sample pipes; ensure user creation even if sample fails

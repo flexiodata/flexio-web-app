@@ -18,6 +18,16 @@ namespace Flexio\Api;
 
 class Response
 {
+    public static function sendRaw($content) : void
+    {
+        // set the default headers; note: never cache api calls
+        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
+        echo $content;
+    }
+
     public static function sendContent(array $content) : void
     {
         // set the default headers; note: never cache api calls
@@ -25,7 +35,7 @@ class Response
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        // set the HTTP header content type to json; note: IE's behaves badly if
+        // set the HTTP header content type to json; note: IE behaves badly if
         // content-type json is returned in response to multi-part uploads
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
@@ -44,14 +54,15 @@ class Response
         header('Cache-Control: no-store, no-cache, must-revalidate');
         header('Pragma: no-cache');
 
-        // set the HTTP header content type to json; note: IE's behaves badly if
+        // set the HTTP header content type to json; note: IE behaves badly if
         // content-type json is returned in response to multi-part uploads
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        // set the http error code
-        $http_error_code = self::getHttpErrorCode($error_code);
-        self::headersError($http_error_code);
+        // set the http error code header
+        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+        $http_error_code = (string)self::getHttpErrorCode($error_code);
+        header($protocol . ' ' . $http_error_code . ' ' . 'Bad Request');
 
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
@@ -148,22 +159,9 @@ class Response
         return true;
     }
 
-    public static function headersError(int $code, string $text = null) : int
-    {
-        switch ($code) {
-            default:
-            case 400: $text = $text ?? 'Bad Request'; break;
-        }
-
-        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-        header($protocol . ' ' . (string)$code . ' ' . $text);
-
-        return $code;
-    }
-
-    // mode should be either 'inline' or 'download'
     public static function headersPdf(string $user_agent, string $output_filename, string $file_location, string $mode = 'inline') : bool
     {
+        // mode should be either 'inline' or 'download'
         if ($mode != 'inline' && $mode != 'download')
             return false;
 

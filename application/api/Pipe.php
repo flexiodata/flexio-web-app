@@ -382,7 +382,7 @@ class Pipe
             $content = json_encode($content);
         }
 
-        echo($content);
+        \Flexio\Api\Response::sendRaw($content);
         exit(0);
     }
 

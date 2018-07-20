@@ -476,8 +476,7 @@ class Process
             $content = json_encode($content);
         }
 
-        echo($content);
-        exit(0);
+        \Flexio\Api\Response::sendRaw($content);
     }
 
     public static function cancel(\Flexio\Api\Request $request) : void

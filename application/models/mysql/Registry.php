@@ -215,7 +215,7 @@ class Registry extends ModelBase
      * @param {string} $name; The name of the variable
      * @param {string} $value; The value of the variable
      *
-     * @return {void}
+     * @return {bool}
      */
     public function setVariable(string $object_eid, string $name, /* variable */ $value, string $type = 'STRING', int $expires = null, string $mime_type = '', $db = null) : bool
     {

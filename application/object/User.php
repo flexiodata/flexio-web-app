@@ -259,81 +259,65 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->user->isAdministrator($this->getEid());
     }
 
-    public function getProfilePicture() : void
+    public function setProfilePicture(string $filename, string $mime_type) : bool
     {
+        $eid = $this->getEid();
+        $size = @filesize($filename);
+        if ($size === false)
+            return false;
+
+        if ($size > 2097152) // 2MB
+            return false;
+
+        $contents = file_get_contents($filename);
+        return $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+    }
+
+    public function getProfilePicture(&$data) : string
+    {
+        // note: sets the content in the data param; returns an appropriate string
+        // that can be used an etag
+
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
         $etag = is_null($updated) ? null : md5("$eid;profile.picture;$updated");
 
-        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
-        {
-            header("HTTP/1.1 304 Not Modified");
-            exit(0);
-        }
-
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
-        if (is_null($data))
-            return;
 
-        header('Content-Type: ' . $mime_type);
-        if (!is_null($etag))
-            header("Etag: $etag");
-        echo $data;
+        return $etag;
     }
 
-    public function changeProfilePicture(string $filename, string $mime_type) : void
+    public function setProfileBackground(string $filename, string $mime_type) : bool
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
         if ($size === false)
-            return;
+            return false;
 
         if ($size > 2097152) // 2MB
-            return;
+            return false;
 
         $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+        return $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
     }
 
-    public function getProfileBackground() : void
+    public function getProfileBackground(&$data) : string
     {
+        // note: sets the content in the data param; returns an appropriate string
+        // that can be used an etag
+
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
         $etag = is_null($updated) ? null : md5("$eid;profile.background;$updated");
 
-        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
-        {
-            header("HTTP/1.1 304 Not Modified");
-            exit(0);
-        }
-
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
-        if (is_null($data))
-            return;
 
-        header('Content-Type: ' . $mime_type);
-        if (!is_null($etag))
-            header("Etag: $etag");
-        echo $data;
+        return $etag;
     }
 
-    public function changeProfileBackground(string $filename, string $mime_type) : void
-    {
-        $eid = $this->getEid();
-        $size = @filesize($filename);
-        if ($size === false)
-            return;
-
-        if ($size > 2097152) // 2MB
-            return;
-
-        $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
-    }
-
-    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : void
+    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : bool
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';
@@ -352,16 +336,16 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
          else
         {
-            return;
+            return false;
         }
 
         $data = $this->getModel()->registry->getBinary($eid, $type, $mime_type);
         if (is_null($data))
-            return;
+            return false;
 
         $src_img = @imagecreatefromstring($data);
         if ($src_img === false)
-            return;
+            return false;
 
         // create a 24-bit PNG
         $dest_img = imagecreatetruecolor($dest_w, $dest_h);
@@ -386,7 +370,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         imagedestroy($dest_img);
 
         //$this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
-        $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
+        return $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
     }
 
     private function isCached() : bool
