@@ -144,7 +144,6 @@ class Stream
             }
 
             fclose($handle);
-            exit(0);
         }
          else
         {
@@ -161,8 +160,8 @@ class Stream
                 if ($encoding != 'UTF-8')
                     $result = iconv($encoding, 'UTF-8', $result);
             }
-            echo($result);
-            exit(0);
+
+            \Flexio\Api\Response::sendRaw($result);
         }
     }
 
@@ -190,8 +189,8 @@ class Stream
                 if ($encoding != 'UTF-8')
                     $result = iconv($encoding, 'UTF-8', $result);
             }
-            echo($result);
-            exit(0);
+
+            \Flexio\Api\Response::sendRaw($result);
         }
          else
         {
@@ -208,8 +207,7 @@ class Stream
             $result['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
             $result = json_encode($result);
 
-            echo($result);
-            exit(0);
+            \Flexio\Api\Response::sendRaw($result);
         }
     }
 

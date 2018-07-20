@@ -631,7 +631,8 @@ class User
         header('Content-Type: ' . $mime_type);
         if (!is_null($etag))
             header("Etag: $etag");
-        echo $content;
+
+        \Flexio\Api\Response::sendRaw($content);
     }
 
     public function setProfileBackground(\Flexio\Api\Request $request) : void
@@ -666,7 +667,8 @@ class User
         header('Content-Type: ' . $mime_type);
         if (!is_null($etag))
             header("Etag: $etag");
-        echo $content;
+
+        \Flexio\Api\Response::sendRaw($content);
     }
 
     public static function createExampleObjects(string $user_eid) : array

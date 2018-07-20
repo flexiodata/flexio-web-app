@@ -18,6 +18,16 @@ namespace Flexio\Api;
 
 class Response
 {
+    public static function sendRaw($content) : void
+    {
+        // set the default headers; note: never cache api calls
+        header('Expires: Mon, 15 Mar 2010 05:00:00 GMT');
+        header('Cache-Control: no-store, no-cache, must-revalidate');
+        header('Pragma: no-cache');
+
+        echo $content;
+    }
+
     public static function sendContent(array $content) : void
     {
         // set the default headers; note: never cache api calls
