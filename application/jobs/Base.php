@@ -195,7 +195,6 @@ class Base implements \Flexio\IFace\IJob
 
         if (is_string($stream))
         {
-
             $data = @json_decode($stream);
         }
          else
