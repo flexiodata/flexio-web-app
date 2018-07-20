@@ -149,9 +149,9 @@ class Response
         return true;
     }
 
-    // mode should be either 'inline' or 'download'
     public static function headersPdf(string $user_agent, string $output_filename, string $file_location, string $mode = 'inline') : bool
     {
+        // mode should be either 'inline' or 'download'
         if ($mode != 'inline' && $mode != 'download')
             return false;
 
