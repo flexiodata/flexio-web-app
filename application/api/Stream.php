@@ -121,7 +121,7 @@ class Stream
         if ($is_flexio_table === true)
         {
             // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
-            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            $headers_set = \Flexio\Api\Response::headersDownload($user_agent, $filename, $response_content_type);
             if ($headers_set === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
@@ -149,7 +149,7 @@ class Stream
          else
         {
             // try to set the headers; if we can't (e.g. user agent indicates 'bot', then throw an exception)
-            $headers_set = \Flexio\Base\Util::headersDownload($user_agent, $filename, $response_content_type);
+            $headers_set = \Flexio\Api\Response::headersDownload($user_agent, $filename, $response_content_type);
             if ($headers_set === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 

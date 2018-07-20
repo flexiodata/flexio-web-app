@@ -51,7 +51,7 @@ class Response
 
         // set the http error code
         $http_error_code = self::getHttpErrorCode($error_code);
-        \Flexio\Base\Util::header_error($http_error_code);
+        self::headersError($http_error_code);
 
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
@@ -127,6 +127,75 @@ class Response
             case \Flexio\Base\Error::NO_SERVICE:
                 return 500;
         }
+    }
+
+    public static function headersDownload(string $user_agent, string $output_filename, string $content_type) : bool
+    {
+        if (stripos($user_agent, 'bot') !== false)
+            return false;
+
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Type: ' . $content_type);
+
+        if (stripos($user_agent, 'win') !== false && stripos($user_agent, 'msie') !== false)
+            header('Content-Disposition: filename="' . $output_filename . '"');
+                else
+            header('Content-Disposition: attachment; filename="' . $output_filename . '"');
+
+        return true;
+    }
+
+    public static function headersError(int $code, string $text = null) : int
+    {
+        switch ($code) {
+            default:
+            case 400: $text = $text ?? 'Bad Request'; break;
+        }
+
+        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+        header($protocol . ' ' . (string)$code . ' ' . $text);
+
+        return $code;
+    }
+
+    // mode should be either 'inline' or 'download'
+    public static function headersPdf(string $user_agent, string $output_filename, string $file_location, string $mode = 'inline') : bool
+    {
+        if ($mode != 'inline' && $mode != 'download')
+            return false;
+
+        if (stripos($user_agent, 'bot') !== false)
+            return false;
+
+        if ($mode == 'inline')
+        {
+            // next two lines solve problem with inline pdf+https in IE
+            header('Content-Type: application/pdf');
+            header('Content-Length: '. filesize($file_location));
+            header('Pragma: public');
+            header('Cache-Control:  maxage=1');
+            header('Content-Disposition: inline; filename="'.$output_filename.'"');
+        }
+         else
+        {
+            header('Content-Type: application/pdf');
+            header('Content-Length: '. filesize($file_location));
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+
+            //$ie = (stripos($user_agent, 'win') !== false && stripos($user_agent, 'msie') !== false) ? true : false;
+            //if ($ie)
+            //    header('Content-Disposition: filename="'.$output_filename.'"');
+            //     else
+            header('Content-Disposition: attachment; filename="'.$output_filename.'"');
+        }
+
+        return true;
     }
 
     private static function sessionAuthExpired() : bool
