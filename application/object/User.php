@@ -282,7 +282,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         echo $data;
     }
 
-    public function changeProfilePicture(string $filename, string $mime_type) : void
+    public function setProfilePicture(string $filename, string $mime_type) : void
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
@@ -319,7 +319,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         echo $data;
     }
 
-    public function changeProfileBackground(string $filename, string $mime_type) : void
+    public function setProfileBackground(string $filename, string $mime_type) : void
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
