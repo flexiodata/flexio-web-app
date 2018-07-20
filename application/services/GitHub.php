@@ -55,6 +55,20 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return array();
 
+
+        try
+        {
+            $arr = $this->getFileInfo($full_path);
+            if (($arr['type'] ?? '') == 'FILE')
+            {
+                $arr['path'] = $full_path;
+                return [ $arr ];
+            }
+        }
+        catch (\Exception $e)
+        {
+        }
+
         while (false !== strpos($full_path,'//'))
             $full_path = str_replace('//','/',$full_path);
 
