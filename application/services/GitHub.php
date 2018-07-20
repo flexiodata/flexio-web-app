@@ -158,6 +158,8 @@ class GitHub implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                          'size' => $entry['size'] ?? null,
                          'modified' => '',
                          'type' => 'FILE');
+
+            return $res;
         }
          else
         {
