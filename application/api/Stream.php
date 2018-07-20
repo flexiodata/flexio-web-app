@@ -212,4 +212,43 @@ class Stream
             exit(0);
         }
     }
+
+/*
+    // following is old code that was once used for creating a database download archive;
+    // saved here for now since it might be useful in the future
+
+    public static function addToZipArchive($arhivefilename, $zippedfilename, $inputfilename) : void
+    {
+        // create the zip archive if needed and add the temporary file to the zip archive
+        $zip = new \ZipArchive();
+        $zip->open($arhivefilename, \ZipArchive::CREATE);
+        $zip->addFile($inputfilename, $zippedfilename);
+        $zip->close();
+    }
+
+    public static function echoZipDownload($zip_name) : void
+    {
+        $agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+        if (stripos($agent, 'bot') === false)
+        {
+            header('Pragma: public');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Cache-Control: private', false);
+            header('Content-Type: application/zip');
+
+            if (stripos($agent, 'win') !== false && stripos($agent, 'msie') !== false)
+                header('Content-Disposition: filename="' . $zip_name . '"');
+                 else
+                header('Content-Disposition: attachment; filename="' . $zip_name . '"');
+        }
+         else
+        {
+            die('Invalid credentials.  Failure.');
+        }
+
+        @readfile($zip_name);
+    }
+*/
 }
