@@ -383,7 +383,6 @@ class Pipe
         }
 
         \Flexio\Api\Response::sendRaw($content);
-        exit(0);
     }
 
     private static function cleanProperties(array $properties) : array
