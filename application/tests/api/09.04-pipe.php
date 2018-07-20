@@ -86,6 +86,23 @@ class Test
         $response = json_decode($result['response'],true);
         $objeid3 = $response['eid'] ?? '';
 
+        $params = array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid1/pipes",
+            'token' => $token1,
+            'content_type' => 'application/json',
+            'params' => '{
+                "name": "Test Pipe",
+                "alias": "alias4",
+                "task": {
+                    "op": "echo",
+                    "msg": "${input.msg}"
+                }
+            }'
+        );
+        $result = \Flexio\Tests\Util::callApi($params);
+        $response = json_decode($result['response'],true);
+        $objeid4 = $response['eid'] ?? '';
 
         // TEST: run pipe with rights checks
 
@@ -178,7 +195,7 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes/$objeid1/run",
+            'url' => "$apibase/$userid1/pipes/$objeid4/run",
             'token' => $token1,
             'content_type' => 'application/json',
             'params' => '{
@@ -308,7 +325,7 @@ class Test
         // BEGIN TEST
         $params = array(
             'method' => 'POST',
-            'url' => "$apibase/$userid1/pipes/$objeid1/run",
+            'url' => "$apibase/$userid1/pipes/$objeid4/run",
             'token' => $token1,
             'params' => array(
                 "msg" => true
