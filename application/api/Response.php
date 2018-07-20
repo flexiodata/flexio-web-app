@@ -49,9 +49,10 @@ class Response
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        // set the http error code
-        $http_error_code = self::getHttpErrorCode($error_code);
-        self::headersError($http_error_code);
+        // set the http error code header
+        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+        $http_error_code = (string)self::getHttpErrorCode($error_code);
+        header($protocol . ' ' . $http_error_code . ' ' . 'Bad Request');
 
         // if a message isn't specified, supply a default message
         if (strlen($error_message ) == 0)
@@ -146,19 +147,6 @@ class Response
             header('Content-Disposition: attachment; filename="' . $output_filename . '"');
 
         return true;
-    }
-
-    public static function headersError(int $code, string $text = null) : int
-    {
-        switch ($code) {
-            default:
-            case 400: $text = $text ?? 'Bad Request'; break;
-        }
-
-        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-        header($protocol . ' ' . (string)$code . ' ' . $text);
-
-        return $code;
     }
 
     // mode should be either 'inline' or 'download'
