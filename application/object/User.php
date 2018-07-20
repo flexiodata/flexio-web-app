@@ -273,27 +273,19 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
     }
 
-    public function getProfilePicture() : void
+    public function getProfilePicture(&$data) : string
     {
+        // note: sets the content in the data param; returns an appropriate string
+        // that can be used an etag
+
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.picture');
         $etag = is_null($updated) ? null : md5("$eid;profile.picture;$updated");
 
-        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
-        {
-            header("HTTP/1.1 304 Not Modified");
-            exit(0);
-        }
-
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.picture', $mime_type);
-        if (is_null($data))
-            return;
 
-        header('Content-Type: ' . $mime_type);
-        if (!is_null($etag))
-            header("Etag: $etag");
-        echo $data;
+        return $etag;
     }
 
     public function setProfileBackground(string $filename, string $mime_type) : bool
@@ -310,27 +302,19 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
     }
 
-    public function getProfileBackground() : void
+    public function getProfileBackground(&$data) : string
     {
+        // note: sets the content in the data param; returns an appropriate string
+        // that can be used an etag
+
         $eid = $this->getEid();
         $updated = $this->getModel()->registry->getUpdateTime($eid, 'profile.background');
         $etag = is_null($updated) ? null : md5("$eid;profile.background;$updated");
 
-        if (!is_null($etag) && isset($_SERVER['HTTP_IF_NONE_MATCH']) && $etag == $_SERVER['HTTP_IF_NONE_MATCH'])
-        {
-            header("HTTP/1.1 304 Not Modified");
-            exit(0);
-        }
-
         $mime_type = 'text/plain';
         $data = $this->getModel()->registry->getBinary($eid, 'profile.background', $mime_type);
-        if (is_null($data))
-            return;
 
-        header('Content-Type: ' . $mime_type);
-        if (!is_null($etag))
-            header("Etag: $etag");
-        echo $data;
+        return $etag;
     }
 
     public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : bool
