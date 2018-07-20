@@ -259,18 +259,18 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $this->getModel()->user->isAdministrator($this->getEid());
     }
 
-    public function setProfilePicture(string $filename, string $mime_type) : void
+    public function setProfilePicture(string $filename, string $mime_type) : bool
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
         if ($size === false)
-            return;
+            return false;
 
         if ($size > 2097152) // 2MB
-            return;
+            return false;
 
         $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
+        return $this->getModel()->registry->setBinary($eid, 'profile.picture', $contents, null, $mime_type);
     }
 
     public function getProfilePicture() : void
@@ -296,18 +296,18 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         echo $data;
     }
 
-    public function setProfileBackground(string $filename, string $mime_type) : void
+    public function setProfileBackground(string $filename, string $mime_type) : bool
     {
         $eid = $this->getEid();
         $size = @filesize($filename);
         if ($size === false)
-            return;
+            return false;
 
         if ($size > 2097152) // 2MB
-            return;
+            return false;
 
         $contents = file_get_contents($filename);
-        $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
+        return $this->getModel()->registry->setBinary($eid, 'profile.background', $contents, null, $mime_type);
     }
 
     public function getProfileBackground() : void
@@ -333,7 +333,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         echo $data;
     }
 
-    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : void
+    public function cropPicture(string $type, int $src_x, int $src_y, int $src_w, int $src_h) : bool
     {
         $eid = $this->getEid();
         $mime_type = 'text/plain';
@@ -352,16 +352,16 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
          else
         {
-            return;
+            return false;
         }
 
         $data = $this->getModel()->registry->getBinary($eid, $type, $mime_type);
         if (is_null($data))
-            return;
+            return false;
 
         $src_img = @imagecreatefromstring($data);
         if ($src_img === false)
-            return;
+            return false;
 
         // create a 24-bit PNG
         $dest_img = imagecreatetruecolor($dest_w, $dest_h);
@@ -386,7 +386,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         imagedestroy($dest_img);
 
         //$this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/png');
-        $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
+        return $this->getModel()->registry->setBinary($eid, $type, $data, null, 'image/jpeg');
     }
 
     private function isCached() : bool
