@@ -56,6 +56,16 @@ class FrameworkRequest
             return $this->url_parts[$idx];
     }
 
+    public function getHttpOrigin() : string
+    {
+        return $_SERVER['HTTP_ORIGIN'] ?? '';
+    }
+
+    public function getHttpHost() : string
+    {
+        return $_SERVER['HTTP_HOST'] ?? '';
+    }
+
     public function getUserAgent() : string
     {
         return $_SERVER['HTTP_USER_AGENT'] ?? '';

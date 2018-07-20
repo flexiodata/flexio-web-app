@@ -134,18 +134,20 @@ class Api
     public static function request(\Flexio\System\FrameworkRequest $server_request) : void
     {
         // STEP 1: set basic response headers
-        if (IS_DEBUG() && (strpos($_SERVER['HTTP_ORIGIN'] ?? '',"://localhost:") !== false) || GET_HTTP_HOST() == 'localhost')
+        $request_http_origin = $server_request->getHttpOrigin();
+        $request_http_host = $server_request->getHttpHost();
+
+        if (IS_DEBUG() && (strpos($request_http_origin,"://localhost:") !== false) || $request_http_host == 'localhost')
         {
             header('Access-Control-Allow-Credentials: true'); // allow cookies (may not combine with allow origin: *)
-            header('Access-Control-Allow-Origin: ' . ($_SERVER['HTTP_ORIGIN']??'*'));
+            header('Access-Control-Allow-Origin: ' . $request_http_origin);
             header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
             header('Access-Control-Max-Age: 1000');
             header('Access-Control-Allow-Headers: authorization, origin, x-csrftoken, content-type, accept'); // note that '*' is not valid for Access-Control-Allow-Headers
         }
         else
         {
-            $host = GET_HTTP_HOST();
-            if (substr($host, 0, 4) == 'api.' && substr($host, -8) == '.flex.io')
+            if (substr($request_http_host, 0, 4) == 'api.' && substr($request_http_host, -8) == '.flex.io')
             {
                 header('Access-Control-Allow-Origin: *');
                 header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, PATCH, HEAD');
