@@ -558,14 +558,14 @@ class Check
         $type = gettype($o);
         if ($type == 'array')
         {
-            return json_encode($o);
+            return json_encode($o, JSON_UNESCAPED_SLASHES);
         }
              else
         {
             if (is_float($o) && is_nan($o))
                 return "($type)NaN";
                  else
-                return "($type)".json_encode($o);
+                return "($type)".json_encode($o, JSON_UNESCAPED_SLASHES);
         }
         // return var_export($o,true);
     }
