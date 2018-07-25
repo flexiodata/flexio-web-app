@@ -101,7 +101,7 @@ class Select extends \Flexio\Jobs\Base
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::EXECUTE_FAILED, "The input JSON must be a valid JSON array");
         }
 
-        $payload = json_encode($output);
+        $payload = json_encode($output, JSON_UNESCAPED_SLASHES);
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter = $outstream->getWriter();
         $streamwriter->write($payload);

@@ -230,7 +230,7 @@ class Request extends \Flexio\Jobs\Base
         }
         if ($content_type == 'application/json' && is_array($post_data))
         {
-            $post_data = json_encode($post_data);
+            $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES);
         }
 
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);

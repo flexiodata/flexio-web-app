@@ -136,7 +136,7 @@ class Foreach1 extends \Flexio\Jobs\Base
 
             if (is_array($input) || is_object($input))
             {
-                $json = json_encode($input);
+                $json = json_encode($input, JSON_UNESCAPED_SLASHES);
 
                 $p = $subprocess->getParams();
                 $param_stream = \Flexio\Base\Stream::create();

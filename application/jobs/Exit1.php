@@ -49,7 +49,7 @@ class Exit1 extends \Flexio\Jobs\Base
         if (is_array($response) || is_object($response))
         {
             $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-            $response = json_encode($response);
+            $response = json_encode($response, JSON_UNESCAPED_SLASHES);
         }
 
         $streamwriter = $outstream->getWriter();

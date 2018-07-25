@@ -47,7 +47,7 @@ class Echo1 extends \Flexio\Jobs\Base
         if (is_array($msg) || is_object($msg))
         {
             $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-            $msg = json_encode($msg);
+            $msg = json_encode($msg, JSON_UNESCAPED_SLASHES);
         }
 
         $streamwriter = $outstream->getWriter();

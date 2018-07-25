@@ -220,7 +220,7 @@ class Merge extends \Flexio\Jobs\Base
 
         if ($result !== null)
         {
-            $outstream->getWriter()->write(json_encode($result));
+            $outstream->getWriter()->write(json_encode($result, JSON_UNESCAPED_SLASHES));
             $outstream->setSize($streamwriter->getBytesWritten());
         }
     }

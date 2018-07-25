@@ -844,7 +844,7 @@ class ScriptHost
             if (isset($this->output_streams[$handle]) && $this->output_streams[$handle]->isTable())
                 $writer->write((array)$data);
                  else
-                $writer->write(json_encode($data));
+                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
         else
         {
@@ -1147,7 +1147,7 @@ class Execute extends \Flexio\Jobs\Base
                     $rows[] = $row;
                 }
 
-                $json = json_encode($rows);
+                $json = json_encode($rows, JSON_UNESCAPED_SLASHES);
 
                 $code = str_replace('flexio.input.json_assoc()', $json, $code);
             }

@@ -105,6 +105,6 @@ class List1 extends \Flexio\Jobs\Base
         }
 
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
-        $streamwriter->write(json_encode($results));
+        $streamwriter->write(json_encode($results, JSON_UNESCAPED_SLASHES));
     }
 }

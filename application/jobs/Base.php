@@ -63,7 +63,7 @@ class Base implements \Flexio\IFace\IJob
 
         if (is_object($stream) || is_array($stream))
         {
-            $data = json_encode($stream);
+            $data = json_encode($stream, JSON_UNESCAPED_SLASHES);
             if ($content_type === null)
             {
                 $content_type = \Flexio\Base\ContentType::JSON;
@@ -93,7 +93,7 @@ class Base implements \Flexio\IFace\IJob
             $firstch = substr($test,0,1);
             if ($firstch === '[' || $firstch === '{')
             {
-                $test = @json_encode($data);
+                $test = @json_encode($data, JSON_UNESCAPED_SLASHES);
                 if ($test !== false)
                 {
                     $ret->setMimeType($content_type);
@@ -225,7 +225,7 @@ class Base implements \Flexio\IFace\IJob
 
         if (is_array($data) || is_object($data))
         {
-            $data = json_encode($data);
+            $data = json_encode($data, JSON_UNESCAPED_SLASHES);
             return self::ensureStream($data, \Flexio\Base\ContentType::JSON);
         }
 

@@ -67,7 +67,7 @@ class Set extends \Flexio\Jobs\Base
             $is_json = false;
             if (is_array($value) || is_object($value))
             {
-                $value = json_encode($value);
+                $value = json_encode($value, JSON_UNESCAPED_SLASHES);
                 $is_json = true;
             }
 

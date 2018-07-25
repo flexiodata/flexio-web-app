@@ -213,7 +213,7 @@ class Convert extends \Flexio\Jobs\Base
                 if ($row === false)
                     break;
 
-                $row = json_encode($row);
+                $row = json_encode($row, JSON_UNESCAPED_SLASHES);
                 $streamwriter->write(($rown>0?",\n":"\n") . $row);
 
                 ++$rown;
@@ -426,7 +426,7 @@ class Convert extends \Flexio\Jobs\Base
 
         if ($output_mime_type == \Flexio\Base\ContentType::JSON)
         {
-            $json = json_encode($rows);
+            $json = json_encode($rows, JSON_UNESCAPED_SLASHES);
             $streamwriter->write($json);
 
             $outstream->set(['mime_type' => \Flexio\Base\ContentType::JSON,
@@ -856,7 +856,7 @@ class Convert extends \Flexio\Jobs\Base
 
             if ($output == 'json')
             {
-                $row = json_encode($row);
+                $row = json_encode($row, JSON_UNESCAPED_SLASHES);
                 $json = ($rown>0?",\n":"\n") . $row;
                 $total_json_size += strlen($json);
                 $result = $streamwriter->write($json);
@@ -967,8 +967,6 @@ class Convert extends \Flexio\Jobs\Base
         }
     }
 
-
-
     private function createOutputFromSpreadsheetInput(\Flexio\IFace\IStream &$instream, \Flexio\IFace\IStream &$outstream, string $output_mime_type) : void
     {
         $reader = $instream->getReader();
@@ -996,7 +994,7 @@ class Convert extends \Flexio\Jobs\Base
 
             // transfer the data
             $streamwriter = $outstream->getWriter();
-            $streamwriter->write(json_encode($rows));
+            $streamwriter->write(json_encode($rows, JSON_UNESCAPED_SLASHES));
             $streamwriter->close();
 
             // input/output

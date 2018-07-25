@@ -133,7 +133,7 @@ class Filter extends \Flexio\Jobs\Base
                 $results[] = $row;
         }
 
-        $payload = json_encode($results);
+        $payload = json_encode($results, JSON_UNESCAPED_SLASHES);
 
         $outstream->setMimeType(\Flexio\Base\ContentType::JSON);
         $streamwriter = $outstream->getWriter();

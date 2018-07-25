@@ -47,7 +47,7 @@ class Dump extends \Flexio\Jobs\Base
 
         if (is_array($msg) || is_object($msg))
         {
-            $msg = @json_encode($msg);
+            $msg = @json_encode($msg, JSON_UNESCAPED_SLASHES);
         }
 
         echo $msg;
