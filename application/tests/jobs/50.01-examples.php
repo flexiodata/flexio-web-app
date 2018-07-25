@@ -79,7 +79,7 @@ class Test
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->getRows(0,1);
-        $expected = json_decode('[{"repository":"flexiodata\/examples"}]',true);
+        $expected = json_decode('[{"repository":"flexiodata/examples"}]',true);
         \Flexio\Tests\Check::assertInArray('A.2', 'Example Pipe; test for pipe installed for new users',  $actual, $expected, $results);
 
 
@@ -116,7 +116,7 @@ class Test
         ]);
         $process = \Flexio\Jobs\Process::create()->execute($task);
         $actual = $process->getStdout()->getReader()->readRow(0,1);
-        $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980\/12\/29"}',true);
+        $expected = json_decode('{"city":"Jackson","state":"MS","zipcode":"39201","birthday":"1980/12/29"}',true);
         \Flexio\Tests\Check::assertArray('B.1', 'Example; test for pipe similar to demo video',  $actual, $expected, $results);
 
 
