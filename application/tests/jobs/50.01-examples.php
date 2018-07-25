@@ -229,7 +229,7 @@ class Test
         ];
         $process = \Flexio\Jobs\Process::create()->setParams($params)->execute($task);
         $actual = $process->getStdout()->getReader()->read(100);
-        $expected = "[\n{\"url\":\"http:\/\/saastr.libsyn.com\/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-wit";
+        $expected = "[\n{\"url\":\"http://saastr.libsyn.com/saastr-026-the-benefits-of-bootstrapping-your-saas-startup-with-l";
         \Flexio\Tests\Check::assertString('D.1', 'Blog Entry Job; check near the first part of the JSON returned',  $actual, $expected, $results);
     }
 }
