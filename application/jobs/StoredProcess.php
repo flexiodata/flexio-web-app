@@ -287,14 +287,10 @@ class StoredProcess implements \Flexio\IFace\IProcess
             if ($this->hasError())
             {
                 $process_info = array('error' => $this->getError());
-                $process_info_str = json_encode($process_info);
+                $process_info_str = json_encode($process_info, JSON_PARTIAL_OUTPUT_ON_ERROR); // don't allow bad characters that may exist in debugging info to cause encoding to cause another failure
 
                 $process_params['process_status'] = \Flexio\Jobs\Process::STATUS_FAILED;
                 $process_params['process_info'] = $process_info_str;
-
-
-// TODO: handle bad json_encode (where json_encode is false)
-
             }
         }
         $this->procobj->set($process_params);
