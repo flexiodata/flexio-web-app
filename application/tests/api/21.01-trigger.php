@@ -62,7 +62,7 @@ class Test
         fclose($handle);
         unlink($path);
 
-        $expected = "From: Test User <test@flex.io>; Message: \nThis is an email with a CSV attachment.\n\n\n\n; Files: {\"Vend_mast.csv\":{\"name\":\"Vend_mast.csv\",\"extension\":\"csv\",\"size\":8695,\"content_type\":\"application\/octet-stream\"}}";
+        $expected = "From: Test User <test@flex.io>; Message: \nThis is an email with a CSV attachment.\n\n\n\n; Files: {\"Vend_mast.csv\":{\"name\":\"Vend_mast.csv\",\"extension\":\"csv\",\"size\":8695,\"content_type\":\"application/octet-stream\"}}";
         \Flexio\Tests\Check::assertString('A.1', 'EMAIL <username>/<alias>@pipes.flex.io; check for handling email input to a pipe',  $actual, $expected, $results);
     }
 }
