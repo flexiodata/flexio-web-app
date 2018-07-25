@@ -46,7 +46,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello,World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (javascript) execute task with lowercase sha256 integrity check',  $actual, $expected, $results);
@@ -65,7 +65,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello,World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task with uppercase sha256 integrity check',  $actual, $expected, $results);
@@ -165,7 +165,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello,World!"
         }';
         \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (javascript) execute task with sha384 integrity check',  $actual, $expected, $results);
@@ -213,7 +213,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello,World!"
         }';
         \Flexio\Tests\Check::assertInArray('C.1', 'Process Execute; (javascript) execute task with sha512 integrity check',  $actual, $expected, $results);

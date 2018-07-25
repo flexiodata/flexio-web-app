@@ -61,7 +61,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task context query parameters',  $actual, $expected, $results);
@@ -98,7 +98,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task context query parameters',  $actual, $expected, $results);

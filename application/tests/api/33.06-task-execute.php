@@ -61,7 +61,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task default variable keys',  $actual, $expected, $results);
@@ -98,7 +98,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);
@@ -136,7 +136,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "bccb"
         }';
         \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (python) execute task default variable keys',  $actual, $expected, $results);
@@ -171,7 +171,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "bccb"
         }';
         \Flexio\Tests\Check::assertInArray('B.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);

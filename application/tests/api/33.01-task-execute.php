@@ -45,7 +45,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task basic functionality',  $actual, $expected, $results);
@@ -64,7 +64,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task basic functionality',  $actual, $expected, $results);

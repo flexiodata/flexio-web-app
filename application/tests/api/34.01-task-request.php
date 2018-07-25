@@ -92,7 +92,7 @@ class Test
         $actual['response'] = $response;
         $expected = '{
             "code": 200,
-            "content_type": "application\/x-empty",
+            "content_type": "application/x-empty",
             "response": null
         }';
         \Flexio\Tests\Check::assertInArray('A.3', 'Process Request; invalid url',  $actual, $expected, $results);
@@ -110,7 +110,7 @@ class Test
         $actual['response'] = $response;
         $expected = '{
             "code": 200,
-            "content_type": "application\/json; charset=utf-8",
+            "content_type": "application/json; charset=utf-8",
             "response": {
                 "args":[],
                 "url":"https://postman-echo.com/get"

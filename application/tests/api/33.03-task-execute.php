@@ -44,7 +44,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task with remote code',  $actual, $expected, $results);
@@ -62,7 +62,7 @@ class Test
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (python) execute task with remote code and sha256 integrity check',  $actual, $expected, $results);
@@ -88,7 +88,7 @@ EOD;
         $actual = $result;
         $expected = '{
             "code": 200,
-            "content_type": "text\/plain;charset=UTF-8",
+            "content_type": "text/plain;charset=UTF-8",
             "response": "This is local."
         }';
         \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (python) execute task with remote code, but local override',  $actual, $expected, $results);
