@@ -205,7 +205,7 @@ class Stream
                 $result['columns'] = $stream->getStructure()->get();
 
             $result['rows'] = \Flexio\Base\Util::getStreamContents($stream, $start, $limit);
-            $result = json_encode($result);
+            $result = json_encode($result, JSON_UNESCAPED_SLASHES);
 
             \Flexio\Api\Response::sendRaw($result);
         }

@@ -101,7 +101,7 @@ class Vfs
             {
                 if ($counter > 0)
                     echo ',';
-                echo json_encode($data);
+                echo json_encode($data, JSON_UNESCAPED_SLASHES);
             }
              else
             {

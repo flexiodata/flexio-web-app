@@ -40,7 +40,7 @@ class Response
         if (count($_FILES) == 0)
             header('Content-Type: application/json');
 
-        $response = @json_encode($content, JSON_PRETTY_PRINT);
+        $response = @json_encode($content, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         echo $response;
     }
 
@@ -75,7 +75,7 @@ class Response
         // send the response
         $response = array();
         $response['error'] = $error;
-        $response = @json_encode($response, JSON_PRETTY_PRINT);
+        $response = @json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
         echo $response;
     }
 

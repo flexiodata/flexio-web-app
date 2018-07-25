@@ -115,7 +115,7 @@ class Segment
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-        $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
+        $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
         $headers = array();
         $headers[] = 'Authorization: Basic ' . base64_encode($segment_key . ':');
@@ -148,7 +148,7 @@ class Segment
             "context" => array(),
             "timestamp" => \Flexio\System\System::getTimestamp()
         );
-        $post_data = json_encode($post_data, JSON_FORCE_OBJECT);
+        $post_data = json_encode($post_data, JSON_UNESCAPED_SLASHES | JSON_FORCE_OBJECT);
 
         $headers = array();
         $headers[] = 'Authorization: Basic ' . base64_encode($segment_key . ':');

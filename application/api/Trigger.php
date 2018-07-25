@@ -135,7 +135,7 @@ class Trigger
             {
                 // flexio table; return application/json in place of internal mime
                 header('Content-Type: ' . \Flexio\Base\ContentType::JSON, true, $response_code);
-                $content = json_encode($content);
+                $content = json_encode($content, JSON_UNESCAPED_SLASHES);
             }
 
             \Flexio\Api\Response::sendRaw($content);
