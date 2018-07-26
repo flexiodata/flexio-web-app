@@ -928,8 +928,24 @@ class Execute extends \Flexio\Jobs\Base
     private $code = '';
     private $process = null;
 
-    private static function getFileContents(string $url) : string
+    private static function getFileContents(\Flexio\IFace\IProcess $process, string $path) : string
     {
+        $vfs = new \Flexio\Services\Vfs($process->getOwner());
+        $vfs->setProcess($process);
+        $info = $vfs->getFileInfo($path);
+
+        $contents = '';
+        $vfs->read($path, function($data) use (&$contents) {
+            $contents .= $data;
+        });
+
+        return $contents;
+
+/*
+// DEPRECATED: code to load directly from URL
+
+        $url = $path;
+
         // load the service
         $connection_info = array(
             'connection_type' => \Flexio\Services\Factory::TYPE_HTTP
@@ -946,6 +962,7 @@ class Execute extends \Flexio\Jobs\Base
         });
 
         return $contents;
+*/
     }
 
     public function validate() : array
@@ -1012,7 +1029,7 @@ class Execute extends \Flexio\Jobs\Base
             if ($file === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $this->code = self::getFileContents($file);
+            $this->code = self::getFileContents($process, $file);
             $this->code_base64 = base64_encode($this->code);
         }
 
