@@ -50,8 +50,6 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public function list(string $path = '', array $options = []) : array
     {
-        $spreadsheets = $this->getSpreadsheets();
-
         $base_path = $path;
         if ($base_path == '')
             $base_path = '/';
@@ -59,6 +57,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
         if ($path == '' || $path == '/')
         {
             $files = [];
+
+            $spreadsheets = $this->getSpreadsheets();
+
             foreach ($spreadsheets as $spreadsheet)
             {
                 //$worksheets = $spreadsheet->getWorksheets();
@@ -85,6 +86,7 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
             if ($path[0] == '/')
                 $path = substr($path,1);
             $spreadsheet = $this->getSpreadsheetByTitle($path);
+
             if (!$spreadsheet)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE, "Cannot locate spreadsheet '$path'");
             $worksheets = $spreadsheet->getWorksheets();
@@ -111,6 +113,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     public function getFileInfo(string $path) : array
     {
+        if (!$this->authenticated())
+            return null;
+        
         $ids = $this->getIdsFromPath($path);
         if (isset($ids['spreadsheet_id']))
             $spreadsheet_id = $ids['spreadsheet_id'];
@@ -198,6 +203,9 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
     private function internalCreateFile(string $path, array $properties = []) // TODO: add return type
     {
+        // bust our spreadsheet list cache
+        $this->spreadsheets = [];
+
         $title = trim($path, "/ \t\r\n");
 
         $postdata = json_encode(array(
