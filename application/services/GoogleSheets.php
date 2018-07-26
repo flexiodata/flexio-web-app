@@ -609,10 +609,13 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
                 {
                     $column_names[] = self::stringFromColumnIndex(count($column_names)+1);
                 }
+            }
 
+            foreach ($result['values'] as $row)
+            {
                 if (count($row) < count($column_names))
                     $row = array_pad($row, count($column_names), '');
-
+            
                 $row = array_combine($column_names, $row);
 
                 $callback($row);
