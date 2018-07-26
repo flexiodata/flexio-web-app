@@ -494,9 +494,12 @@ class GoogleSheets implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyst
 
         $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
 
+
+
+
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Cname%2CmodifiedTime)&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'+and+trashed=false");
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?pageSize=$file_limit&fields=files(id%2Cname%2CmodifiedTime)&q=mimeType%3D'application%2Fvnd.google-apps.spreadsheet'+and+trashed=false");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

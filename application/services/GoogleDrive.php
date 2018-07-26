@@ -71,7 +71,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$folderid'+in+parents+and+trashed=false");
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files?pageSize=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$folderid'+in+parents+and+trashed=false");
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -171,7 +171,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         {
             $p = str_replace("'", "\\'", $p);
             $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
+            $url = "https://www.googleapis.com/drive/v3/files?pageSize=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
 
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);

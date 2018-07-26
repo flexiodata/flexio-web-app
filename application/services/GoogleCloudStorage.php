@@ -351,7 +351,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         {
             $p = str_replace("'", "\\'", $p);
             $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?maxResults=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
+            $url = "https://www.googleapis.com/drive/v3/files?pageSize=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
 
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
