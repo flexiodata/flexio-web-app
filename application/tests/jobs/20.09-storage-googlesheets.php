@@ -44,10 +44,15 @@ class Test
                 continue;
             if (strpos($filename, 'content') === false)
                 continue;
+    
+            // google sheets cannot stored null values
+            if (strpos($filename, 'content-null') !== false)
+                continue;
             
             $idx++;
-            if ($idx == 5)
-                break;
+
+            //if ($idx > 3)
+            //    continue;
 
             $stream = \Flexio\Tests\Util::createStreamFromFile($filename);
 
