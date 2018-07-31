@@ -114,46 +114,6 @@ EOD;
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task context post parameters routed to context form',  $actual, $expected, $results);
 
 
-        // TEST: execute task context post parameters routed to context input
-
-        // BEGIN TEST
-        $script = <<<EOD
-import json
-def flexio_handler(context):
-    for row in context.input:
-        context.output.write(row)
-EOD;
-        $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
-        ]);
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/processes",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => json_encode(["task" => $task])
-        ));
-        $response = json_decode($result['response'],true);
-        $objeid = $response['eid'] ?? '';
-        $result = \Flexio\Tests\Util::callApi(array(
-            'method' => 'POST',
-            'url' => "$apibase/$userid/processes/$objeid/run",
-            'token' => $token,
-            'content_type' => 'application/json',
-            'params' => json_encode(array(
-                'param1' => 'a',
-                'param2' => 'b',
-                'param3' => 'c'
-            ))
-        ));
-        $actual = $result;
-        $expected = '{
-            "code": 200,
-            "content_type": "text/plain;charset=UTF-8",
-            "response": "param1:a;param2:b;param3:c;"
-        }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (python) execute task context post parameters routed to context input',  $actual, $expected, $results);
-
         // BEGIN TEST
         $script = <<<EOD
 exports.flexio_handler = function(context) {
@@ -193,7 +153,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'Process Execute; (javascript) execute task context post parameters routed to context input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (javascript) execute task context post parameters routed to context input',  $actual, $expected, $results);
     }
 }
 
