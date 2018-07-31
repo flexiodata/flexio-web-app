@@ -846,6 +846,13 @@ class ScriptHost
                  else
                 $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
         }
+        else if (is_array($data))
+        {
+            if (isset($this->output_streams[$handle]) && $this->output_streams[$handle]->isTable())
+                $writer->write((array)$data);
+                 else
+                $writer->write(json_encode($data, JSON_UNESCAPED_SLASHES));
+        }
         else
         {
             $writer->write((string)$data);
@@ -916,6 +923,8 @@ class ScriptHost
         $res = $reader->readRow();
         if ($res === false)
             return false;
+        if (is_string($res))
+            return $res;
         return $associative ? $res : array_values($res);
     }
 }

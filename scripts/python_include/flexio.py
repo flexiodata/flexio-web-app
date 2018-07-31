@@ -427,6 +427,8 @@ class Input(object):
         return row
 
     def type_casts(self, row):
+        if not isinstance(row, dict):
+            return row
         if self._casts is None:
             self._casts = {}
             structure = self.structure

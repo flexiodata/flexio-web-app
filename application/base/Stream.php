@@ -55,8 +55,27 @@ class StreamReader implements \Flexio\IFace\IStreamReader
 
     public function readRow()
     {
-        // this class not used for tables -- see StorageFileReaderWriter
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        if ($this->stream->isTable())
+        {
+            // this class not used for tables -- see StorageFileReaderWriter
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
+        }
+         else
+        {
+            $linelen = strpos($this->stream->buffer, "\n");
+            if ($linelen === false)
+            {
+                return $this->read(strlen($this->stream->buffer));
+            }
+             else
+            {
+                $line = $this->read($linelen);
+                if ($line === false)
+                    return false;
+                $this->read(1); // for the \n
+                return rtrim($line, "\r");
+            }
+        }
     }
 
     public function getRows(int $offset, int $limit)
