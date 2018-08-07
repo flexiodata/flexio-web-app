@@ -436,7 +436,7 @@ class Stream implements \Flexio\IFace\IStream
         return $this->set($properties);
     }
 
-    public function getSize() // TODO: add return type (size can be null)
+    public function getSize() : ?int
     {
         return $this->properties['size'];
     }
