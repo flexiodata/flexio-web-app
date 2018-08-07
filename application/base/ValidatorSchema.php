@@ -49,7 +49,7 @@ class ValidatorSchema
 
     private $errors = array();
 
-    public static function check($data, $schema) // TODO: add return type
+    public static function check($data, $schema) : \Flexio\Base\ValidatorSchema
     {
         // note: function to validate a schema and an object against a
         // schema; useful for validating both the data and schema when
@@ -71,7 +71,7 @@ class ValidatorSchema
         return $validator;
     }
 
-    public static function checkObject($data, $schema) // TODO: add return type
+    public static function checkObject($data, $schema) : \Flexio\Base\ValidatorSchema
     {
         // note: function to validate an object against a schema; useful
         // for validating data and schema when a schema is already validated
@@ -86,7 +86,7 @@ class ValidatorSchema
         return $validator;
     }
 
-    public static function checkSchema($schema) // TODO: add return type
+    public static function checkSchema($schema) : \Flexio\Base\ValidatorSchema
     {
         // note: function to validate a schema; useful for validating
         // a schema once before using it to check multiple objects
@@ -900,7 +900,7 @@ class ValidatorSchema
         return ($str_item_count === 0) ? true : false;
     }
 
-    private static function example($key, $value) // TODO: add return type
+    private static function example($key, $value) : string
     {
         // create a value that can be displayed
         if (is_array($value) || is_object($value))
@@ -912,13 +912,13 @@ class ValidatorSchema
         // the key might be null (top level values), in which case,
         // just return the value
         if (!is_string($key))
-            return $value;
+            return (string)$value;
 
         $pair = array($key => $value);
         return json_encode($pair);
     }
 
-    private static function example_list($data) // TODO: add return type
+    private static function example_list(array $data) : string
     {
         $count = count($data);
 
@@ -926,10 +926,10 @@ class ValidatorSchema
             return '';
 
         if ($count === 1)
-            return $data[0];
+            return (string)$data[0];
 
         if ($count === 2)
-            return $data[0] . ' or ' . $data[1];
+            return (string)$data[0] . ' or ' . (string)$data[1];
 
         $result = '';
         $idx = 0;
@@ -940,7 +940,7 @@ class ValidatorSchema
             if ($idx === ($count - 1))
                 $result .= 'or ';
 
-            $result .= $d;
+            $result .= (string)$d;
             $idx++;
         }
 
