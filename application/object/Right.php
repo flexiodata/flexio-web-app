@@ -67,9 +67,8 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         foreach ($items as $i)
         {
             $o = new static();
-            $local_properties = self::formatProperties($i);
-            $o->properties = $local_properties;
-            $o->setEid($local_properties['eid']);
+            $o->properties =self::formatProperties($i);
+            $o->setEid($o->properties['eid']);
             $objects[] = $o;
         }
 
@@ -82,7 +81,7 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         $right_model = $object->getModel()->right;
 
         $properties = $right_model->get($eid);
-        if ($properties === false)
+        if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
@@ -180,24 +179,26 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return false;
 
         // note: following is normal cache behavior
-        // if ($this->properties === false)
+        // if (!$this->properties)
         //    return false;
         //
         // return true;
     }
 
-    private function clearCache() : bool
+    private function clearCache() : void
     {
-        $this->properties = false;
-        return true;
+        $this->properties = null;
     }
 
-    private function populateCache() : bool
+    private function populateCache() : void
     {
         $right_model = $this->getModel()->right;
-        $local_properties = $right_model->get($this->getEid());
-        $this->properties = self::formatProperties($local_properties);
-        return true;
+
+        $properties = $right_model->get($this->getEid());
+        if (!$properties)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $this->properties = self::formatProperties($properties);
     }
 
     private static function formatProperties(array $properties) : array

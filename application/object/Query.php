@@ -89,7 +89,7 @@ class Query
 
         if ($eid_type === \Model::TYPE_UNDEFINED)
         {
-            $object = false; // equivalent to what Model::get() returns if an object isn't found
+            $object = null; // equivalent to what Model::get() returns if an object isn't found
         }
          else
         {

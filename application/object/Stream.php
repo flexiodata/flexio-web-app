@@ -47,9 +47,8 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         foreach ($items as $i)
         {
             $o = new static();
-            $local_properties = self::formatProperties($i);
-            $o->properties = $local_properties;
-            $o->setEid($local_properties['eid']);
+            $o->properties =self::formatProperties($i);
+            $o->setEid($o->properties['eid']);
             $objects[] = $o;
         }
 
@@ -62,7 +61,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         $stream_model = $object->getModel()->stream;
 
         $properties = $stream_model->get($eid);
-        if ($properties === false)
+        if (!$properties)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
@@ -425,24 +424,26 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     private function isCached() : bool
     {
-        if ($this->properties === false)
+        if (!$this->properties)
             return false;
 
         return true;
     }
 
-    private function clearCache() : bool
+    private function clearCache() : void
     {
-        $this->properties = false;
-        return true;
+        $this->properties = null;
     }
 
-    private function populateCache() : bool
+    private function populateCache() : void
     {
         $stream_model = $this->getModel()->stream;
-        $local_properties = $stream_model->get($this->getEid());
-        $this->properties = self::formatProperties($local_properties);
-        return true;
+
+        $properties = $stream_model->get($this->getEid());
+        if (!$properties)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+        $this->properties = self::formatProperties($properties);
     }
 
     private $storagefs = null;

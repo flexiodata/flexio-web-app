@@ -80,7 +80,7 @@ class Test
         $delete1_result = $model->purge($eid1);
         $info1_after_deletion = $model->get($eid1);
         $info2_after_deletion = $model->get($eid2);
-        $actual = $info1_before_deletion['eid'] === $eid1 && $info1_after_deletion === false && $info2_before_deletion['eid'] === $eid2 && $info2_after_deletion['eid'] === $eid2;
+        $actual = $info1_before_deletion['eid'] === $eid1 && !$info1_after_deletion && $info2_before_deletion['eid'] === $eid2 && $info2_after_deletion['eid'] === $eid2;
         $expected = true;
         \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Right::purge(); when purging, make sure object being purged is physically and that other objects are not effected',  $actual, $expected, $results);
     }

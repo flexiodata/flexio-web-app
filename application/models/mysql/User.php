@@ -263,7 +263,7 @@ class User extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) // TODO: add return type
+
     {
         if (!\Flexio\Base\Eid::isValid($eid))
             return false; // don't flag an error, but acknowledge that object doesn't exist

@@ -239,15 +239,15 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) // TODO: add return type
+    public function get(string $eid) : ?array
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return false; // don't flag an error, but acknowledge that object doesn't exist
+            return null; // don't flag an error, but acknowledge that object doesn't exist
 
         $filter = array('eid' => $eid);
         $rows = $this->list($filter);
         if (count($rows) === 0)
-            return false;
+            return null;
 
         return $rows[0];
     }
@@ -435,7 +435,7 @@ class Process extends ModelBase
     public function getProcessStatus(string $eid) : string
     {
         $process_info = $this->get($eid);
-        if ($process_info === false)
+        if (!$process_info)
             return '';
 
         return $process_info['process_status'];
