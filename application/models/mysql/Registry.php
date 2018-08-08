@@ -31,7 +31,7 @@ class Registry extends ModelBase
      *
      * @return {string}; The value of the variable
      */
-    public function getString(string $object_eid, string $name, string $default_value = null) // TODO: add return type
+    public function getString(string $object_eid, string $name, string $default_value = null) : ?string
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
@@ -40,15 +40,15 @@ class Registry extends ModelBase
             return $res;
     }
 
-    public function getNumber(string $object_eid, string $name, float $default_value = null) // TODO: add return type
+    public function getNumber(string $object_eid, string $name, float $default_value = null) : ?float
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
             return $default_value;
-        return 0 + $res;
+        return 0.0 + $res;
     }
 
-    public function getBoolean(string $object_eid, string $name, bool $default_value = null) // TODO: add return type
+    public function getBoolean(string $object_eid, string $name, bool $default_value = null) : ?bool
     {
         $res = $this->getVariable($object_eid, $name);
         if (is_null($res))
@@ -63,13 +63,13 @@ class Registry extends ModelBase
             return false;
     }
 
-    public function getBinary(string $object_eid, string $name, &$mime_type) // TODO: add return type
+    public function getBinary(string $object_eid, string $name, &$mime_type) : ?string
     {
         try
         {
             $db = $this->getDatabase();
             if (!$db)
-                return false;
+                return null;
 
             $qobject_eid = $db->quote(($object_eid ?? ''));
             $qname = $db->quote($name);
@@ -92,13 +92,13 @@ class Registry extends ModelBase
         return null;
     }
 
-    public function getUpdateTime(string $object_eid, string $name) // TODO: add return type
+    public function getUpdateTime(string $object_eid, string $name) : ?string
     {
         try
         {
             $db = $this->getDatabase();
             if (!$db)
-                return false;
+                return null;
 
             $qobject_eid = $db->quote(($object_eid ?? ''));
             $qname = $db->quote($name);
@@ -313,7 +313,7 @@ class Registry extends ModelBase
      *
      * @return {string}; The value of the variable
      */
-    public function getVariable(string $object_eid, string $name, $db = null, bool $for_update = false) // TODO: add return type
+    public function getVariable(string $object_eid, string $name, $db = null, bool $for_update = false) : ?string
     {
         if (!self::checkInput($object_eid, $name))
             return null;

@@ -45,7 +45,7 @@ class Test
             $object_eid = '';
             $name = $i;
             $read_value = $model->getNumber($object_eid, $name);
-            if ($read_value === $entry_idx)
+            if ($read_value == $entry_idx)
                 $read_successes++;
             $entry_idx++;
         }
