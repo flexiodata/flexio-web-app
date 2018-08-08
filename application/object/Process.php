@@ -237,8 +237,6 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $process_model = $this->getModel()->process;
         $log_entries = $process_model->getProcessLogEntries($this->getEid());
-        if ($log_entries == false)
-            return array();
 
         $result = array();
         foreach ($log_entries as $entry)
