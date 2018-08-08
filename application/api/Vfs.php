@@ -43,8 +43,6 @@ class Vfs
         if ($owner_user->allows($requesting_user_eid, \Flexio\Object\Right::TYPE_READ) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
-        // TODO: need to patch through the owner info here
-
         $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $result = $vfs->list($path);
 
@@ -82,8 +80,6 @@ class Vfs
 
         $is_data = false;
         $counter = 0;
-
-        // TODO: need to patch through the owner info here
 
         $vfs = new \Flexio\Services\Vfs($owner_user_eid);
         $vfs->read($path, function($data) use (&$is_data, &$counter) {
@@ -141,9 +137,6 @@ class Vfs
 
         // grab path, including preceding slash
         $path = substr($path, $pos+4);
-
-
-        // TODO: need to patch through the owner info here
 
         $vfs = new \Flexio\Services\Vfs($owner_user_eid);
 

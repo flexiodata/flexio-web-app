@@ -20,7 +20,9 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\Action::create()
+        // FUNCTION:
+        //   \Flexio\Model\Action::create()
+        //   \Flexio\Model\Action::get()
 
 
         // SETUP
