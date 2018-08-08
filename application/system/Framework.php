@@ -23,7 +23,7 @@ class FrameworkRequest
     public $url_parts = array();
     public $params = array();
 
-    public function setActionName($value) : void
+    public function setActionName(string $value) : void
     {
         $this->action = $value;
     }
@@ -33,7 +33,7 @@ class FrameworkRequest
         return $this->action;
     }
 
-    public function setControllerName($value) : void
+    public function setControllerName(string $value) : void
     {
         $this->controller = $value;
     }
@@ -48,7 +48,7 @@ class FrameworkRequest
         return $this->url_parts;
     }
 
-    public function getUrlPathPart($idx, $default = null) // TODO: add return type
+    public function getUrlPathPart(int $idx, string $default = null) : ?string
     {
         if ($idx >= count($this->url_parts))
             return $default;
@@ -86,17 +86,17 @@ class FrameworkRequest
         return $_SERVER['REQUEST_METHOD'] ?? '';
     }
 
-    public function getQuery($key, $default = null) // TODO: add return type
+    public function getQuery(string $key, string $default = null) : ?string
     {
         return (isset($_GET[$key])) ? $_GET[$key] : $default;
     }
 
-    public function setParam($key, $value) : void
+    public function setParam(string $key, string $value) : void
     {
         $this->params[$key] = $value;
     }
 
-    public function getParam($key, $default = null) // TODO: add return type
+    public function getParam(string $key, string $default = null) : ?string
     {
         if (isset($this->params[$key]))
             return $this->params[$key];
@@ -137,16 +137,17 @@ class FrameworkRequest
     }
 }
 
+
 class FrameworkResponse
 {
     public $body = '';
 
-    public function setBody($body) : void
+    public function setBody(string $body) : void
     {
         $this->body = $body;
     }
 
-    public function getBody() // TODO: add return type
+    public function getBody() : string
     {
         return $this->body;
     }
@@ -157,7 +158,7 @@ class FrameworkViewHeadLinks
 {
     public $arr = array();
 
-    public function appendStylesheet($link) : void
+    public function appendStylesheet(string $link) : void
     {
         $this->arr[] = array('type' => 'style', 'content' => $link);
     }
@@ -175,13 +176,11 @@ class FrameworkViewHeadLinks
 }
 
 
-
-
 class FrameworkViewHeadStyle
 {
     public $arr = array();
 
-    public function appendStyle($style) : void
+    public function appendStyle(string $style) : void
     {
         $this->arr[] = $style;
     }
@@ -194,6 +193,7 @@ class FrameworkViewHeadStyle
         return '<style type="text/css">' . $ret . '</style>';
     }
 }
+
 
 class FrameworkViewInlineScript
 {
@@ -209,7 +209,7 @@ class FrameworkViewInlineScript
         $this->arr[] = array('type' => 'script', 'content' => ob_get_clean());
     }
 
-    public function appendFile($file) : void
+    public function appendFile(string $file) : void
     {
         $this->arr[] = array('type' => 'file', 'content' => $file);
     }
@@ -241,35 +241,35 @@ class FrameworkView
     {
     }
 
-    public function headLink() // TODO: add return type
+    public function headLink() : \Flexio\System\FrameworkViewHeadLinks
     {
         if (!$this->head_links)
             $this->head_links = new FrameworkViewHeadLinks;
         return $this->head_links;
     }
 
-    public function headStyle() // TODO: add return type
+    public function headStyle() : \Flexio\System\FrameworkViewHeadStyle
     {
         if (!$this->head_style)
             $this->head_style = new FrameworkViewHeadStyle;
         return $this->head_style;
     }
 
-    public function headTitle($title = null) : string
+    public function headTitle(string $title = null) : string
     {
         if (!is_null($title))
             $this->head_title = $title;
         return '<title>' . $this->head_title . '</title>';
     }
 
-    public function inlineScript() // TODO: add return type
+    public function inlineScript() : \Flexio\System\FrameworkViewInlineScript
     {
         if (!$this->inline_script)
             $this->inline_script = new FrameworkViewInlineScript;
         return $this->inline_script;
     }
 
-    public function render($file) // TODO: add return type
+    public function render(string $file) : string
     {
         if (false === strpos($file, DIRECTORY_SEPARATOR))
         {
@@ -281,7 +281,6 @@ class FrameworkView
         return ob_get_clean();
     }
 }
-
 
 
 class FxControllerAction
@@ -298,7 +297,9 @@ class FxControllerAction
     {
     }
 
-    public function initControllerAction($view, $request, $response) : void
+    public function initControllerAction(\Flexio\System\FrameworkView $view,
+                                         \Flexio\System\FrameworkRequest $request,
+                                         \Flexio\System\FrameworkResponse $response) : void
     {
         $this->view = $view;
         $this->request = $request;
@@ -310,7 +311,7 @@ class FxControllerAction
     {
     }
 
-    public function invokeAction($controller, $action) : void
+    public function invokeAction(string $controller, string $action) : void
     {
         if (!method_exists($this, $action . 'Action'))
         {
@@ -325,7 +326,7 @@ class FxControllerAction
         call_user_func_array(array($this, $action . 'Action'), array());
     }
 
-    public function render($action = null) : void
+    public function render(string $action = null) : void
     {
         if (is_null($action))
             $action = $this->action;
@@ -337,7 +338,7 @@ class FxControllerAction
         }
     }
 
-    public function renderScript($file) : void
+    public function renderScript(string $file) : void
     {
         if (!$this->render_raw)
         {
@@ -346,19 +347,19 @@ class FxControllerAction
         }
     }
 
-    public function getRequest() // TODO: add return type
+    public function getRequest() : \Flexio\System\FrameworkRequest
     {
         return $this->request;
     }
 
-    public function getResponse() // TODO: add return type
+    public function getResponse() : \Flexio\System\FrameworkResponse
     {
         if (!$this->response)
             $this->response = new FrameworkResponse;
         return $this->response;
     }
 
-    public function getView() // TODO: add return type
+    public function getView() : \Flexio\System\FrameworkView
     {
         if (!$this->view)
         {
@@ -367,18 +368,18 @@ class FxControllerAction
         return $this->view;
     }
 
-    public function getRenderRaw() // TODO: add return type
+    public function getRenderRaw() : bool
     {
         return $this->render_raw;
     }
 
-    public function _redirect($location) : void
+    public function _redirect(string $location) : void
     {
         header("Location: $location");
         exit(0);
     }
 
-    public function _forward($action, $controller = null) : void
+    public function _forward(string $action, string $controller = null) : void
     {
         $this->forward = array('controller' => $controller, 'action' => $action);
     }
@@ -388,7 +389,7 @@ class FxControllerAction
      *
      * @return void
      */
-    public function __call($name, $args) : void
+    public function __call(string $name, array $args) : void
     {
         throw new \Exception('Sorry, the requested action is unavailable');
     }
@@ -417,14 +418,11 @@ class FxControllerAction
         $this->render_embed = true;
     }
 
-    protected function setViewTitle($title) : void
+    protected function setViewTitle(string $title) : void
     {
         $this->view->title = $title;
     }
 }
-
-
-
 
 
 abstract class FrameworkPlugin
@@ -433,32 +431,32 @@ abstract class FrameworkPlugin
     protected $response;
     protected $view;
 
-    public function setRequest($request) : void
+    public function setRequest(\Flexio\System\FrameworkRequest $request) : void
     {
         $this->request = $request;
     }
 
-    public function getRequest() // TODO: add return type
+    public function getRequest() : \Flexio\System\FrameworkRequest
     {
         return $this->request;
     }
 
-    public function setResponse($response) : void
+    public function setResponse(\Flexio\System\FrameworkResponse $response) : void
     {
         $this->response = $response;
     }
 
-    public function getResponse() // TODO: add return type
+    public function getResponse() : \Flexio\System\FrameworkResponse
     {
         return $this->response;
     }
 
-    public function setView($view) : void
+    public function setView(\Flexio\System\FrameworkView $view) : void
     {
         $this->view = $view;
     }
 
-    public function getView() // TODO: add return type
+    public function getView() : \Flexio\System\FrameworkView
     {
         return $this->view;
     }
@@ -484,7 +482,7 @@ class Framework
     protected $suffix = null;
     protected $plugins = array();
 
-    public static function getInstance() // TODO: add return type
+    public static function getInstance() : \Flexio\System\Framework
     {
         if (null === self::$_instance)
             self::$_instance = new self();
@@ -492,17 +490,17 @@ class Framework
         return self::$_instance;
     }
 
-    public function setControllerPrefix($prefix) : void
+    public function setControllerPrefix(string $prefix) : void
     {
         $this->prefix = $prefix;
     }
 
-    public function setControllerSuffix($suffix) : void
+    public function setControllerSuffix(string $suffix) : void
     {
         $this->suffix = $suffix;
     }
 
-    public function registerPlugin($plugin) : void
+    public function registerPlugin(\Flexio\System\FlexioPlugin $plugin) : void
     {
         $this->plugins[] = $plugin;
     }
