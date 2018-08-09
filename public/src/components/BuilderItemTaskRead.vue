@@ -30,35 +30,19 @@
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
       <h4>2. Choose file</h4>
-      <div class="mb3" v-show="paths.length > 0">
-        <div class="mb1 bt b--black-10"></div>
-        <div class="overflow-y-auto" style="max-height: 260px">
-          <div
-            class="flex flex-row items-center no-select cursor-default darken-05 css-item"
-            :key="path"
-            v-for="(path, index) in paths"
-          >
-            <div class="flex-fill ph2 f7 lh-copy">{{path}}</div>
-            <div
-              class="pointer black-30 hover-black-60 ph1 css-remove"
-              @click="removeFile(index)"
-            >
-              <i class="db material-icons md-24">close</i>
-            </div>
-          </div>
-        </div>
-      <div class="mt1 bt b--black-10"></div>
-      </div>
-      <div>
+      <el-input
+        v-model="edit_values.path"
+      >
         <el-button
+          slot="append"
           class="ttu b"
+          type="primary"
           size="small"
           @click="show_file_chooser_dialog = true"
-          v-show="paths.length == 0"
         >
-          Choose file
+          Browse
         </el-button>
-      </div>
+      </el-input>
     </template>
 
     <!-- file chooser dialog -->
@@ -88,7 +72,7 @@
         <el-button
           class="ttu b"
           type="primary"
-          @click="addFiles"
+          @click="addFile"
         >
           Choose file
         </el-button>
@@ -222,6 +206,13 @@
         this.$emit('active-item-change', this.index)
         this.$emit('item-change', this.edit_values, this.index)
       },
+      addFile() {
+        var files = this.$refs['file-chooser'].getSelectedFiles()
+        files = _.get(files, '[0].path', '')
+        this.edit_values = _.assign({}, this.edit_values, { path: files })
+        this.show_file_chooser_dialog = false
+      },
+      /*
       addFiles() {
         var files = this.$refs['file-chooser'].getSelectedFiles()
         files = _.map(files, (f) => { return f.path })
@@ -238,6 +229,7 @@
         files.splice(idx, 1)
         this.edit_values = _.assign({}, this.edit_values, { path: files })
       }
+      */
     }
   }
 </script>
