@@ -5,8 +5,8 @@ prompt:
   element: form
   title: Echo
   description: ''
-  cls: el-form--compact
-  label_position: right
+  cls: el-form--compact el-form__label-tiny
+  label_position: top
   label_width: 6rem
   form_items:
     - element: input
