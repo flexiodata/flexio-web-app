@@ -13,11 +13,9 @@ prompt:
       type: hidden
       variable: op
       value: convert
-
     - element: markdown
       value: |
         <h3 class="mv0">Input</h3>
-
     - element: select
       variable: input.format
       label: Format
@@ -40,7 +38,6 @@ prompt:
           value: 'atom'
         - label: Table
           value: 'table'
-
     - element: select
       variable: input.delimiter
       label: Delimiter
@@ -62,7 +59,6 @@ prompt:
       is_visible:
         variable: input.format
         equals: delimited
-
     - element: select
       variable: input.qualifier
       label: Text qualifier
@@ -78,7 +74,6 @@ prompt:
       is_visible:
         variable: input.format
         equals: delimited
-
     - element: switch
       variable: input.header
       label: First row header
@@ -86,11 +81,9 @@ prompt:
       is_visible:
         variable: input.format
         equals: delimited
-
     - element: markdown
       value: |
         <h3 class="mv0">Output</h3>
-
     - element: select
       variable: output.format
       label: Format
@@ -113,7 +106,6 @@ prompt:
           value: 'atom'
         - label: Table
           value: 'table'
-
     - element: select
       variable: output.delimiter
       label: Delimiter
@@ -135,7 +127,6 @@ prompt:
       is_visible:
         variable: output.format
         equals: delimited
-
     - element: select
       variable: output.qualifier
       label: Text qualifier
@@ -151,7 +142,6 @@ prompt:
       is_visible:
         variable: output.format
         equals: delimited
-
     - element: switch
       variable: output.header
       label: First row header

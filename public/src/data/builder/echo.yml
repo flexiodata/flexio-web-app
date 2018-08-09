@@ -13,7 +13,6 @@ prompt:
       type: hidden
       variable: op
       value: echo
-
     - element: input
       type: textarea
       variable: msg

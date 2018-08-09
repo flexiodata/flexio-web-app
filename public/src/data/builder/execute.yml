@@ -11,7 +11,6 @@ prompt:
       type: hidden
       variable: op
       value: execute
-
     - element: select
       variable: lang
       label: Language
@@ -22,7 +21,6 @@ prompt:
           value: javascript
         - label: Python
           value: python
-
     - element: code-editor
       lang: python
       transpose: base64

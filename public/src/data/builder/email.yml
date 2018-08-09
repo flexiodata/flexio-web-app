@@ -13,21 +13,18 @@ prompt:
       type: hidden
       variable: op
       value: email
-
     - element: input
       type: email
       variable: to
       label: To
       placeholder: Enter email address
       value: ''
-
     - element: input
       type: text
       variable: subject
       label: Subject
       placeholder: Enter subject
       value: ''
-
     - element: input
       type: textarea
       variable: body
