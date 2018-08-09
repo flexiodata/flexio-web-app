@@ -119,11 +119,11 @@
       },
       showTitle: {
         type: Boolean,
-        default: false
+        default: true
       },
       title: {
         type: String,
-        default: ''
+        default: 'Insert new task'
       },
       description: {
         type: String,

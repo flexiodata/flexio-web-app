@@ -29,7 +29,7 @@
       </el-button>
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
-      <h4>2. Choose files</h4>
+      <h4>2. Choose file</h4>
       <div class="mb3" v-show="paths.length > 0">
         <div class="mb1 bt b--black-10"></div>
         <div class="overflow-y-auto" style="max-height: 260px">
@@ -54,8 +54,9 @@
           class="ttu b"
           size="small"
           @click="show_file_chooser_dialog = true"
+          v-show="paths.length == 0"
         >
-          Add files
+          Choose file
         </el-button>
       </div>
     </template>
@@ -63,7 +64,7 @@
     <!-- file chooser dialog -->
     <el-dialog
       custom-class="el-dialog--compressed-body"
-      title="Choose files"
+      title="Choose file"
       width="51rem"
       top="8vh"
       :modal-append-to-body="false"
@@ -72,6 +73,8 @@
       <BuilderComponentFileChooser
         ref="file-chooser"
         :connection-identifier="connection_identifier"
+        :allow-multiple="false"
+        :allow-folders="false"
         :show-result="false"
         v-if="show_file_chooser_dialog"
       />
@@ -87,7 +90,7 @@
           type="primary"
           @click="addFiles"
         >
-          Add files
+          Choose file
         </el-button>
       </span>
     </el-dialog>

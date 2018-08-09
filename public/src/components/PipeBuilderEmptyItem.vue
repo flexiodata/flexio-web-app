@@ -15,7 +15,7 @@
     </el-button>
     <p class="mt4 ttu fw6 f7 moon-gray">&mdash; or start with one of the following tasks &mdash;</p>
     <BuilderItemTaskChooser
-      title="Choose a task"
+      :show-title="false"
       :ops="ops"
       @task-chooser-select-task="selectTask"
     />
