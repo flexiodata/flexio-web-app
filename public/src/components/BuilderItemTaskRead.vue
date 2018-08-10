@@ -12,7 +12,7 @@
       v-show="show_description"
     >
     </div>
-    <h4>1. Choose connection</h4>
+    <h4 class="fw6">1. Choose connection</h4>
     <BuilderComponentConnectionChooser
       class="mb3"
       :connection-identifier.sync="connection_identifier"
@@ -29,7 +29,7 @@
       </el-button>
     </BuilderComponentConnectionChooser>
     <template v-if="has_available_connection">
-      <h4>2. Choose file</h4>
+      <h4 class="fw6">2. Choose file</h4>
       <el-input
         v-model="edit_values.path"
       >
