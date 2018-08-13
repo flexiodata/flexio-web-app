@@ -121,7 +121,7 @@ class Convert extends \Flexio\Jobs\Base
         $output_content_type_from_definition = self::getOutputMimeTypeFromDefinition($job_params);
 
         // default to convert to table
-        if ($output_content_type_from_definition === false)
+        if (!isset($output_content_type_from_definition))
             $output_content_type_from_definition = \Flexio\Base\ContentType::FLEXIO_TABLE;
 
 
@@ -130,7 +130,7 @@ class Convert extends \Flexio\Jobs\Base
         $instream_mime_type = $instream->getMimeType();
         if ($instream_mime_type != \Flexio\Base\ContentType::FLEXIO_TABLE)
         {
-            if ($input_content_type_from_definition === false)
+            if (!isset($input_content_type_from_definition))
                 $instream_mime_type = $instream->getMimeType();
                     else
                 $instream_mime_type = $input_content_type_from_definition;
@@ -532,7 +532,7 @@ class Convert extends \Flexio\Jobs\Base
 
 
             $structure = self::determineStructureFromJsonArray($items);
-            if ($structure === false)
+            if (!isset($structure))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             foreach ($items as &$row)
@@ -583,7 +583,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             // set the output structure and write the rows
             $structure = self::determineStructureFromJsonArray($items);
-            if ($structure === false)
+            if (!isset($structure))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             // input/output
@@ -903,7 +903,7 @@ class Convert extends \Flexio\Jobs\Base
             $worksheet = $spreadsheet->getActiveSheet();
 
             $structure = self::determineStructureFromJsonArray($spreadsheet_output);
-            if ($structure === false)
+            if (!isset($structure))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             $job_params = $this->getJobParameters();
@@ -1007,7 +1007,7 @@ class Convert extends \Flexio\Jobs\Base
         {
             // set the output structure and write the rows
             $structure = self::determineStructureFromJsonArray($rows);
-            if ($structure === false)
+            if (!isset($structure))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
 
             // input/output
@@ -1413,11 +1413,11 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function determineStructureFromJsonArray(array $items) // TODO: add return type
+    private static function determineStructureFromJsonArray(array $items) : ?array
     {
         // create the fields based off the first row
         if (count($items) === 0)
-            return false;
+            return null;
 
         $structure = array();
 
@@ -1487,7 +1487,7 @@ class Convert extends \Flexio\Jobs\Base
         return $structure;
     }
 
-    private static function getInputMimeTypeFromDefinition(array $job_params) // TODO: add return type
+    private static function getInputMimeTypeFromDefinition(array $job_params) : ?string
     {
         $input = $job_params['input'] ?? '';
         $format = is_string($input) ? $input : ($job_params['input']['format'] ?? '');
@@ -1513,10 +1513,10 @@ class Convert extends \Flexio\Jobs\Base
         else if ($format == 'ods')
             return \Flexio\Base\ContentType::ODS;
         else
-            return false;
+            return null;
     }
 
-    private static function getOutputMimeTypeFromDefinition(array $job_params) // TODO: add return type
+    private static function getOutputMimeTypeFromDefinition(array $job_params) : ?string
     {
         $output = $job_params['output'] ?? '';
         $format = is_string($output) ? $output : ($output['format'] ?? '');
@@ -1538,7 +1538,7 @@ class Convert extends \Flexio\Jobs\Base
         else if ($format == 'ods')
             return \Flexio\Base\ContentType::ODS;
         else
-            return false;
+            return null;
     }
 
     private static $ebcdicToAscii  = [
