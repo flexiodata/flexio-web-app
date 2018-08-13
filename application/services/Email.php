@@ -306,22 +306,4 @@ class Email
 
         return true;
     }
-
-    private static function getCleanedAddresses(array $addresses) : array
-    {
-        $cleaned_addresses = array();
-        foreach ($addresses as $a)
-        {
-            if (!is_string($a))
-                continue;
-
-            $a = trim($a);
-            if (strlen($a) === 0)
-                continue;
-
-            $cleaned_addresses[] = $a;
-        }
-
-        return $cleaned_addresses;
-    }
 }
