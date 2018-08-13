@@ -24,11 +24,8 @@ class PhantomController extends \Flexio\System\FxControllerAction
         parent::init();
     }
 
-    public static function renderWorkspaceThumbnail($params) // TODO: add return type
+    public static function renderWorkspaceThumbnail(array $params) : string
     {
-        if (!isset($params['url']))
-            return false;
-
         // get phantomjs executable path
         $exe = \Flexio\System\System::getBinaryPath('phantomjs');
 
@@ -56,12 +53,8 @@ class PhantomController extends \Flexio\System\FxControllerAction
         return $output;
     }
 
-    private static function createParamsFile($params) // TODO: add return type
+    private static function createParamsFile(array $params) : string
     {
-        // make sure parameters are an array
-        if (!is_array($params))
-            $params = unserialize($params);
-
         // get the domain name and session id
         $domain = $_SERVER['SERVER_NAME'];
         $sess_id = session_id();
@@ -84,7 +77,7 @@ class PhantomController extends \Flexio\System\FxControllerAction
         return $params_file;
     }
 
-    private static function createFullUri($url) // TODO: add return type
+    private static function createFullUri(string $url) : string
     {
         // get the domain name
         $domain = $_SERVER['SERVER_NAME'];
