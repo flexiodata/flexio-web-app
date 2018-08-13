@@ -60,31 +60,31 @@ class Test
         $path = "";
         $result = $search_model->exec($path);
         $actual = $result;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
+        $expected = null;
+        \Flexio\Tests\Check::assertNull('A.3', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $path = "->";
         $result = $search_model->exec($path);
         $actual = $result;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
+        $expected = null;
+        \Flexio\Tests\Check::assertNull('A.4', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "$eid->";
         $result = $search_model->exec($path);
         $actual = $result;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
+        $expected = null;
+        \Flexio\Tests\Check::assertNull('A.5', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
         $path = "->$eid";
         $result = $search_model->exec($path);
         $actual = $result;
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.6', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
+        $expected = null;
+        \Flexio\Tests\Check::assertNull('A.6', '\Flexio\Model\Search::exec(); return false with invalid search path',  $actual, $expected, $results);
 
 
 

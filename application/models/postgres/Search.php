@@ -24,13 +24,13 @@ class SearchTerm
 
 class Search extends ModelBase
 {
-    public function exec(string $search_path) // TODO: add return type
+    public function exec(string $search_path) : ?array
     {
         // parse the search path; if the path doesn't parse correctly,
         // return false
         $search_terms = array();
         if (self::parse($search_path, $search_terms) === false)
-            return false;
+            return null;
 
         // path parses correctly, but we don't have any search terms;
         // return empty array
@@ -41,13 +41,13 @@ class Search extends ModelBase
         $search_term_count = count($search_terms);
         $search_term_idx = 0;
 
-        $search_results = false;
+        $search_results = null;
         foreach ($search_terms as $term)
         {
             $search_term_idx++;
             $is_last_term = ($search_term_idx === $search_term_count) ? true : false;
 
-            $search_results = self::evaluate($search_results, $term, $is_last_term);
+            $search_results = $this->evaluate($search_results, $term, $is_last_term);
         }
 
         // just return the eids
@@ -60,7 +60,7 @@ class Search extends ModelBase
         return $results;
     }
 
-    public function recursive_search(string $search_path) // TODO: add return type
+    public function recursive_search(string $search_path) : array
     {
         // use the output of one search as the input for the next search;
         // return a list of all objects that are found in the order in
@@ -91,7 +91,7 @@ class Search extends ModelBase
         return $results;
     }
 
-    private function evaluate($input_eids, $search_term, $is_last_term) // TODO: add return type
+    private function evaluate(array $input_eids = null, \SearchTerm $search_term, bool $is_last_term) : array
     {
         // takes the list of input eids and finds the corresponding
         // output eids based on the search terms
@@ -105,7 +105,7 @@ class Search extends ModelBase
         // starting out and the initial set of eids should be contained
         // in the first search term; if it isn't, there's nothing to
         // find, so we're done; otherwise, set the list of input eids
-        if ($input_eids === false)
+        if (!isset($input_eids))
         {
             if ($search_term->node_eids === false)
                 return array();
@@ -163,12 +163,8 @@ class Search extends ModelBase
         return $result_eids;
     }
 
-    private static function parse($search_path, &$search_terms) // TODO: add return type
+    private static function parse(string $search_path, array &$search_terms) : bool
     {
-        // the search path must be a string
-        if (!is_string($search_path))
-            return false;
-
         // parsed search terms
         $search_terms_local = array();
 
@@ -213,7 +209,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function parse_nodepart($part, &$search_term) // TODO: add return type
+    private static function parse_nodepart(string $part, \SearchTerm &$search_term) : bool
     {
         // trim away leading/trailing whitespace and parenthesis
         $part = self::trim_spaces($part);
@@ -259,7 +255,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function parse_edgepart($part, &$search_term) // TODO: add return type
+    private static function parse_edgepart(string $part, \SearchTerm &$search_term) : bool
     {
         // trim away leading/trailing whitespace and parenthesis
         $part = self::trim_spaces($part);
@@ -290,7 +286,7 @@ class Search extends ModelBase
         return true;
     }
 
-    private static function filterInputEidsByListedEids($search_term, &$input_eids) // TODO: add return type
+    private static function filterInputEidsByListedEids(\SearchTerm $search_term, array &$input_eids) : void
     {
         // if no eids have been specified, let everything through
         if ($search_term->node_eids === false)
@@ -308,7 +304,7 @@ class Search extends ModelBase
         $input_eids = $filtered_input_eids;
     }
 
-    private static function filterInputEidsByListedEidType($search_term, &$input_eids) // TODO: add return type
+    private static function filterInputEidsByListedEidType(\SearchTerm $search_term, array &$input_eids) : void
     {
         // if no eid types have been specified, let everything through
         if ($search_term->node_types === false)
@@ -327,12 +323,12 @@ class Search extends ModelBase
         $input_eids = $filtered_input_eids;
     }
 
-    private static function trim_spaces($str) // TODO: add return type
+    private static function trim_spaces(string $str) : string
     {
         return trim($str, " \t\n\r\0\x0B");
     }
 
-    private static function trim_groupchars($str) // TODO: add return type
+    private static function trim_groupchars(string $str) : string
     {
         return trim($str, "()");
     }
