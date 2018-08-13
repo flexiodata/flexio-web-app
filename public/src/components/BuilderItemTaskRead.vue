@@ -233,13 +233,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-  .css-item
-    padding: 1px 0
-    .css-remove
-      visibility: hidden
-    &:hover
-      .css-remove
-        visibility: visible
-</style>
