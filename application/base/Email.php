@@ -18,6 +18,8 @@ namespace Flexio\Base;
 
 class Email
 {
+    private const EMAIL_ADDRESS_DELIMITER = ',';
+
     private $from_addresses;
     private $to_addresses;
     private $cc_addresses;
@@ -29,6 +31,11 @@ class Email
     private $msg_htmlembedded;
     private $attachments;
 
+    public function __construct()
+    {
+        $this->initialize();
+    }
+
     public static function isValid(string $email) : bool
     {
         return \Flexio\Base\Util::isValidEmail($email);
@@ -36,36 +43,41 @@ class Email
 
     public static function create(array $params = null) : \Flexio\Base\Email
     {
+        $from = $params['from'] ?? array();
+        $to = $params['to'] ?? array();
+        $cc = $params['cc'] ?? array();
+        $bcc = $params['bcc'] ?? array();
+        $reply_to = $params['reply_to'] ?? array();
+        $subject = $params['subject'] ?? '';
+        $msg_text = $params['msg_text'] ?? '';
+        $msg_html = $params['msg_html'] ?? '';
+        $attachments = $params['attachments'] ?? array();
+
+        // allow addresses to be specified as a delimited list
+        if (is_string($from))
+            $from = explode(self::EMAIL_ADDRESS_DELIMITER, $from);
+        if (is_string($to))
+            $to = explode(self::EMAIL_ADDRESS_DELIMITER, $to);
+        if (is_string($cc))
+            $cc = explode(self::EMAIL_ADDRESS_DELIMITER, $cc);
+        if (is_string($bcc))
+            $bcc = explode(self::EMAIL_ADDRESS_DELIMITER, $bcc);
+        if (is_string($reply_to))
+            $bcc = explode(self::EMAIL_ADDRESS_DELIMITER, $bcc);
+
+        // set the parameters
         $email = new self;
-        $email->initialize();
-
-        if (!isset($params))
-            return $email;
-
-        if (isset($params['from']))
-            $email->setFrom($params['from']);
-        if (isset($params['to']))
-            $email->setTo($params['to']);
-        if (isset($params['cc']))
-            $email->setCC($params['cc']);
-        if (isset($params['bcc']))
-            $email->setBCC($params['bcc']);
-        if (isset($params['reply_to']))
-            $email->setReplyTo($params['reply_to']);
-        if (isset($params['subject']))
-            $email->setSubject($params['subject']);
-        if (isset($params['msg_text']))
-            $email->setMessageText($params['msg_text']);
-        if (isset($params['msg_html']))
-            $email->setMessageHtml($params['msg_html']);
-
-        if (isset($params['attachments']) && is_array($params['attachments']))
+        $email->setFrom($from);
+        $email->setTo($to);
+        $email->setCC($cc);
+        $email->setBCC($bcc);
+        $email->setReplyTo($reply_to);
+        $email->setSubject($subject);
+        $email->setMessageText($msg_text);
+        $email->setMessageHtml($msg_html);
+        foreach ($attachments as $a)
         {
-            $attachments = $params['attachments'];
-            foreach ($attachments as $a)
-            {
-                $email->addAttachment($a);
-            }
+            $email->addAttachment($a);
         }
 
         return $email;
@@ -121,11 +133,11 @@ class Email
         return $email;
     }
 
-    // splits an address list like:  [  "First Last <first.last@email.com>" ] into
-    //                               [ { "display" => "First Last", "email" => "first.last@email.com" } ]
-
     public static function splitAddressList(array $arr) : array
     {
+        // splits an address list like:  [  "First Last <first.last@email.com>" ] into
+        //                               [ { "display" => "First Last", "email" => "first.last@email.com" } ]
+
         $ret = [];
         foreach ($arr as $a)
             $ret[] = self::splitAddress($a);
@@ -144,15 +156,8 @@ class Email
         return $ret;
     }
 
-    public function setFrom($addresses) : \Flexio\Base\Email // TODO: add parameter type
+    public function setFrom(array $addresses) : \Flexio\Base\Email
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
         $this->from_addresses = self::getCleanedAddresses($addresses);
         return $this;
     }
@@ -162,15 +167,8 @@ class Email
         return $this->from_addresses;
     }
 
-    public function setTo($addresses) : \Flexio\Base\Email // TODO: add parameter type
+    public function setTo(array $addresses) : \Flexio\Base\Email
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
         $this->to_addresses = self::getCleanedAddresses($addresses);
         return $this;
     }
@@ -180,15 +178,8 @@ class Email
         return $this->to_addresses;
     }
 
-    public function setCC($addresses) : \Flexio\Base\Email // TODO: add parameter type
+    public function setCC(array $addresses) : \Flexio\Base\Email
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
         $this->cc_addresses = self::getCleanedAddresses($addresses);
         return $this;
     }
@@ -198,15 +189,8 @@ class Email
         return $this->cc_addresses;
     }
 
-    public function setBCC($addresses) : \Flexio\Base\Email // TODO: add parameter type
+    public function setBCC(array $addresses) : \Flexio\Base\Email
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
         $this->bcc_addresses = self::getCleanedAddresses($addresses);
         return $this;
     }
@@ -216,15 +200,8 @@ class Email
         return $this->bcc_addresses;
     }
 
-    public function setReplyTo($addresses) : \Flexio\Base\Email // TODO: add parameter type
+    public function setReplyTo(array $addresses) : \Flexio\Base\Email
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
         $this->replyto_addresses = self::getCleanedAddresses($addresses);
         return $this;
     }
@@ -351,13 +328,13 @@ class Email
         }
 
         // get the "cc"
-        $this->setCC(''); // TODO: populate
+        $this->setCC(['']); // TODO: populate
 
         // get the "bcc"
-        $this->setBCC(''); // TODO: populate
+        $this->setBCC(['']); // TODO: populate
 
         // get the "replyto"
-        $this->setReplyTo(''); // TODO: populate
+        $this->setReplyTo(['']); // TODO: populate
 
         // get the subject
         $subject = $message->getHeaderValue('subject') ?? '';

@@ -32,33 +32,7 @@ class NoticeEmail
     public static function create(array $params = null) : \Flexio\Services\NoticeEmail
     {
         $service = new self;
-
-        if (isset($params['from']))
-            $service->setFrom($params['from']);
-        if (isset($params['to']))
-            $service->setTo($params['to']);
-        if (isset($params['cc']))
-            $service->setCC($params['cc']);
-        if (isset($params['bcc']))
-            $service->setBCC($params['bcc']);
-        if (isset($params['reply_to']))
-            $service->setReplyTo($params['reply_to']);
-        if (isset($params['subject']))
-            $service->setSubject($params['subject']);
-        if (isset($params['msg_text']))
-            $service->setMessageText($params['msg_text']);
-        if (isset($params['msg_html']))
-            $service->setMessageHtml($params['msg_html']);
-
-        if (isset($params['attachments']) && is_array($params['attachments']))
-        {
-            $attachments = $params['attachments'];
-            foreach ($attachments as $a)
-            {
-                $service->addAttachment($a);
-            }
-        }
-
+        $service->email = \Flexio\Base\Email::create($params);
         return $service;
     }
 
@@ -72,7 +46,7 @@ class NoticeEmail
             return $this->sendWithoutAttachments();
     }
 
-    public function setFrom($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
+    public function setFrom(array $addresses) : \Flexio\Services\NoticeEmail
     {
         $this->email->setFrom($addresses);
         return $this;
@@ -83,7 +57,7 @@ class NoticeEmail
         return $this->email->getFrom();
     }
 
-    public function setTo($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
+    public function setTo(array $addresses) : \Flexio\Services\NoticeEmail
     {
         $this->email->setTo($addresses);
         return $this;
@@ -94,7 +68,7 @@ class NoticeEmail
         return $this->email->getTo();
     }
 
-    public function setCC($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
+    public function setCC(array $addresses) : \Flexio\Services\NoticeEmail
     {
         $this->email->setCC($addresses);
         return $this;
@@ -105,7 +79,7 @@ class NoticeEmail
         return $this->email->getCC();
     }
 
-    public function setBCC($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
+    public function setBCC(array $addresses) : \Flexio\Services\NoticeEmail
     {
         $this->email->setBCC($addresses);
         return $this;
@@ -116,7 +90,7 @@ class NoticeEmail
         return $this->email->getBCC();
     }
 
-    public function setReplyTo($addresses) : \Flexio\Services\NoticeEmail // TODO: add parameter type
+    public function setReplyTo(array $addresses) : \Flexio\Services\NoticeEmail
     {
         $this->email->setReplyTo($addresses);
         return $this;
@@ -206,7 +180,7 @@ class NoticeEmail
         // if we don't have a reply-to address, then supply it
         $replyto_addresses - $this->getReplyTo();
         if (count($replyto_addresses) === 0)
-            $this->setReplyTo(self::EMAIL_ADDRESS_NO_REPLY);
+            $this->setReplyTo([self::EMAIL_ADDRESS_NO_REPLY]);
 
         // build up the destination array
         $destination = array();

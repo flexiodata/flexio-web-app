@@ -24,36 +24,36 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->getFrom();
-        $expected = '[]';
+        $expected = [];
         \Flexio\Tests\Check::assertArray('A.1', '\Flexio\Base\Email::getFrom(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setFrom(123)->getFrom();
-        $expected = '[]';
-        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Email::setFrom(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setFrom([])->getFrom();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('A.2', '\Flexio\Base\Email::setFrom(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setFrom('no-reply@flex.io')->getFrom();
-        $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Email::setFrom(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setFrom([123])->getFrom();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('A.3', '\Flexio\Base\Email::setFrom(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setFrom(['no-reply@flex.io'])->getFrom();
         $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Email::setFrom(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.4', '\Flexio\Base\Email::setFrom(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setFrom(['no-reply@flex.io', 'info@flex.io'])->getFrom();
         $expected = ['no-reply@flex.io', 'info@flex.io'];
-        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\Email::setFrom(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.5', '\Flexio\Base\Email::setFrom(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setFrom([false, 'info@flex.io'])->getFrom();
         $expected = ['info@flex.io'];
-        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\Email::setFrom(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('A.6', '\Flexio\Base\Email::setFrom(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setFrom('  info@flex.io  ')->getFrom();
+        $actual = \Flexio\Base\Email::create()->setFrom(['  info@flex.io  '])->getFrom();
         $expected = ['info@flex.io'];
         \Flexio\Tests\Check::assertArray('A.7', '\Flexio\Base\Email::setFrom(); trim input', $actual, $expected, $results);
 
@@ -68,36 +68,36 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->getTo();
-        $expected = '[]';
+        $expected = [];
         \Flexio\Tests\Check::assertArray('B.1', '\Flexio\Base\Email::getTo(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setTo(123)->getTo();
-        $expected = '[]';
-        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\Email::setTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setTo([])->getTo();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('B.2', '\Flexio\Base\Email::setTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setTo('no-reply@flex.io')->getTo();
-        $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\Email::setTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setTo([123])->getTo();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('B.3', '\Flexio\Base\Email::setTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setTo(['no-reply@flex.io'])->getTo();
         $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Email::setTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.4', '\Flexio\Base\Email::setTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setTo(['no-reply@flex.io', 'info@flex.io'])->getTo();
         $expected = ['no-reply@flex.io', 'info@flex.io'];
-        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\Email::setTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.5', '\Flexio\Base\Email::setTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setTo([false, 'info@flex.io'])->getTo();
         $expected = ['info@flex.io'];
-        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\Email::setTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('B.6', '\Flexio\Base\Email::setTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setTo('  info@flex.io  ')->getTo();
+        $actual = \Flexio\Base\Email::create()->setTo(['  info@flex.io  '])->getTo();
         $expected = ['info@flex.io'];
         \Flexio\Tests\Check::assertArray('B.7', '\Flexio\Base\Email::setTo(); trim input', $actual, $expected, $results);
 
@@ -112,36 +112,36 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->getCC();
-        $expected = '[]';
+        $expected = [];
         \Flexio\Tests\Check::assertArray('C.1', '\Flexio\Base\Email::getCC(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setCC(123)->getCC();
-        $expected = '[]';
-        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Email::setCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setCC([])->getCC();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('C.2', '\Flexio\Base\Email::setCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setCC('no-reply@flex.io')->getCC();
-        $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\Email::setCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setCC([123])->getCC();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('C.3', '\Flexio\Base\Email::setCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setCC(['no-reply@flex.io'])->getCC();
         $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\Email::setCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.4', '\Flexio\Base\Email::setCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setCC(['no-reply@flex.io', 'info@flex.io'])->getCC();
         $expected = ['no-reply@flex.io', 'info@flex.io'];
-        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\Email::setCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.5', '\Flexio\Base\Email::setCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setCC([false, 'info@flex.io'])->getCC();
         $expected = ['info@flex.io'];
-        \Flexio\Tests\Check::assertArray('C.6', '\Flexio\Base\Email::setCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('C.6', '\Flexio\Base\Email::setCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setCC('  info@flex.io  ')->getCC();
+        $actual = \Flexio\Base\Email::create()->setCC(['  info@flex.io  '])->getCC();
         $expected = ['info@flex.io'];
         \Flexio\Tests\Check::assertArray('C.7', '\Flexio\Base\Email::setCC(); trim input', $actual, $expected, $results);
 
@@ -156,36 +156,36 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->getBCC();
-        $expected = '[]';
+        $expected = [];
         \Flexio\Tests\Check::assertArray('D.1', '\Flexio\Base\Email::getBCC(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setBCC(123)->getBCC();
-        $expected = '[]';
-        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Email::setBCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setBCC([])->getBCC();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('D.2', '\Flexio\Base\Email::setBCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setBCC('no-reply@flex.io')->getBCC();
-        $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Email::setBCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setBCC([123])->getBCC();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('D.3', '\Flexio\Base\Email::setBCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setBCC(['no-reply@flex.io'])->getBCC();
         $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Email::setBCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.4', '\Flexio\Base\Email::setBCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setBCC(['no-reply@flex.io', 'info@flex.io'])->getBCC();
         $expected = ['no-reply@flex.io', 'info@flex.io'];
-        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Email::setBCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.5', '\Flexio\Base\Email::setBCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setBCC([false, 'info@flex.io'])->getBCC();
         $expected = ['info@flex.io'];
-        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\Email::setBCC(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('D.6', '\Flexio\Base\Email::setBCC(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setBCC('  info@flex.io  ')->getBCC();
+        $actual = \Flexio\Base\Email::create()->setBCC(['  info@flex.io  '])->getBCC();
         $expected = ['info@flex.io'];
         \Flexio\Tests\Check::assertArray('D.7', '\Flexio\Base\Email::setBCC(); trim input', $actual, $expected, $results);
 
@@ -200,36 +200,36 @@ class Test
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->getReplyTo();
-        $expected = '[]';
+        $expected = [];
         \Flexio\Tests\Check::assertArray('E.1', '\Flexio\Base\Email::getReplyTo(); default value', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setReplyTo(123)->getReplyTo();
-        $expected = '[]';
-        \Flexio\Tests\Check::assertArray('E.2', '\Flexio\Base\Email::setReplyTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setReplyTo([])->getReplyTo();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('E.2', '\Flexio\Base\Email::setReplyTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setReplyTo('no-reply@flex.io')->getReplyTo();
-        $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('E.3', '\Flexio\Base\Email::setReplyTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        $actual = \Flexio\Base\Email::create()->setReplyTo([123])->getReplyTo();
+        $expected = [];
+        \Flexio\Tests\Check::assertArray('E.3', '\Flexio\Base\Email::setReplyTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setReplyTo(['no-reply@flex.io'])->getReplyTo();
         $expected = ['no-reply@flex.io'];
-        \Flexio\Tests\Check::assertArray('E.4', '\Flexio\Base\Email::setReplyTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.4', '\Flexio\Base\Email::setReplyTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setReplyTo(['no-reply@flex.io', 'info@flex.io'])->getReplyTo();
         $expected = ['no-reply@flex.io', 'info@flex.io'];
-        \Flexio\Tests\Check::assertArray('E.5', '\Flexio\Base\Email::setReplyTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.5', '\Flexio\Base\Email::setReplyTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
         $actual = \Flexio\Base\Email::create()->setReplyTo([false, 'info@flex.io'])->getReplyTo();
         $expected = ['info@flex.io'];
-        \Flexio\Tests\Check::assertArray('E.6', '\Flexio\Base\Email::setReplyTo(); set parameter based on string or array with strings', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertArray('E.6', '\Flexio\Base\Email::setReplyTo(); set parameter based on array with strings', $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = \Flexio\Base\Email::create()->setReplyTo('  info@flex.io  ')->getReplyTo();
+        $actual = \Flexio\Base\Email::create()->setReplyTo(['  info@flex.io  '])->getReplyTo();
         $expected = ['info@flex.io'];
         \Flexio\Tests\Check::assertArray('E.7', '\Flexio\Base\Email::setReplyTo(); trim input', $actual, $expected, $results);
 

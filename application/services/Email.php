@@ -74,31 +74,7 @@ class Email
         $service = new self;
 
         // set the email properties
-        if (isset($params['from']))
-            $service->setFrom($params['from']);
-        if (isset($params['to']))
-            $service->setTo($params['to']);
-        if (isset($params['cc']))
-            $service->setCC($params['cc']);
-        if (isset($params['bcc']))
-            $service->setBCC($params['bcc']);
-        if (isset($params['reply_to']))
-            $service->setReplyTo($params['reply_to']);
-        if (isset($params['subject']))
-            $service->setSubject($params['subject']);
-        if (isset($params['msg_text']))
-            $service->setMessageText($params['msg_text']);
-        if (isset($params['msg_html']))
-            $service->setMessageHtml($params['msg_html']);
-
-        if (isset($params['attachments']) && is_array($params['attachments']))
-        {
-            $attachments = $params['attachments'];
-            foreach ($attachments as $a)
-            {
-                $service->addAttachment($a);
-            }
-        }
+        $service->email = \Flexio\Base\Email::create($params);
 
         // set the email connection info
         if (($params['connection_type'] ?? '') == 'gmail')
@@ -128,7 +104,7 @@ class Email
         return $service;
     }
 
-    public function setFrom($addresses) : \Flexio\Services\Email // TODO: add parameter type
+    public function setFrom(array $addresses) : \Flexio\Services\Email
     {
         $this->email->setFrom($addresses);
         return $this;
@@ -139,7 +115,7 @@ class Email
         return $this->email->getFrom();
     }
 
-    public function setTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
+    public function setTo(array $addresses) : \Flexio\Services\Email
     {
         $this->email->setTo($addresses);
         return $this;
@@ -150,7 +126,7 @@ class Email
         return $this->email->getTo();
     }
 
-    public function setCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
+    public function setCC(array $addresses) : \Flexio\Services\Email
     {
         $this->email->setCC($addresses);
         return $this;
@@ -161,7 +137,7 @@ class Email
         return $this->email->getCC();
     }
 
-    public function setBCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
+    public function setBCC(array $addresses) : \Flexio\Services\Email
     {
         $this->email->setBCC($addresses);
         return $this;
@@ -172,7 +148,7 @@ class Email
         return $this->email->getBCC();
     }
 
-    public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
+    public function setReplyTo(array $addresses) : \Flexio\Services\Email
     {
         $this->email->setReplyTo($addresses);
         return $this;
