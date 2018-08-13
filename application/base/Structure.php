@@ -54,14 +54,12 @@ class Structure
             $columns = array();
 
         if (!is_array($columns))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $object = (new self);
         foreach ($columns as $c)
         {
             $result = $object->push($c);
-            if ($result === false)
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
 
         return $object;
@@ -129,7 +127,7 @@ class Structure
         return self::create();
     }
 
-    public function push(array $column) // TODO: add return type
+    public function push(array $column) : array
     {
         // note: returns the added column, or false if the column couldn't be added
 
@@ -147,19 +145,19 @@ class Structure
 
         // make sure we have a valid parameter values
         if (!is_string($column_entry['name']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (strlen($column_entry['name']) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (!is_string($column_entry['type']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (strlen($column_entry['type']) === 0)
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (isset($column_entry['width']) && !is_integer($column_entry['width']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (isset($column_entry['scale']) && !is_integer($column_entry['scale']))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
         if (isset($column_entry['expression']) && !is_string($column_entry['expression']))
-           return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // make sure the name is valid and unique
         $temp_column_name = self::makeValidName($column_entry['name']);
@@ -176,7 +174,7 @@ class Structure
         switch ($column_entry['type'])
         {
             default:
-                return false;
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
             case self::TYPE_TEXT:
             case self::TYPE_CHARACTER:
@@ -258,7 +256,7 @@ class Structure
         // if the type is numeric, make sure the scale is less than the width
         // by at least 2
         if ($column_entry['type'] === self::TYPE_NUMERIC && ($column_entry['scale'] > $column_entry['width'] - 2))
-            return false;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         // save the column entry by the name and the store_name key
         $this->column_index_lookup[$column_entry['name']] = $column_entry;
@@ -271,9 +269,9 @@ class Structure
         return $column_entry;
     }
 
-    public function pop() // TODO: add return type
+    public function pop() : ?array
     {
-        // note: returns the removed column, or false if there was no column to remove
+        // note: returns the removed column, or null if there was no column to remove
 
         // remove the entry from the lookups
         unset($this->column_index_lookup[$column_entry['name']]);
@@ -282,9 +280,9 @@ class Structure
         // remove the entry from the column list
         $removed_element = array_pop($this->columns);
 
-        // return the column that was removed; return false
+        // return the column that was removed, or null if no column was removed
         if (!isset($removed_element))
-            return false;
+            return null;
 
         return $removed_element;
     }
