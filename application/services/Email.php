@@ -46,276 +46,202 @@ class OauthHelper extends \PHPMailer\PHPMailer\OAuth
 
 class Email
 {
-    private $from_addresses;
-    private $to_addresses;
-    private $cc_addresses;
-    private $bcc_addresses;
-    private $replyto_addresses;
-    private $subject;
-    private $msg_text;
-    private $msg_html;
-    private $msg_htmlembedded;
-    private $attachments;
-
+    private $email; // email properties (e.g. from, to, subject, etc)
     private $protocol;
+    private $security;
+    private $authentication;
     private $host;
     private $port;
     private $username;
     private $password;
     private $oauth;
 
-    public static function create(array $params = null) : \Flexio\Services\Email
+    public function __construct()
     {
-        if (!isset($params))
-            return new self;
-
-        $service = new self;
-        $service->initialize($params);
-        return $service;
+        $this->email = \Flexio\Base\Email::create();
+        $this->protocol = '';
+        $this->security = '';
+        $this->authentication = '';
+        $this->host = '';
+        $this->port = '';
+        $this->username = '';
+        $this->password = '';
+        $this->oauth = null;
     }
 
-    public static function setEmail(array $params = null)
+    public static function create(array $params = null) : \Flexio\Services\Email
     {
+        $service = new self;
+
+        // set the email properties
         if (isset($params['from']))
-            $this->setFrom($params['from']);
+            $service->setFrom($params['from']);
         if (isset($params['to']))
-            $this->setTo($params['to']);
+            $service->setTo($params['to']);
         if (isset($params['cc']))
-            $this->setCC($params['cc']);
+            $service->setCC($params['cc']);
         if (isset($params['bcc']))
-            $this->setBCC($params['bcc']);
+            $service->setBCC($params['bcc']);
         if (isset($params['reply_to']))
-            $this->setReplyTo($params['reply_to']);
+            $service->setReplyTo($params['reply_to']);
         if (isset($params['subject']))
-            $this->setSubject($params['subject']);
+            $service->setSubject($params['subject']);
         if (isset($params['msg_text']))
-            $this->setMessageText($params['msg_text']);
+            $service->setMessageText($params['msg_text']);
         if (isset($params['msg_html']))
-            $this->setMessageHtml($params['msg_html']);
+            $service->setMessageHtml($params['msg_html']);
 
         if (isset($params['attachments']) && is_array($params['attachments']))
         {
             $attachments = $params['attachments'];
             foreach ($attachments as $a)
             {
-                $this->addAttachment($a);
+                $service->addAttachment($a);
             }
         }
 
-        return $this;
+        // set the email connection info
+        if (($params['connection_type'] ?? '') == 'gmail')
+        {
+            $service->protocol = 'smtp';
+            $service->security = 'ssl';
+            $service->authentication = 'oauth2';
+            $service->host = 'smtp.gmail.com';
+            $service->port = null;
+            $service->username = '';
+            $service->password = '';
+            $service->oauth = new OauthHelper();
+            $service->oauth->set($from, $params['access_token']);
+        }
+         else
+        {
+            $service->protocol = ($params['protocol'] ?? '');              // none, smtp
+            $service->security = ($params['security'] ?? '');              // none, ssl, tls
+            $service->authentication = ($params['authentication'] ?? '');  // none, password, encpassword, kerberos, ntlm, oauth2
+            $service->host = ($params['host'] ?? '');
+            $service->port = ($params['port'] ?? '');
+            $service->username = ($params['username'] ?? '');
+            $service->password = ($params['password'] ?? '');
+            $service->oauth = null;
+        }
+
+        return $service;
     }
 
     public function setFrom($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
-        if ($addresses === null || $addresses === '')
-        {
-            $this->from_addresses = [];
-            return $this;
-        }
-
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
-        $this->from_addresses = self::getCleanedAddresses($addresses);
+        $this->email->setFrom($addresses);
         return $this;
     }
 
     public function getFrom() : array
     {
-        return $this->from_addresses;
+        return $this->email->getFrom();
     }
 
     public function setTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
-        if ($addresses === null || $addresses === '')
-        {
-            $this->to_addresses = [];
-            return $this;
-        }
-
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
-        $this->to_addresses = self::getCleanedAddresses($addresses);
+        $this->email->setTo($addresses);
         return $this;
     }
 
     public function getTo() : array
     {
-        return $this->to_addresses;
+        return $this->email->getTo();
     }
 
     public function setCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
-        $this->cc_addresses = self::getCleanedAddresses($addresses);
+        $this->email->setCC($addresses);
         return $this;
     }
 
     public function getCC() : array
     {
-        return $this->cc_addresses;
+        return $this->email->getCC();
     }
 
     public function setBCC($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
-        $this->bcc_addresses = self::getCleanedAddresses($addresses);
+        $this->email->setBCC($addresses);
         return $this;
     }
 
     public function getBCC() : array
     {
-        return $this->bcc_addresses;
+        return $this->email->getBCC();
     }
 
     public function setReplyTo($addresses) : \Flexio\Services\Email // TODO: add parameter type
     {
-        // make sure we have an array
-        if (is_string($addresses))
-            $addresses = explode(',', $addresses);
-        if (!is_array($addresses))
-            return $this;
-
-        // set the addresses
-        $this->replyto_addresses = self::getCleanedAddresses($addresses);
+        $this->email->setReplyTo($addresses);
         return $this;
     }
 
     public function getReplyTo() : array
     {
-        return $this->replyto_addresses;
+        return $this->email->getReplyTo();
     }
 
     public function setSubject(string $subject) : \Flexio\Services\Email
     {
-        $this->subject = $subject;
+        $this->email->setSubject($subject);
         return $this;
     }
 
     public function getSubject() : string
     {
-        return $this->subject;
+        return $this->email->getSubject();
     }
 
     public function setMessageText(string $message) : \Flexio\Services\Email
     {
-	    $this->msg_text = $message;
+        $this->email->setMessageText($message);
         return $this;
     }
 
     public function getMessageText() : string
     {
-        return $this->msg_text;
+        return $this->email->getMessageText();
     }
 
     public function setMessageHtml(string $message) : \Flexio\Services\Email
     {
-        $this->msg_html = $message;
+        $this->email->setMessageHtml($message);
         return $this;
     }
 
     public function getMessageHtml() : string
     {
-        return $this->msg_html;
+        return $this->email->getMessageHtml();
     }
 
     public function setMessageHtmlEmbedded(string $message) : \Flexio\Services\Email
     {
-        $this->msg_htmlembedded = $message;
+        $this->email->setMessageHtmlEmbedded($message);
         return $this;
     }
 
     public function getMessageHtmlEmbedded() : string
     {
-        return $this->msg_htmlembedded;
+        return $this->email->getMessageHtmlEmbedded();
     }
 
     public function addAttachment(array $attachment) : \Flexio\Services\Email
     {
-        $a = array();
-        $a['name'] = $attachment['name'] ?? '';
-        $a['file'] = $attachment['file'] ?? '';
-        $a['mime_type'] = $attachment['mime_type'] ?? \Flexio\Base\ContentType::UNDEFINED;
-        $a['content'] = $attachment['content'] ?? '';
-
-        $this->attachments[] = $a;
+        $this->email->addAttachment($attachment);
         return $this;
     }
 
     public function getAttachments() : array
     {
-        return $this->attachments;
+        return $this->email->getAttachments();
     }
 
     public function clearAttachments() : \Flexio\Services\Email
     {
-        $this->attachments = array();
+        $this->email->clearAttachments();
         return $this;
-    }
-
-    private function initialize($params = []) : void
-    {
-        $this->oauth = null;
-  
-        $this->from_addresses = array();
-        $this->to_addresses = array();
-        $this->cc_addresses = array();
-        $this->bcc_addresses = array();
-        $this->replyto_addresses = array();
-        $this->subject = '';
-        $this->msg_text = '';
-        $this->msg_html = '';
-        $this->msg_htmlembedded = '';
-        $this->attachments = array();
-
-        $from = ($params['from'] ?? '');
-        if (strlen($from) == 0)
-            $from = ($params['email'] ?? '');
-
-        $this->setFrom($from);
-
-
-        if (($params['connection_type'] ?? '') == 'gmail')
-        {
-            $this->protocol = 'smtp';
-            $this->security = 'ssl';
-            $this->authentication = 'oauth2';
-            $this->host = 'smtp.gmail.com';
-            $this->username = '';
-            $this->password = '';
-            $this->oauth = new OauthHelper();
-            $this->oauth->set($from, $params['access_token']);
-        }
-         else
-        {
-            $this->protocol = ($params['protocol'] ?? '');              // none, smtp
-            $this->security = ($params['security'] ?? '');              // none, ssl, tls
-            $this->authentication = ($params['authentication'] ?? '');  // none, password, encpassword, kerberos, ntlm, oauth2
-            $this->host = ($params['host'] ?? '');
-            $this->username = ($params['username'] ?? '');
-            $this->password = ($params['password'] ?? '');
-        }
     }
 
     public function send() : bool
@@ -351,21 +277,24 @@ class Email
                 $mail->setOAuth($this->oauth);
             }
 
-            $from = count($this->from_addresses) > 0 ? $this->from_addresses[0] : '';
+            $from_addresses = $this->getFrom();
+            $from = count($from_addresses) > 0 ? $from_addresses[0] : '';
             $mail->setFrom($from);
 
-            foreach ($this->to_addresses as $email)
+            $to_addresses = $this->getTo();
+            foreach ($to_addresses as $a)
             {
-                $mail->addAddress($email);     // add a recipient
+                $mail->addAddress($a);     // add a recipient
             }
 
-            foreach ($this->attachments as $attachment)
+            $attachments = $this->getAttachments();
+            foreach ($attachments as $a)
             {
-                $mail->addAttachment($attachment['file'], $attachment['name'], 'base64', $attachment['mime_type']);
+                $mail->addAttachment($a['file'], $a['name'], 'base64', $a['mime_type']);
             }
 
-            $mail->Subject = $this->subject;
-            $mail->Body = $this->msg_text;
+            $mail->Subject = $this->getSubject();
+            $mail->Body = $this->getMessageText();
 
             $mail->send();
         }
