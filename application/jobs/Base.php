@@ -56,7 +56,7 @@ class Base implements \Flexio\IFace\IJob
         $this->replaceParameterTokens($process);
     }
 
-    public static function ensureStream($stream, $content_type = null)
+    public static function ensureStream($stream, string $content_type = null) : \Flexio\Base\Stream
     {
         if ($stream instanceof \Flexio\Base\Stream)
             return $stream;
@@ -106,7 +106,7 @@ class Base implements \Flexio\IFace\IJob
         return $res;
     }
 
-    public function getParameterStream($process, string $varname, $info = null) // TODO: add return type
+    public function getParameterStream($process, string $varname, array $info = null) : ?\Flexio\Base\Stream
     {
         if ($info === null)
         {
@@ -365,7 +365,7 @@ class Base implements \Flexio\IFace\IJob
         return $task;
     }
 
-    public static function flattenParams($task) // TODO: add return type
+    public static function flattenParams(array $task) : array
     {
         // helper function for iterating through a task and moving all key
         // values from the params node to the top-level; used currently to
