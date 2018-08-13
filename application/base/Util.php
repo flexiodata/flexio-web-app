@@ -18,7 +18,7 @@ namespace Flexio\Base;
 
 class Util
 {
-    public static function rmtree($dir) // TODO: add return type
+    public static function rmtree(string $dir) : bool
     {
         $files = array_diff(scandir($dir), array('.', '..'));
 
@@ -500,14 +500,14 @@ class Util
         return $arr;
     }
 
-    public static function getDaysDiff(string $dt1, string $dt2) // TODO: add return type
+    public static function getDaysDiff(string $dt1, string $dt2) : float
     {
         // note: input are two strings of form YYYY-MM-DD
         $time1 = strtotime($dt1);
         $time2 = strtotime($dt2);
 
         $seconds_diff = $time2 - $time1; // allow time difference to be negative
-        $days_diff = floor($seconds_diff/(24*60*60));
+        $days_diff = floor((float)$seconds_diff/(24*60*60));
 
         return $days_diff;
     }
@@ -716,7 +716,7 @@ class Util
         return 'ZZXV2/'.base64_encode($enc);
     }
 
-    public static function decrypt(string $ciphertext, string $key = null) // TODO: add return type
+    public static function decrypt(string $ciphertext, string $key = null) : ?string
     {
         require_once dirname(dirname(__DIR__)) . '/library/sodium_compat/autoload.php';
 
