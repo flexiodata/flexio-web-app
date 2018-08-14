@@ -104,7 +104,7 @@
             element: 'task-json-editor',
             value: task
           }
-        } else if (task.op == 'copy' || task.op == 'request') {
+        } else if (task.op == 'request') {
           var task = _.omit(task, ['eid'])
           prompt = {
             element: 'task-json-editor',
