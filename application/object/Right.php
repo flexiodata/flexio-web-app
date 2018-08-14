@@ -149,10 +149,9 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties['owned_by']['eid'];
+        // TODO: owner info isn't unpacked; should make owned-by presentation consistent
+        $right_model = $this->getModel()->right;
+        return $right_model->get($this->getEid())['owned_by'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Right
@@ -219,12 +218,6 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
 
         // unpack the actions object
         $mapped_properties['actions'] = json_decode($mapped_properties['actions'],true);

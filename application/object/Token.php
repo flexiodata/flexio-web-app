@@ -121,10 +121,9 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        if ($this->isCached() === false)
-            $this->populateCache();
-
-        return $this->properties['owned_by']['eid'];
+        // TODO: owner info isn't unpacked; should make owned-by presentation consistent
+        $token_model = $this->getModel()->token;
+        return $token_model->get($this->getEid())['owned_by'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Token
@@ -184,12 +183,6 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        // expand the owner info
-        $mapped_properties['owned_by'] = array(
-            'eid' => $properties['owned_by'],
-            'eid_type' => \Model::TYPE_USER
-        );
 
         // TODO: this is legacy for API consistency; remove when UI is updated to use owned_by
         $mapped_properties['user_eid'] = $mapped_properties['owned_by'];
