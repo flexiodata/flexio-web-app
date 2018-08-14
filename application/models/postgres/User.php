@@ -168,18 +168,14 @@ class User extends ModelBase
         if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
             $process_arr['password'] = self::encodePassword($process_arr['password']);
 
+        // if the item doesn't exist, return false; TODO: throw exception instead?
+        if ($this->exists($eid) === false)
+            return false;
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
-            // if the item doesn't exist, return false
-            $existing_status = $this->getStatus($eid);
-            if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->rollback();
-                return false;
-            }
-
             if (isset($process_arr['username']))
             {
                 $qusername = $db->quote($process_arr['username']);
@@ -293,18 +289,6 @@ class User extends ModelBase
     public function setStatus(string $eid, string $status) : bool
     {
         return $this->set($eid, array('eid_status' => $status));
-    }
-
-    public function getStatus(string $eid) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return \Model::STATUS_UNDEFINED;
-
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_user where eid = ?", $eid);
-        if ($result === false)
-            return \Model::STATUS_UNDEFINED;
-
-        return $result;
     }
 
     public function exists(string $eid) : bool

@@ -107,15 +107,13 @@ class Right extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
+        // if the item doesn't exist, return false; TODO: throw exception instead?
+        if ($this->exists($eid) === false)
+            return false;
+
         $db = $this->getDatabase();
         try
         {
-            // if the item doesn't exist, return false; TODO: throw exception instead?
-            $existing_status = $this->getStatus($eid);
-            if ($existing_status === \Model::STATUS_UNDEFINED)
-                return false;
-
-            // set the properties
             $db->update('tbl_acl', $process_arr, 'eid = ' . $db->quote($eid));
             return true;
         }
@@ -195,18 +193,6 @@ class Right extends ModelBase
     public function setStatus(string $eid, string $status) : bool
     {
         return $this->set($eid, array('eid_status' => $status));
-    }
-
-    public function getStatus(string $eid) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return \Model::STATUS_UNDEFINED;
-
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_acl where eid = ?", $eid);
-        if ($result === false)
-            return \Model::STATUS_UNDEFINED;
-
-        return $result;
     }
 
     public function exists(string $eid) : bool

@@ -143,18 +143,14 @@ class Connection extends ModelBase
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
+        // if the item doesn't exist, return false; TODO: throw exception instead?
+        if ($this->exists($eid) === false)
+            return false;
+
         $db = $this->getDatabase();
         $db->beginTransaction();
         try
         {
-            // if the item doesn't exist, return false; TODO: throw exception instead?
-            $existing_status = $this->getStatus($eid);
-            if ($existing_status === \Model::STATUS_UNDEFINED)
-            {
-                $db->rollback();
-                return false;
-            }
-
             if (isset($params['alias']) && $params['alias'] !== '')
             {
                 // if an identifier is specified, make sure that it's unique within an owner
@@ -286,18 +282,6 @@ class Connection extends ModelBase
     public function setStatus(string $eid, string $status) : bool
     {
         return $this->set($eid, array('eid_status' => $status));
-    }
-
-    public function getStatus(string $eid) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return \Model::STATUS_UNDEFINED;
-
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_connection where eid = ?", $eid);
-        if ($result === false)
-            return \Model::STATUS_UNDEFINED;
-
-        return $result;
     }
 
     public function exists(string $eid) : bool

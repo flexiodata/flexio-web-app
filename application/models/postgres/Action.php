@@ -221,18 +221,6 @@ class Action extends ModelBase
         return $this->set($eid, array('eid_status' => $status));
     }
 
-    public function getStatus(string $eid) : string
-    {
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return \Model::STATUS_UNDEFINED;
-
-        $result = $this->getDatabase()->fetchOne("select eid_status from tbl_action where eid = ?", $eid);
-        if ($result === false)
-            return \Model::STATUS_UNDEFINED;
-
-        return $result;
-    }
-
     public function exists(string $eid) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))
