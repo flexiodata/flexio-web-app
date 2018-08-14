@@ -93,8 +93,15 @@ class Query
         }
          else
         {
-            $model_str = self::getModelNameFromType($eid_type);
-            $object = $model->$model_str->get($eid);
+            try
+            {
+                $model_str = self::getModelNameFromType($eid_type);
+                $object = $model->$model_str->get($eid);
+            }
+            catch (\Flexio\Base\Exception $e)
+            {
+                $object = null;
+            }
         }
 
         foreach($query as $property_name => $property_value)

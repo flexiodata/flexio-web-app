@@ -60,10 +60,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $connection_model = $object->getModel()->connection;
-
         $properties = $connection_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -538,11 +535,7 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $connection_model = $this->getModel()->connection;
-
         $properties = $connection_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

@@ -60,10 +60,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $pipe_model = $object->getModel()->pipe;
-
         $properties = $pipe_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -342,11 +339,7 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $pipe_model = $this->getModel()->pipe;
-
         $properties = $pipe_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

@@ -156,15 +156,15 @@ class Token extends ModelBase
         return $output;
     }
 
-    public function get(string $eid) : ?array
+    public function get(string $eid) : array
     {
         if (!\Flexio\Base\Eid::isValid($eid))
-            return null; // don't flag an error, but acknowledge that object doesn't exist
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $filter = array('eid' => $eid);
         $rows = $this->list($filter);
         if (count($rows) === 0)
-            return null;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         return $rows[0];
     }
@@ -198,6 +198,18 @@ class Token extends ModelBase
             return \Model::STATUS_UNDEFINED;
 
         return $result;
+    }
+
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_token where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
     }
 
     public function getInfoFromAccessCode(string $code) // TODO: add return type

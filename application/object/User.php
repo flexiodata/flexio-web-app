@@ -79,10 +79,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $user_model = $object->getModel()->user;
-
         $properties = $user_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -388,11 +385,7 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $user_model = $this->getModel()->user;
-
         $properties = $user_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

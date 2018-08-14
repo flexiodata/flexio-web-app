@@ -75,13 +75,13 @@ class Test
         $info2 = array();
         $eid2 = $model->create($info2);
         $model->set($eid2, array('owned_by' => $eid2));
-        $info1_before_deletion = $model->get($eid1);
-        $info2_before_deletion = $model->get($eid2);
+        $exists1_before_deletion = $model->exists($eid1);
+        $exists2_before_deletion = $model->exists($eid2);
         $delete1_result = $model->purge($eid1);
-        $info1_after_deletion = $model->get($eid1);
-        $info2_after_deletion = $model->get($eid2);
-        $actual = $info1_before_deletion['eid'] === $eid1 && !$info1_after_deletion && $info2_before_deletion['eid'] === $eid2 && $info2_after_deletion['eid'] === $eid2;
+        $exists1_after_deletion = $model->exists($eid1);
+        $exists2_after_deletion = $model->exists($eid2);
+        $actual = $exists1_before_deletion === true && $exists1_after_deletion === false && $exists2_before_deletion === true && $exists2_after_deletion === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Comment::purge(); when purging, make sure object being purged is physically and that other objects are not effected',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\Comment::purge(); when purging, make sure object being purged is physically removed and that other objects are not effected',  $actual, $expected, $results);
     }
 }

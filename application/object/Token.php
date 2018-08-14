@@ -53,10 +53,7 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $token_model = $object->getModel()->token;
-
         $properties = $token_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -161,11 +158,7 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $token_model = $this->getModel()->token;
-
         $properties = $token_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

@@ -59,10 +59,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $process_model = $object->getModel()->process;
-
         $properties = $process_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -287,11 +284,7 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $process_model = $this->getModel()->process;
-
         $properties = $process_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

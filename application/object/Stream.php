@@ -59,10 +59,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
     {
         $object = new static();
         $stream_model = $object->getModel()->stream;
-
         $properties = $stream_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -438,11 +435,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
     private function populateCache() : void
     {
         $stream_model = $this->getModel()->stream;
-
         $properties = $stream_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

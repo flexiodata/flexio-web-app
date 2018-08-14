@@ -53,10 +53,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $action_model = $object->getModel()->action;
-
         $properties = $action_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -183,11 +180,7 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $action_model = $this->getModel()->action;
-
         $properties = $action_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

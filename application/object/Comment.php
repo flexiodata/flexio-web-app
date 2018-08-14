@@ -53,10 +53,7 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $comment_model = $object->getModel()->comment;
-
         $properties = $comment_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -156,11 +153,7 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $comment_model = $this->getModel()->comment;
-
         $properties = $comment_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 

@@ -73,11 +73,15 @@ class System
             return false;
         }
 
-        $user_eid = $user_model->getEidFromIdentifier($username);
-        $user_info = $user_model->get($user_eid);
-
-        if (!$user_info)
+        try
+        {
+            $user_eid = $user_model->getEidFromIdentifier($username);
+            $user_info = $user_model->get($user_eid);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
             return false;
+        }
 
         // if the user has been deleted or the status is anything besides
         // active, return false

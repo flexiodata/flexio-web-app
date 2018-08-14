@@ -79,10 +79,7 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     {
         $object = new static();
         $right_model = $object->getModel()->right;
-
         $properties = $right_model->get($eid);
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
         $object->setEid($eid);
         $object->clearCache();
@@ -193,11 +190,7 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
     private function populateCache() : void
     {
         $right_model = $this->getModel()->right;
-
         $properties = $right_model->get($this->getEid());
-        if (!$properties)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
-
         $this->properties = self::formatProperties($properties);
     }
 
