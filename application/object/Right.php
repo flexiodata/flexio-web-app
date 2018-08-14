@@ -149,9 +149,10 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        // TODO: add owned_by to list of properties and use those here?
-        $right_model = $this->getModel()->right;
-        return $right_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Right

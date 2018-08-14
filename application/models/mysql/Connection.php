@@ -265,20 +265,6 @@ class Connection extends ModelBase
         return $result;
     }
 
-    public function getOwner(string $eid) : string
-    {
-        // TODO: add constant for owner undefined and/or public; use this instead of '' in return result
-
-        if (!\Flexio\Base\Eid::isValid($eid))
-            return '';
-
-        $result = $this->getDatabase()->fetchOne("select owned_by from tbl_connection where eid = ?", $eid);
-        if ($result === false)
-            return '';
-
-        return $result;
-    }
-
     public function exists(string $eid) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))

@@ -121,9 +121,10 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function getOwner() : string
     {
-        // TODO: add owned_by to list of properties and use those here?
-        $token_model = $this->getModel()->token;
-        return $token_model->getOwner($this->getEid());
+        if ($this->isCached() === false)
+            $this->populateCache();
+
+        return $this->properties['owned_by']['eid'];
     }
 
     public function setStatus(string $status) : \Flexio\Object\Token
