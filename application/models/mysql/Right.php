@@ -209,6 +209,18 @@ class Right extends ModelBase
         return $result;
     }
 
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_acl where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
     public function getInfoFromObjectEid(string $object_eid) : array
     {
         // get the all available authentication information for the object_eid

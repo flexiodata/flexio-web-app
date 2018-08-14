@@ -300,6 +300,18 @@ class Connection extends ModelBase
         return $result;
     }
 
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_connection where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
     private static function isValidConnectionStatus(string $status) : bool
     {
         switch ($status)

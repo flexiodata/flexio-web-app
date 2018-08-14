@@ -283,6 +283,18 @@ class Process extends ModelBase
         return $result;
     }
 
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_process where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
     public function log(string $eid = null, string $process_eid, array $params) : string
     {
         // TODO: we may want to split this out into it's own model with create, get, set, etc,

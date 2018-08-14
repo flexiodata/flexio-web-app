@@ -200,6 +200,18 @@ class Token extends ModelBase
         return $result;
     }
 
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_token where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
+
     public function getInfoFromAccessCode(string $code) // TODO: add return type
     {
         $filter = array('access_code' => $code);

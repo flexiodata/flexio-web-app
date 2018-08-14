@@ -232,4 +232,16 @@ class Action extends ModelBase
 
         return $result;
     }
+
+    public function exists(string $eid) : bool
+    {
+        if (!\Flexio\Base\Eid::isValid($eid))
+            return false;
+
+        $result = $this->getDatabase()->fetchOne("select eid from tbl_action where eid = ?", $eid);
+        if ($result === false)
+            return false;
+
+        return true;
+    }
 }
