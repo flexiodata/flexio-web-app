@@ -92,7 +92,7 @@
   const getDefaultValues = () => {
     return {
       op: 'read',
-      path: []
+      path: ''
     }
   }
 
