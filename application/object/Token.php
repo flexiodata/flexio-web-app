@@ -185,6 +185,12 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
+
         // TODO: this is legacy for API consistency; remove when UI is updated to use owned_by
         $mapped_properties['user_eid'] = $mapped_properties['owned_by'];
 

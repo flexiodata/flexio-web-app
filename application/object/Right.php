@@ -210,6 +210,7 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "actions" => null,
                 "user" => null,
                 "object_eid" => null,
+                "owned_by" => null,
                 "created" => null,
                 "updated" => null
             ],
@@ -218,6 +219,12 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         // sanity check: if the data record is missing, then eid will be null
         if (!isset($mapped_properties['eid']))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+
+        // expand the owner info
+        $mapped_properties['owned_by'] = array(
+            'eid' => $properties['owned_by'],
+            'eid_type' => \Model::TYPE_USER
+        );
 
         // unpack the actions object
         $mapped_properties['actions'] = json_decode($mapped_properties['actions'],true);
