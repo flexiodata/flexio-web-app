@@ -67,7 +67,9 @@ class Stream extends ModelBase
 
     public function delete(string $eid) : bool
     {
-        return $this->setStatus($eid, \Model::STATUS_DELETED);
+        // set the status to deleted
+        $params = array('eid_status' => \Model::STATUS_DELETED);
+        return $this->set($eid, $params);
     }
 
     public function purge(string $owner_eid) : bool
@@ -212,11 +214,6 @@ class Stream extends ModelBase
             return '';
 
         return $result;
-    }
-
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
     }
 
     public function exists(string $eid) : bool

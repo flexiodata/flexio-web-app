@@ -286,11 +286,6 @@ class Pipe extends ModelBase
         return $result;
     }
 
-    public function setStatus(string $eid, string $status) : bool
-    {
-        return $this->set($eid, array('eid_status' => $status));
-    }
-
     public function exists(string $eid) : bool
     {
         if (!\Flexio\Base\Eid::isValid($eid))

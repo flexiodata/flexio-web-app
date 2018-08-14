@@ -123,9 +123,12 @@ class Comment extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Comment
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $comment_model = $this->getModel()->comment;
-        $result = $comment_model->setStatus($this->getEid(), $status);
+        $result = $comment_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

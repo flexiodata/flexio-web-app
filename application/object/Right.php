@@ -156,9 +156,12 @@ class Right extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Right
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $right_model = $this->getModel()->right;
-        $result = $right_model->setStatus($this->getEid(), $status);
+        $result = $right_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

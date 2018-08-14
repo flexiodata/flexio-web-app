@@ -153,9 +153,12 @@ class Connection extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Connection
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $connection_model = $this->getModel()->connection;
-        $result = $connection_model->setStatus($this->getEid(), $status);
+        $result = $connection_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

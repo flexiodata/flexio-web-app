@@ -192,9 +192,12 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
 
     public function setStatus(string $status) : \Flexio\Object\Stream
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $stream_model = $this->getModel()->stream;
-        $result = $stream_model->setStatus($this->getEid(), $status);
+        $result = $stream_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

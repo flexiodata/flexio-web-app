@@ -198,9 +198,12 @@ class User extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Base
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $user_model = $this->getModel()->user;
-        $result = $user_model->setStatus($this->getEid(), $status);
+        $result = $user_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

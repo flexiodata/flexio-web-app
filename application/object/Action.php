@@ -150,9 +150,12 @@ class Action extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Action
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $action_model = $this->getModel()->action;
-        $result = $action_model->setStatus($this->getEid(), $status);
+        $result = $action_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

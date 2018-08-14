@@ -309,9 +309,12 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Pipe
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $pipe_model = $this->getModel()->pipe;
-        $result = $pipe_model->setStatus($this->getEid(), $status);
+        $result = $pipe_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

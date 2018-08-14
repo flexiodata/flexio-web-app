@@ -128,9 +128,12 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Token
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $token_model = $this->getModel()->token;
-        $result = $token_model->setStatus($this->getEid(), $status);
+        $result = $token_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 

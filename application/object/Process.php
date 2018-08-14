@@ -162,9 +162,12 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function setStatus(string $status) : \Flexio\Object\Process
     {
+        if ($status === \Model::STATUS_DELETED)
+            return $this->delete();
+
         $this->clearCache();
         $process_model = $this->getModel()->process;
-        $result = $process_model->setStatus($this->getEid(), $status);
+        $result = $process_model->set($this->getEid(), array('eid_status' => $status));
         return $this;
     }
 
