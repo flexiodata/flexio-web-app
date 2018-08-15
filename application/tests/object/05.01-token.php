@@ -211,10 +211,9 @@ class Test
             "eid" : null,
             "eid_type" : null,
             "eid_status" : null,
-            "owned_by" : {
-                "eid" : null,
-                "eid_type" : null
-            },
+            "user_eid" : null,
+            "access_code" : null,
+            "owned_by" : null,
             "created" : null,
             "updated" : null
         }
