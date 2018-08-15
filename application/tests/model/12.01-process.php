@@ -27,7 +27,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->process;
 
 
-        // TEST: process creation with no parameters
+        // TEST: creation with no parameters
 
         // BEGIN TEST
         $info = array(
@@ -38,7 +38,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Process::create(); for process creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
-        // TEST: make sure it has the essential fields and make sure these are set when specified in the input
+        // TEST: creation with basic input
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();

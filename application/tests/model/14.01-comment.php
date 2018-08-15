@@ -38,7 +38,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Comment::create(); for comment creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
-        // TEST: creation with basic parameter input
+        // TEST: creation with basic input
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();

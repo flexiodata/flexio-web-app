@@ -38,7 +38,7 @@ class Test
         \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\Pipe::create(); for pipe creation, don\'t require input parameters; return valid eid on success',  $actual, $expected, $results);
 
 
-        // TEST: creation with basic name input
+        // TEST: creation with basic input
 
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
