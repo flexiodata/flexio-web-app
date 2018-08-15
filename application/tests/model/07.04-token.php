@@ -20,6 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\Token::delete()
+        // FUNCTION: \Flexio\Model\Token::purge()
     }
 }
