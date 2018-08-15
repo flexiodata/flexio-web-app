@@ -20,66 +20,57 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\User::checkPasswordHash()
+        // FUNCTION: \Flexio\Model\User::getUsernameFromEid()
 
 
         // SETUP
         $model = \Flexio\Tests\Util::getModel()->user;
 
 
-        // TEST: tests for empty string input
+        // TEST: test ability to get the username from the eid
 
         // BEGIN TEST
-        $actual = $model->checkPasswordHash('','');
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.1', '\Flexio\Model\User::checkPasswordHash(): empty string input', $actual, $expected, $results);
+        $actual = '';
+        try
+        {
+            $username = $model->getUsernameFromEid(null);
+            $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
+        }
+        catch (\Error $e)
+        {
+            $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        }
+        $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\User::getUsernameFromEid(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}b5e06a0994664b8674c182864515de4dc44333b0','');
+        $username = $model->getUsernameFromEid('xxxxxxxxxxxx');
+        $actual = $username === false;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::checkPasswordHash(): hash for empty string input', $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::getUsernameFromEid(); return false when username can\'t be found',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}b5e06a0994664b8674c182864515de4dc44333b0',' '); // check for trimming
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.3', '\Flexio\Model\User::checkPasswordHash(): single space password; check that spaces arent trimmed', $actual, $expected, $results);
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'username' => $handle1,
+            'email' => $handle2
+        );
+        $eid = $model->create($info);
+        $actual = $model->getUsernameFromEid($eid);
+        $expected = $handle1;
+        \Flexio\Tests\Check::assertString('A.3', '\Flexio\Model\User::getUsernameFromEid(); use the eid to get the username',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = $model->checkPasswordHash('b5e06a0994664b8674c182864515de4dc44333b0',''); // check for leading SSHA prefix
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.4', '\Flexio\Model\User::checkPasswordHash(): check for hash identifier', $actual, $expected, $results);
-
-
-        // TEST: tests for non-empty string input
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542','test');
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::checkPasswordHash(): basic non-empty string input', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542','test '); // don't allow trimming after
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.2', '\Flexio\Model\User::checkPasswordHash(): non-empty string input; check that spaces after password are not trimmed', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}87a0f0cfc2cd5b68a9a3b5a3937ca1211227a542',' test'); // don't allow trimming before
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.3', '\Flexio\Model\User::checkPasswordHash(): non-empty string input; check that spaces before password are not trimmed', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99tc');
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('B.4', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99tcd');
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.5', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check; password length sensitivity', $actual, $expected, $results);
-
-        // BEGIN TEST
-        $actual = $model->checkPasswordHash('{SSHA}3226155047ca866b1724d14f2e8167aa2ef88afb','mj6dc95k99t');
-        $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.6', '\Flexio\Model\User::checkPasswordHash(): non-trivial password check; password length sensitivity', $actual, $expected, $results);
+        $handle1 = strtoupper(\Flexio\Base\Util::generateHandle());
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'username' => $handle1,
+            'email' => $handle2
+        );
+        $eid = $model->create($info);
+        $actual = $model->getUsernameFromEid($eid);
+        $expected = strtolower($handle1);
+        \Flexio\Tests\Check::assertString('A.4', '\Flexio\Model\User::getUsernameFromEid(); make sure username is case insensitive',  $actual, $expected, $results);
     }
 }

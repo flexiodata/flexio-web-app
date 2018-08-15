@@ -20,7 +20,7 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\User::delete()
+        // FUNCTION: \Flexio\Model\User::purge()
 
 
         // SETUP
@@ -33,7 +33,7 @@ class Test
         $actual = '';
         try
         {
-            $model->delete(null);
+            $model->purge(null);
             $actual = \Flexio\Tests\Base::ERROR_NO_EXCEPTION;
         }
         catch (\Error $e)
@@ -41,66 +41,56 @@ class Test
             $actual = \Flexio\Tests\Base::ERROR_EXCEPTION;
         }
         $expected = \Flexio\Tests\Base::ERROR_EXCEPTION;
-        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\User::delete(); throw an error with null input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertString('A.1', '\Flexio\Model\User::purge(); throw an error with null input',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $actual = $model->delete('');
+        $actual = $model->purge('');
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::delete(); return false with invalid input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('A.2', '\Flexio\Model\User::purge(); return false with invalid input',  $actual, $expected, $results);
 
 
         // TEST: valid eid input, but object doesn't exist
 
         // BEGIN TEST
         $eid = \Flexio\Base\Eid::generate();
-        $actual = $model->delete($eid);
+        $actual = $model->purge($eid);
         $expected = false;
-        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::delete(); return false after trying to delete an object that doesn\'t exist',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('B.1', '\Flexio\Model\User::purge(); return false after trying to purge an object that doesn\'t exist',  $actual, $expected, $results);
 
 
         // TEST: valid eid input, and object exists
 
         // BEGIN TEST
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Tests\Util::createEmailAddress();
         $info = array(
-            'username' => $handle1,
-            'email' => $handle2
+            'username' => \Flexio\Base\Util::generateHandle(),
+            'email' => \Flexio\Tests\Util::createEmailAddress()
         );
         $eid = $model->create($info);
-        $actual = $model->delete($eid);
+        $model->set($eid, array('owned_by' => $eid));
+        $actual = $model->purge($eid);
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\User::delete(); return true when deleting an object that exists',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.1', '\Flexio\Model\User::purge(); return true when purging an object that exists',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Tests\Util::createEmailAddress();
-        $info = array(
-            'username' => $handle1,
-            'email' => $handle2
+        $info1 = array(
+            'username' => \Flexio\Base\Util::generateHandle(),
+            'email' => \Flexio\Tests\Util::createEmailAddress()
         );
-        $eid = $model->create($info);
-        $status_before_deletion = $model->get($eid)['eid_status'];
-        $delete_result = $model->delete($eid);
-        $status_after_deletion = $model->get($eid)['eid_status'];
-        $actual = $delete_result === true && $status_before_deletion !== \Model::STATUS_DELETED  && $status_after_deletion === \Model::STATUS_DELETED;
-        $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\User::delete(); when deleting, make sure object is deleted',  $actual, $expected, $results);
-
-        // BEGIN TEST
-        $handle1 = \Flexio\Base\Util::generateHandle();
-        $handle2 = \Flexio\Tests\Util::createEmailAddress();
-        $info = array(
-            'username' => $handle1,
-            'email' => $handle2
+        $eid1 = $model->create($info1);
+        $model->set($eid1, array('owned_by' => $eid1));
+        $info2 = array(
+            'username' => \Flexio\Base\Util::generateHandle(),
+            'email' => \Flexio\Tests\Util::createEmailAddress()
         );
-        $eid = $model->create($info);
-        $status_before_deletion = $model->get($eid)['eid_status'];
-        $first_deletion = $model->delete($eid);
-        $second_deletion = $model->delete($eid);
-        $status_after_deletion = $model->get($eid)['eid_status'];
-        $actual = $status_before_deletion !== \Model::STATUS_DELETED && $status_after_deletion === \Model::STATUS_DELETED && $first_deletion === true && $second_deletion === true;
+        $eid2 = $model->create($info2);
+        $model->set($eid2, array('owned_by' => $eid2));
+        $exists1_before_deletion = $model->exists($eid1);
+        $exists2_before_deletion = $model->exists($eid2);
+        $delete1_result = $model->purge($eid1);
+        $exists1_after_deletion = $model->exists($eid1);
+        $exists2_after_deletion = $model->exists($eid2);
+        $actual = $exists1_before_deletion === true && $exists1_after_deletion === false && $exists2_before_deletion === true && $exists2_after_deletion === true;
         $expected = true;
-        \Flexio\Tests\Check::assertBoolean('C.3', '\Flexio\Model\User::delete(); multiple deletion should succeed',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertBoolean('C.2', '\Flexio\Model\User::purge(); when purging, make sure object being purged is physically removed and that other objects are not effected',  $actual, $expected, $results);
     }
 }

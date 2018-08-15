@@ -20,5 +20,133 @@ class Test
 {
     public function run(&$results)
     {
+        // FUNCTION: \Flexio\Model\User::create()
+
+
+        // SETUP
+        $model = \Flexio\Tests\Util::getModel()->user;
+
+
+        // TEST: make sure the required parameters are valid
+
+        // BEGIN TEST
+        $actual = array();
+        try
+        {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
+            $info = array(
+                'username' => null,
+                'email' => $handle2,
+                'password' => $handle1
+            );
+            $eid = $model->create($info);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
+        );
+        \Flexio\Tests\Check::assertInArray('A.1', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = array();
+        try
+        {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
+            $info = array(
+                'username' => 'ab',
+                'email' => $handle2,
+                'password' => $handle1
+            );
+            $eid = $model->create($info);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
+        );
+        \Flexio\Tests\Check::assertInArray('A.2', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = array();
+        try
+        {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
+            $info = array(
+                'username' => $handle1,
+                'email' => null,
+                'password' => $handle1
+            );
+            $eid = $model->create($info);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
+        );
+        \Flexio\Tests\Check::assertInArray('A.3', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $actual = array();
+        try
+        {
+            $handle1 = \Flexio\Base\Util::generateHandle();
+            $handle2 = \Flexio\Tests\Util::createEmailAddress();
+            $info = array(
+                'username' => $handle1,
+                'email' => 'abc',
+                'password' => $handle1
+            );
+            $eid = $model->create($info);
+        }
+        catch (\Flexio\Base\Exception $e)
+        {
+            $message = $e->getMessage();
+            $actual = json_decode($message,true);
+        }
+        $expected = array(
+            'code' => \Flexio\Base\Error::INVALID_SYNTAX
+        );
+        \Flexio\Tests\Check::assertInArray('A.4', '\Flexio\Model\User::create(); throw an exception when a username is invalid',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'username' => $handle1,
+            'email' => $handle2
+        );
+        $eid = $model->create($info);
+        $actual = \Flexio\Base\Eid::isValid($eid);
+        $expected = true;
+        \Flexio\Tests\Check::assertBoolean('A.5', '\Flexio\Model\User::create(); make sure that a valid eid is returned on success',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $handle1 = \Flexio\Base\Util::generateHandle();
+        $handle2 = \Flexio\Tests\Util::createEmailAddress();
+        $info = array(
+            'username' => $handle1,
+            'email' => $handle2
+        );
+        $eid = $model->create($info);
+        $actual = $model->get($eid);
+        $expected = array(
+            'eid' => $eid,
+            'username' => $handle1,
+            'email' => $handle2
+        );
+        \Flexio\Tests\Check::assertInArray('A.6', '\Flexio\Model\User::create(); make sure that eid and username are set when a user is created',  $actual, $expected, $results);
     }
 }
