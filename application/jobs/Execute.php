@@ -977,9 +977,9 @@ class Execute extends \Flexio\Jobs\Base
     public function validate() : array
     {
         $errors = array();
-        $jobs_params = $this->getJobParameters();
+        $job_params = $this->getJobParameters();
 
-        if (!isset($jobs_params['op']))
+        if (!isset($job_params['op']))
             $errors[] = array('code' => \Flexio\Base\Error::INVALID_SYNTAX, 'message' => '');
 
         if (count($errors) > 0)
@@ -1018,23 +1018,23 @@ class Execute extends \Flexio\Jobs\Base
         $this->process = $process;
 
         // properties
-        $jobs_params = $this->getJobParameters();
+        $job_params = $this->getJobParameters();
 
         // get the language
-        $this->lang = $jobs_params['lang'];
+        $this->lang = $job_params['lang'];
 
         // if code is specified, get the contents from the supplied code
-        $code = $jobs_params['code'] ?? false;
+        $code = $job_params['code'] ?? false;
         if ($code !== false)
         {
-            $this->code_base64 = $jobs_params['code'];
+            $this->code_base64 = $job_params['code'];
             $this->code = base64_decode($this->code_base64);
         }
          else
         {
             // if the code isn't specified in a file location, see if it's specified
             // in a remote location
-            $file = $jobs_params['path'] ?? false;
+            $file = $job_params['path'] ?? false;
             if ($file === false)
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -1042,7 +1042,7 @@ class Execute extends \Flexio\Jobs\Base
             $this->code_base64 = base64_encode($this->code);
         }
 
-        $integrity = $jobs_params['integrity'] ?? false;
+        $integrity = $job_params['integrity'] ?? false;
         if ($integrity !== false)
         {
             // an integrity parameter is specified; use a subresource integrity check
