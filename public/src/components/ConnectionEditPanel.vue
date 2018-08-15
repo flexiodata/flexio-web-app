@@ -101,7 +101,7 @@
         </el-form>
 
         <ConnectionInfoPanel
-          :connection.sync="edit_connection"
+          :connection-info.sync="connection_info"
           v-if="is_http"
         />
 
@@ -173,8 +173,8 @@
         access_token: '',
         refresh_token: '',
         expires: '',
-        headers: [],
-        data: []
+        headers: {},
+        data: {}
       }
     }
   }
@@ -301,6 +301,14 @@
         }
 
         return false
+      },
+      connection_info: {
+        get() {
+          return _.get(this.edit_connection, 'connection_info', {})
+        },
+        set(value) {
+          this.edit_connection = _.assign({}, this.edit_connection, { connection_info: value })
+        }
       }
     },
     mounted() {

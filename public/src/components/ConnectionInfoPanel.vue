@@ -2,7 +2,7 @@
   <div>
     <el-form
       class="el-form--compact el-form__label-tiny"
-      :model="$data"
+      :model="form_values"
     >
       <div class="flex flex-column flex-row-ns">
         <el-form-item
@@ -14,7 +14,7 @@
           <el-select
             class="w-100"
             placeholder="Method"
-            v-model="method"
+            v-model="form_values.method"
           >
             <el-option
               :label="option.label"
@@ -36,7 +36,7 @@
             autocomplete="off"
             spellcheck="false"
             placeholder="URL"
-            v-model="url"
+            v-model="form_values.url"
           />
         </el-form-item>
       </div>
@@ -48,9 +48,10 @@
           <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
           <div class="mv2 mh3 mw6">
             <el-form
-              class="el-form--compact"
+              class="el-form--compact el-form__label-tiny"
+              label-position="top"
               label-width="10rem"
-              :model="$data"
+              :model="form_values"
             >
               <el-form-item
                 label="Authorization Type"
@@ -59,7 +60,7 @@
               >
                 <el-select
                   placeholder="Authorization Type"
-                  v-model="auth"
+                  v-model="form_values.auth"
                 >
                   <el-option
                     :label="option.label"
@@ -73,77 +74,77 @@
                 label="Username"
                 key="username"
                 prop="username"
-                v-if="auth == 'basic'"
+                v-if="form_values.auth == 'basic'"
               >
                 <el-input
                   placeholder="Username"
                   spellcheck="false"
-                  v-model="username"
+                  v-model="form_values.username"
                 />
               </el-form-item>
               <el-form-item
                 label="Password"
                 key="password"
                 prop="password"
-                v-if="auth == 'basic'"
+                v-if="form_values.auth == 'basic'"
               >
                 <el-input
                   type="password"
                   placeholder="Password"
                   spellcheck="false"
-                  v-model="password"
+                  v-model="form_values.password"
                 />
               </el-form-item>
               <el-form-item
                 label="Token"
                 key="token"
                 prop="token"
-                v-if="auth == 'bearer'"
+                v-if="form_values.auth == 'bearer'"
               >
                 <el-input
                   type="password"
                   placeholder="Token"
                   spellcheck="false"
-                  v-model="token"
+                  v-model="form_values.token"
                 />
               </el-form-item>
               <el-form-item
                 label="Access Token"
                 key="access_token"
                 prop="access_token"
-                v-if="auth == 'oauth2'"
+                v-if="form_values.auth == 'oauth2'"
               >
                 <el-input
                   type="password"
                   placeholder="Access Token"
                   spellcheck="false"
-                  v-model="access_token"
+                  v-model="form_values.access_token"
                 />
               </el-form-item>
               <el-form-item
                 label="Refresh Token"
                 key="refresh_token"
                 prop="refresh_token"
-                v-if="auth == 'oauth2'"
+                v-if="form_values.auth == 'oauth2'"
               >
                 <el-input
                   type="password"
                   placeholder="Refresh Token"
                   spellcheck="false"
-                  v-model="refresh_token"
+                  v-model="form_values.refresh_token"
                 />
               </el-form-item>
               <el-form-item
                 label="Expires"
                 key="expires"
                 prop="expires"
-                v-if="auth == 'oauth2'"
+                v-if="form_values.auth == 'oauth2'"
               >
                 <el-input
                   type="password"
                   placeholder="Expires"
                   spellcheck="false"
-                  v-model="expires"
+                  v-model="form_values.expires"
                 />
               </el-form-item>
             </el-form>
@@ -156,14 +157,13 @@
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
-              v-if="false"
             />
             <KeypairItem
-              v-for="(item, index) in data"
+              v-for="(item, index) in form_values.data"
               :key="index"
               :item="item"
               :index="index"
-              :count="data.length"
+              :count="form_values.data.length"
               @change="onFormDataItemChange"
               @delete="onFormDataItemDelete"
             />
@@ -176,14 +176,13 @@
             <KeypairItem
               :item="{ key: 'Key', val: 'Value' }"
               :is-static="true"
-              v-if="false"
             />
             <KeypairItem
-              v-for="(item, index) in headers"
+              v-for="(item, index) in form_values.headers"
               :key="index"
               :item="item"
               :index="index"
-              :count="headers.length"
+              :count="form_values.headers.length"
               @change="onHeaderItemChange"
               @delete="onHeaderItemDelete"
             />
@@ -209,6 +208,22 @@
     }
   }
 
+  const getDefaultInfo = () => {
+    return {
+      method: '',
+      url: '',
+      auth: 'none',
+      username: '',
+      password: '',
+      token: '',
+      access_token: '',
+      refresh_token: '',
+      expires: '',
+      headers: [],
+      data: []
+    }
+  }
+
   const method_options = [
     { val: '',        label: 'Default (none)' },
     { val: 'GET',     label: 'GET'            },
@@ -229,7 +244,7 @@
 
   export default {
     props: {
-      'connection': {
+      'connectionInfo': {
         type: Object,
         required: true
       }
@@ -239,100 +254,99 @@
       KeypairItem
     },
     watch: {
-      connection_info() {
-        this.$emit('update:connection', this.getConnection())
+      connectionInfo: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
+      },
+      form_values: {
+        handler: 'emitUpdate',
+        deep: true
       }
     },
     data() {
       return {
         active_tab_name: 'authorization',
-
+        emitting: false,
         method_options,
         auth_options,
-        method: '',
-        url: '',
-        auth: 'none',
-        username: '',
-        password: '',
-        token: '',
-        access_token: '',
-        refresh_token: '',
-        expires: '',
-        headers: [],
-        data: []
+        form_values: getDefaultInfo()
       }
-    },
-    computed: {
-      connection_info() {
-        return _.pick(this.$data, ['method', 'url', 'auth', 'username', 'password', 'token', 'access_token', 'refresh_token', 'expires', 'headers', 'data'])
-      }
-    },
-    mounted() {
-      this.$nextTick(() => {
-        this.reset()
-      })
     },
     methods: {
-      reset() {
-        _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
-          if (_.isString(val))
-            this[key] = val
+      initSelf() {
+        if (this.emitting) {
+          return
+        }
 
-          if (_.isPlainObject(val))
-          {
+        this.form_values = getDefaultInfo()
+
+        // fill out the info from the connection info
+        _.each(this.connectionInfo, (val, key) => {
+          if (_.isString(val)) {
+            this.form_values[key] = val
+          }
+
+          if (_.isPlainObject(val)) {
             _.each(val, (val2, key2) => {
-              this[key] = [].concat(this[key]).concat(newKeypairItem(key2, val2))
+              this.form_values[key] = [].concat(this.form_values[key]).concat(newKeypairItem(key2, val2))
             })
           }
         })
 
         // add "ghost" items
-        this.data = [].concat(this.data).concat(newKeypairItem())
-        this.headers = [].concat(this.headers).concat(newKeypairItem())
+        this.form_values.data = [].concat(this.form_values.data).concat(newKeypairItem())
+        this.form_values.headers = [].concat(this.form_values.headers).concat(newKeypairItem())
       },
-      getConnection() {
-        var connection_info = _.cloneDeep(this.connection_info)
+      emitUpdate() {
+        var connection_info = _.cloneDeep(this.form_values)
 
-        var data = _.keyBy(this.$data.data, 'key')
+        // map 'data' values
+        var data = _.keyBy(this.form_values.data, 'key')
         data = _.pickBy(data, (val, key) => { return key.length > 0 })
         data = _.mapValues(data, 'val')
 
-        var headers = _.keyBy(this.$data.headers, 'key')
+        // map 'headers' values
+        var headers = _.keyBy(this.form_values.headers, 'key')
         headers = _.pickBy(headers, (val, key) => { return key.length > 0 })
         headers = _.mapValues(headers, 'val')
 
         connection_info.data = data
         connection_info.headers = headers
 
-        return _.assign({}, this.connection, { connection_info })
+        // make sure our update below doesn't trigger another call to 'initSelf'
+        this.emitting = true
+        this.$nextTick(() => { this.emitting = false })
+
+        this.$emit('update:connectionInfo', connection_info)
+      },
+      doKeypairChange(item, index, key) {
+        if (index == _.size(this.form_values[key]) - 1) {
+          this.form_values[key] = [].concat(this.form_values[key]).concat(newKeypairItem())
+        }
+
+        var arr = [].concat(this.form_values[key])
+        arr[index] = _.assign({}, item)
+        this.form_values[key] = [].concat(arr)
+
+      },
+      doKeypairDelete(item, index, key) {
+        var tmp = this.form_values[key]
+        _.pullAt(tmp, [index])
+        this.form_values[key] = []
+        this.$nextTick(() => { this.form_values[key] = [].concat(tmp) })
       },
       onFormDataItemChange(item, index) {
-        if (index == _.size(this.data) - 1)
-          this.data = [].concat(this.data).concat(newKeypairItem())
-
-        var arr = [].concat(this.data)
-        arr[index] = _.assign({}, item)
-        this.data = [].concat(arr)
+        this.doKeypairChange(item, index, 'data')
       },
       onFormDataItemDelete(item, index) {
-        var tmp = this.data
-        _.pullAt(tmp, [index])
-        this.data = []
-        this.$nextTick(() => { this.data = [].concat(tmp) })
+        this.doKeypairDelete(item, index, 'data')
       },
       onHeaderItemChange(item, index) {
-        if (index == _.size(this.headers) - 1)
-          this.headers = [].concat(this.headers).concat(newKeypairItem())
-
-        var arr = [].concat(this.headers)
-        arr[index] = _.assign({}, item)
-        this.headers = [].concat(arr)
+        this.doKeypairChange(item, index, 'headers')
       },
       onHeaderItemDelete(item, index) {
-        var tmp = this.headers
-        _.pullAt(tmp, [index])
-        this.headers = []
-        this.$nextTick(() => { this.headers = [].concat(tmp) })
+        this.doKeypairDelete(item, index, 'headers')
       }
     }
   }
