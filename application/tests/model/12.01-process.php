@@ -78,11 +78,6 @@ class Test
         );
         \Flexio\Tests\Check::assertInArray('B.2', '\Flexio\Model\Process::create(); in process creation, make sure essential fields are created',  $actual, $expected, $results);
 
-
-        // TEST: creation with basic parameters
-
-        // TODO: add tests
-
         // BEGIN TEST
         $info = array(
         );
@@ -91,7 +86,7 @@ class Test
         $expected = array(
             'owned_by' => ''
         );
-        \Flexio\Tests\Check::assertInArray('C.1', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.3', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
         // BEGIN TEST
         $random_eid1 = \Flexio\Base\Eid::generate();
@@ -106,6 +101,6 @@ class Test
             'owned_by' => $random_eid1,
             'created_by' => $random_eid2
         );
-        \Flexio\Tests\Check::assertInArray('C.2', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.4', '\Flexio\Model\Process::create(); in process creation, make sure parameter is set when specified',  $actual, $expected, $results);
     }
 }
