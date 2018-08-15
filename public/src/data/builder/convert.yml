@@ -15,7 +15,7 @@ prompt:
       value: convert
     - element: markdown
       value: |
-        <p class="mv0 ttu fw6 f7 moon-gray">Input</p>
+        <h3 class="mv0 fw6">Input</h3>
     - element: select
       variable: input.format
       label: Format
@@ -83,7 +83,7 @@ prompt:
         equals: delimited
     - element: markdown
       value: |
-        <p class="mv0 ttu fw6 f7 moon-gray">Output</p>
+        <h3 class="mv0 fw6">Output</h3>
     - element: select
       variable: output.format
       label: Format
