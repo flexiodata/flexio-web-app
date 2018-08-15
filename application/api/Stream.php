@@ -83,7 +83,7 @@ class Stream
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
 
         if ($download === true)
-            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename, $useragent);
+            self::echoDownload($stream, $content_type, $encode, $metadata, $start, $limit, $filename, $user_agent);
               else
             self::echoContent($stream, $content_type, $encode, $metadata, $start, $limit);
     }
