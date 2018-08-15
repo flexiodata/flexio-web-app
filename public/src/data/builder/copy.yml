@@ -1,0 +1,10 @@
+task:
+  op: copy
+
+prompt:
+  element: task-copy
+  title: Copy
+  form_values:
+    op: copy
+    from: ''
+    to: ''
