@@ -1,8 +1,8 @@
 <template>
   <div class="dn db-ns" v-if="isStatic">
-    <div class="flex flex-column flex-row-ns">
-      <div class="mr3-ns fw6 w-30-ns">{{key}}</div>
-      <div class="mr2-ns fw6 w-70-ns">{{val}}</div>
+    <div class="flex flex-column flex-row-ns nb1">
+      <div class="mr3-ns fw6 w-30-ns f6">{{key}}</div>
+      <div class="mr2-ns fw6 w-70-ns f6">{{val}}</div>
     <div class="o-0">
       <span class="pointer f3">
         &times;
