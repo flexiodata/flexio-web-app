@@ -11,6 +11,17 @@ prompt:
       type: hidden
       variable: op
       value: execute
+    - element: markdown
+      value: |
+        <p class="mv0 ttu fw6 f7 moon-gray">Enter a remote script path</p>
+    - element: input
+      type: text
+      variable: path
+      label: Path
+      placeholder: Remote path
+    - element: markdown
+      value: |
+        <p class="mv0 ttu fw6 f7 moon-gray">&mdash; or inline your script &mdash;</p>
     - element: select
       variable: lang
       label: Language
