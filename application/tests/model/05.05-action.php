@@ -20,6 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // FUNCTION: \Flexio\Model\Action::delete()
+        // FUNCTION: \Flexio\Model\Action::set()
     }
 }
