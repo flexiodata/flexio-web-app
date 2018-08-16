@@ -22,7 +22,7 @@ class Token extends ModelBase
         $validator = \Flexio\Base\Validator::create();
         if (($validator->check($params, array(
                 'eid_status'  => array('type' => 'string', 'required' => false, 'default' =>  \Model::STATUS_AVAILABLE),
-                'access_code' => array('type' => 'string', 'required' => false, 'default' => ''),
+                'access_code' => array('type' => 'string', 'required' => true), // needs to be unique
                 'owned_by'    => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'  => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)

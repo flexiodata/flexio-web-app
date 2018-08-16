@@ -66,13 +66,6 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         if (!isset($properties))
             $properties = array();
 
-        // the owned_by needs to be set and be a valid user
-        if (!isset($properties['owned_by']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
-
-        $owned_by = $properties['owned_by'];
-        $user = \Flexio\Object\User::load($owned_by);
-
         // generate an access code
         $properties['access_code'] = \Flexio\Base\Util::generateHandle();
 
@@ -95,7 +88,11 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
 
     public function set(array $properties) : \Flexio\Object\Token
     {
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::WRITE_FAILED);
+        // TODO: add properties check
+
+        $this->clearCache();
+        $token_model = $this->getModel()->token;
+        $token_model->set($this->getEid(), $properties);
         return $this;
     }
 
@@ -112,7 +109,7 @@ class Token extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return \Model::TYPE_TOKEN;
     }
 
-    public function setOwner(string $user_eid) : \Flexio\Object\Stream
+    public function setOwner(string $user_eid) : \Flexio\Object\Token
     {
         $properties = array('owned_by' => $user_eid);
         $this->set($properties);

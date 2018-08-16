@@ -29,7 +29,7 @@ class Test
         $model = \Flexio\Tests\Util::getModel()->action;
 
 
-        // TEST: action creation with no parameters
+        // TEST: creation with no parameters
 
         // BEGIN TEST
         $info = array(
