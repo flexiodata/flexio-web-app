@@ -53,7 +53,7 @@ class Right extends ModelBase
         }
         catch (\Exception $e)
         {
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, $t);
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);
         }
     }
 
