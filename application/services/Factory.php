@@ -75,7 +75,8 @@ class Factory
                         'host' => $connection_info['host'] ?? '',
                         'port' => $connection_info['port'] ?? '',
                         'username' => $connection_info['username'] ?? '',
-                        'password' => $connection_info['password'] ?? ''
+                        'password' => $connection_info['password'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     $service = \Flexio\Services\Ftp::create($auth_params);
                 break;
@@ -126,7 +127,8 @@ class Factory
 
             case self::TYPE_DROPBOX:
                     $auth_params = array(
-                        'access_token' => $connection_info['access_token'] ?? ''
+                        'access_token' => $connection_info['access_token'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     $service = \Flexio\Services\Dropbox::create($auth_params);
                 break;
@@ -134,7 +136,8 @@ class Factory
             case self::TYPE_BOX:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
-                        'refresh_token' => $connection_info['refresh_token'] ?? ''
+                        'refresh_token' => $connection_info['refresh_token'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\Box::create($auth_params);
@@ -153,7 +156,8 @@ class Factory
             case self::TYPE_GOOGLEDRIVE:
                     $auth_params = array(
                         'access_token' => $connection_info['access_token'] ?? '',
-                        'refresh_token' => $connection_info['refresh_token'] ?? ''
+                        'refresh_token' => $connection_info['refresh_token'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                     $service = \Flexio\Services\GoogleDrive::create($auth_params);
@@ -171,7 +175,8 @@ class Factory
             case self::TYPE_GOOGLECLOUDSTORAGE:
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
-                    'refresh_token' => $connection_info['refresh_token'] ?? ''
+                    'refresh_token' => $connection_info['refresh_token'] ?? '',
+                    'base_path' => $connection_info['base_path'] ?? ''
                 );
                 if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                 $service = \Flexio\Services\GoogleCloudStorage::create($auth_params);
@@ -182,7 +187,8 @@ class Factory
                     'access_token' => $connection_info['access_token'] ?? '',
                     'refresh_token' => $connection_info['refresh_token'] ?? '',
                     'owner' => $connection_info['owner'] ?? '',
-                    'repository' => $connection_info['repository'] ?? ''
+                    'repository' => $connection_info['repository'] ?? '',
+                    'base_path' => $connection_info['base_path'] ?? ''
                 );
                 if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];
                 $service = \Flexio\Services\GitHub::create($auth_params);
@@ -198,7 +204,8 @@ class Factory
                         'region' => $connection_info['region'] ?? '',
                         'bucket' => $connection_info['bucket'] ?? '',
                         'accesskey' => $connection_info['aws_key'] ?? '',
-                        'secretkey' => $connection_info['aws_secret'] ?? ''
+                        'secretkey' => $connection_info['aws_secret'] ?? '',
+                        'base_path' => $connection_info['base_path'] ?? ''
                     );
                     $service = \Flexio\Services\AmazonS3::create($auth_params);
                 break;

@@ -120,13 +120,6 @@ class Structure
         return self::create($structure_output);
     }
 
-    public static function intersect(array $structures = null) : \Flexio\Base\Structure
-    {
-        // TODO: creates a structure that's the intersection of the specified structures
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return self::create();
-    }
-
     public function push(array $column) : array
     {
         // note: returns the added column, or false if the column couldn't be added

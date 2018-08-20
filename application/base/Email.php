@@ -328,13 +328,49 @@ class Email
         }
 
         // get the "cc"
-        $this->setCC(['']); // TODO: populate
+        $cc_header = $message->getHeader('cc');
+        if ($cc_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
+        {
+            $cc = array();
+            $addresses = $cc_header->getParts();
+            foreach ($addresses as $a)
+            {
+                $display = $a->getName();
+                $address = $a->getEmail();
+                $cc[] = "$display <$address>";
+            }
+            $this->setCC($cc);
+        }
 
         // get the "bcc"
-        $this->setBCC(['']); // TODO: populate
+        $bcc_header = $message->getHeader('bcc');
+        if ($bcc_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
+        {
+            $bcc = array();
+            $addresses = $bcc_header->getParts();
+            foreach ($addresses as $a)
+            {
+                $display = $a->getName();
+                $address = $a->getEmail();
+                $bcc[] = "$display <$address>";
+            }
+            $this->setBCC($bcc);
+        }
 
         // get the "replyto"
-        $this->setReplyTo(['']); // TODO: populate
+        $replyto_header = $message->getHeader('reply-to');
+        if ($replyto_header instanceof \ZBateson\MailMimeParser\Header\AddressHeader)
+        {
+            $replyto = array();
+            $addresses = $replyto_header->getParts();
+            foreach ($addresses as $a)
+            {
+                $display = $a->getName();
+                $address = $a->getEmail();
+                $replyto[] = "$display <$address>";
+            }
+            $this->setReplyTo($replyto);
+        }
 
         // get the subject
         $subject = $message->getHeaderValue('subject') ?? '';
