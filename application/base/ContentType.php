@@ -236,7 +236,6 @@ class ContentType
         if ($result === false)
             return false;
 
-        // TODO: set values here
         $parts = explode(';', $result);
         $local_mime_type = $parts[0] ?? '';
         $local_content_type = $parts[1] ?? '';
