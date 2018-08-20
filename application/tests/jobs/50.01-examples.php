@@ -125,14 +125,14 @@ class Test
         // Pipe Description: Convert all text in a CSV file to upper case and filter rows
         // Blog Link: https://www.flex.io/blog/we-are-reinventing-the-query-builder-well-kinda/
         // DEPRECATED: note, the following logic differs slightly from the blog entry now,
-        // (e.g. the input uses the 'request' job instead of the old 'input' job; however the
-        // the following is still useful as a close test for the blog entry)
+        // (e.g. the sample data set varies a little, and the input uses the 'request' job instead of the
+        // old 'input' job; however the the following is still useful as a close test for the blog entry)
 
         // BEGIN TEST
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "request",
-                "url" => "https://webapps.goldprairie.com/filetrans/?download=kfjgssycsm"
+                "url" => "https://raw.githubusercontent.com/flexiodata/data/0b757f6771b156e4e9222a4ca9cf5e69643dc2b4/contact-samples/contacts-ltd1.csv"
             ],
             [
                 "op" => "convert",
@@ -153,26 +153,20 @@ class Test
         $actual = $rows[0];
         $expected = json_decode('
         {
-            "number": "3000",
-            "gender": "FEMALE",
-            "givenname": "EFFIE",
-            "middleinitial": "S",
-            "surname": "BRADBERRY",
-            "streetaddress": "4065 CHICAGO AVENUE",
-            "city": "FRESNO",
-            "state": "CA",
-            "zipcode": "93721",
-            "country": "US",
-            "emailaddress": "EFFIE.S.BRADBERRY@POOKMAIL.COM",
-            "telephonenumber": "559-619-7731",
-            "mothersmaiden": "SCHNEIDER",
-            "birthday": "12/29/1959",
-            "cctype": "VISA",
-            "ccnumber": "4532620905918045",
-            "cvv2": "812",
-            "ccexpires": "10/2012",
-            "nationalid": "610-07-3447",
-            "ups": "1Z 3W5 6V5 59 2261 267 6"
+            "id":"3000",
+            "gender":"FEMALE",
+            "givenname":"EFFIE",
+            "middleinitial":"S",
+            "surname":"BRADBERRY",
+            "streetaddress":"4065 CHICAGO AVENUE",
+            "city":"FRESNO",
+            "state":"CA",
+            "zipcode":"93721",
+            "country":"US",
+            "emailaddress":"EFFIE.S.BRADBERRY@POOKMAIL.COM",
+            "telephonenumber":"559-619-7731",
+            "mothersmaiden":"SCHNEIDER",
+            "birthday":"12/29/1959"
         }
         ',true);
         \Flexio\Tests\Check::assertArray('C.1', 'Blog Entry Job; check the last row produced by the job',  $actual, $expected, $results);
