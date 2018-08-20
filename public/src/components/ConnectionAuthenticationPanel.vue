@@ -14,7 +14,7 @@
         </div>
       </div>
       <div v-else>
-        <div class="flex flex-row items-center justify-center lh-copy" v-if="is_connected">
+        <div class="flex flex-row items-center justify-center lh-copy">
           <i class="el-icon-success v-mid dark-green f3 mr2"></i>
           <span class="dn dib-ns">You are connected to {{service_name}}!</span>
         </div>
@@ -543,6 +543,7 @@
       return {
         cinfo,
         region_options,
+        is_resetting: false,
         test_state: 'none', // none, testing, error, success
         rules: {
           email: [
@@ -698,13 +699,23 @@
         return _.find(connections, { connection_type: this.ctype })
       },
       reset() {
-        _.each(_.get(this.connection, 'connection_info', {}), (val, key) => {
-          this.cinfo[key] = val
-        })
+        // avoid infinite loop...
+        if (this.is_resetting === true) {
+          return
+        }
+
+        this.is_resetting = true
+
+        var cinfo = _.get(this.connection, 'connection_info', {})
+        cinfo = _.assign({}, defaultConnectionInfo(), cinfo)
+
+        this.cinfo = cinfo
 
         if (this.$refs.form) {
           this.$refs.form.clearValidate()
         }
+
+        this.$nextTick(() => { this.is_resetting = false })
       },
       emitChange() {
         this.test_state = 'none'
