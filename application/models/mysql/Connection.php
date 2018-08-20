@@ -143,7 +143,7 @@ class Connection extends ModelBase
         if (isset($process_arr['connection_info']))
             $process_arr['connection_info'] = \Flexio\Base\Util::encrypt($process_arr['connection_info'], $GLOBALS['g_store']->connection_enckey);
 
-        // if the item doesn't exist, return false; TODO: throw exception instead?
+        // if the item doesn't exist, return false
         if ($this->exists($eid) === false)
             return false;
 

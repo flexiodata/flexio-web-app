@@ -127,7 +127,7 @@ class Process extends ModelBase
         if (isset($process_arr['eid_status']) && \Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        // if the item doesn't exist, return false; TODO: throw exception instead?
+        // if the item doesn't exist, return false
         if ($this->exists($eid) === false)
             return false;
 
