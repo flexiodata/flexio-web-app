@@ -170,7 +170,7 @@ class User extends ModelBase
         if (isset($process_arr['password']) && strlen($process_arr['password']) > 0)
             $process_arr['password'] = self::encodePassword($process_arr['password']);
 
-        // if the item doesn't exist, return false; TODO: throw exception instead?
+        // if the item doesn't exist, return false
         if ($this->exists($eid) === false)
             return false;
 
