@@ -27,72 +27,122 @@
             Disconnect from your {{service_name}} account
           </el-button>
         </div>
-      </div>
-      <div class="br2 bg-near-white mt3 pa3" v-if="is_google_cloud_storage && is_connected">
-        <div class="w-60-ns center">
-          <el-form
-            ref="form"
-            class="flex flex-column el-form--compact el-form__label-tiny"
-            label-position="top"
-            :model="cinfo"
-            :rules="rules"
-          >
-            <!-- google cloud storage -->
-            <el-form-item
-              label="What Google Cloud Storage bucket would you like to use?"
-              key="bucket"
-              prop="bucket"
-              :class="getClass('bucket')"
-              v-if="showInput('bucket')"
+        <div class="br2 bg-near-white mt3 pa3" v-if="is_box || is_dropbox || is_google_drive">
+          <div class="w-60-ns center">
+            <el-form
+              ref="form"
+              class="flex flex-column el-form--compact el-form__label-tiny"
+              label-position="top"
+              :model="cinfo"
+              :rules="rules"
             >
-              <el-input
-                placeholder="Bucket"
-                spellcheck="false"
-                v-model="cinfo.bucket"
-              />
-            </el-form-item>
-          </el-form>
+              <el-form-item
+                label="Base Path"
+                key="base_path"
+                prop="base_path"
+                :class="getClass('base_path')"
+                v-if="showInput('base_path')"
+              >
+                <template slot="label">
+                  Base path
+                  <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
+                <el-input
+                  placeholder="Base Path (optional)"
+                  spellcheck="false"
+                  v-model="cinfo.base_path"
+                />
+              </el-form-item>
+            </el-form>
+          </div>
         </div>
-      </div>
-      <div class="br2 bg-near-white mt3 pa3" v-if="is_github && is_connected">
-        <div class="w-60-ns center">
-          <el-form
-            ref="form"
-            class="flex flex-column el-form--compact el-form__label-tiny"
-            label-position="top"
-            :model="cinfo"
-            :rules="rules"
-          >
-            <p>What GitHub owner and repository would you like to use?</p>
+        <div class="br2 bg-near-white mt3 pa3" v-else-if="is_google_cloud_storage">
+          <div class="w-60-ns center">
+            <el-form
+              ref="form"
+              class="flex flex-column el-form--compact el-form__label-tiny"
+              label-position="top"
+              :model="cinfo"
+              :rules="rules"
+            >
+              <!-- google cloud storage -->
+              <el-form-item
+                label="What Google Cloud Storage bucket would you like to use?"
+                key="bucket"
+                prop="bucket"
+                :class="getClass('bucket')"
+                v-if="showInput('bucket')"
+              >
+                <el-input
+                  placeholder="Bucket"
+                  spellcheck="false"
+                  v-model="cinfo.bucket"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Base Path"
+                key="base_path"
+                prop="base_path"
+                :class="getClass('base_path')"
+                v-if="showInput('base_path')"
+              >
+                <template slot="label">
+                  Base path
+                  <span class="lh-1 hint--top" aria-label="An optional root directory akin to chroot (e.g. /home/myname)">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
+                <el-input
+                  placeholder="Base Path (optional)"
+                  spellcheck="false"
+                  v-model="cinfo.base_path"
+                />
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+        <div class="br2 bg-near-white mt3 pa3" v-else-if="is_github">
+          <div class="w-60-ns center">
+            <el-form
+              ref="form"
+              class="flex flex-column el-form--compact el-form__label-tiny"
+              label-position="top"
+              :model="cinfo"
+              :rules="rules"
+            >
+              <p>What GitHub owner and repository would you like to use?</p>
 
-            <!-- github -->
-            <el-form-item
-              label="Owner"
-              key="owner"
-              prop="owner"
-              :class="getClass('owner')"
-              v-if="showInput('owner')"
-            >
-              <el-input
-                placeholder="Owner"
-                spellcheck="false"
-                v-model="cinfo.owner"
-              />
-            </el-form-item>
-            <el-form-item
-              label="Repository"
-              key="repository"
-              prop="repository"
-              :class="getClass('repository')"
-              v-if="showInput('repository')"
-            >
-              <el-input
-                placeholder="Repository"
-                spellcheck="false"
-                v-model="cinfo.repository"
-              />
-            </el-form-item>
-          </el-form>
+              <!-- github -->
+              <el-form-item
+                label="Owner"
+                key="owner"
+                prop="owner"
+                :class="getClass('owner')"
+                v-if="showInput('owner')"
+              >
+                <el-input
+                  placeholder="Owner"
+                  spellcheck="false"
+                  v-model="cinfo.owner"
+                />
+              </el-form-item>
+              <el-form-item
+                label="Repository"
+                key="repository"
+                prop="repository"
+                :class="getClass('repository')"
+                v-if="showInput('repository')"
+              >
+                <el-input
+                  placeholder="Repository"
+                  spellcheck="false"
+                  v-model="cinfo.repository"
+                />
+              </el-form-item>
+            </el-form>
+          </div>
         </div>
       </div>
     </div>
@@ -377,7 +427,7 @@
               </span>
             </template>
             <el-input
-              placeholder="Base Path"
+              placeholder="Base Path (optional)"
               spellcheck="false"
               v-model="cinfo.base_path"
             />
@@ -524,6 +574,15 @@
       is_gmail() {
         return this.ctype == ctypes.CONNECTION_TYPE_GMAIL
       },
+      is_box() {
+        return this.ctype == ctypes.CONNECTION_TYPE_BOX
+      },
+      is_dropbox() {
+        return this.ctype == ctypes.CONNECTION_TYPE_DROPBOX
+      },
+      is_google_drive() {
+        return this.ctype == ctypes.CONNECTION_TYPE_GOOGLEDRIVE
+      },
       is_google_cloud_storage() {
         return this.ctype == ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE
       },
@@ -531,8 +590,7 @@
         return this.ctype == ctypes.CONNECTION_TYPE_GITHUB
       },
       is_oauth() {
-        switch (this.ctype)
-        {
+        switch (this.ctype) {
           case ctypes.CONNECTION_TYPE_BOX:
           case ctypes.CONNECTION_TYPE_DROPBOX:
           case ctypes.CONNECTION_TYPE_GITHUB:
@@ -545,33 +603,39 @@
         return false
       },
       key_values() {
-        if (this.is_google_cloud_storage) {
-          return ['bucket']
+        var ctype = this.getConnectionType()
+
+        switch (ctype) {
+          case ctypes.CONNECTION_TYPE_BOX:
+          case ctypes.CONNECTION_TYPE_DROPBOX:
+          case ctypes.CONNECTION_TYPE_GOOGLEDRIVE:
+            return ['base_path']
+          case ctypes.CONNECTION_TYPE_GITHUB:
+            return ['owner', 'repository']
+          case ctypes.CONNECTION_TYPE_GOOGLECLOUDSTORAGE:
+            return ['bucket', 'base_path']
         }
 
-        if (this.is_github) {
-          return ['owner', 'repository']
-        }
-
+        // no key values for all other oauth2 connections
         if (this.is_oauth) {
           return []
         }
 
-        switch (this.getConnectionType()) {
+        switch (ctype) {
           default:
             return ['host', 'port', 'username', 'password', 'database']
-          case ctypes.CONNECTION_TYPE_SFTP:
-            return ['host', 'port', 'username', 'password', 'base_path']
-          case ctypes.CONNECTION_TYPE_SMTP:
-            return ['email', 'username', 'password', 'host', 'port', 'security']
+          case ctypes.CONNECTION_TYPE_AMAZONS3:
+            return ['aws_key', 'aws_secret', 'bucket', 'base_path', 'region']
           case ctypes.CONNECTION_TYPE_ELASTICSEARCH:
             return ['host', 'port', 'username', 'password']
-          case ctypes.CONNECTION_TYPE_AMAZONS3:
-            return ['aws_key', 'aws_secret', 'bucket', 'region']
           case ctypes.CONNECTION_TYPE_FIREBASE:
             return ['host', 'username', 'password']
           case ctypes.CONNECTION_TYPE_PIPELINEDEALS:
             return ['token']
+          case ctypes.CONNECTION_TYPE_SFTP:
+            return ['host', 'port', 'username', 'password', 'base_path']
+          case ctypes.CONNECTION_TYPE_SMTP:
+            return ['email', 'username', 'password', 'host', 'port', 'security']
           case ctypes.CONNECTION_TYPE_TWILIO:
             return ['username', 'password']
         }
