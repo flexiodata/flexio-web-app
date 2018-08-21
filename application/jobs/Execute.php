@@ -153,15 +153,17 @@ class ExecuteProxy
 */
     }
 
-    public function getStdError() // TODO: add return type
+    public function getStdError() : ?string
     {
         $res = fread($this->pipes[2], 8192);
+        if ($res === false)
+            return null;
         if (strlen(trim($res)) == 0)
             return null;
         return $res;
     }
 
-    public static function encodepart($val) // TODO: add return type
+    public static function encodepart($val) : string
     {
         if (is_null($val))
         {
@@ -303,7 +305,6 @@ class ExecuteProxy
         return $result;
     }
 
-
     public function sendMessage($msg) : void
     {
         fwrite($this->pipes[0], self::MESSAGE_SIGNATURE . strlen($msg) . ',' . $msg);
@@ -379,7 +380,7 @@ class ScriptHost
         return $this->process;
     }
 
-    private function getInputReader($idx) // TODO: add return type
+    private function getInputReader(int $idx) // TODO: add return type
     {
         if (count($this->input_readers) != count($this->input_streams))
             $this->input_readers = array_pad($this->input_readers, count($this->input_streams), null);
@@ -398,7 +399,7 @@ class ScriptHost
         return $ret;
     }
 
-    private function getOutputWriter($idx, $reset = false) // TODO: add return type
+    private function getOutputWriter(int $idx, bool $reset = false) // TODO: add return type
     {
         if (count($this->output_writers) != count($this->output_streams))
             $this->output_writers = array_pad($this->output_writers, count($this->output_streams), null);
@@ -493,12 +494,12 @@ class ScriptHost
         $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
-    public function func_debug($message) : void
+    public function func_debug(string $message) : void
     {
         die($message);
     }
 
-    public function func_getConnections() // TODO: add return type
+    public function func_getConnections() : array
     {
         $owner_user_eid = $this->getProcess()->getOwner();
 
@@ -524,8 +525,7 @@ class ScriptHost
         return $results;
     }
 
-
-    public function func_getLocalConnections() // TODO: add return type
+    public function func_getLocalConnections() : array
     {
         $results = array();
 
@@ -538,7 +538,7 @@ class ScriptHost
         return $results;
     }
 
-    public function func_getConnectionAccessToken($identifier) // TODO: add return type
+    public function func_getConnectionAccessToken(string $identifier) // TODO: add return type
     {
         // first, check the process's local connections for a hit
         $local_connection_properties = $this->getProcess()->getLocalConnection($identifier);
@@ -570,8 +570,6 @@ class ScriptHost
         }
     }
 
-
-
     public function func_getEnv() // TODO: add return type
     {
         $res = [];
@@ -593,7 +591,7 @@ class ScriptHost
 
     public $stream_cache = array();
 
-    private function __getInputStreamInfo($name) : ?array
+    private function __getInputStreamInfo(string $name) : ?array
     {
         if ($name === '_fxstdin_')
         {
@@ -623,7 +621,7 @@ class ScriptHost
         }
     }
 
-    public function func_getInputStreamInfo($name) // TODO: add return type
+    public function func_getInputStreamInfo(string $name) : ?array
     {
         if (isset($this->input_map[$name]))
         {
@@ -638,7 +636,7 @@ class ScriptHost
         return $res;
     }
 
-    public function func_getVfsStreamHandle($path)
+    public function func_getVfsStreamHandle(string $path) : int
     {
         if (isset($this->input_map[$path]))
         {
@@ -667,7 +665,7 @@ class ScriptHost
         return $info['handle'];
     }
 
-    private function __getOutputStreamInfo($name) // TODO: add return type
+    private function __getOutputStreamInfo(string $name) : ?array
     {
         if ($name === '_fxstdout_')
         {
@@ -684,7 +682,7 @@ class ScriptHost
         }
     }
 
-    public function func_getOutputStreamInfo($name) // TODO: add return type
+    public function func_getOutputStreamInfo(string $name) : ?array
     {
         if (isset($this->output_map[$name]))
         {
@@ -751,7 +749,7 @@ class ScriptHost
                      'content_type' => $stream->getMimeType());
     }
 
-    public function func_managedCreate($stream_idx, $properties) : bool
+    public function func_managedCreate(int $stream_idx, $properties) : bool
     {
         if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
             return false;
@@ -787,7 +785,7 @@ class ScriptHost
         return true;
     }
 
-    public function func_getInputStreamStructure($stream_idx) // TODO: add return type
+    public function func_getInputStreamStructure(int $stream_idx) : array
     {
         if ($stream_idx < 0 || $stream_idx >= count($this->input_streams))
             return false;
@@ -797,7 +795,7 @@ class ScriptHost
         return $stream->getStructure()->enum();
     }
 
-    public function func_insertRow($stream_idx, $row) : void
+    public function func_insertRow(int $stream_idx, $row) : void
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
@@ -815,7 +813,7 @@ class ScriptHost
         }
     }
 
-    public function func_insertRows($stream_idx, $row) : void
+    public function func_insertRows(int $stream_idx, $row) : void
     {
         $writer = $this->getOutputWriter($stream_idx);
         if (is_null($writer))
@@ -859,7 +857,7 @@ class ScriptHost
         }
     }
 
-    public function func_createVfsStreamHandle($path)
+    public function func_createVfsStreamHandle(string $path) : int
     {
         $key = \Flexio\Base\Util::generateRandomString(20);
 
@@ -877,7 +875,7 @@ class ScriptHost
         return $info['handle'];
     }
 
-    public function func_commitVfsStreamHandle($stream_idx /* handle */)
+    public function func_commitVfsStreamHandle(int $stream_idx /* handle */)
     {
         if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
             return false;
@@ -901,7 +899,7 @@ class ScriptHost
         });
     }
 
-    public function func_read($stream_idx, $length) // TODO: add return type
+    public function func_read(int $stream_idx, $length) // TODO: add return type
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
@@ -914,7 +912,7 @@ class ScriptHost
         return new BinaryData($res);
     }
 
-    public function func_readline($stream_idx, $associative) // TODO: add return type
+    public function func_readline(int $stream_idx, bool $associative) // TODO: add return type
     {
         $reader = $this->getInputReader($stream_idx);
         if (is_null($reader))
