@@ -20,8 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: add additional tests
-
         // SETUP
         $storage_items = [
             \Flexio\Tests\Base::STORAGE_LOCAL,

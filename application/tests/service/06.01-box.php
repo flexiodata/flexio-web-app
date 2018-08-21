@@ -20,8 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: add additional tests
-
         // TEST: service creation
 
         // BEGIN TEST
