@@ -20,8 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: placeholder job to test basic functionality; fill out tests
-
         // SETUP
         $create = [
             "op" => "create",

@@ -38,8 +38,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: fix bad tests that are commented out
-
         // TEST: content parsing; empty input
 
         // BEGIN TEST

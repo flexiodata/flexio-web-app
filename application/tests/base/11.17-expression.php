@@ -159,13 +159,5 @@ class Test
         $actual = $retval;
         $expected = "c";
         \Flexio\Tests\Check::assertString('E.3', 'Expression; ExprEvaluate with row input',  $actual, $expected, $results);
-
-
-
-
-
-        // TEST: common cleaning tests
-
-        // TODO: add tests
     }
 }

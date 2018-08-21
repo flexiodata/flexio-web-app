@@ -254,7 +254,7 @@ class Check
         if (is_string($expected))
             $expected = json_decode($expected,true); // use true param to convert into array rather than object
 
-        // TODO: the arrays are different; compare the keys
+        // the arrays are different; compare the keys
         $keys_are_equal = self::arrayKeysEqual($actual, $expected);
         if ($keys_are_equal === true)
         {
