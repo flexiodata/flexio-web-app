@@ -27,21 +27,6 @@ class Task
         foreach ($tasks as $t)
         {
             $sequence[] = $t;
-/*
-// TODO: new job format has parameters on the same level as "op"; remove when tests are confirmed
-
-            $op = $t['op'] ?? false;
-            unset($t['op']);
-
-            $item = array();
-
-            if ($op !== false)
-                $item['op'] = $op;
-
-            $item['params'] = $t;
-
-            $sequence[] = $item;
-*/
         }
 
         // wrap all the tasks in a sequence operation
