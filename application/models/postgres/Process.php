@@ -271,7 +271,7 @@ class Process extends ModelBase
         // convenient
 
         // make sure we have a process
-        if ($this->processExists($process_eid) === false)
+        if ($this->exists($process_eid) === false)
             return false;
 
         if (!isset($eid))
@@ -458,23 +458,6 @@ class Process extends ModelBase
          {
              return false;
          }
-    }
-
-    private function processExists(string $eid) : bool
-    {
-        try
-        {
-            $db = $this->getDatabase();
-            $result = $db->fetchOne("select eid from tbl_process where eid= ?", $eid);
-            if ($result !== false)
-                return true;
-
-            return false;
-        }
-        catch (\Exception $e)
-        {
-            return false;
-        }
     }
 
     private function generateProcessLogEid() : string
