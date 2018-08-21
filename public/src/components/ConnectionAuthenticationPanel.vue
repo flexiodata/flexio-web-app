@@ -2,7 +2,7 @@
   <div>
     <div v-if="is_oauth">
       <div v-if="!is_connected">
-        <div class="lh-copy" v-if="">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+        <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
         <div class="mv3 tc">
           <el-button
             class="ttu b"
@@ -28,7 +28,8 @@
           </el-button>
         </div>
         <div class="br2 bg-near-white mt3 pa3" v-if="is_box || is_dropbox || is_google_drive">
-          <div class="w-60-ns center">
+          <div class="mw6 center">
+            <p>What base path would you like to use?</p>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -59,7 +60,8 @@
           </div>
         </div>
         <div class="br2 bg-near-white mt3 pa3" v-else-if="is_google_cloud_storage">
-          <div class="w-60-ns center">
+          <div class="mw6 center">
+            <p>What bucket and base path would you like to use?</p>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -104,7 +106,8 @@
           </div>
         </div>
         <div class="br2 bg-near-white mt3 pa3" v-else-if="is_github">
-          <div class="w-60-ns center">
+          <div class="mw6 center">
+            <p>What owner and repository would you like to use?</p>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -112,9 +115,6 @@
               :model="cinfo"
               :rules="rules"
             >
-              <p>What GitHub owner and repository would you like to use?</p>
-
-              <!-- github -->
               <el-form-item
                 label="Owner"
                 key="owner"
@@ -147,7 +147,7 @@
       </div>
     </div>
     <div v-else>
-      <div class="lh-copy">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
+      <div class="lh-copy f6">To use this connection, you must first connect {{service_name}} to Flex.io.</div>
       <div class="w-50-ns center mt3">
         <el-form
           ref="form"
