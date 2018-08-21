@@ -19,6 +19,7 @@ namespace Flexio\Services;
 class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 {
     private $access_token = '';
+    private $base_path = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
@@ -52,12 +53,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $file_limit = 10000; // limit return results to 10000
 
-        // strip any trailing slash
-        if (substr($path, -1) == '/')
-            $path = substr($path, 0, strlen($path)-1);
+        $remote_path = $this->getRemotePath($path);
 
         $postdata = json_encode([
-            "path" => $path,
+            "path" => $remote_path,
             "recursive" => false
         ]);
 
@@ -137,11 +136,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
+        $remote_path = $this->getRemotePath($path);
 
         $postdata = json_encode([
-            "path" => $path
+            "path" => $remote_path
         ]);
 
         $ch = curl_init();
@@ -190,9 +188,6 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function createDirectory(string $path, array $properties = []) : bool
     {
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-
         $error_summary = '';
         if (!$this->internalCreateFolder($path, $error_summary))
         {
@@ -207,10 +202,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function unlink(string $path) : bool
     {
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
+        $remote_path = $this->getRemotePath($path);
 
-        $postdata = json_encode(array('path' => $path));
+        $postdata = json_encode(array('path' => $remote_path));
 
         // download the file
         $ch = curl_init();
@@ -233,7 +227,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function internalCreateFolder(string $path, string &$error_summary) : bool
     {
-        $postdata = json_encode(array('path' => $path, 'autorename' => false));
+        $remote_path = $this->getRemotePath($path);
+
+        $postdata = json_encode(array('path' => $remote_path, 'autorename' => false));
 
         // download the file
         $ch = curl_init();
@@ -271,10 +267,9 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     {
         $path = $params['path'] ?? '';
 
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
+        $remote_path = $this->getRemotePath($path);
 
-        $dropbox_args = json_encode(array('path' => $path));
+        $dropbox_args = json_encode(array('path' => $remote_path));
 
         $http_response_code = false;
         $error_payload = '';
@@ -334,13 +329,10 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         }
 
         $path = $params['path'] ?? '';
-
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-
+        $remote_path = $this->getRemotePath($path);
 
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
-        $filename = rawurlencode($path);
+        $filename = rawurlencode($remote_path);
 
         // upload/write the file
         $ch = curl_init();
@@ -390,7 +382,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
 
         $dropbox_args = json_encode(array('cursor' => array('session_id' => $session_id, 'offset' => $offset),
-                                          'commit' => array('path' => $path, 'mode' => 'overwrite')));
+                                          'commit' => array('path' => $remote_path, 'mode' => 'overwrite')));
         curl_setopt($ch, CURLOPT_URL, "https://content.dropboxapi.com/2/files/upload_session/finish");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, '');
@@ -411,6 +403,15 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         return true;
     }
+
+
+
+    private function getRemotePath(string $path) : string
+    {
+        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+    }
+
+
 
     ////////////////////////////////////////////////////////////
     // additional functions
@@ -454,6 +455,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         {
             $object = new self;
             $object->access_token = $params['access_token'];
+            $object->base_path = $params['base_path'] ?? '';
             return $object;
         }
 
@@ -485,6 +487,7 @@ class Dropbox implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $object = new self;
             $token = $service->requestAccessToken($params['code']);
             $object->access_token = $token->getAccessToken();
+            $object->base_path = $params['base_path'] ?? '';
             return $object;
         }
 
