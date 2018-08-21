@@ -425,41 +425,6 @@ class Process extends ModelBase
         return $result;
     }
 
-    public function getOutputByHash(string $hash) // TODO: add return type
-    {
-        // don't pull results for empty string
-        if (strlen($hash) === 0)
-            return false;
-
-        try
-        {
-            // see if a process output exists for the existing hash
-            $db = $this->getDatabase();
-            $rows = $db->fetchAll("select eid as eid,
-                                          output as output
-                                   from tbl_process
-                                   where process_hash = ?
-                                  ", $hash);
-
-            // if we don't have any rows, return false
-            if (!$rows)
-                return false;
-
-            // use the first row; TODO: if we do have multiple hashes that
-            // are the same, there should only be one original from which the
-            // others are based; we may want to track this and explicitly check
-            // that we only have one original and return false otherise in order
-            // to prevent the very unlikely case of where we might find a cached
-            // result that's based on some other input and task
-            $output = $rows[0]['output'];
-            return $output;
-         }
-         catch (\Exception $e)
-         {
-             return false;
-         }
-    }
-
     private function generateProcessLogEid() : string
     {
         // note: this function generates a unique log process eid; this
