@@ -76,4 +76,43 @@ class Util
     {
         return new TableToCsvCallbackAdaptor($structure, $table_data_callback);
     }
+
+    public static function mergePath(string $basepath, string $path) : string
+    {
+        if ($path === '')
+            $path = '/';
+
+        if ($basepath === '/' || $basepath === '')
+            return rtrim($path, '/');
+
+        $parts = explode('/', trim($path,'/'));
+        $out = [];
+        foreach ($parts as $part)
+        {
+            if ($part === '.' || $part == '')
+                continue;
+            if ($part === '..')
+            {
+                array_pop($out);
+                continue;
+            }
+
+            $out[] = $part;
+        }
+
+        $path = implode('/', $out);
+
+        $res = $basepath;
+        if (substr($res, -1) == '/')
+            $res = substr($res, 0, strlen($res)-1);
+
+        if (strlen($path) == 0 || $path == '/')
+            return $res;
+
+        if ($path[0] == '/')
+            return $res . $path;
+             else
+            return $res . '/' . $path;
+    }
+
 }

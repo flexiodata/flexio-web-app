@@ -18,8 +18,6 @@ namespace Flexio\Api;
 
 class Api
 {
-    // TODO: migrate VFS api endpoints over to new user scheme?
-
     // TODO: figure out how to handle these endpoints:
     // 'POS /users/resendverify'         => '\Flexio\Api\User::resendverify'
     // 'POS /users/activate'             => '\Flexio\Api\User::activate'

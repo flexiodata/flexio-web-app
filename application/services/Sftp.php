@@ -75,47 +75,10 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return $this->authenticated;
     }
 
-    private static function mergePath(string $basepath, string $path) : string
+
+    private function getRemotePath(string $path) : string
     {
-        if ($path === '')
-            $path = '/';
-
-        if ($basepath === '')
-            return $path;
-
-        $parts = explode('/', trim($path,'/'));
-        $out = [];
-        foreach ($parts as $part)
-        {
-            if ($part === '.' || $part == '')
-                continue;
-            if ($part === '..')
-            {
-                array_pop($out);
-                continue;
-            }
-
-            $out[] = $part;
-        }
-
-        $path = implode('/', $out);
-
-        $res = $basepath;
-        if (substr($res, -1) == '/')
-            $res = substr($res, 0, strlen($res)-1);
-
-        if (strlen($path) == 0 || $path == '/')
-            return $res;
-
-        if ($path[0] == '/')
-            return $res . $path;
-             else
-            return $res . '/' . $path;
-    }
-
-    private function getFullPath(string $path) : string
-    {
-        return self::mergePath($this->base_path, $path);
+        return \Flexio\Services\Util::mergePath($this->base_path, $path);
     }
 
     ////////////////////////////////////////////////////////////
@@ -141,7 +104,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if ($list_path == '')
             $list_path = '/';
 
-        $files = $this->connection->rawlist($this->getFullPath($path));
+        $files = $this->connection->rawlist($this->getRemotePath($path));
         if (!is_array($files))
         {
             $arr = $this->getFileInfo($path);
@@ -179,7 +142,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->checkConnect())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
-        $info = $this->connection->lstat($this->getFullPath($path));
+        $info = $this->connection->lstat($this->getRemotePath($path));
 
         if (!isset($info['type']))
         {
@@ -220,10 +183,10 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->checkConnect())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
-        if ($this->connection->file_exists($this->getFullPath($path)))
+        if ($this->connection->file_exists($this->getRemotePath($path)))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED, "Object already exists");
 
-        $this->connection->mkdir($this->getFullPath($path), -1, true);
+        $this->connection->mkdir($this->getRemotePath($path), -1, true);
         return $this->isDirectory($path);
     }
 
@@ -234,11 +197,11 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         if ($this->isDirectory($path))
         {
-            return $this->connection->delete($this->getFullPath($path), true /*recursive*/);
+            return $this->connection->delete($this->getRemotePath($path), true /*recursive*/);
         }
          else
         {
-            return $this->connection->delete($this->getFullPath($path), false);
+            return $this->connection->delete($this->getRemotePath($path), false);
         }
     }
 
@@ -253,7 +216,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->checkConnect())
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::CONNECTION_FAILED);
 
-        $info = $this->connection->lstat($this->getFullPath($path));
+        $info = $this->connection->lstat($this->getRemotePath($path));
         $type = $info['type'] ?? 0;
         return ($type == 2 ? true : false);
     }
@@ -268,7 +231,7 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $fp = fopen("sftpcapture://", "wb");
 
         $path = $params['path'] ?? '';
-        $res = $this->connection->get($this->getFullPath($path), $fp);
+        $res = $this->connection->get($this->getRemotePath($path), $fp);
 
         fclose($fp);
         stream_wrapper_unregister('sftpcapture');
@@ -307,10 +270,10 @@ class Sftp implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         if (!$this->isDirectory($folder))
         {
-            $this->connection->mkdir($this->getFullPath($folder), -1, true);
+            $this->connection->mkdir($this->getRemotePath($folder), -1, true);
         }
 
-        $this->connection->put($this->getFullPath($path), function($length) use (&$callback) {
+        $this->connection->put($this->getRemotePath($path), function($length) use (&$callback) {
             $res = $callback($length);
             if ($res === false) return null; // SFTP.php expects null upon eof
             return $res;
