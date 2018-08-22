@@ -59,12 +59,15 @@
       </div>
       <multipane-resizer />
       <div
-        class="pane pa4 overflow-y-auto"
+        class="pane pa4 overflow-y-scroll"
         :style="{ flexGrow: 1 }"
       >
         <div class="mv4 center mw-doc">
-          <div class="pv4 bg-white br2 css-white-box">
-            Content
+          <div class="mv4 pv4 bg-white br2 css-white-box">
+            UI Builder
+          </div>
+          <div class="mv4 pv4 bg-white br2 css-white-box">
+            Pipe Builder
           </div>
         </div>
       </div>
