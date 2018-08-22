@@ -38,8 +38,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: fill out tests
-
         // TEST: stream parsing; empty input
 
         // BEGIN TEST

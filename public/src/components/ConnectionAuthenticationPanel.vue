@@ -15,8 +15,8 @@
       </div>
       <div v-else>
         <div class="flex flex-row items-center justify-center lh-copy">
-          <i class="el-icon-success v-mid dark-green f3 mr2"></i>
-          <span class="dn dib-ns">You are connected to {{service_name}}!</span>
+          <i class="el-icon-success v-mid dark-green f2 mr2"></i>
+          <span class="dn dib-ns f4 fw6">You are connected to {{service_name}}!</span>
         </div>
         <div class="mv3 tc">
           <el-button
@@ -27,9 +27,11 @@
             Disconnect from your {{service_name}} account
           </el-button>
         </div>
-        <div class="br2 bg-near-white mt3 pa3" v-if="is_box || is_dropbox || is_google_drive">
+        <div class="br2 bg-near-white mt4 pa3" v-if="is_box || is_dropbox || is_google_drive">
           <div class="mw6 center">
-            <p>What base path would you like to use?</p>
+            <div class="mb3 lh-copy ttu fw6 f6">
+              Additional configuration
+            </div>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -59,9 +61,11 @@
             </el-form>
           </div>
         </div>
-        <div class="br2 bg-near-white mt3 pa3" v-else-if="is_google_cloud_storage">
+        <div class="br2 bg-near-white mt4 pa3" v-else-if="is_google_cloud_storage">
           <div class="mw6 center">
-            <p>What bucket and base path would you like to use?</p>
+            <div class="mb3 lh-copy ttu fw6 f6">
+              Additional configuration
+            </div>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -71,12 +75,17 @@
             >
               <!-- google cloud storage -->
               <el-form-item
-                label="What Google Cloud Storage bucket would you like to use?"
                 key="bucket"
                 prop="bucket"
                 :class="getClass('bucket')"
                 v-if="showInput('bucket')"
               >
+                <template slot="label">
+                  Bucket
+                  <span class="lh-1 hint--top" aria-label="The Google Cloud Storage bucket name to which you wish to connect">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
                 <el-input
                   placeholder="Bucket"
                   spellcheck="false"
@@ -105,9 +114,11 @@
             </el-form>
           </div>
         </div>
-        <div class="br2 bg-near-white mt3 pa3" v-else-if="is_github">
+        <div class="br2 bg-near-white mt4 pa3" v-else-if="is_github">
           <div class="mw6 center">
-            <p>What owner and repository would you like to use?</p>
+            <div class="mb3 lh-copy ttu fw6 f6">
+              Additional configuration
+            </div>
             <el-form
               ref="form"
               class="flex flex-column el-form--compact el-form__label-tiny"
@@ -116,12 +127,17 @@
               :rules="rules"
             >
               <el-form-item
-                label="Owner"
                 key="owner"
                 prop="owner"
                 :class="getClass('owner')"
                 v-if="showInput('owner')"
               >
+                <template slot="label">
+                  Owner
+                  <span class="lh-1 hint--top" aria-label="The owner of the GitHub repository to which you wish to connect">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
                 <el-input
                   placeholder="Owner"
                   spellcheck="false"
@@ -129,12 +145,17 @@
                 />
               </el-form-item>
               <el-form-item
-                label="Repository"
                 key="repository"
                 prop="repository"
                 :class="getClass('repository')"
                 v-if="showInput('repository')"
               >
+                <template slot="label">
+                  Repository
+                  <span class="lh-1 hint--top" aria-label="The GitHub repository to which you wish to connect">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </template>
                 <el-input
                   placeholder="Repository"
                   spellcheck="false"

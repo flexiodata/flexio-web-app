@@ -37,9 +37,6 @@ class Test
 
     public function run(&$results)
     {
-        // TODO: add additional tests
-
-
         // TEST: Convert RSS; empty file
 
         // BEGIN TEST

@@ -20,8 +20,6 @@ class Test
 {
     public function run(&$results)
     {
-        // TODO: add additional tests
-
         // SETUP
         $storage_items = [
             \Flexio\Tests\Base::STORAGE_LOCAL,
@@ -56,7 +54,7 @@ class Test
             $filename = \Flexio\Base\Util::generateHandle() . '.txt';
             $filepath = $folderpath . $filename;
 
-            $vfs = new \Flexio\Services\Vfs($test_user_eid); // TODO: set VFS owner
+            $vfs = new \Flexio\Services\Vfs($test_user_eid);
             $vfs->createDirectory($folderpath);
             $vfs->createFile($filepath);
 
