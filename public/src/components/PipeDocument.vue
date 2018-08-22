@@ -10,22 +10,40 @@
   <div class="bg-nearer-white" v-else-if="is_fetched">
     <!-- runtime view -->
     <div
+      class="h-100 pa4 overflow-y-scroll"
       v-if="is_view_runtime"
     >
-      <div>Runtime view</div>
-      <el-button @click="active_view = 'build'">Set build view</el-button>
+      <!-- runtime view; run mode -->
+      <div class="mv4 center mw-doc" v-if="is_pipe_mode_run">
+        <div>Runtime view</div>
+        <el-button @click="active_view = 'build'">Set build view</el-button>
+      </div>
+
+      <!-- runtime view; build mode -->
+      <div class="mv4 center mw-doc" v-else>
+        <div class="pa4 bg-white br2 tc css-white-box">
+          <div class="dib mb3 pv1">
+            <i class="el-icon-warning v-mid f1" style="color: #ec7713"></i>
+          </div>
+          <h3 class="fw6 f3 mt0 mb4">This pipe cannot be run in a browser.</h3>
+          <p class="center lh-copy mv4 mw7">If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.</p>
+        </div>
+      </div>
     </div>
 
-    <!-- pipe run mode view -->
+    <!-- build view; run mode -->
     <div
+      class="h-100 pa4 overflow-y-scroll"
       v-else-if="is_pipe_mode_run"
     >
-      <div>Pipe run mode</div>
-      <el-button @click="is_pipe_mode_run = 'R'">Set pipe build mode</el-button>
-      <el-button @click="active_view = 'run'">Set runtime view</el-button>
+      <div class="mv4 center mw-doc">
+        <div>Pipe run mode</div>
+        <el-button @click="is_pipe_mode_run = 'R'">Set pipe build mode</el-button>
+        <el-button @click="active_view = 'run'">Set runtime view</el-button>
+      </div>
     </div>
 
-    <!-- pipe build mode view -->
+      <!-- build view; build mode -->
     <multipane
       class="vertical-panes"
       layout="vertical"
@@ -41,10 +59,14 @@
       </div>
       <multipane-resizer />
       <div
-        class="pane overflow-y-auto"
+        class="pane pa4 overflow-y-auto"
         :style="{ flexGrow: 1 }"
       >
-        <div>Content</div>
+        <div class="mv4 center mw-doc">
+          <div class="pv4 bg-white br2 css-white-box">
+            Content
+          </div>
+        </div>
       </div>
     </multipane>
   </div>
