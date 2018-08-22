@@ -23,6 +23,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $accesskey = '';
     private $secretkey = '';
     private $region = '';
+    private $base_path = '';
 
     private $aws = null;
     private $s3 = null;
@@ -34,7 +35,8 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 'region'    => array('type' => 'string', 'required' => true),
                 'bucket'    => array('type' => 'string', 'required' => true),
                 'accesskey' => array('type' => 'string', 'required' => true),
-                'secretkey' => array('type' => 'string', 'required' => true)
+                'secretkey' => array('type' => 'string', 'required' => true),
+                'base_path' => array('type' => 'string', 'required' => false),
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -47,6 +49,8 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         $service = new self;
         if ($service->initialize($region, $bucket, $accesskey, $secretkey) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
+
+        $service->base_path = $validated_params['base_path'] ?? '';
 
         return $service;
     }
@@ -93,13 +97,12 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         if (!$this->authenticated())
             return array();
 
-        $path = trim($path);
+        while (false !== strpos($path,'//'))
+            $path = str_replace('//','/',$path);
+        $path = ltrim($path,'/');
+        $orig_path = $path;
 
-        // trim off preceding slash
-        if (strlen($path) > 0 && $path[0] == '/')
-            $path = substr($path, 1);
-        if ($path === false)
-            $path = '';
+        $path = $this->getS3KeyFromPath($path);
 
         // add a trailing slash if necessary
         if (strlen($path) > 0 && substr($path, -1) != '/')
@@ -211,11 +214,25 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
         $objects = array();
 
+        $trimmed_base_path = trim($this->base_path,'/');
+
         foreach ($arr as $a)
         {
+            $name = trim($a['name'],'/');
+            $path = trim($a['path'],'/');
+
+            if (strlen($trimmed_base_path) > 0)
+            {
+                if (substr($path, 0, strlen($trimmed_base_path)) == $trimmed_base_path)
+                    $path = substr($path, strlen($trimmed_base_path));
+                if (substr($path,0,1) != '/')
+                    $path = '/' . $path;
+            }
+
+
             $objects[] = array(
-                'name' => trim($a['name'],'/'),
-                'path' => rtrim($a['path'],'/'),
+                'name' => $name,
+                'path' => $path,
                 'size' => (int)$a['size'],
                 'modified' => $a['modified'],
                 'type' => ($a['type'] == 'DIR') ? 'DIR':'FILE'
@@ -559,6 +576,7 @@ class AmazonS3 implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     private function getS3KeyFromPath(string $path) : string
     {
+        $path = $this->base_path . $path;
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
         if (substr($path, 0, 1) == '/')
