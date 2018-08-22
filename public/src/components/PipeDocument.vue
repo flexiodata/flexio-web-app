@@ -26,7 +26,7 @@
             <i class="el-icon-warning v-mid f1" style="color: #ec7713"></i>
           </div>
           <h3 class="fw6 f3 mt0 mb4">This pipe cannot be run in a browser.</h3>
-          <p class="center lh-copy mv4 mw7">If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.</p>
+          <p class="mv4 lh-copy center mw7">If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.</p>
         </div>
       </div>
     </div>

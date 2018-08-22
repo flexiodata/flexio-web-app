@@ -4,7 +4,7 @@
       <i class="el-icon-success v-mid f1" style="color: #13ce66"></i>
     </div>
     <h3 class="fw6 f3 mt0 mb4">Your pipe is working!</h3>
-    <p class="mv4">Click the button below or use the following link to run your pipe in a browser.</p>
+    <p class="mv4 lh-copy">Click the button below or use the following link to run your pipe in a browser.</p>
     <div class="mv4 mw7 center">
       <el-input
         :readonly="true"
