@@ -22,6 +22,7 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
     private $refresh_token = '';
     private $expires = 0;
     private $folders = [];
+    private $base_path = '';
 
     public static function create(array $params = null) // TODO: add return type; fix dual return types which is used for Oauth
     {
@@ -140,15 +141,15 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function internalGetFileInfo(string $path) : ?array
     {
-        if (is_null($path) || $path == '' || $path == '/')
+        $remote_path = $this->getRemotePath($path);
+
+        if (is_null($remote_path) || $remote_path == '' || $remote_path == '/')
         {
             return [ 'id' => '0', 'content_type' => \Flexio\Base\ContentType::FLEXIO_FOLDER ];
         }
 
-        $path = trim($path, '/');
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $parts = explode('/', $path);
+
+        $parts = explode('/', trim($remote_path,'/'));
         $file_limit = 1000;
 
         $current_id = 0; // stores the current folder id; 0 = root
@@ -462,6 +463,12 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
         return true;
     }
 
+    private function getRemotePath(string $path) : string
+    {
+        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+    }
+
+
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -548,6 +555,9 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
+
+                $object->base_path = $params['base_path'] ?? '';
+
                 return $object;
             }
              else
@@ -585,6 +595,8 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
                 if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
                     $object->refresh_token = $refresh_token;
 
+                $object->base_path = $params['base_path'] ?? '';
+                
                 return $object;
             }
         }
@@ -607,6 +619,8 @@ class Box implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
             $object->expires = $token->getEndOfLife();
             if (is_null($object->refresh_token)) $object->refresh_token = '';
 
+            $object->base_path = $params['base_path'] ?? '';
+            
             return $object;
         }
 

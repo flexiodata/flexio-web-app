@@ -21,6 +21,7 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
+    private $base_path = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
@@ -150,16 +151,14 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
 
     private function internalGetFileInfo(string $path)
     {
-        if (is_null($path) || $path == '' || $path == '/')
+        $remote_path = $this->getRemotePath($path);
+
+        if (is_null($remote_path) || $remote_path == '' || $remote_path == '/')
         {
             return [ 'id' => 'root', 'content_type' => 'application/vnd.google-apps.folder' ];
         }
 
-
-        $path = trim($path, '/');
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $parts = explode('/', $path);
+        $parts = explode('/', trim($remote_path,'/'));
         $file_limit = 1000;
 
         $ch = curl_init();
@@ -481,6 +480,13 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
         return ($file_size == $total_written ? true : false);
     }
 
+    private function getRemotePath(string $path) : string
+    {
+        return \Flexio\Services\Util::mergePath($this->base_path, $path);
+    }
+
+
+
     ////////////////////////////////////////////////////////////
     // additional functions
     ////////////////////////////////////////////////////////////
@@ -542,6 +548,9 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
+
+                $object->base_path = $params['base_path'] ?? '';
+
                 return $object;
             }
              else
@@ -579,6 +588,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
                 if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
                     $object->refresh_token = $refresh_token;
 
+                $object->base_path = $params['base_path'] ?? '';
+                
                 return $object;
             }
         }
@@ -600,6 +611,8 @@ class GoogleDrive implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSyste
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
             if (is_null($object->refresh_token)) $object->refresh_token = '';
+
+            $object->base_path = $params['base_path'] ?? '';
 
             return $object;
         }
