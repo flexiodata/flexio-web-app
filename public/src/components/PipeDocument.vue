@@ -8,16 +8,29 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <multipane class="vertical-panes" layout="vertical">
+    <!-- runtime mode -->
+    <div
+      v-if="is_runtime"
+    >
+      Runtime mode...
+    </div>
+
+    <!-- build mode -->
+    <multipane
+      class="vertical-panes"
+      layout="vertical"
+      v-else
+    >
       <div
-        class="pane overflow-y-scroll"
-        :style="{ minWidth: '100px', width: '25%', maxWidth: '40%' }"
+        class="pane overflow-y-auto"
+        :style="{ minWidth: '100px', width: '22%', maxWidth: '40%' }"
       >
-        <div>YAML</div>
+        <div>Code</div>
+        <el-button @click="active_view = 'run'">Change view</el-button>
       </div>
       <multipane-resizer />
       <div
-        class="pane overflow-y-scroll"
+        class="pane overflow-y-auto"
         :style="{ flexGrow: 1 }"
       >
         <div>Content</div>
@@ -31,6 +44,9 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
 
+  const PIPEDOC_VIEW_BUILD  = 'build'
+  const PIPEDOC_VIEW_RUN    = 'run'
+
   export default {
     components: {
       Multipane,
@@ -41,6 +57,15 @@
       eid: {
         handler: 'loadPipe',
         immediate: true
+      },
+      active_view: {
+        handler: 'updateRoute',
+        immediate: true
+      }
+    },
+    data() {
+      return {
+        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD)
       }
     },
     computed: {
@@ -50,6 +75,10 @@
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
+      },
+      // if we're in runtime mode or not...
+      is_runtime() {
+        return this.active_view == PIPEDOC_VIEW_RUN
       }
     },
     methods: {
@@ -65,6 +94,13 @@
             this.$store.commit('pipe/FETCHING_PIPE', false)
           }
         })
+      },
+      updateRoute() {
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        var view = this.active_view
+        _.set(new_route, 'params.view', view)
+        this.$router.replace(new_route)
       }
     }
   }
