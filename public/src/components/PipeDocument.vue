@@ -8,18 +8,33 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <div class="h-100 flex flex-row items-center justify-center">
-      Pipe Document
-    </div>
+    <multipane class="vertical-panes" layout="vertical">
+      <div
+        class="pane overflow-y-scroll"
+        :style="{ minWidth: '100px', width: '25%', maxWidth: '40%' }"
+      >
+        <div>YAML</div>
+      </div>
+      <multipane-resizer />
+      <div
+        class="pane overflow-y-scroll"
+        :style="{ flexGrow: 1 }"
+      >
+        <div>Content</div>
+      </div>
+    </multipane>
   </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
+  import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
 
   export default {
     components: {
+      Multipane,
+      MultipaneResizer,
       Spinner
     },
     watch: {
@@ -56,4 +71,10 @@
 </script>
 
 <style lang="stylus" scoped>
+  .vertical-panes
+    width: 100%
+    height: 100%
+
+  .vertical-panes > .pane ~ .pane
+    border-left: 1px solid #ddd
 </style>
