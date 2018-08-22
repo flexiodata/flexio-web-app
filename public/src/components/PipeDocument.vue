@@ -8,14 +8,24 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <!-- runtime mode -->
+    <!-- runtime view -->
     <div
-      v-if="is_runtime"
+      v-if="is_view_runtime"
     >
-      Runtime mode...
+      <div>Runtime view</div>
+      <el-button @click="active_view = 'build'">Set build view</el-button>
     </div>
 
-    <!-- build mode -->
+    <!-- pipe run mode view -->
+    <div
+      v-else-if="is_pipe_mode_run"
+    >
+      <div>Pipe run mode</div>
+      <el-button @click="is_pipe_mode_run = 'R'">Set pipe build mode</el-button>
+      <el-button @click="active_view = 'run'">Set runtime view</el-button>
+    </div>
+
+    <!-- pipe build mode view -->
     <multipane
       class="vertical-panes"
       layout="vertical"
@@ -26,7 +36,8 @@
         :style="{ minWidth: '100px', width: '22%', maxWidth: '40%' }"
       >
         <div>Code</div>
-        <el-button @click="active_view = 'run'">Change view</el-button>
+        <el-button @click="is_pipe_mode_run = 'R'">Set pipe run mode</el-button>
+        <el-button @click="active_view = 'run'">Set runtime view</el-button>
       </div>
       <multipane-resizer />
       <div
@@ -43,6 +54,10 @@
   import { mapState } from 'vuex'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
+
+  const PIPE_MODE_UNDEFINED = ''
+  const PIPE_MODE_BUILD     = 'B'
+  const PIPE_MODE_RUN       = 'R'
 
   const PIPEDOC_VIEW_BUILD  = 'build'
   const PIPEDOC_VIEW_RUN    = 'run'
@@ -70,15 +85,62 @@
     },
     computed: {
       ...mapState({
+        orig_pipe: state => state.pipe.orig_pipe,
+        edit_keys: state => state.pipe.edit_keys,
         is_fetching: state => state.pipe.fetching,
         is_fetched: state => state.pipe.fetched
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
       },
+      edit_pipe: {
+        get() {
+          var pipe = _.get(this.$store.state.pipe, 'edit_pipe', {})
+          return pipe
+        },
+        set(value) {
+          try {
+            var pipe = _.cloneDeep(value)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
+        }
+      },
       // if we're in runtime mode or not...
-      is_runtime() {
+      is_view_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN
+      },
+      // if we're in build mode, but `pipe_mode == 'R'`
+      is_pipe_mode_run: {
+        get() {
+          return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+        },
+        set() {
+          var doSet = () => {
+            var pipe_mode = this.is_pipe_mode_run ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { pipe_mode })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.saveChanges()
+          }
+
+          if (this.is_pipe_mode_run) {
+            this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
+              confirmButtonText: 'TURN PIPE OFF',
+              cancelButtonText: 'CANCEL',
+              type: 'warning'
+            }).then(() => {
+              doSet()
+            }).catch(() => {
+              // do nothing
+            })
+          } else {
+            doSet()
+          }
+        }
       }
     },
     methods: {
@@ -92,6 +154,29 @@
             this.$store.commit('pipe/FETCHING_PIPE', false)
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)
+          }
+        })
+      },
+      saveChanges() {
+        var eid = this.eid
+        var attrs = _.pick(this.edit_pipe, this.edit_keys)
+
+        // don't POST null values
+        attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
+
+        return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          if (response.ok) {
+            this.$message({
+              message: 'The pipe was updated successfully.',
+              type: 'success'
+            })
+
+            this.$store.commit('pipe/INIT_PIPE', response.body)
+          } else {
+            this.$message({
+              message: 'There was a problem updating the pipe.',
+              type: 'error'
+            })
           }
         })
       },
