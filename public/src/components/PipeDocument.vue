@@ -38,45 +38,10 @@
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 pt3 bg-white br2 tc css-white-box">
-          <div class="dib mv3 pv1">
-            <i class="el-icon-success v-mid f1" style="color: #13ce66"></i>
-          </div>
-          <h3 class="fw6 f3 mt0 mb4">Your pipe is working!</h3>
-          <p class="mv4">Click the button below or use the following link to run your pipe in a browser.</p>
-          <div class="mv4 mw7 center">
-            <el-input
-              :readonly="true"
-              v-model="runtime_link"
-            >
-              <template slot="append">
-                <el-button
-                  class="hint--top"
-                  aria-label="Copy to Clipboard"
-                  :data-clipboard-text="runtime_link"
-                ><span class="ttu b">Copy</span></el-button>
-              </template>
-            </el-input>
-          </div>
-          <div class="mv4">
-            <el-button
-              size="large"
-              type="primary"
-              class="ttu b"
-              @click="openPipeInNewWindow"
-            >
-              <span class="ph4">Run pipe</span>
-            </el-button>
-          </div>
-          <div class="bb b--black-05 mv4"></div>
-          <div class="flex flex-row items-center justify-center">
-            <span class="ttu f6 fw6">Your pipe is</span>
-            <LabelSwitch
-              class="dib ml2"
-              active-color="#13ce66"
-              v-model="is_pipe_mode_run"
-            />
-          </div>
-          <p class="mt2 moon-gray f8 i">(you may turn this pipe off to edit it)</p>
+          <PipeDocumentRunPanel
+            :eid="eid"
+            :is-mode-run.sync="is_pipe_mode_run"
+          />
         </div>
       </div>
     </div>
@@ -118,6 +83,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
+  import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
 
   const PIPE_MODE_UNDEFINED = ''
   const PIPE_MODE_BUILD     = 'B'
@@ -131,7 +97,8 @@
       Multipane,
       MultipaneResizer,
       Spinner,
-      LabelSwitch
+      LabelSwitch,
+      PipeDocumentRunPanel
     },
     watch: {
       eid: {
@@ -158,9 +125,6 @@
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
       },
-      runtime_link() {
-        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
-      },
       edit_pipe: {
         get() {
           var pipe = _.get(this.$store.state.pipe, 'edit_pipe', {})
@@ -186,16 +150,16 @@
         get() {
           return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
-        set() {
+        set(value) {
           var doSet = () => {
-            var pipe_mode = this.is_pipe_mode_run ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var pipe_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { pipe_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
 
-          if (this.is_pipe_mode_run) {
+          if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
               confirmButtonText: 'TURN PIPE OFF',
               cancelButtonText: 'CANCEL',
@@ -254,9 +218,6 @@
         var view = this.active_view
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
-      },
-      openPipeInNewWindow() {
-        window.open(this.runtime_link, '_blank')
       }
     }
   }
