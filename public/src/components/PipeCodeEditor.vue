@@ -1,7 +1,7 @@
 <template>
   <div>
     <CodeEditor
-      class="bg-white ba b--black-10"
+      :class="editorCls"
       :lang.sync="lang"
       :enable-json-view-toggle="!has_errors"
       :show-json-view-toggle="false"
@@ -43,6 +43,10 @@
       type: {
         type: String,
         default: 'sdk-js' // 'sdk-js', 'json', 'yaml'
+      },
+      editorCls: {
+        type: String,
+        default: 'bg-white ba b--black-10'
       },
       taskOnly: {
         type: Boolean,

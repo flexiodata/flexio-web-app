@@ -54,11 +54,17 @@
     >
       <div
         class="pane overflow-y-auto"
-        :style="{ minWidth: '100px', width: '22%', maxWidth: '40%' }"
+        :style="{ minWidth: '100px', width: '25%', maxWidth: '50%' }"
       >
-        <div>Code</div>
-        <el-button @click="is_pipe_mode_run = 'R'">Set pipe run mode</el-button>
-        <el-button @click="active_view = 'run'">Set runtime view</el-button>
+        <PipeCodeEditor
+          ref="code-editor"
+          type="yaml"
+          editor-cls="bg-white"
+          :task-only="false"
+          :has-errors.sync="has_errors"
+          @save="saveChanges"
+          v-model="edit_pipe"
+        />
       </div>
       <multipane-resizer />
       <div
@@ -83,6 +89,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
+  import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -98,6 +105,7 @@
       MultipaneResizer,
       Spinner,
       LabelSwitch,
+      PipeCodeEditor,
       PipeDocumentRunPanel
     },
     watch: {
