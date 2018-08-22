@@ -64,7 +64,7 @@
               class="ttu b"
               @click="openPipeInNewWindow"
             >
-              Run pipe
+              <span class="ph4">Run pipe</span>
             </el-button>
           </div>
           <div class="bb b--black-05 mv4"></div>
@@ -76,7 +76,7 @@
               v-model="is_pipe_mode_run"
             />
           </div>
-          <p class="moon-gray f8 i">(you may turn the pipe off to edit it)</p>
+          <p class="mt2 moon-gray f8 i">(you may turn this pipe off to edit it)</p>
         </div>
       </div>
     </div>
