@@ -8,19 +8,19 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <!-- runtime view -->
-    <div
-      class="h-100 pa4 overflow-y-scroll"
-      v-if="is_view_runtime"
-    >
-      <!-- runtime view; run mode -->
-      <div class="mv4 center mw-doc" v-if="is_pipe_mode_run">
-        <div>Runtime view</div>
-        <el-button @click="active_view = 'build'">Set build view</el-button>
-      </div>
+    <!-- runtime view; run mode -->
+    <BuilderDocument
+      class="h-100 overflow-y-scroll"
+      :definition="edit_pipe"
+      v-if="is_view_runtime && is_pipe_mode_run"
+    />
 
       <!-- runtime view; build mode -->
-      <div class="mv4 center mw-doc" v-else>
+    <div
+      class="h-100 pa4 overflow-y-scroll"
+      v-else-if="is_view_runtime && !is_pipe_mode_run"
+    >
+      <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
           <div class="dib mb3 pv1">
             <i class="el-icon-warning v-mid f1" style="color: #ec7713"></i>
@@ -141,6 +141,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
+  import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
@@ -160,6 +161,7 @@
       MultipaneResizer,
       Spinner,
       LabelSwitch,
+      BuilderDocument,
       BuilderList,
       PipeBuilderList,
       PipeCodeEditor,
