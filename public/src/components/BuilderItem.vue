@@ -7,7 +7,7 @@
     <div class="flex flex-row relative">
       <!-- stylized number w/o icons -->
       <div
-        class="flex-none pv4 pl1 pl3-l pr3 pr4-l"
+        class="flex-none pv4 pr3 pr4-l"
         v-if="showNumbers && !showIcons"
       >
         <div
@@ -27,7 +27,7 @@
 
       <!-- number with icons -->
       <div
-        class="flex-none pv4 mt2 tr"
+        class="flex-none pv4 pr1 pr3-l mt2 tr"
         style="width: 24px"
         v-if="showNumbers && showIcons"
       >
@@ -36,8 +36,10 @@
 
       <!-- icon -->
       <div
-        class="flex-none pv4 pl1 pl3-l pr3 pr4-l"
-        :class="builder__is_editing && !is_active ? 'o-40' : ''"
+        class="flex-none pv4 pr3 pr4-l"
+        :class="{
+          'o-40': builder__is_editing && !is_active
+        }"
         v-if="showIcons"
       >
         <ServiceIcon

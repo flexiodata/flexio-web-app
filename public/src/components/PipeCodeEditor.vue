@@ -1,7 +1,7 @@
 <template>
   <div>
     <CodeEditor
-      class="bg-white ba b--black-10"
+      :class="editorCls"
       :lang.sync="lang"
       :enable-json-view-toggle="!has_errors"
       :show-json-view-toggle="false"
@@ -9,7 +9,7 @@
       v-model="edit_code"
     />
     <transition name="el-zoom-in-top">
-      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors">{{error_msg}}</div>
+      <div class="f8 dark-red pre overflow-y-hidden overflow-x-auto code mt1" v-if="has_errors && false">{{error_msg}}</div>
     </transition>
   </div>
 </template>
@@ -43,6 +43,10 @@
       type: {
         type: String,
         default: 'sdk-js' // 'sdk-js', 'json', 'yaml'
+      },
+      editorCls: {
+        type: String,
+        default: 'bg-white ba b--black-10'
       },
       taskOnly: {
         type: Boolean,

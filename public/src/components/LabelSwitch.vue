@@ -18,8 +18,10 @@
         {{value ? activeLabel : inactiveLabel}}
       </span>
     </transition>
-    <div class="absolute no-pointer-events dib ttu b invisible" style="left: 1000px; top: 1000px" ref="active-text">{{activeLabel}}</div>
-    <div class="absolute no-pointer-events dib ttu b invisible" style="left: 1000px; top: 1000px" ref="inactive-text">{{inactiveLabel}}</div>
+    <div class="relative overflow-hidden">
+      <div class="absolute no-pointer-events dib ttu b invisible" style="left: 1000px; top: 1000px" ref="active-text">{{activeLabel}}</div>
+      <div class="absolute no-pointer-events dib ttu b invisible" style="left: 1000px; top: 1000px" ref="inactive-text">{{inactiveLabel}}</div>
+    </div>
   </div>
 </template>
 
