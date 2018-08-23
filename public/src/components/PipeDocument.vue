@@ -130,7 +130,9 @@
                     :show-delete-buttons="false"
                     @item-prev="active_ui_idx--"
                     @item-next="active_ui_idx++"
+                    v-if="edit_ui_list.length > 0"
                   />
+                  <div class="tc f5" v-else>There is no web user interface for this pipe.</div>
                 </div>
               </el-collapse-item>
               <el-collapse-item name="task-list">
