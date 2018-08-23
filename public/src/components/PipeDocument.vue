@@ -84,30 +84,52 @@
           :is-mode-run.sync="is_pipe_mode_run"
         />
         <div class="mt3 mb4 center mw-doc">
-          <div class="mb4 pa4 bg-white br2 css-white-box">
-            <BuilderList
-              builder-mode="wizard"
-              :items="edit_ui_list"
-              :container-id="doc_id"
-              :active-item-idx.sync="active_ui_idx"
-              :show-numbers="true"
-              :show-icons="false"
-              :show-insert-buttons="false"
-              :show-edit-buttons="false"
-              :show-delete-buttons="false"
-              @item-prev="active_ui_idx--"
-              @item-next="active_ui_idx++"
-            />
-          </div>
-          <div class="mv4 pa4 bg-white br2 css-white-box">
-            <PipeBuilderList
-              :container-id="doc_id"
-              :has-errors.sync="has_errors"
-              :active-item-idx.sync="active_task_idx"
-              @save="saveChanges"
-              v-model="edit_task_list"
-            />
-          </div>
+          <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
+            <el-collapse-item name="web-ui">
+              <template slot="title">
+                <div class="flex flex-row items-center">
+                  <span class="f4">Web User Interface</span>
+                  <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web user interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </div>
+              </template>
+              <div class="pa4 bg-white br2 css-white-box">
+                <BuilderList
+                  builder-mode="wizard"
+                  :items="edit_ui_list"
+                  :container-id="doc_id"
+                  :active-item-idx.sync="active_ui_idx"
+                  :show-numbers="true"
+                  :show-icons="false"
+                  :show-insert-buttons="false"
+                  :show-edit-buttons="false"
+                  :show-delete-buttons="false"
+                  @item-prev="active_ui_idx--"
+                  @item-next="active_ui_idx++"
+                />
+              </div>
+            </el-collapse-item>
+            <el-collapse-item name="task-list">
+              <template slot="title">
+                <div class="flex flex-row items-center">
+                  <span class="f4">Task List</span>
+                  <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
+                    <i class="el-icon-info blue"></i>
+                  </span>
+                </div>
+              </template>
+              <div class="pa4 bg-white br2 css-white-box">
+                <PipeBuilderList
+                  :container-id="doc_id"
+                  :has-errors.sync="has_errors"
+                  :active-item-idx.sync="active_task_idx"
+                  @save="saveChanges"
+                  v-model="edit_task_list"
+                />
+              </div>
+            </el-collapse-item>
+          </el-collapse>
         </div>
       </div>
     </multipane>
@@ -157,6 +179,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
+        active_collapse_items: ['web-ui', 'task-list'],
         active_ui_idx: 0,
         active_task_idx: -1,
         has_errors: false
