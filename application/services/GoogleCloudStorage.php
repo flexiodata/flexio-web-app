@@ -21,8 +21,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
     private $access_token = '';
     private $refresh_token = '';
     private $expires = 0;
-
-    private $bucket = 'testsuite';
+    private $bucket = '';
+    private $base_path = '';
 
     public static function create(array $params = null) // TODO: add return type; TODO: fix dual return types which is used for Oauth
     {
@@ -728,6 +728,10 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 $object->access_token = $params['access_token'];
                 $object->refresh_token = $params['refresh_token'] ?? '';
                 $object->expires = $expires;
+
+                $object->bucket = $params['bucket'] ?? '';
+                $object->base_path = $params['base_path'] ?? '';    
+
                 return $object;
             }
              else
@@ -765,6 +769,9 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 if ($object->refresh_token === null || strlen($object->refresh_token) == 0)
                     $object->refresh_token = $refresh_token;
 
+                $object->bucket = $params['bucket'] ?? '';
+                $object->base_path = $params['base_path'] ?? '';
+    
                 return $object;
             }
         }
@@ -786,6 +793,9 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $object->refresh_token = $token->getRefreshToken();
             $object->expires = $token->getEndOfLife();
             if (is_null($object->refresh_token)) $object->refresh_token = '';
+
+            $object->bucket = $params['bucket'] ?? '';
+            $object->base_path = $params['base_path'] ?? '';
 
             return $object;
         }
