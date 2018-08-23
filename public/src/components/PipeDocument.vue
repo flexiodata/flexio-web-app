@@ -73,15 +73,26 @@
         :style="{ flexGrow: 1 }"
       >
         <div class="mv4 center mw-doc">
-          <div class="mv4 pv4 bg-white br2 css-white-box">
-            UI Builder
+          <div class="mv4 pa4 bg-white br2 css-white-box">
+            <BuilderList
+              builder-mode="wizard"
+              :items="edit_ui_list"
+              :container-id="doc_id"
+              :active-item-idx.sync="active_ui_idx"
+              :show-numbers="true"
+              :show-icons="false"
+              :show-insert-buttons="false"
+              :show-edit-buttons="false"
+              :show-delete-buttons="false"
+              @item-prev="active_ui_idx--"
+              @item-next="active_ui_idx++"
+            />
           </div>
-          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
+          <div class="mv4 pa4 bg-white br2 css-white-box">
             <PipeBuilderList
-              class="mv3"
               :container-id="doc_id"
               :has-errors.sync="has_errors"
-              :active-item-idx.sync="active_item_idx"
+              :active-item-idx.sync="active_task_idx"
               @save="saveChanges"
               v-model="edit_task_list"
             />
@@ -97,6 +108,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
+  import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
@@ -114,6 +126,7 @@
       MultipaneResizer,
       Spinner,
       LabelSwitch,
+      BuilderList,
       PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentRunPanel
@@ -131,7 +144,8 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_item_idx: -1,
+        active_ui_idx: 0,
+        active_task_idx: -1,
         has_errors: false
       }
     },
@@ -162,6 +176,15 @@
           {
             // TODO: add error handling
           }
+        }
+      },
+      edit_ui_list: {
+        get() {
+          var ui = _.get(this.edit_pipe, 'ui.prompts', [])
+          return ui
+        },
+        set(value) {
+
         }
       },
       edit_task_list: {
