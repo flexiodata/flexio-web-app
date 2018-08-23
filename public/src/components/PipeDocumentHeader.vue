@@ -13,6 +13,7 @@
         plain
         class="btn-header hint--bottom"
         aria-label="Schedule"
+        v-show="false"
       >
         <i class="material-icons">date_range</i>
       </el-button>
@@ -20,6 +21,7 @@
         plain
         class="btn-header hint--bottom"
         aria-label="Deploy"
+        v-show="false"
       >
         <i class="material-icons">archive</i>
       </el-button>
@@ -27,6 +29,7 @@
         plain
         class="btn-header hint--bottom"
         aria-label="Properties"
+        v-show="false"
       >
         <i class="material-icons">edit</i>
       </el-button>
