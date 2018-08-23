@@ -52,92 +52,116 @@
       </div>
     </div>
 
-      <!-- build view; build mode -->
-    <multipane
-      class="vertical-panes"
-      layout="vertical"
-      v-else
-    >
-      <div
-        class="pane"
-        :style="{ minWidth: '100px', width: '25%', maxWidth: '50%' }"
-      >
-        <PipeCodeEditor
-          class="h-100"
-          ref="code-editor"
-          type="yaml"
-          editor-cls="bg-white h-100"
-          :task-only="false"
-          :has-errors.sync="has_errors"
-          @save="saveChanges"
-          v-model="edit_pipe"
-        />
-      </div>
-      <multipane-resizer />
-      <div
-        class="pane pa4 overflow-y-scroll"
-        :style="{ flexGrow: 1 }"
-      >
-        <PipeDocumentHeader
-          class="center mw-doc"
-          :title="title"
-          :is-mode-run.sync="is_pipe_mode_run"
-        />
-        <div class="mt3 mb4 center mw-doc">
-          <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
-            <el-collapse-item name="web-ui">
-              <template slot="title">
-                <div class="flex flex-row items-center">
-                  <span class="f4">Web User Interface</span>
-                  <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web user interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
-                    <i class="el-icon-info blue"></i>
-                  </span>
-                </div>
-              </template>
-              <div class="pa4 bg-white br2 css-white-box">
-                <BuilderList
-                  builder-mode="wizard"
-                  :items="edit_ui_list"
-                  :container-id="doc_id"
-                  :active-item-idx.sync="active_ui_idx"
-                  :show-numbers="true"
-                  :show-icons="false"
-                  :show-insert-buttons="false"
-                  :show-edit-buttons="false"
-                  :show-delete-buttons="false"
-                  @item-prev="active_ui_idx--"
-                  @item-next="active_ui_idx++"
-                />
-              </div>
-            </el-collapse-item>
-            <el-collapse-item name="task-list">
-              <template slot="title">
-                <div class="flex flex-row items-center">
-                  <span class="f4">Task List</span>
-                  <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
-                    <i class="el-icon-info blue"></i>
-                  </span>
-                </div>
-              </template>
-              <div class="pa4 bg-white br2 css-white-box">
-                <PipeBuilderList
-                  :container-id="doc_id"
-                  :has-errors.sync="has_errors"
-                  :active-item-idx.sync="active_task_idx"
-                  @save="saveChanges"
-                  v-model="edit_task_list"
-                />
-              </div>
-            </el-collapse-item>
-          </el-collapse>
+    <!-- build view; build mode -->
+    <div class="h-100" v-else>
+      <transition name="el-zoom-in-top">
+        <div
+          class="flex flex-row items-center el-alert el-alert--warning bb b--black-10"
+          v-if="is_changed || is_code_changed"
+        >
+          <div class="flex-fill">Your have made changes to this pipe. Would you like to save your changes?</div>
+          <el-button
+            class="ttu b"
+            size="small"
+            @click="cancelChanges"
+          >
+            Cancel
+          </el-button>
+          <el-button
+            class="ttu b"
+            size="small"
+            type="primary"
+            @click="saveChanges"
+          >
+            Save changes
+          </el-button>
         </div>
-      </div>
-    </multipane>
+      </transition>
+      <multipane
+        class="vertical-panes"
+        layout="vertical"
+      >
+        <div
+          class="pane"
+          :style="{ minWidth: '100px', width: '25%', maxWidth: '50%' }"
+        >
+          <PipeCodeEditor
+            class="h-100"
+            ref="code-editor"
+            type="yaml"
+            editor-cls="bg-white h-100"
+            :task-only="false"
+            :has-errors.sync="has_errors"
+            @save="saveChanges"
+            v-model="edit_pipe"
+          />
+        </div>
+        <multipane-resizer />
+        <div
+          class="pane pa4 overflow-y-scroll"
+          :style="{ flexGrow: 1 }"
+        >
+          <PipeDocumentHeader
+            class="center mw-doc"
+            :title="title"
+            :is-mode-run.sync="is_pipe_mode_run"
+          />
+          <div class="mt3 mb4 center mw-doc">
+            <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
+              <el-collapse-item name="web-ui">
+                <template slot="title">
+                  <div class="flex flex-row items-center">
+                    <span class="f4">Web User Interface</span>
+                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web user interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
+                      <i class="el-icon-info blue"></i>
+                    </span>
+                  </div>
+                </template>
+                <div class="pa4 bg-white br2 css-white-box">
+                  <BuilderList
+                    builder-mode="wizard"
+                    :items="edit_ui_list"
+                    :container-id="doc_id"
+                    :active-item-idx.sync="active_ui_idx"
+                    :show-numbers="true"
+                    :show-icons="false"
+                    :show-insert-buttons="false"
+                    :show-edit-buttons="false"
+                    :show-delete-buttons="false"
+                    @item-prev="active_ui_idx--"
+                    @item-next="active_ui_idx++"
+                  />
+                </div>
+              </el-collapse-item>
+              <el-collapse-item name="task-list">
+                <template slot="title">
+                  <div class="flex flex-row items-center">
+                    <span class="f4">Task List</span>
+                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
+                      <i class="el-icon-info blue"></i>
+                    </span>
+                  </div>
+                </template>
+                <div class="pa4 bg-white br2 css-white-box">
+                  <PipeBuilderList
+                    :container-id="doc_id"
+                    :has-errors.sync="has_errors"
+                    :active-item-idx.sync="active_task_idx"
+                    @save="saveChanges"
+                    v-model="edit_task_list"
+                  />
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+        </div>
+      </multipane>
+    </div>
   </div>
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
@@ -202,6 +226,12 @@
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
+      },
+      is_code_changed() {
+        return this.isCodeChanged()
+      },
+      is_changed() {
+        return this.isChanged()
       },
       edit_pipe: {
         get() {
@@ -279,6 +309,10 @@
       }
     },
     methods: {
+      ...mapGetters('pipe', [
+        'isCodeChanged',
+        'isChanged'
+      ]),
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
 
@@ -289,6 +323,17 @@
             this.$store.commit('pipe/FETCHING_PIPE', false)
           } else {
             this.$store.commit('pipe/FETCHING_PIPE', false)
+          }
+        })
+      },
+      cancelChanges() {
+        this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
+
+        this.$nextTick(() => {
+          // one of the few times we need to do something imperatively
+          var editor = this.$refs['code-editor']
+          if (editor && editor.revert) {
+            editor.revert()
           }
         })
       },
