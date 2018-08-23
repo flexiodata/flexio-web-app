@@ -53,13 +53,14 @@
       v-else
     >
       <div
-        class="pane overflow-y-auto"
+        class="pane"
         :style="{ minWidth: '100px', width: '25%', maxWidth: '50%' }"
       >
         <PipeCodeEditor
+          class="h-100"
           ref="code-editor"
           type="yaml"
-          editor-cls="bg-white"
+          editor-cls="bg-white h-100"
           :task-only="false"
           :has-errors.sync="has_errors"
           @save="saveChanges"
@@ -120,7 +121,8 @@
     },
     data() {
       return {
-        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD)
+        active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
+        has_errors: false
       }
     },
     computed: {
