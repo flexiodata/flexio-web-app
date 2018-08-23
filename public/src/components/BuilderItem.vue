@@ -36,8 +36,11 @@
 
       <!-- icon -->
       <div
-        class="flex-none pv4 pl1 pl3-l pr3 pr4-l"
-        :class="builder__is_editing && !is_active ? 'o-40' : ''"
+        class="flex-none pv4 pr3 pr4-l"
+        :class="{
+          'o-40': builder__is_editing && !is_active,
+          'pl1 pl3-l': showNumbers
+        }"
         v-if="showIcons"
       >
         <ServiceIcon

@@ -76,8 +76,15 @@
           <div class="mv4 pv4 bg-white br2 css-white-box">
             UI Builder
           </div>
-          <div class="mv4 pv4 bg-white br2 css-white-box">
-            Pipe Builder
+          <div class="mv4 pa4 pt3 bg-white br2 css-white-box">
+            <PipeBuilderList
+              class="mv3"
+              :container-id="doc_id"
+              :has-errors.sync="has_errors"
+              :active-item-idx.sync="active_item_idx"
+              @save="saveChanges"
+              v-model="edit_task_list"
+            />
           </div>
         </div>
       </div>
@@ -90,6 +97,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import LabelSwitch from './LabelSwitch.vue'
+  import PipeBuilderList from './PipeBuilderList.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
 
@@ -106,6 +114,7 @@
       MultipaneResizer,
       Spinner,
       LabelSwitch,
+      PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentRunPanel
     },
@@ -122,6 +131,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
+        active_item_idx: -1,
         has_errors: false
       }
     },
@@ -134,6 +144,9 @@
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
+      },
+      doc_id() {
+        return 'pipe-doc-' + this.eid
       },
       edit_pipe: {
         get() {
@@ -151,11 +164,27 @@
           }
         }
       },
-      // if we're in runtime mode or not...
+      edit_task_list: {
+        get() {
+          var task = _.get(this.edit_pipe, 'task', { op: 'sequence', items: [] })
+          return task
+        },
+        set(value) {
+          try {
+            var task = _.cloneDeep(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.assign(pipe, { task })
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
+        }
+      },
       is_view_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN
       },
-      // if we're in build mode, but `pipe_mode == 'R'`
       is_pipe_mode_run: {
         get() {
           return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
