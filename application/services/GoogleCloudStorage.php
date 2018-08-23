@@ -59,10 +59,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
         }
 
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $path = ltrim($path,'/');
-
         // list on single file
         $arr = $this->getFileInfo($path);
 
@@ -91,23 +87,7 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
             $bucket_path .= '/';
         $bucket_path_len = strlen($bucket_path);
 
-/*
-        $file_limit = 1000; // limit return results to 1000; max is 1000, default is 100
-        $folder = $path;
 
-        $fileinfo = $this->internalGetFileInfo($path);
-        if (!isset($fileinfo['id']) || !isset($fileinfo['content_type']))
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
-
-        if ($fileinfo['content_type'] != 'application/vnd.google-apps.folder')
-        {
-            $arr = $this->getFileInfo($path);
-            $arr['path'] = $path;
-            return [ $arr ];
-        }
-
-        $folderid = $fileinfo['id'];
-*/
 
         $ch = curl_init();
 
@@ -287,7 +267,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
          else
         {
-
             // perhaps it's a directory without a directory 'file'
 
             $ch = curl_init();
@@ -326,50 +305,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
             }
         }
-    }
-
-    private function internalGetFileInfo(string $path)
-    {
-        if (is_null($path) || $path == '' || $path == '/')
-        {
-            return [ 'id' => 'root', 'content_type' => 'application/vnd.google-apps.folder' ];
-        }
-
-
-        $path = trim($path, '/');
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
-        $parts = explode('/', $path);
-        $file_limit = 1000;
-
-        $ch = curl_init();
-
-        $current_id = 'root'; // stores the current folder id
-        $current_content_type = 'application/octet-stream';
-
-        foreach ($parts as $p)
-        {
-            $p = str_replace("'", "\\'", $p);
-            $p = urlencode($p); // necessary for files/folders with spaces
-            $url = "https://www.googleapis.com/drive/v3/files?pageSize=$file_limit&fields=files(id%2Ckind%2CmimeType%2CmodifiedTime%2Cname%2Csize)&q='$current_id'+in+parents+and+name='$p'+and+trashed=false";
-
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
-            curl_setopt($ch, CURLOPT_HTTPGET, true);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-            $result = curl_exec($ch);
-            $result = @json_decode($result,true);
-
-            if (!isset($result['files'][0]['id']))
-                return null;
-            $current_id = $result['files'][0]['id'];
-            $current_content_type = $result['files'][0]['mimeType'];
-        }
-
-        curl_close($ch);
-
-        return array('id' => $current_id, 'content_type' => $current_content_type);
     }
 
     public function exists(string $path) : bool
@@ -420,25 +355,8 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
     public function unlink(string $path) : bool
     {
-        if (!$this->authenticated())
-            return false;
-
-        $fileid = $this->getFileId($path);
-        if ($fileid === null || $fileid === 'root' || strlen($fileid) == 0)
-            return false;
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files/" . $fileid);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        return ($httpcode >= 200 && $httpcode <= 299) ? true : false;
+        // TODO: implement
+        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
     }
 
     public function read(array $params, callable $callback)
@@ -447,9 +365,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
 
         if (!$this->authenticated())
             return false;
-
-        while (false !== strpos($path,'//'))
-            $path = str_replace('//','/',$path);
 
         $bucket = '';
         $bucket_path = '';
@@ -515,62 +430,6 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         }
     }
 
-    private function internalCreateFolder($parentid, $name)
-    {
-        $postdata = json_encode(array(
-            'name' => $name,
-            'parents' => [ $parentid ],
-            'mimeType' => 'application/vnd.google-apps.folder'
-        ));
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/drive/v3/files");
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json', 'Authorization: Bearer '.$this->access_token]);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        $result = @json_decode($result, true);
-        $fileid = $result['id'] ?? '';
-        if (strlen($fileid) == 0)
-            return false;
-
-        return $fileid;
-    }
-
-    private function createFolderStructure($path)
-    {
-        $folder = trim($path,'/');
-        if ($folder == '')
-            return 'root';
-
-        $parts = explode('/',$folder);
-
-        $path = '';
-        $parentid = 'root';
-        for ($i = 0; $i < count($parts); ++$i)
-        {
-            $path .= ('/'.$parts[$i]);
-
-            $folderid = $this->getFileId($path);
-
-            if (!$folderid)
-            {
-                $folderid = $this->internalCreateFolder($parentid, $parts[$i]);
-                if (!$folderid)
-                    return false;
-            }
-
-            $parentid = $folderid;
-        }
-
-        return $folderid;
-    }
-
     public function write(array $params, callable $callback)
     {
         if (!$this->authenticated())
@@ -585,12 +444,10 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         while (false !== strpos($path,'//'))
             $path = str_replace('//','/',$path);
 
-
         $content_type = $params['content_type'] ?? \Flexio\Base\ContentType::STREAM;
         $content_type = "text/plain";
 
-
-
+        
         $dest_is_folder = false;
         try
         {
