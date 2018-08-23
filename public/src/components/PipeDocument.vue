@@ -36,9 +36,15 @@
       class="h-100 pa4 overflow-y-scroll"
       v-else-if="is_pipe_mode_run"
     >
-      <div class="mv4 center mw-doc">
-        <div class="pa4 pt3 bg-white br2 tc css-white-box">
+      <PipeDocumentHeader
+        class="center mw-doc"
+        :title="title"
+        :is-mode-run.sync="is_pipe_mode_run"
+      />
+      <div class="mt3 mb4 center mw-doc">
+        <div class="pa4 pt3 bg-white br2 css-white-box">
           <PipeDocumentRunPanel
+            class="tc"
             :eid="eid"
             :is-mode-run.sync="is_pipe_mode_run"
           />
@@ -72,8 +78,13 @@
         class="pane pa4 overflow-y-scroll"
         :style="{ flexGrow: 1 }"
       >
-        <div class="mv4 center mw-doc">
-          <div class="mv4 pa4 bg-white br2 css-white-box">
+        <PipeDocumentHeader
+          class="center mw-doc"
+          :title="title"
+          :is-mode-run.sync="is_pipe_mode_run"
+        />
+        <div class="mt3 mb4 center mw-doc">
+          <div class="mb4 pa4 bg-white br2 css-white-box">
             <BuilderList
               builder-mode="wizard"
               :items="edit_ui_list"
@@ -111,6 +122,7 @@
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
   import PipeCodeEditor from './PipeCodeEditor.vue'
+  import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -129,6 +141,7 @@
       BuilderList,
       PipeBuilderList,
       PipeCodeEditor,
+      PipeDocumentHeader,
       PipeDocumentRunPanel
     },
     watch: {
@@ -161,6 +174,9 @@
       },
       doc_id() {
         return 'pipe-doc-' + this.eid
+      },
+      title() {
+        return _.get(this.orig_pipe, 'name', '')
       },
       edit_pipe: {
         get() {

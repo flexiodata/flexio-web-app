@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="dib mv3 pv1">
+    <div class="db mv3 pv1">
       <i class="el-icon-success v-mid f1" style="color: #13ce66"></i>
     </div>
-    <h3 class="fw6 f3 mt0 mb4">Your pipe is working!</h3>
-    <p class="mv4 lh-copy">Click the button below or use the following link to run your pipe in a browser.</p>
+    <h3 class="fw6 f3 mt3 mb4">Your pipe is working!</h3>
     <div class="mv4 mw7 center">
+      <p class="mt0 lh-copy">Click the button below or use the following link to run your pipe in a browser.</p>
       <el-input
         :readonly="true"
         v-model="runtime_link"
@@ -18,16 +18,16 @@
           ><span class="ttu b">Copy</span></el-button>
         </template>
       </el-input>
-    </div>
-    <div class="mv4">
-      <el-button
-        size="large"
-        type="primary"
-        class="ttu b"
-        @click="openPipeInNewWindow"
-      >
-        <span class="ph4">Run pipe</span>
-      </el-button>
+      <p>
+        <el-button
+          size="large"
+          type="primary"
+          class="ttu b"
+          @click="openPipeInNewWindow"
+        >
+          <span class="ph4">Run pipe</span>
+        </el-button>
+      </p>
     </div>
     <div class="bb b--black-05 mv4"></div>
     <div class="flex flex-row items-center justify-center">
