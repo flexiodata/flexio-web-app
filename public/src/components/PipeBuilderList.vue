@@ -19,7 +19,6 @@
       v-if="prompts.length > 0"
     />
     <PipeBuilderEmptyItem
-      class="pa4 ba b--black-10 br2"
       @insert-step="insertStep"
       v-else
     />

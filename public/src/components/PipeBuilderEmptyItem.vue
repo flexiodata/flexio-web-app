@@ -1,22 +1,24 @@
 <template>
   <div>
-    <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting connection</p>
-    <ConnectionChooserList
-      class="mb2 overflow-auto"
-      layout="grid"
-      :show-status="false"
-      @item-activate="selectConnection"
-    />
-    <el-button
-      class="ttu b"
-      @click="show_connection_dialog = true"
-    >
-      Set up a new connection
-    </el-button>
-    <p class="mt4 ttu fw6 f7 moon-gray">&mdash; or start with one of the following tasks &mdash;</p>
+    <div v-if="false">
+      <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting connection</p>
+      <ConnectionChooserList
+        class="mb2 overflow-auto"
+        layout="grid"
+        :show-status="false"
+        @item-activate="selectConnection"
+      />
+      <el-button
+        class="ttu b"
+        @click="show_connection_dialog = true"
+      >
+        Set up a new connection
+      </el-button>
+      <p class="mt4 ttu fw6 f7 moon-gray">&mdash; or start with one of the following tasks &mdash;</p>
+    </div>
+    <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting task</p>
     <BuilderItemTaskChooser
       :show-title="false"
-      :ops="ops"
       @task-chooser-select-task="selectTask"
     />
 
