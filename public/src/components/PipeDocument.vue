@@ -115,7 +115,7 @@
           :style="{ flexGrow: 1 }"
         >
           <PipeDocumentHeader
-            class="nl4 nr4 pv2 ph4 relative z-7 bg-nearer-white sticky"
+            class="nl4 nr4 pv1 ph3 relative z-7 bg-nearer-white sticky"
             @run-click="runPipe"
             :title="title"
             :is-mode-run.sync="is_pipe_mode_run"
