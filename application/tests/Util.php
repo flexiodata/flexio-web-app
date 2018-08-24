@@ -297,10 +297,11 @@ EOD;
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
 
         $stream = \Flexio\Base\Stream::create();
+        $writer = $stream->getWriter();
         while (!feof($f))
         {
             $buffer = fread($f, 2048);
-            $stream->getWriter()->write($buffer);
+            $writer->write($buffer);
         }
 
         fclose($f);
