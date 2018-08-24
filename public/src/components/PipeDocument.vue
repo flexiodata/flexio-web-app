@@ -167,6 +167,38 @@
                 </div>
               </el-collapse-item>
             </el-collapse>
+            <div
+              class="mb4 pa4 pt3 bg-white br2 css-white-box"
+              v-if="!is_pipe_mode_run"
+            >
+              <!-- title bar -->
+              <div class="flex flex-row items-center pt1 pb3">
+                <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
+                <el-button
+                  class="ttu b"
+                  style="min-width: 5rem"
+                  type="primary"
+                  size="small"
+                  :disabled="is_changed || is_code_changed || has_errors || active_task_idx != -1"
+                  @click.stop="runPipe"
+                >
+                  Run
+                </el-button>
+              </div>
+
+              <!-- content -->
+              <ProcessContent
+                :process-eid="active_process_eid"
+                v-if="active_process_eid.length > 0 && has_run_once"
+              />
+              <div
+                class="bg-white ba b--black-10 pa3 f6"
+                v-else-if="!has_run_once"
+              >
+                <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
+              </div>
+            </div>
+
           </div>
         </div>
       </multipane>
@@ -176,6 +208,8 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { PROCESS_MODE_BUILD } from '../constants/process'
+
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
@@ -186,6 +220,7 @@
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
+  import ProcessContent from './ProcessContent.vue'
 
   const PIPE_MODE_UNDEFINED = ''
   const PIPE_MODE_BUILD     = 'B'
@@ -206,7 +241,8 @@
       PipeBuilderList,
       PipeCodeEditor,
       PipeDocumentHeader,
-      PipeDocumentRunPanel
+      PipeDocumentRunPanel,
+      ProcessContent
     },
     watch: {
       eid: {
@@ -224,6 +260,7 @@
         active_collapse_items: ['web-ui', 'task-list'],
         active_ui_idx: 0,
         active_task_idx: -1,
+        has_run_once: false,
         has_errors: false
       }
     },
@@ -306,6 +343,10 @@
       is_view_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN
       },
+      active_process_eid() {
+        var process = _.last(this.getActiveDocumentProcesses())
+        return _.get(process, 'eid', '')
+      },
       is_pipe_mode_run: {
         get() {
           return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
@@ -339,6 +380,9 @@
       ...mapGetters('pipe', [
         'isCodeChanged',
         'isChanged'
+      ]),
+      ...mapGetters([
+        'getActiveDocumentProcesses'
       ]),
       loadPipe() {
         this.$store.commit('pipe/FETCHING_PIPE', true)
@@ -381,6 +425,25 @@
               type: 'error'
             })
           }
+        })
+      },
+      runPipe() {
+        this.$store.track('Ran Pipe', {
+          title: this.title,
+          code: this.edit_code
+        })
+
+        var attrs = _.pick(this.edit_pipe, ['task'])
+
+        _.assign(attrs, {
+          parent_eid: this.eid,
+          process_mode: PROCESS_MODE_BUILD,
+          run: true // this will automatically run the process and start polling the process
+        })
+
+        this.$store.dispatch('createProcess', { attrs }).then(response => {
+          // we've manually run the pipe once so we can now show an output result
+          this.has_run_once = true
         })
       },
       updateRoute() {
