@@ -22,6 +22,9 @@ RUN pip3 install matplotlib
 RUN pip3 install plotly
 RUN pip3 install pandas
 
+# pdf support
+RUN pip3 install pypdf2
+
 # excel support
 RUN pip3 install openpyxl
 
