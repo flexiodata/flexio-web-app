@@ -355,14 +355,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-
-        this.$nextTick(() => {
-          // one of the few times we need to do something imperatively
-          var editor = this.$refs['code-editor']
-          if (editor && editor.revert) {
-            editor.revert()
-          }
-        })
+        this.revertCodeEditor()
       },
       saveChanges() {
         var eid = this.eid
@@ -372,6 +365,8 @@
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
         return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
+          this.active_task_idx = -1
+
           if (response.ok) {
             this.$message({
               message: 'The pipe was updated successfully.',
@@ -379,6 +374,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
+            this.revertCodeEditor()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -393,6 +389,15 @@
         var view = this.active_view
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
+      },
+      revertCodeEditor() {
+        this.$nextTick(() => {
+          // one of the few times we need to do something imperatively
+          var editor = this.$refs['code-editor']
+          if (editor && editor.revert) {
+            editor.revert()
+          }
+        })
       }
     }
   }
