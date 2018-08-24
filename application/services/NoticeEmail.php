@@ -178,7 +178,7 @@ class NoticeEmail
             return false;
 
         // if we don't have a reply-to address, then supply it
-        $replyto_addresses - $this->getReplyTo();
+        $replyto_addresses = $this->getReplyTo();
         if (count($replyto_addresses) === 0)
             $this->setReplyTo([self::EMAIL_ADDRESS_NO_REPLY]);
 
