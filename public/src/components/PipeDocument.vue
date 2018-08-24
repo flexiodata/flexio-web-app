@@ -69,7 +69,7 @@
       <transition name="el-zoom-in-top">
         <div
           class="flex flex-row items-center el-alert el-alert--warning bb b--black-10"
-          v-if="is_changed || is_code_changed"
+          v-if="show_save_cancel"
         >
           <div class="flex-fill">Your have made changes to this pipe. Would you like to save your changes?</div>
           <el-button
@@ -248,6 +248,17 @@
       },
       is_changed() {
         return this.isChanged()
+      },
+      show_save_cancel() {
+        var orig_mode = _.get(this.orig_pipe, 'pipe_mode')
+        var edit_mode = _.get(this.edit_pipe, 'pipe_mode')
+
+        // we're entering run mode, don't show the save/cancel banner
+        if (orig_mode == PIPE_MODE_BUILD && edit_mode == PIPE_MODE_RUN) {
+          return false
+        }
+
+        return this.is_changed || this.is_code_changed
       },
       edit_pipe: {
         get() {
