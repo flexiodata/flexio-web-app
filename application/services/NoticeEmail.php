@@ -215,7 +215,7 @@ class NoticeEmail
             'Source' => implode(',', $this->getFrom()),
             'Destination' => $destination,
             'Message' => $message,
-            'ReplyToAddresses' => implode(',', $this->getReplyTo())
+            'ReplyToAddresses' => $replyto_addresses
             //'ReturnPath' => array()
         );
 
