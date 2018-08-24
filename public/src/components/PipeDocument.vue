@@ -116,7 +116,7 @@
         >
           <PipeDocumentHeader
             class="nl4 nr4 pv1 ph3 relative z-7 bg-nearer-white sticky"
-            @run-click="runPipe"
+            @run-click="testPipe"
             :title="title"
             :is-mode-run.sync="is_pipe_mode_run"
           />
@@ -135,7 +135,7 @@
                   <BuilderList
                     builder-mode="wizard"
                     :items="edit_ui_list"
-                    :container-id="doc_id"
+                    :container-id="content_pane_id"
                     :active-item-idx.sync="active_ui_idx"
                     :show-numbers="true"
                     :show-icons="false"
@@ -162,7 +162,7 @@
                 </template>
                 <div class="pa4 bg-white br2 css-white-box">
                   <PipeBuilderList
-                    :container-id="doc_id"
+                    :container-id="content_pane_id"
                     :has-errors.sync="has_errors"
                     :active-item-idx.sync="active_task_idx"
                     @save="saveChanges"
@@ -170,7 +170,7 @@
                   />
                 </div>
               </el-collapse-item>
-              <el-collapse-item name="output">
+              <el-collapse-item name="output" :id="output_item_id">
                 <template slot="title">
                   <div class="flex flex-row items-center">
                     <span class="f4">Output</span>
@@ -264,6 +264,7 @@
         active_ui_idx: 0,
         active_task_idx: -1,
         content_pane_id: _.uniqueId('pane-'),
+        output_item_id: _.uniqueId('item-'),
         has_run_once: false,
         has_errors: false
       }
@@ -277,9 +278,6 @@
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
-      },
-      doc_id() {
-        return 'pipe-doc-' + this.eid
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
@@ -431,7 +429,7 @@
           }
         })
       },
-      runPipe() {
+      testPipe() {
         this.$store.track('Ran Pipe', {
           title: this.title,
           code: this.edit_code
@@ -449,6 +447,8 @@
           // we've manually run the pipe once so we can now show an output result
           this.has_run_once = true
         })
+
+        this.scrollToItem(this.output_item_id)
       },
       updateRoute() {
         // update the route
@@ -474,6 +474,17 @@
             stickyBitStickyOffset: 0
           })
         }, 100)
+      },
+      scrollToItem(item_id) {
+        if (_.isString(item_id)) {
+          setTimeout(() => {
+            this.$scrollTo('#'+item_id, {
+                container: '#'+this.content_pane_id,
+                duration: 400,
+                offset: -32
+            })
+          }, 10)
+        }
       }
     }
   }
