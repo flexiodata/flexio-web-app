@@ -8,25 +8,37 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
+    <!-- runtime view; run mode; no ui steps -->
+    <div
+      class="h-100 pa4 overflow-y-scroll"
+      v-if="is_view_runtime && is_pipe_mode_run && edit_ui_list.length == 0"
+    >
+      <div class="mv4 center mw-doc">
+        <div class="pa4 bg-white br2 tc css-white-box">
+          <IconMessage title="This pipe cannot be run in a browser.">
+            If you are the owner of this pipe, please set up a web user interface. If this pipe was shared with you, please contact the person who shared it with you to have it set up for your use.
+          </IconMessage>
+        </div>
+      </div>
+    </div>
+
     <!-- runtime view; run mode -->
     <BuilderDocument
       class="h-100 overflow-y-scroll"
       :definition="edit_pipe"
-      v-if="is_view_runtime && is_pipe_mode_run"
+      v-else-if="is_view_runtime && is_pipe_mode_run"
     />
 
-      <!-- runtime view; build mode -->
+    <!-- runtime view; build mode -->
     <div
       class="h-100 pa4 overflow-y-scroll"
       v-else-if="is_view_runtime && !is_pipe_mode_run"
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
-          <div class="dib mb3 pv1">
-            <i class="el-icon-warning v-mid f1" style="color: #ec7713"></i>
-          </div>
-          <h3 class="fw6 f3 mt0 mb4">This pipe cannot be run in a browser.</h3>
-          <p class="mv4 lh-copy center mw7">If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.</p>
+          <IconMessage title="This pipe cannot be run in a browser.">
+            If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.
+          </IconMessage>
         </div>
       </div>
     </div>
@@ -166,6 +178,7 @@
   import { mapState, mapGetters } from 'vuex'
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
+  import IconMessage from './IconMessage.vue'
   import LabelSwitch from './LabelSwitch.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
@@ -186,6 +199,7 @@
       Multipane,
       MultipaneResizer,
       Spinner,
+      IconMessage,
       LabelSwitch,
       BuilderDocument,
       BuilderList,
