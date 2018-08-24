@@ -33,14 +33,23 @@
       >
         <i class="material-icons">edit</i>
       </el-button>
-      <div class="pv2">
-        <LabelSwitch
-          class="ml2 hint--bottom"
-          active-color="#13ce66"
-          aria-label="Turn pipe on"
-          v-model="is_pipe_mode_run"
-        />
-      </div>
+      <LabelSwitch
+        class="ml2 hint--bottom"
+        active-color="#13ce66"
+        aria-label="Turn pipe on"
+        v-model="is_pipe_mode_run"
+      />
+      <el-button
+        class="ttu b ml3"
+        style="min-width: 5rem; margin-left: 1rem"
+        type="primary"
+        size="small"
+        :disabled="!allowRun"
+        @click="$emit('run-click')"
+        v-if="!isModeRun"
+      >
+        Test
+      </el-button>
     </div>
   </div>
 </template>
@@ -57,6 +66,10 @@
       isModeRun: {
         type: Boolean,
         required: true
+      },
+      allowRun: {
+        type: Boolean,
+        default: true
       }
     },
     components: {
