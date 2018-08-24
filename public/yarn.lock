@@ -6573,6 +6573,10 @@ vue-loader@^13.6.0:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
 
+vue-multipane@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/vue-multipane/-/vue-multipane-0.9.5.tgz#10ddaf9092e0a9e761edfd0d1f1db8bbb54b3e9c"
+
 vue-resize-directive@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/vue-resize-directive/-/vue-resize-directive-1.0.0.tgz#e1197131390ac8d5e20116198679b06eb6cec985"

@@ -13,6 +13,25 @@
 .CodeMirror-empty
   color: #999
 
+// CodeMirror lint styles
+.CodeMirror-lint-tooltip
+  background-color: #ffd
+  border: 0
+  box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.2)
+  border-radius: 0; //3px?
+  color: #222
+  font-family: monospace
+  font-size: 13px
+  overflow: hidden
+  padding: 6px
+  position: fixed
+  white-space: pre
+  white-space: pre-wrap
+  z-index: 100
+  max-width: 400px
+  opacity: 0
+  transition: opacity .4s
+
 /*
 // -- CodeMirror autocomplete dropdown styles --
 
@@ -45,26 +64,6 @@
 
   &:hover
     background-color: rgba(0, 0, 0, 0.225)
-
-// -- CodeMirror command bar lint styles --
-
-.CodeMirror-lint-tooltip
-  background-color: #ffd
-  border: 0
-  box-shadow: 1px 2px 4px -1px rgba(0, 0, 0, 0.125), -1px 2px 4px -1px rgba(0, 0, 0, 0.125), 0 0 1px rgba(0, 0, 0, 0.25)
-  border-radius: 0; //3px?
-  color: black
-  font-family: monospace
-  font-size: 13px
-  overflow: hidden
-  padding: 3px 4px
-  position: fixed
-  white-space: pre
-  white-space: pre-wrap
-  z-index: 100
-  max-width: 600px
-  opacity: 0
-  transition: opacity .4s
 
 // -- CodeMirror command bar theme --
 

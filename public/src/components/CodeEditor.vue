@@ -29,13 +29,19 @@
 <script>
   // vue-codemirror includes
   import 'codemirror/lib/codemirror.css'
+  import 'codemirror/addon/lint/lint.css'
   import { codemirror } from 'vue-codemirror'
   import {} from 'codemirror/mode/javascript/javascript'
   import {} from 'codemirror/mode/yaml/yaml'
   import {} from 'codemirror/mode/python/python'
+  import {} from 'codemirror/addon/lint/lint'
+  import {} from 'codemirror/addon/lint/json-lint'
+  import {} from 'codemirror/addon/lint/yaml-lint'
   //import {} from 'codemirror/mode/css/css'
   //import {} from 'codemirror/mode/xml/xml'
   //import {} from 'codemirror/mode/htmlmixed/htmlmixed'
+
+  import yaml from 'js-yaml'
 
   export default {
     inheritAttrs: false,
@@ -47,6 +53,10 @@
       lang: {
         type: String,
         default: 'javascript'
+      },
+      lint: {
+        type: Boolean,
+        default: true
       },
       transpose: {
         type: String,
@@ -116,6 +126,8 @@
           */
           lineNumbers: true,
           mode: this.mode,
+          gutters: this.lint ? ['CodeMirror-lint-markers'] : [],
+          lint: this.lint,
           extraKeys: {
             // indent with 4 spaces for python and 2 spaces for all other languages
             Tab: function(cm) {
@@ -129,6 +141,12 @@
       },
       opts() {
         return _.assign({}, this.default_opts, this.options)
+      }
+    },
+    created() {
+      // required for linting
+      if (!window.jsyaml) {
+        window.jsyaml = yaml
       }
     },
     mounted() {
