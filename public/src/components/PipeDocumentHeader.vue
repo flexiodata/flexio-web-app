@@ -12,35 +12,28 @@
       <el-button
         plain
         class="btn-header hint--bottom"
+        style="margin-left: 1rem"
         aria-label="Schedule"
-        v-show="false"
+        v-if="false"
       >
         <i class="material-icons">date_range</i>
       </el-button>
       <el-button
         plain
         class="btn-header hint--bottom"
-        aria-label="Deploy"
-        v-show="false"
-      >
-        <i class="material-icons">archive</i>
-      </el-button>
-      <el-button
-        plain
-        class="btn-header hint--bottom"
         aria-label="Properties"
-        v-show="false"
+        v-if="false"
       >
         <i class="material-icons">edit</i>
       </el-button>
       <LabelSwitch
-        class="ml2 hint--bottom"
+        class="hint--bottom"
         active-color="#13ce66"
         aria-label="Turn pipe on"
         v-model="is_pipe_mode_run"
       />
       <el-button
-        class="ttu b ml3"
+        class="ttu b"
         style="min-width: 5rem; margin-left: 1rem"
         type="primary"
         size="small"
@@ -50,6 +43,22 @@
       >
         Test
       </el-button>
+      <el-dropdown
+        class="ml3"
+        trigger="click"
+        @command="onCommand"
+        v-if="false"
+      >
+        <span class="el-dropdown-link dib pointer hover-blue">
+          <i class="material-icons">more_vert</i>
+        </span>
+        <el-dropdown-menu style="min-width: 10rem" slot="dropdown">
+          <el-dropdown-item class="flex flex-row items-center ph2" command="schedule"><i class="material-icons mr3">date_range</i> Schedule</el-dropdown-item>
+          <el-dropdown-item class="flex flex-row items-center ph2" command="deploy"><i class="material-icons mr3">archive</i> Deploy</el-dropdown-item>
+          <el-dropdown-item divided></el-dropdown-item>
+          <el-dropdown-item class="flex flex-row items-center ph2" command="properties"><i class="material-icons mr3">edit</i> Properties</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </div>
   </div>
 </template>
