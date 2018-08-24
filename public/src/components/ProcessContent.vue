@@ -14,7 +14,7 @@
         :height="300"
         :stream-eid="stream_eid"
       />
-      <div class="mt4 mb2 tc">
+      <div class="mt3 tc">
         <a
           class="el-button el-button--primary el-button--large ttu b no-underline"
           :href="download_url"

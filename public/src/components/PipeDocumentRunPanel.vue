@@ -20,7 +20,6 @@
       </el-input>
       <p>
         <el-button
-          size="large"
           type="primary"
           class="ttu b"
           @click="openPipeInNewWindow"

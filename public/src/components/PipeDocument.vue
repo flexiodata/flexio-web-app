@@ -16,7 +16,7 @@
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
           <IconMessage title="This pipe cannot be run in a browser.">
-            If you are the owner of this pipe, please set up a web user interface. If this pipe was shared with you, please contact the person who shared it with you to have it set up for your use.
+            If you are the owner of this pipe, please set up a web interface. If this pipe was shared with you, please contact the person who shared it with you to have it set up for your use.
           </IconMessage>
         </div>
       </div>
@@ -45,7 +45,7 @@
 
     <!-- build view; run mode -->
     <div
-      class="h-100 pa4 overflow-y-scroll"
+      class="h-100 pa4"
       v-else-if="is_pipe_mode_run"
     >
       <PipeDocumentHeader
@@ -110,21 +110,23 @@
         </div>
         <multipane-resizer />
         <div
-          class="pane pa4 overflow-y-scroll"
+          class="pane pa4 pt0 overflow-y-scroll"
+          :id="content_pane_id"
           :style="{ flexGrow: 1 }"
         >
           <PipeDocumentHeader
-            class="center mw-doc"
+            class="nl4 nr4 pv2 ph4 relative z-7 bg-nearer-white sticky"
+            @run-click="runPipe"
             :title="title"
             :is-mode-run.sync="is_pipe_mode_run"
           />
-          <div class="mt3 mb4 center mw-doc">
+          <div class="mv4 center mw-doc">
             <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
               <el-collapse-item name="web-ui">
                 <template slot="title">
                   <div class="flex flex-row items-center">
-                    <span class="f4">Web User Interface</span>
-                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web user interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
+                    <span class="f4">Web Interface</span>
+                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
                       <i class="el-icon-info blue"></i>
                     </span>
                   </div>
@@ -144,7 +146,9 @@
                     @item-next="active_ui_idx++"
                     v-if="edit_ui_list.length > 0"
                   />
-                  <div class="tc f5" v-else>There is no web user interface for this pipe.</div>
+                  <div class="tc f6" v-else>
+                    <em>There is no web interface for this pipe.</em>
+                  </div>
                 </div>
               </el-collapse-item>
               <el-collapse-item name="task-list">
@@ -166,39 +170,29 @@
                   />
                 </div>
               </el-collapse-item>
+              <el-collapse-item name="output">
+                <template slot="title">
+                  <div class="flex flex-row items-center">
+                    <span class="f4">Output</span>
+                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after a test run.">
+                      <i class="el-icon-info blue"></i>
+                    </span>
+                  </div>
+                </template>
+                <div class="pa4 bg-white br2 css-white-box">
+                  <ProcessContent
+                    :process-eid="active_process_eid"
+                    v-if="active_process_eid.length > 0 && has_run_once"
+                  />
+                  <div
+                    class="tc f6"
+                    v-else-if="!has_run_once"
+                  >
+                    <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
+                  </div>
+                </div>
+              </el-collapse-item>
             </el-collapse>
-            <div
-              class="mb4 pa4 pt3 bg-white br2 css-white-box"
-              v-if="!is_pipe_mode_run"
-            >
-              <!-- title bar -->
-              <div class="flex flex-row items-center pt1 pb3">
-                <h3 class="flex-fill mv0 mr3 fw6 f4">Output</h3>
-                <el-button
-                  class="ttu b"
-                  style="min-width: 5rem"
-                  type="primary"
-                  size="small"
-                  :disabled="is_changed || is_code_changed || has_errors || active_task_idx != -1"
-                  @click.stop="runPipe"
-                >
-                  Run
-                </el-button>
-              </div>
-
-              <!-- content -->
-              <ProcessContent
-                :process-eid="active_process_eid"
-                v-if="active_process_eid.length > 0 && has_run_once"
-              />
-              <div
-                class="bg-white ba b--black-10 pa3 f6"
-                v-else-if="!has_run_once"
-              >
-                <em>Configure your pipe in the configuration panel, then click the 'Run' button above to see a preview of the pipe's output.</em>
-              </div>
-            </div>
-
           </div>
         </div>
       </multipane>
@@ -207,6 +201,7 @@
 </template>
 
 <script>
+  import stickybits from 'stickybits'
   import { mapState, mapGetters } from 'vuex'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
@@ -252,14 +247,23 @@
       active_view: {
         handler: 'updateRoute',
         immediate: true
+      },
+      is_pipe_mode_run: {
+        handler: 'initSticky',
+        immediate: true
+      },
+      is_fetched: {
+        handler: 'initSticky',
+        immediate: true
       }
     },
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['web-ui', 'task-list'],
+        active_collapse_items: ['web-ui', 'task-list', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
+        content_pane_id: _.uniqueId('pane-'),
         has_run_once: false,
         has_errors: false
       }
@@ -461,6 +465,15 @@
             editor.revert()
           }
         })
+      },
+      initSticky() {
+        setTimeout(() => {
+          stickybits('.sticky', {
+            scrollEl: '#' + this.content_pane_id,
+            useStickyClasses: true,
+            stickyBitStickyOffset: 0
+          })
+        }, 100)
       }
     }
   }
@@ -473,4 +486,12 @@
 
   .vertical-panes > .pane ~ .pane
     border-left: 1px solid #ddd
+
+  .sticky
+    box-shadow: 0 1px 0 0 rgba(0,0,0,0.05)
+    transition: all 0.15s ease
+
+  .sticky.js-is-sticky
+  .sticky.js-is-stuck
+    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2)
 </style>
