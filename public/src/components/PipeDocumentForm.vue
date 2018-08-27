@@ -1,123 +1,136 @@
 <template>
-  <el-form
-    ref="form"
-    class="el-form--cozy"
-    label-width="9rem"
-    :model="form_values"
-    :rules="rules"
-    v-if="form_values"
-  >
-    <el-form-item
-      key="eid"
-      label="ID"
-      prop="eid"
+  <div>
+    <div class="w-100 mb4" v-if="showHeader">
+      <div class="flex flex-row items-center" v-if="showHeader">
+        <span class="flex-fill f4">Properties for '{{orig_pipe.name}}'</span>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
+      </div>
+    </div>
+
+    <el-form
+      ref="form"
+      class="el-form--cozy"
+      label-width="9rem"
+      :model="form_values"
+      :rules="rules"
+      v-if="form_values"
     >
-      <el-input
-        style="max-width: 16rem"
-        :disabled="true"
-        v-model="form_values.eid"
-      />
-    </el-form-item>
-    <el-form-item
-      key="name"
-      label="Name"
-      prop="name"
-    >
-      <el-input
-        placeholder="Enter name"
-        style="max-width: 36rem"
-        :autofocus="true"
-        v-model="form_values.name"
-      />
-    </el-form-item>
-    <el-form-item
-      key="alias"
-      label="API Endpoint"
-      prop="alias"
-    >
-      <el-input
-        placeholder="Enter alias"
-        class="mr1"
-        style="max-width: 36rem"
-        v-model="form_values.alias"
+      <el-form-item
+        key="name"
+        label="Name"
+        prop="name"
       >
-        <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
-        <template slot="append">
+        <el-input
+          placeholder="Enter name"
+          style="max-width: 36rem"
+          :autofocus="true"
+          v-model="form_values.name"
+        />
+      </el-form-item>
+      <el-form-item
+        key="alias"
+        label="API Endpoint"
+        prop="alias"
+      >
+        <el-input
+          placeholder="Enter alias"
+          class="mr1"
+          style="max-width: 36rem"
+          v-model="form_values.alias"
+        >
+          <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
+          <template slot="append">
+            <el-button
+              class="hint--top"
+              aria-label="Copy to Clipboard"
+              :data-clipboard-text="path"
+            ><span class="ttu b">Copy</span></el-button>
+          </template>
+        </el-input>
+        <span>
           <el-button
-            class="hint--top"
-            aria-label="Copy to Clipboard"
-            :data-clipboard-text="path"
-          ><span class="ttu b">Copy</span></el-button>
-        </template>
-      </el-input>
-      <span>
-        <el-button
-          type="text"
-          @click="show_pipe_deploy_dialog = true"
-        >
-          How do I deploy this pipe?
-        </el-button>
-      </span>
-    </el-form-item>
-    <el-form-item
-      label="Scheduled"
-    >
-      <el-switch
-        v-model="is_scheduled"
-      />
-      <span class="ml1">
-        <el-button
-          type="text"
-          @click="show_pipe_schedule_dialog = true"
-        >
-          Options...
-        </el-button>
-      </span>
-    </el-form-item>
-    <el-form-item
-      key="description"
-      label="Description"
-      prop="description"
-    >
-      <el-input
-        type="textarea"
-        placeholder="Enter description"
-        :rows="3"
-        v-model="form_values.description"
-      />
-    </el-form-item>
+            type="text"
+            @click="show_pipe_deploy_dialog = true"
+          >
+            How do I deploy this pipe?
+          </el-button>
+        </span>
+      </el-form-item>
+      <el-form-item
+        label="Scheduled"
+      >
+        <el-switch
+          v-model="is_scheduled"
+        />
+        <span class="ml1">
+          <el-button
+            type="text"
+            @click="show_pipe_schedule_dialog = true"
+          >
+            Options...
+          </el-button>
+        </span>
+      </el-form-item>
+      <el-form-item
+        key="description"
+        label="Description"
+        prop="description"
+      >
+        <el-input
+          type="textarea"
+          placeholder="Enter description"
+          :rows="3"
+          v-model="form_values.description"
+        />
+      </el-form-item>
 
-    <!-- pipe schedule dialog -->
-    <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
-      top="8vh"
-      :modal-append-to-body="false"
-      :visible.sync="show_pipe_schedule_dialog"
-    >
-      <PipeSchedulePanel
-        :pipe="edit_pipe"
-        @close="show_pipe_schedule_dialog = false"
-        @cancel="show_pipe_schedule_dialog = false"
-        @submit="updatePipeSchedule"
-      />
-    </el-dialog>
+      <!-- pipe schedule dialog -->
+      <el-dialog
+        custom-class="el-dialog--no-header el-dialog--no-footer"
+        width="42rem"
+        top="8vh"
+        :modal-append-to-body="false"
+        :visible.sync="show_pipe_schedule_dialog"
+      >
+        <PipeSchedulePanel
+          :pipe="edit_pipe"
+          @close="show_pipe_schedule_dialog = false"
+          @cancel="show_pipe_schedule_dialog = false"
+          @submit="updatePipeSchedule"
+        />
+      </el-dialog>
 
-    <!-- pipe deploy dialog -->
-    <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="56rem"
-      top="8vh"
-      :modal-append-to-body="false"
-      :visible.sync="show_pipe_deploy_dialog"
-    >
-      <PipeDeployPanel
-        :pipe="orig_pipe"
-        @close="show_pipe_deploy_dialog = false"
-      />
-    </el-dialog>
+      <!-- pipe deploy dialog -->
+      <el-dialog
+        custom-class="el-dialog--no-header el-dialog--no-footer"
+        width="56rem"
+        top="8vh"
+        :modal-append-to-body="false"
+        :visible.sync="show_pipe_deploy_dialog"
+      >
+        <PipeDeployPanel
+          :pipe="orig_pipe"
+          @close="show_pipe_deploy_dialog = false"
+        />
+      </el-dialog>
+    </el-form>
 
-  </el-form>
+    <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
+      <el-button
+        class="ttu b"
+        @click="$emit('cancel')"
+      >
+        Cancel
+      </el-button>
+      <el-button
+        class="ttu b"
+        type="primary"
+        @click="submit"
+      >
+        Save changes
+      </el-button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -129,6 +142,20 @@
   import Validation from './mixins/validation'
 
   export default {
+    props: {
+      'title': {
+        type: String,
+        default: ''
+      },
+      'show-header': {
+        type: Boolean,
+        default: true
+      },
+      'show-footer': {
+        type: Boolean,
+        default: true
+      }
+    },
     mixins: [Validation],
     components: {
       PipeSchedulePanel,
@@ -189,6 +216,9 @@
       this.resetForm(this.orig_pipe)
     },
     methods: {
+      submit() {
+        this.$emit('submit', this.edit_pipe)
+      },
       validate(callback) {
         this.$refs.form.validate(callback)
       },

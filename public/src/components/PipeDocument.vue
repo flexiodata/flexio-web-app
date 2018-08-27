@@ -116,6 +116,8 @@
         >
           <PipeDocumentHeader
             class="nl4 nr4 pv1 ph3 relative z-7 bg-nearer-white sticky"
+            @schedule-click="show_pipe_schedule_dialog = true"
+            @properties-click="show_pipe_properties_dialog = true"
             @run-click="testPipe"
             :title="title"
             :is-mode-run.sync="is_pipe_mode_run"
@@ -197,6 +199,38 @@
         </div>
       </multipane>
     </div>
+
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="42rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_properties_dialog"
+    >
+      <PipeDocumentForm
+        ref="pipe-document-form"
+        @close="revertProperties"
+        @cancel="revertProperties"
+        @submit="saveProperties"
+      />
+    </el-dialog>
+
+    <!-- pipe schedule dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="42rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :visible.sync="show_pipe_schedule_dialog"
+    >
+      <PipeSchedulePanel
+        :pipe="edit_pipe"
+        @close="show_pipe_schedule_dialog = false"
+        @cancel="show_pipe_schedule_dialog = false"
+        @submit="updatePipeSchedule"
+      />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -215,6 +249,8 @@
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
+  import PipeSchedulePanel from './PipeSchedulePanel.vue'
+  import PipeDocumentForm from './PipeDocumentForm.vue'
   import ProcessContent from './ProcessContent.vue'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -237,6 +273,8 @@
       PipeCodeEditor,
       PipeDocumentHeader,
       PipeDocumentRunPanel,
+      PipeSchedulePanel,
+      PipeDocumentForm,
       ProcessContent
     },
     watch: {
@@ -265,6 +303,8 @@
         active_task_idx: -1,
         content_pane_id: _.uniqueId('pane-'),
         output_item_id: _.uniqueId('item-'),
+        show_pipe_schedule_dialog: false,
+        show_pipe_properties_dialog: false,
         has_run_once: false,
         has_errors: false
       }
@@ -427,6 +467,32 @@
               type: 'error'
             })
           }
+        })
+      },
+      revertProperties() {
+        this.cancelChanges()
+        this.show_pipe_properties_dialog = false
+      },
+      saveProperties() {
+        var doc_form = this.$refs['pipe-document-form']
+        doc_form.validate((valid) => {
+          if (!valid)
+            return
+
+          this.saveChanges().then(() => {
+            this.show_pipe_properties_dialog = false
+          })
+        })
+      },
+      updatePipeSchedule(attrs) {
+        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.saveChanges().then(() => {
+          this.show_pipe_schedule_dialog = false
         })
       },
       testPipe() {
