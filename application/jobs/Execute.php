@@ -1105,7 +1105,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 300s python3 /fxpython/script.py)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 3600s python3 /fxpython/script.py)'";
 
             $script_host = new ScriptHost();
             $script_host->setProcess($process);
@@ -1140,7 +1140,7 @@ class Execute extends \Flexio\Jobs\Base
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 30s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxnodejs/script.js && timeout 3600s nodejs /fxnodejs/run.js unmanaged /fxnodejs/script.js)'";
 
             $script_host = new ScriptHost();
             $script_host->setProcess($process);
