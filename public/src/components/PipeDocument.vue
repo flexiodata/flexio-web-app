@@ -98,7 +98,7 @@
             index="0"
             @click="show_yaml = !show_yaml"
           >
-            <i class="material-icons nl2 nr2 hint--right" aria-label="Toggle Pipe YAML">code</i>
+            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe YAML' : 'Show Pipe YAML'">code</i>
           </el-menu-item>
         </el-menu>
 
@@ -187,6 +187,7 @@
                       :container-id="content_pane_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
+                      @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
@@ -347,9 +348,6 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
-      is_code_changed() {
-        return this.isCodeChanged()
-      },
       is_changed() {
         return this.isChanged()
       },
@@ -362,7 +360,7 @@
           return false
         }
 
-        return this.is_changed || this.is_code_changed
+        return this.is_changed
       },
       edit_pipe: {
         get() {
@@ -445,7 +443,6 @@
     },
     methods: {
       ...mapGetters('pipe', [
-        'isCodeChanged',
         'isChanged'
       ]),
       ...mapGetters([
@@ -465,6 +462,7 @@
         })
       },
       cancelChanges() {
+        debugger
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
         this.revertCodeEditor()
       },
@@ -521,11 +519,6 @@
         })
       },
       testPipe() {
-        this.$store.track('Ran Pipe', {
-          title: this.title,
-          code: this.edit_code
-        })
-
         var attrs = _.pick(this.edit_pipe, ['task'])
 
         _.assign(attrs, {
