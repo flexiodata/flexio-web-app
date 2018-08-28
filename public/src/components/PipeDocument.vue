@@ -66,12 +66,12 @@
 
     <!-- build view; build mode -->
     <div class="h-100" v-else>
-      <transition name="el-zoom-in-top">
-        <div
-          class="flex flex-row items-center el-alert el-alert--warning bb b--black-10"
-          v-if="show_save_cancel"
-        >
-          <div class="flex-fill">Your have made changes to this pipe. Would you like to save your changes?</div>
+      <vue-slide-up-down
+        :active="show_save_cancel"
+        :duration="300"
+      >
+        <div class="flex flex-row items-center el-alert el-alert--warning bb b--black-10">
+          <div class="flex-fill f6">Your have made changes to this pipe. Would you like to save your changes?</div>
           <el-button
             class="ttu b"
             size="small"
@@ -88,7 +88,7 @@
             Save changes
           </el-button>
         </div>
-      </transition>
+      </vue-slide-up-down>
       <multipane
         class="vertical-panes"
         layout="vertical"
@@ -243,6 +243,7 @@
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
+  import VueSlideUpDown from 'vue-slide-up-down'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
   import LabelSwitch from './LabelSwitch.vue'
@@ -267,6 +268,7 @@
     components: {
       Multipane,
       MultipaneResizer,
+      VueSlideUpDown,
       Spinner,
       IconMessage,
       LabelSwitch,
