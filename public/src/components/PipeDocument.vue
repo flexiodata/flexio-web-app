@@ -133,26 +133,25 @@
                     </span>
                   </div>
                 </template>
-                <BuilderList
-                  class="mv3"
-                  builder-mode="wizard"
-                  :items="edit_ui_list"
-                  :container-id="content_pane_id"
-                  :active-item-idx.sync="active_ui_idx"
-                  :show-numbers="true"
-                  :show-icons="false"
-                  :show-insert-buttons="false"
-                  :show-edit-buttons="false"
-                  :show-delete-buttons="false"
-                  @item-prev="active_ui_idx--"
-                  @item-next="active_ui_idx++"
-                  v-if="edit_ui_list.length > 0"
-                />
-                <div
-                  class="mv3 pa4 bg-white br2 css-white-box"
-                  v-else
-                >
-                  <div class="tc f6">
+                <div class="mv3 pa4 bg-white br2 css-white-box">
+                  <BuilderList
+                    builder-mode="wizard"
+                    :items="edit_ui_list"
+                    :container-id="content_pane_id"
+                    :active-item-idx.sync="active_ui_idx"
+                    :show-numbers="true"
+                    :show-icons="false"
+                    :show-insert-buttons="false"
+                    :show-edit-buttons="false"
+                    :show-delete-buttons="false"
+                    @item-prev="active_ui_idx--"
+                    @item-next="active_ui_idx++"
+                    v-if="edit_ui_list.length > 0"
+                  />
+                  <div
+                    class="tc f6"
+                    v-else
+                  >
                     <em>There is no web interface for this pipe.</em>
                   </div>
                 </div>
