@@ -68,7 +68,7 @@
     <div class="h-100" v-else>
       <vue-slide-up-down
         :active="show_save_cancel"
-        :duration="300"
+        :duration="200"
       >
         <div class="flex flex-row items-center el-alert el-alert--warning bb b--black-10">
           <div class="flex-fill f6">Your have made changes to this pipe. Would you like to save your changes?</div>
@@ -89,118 +89,137 @@
           </el-button>
         </div>
       </vue-slide-up-down>
-      <multipane
-        class="vertical-panes"
-        layout="vertical"
-      >
-        <div
-          class="pane"
-          :style="{ minWidth: '100px', width: '25%', maxWidth: '50%' }"
+      <div class="flex flex-row h-100">
+        <el-menu
+          class="bg-nearer-white"
+          default-active="0"
         >
-          <PipeCodeEditor
-            class="h-100"
-            ref="code-editor"
-            type="yaml"
-            editor-cls="bg-white h-100"
-            :task-only="false"
-            :has-errors.sync="has_errors"
-            @save="saveChanges"
-            v-model="edit_pipe"
-          />
-        </div>
-        <multipane-resizer />
-        <div
-          class="pane pa4 pt0 overflow-y-scroll"
-          :id="content_pane_id"
-          :style="{ flexGrow: 1 }"
+          <el-menu-item
+            index="0"
+            @click="show_yaml = !show_yaml"
+          >
+            <i class="material-icons nl2 nr2 hint--right" aria-label="Toggle Pipe YAML">code</i>
+          </el-menu-item>
+        </el-menu>
+
+        <multipane
+          class="vertical-panes"
+          layout="vertical"
         >
-          <PipeDocumentHeader
-            class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
-            @schedule-click="show_pipe_schedule_dialog = true"
-            @properties-click="show_pipe_properties_dialog = true"
-            @run-click="testPipe"
-            :title="title"
-            :is-mode-run.sync="is_pipe_mode_run"
-          />
-          <div class="mv4 center mw-doc">
-            <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
-              <el-collapse-item name="web-ui">
-                <template slot="title">
-                  <div class="flex flex-row items-center">
-                    <span class="f4">Web Interface</span>
-                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
-                      <i class="el-icon-info blue"></i>
-                    </span>
-                  </div>
-                </template>
-                <div class="mv3 pa4 bg-white br2 css-white-box">
-                  <BuilderList
-                    builder-mode="wizard"
-                    :items="edit_ui_list"
-                    :container-id="content_pane_id"
-                    :active-item-idx.sync="active_ui_idx"
-                    :show-numbers="true"
-                    :show-icons="false"
-                    :show-insert-buttons="false"
-                    :show-edit-buttons="false"
-                    :show-delete-buttons="false"
-                    @item-prev="active_ui_idx--"
-                    @item-next="active_ui_idx++"
-                    v-if="edit_ui_list.length > 0"
-                  />
-                  <div
-                    class="tc f6"
-                    v-else
-                  >
-                    <em>There is no web interface for this pipe.</em>
-                  </div>
-                </div>
-              </el-collapse-item>
-              <el-collapse-item name="task-list">
-                <template slot="title">
-                  <div class="flex flex-row items-center">
-                    <span class="f4">Task List</span>
-                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
-                      <i class="el-icon-info blue"></i>
-                    </span>
-                  </div>
-                </template>
-                <div class="mv3 pa4 bg-white br2 css-white-box">
-                  <PipeBuilderList
-                    :container-id="content_pane_id"
-                    :has-errors.sync="has_errors"
-                    :active-item-idx.sync="active_task_idx"
-                    @save="saveChanges"
-                    v-model="edit_task_list"
-                  />
-                </div>
-              </el-collapse-item>
-              <el-collapse-item name="output" :id="output_item_id">
-                <template slot="title">
-                  <div class="flex flex-row items-center">
-                    <span class="f4">Result</span>
-                    <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after a test run.">
-                      <i class="el-icon-info blue"></i>
-                    </span>
-                  </div>
-                </template>
-                <div class="mv3 pa4 bg-white br2 css-white-box">
-                  <ProcessContent
-                    :process-eid="active_process_eid"
-                    v-if="active_process_eid.length > 0 && has_run_once"
-                  />
-                  <div
-                    class="tc f6"
-                    v-else-if="!has_run_once"
-                  >
-                    <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
-                  </div>
-                </div>
-              </el-collapse-item>
-            </el-collapse>
+          <div
+            class="pane trans-w"
+            :style="{
+              maxWidth: '50%',
+              minWidth: show_yaml ? '100px' : '0',
+              width: show_yaml ? '25%' : '0'
+            }"
+          >
+            <PipeCodeEditor
+              class="h-100"
+              ref="code-editor"
+              type="yaml"
+              editor-cls="bg-white h-100"
+              :task-only="false"
+              :has-errors.sync="has_errors"
+              @save="saveChanges"
+              v-model="edit_pipe"
+            />
           </div>
-        </div>
-      </multipane>
+          <multipane-resizer />
+          <div
+            class="pane pa4 pt0 overflow-y-scroll"
+            :id="content_pane_id"
+            :style="{ flexGrow: 1 }"
+          >
+            <PipeDocumentHeader
+              class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
+              @schedule-click="show_pipe_schedule_dialog = true"
+              @properties-click="show_pipe_properties_dialog = true"
+              @run-click="testPipe"
+              :title="title"
+              :is-mode-run.sync="is_pipe_mode_run"
+            />
+            <div class="mv4 center mw-doc">
+              <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
+                <el-collapse-item name="web-ui">
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Web Interface</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
+                        <i class="el-icon-info blue"></i>
+                      </span>
+                    </div>
+                  </template>
+                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                    <BuilderList
+                      builder-mode="wizard"
+                      :items="edit_ui_list"
+                      :container-id="content_pane_id"
+                      :active-item-idx.sync="active_ui_idx"
+                      :show-numbers="true"
+                      :show-icons="false"
+                      :show-insert-buttons="false"
+                      :show-edit-buttons="false"
+                      :show-delete-buttons="false"
+                      @item-prev="active_ui_idx--"
+                      @item-next="active_ui_idx++"
+                      v-if="edit_ui_list.length > 0"
+                    />
+                    <div
+                      class="tc f6"
+                      v-else
+                    >
+                      <em>There is no web interface for this pipe.</em>
+                    </div>
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="task-list">
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Task List</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
+                        <i class="el-icon-info blue"></i>
+                      </span>
+                    </div>
+                  </template>
+                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                    <PipeBuilderList
+                      :container-id="content_pane_id"
+                      :has-errors.sync="has_errors"
+                      :active-item-idx.sync="active_task_idx"
+                      @save="saveChanges"
+                      v-model="edit_task_list"
+                    />
+                  </div>
+                </el-collapse-item>
+                <el-collapse-item name="output" :id="output_item_id">
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Result</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after a test run.">
+                        <i class="el-icon-info blue"></i>
+                      </span>
+                    </div>
+                  </template>
+                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                    <ProcessContent
+                      :process-eid="active_process_eid"
+                      v-if="active_process_eid.length > 0 && has_run_once"
+                    />
+                    <div
+                      class="tc f6"
+                      v-else-if="!has_run_once"
+                    >
+                      <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
+                    </div>
+                  </div>
+                </el-collapse-item>
+              </el-collapse>
+            </div>
+          </div>
+        </multipane>
+      </div>
+
     </div>
 
     <el-dialog
@@ -310,6 +329,7 @@
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
+        show_yaml: true,
         has_run_once: false,
         has_errors: false
       }
