@@ -178,7 +178,7 @@
               <el-collapse-item name="output" :id="output_item_id">
                 <template slot="title">
                   <div class="flex flex-row items-center">
-                    <span class="f4">Output</span>
+                    <span class="f4">Result</span>
                     <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after a test run.">
                       <i class="el-icon-info blue"></i>
                     </span>
