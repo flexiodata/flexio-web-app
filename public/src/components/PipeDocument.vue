@@ -381,7 +381,7 @@
       edit_ui_list: {
         get() {
           var ui = _.get(this.edit_pipe, 'ui.prompts', [])
-          return ui
+          return _.isArray(ui) ? ui : []
         },
         set(value) {
 

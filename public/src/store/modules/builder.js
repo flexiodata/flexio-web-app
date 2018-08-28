@@ -39,32 +39,6 @@ const mutations = {
     // get prompts from definition
     var prompts = _.get(def, 'ui.prompts', [])
 
-    // replace name element with form element
-    var existing_name = _.findIndex(prompts, { element: 'name' })
-    if (existing_name != -1) {
-      prompts[existing_name] = {
-        element: 'form',
-        element_identifier: 'name',
-        title: 'Name your pipe',
-        cls: 'el-form--cozy el-form__label-tiny',
-        form_items: [{
-          element: 'input',
-          type: 'text',
-          variable: 'pipe.name',
-          label: 'Name',
-          placeholder: 'Name',
-          value: _.get(def, 'name', '')
-        },{
-          element: 'input',
-          type: 'textarea',
-          variable: 'pipe.description',
-          label: 'Description',
-          placeholder: 'Description (optional)',
-          value: ''
-        }]
-      }
-    }
-
     // if we're in the builder, remove all runtime-only steps and add a summary step
     if (state.route == ROUTE_BUILDER) {
       prompts = _.reject(prompts, { runtime_only: true })
@@ -76,7 +50,9 @@ const mutations = {
     }
 
     // map prompt objects
-    state.prompts = _.map(prompts, p => {
+    state.prompts = _.map(prompts, prompt => {
+      var p = _.cloneDeep(prompt)
+
       // necessary for scrollTo
       _.assign(p, { id: _.uniqueId('prompt-') })
 
