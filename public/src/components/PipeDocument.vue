@@ -115,7 +115,7 @@
           :style="{ flexGrow: 1 }"
         >
           <PipeDocumentHeader
-            class="nl4 nr4 pv1 ph3 relative z-7 bg-nearer-white sticky"
+            class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
             @schedule-click="show_pipe_schedule_dialog = true"
             @properties-click="show_pipe_properties_dialog = true"
             @run-click="testPipe"
@@ -133,22 +133,26 @@
                     </span>
                   </div>
                 </template>
-                <div class="pa4 bg-white br2 css-white-box">
-                  <BuilderList
-                    builder-mode="wizard"
-                    :items="edit_ui_list"
-                    :container-id="content_pane_id"
-                    :active-item-idx.sync="active_ui_idx"
-                    :show-numbers="true"
-                    :show-icons="false"
-                    :show-insert-buttons="false"
-                    :show-edit-buttons="false"
-                    :show-delete-buttons="false"
-                    @item-prev="active_ui_idx--"
-                    @item-next="active_ui_idx++"
-                    v-if="edit_ui_list.length > 0"
-                  />
-                  <div class="tc f6" v-else>
+                <BuilderList
+                  class="mv3"
+                  builder-mode="wizard"
+                  :items="edit_ui_list"
+                  :container-id="content_pane_id"
+                  :active-item-idx.sync="active_ui_idx"
+                  :show-numbers="true"
+                  :show-icons="false"
+                  :show-insert-buttons="false"
+                  :show-edit-buttons="false"
+                  :show-delete-buttons="false"
+                  @item-prev="active_ui_idx--"
+                  @item-next="active_ui_idx++"
+                  v-if="edit_ui_list.length > 0"
+                />
+                <div
+                  class="mv3 pa4 bg-white br2 css-white-box"
+                  v-else
+                >
+                  <div class="tc f6">
                     <em>There is no web interface for this pipe.</em>
                   </div>
                 </div>
@@ -162,7 +166,7 @@
                     </span>
                   </div>
                 </template>
-                <div class="pa4 bg-white br2 css-white-box">
+                <div class="mv3 pa4 bg-white br2 css-white-box">
                   <PipeBuilderList
                     :container-id="content_pane_id"
                     :has-errors.sync="has_errors"
@@ -181,7 +185,7 @@
                     </span>
                   </div>
                 </template>
-                <div class="pa4 bg-white br2 css-white-box">
+                <div class="mv3 pa4 bg-white br2 css-white-box">
                   <ProcessContent
                     :process-eid="active_process_eid"
                     v-if="active_process_eid.length > 0 && has_run_once"
