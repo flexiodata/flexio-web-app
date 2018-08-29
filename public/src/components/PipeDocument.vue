@@ -333,8 +333,8 @@
         show_yaml: true,
         has_run_once: false,
         has_errors: false,
-        is_updating: false,
-        is_saving: false
+        is_saving: false,
+        is_changed: false
       }
     },
     computed: {
@@ -350,19 +350,8 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
-      is_changed() {
-        return this.isChanged()
-      },
       show_save_cancel() {
-        if (this.is_saving || this.is_updating) {
-          return false
-        }
-
-        var orig_mode = _.get(this.orig_pipe, 'pipe_mode')
-        var edit_mode = _.get(this.edit_pipe, 'pipe_mode')
-
-        // we're entering run mode, don't show the save/cancel banner
-        if (orig_mode == PIPE_MODE_BUILD && edit_mode == PIPE_MODE_RUN) {
+        if (this.is_saving) {
           return false
         }
 
@@ -375,10 +364,9 @@
         },
         set(value) {
           try {
-            this.is_updating = true
             var pipe = _.cloneDeep(value)
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.$nextTick(() => { this.is_updating = false })
+            this.is_changed = true
           }
           catch(e)
           {
@@ -392,7 +380,7 @@
           return _.isArray(ui) ? ui : []
         },
         set(value) {
-
+          this.is_changed = true
         }
       },
       edit_task_list: {
@@ -406,6 +394,7 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.is_changed = true
           }
           catch(e)
           {
@@ -450,9 +439,6 @@
       }
     },
     methods: {
-      ...mapGetters('pipe', [
-        'isChanged'
-      ]),
       ...mapGetters([
         'getActiveDocumentProcesses'
       ]),
@@ -470,9 +456,9 @@
         })
       },
       cancelChanges() {
-        debugger
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
         this.revertCodeEditor()
+        this.is_changed = false
       },
       saveChanges() {
         this.is_saving = true
@@ -499,8 +485,8 @@
             })
           }
 
-          this.is_saving = false
           this.active_task_idx = -1
+          this.is_changed = false
         })
       },
       revertProperties() {
