@@ -45,15 +45,16 @@
 
     <!-- build view; run mode -->
     <div
-      class="h-100 pa4"
+      class="h-100 pa4 pt0 overflow-y-scroll"
+      :id="scrollbar_container_id"
       v-else-if="is_pipe_mode_run"
     >
       <PipeDocumentHeader
-        class="center mw-doc"
+        class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
         :title="title"
         :is-mode-run.sync="is_pipe_mode_run"
       />
-      <div class="mt3 mb4 center mw-doc">
+      <div class="mt5 mb4 center mw-doc">
         <div class="pa4 pt3 bg-white br2 css-white-box">
           <PipeDocumentRunPanel
             class="tc"
@@ -128,7 +129,7 @@
           <multipane-resizer />
           <div
             class="pane pa4 pt0 overflow-y-scroll"
-            :id="content_pane_id"
+            :id="scrollbar_container_id"
             :style="{ flexGrow: 1 }"
           >
             <PipeDocumentHeader
@@ -154,7 +155,7 @@
                     <BuilderList
                       builder-mode="wizard"
                       :items="edit_ui_list"
-                      :container-id="content_pane_id"
+                      :container-id="scrollbar_container_id"
                       :active-item-idx.sync="active_ui_idx"
                       :show-numbers="true"
                       :show-icons="false"
@@ -184,7 +185,7 @@
                   </template>
                   <div class="mv3 pa4 bg-white br2 css-white-box">
                     <PipeBuilderList
-                      :container-id="content_pane_id"
+                      :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
                       @cancel="cancelChanges"
@@ -326,7 +327,7 @@
         active_collapse_items: ['web-ui', 'task-list', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
-        content_pane_id: _.uniqueId('pane-'),
+        scrollbar_container_id: _.uniqueId('pane-'),
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
@@ -546,7 +547,7 @@
       initSticky() {
         setTimeout(() => {
           stickybits('.sticky', {
-            scrollEl: '#' + this.content_pane_id,
+            scrollEl: '#' + this.scrollbar_container_id,
             useStickyClasses: true,
             stickyBitStickyOffset: 0
           })
@@ -556,7 +557,7 @@
         if (_.isString(item_id)) {
           setTimeout(() => {
             this.$scrollTo('#'+item_id, {
-                container: '#'+this.content_pane_id,
+                container: '#'+this.scrollbar_container_id,
                 duration: 400,
                 offset: -32
             })
