@@ -115,13 +115,14 @@
           <div
             class="pane"
             :class="{
-              'trans-w': !show_yaml || transitioning_yaml
+              'trans-a': !show_yaml || transitioning_yaml
             }"
             :style="{
               maxWidth: '50%',
               minWidth: show_yaml ? '100px' : '1px',
               width: show_yaml ? '20%' : '1px',
-              marginLeft: show_yaml ? '0' : '-2px'
+              marginLeft: show_yaml ? '0' : '-2px',
+              opacity: show_yaml ? '1' : '0.01'
             }"
           >
             <PipeCodeEditor
