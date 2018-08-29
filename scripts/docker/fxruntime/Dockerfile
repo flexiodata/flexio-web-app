@@ -13,6 +13,7 @@ RUN apt-get -y install python3-pip
 # image, http, and datetime handling
 RUN pip3 install pillow
 RUN pip3 install requests
+RUN pip3 install aiohttp
 RUN pip3 install arrow
 
 # numeric, plotting, data handling
@@ -24,6 +25,7 @@ RUN pip3 install pandas
 
 # pdf support
 RUN pip3 install pypdf2
+RUN pip3 install fpdf
 
 # excel support
 RUN pip3 install openpyxl
