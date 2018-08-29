@@ -75,7 +75,7 @@
           v-if="show_save_cancel"
         >
           <div class="el-message__content flex flex-row items-center nt1 nb1">
-            <div class="flex-fill f6 mr3">Your have made changes to this pipe. Would you like to save your changes?</div>
+            <div class="flex-fill f6 mr3">You have made changes to this pipe. Would you like to save your changes?</div>
             <el-button
               class="ttu b"
               size="small"
