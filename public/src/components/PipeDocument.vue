@@ -353,7 +353,7 @@
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
-        show_yaml: true,
+        show_yaml: false,
         transitioning_yaml: false,
         has_run_once: false,
         has_errors: false,
