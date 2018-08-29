@@ -115,9 +115,10 @@
           <div
             class="pane trans-w"
             :style="{
-              maxWidth: show_yaml ? '50%' : '0',
+              maxWidth: '50%',
               minWidth: show_yaml ? '100px' : '0',
-              width: show_yaml ? '25%' : '0'
+              width: show_yaml ? '20%' : '0',
+              marginLeft: show_yaml ? '0' : '-1px'
             }"
           >
             <PipeCodeEditor
@@ -131,7 +132,11 @@
               v-model="edit_pipe"
             />
           </div>
-          <multipane-resizer />
+          <multipane-resizer
+            :class="{
+              'no-pointer-events': !show_yaml
+            }"
+          />
           <div
             class="pane pa4 pt0 overflow-y-scroll"
             :id="scrollbar_container_id"
