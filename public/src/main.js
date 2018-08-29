@@ -44,7 +44,6 @@ import store from './store' // Vuex store
 import util from './utils'
 import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
-import './stylesheets/style.styl' // common styles
 
 // fallback css (if there's no Internet connection)
 

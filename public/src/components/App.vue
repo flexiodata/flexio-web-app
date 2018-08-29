@@ -140,3 +140,7 @@
     }
   }
 </script>
+
+<style lang="stylus">
+  @import '../stylesheets/style'
+</style>
