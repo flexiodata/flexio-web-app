@@ -45,15 +45,16 @@
 
     <!-- build view; run mode -->
     <div
-      class="h-100 pa4"
+      class="h-100 pa4 pt0 overflow-y-scroll"
+      :id="scrollbar_container_id"
       v-else-if="is_pipe_mode_run"
     >
       <PipeDocumentHeader
-        class="center mw-doc"
+        class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
         :title="title"
         :is-mode-run.sync="is_pipe_mode_run"
       />
-      <div class="mt3 mb4 center mw-doc">
+      <div class="mt5 mb4 center mw-doc">
         <div class="pa4 pt3 bg-white br2 css-white-box">
           <PipeDocumentRunPanel
             class="tc"
@@ -66,29 +67,34 @@
 
     <!-- build view; build mode -->
     <div class="h-100" v-else>
-      <vue-slide-up-down
-        :active="show_save_cancel"
-        :duration="200"
-      >
-        <div class="flex flex-row items-center el-alert el-alert--warning bb b--black-10">
-          <div class="flex-fill f6">Your have made changes to this pipe. Would you like to save your changes?</div>
-          <el-button
-            class="ttu b"
-            size="small"
-            @click="cancelChanges"
-          >
-            Cancel
-          </el-button>
-          <el-button
-            class="ttu b"
-            size="small"
-            type="primary"
-            @click="saveChanges"
-          >
-            Save changes
-          </el-button>
+      <transition name="el-message-fade">
+        <div
+          role="alert"
+          class="el-message el-message--warning"
+          :style="save_cancel_style"
+          v-if="show_save_cancel"
+        >
+          <div class="el-message__content flex flex-row items-center nt1 nb1">
+            <div class="flex-fill f6 mr3">Your have made changes to this pipe. Would you like to save your changes?</div>
+            <el-button
+              class="ttu b"
+              size="small"
+              @click="cancelChanges"
+            >
+              Cancel
+            </el-button>
+            <el-button
+              class="ttu b"
+              size="small"
+              type="primary"
+              @click="saveChanges"
+            >
+              Save changes
+            </el-button>
+          </div>
         </div>
-      </vue-slide-up-down>
+      </transition>
+
       <div class="flex flex-row h-100">
         <el-menu
           class="bg-nearer-white"
@@ -107,11 +113,16 @@
           layout="vertical"
         >
           <div
-            class="pane trans-w"
+            class="pane"
+            :class="{
+              'trans-a': !show_yaml || transitioning_yaml
+            }"
             :style="{
               maxWidth: '50%',
-              minWidth: show_yaml ? '100px' : '0',
-              width: show_yaml ? '25%' : '0'
+              minWidth: show_yaml ? '100px' : '1px',
+              width: show_yaml ? '20%' : '1px',
+              marginLeft: show_yaml ? '0' : '-2px',
+              opacity: show_yaml ? '1' : '0.01'
             }"
           >
             <PipeCodeEditor
@@ -125,10 +136,14 @@
               v-model="edit_pipe"
             />
           </div>
-          <multipane-resizer />
+          <multipane-resizer
+            :class="{
+              'no-pointer-events': !show_yaml
+            }"
+          />
           <div
             class="pane pa4 pt0 overflow-y-scroll"
-            :id="content_pane_id"
+            :id="scrollbar_container_id"
             :style="{ flexGrow: 1 }"
           >
             <PipeDocumentHeader
@@ -154,7 +169,7 @@
                     <BuilderList
                       builder-mode="wizard"
                       :items="edit_ui_list"
-                      :container-id="content_pane_id"
+                      :container-id="scrollbar_container_id"
                       :active-item-idx.sync="active_ui_idx"
                       :show-numbers="true"
                       :show-icons="false"
@@ -184,7 +199,8 @@
                   </template>
                   <div class="mv3 pa4 bg-white br2 css-white-box">
                     <PipeBuilderList
-                      :container-id="content_pane_id"
+                      ref="task-list"
+                      :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
                       @cancel="cancelChanges"
@@ -230,10 +246,10 @@
       :modal-append-to-body="false"
       :visible.sync="show_pipe_properties_dialog"
     >
-      <PipeDocumentForm
-        ref="pipe-document-form"
-        @close="revertProperties"
-        @cancel="revertProperties"
+      <PipePropertiesPanel
+        :pipe="edit_pipe"
+        @close="show_pipe_properties_dialog = false"
+        @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
       />
     </el-dialog>
@@ -250,7 +266,7 @@
         :pipe="edit_pipe"
         @close="show_pipe_schedule_dialog = false"
         @cancel="show_pipe_schedule_dialog = false"
-        @submit="updatePipeSchedule"
+        @submit="saveSchedule"
       />
     </el-dialog>
 
@@ -263,7 +279,6 @@
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
-  import VueSlideUpDown from 'vue-slide-up-down'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
   import LabelSwitch from './LabelSwitch.vue'
@@ -273,8 +288,8 @@
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
+  import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
-  import PipeDocumentForm from './PipeDocumentForm.vue'
   import ProcessContent from './ProcessContent.vue'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -288,7 +303,6 @@
     components: {
       Multipane,
       MultipaneResizer,
-      VueSlideUpDown,
       Spinner,
       IconMessage,
       LabelSwitch,
@@ -298,8 +312,8 @@
       PipeCodeEditor,
       PipeDocumentHeader,
       PipeDocumentRunPanel,
+      PipePropertiesPanel,
       PipeSchedulePanel,
-      PipeDocumentForm,
       ProcessContent
     },
     watch: {
@@ -318,6 +332,16 @@
       is_fetched: {
         handler: 'initSticky',
         immediate: true
+      },
+      is_changed(val) {
+        this.$nextTick(() => {
+          this.save_cancel_zindex++
+          this.show_save_cancel = val
+        })
+      },
+      show_yaml() {
+        this.transitioning_yaml = true
+        setTimeout(() => { this.transitioning_yaml = false }, 150)
       }
     },
     data() {
@@ -326,13 +350,17 @@
         active_collapse_items: ['web-ui', 'task-list', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
-        content_pane_id: _.uniqueId('pane-'),
+        scrollbar_container_id: _.uniqueId('pane-'),
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
-        show_yaml: true,
+        show_yaml: false,
+        transitioning_yaml: false,
         has_run_once: false,
-        has_errors: false
+        has_errors: false,
+        is_saving: false,
+        show_save_cancel: false,
+        save_cancel_zindex: 2050
       }
     },
     computed: {
@@ -340,7 +368,8 @@
         orig_pipe: state => state.pipe.orig_pipe,
         edit_keys: state => state.pipe.edit_keys,
         is_fetching: state => state.pipe.fetching,
-        is_fetched: state => state.pipe.fetched
+        is_fetched: state => state.pipe.fetched,
+        is_changed: state => state.pipe.changed
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
@@ -348,19 +377,8 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
-      is_changed() {
-        return this.isChanged()
-      },
-      show_save_cancel() {
-        var orig_mode = _.get(this.orig_pipe, 'pipe_mode')
-        var edit_mode = _.get(this.edit_pipe, 'pipe_mode')
-
-        // we're entering run mode, don't show the save/cancel banner
-        if (orig_mode == PIPE_MODE_BUILD && edit_mode == PIPE_MODE_RUN) {
-          return false
-        }
-
-        return this.is_changed
+      save_cancel_style() {
+        return 'z-index: ' + this.save_cancel_zindex
       },
       edit_pipe: {
         get() {
@@ -384,7 +402,6 @@
           return _.isArray(ui) ? ui : []
         },
         set(value) {
-
         }
       },
       edit_task_list: {
@@ -442,9 +459,6 @@
       }
     },
     methods: {
-      ...mapGetters('pipe', [
-        'isChanged'
-      ]),
       ...mapGetters([
         'getActiveDocumentProcesses'
       ]),
@@ -462,11 +476,13 @@
         })
       },
       cancelChanges() {
-        debugger
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.revertCodeEditor()
+        this.revertComponents()
+        this.active_task_idx = -1
       },
       saveChanges() {
+        this.is_saving = true
+
         var eid = this.eid
         var attrs = _.pick(this.edit_pipe, this.edit_keys)
 
@@ -474,8 +490,6 @@
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
         return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          this.active_task_idx = -1
-
           if (response.ok) {
             this.$message({
               message: 'The pipe was updated successfully.',
@@ -483,31 +497,29 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revertCodeEditor()
+            this.revertComponents()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
               type: 'error'
             })
           }
-        })
-      },
-      revertProperties() {
-        this.cancelChanges()
-        this.show_pipe_properties_dialog = false
-      },
-      saveProperties() {
-        var doc_form = this.$refs['pipe-document-form']
-        doc_form.validate((valid) => {
-          if (!valid)
-            return
 
-          this.saveChanges().then(() => {
-            this.show_pipe_properties_dialog = false
-          })
+          this.active_task_idx = -1
         })
       },
-      updatePipeSchedule(attrs) {
+      saveProperties(attrs) {
+        attrs = _.pick(attrs, ['name', 'description', 'alias'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.saveChanges().then(() => {
+          this.show_pipe_properties_dialog = false
+        })
+      },
+      saveSchedule(attrs) {
         attrs = _.pick(attrs, ['schedule', 'schedule_status'])
 
         var pipe = _.cloneDeep(this.edit_pipe)
@@ -541,19 +553,23 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      revertCodeEditor() {
+      revertComponents() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
           var editor = this.$refs['code-editor']
           if (editor && editor.revert) {
             editor.revert()
           }
+          var task_list = this.$refs['task-list']
+          if (task_list && task_list.revert) {
+            task_list.revert()
+          }
         })
       },
       initSticky() {
         setTimeout(() => {
           stickybits('.sticky', {
-            scrollEl: '#' + this.content_pane_id,
+            scrollEl: '#' + this.scrollbar_container_id,
             useStickyClasses: true,
             stickyBitStickyOffset: 0
           })
@@ -563,7 +579,7 @@
         if (_.isString(item_id)) {
           setTimeout(() => {
             this.$scrollTo('#'+item_id, {
-                container: '#'+this.content_pane_id,
+                container: '#'+this.scrollbar_container_id,
                 duration: 400,
                 offset: -32
             })

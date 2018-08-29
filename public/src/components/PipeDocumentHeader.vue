@@ -3,16 +3,12 @@
     <div class="flex-fill">
       <h1 class="mv0 fw6 f3">{{title}}</h1>
     </div>
-    <div
-      class="flex-none flex flex-row items-center pv2"
-      :class="{
-        'invisible': is_pipe_mode_run
-      }"
-    >
+    <div class="flex-none flex flex-row items-center pv1">
       <el-button
         plain
         class="btn-header hint--bottom"
         aria-label="Schedule"
+        :class="{ 'invisible': isModeRun }"
         @click="$emit('schedule-click')"
       >
         <i class="material-icons">date_range</i>
@@ -21,6 +17,7 @@
         plain
         class="btn-header hint--bottom"
         aria-label="Properties"
+        :class="{ 'invisible': isModeRun }"
         @click="$emit('properties-click')"
       >
         <i class="material-icons">edit</i>
@@ -30,16 +27,16 @@
         style="min-width: 5rem; margin: 0 1rem"
         type="primary"
         size="small"
+        :class="{ 'invisible': isModeRun }"
         :disabled="!allowRun"
         @click="$emit('run-click')"
-        v-if="!isModeRun"
       >
         Test
       </el-button>
       <div class="flex flex-row items-center justify-center">
         <span class="ttu f6 fw6">Your pipe is</span>
         <LabelSwitch
-          class="dib ml2 hint--bottom"
+          class="dib ml2 hint--bottom-left"
           active-color="#13ce66"
           aria-label="Turn pipe on"
           v-model="is_pipe_mode_run"
