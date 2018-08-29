@@ -18,11 +18,6 @@
       icon: 'dashboard'
     },
     {
-      route: '/learn',
-      name: 'Build & Learn',
-      icon: 'school'
-    },
-    {
       route: '/pipes',
       name: 'Pipes',
       icon: 'storage'
