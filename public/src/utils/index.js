@@ -47,9 +47,23 @@ var sanitizeMasked = (obj) => {
   return _.omitBy(obj, (val, key) => { return val === '*****' })
 }
 
+var btoaUnicode = (str) => {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    return String.fromCharCode(parseInt(p1, 16))
+  }))
+}
+
+var atobUnicode = (str) => {
+  return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+  }).join(''))
+}
+
 export default {
   pluralize: pluralize,
   slugify: slugify,
   fallbackCss: fallbackCss,
-  sanitizeMasked: sanitizeMasked
+  sanitizeMasked: sanitizeMasked,
+  btoaUnicode: btoaUnicode,
+  atobUnicode: atobUnicode
 }
