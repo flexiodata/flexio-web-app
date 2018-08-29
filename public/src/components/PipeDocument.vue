@@ -113,7 +113,10 @@
           layout="vertical"
         >
           <div
-            class="pane trans-w"
+            class="pane"
+            :class="{
+              'trans-w': !show_yaml || transitioning_yaml
+            }"
             :style="{
               maxWidth: '50%',
               minWidth: show_yaml ? '100px' : '0',
@@ -330,6 +333,10 @@
       },
       is_changed() {
         this.save_cancel_zindex++
+      },
+      show_yaml() {
+        this.transitioning_yaml = true
+        setTimeout(() => { this.transitioning_yaml = false }, 150)
       }
     },
     data() {
@@ -343,6 +350,7 @@
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
         show_yaml: true,
+        transitioning_yaml: false,
         has_run_once: false,
         has_errors: false,
         is_saving: false,
