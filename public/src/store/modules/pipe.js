@@ -5,13 +5,12 @@ import utilSdkJs from '../../utils/sdk-js'
 const state = {
   eid: '',
   orig_pipe: {},
-  orig_code: '',
   edit_pipe: {},
-  edit_code: '',
   syntax_error: '',
   edit_keys: ['eid', 'name', 'alias', 'description', 'pipe_mode', 'schedule', 'schedule_status', 'task', 'ui'],
   fetching: false,
-  fetched: false
+  fetched: false,
+  changed: false
 }
 
 const mutations = {
@@ -27,31 +26,18 @@ const mutations = {
     state.eid = _.get(pipe, 'eid', '')
 
     var pipe = _.pick(pipe, state.edit_keys)
-    var task = _.get(pipe, 'task', {})
-
     state.orig_pipe = pipe
     state.edit_pipe = pipe
 
-    try {
-      state.orig_code = Flexio.pipe(task).toCode()
-      state.edit_code = Flexio.pipe(task).toCode()
-    }
-    catch (e) {
-      var msg = 'Flexio.pipe().echo("There was an error parsing the pipe JSON.")'
-      state.orig_code = msg
-      state.edit_code = msg
-    }
-
     state.syntax_error = ''
     state.fetched = true
+    state.changed = false
   },
 
   UPDATE_EDIT_PIPE (state, pipe) {
     var pipe = _.pick(pipe, state.edit_keys)
-    var task = _.get(pipe, 'task', {})
-
     state.edit_pipe = _.assign({}, state.edit_pipe, pipe)
-    state.edit_code = Flexio.pipe(task).toCode()
+    state.changed = true
   }
 }
 
@@ -61,13 +47,8 @@ const getters = {
   getStorePipe (state, getters, root_state) {
     return _.get(root_state, 'objects.' + state.eid, null)
   },
-  isCodeChanged (state, getters, root_state) {
-    return state.edit_code != state.orig_code
-  },
   isChanged (state, getters, root_state) {
-    var pipe1 = _.omit(state.edit_pipe, ['task'])
-    var pipe2 = _.omit(state.orig_pipe, ['task'])
-    return state.edit_code != state.orig_code || !_.isEqual(pipe1, pipe2)
+    return state.changed
   }
 }
 

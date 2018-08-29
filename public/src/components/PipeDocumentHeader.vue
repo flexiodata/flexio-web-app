@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row items-center">
     <div class="flex-fill">
-      <h1 class="mv0 fw6">{{title}}</h1>
+      <h1 class="mv0 fw6 f3">{{title}}</h1>
     </div>
     <div
       class="flex-none flex flex-row items-center pv2"

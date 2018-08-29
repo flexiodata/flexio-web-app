@@ -18,6 +18,8 @@ import {
   FormItem,
   Icon,
   Input,
+  Menu,
+  MenuItem,
   Message,
   MessageBox,
   Option,
@@ -70,6 +72,8 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Icon)
 Vue.use(Input)
+Vue.use(Menu)
+Vue.use(MenuItem)
 Vue.use(Option)
 Vue.use(Popover)
 Vue.use(Radio)

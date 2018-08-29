@@ -174,6 +174,10 @@
       CodeEditor
     },
     watch: {
+      item: {
+        handler: 'resetSelf',
+        deep: true
+      },
       is_changed: {
         handler: 'onChange'
       },
@@ -188,10 +192,6 @@
       },
       flat_values: {
         handler: 'updateFlatValues',
-        deep: true
-      },
-      'item.form_values': {
-        handler: 'resetSelf',
         deep: true
       }
     },

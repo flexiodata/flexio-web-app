@@ -217,10 +217,9 @@
         }
       },
       itemCancel() {
-        var value = _.get(this.orig_pipe, 'task', { op: 'sequence', items: [] })
         this.is_editing = false
         this.active_prompt_idx = -1
-        this.$emit('input', value)
+        this.$emit('cancel')
       },
       itemSave() {
         this.is_editing = false
