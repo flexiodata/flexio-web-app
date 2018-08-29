@@ -1,7 +1,15 @@
 <template>
   <div class="overflow-y-auto bg-nearer-white">
-    <div class="ma4">
-      <div class="f3 f2-ns">Dashboard</div>
+    <!-- control bar -->
+    <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10">
+      <div class="flex flex-row">
+        <div class="flex-fill flex flex-row items-center">
+          <div class="f2 dn db-ns mr3">Dashboard</div>
+        </div>
+        <div class="flex-none flex flex-row items-center">
+          <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+        </div>
+      </div>
     </div>
 
     <div class="ma4">
@@ -69,6 +77,7 @@
 </template>
 
 <script>
+  import { ROUTE_PIPES } from '../constants/route'
   import StatsPipesRun from './StatsPipesRun.vue'
   import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
@@ -78,6 +87,33 @@
       StatsPipesRun,
       AccountApiForm,
       HelpItems
+    },
+    methods: {
+      openPipe(eid) {
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+      },
+      tryCreatePipe(attrs) {
+        if (!_.isObject(attrs))
+          attrs = { name: 'Untitled Pipe' }
+
+        this.$store.dispatch('createPipe', { attrs }).then(response => {
+          if (response.ok)
+          {
+            var pipe = response.body
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+            this.$store.track('Created Pipe: New', analytics_payload)
+
+            this.openPipe(response.body.eid)
+          }
+           else
+          {
+            this.$store.track('Created Pipe: New (Error)')
+          }
+        })
+      },
+      onNewPipeClick() {
+        this.tryCreatePipe()
+      }
     }
   }
 </script>
