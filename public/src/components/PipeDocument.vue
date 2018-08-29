@@ -115,7 +115,7 @@
           <div
             class="pane trans-w"
             :style="{
-              maxWidth: '50%',
+              maxWidth: show_yaml ? '50%' : '0',
               minWidth: show_yaml ? '100px' : '0',
               width: show_yaml ? '25%' : '0'
             }"

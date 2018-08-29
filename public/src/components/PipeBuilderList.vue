@@ -1,5 +1,5 @@
 <template>
-  <div :value="value">
+  <div>
     <BuilderList
       :items="prompts"
       :container-id="containerId"
