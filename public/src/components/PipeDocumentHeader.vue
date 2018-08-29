@@ -36,7 +36,7 @@
       <div class="flex flex-row items-center justify-center">
         <span class="ttu f6 fw6">Your pipe is</span>
         <LabelSwitch
-          class="dib ml2 hint--bottom"
+          class="dib ml2 hint--bottom-left"
           active-color="#13ce66"
           aria-label="Turn pipe on"
           v-model="is_pipe_mode_run"
