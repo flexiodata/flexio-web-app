@@ -385,11 +385,46 @@ class Pipe
         \Flexio\Api\Response::sendRaw($content);
     }
 
+
+    // using json_encode/decode() on arrays leads to ambiguities
+    // in the case of empty arrays, which should actually be objects,
+    // but get translated into empty arrays; this code ensures
+    // that certain values are kept as objects
+
+    private static function doTaskCasting(array &$a)
+    {
+        if (($a['op'] ?? '') == 'request')
+        {
+            if (isset($a['headers']) && is_array($a['headers']) && count($a['headers']) == 0)
+            {
+                $a['headers'] = (object)$a['headers'];
+            }
+
+            if (isset($a['data']) && is_array($a['data']) && count($a['data']) == 0)
+            {
+                $a['data'] = (object)$a['data'];
+            }
+        }
+
+        foreach ($a as $k => $v)
+        {
+            if (is_array($v))
+            {
+                self::doTaskCasting($a[$k]);
+            }
+        }
+    }
+
     private static function cleanProperties(array $properties) : array
     {
         if (isset($properties['task']) && count($properties['task']) === 0)
             $properties['task'] = (object)$properties['task'];
 
+        if (isset($properties['task']) && is_array($properties['task']))
+        {
+            self::doTaskCasting($properties['task']);
+        }
+        
         return $properties;
     }
 }

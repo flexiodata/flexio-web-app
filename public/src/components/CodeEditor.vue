@@ -40,6 +40,7 @@
   //import {} from 'codemirror/mode/css/css'
   //import {} from 'codemirror/mode/xml/xml'
   //import {} from 'codemirror/mode/htmlmixed/htmlmixed'
+  import util from '../utils'
 
   import yaml from 'js-yaml'
 
@@ -177,7 +178,7 @@
       },
       transposeValue() {
         try {
-          this.calc_value = this.transpose == 'base64' ? atob(this.value) : this.value
+          this.calc_value = this.transpose == 'base64' ? util.atobUnicode(this.value) : this.value
         }
         catch (e) {
         }
@@ -191,7 +192,7 @@
         this.json_view = this.lang == 'yaml' ? 'yaml' : 'json'
       },
       onCmChange: _.debounce(function(value) {
-        this.$emit('input', this.transpose == 'base64' ? btoa(value) : value)
+        this.$emit('input', this.transpose == 'base64' ? util.btoaUnicode(value) : value)
       }, 50),
       onCmUpdate(cm) {
         var info = cm.getScrollInfo()
