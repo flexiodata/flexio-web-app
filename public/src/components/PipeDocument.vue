@@ -119,9 +119,9 @@
             }"
             :style="{
               maxWidth: '50%',
-              minWidth: show_yaml ? '100px' : '0',
-              width: show_yaml ? '20%' : '0',
-              marginLeft: show_yaml ? '0' : '-1px'
+              minWidth: show_yaml ? '100px' : '1px',
+              width: show_yaml ? '20%' : '1px',
+              marginLeft: show_yaml ? '0' : '-2px'
             }"
           >
             <PipeCodeEditor
