@@ -198,6 +198,7 @@
                   </template>
                   <div class="mv3 pa4 bg-white br2 css-white-box">
                     <PipeBuilderList
+                      ref="task-list"
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
@@ -354,7 +355,6 @@
         has_run_once: false,
         has_errors: false,
         is_saving: false,
-        is_changed: false,
         save_cancel_zindex: 2050
       }
     },
@@ -363,7 +363,8 @@
         orig_pipe: state => state.pipe.orig_pipe,
         edit_keys: state => state.pipe.edit_keys,
         is_fetching: state => state.pipe.fetching,
-        is_fetched: state => state.pipe.fetched
+        is_fetched: state => state.pipe.fetched,
+        is_changed: state => state.pipe.changed
       }),
       eid() {
         return _.get(this.$route, 'params.eid', undefined)
@@ -386,7 +387,6 @@
           try {
             var pipe = _.cloneDeep(value)
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.is_changed = true
           }
           catch(e)
           {
@@ -400,7 +400,6 @@
           return _.isArray(ui) ? ui : []
         },
         set(value) {
-          this.is_changed = true
         }
       },
       edit_task_list: {
@@ -414,7 +413,6 @@
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { task })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.is_changed = true
           }
           catch(e)
           {
@@ -477,8 +475,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.revertCodeEditor()
-        this.is_changed = false
+        this.revertComponents()
         this.active_task_idx = -1
       },
       saveChanges() {
@@ -498,7 +495,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revertCodeEditor()
+            this.revertComponents()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -506,7 +503,6 @@
             })
           }
 
-          this.is_changed = false
           this.active_task_idx = -1
         })
       },
@@ -555,12 +551,16 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      revertCodeEditor() {
+      revertComponents() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
           var editor = this.$refs['code-editor']
           if (editor && editor.revert) {
             editor.revert()
+          }
+          var task_list = this.$refs['task-list']
+          if (task_list && task_list.revert) {
+            task_list.revert()
           }
         })
       },

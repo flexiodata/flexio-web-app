@@ -84,6 +84,10 @@
       })
     },
     methods: {
+      revert() {
+        this.is_editing = false
+        this.initFromPipeTask(this.value)
+      },
       promptFromTask(task, task_idx) {
         var prompt
 
@@ -162,7 +166,9 @@
         this.prompts = [].concat(prompts)
         this.has_errors = false
         this.is_editing = false
-        this.$nextTick(() => { this.is_inited = true })
+
+        // NOTE: we cannot use $nextTick here because this call happens multiple times
+        setTimeout(() => { this.is_inited = true }, 1)
       },
       selectNewTask(item, index) {
         var items = this.task_items
