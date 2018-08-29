@@ -230,7 +230,7 @@
       :modal-append-to-body="false"
       :visible.sync="show_pipe_properties_dialog"
     >
-      <PipeDocumentForm
+      <PipePropertiesPanel
         :pipe="edit_pipe"
         @close="show_pipe_properties_dialog = false"
         @cancel="show_pipe_properties_dialog = false"
@@ -273,8 +273,8 @@
   import PipeCodeEditor from './PipeCodeEditor.vue'
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
+  import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
-  import PipeDocumentForm from './PipeDocumentForm.vue'
   import ProcessContent from './ProcessContent.vue'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -298,8 +298,8 @@
       PipeCodeEditor,
       PipeDocumentHeader,
       PipeDocumentRunPanel,
+      PipePropertiesPanel,
       PipeSchedulePanel,
-      PipeDocumentForm,
       ProcessContent
     },
     watch: {
