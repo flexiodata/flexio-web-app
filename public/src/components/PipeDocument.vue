@@ -67,29 +67,34 @@
 
     <!-- build view; build mode -->
     <div class="h-100" v-else>
-      <vue-slide-up-down
-        :active="show_save_cancel"
-        :duration="200"
-      >
-        <div class="flex flex-row items-center el-alert el-alert--warning bb b--black-10">
-          <div class="flex-fill f6">Your have made changes to this pipe. Would you like to save your changes?</div>
-          <el-button
-            class="ttu b"
-            size="small"
-            @click="cancelChanges"
-          >
-            Cancel
-          </el-button>
-          <el-button
-            class="ttu b"
-            size="small"
-            type="primary"
-            @click="saveChanges"
-          >
-            Save changes
-          </el-button>
+      <transition name="el-message-fade">
+        <div
+          role="alert"
+          class="el-message el-message--warning"
+          :style="save_cancel_style"
+          v-if="show_save_cancel"
+        >
+          <div class="el-message__content flex flex-row items-center nt1 nb1">
+            <div class="flex-fill f6 mr3">Your have made changes to this pipe. Would you like to save your changes?</div>
+            <el-button
+              class="ttu b"
+              size="small"
+              @click="cancelChanges"
+            >
+              Cancel
+            </el-button>
+            <el-button
+              class="ttu b"
+              size="small"
+              type="primary"
+              @click="saveChanges"
+            >
+              Save changes
+            </el-button>
+          </div>
         </div>
-      </vue-slide-up-down>
+      </transition>
+
       <div class="flex flex-row h-100">
         <el-menu
           class="bg-nearer-white"
@@ -319,6 +324,9 @@
       is_fetched: {
         handler: 'initSticky',
         immediate: true
+      },
+      is_changed() {
+        this.save_cancel_zindex++
       }
     },
     data() {
@@ -335,7 +343,8 @@
         has_run_once: false,
         has_errors: false,
         is_saving: false,
-        is_changed: false
+        is_changed: false,
+        save_cancel_zindex: 2050
       }
     },
     computed: {
@@ -352,11 +361,10 @@
         return _.get(this.orig_pipe, 'name', '')
       },
       show_save_cancel() {
-        if (this.is_saving) {
-          return false
-        }
-
         return this.is_changed
+      },
+      save_cancel_style() {
+        return 'z-index: ' + this.save_cancel_zindex
       },
       edit_pipe: {
         get() {
