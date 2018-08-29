@@ -332,7 +332,9 @@
         show_pipe_properties_dialog: false,
         show_yaml: true,
         has_run_once: false,
-        has_errors: false
+        has_errors: false,
+        is_updating: false,
+        is_saving: false
       }
     },
     computed: {
@@ -352,6 +354,10 @@
         return this.isChanged()
       },
       show_save_cancel() {
+        if (this.is_saving || this.is_updating) {
+          return false
+        }
+
         var orig_mode = _.get(this.orig_pipe, 'pipe_mode')
         var edit_mode = _.get(this.edit_pipe, 'pipe_mode')
 
@@ -369,8 +375,10 @@
         },
         set(value) {
           try {
+            this.is_updating = true
             var pipe = _.cloneDeep(value)
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.$nextTick(() => { this.is_updating = false })
           }
           catch(e)
           {
@@ -467,6 +475,8 @@
         this.revertCodeEditor()
       },
       saveChanges() {
+        this.is_saving = true
+
         var eid = this.eid
         var attrs = _.pick(this.edit_pipe, this.edit_keys)
 
@@ -474,8 +484,6 @@
         attrs = _.omitBy(attrs, (val, key) => { return _.isNil(val) })
 
         return this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          this.active_task_idx = -1
-
           if (response.ok) {
             this.$message({
               message: 'The pipe was updated successfully.',
@@ -490,6 +498,9 @@
               type: 'error'
             })
           }
+
+          this.is_saving = false
+          this.active_task_idx = -1
         })
       },
       revertProperties() {
