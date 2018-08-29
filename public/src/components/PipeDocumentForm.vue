@@ -2,18 +2,17 @@
   <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showHeader">
-        <span class="flex-fill f4">Properties for '{{orig_pipe.name}}'</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
+        <span class="flex-fill f4">Properties for '{{pipe.name}}'</span>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
 
     <el-form
       ref="form"
-      class="el-form--cozy"
-      label-width="9rem"
-      :model="form_values"
+      class="el-form--cozy el-form__label-tiny"
+      label-position="top"
+      :model="edit_pipe"
       :rules="rules"
-      v-if="form_values"
     >
       <el-form-item
         key="name"
@@ -24,7 +23,7 @@
           placeholder="Enter name"
           style="max-width: 36rem"
           :autofocus="true"
-          v-model="form_values.name"
+          v-model="edit_pipe.name"
         />
       </el-form-item>
       <el-form-item
@@ -36,7 +35,7 @@
           placeholder="Enter alias"
           class="mr1"
           style="max-width: 36rem"
-          v-model="form_values.alias"
+          v-model="edit_pipe.alias"
         >
           <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
           <template slot="append">
@@ -47,29 +46,6 @@
             ><span class="ttu b">Copy</span></el-button>
           </template>
         </el-input>
-        <span>
-          <el-button
-            type="text"
-            @click="show_pipe_deploy_dialog = true"
-          >
-            How do I deploy this pipe?
-          </el-button>
-        </span>
-      </el-form-item>
-      <el-form-item
-        label="Scheduled"
-      >
-        <el-switch
-          v-model="is_scheduled"
-        />
-        <span class="ml1">
-          <el-button
-            type="text"
-            @click="show_pipe_schedule_dialog = true"
-          >
-            Options...
-          </el-button>
-        </span>
       </el-form-item>
       <el-form-item
         key="description"
@@ -80,52 +56,22 @@
           type="textarea"
           placeholder="Enter description"
           :rows="3"
-          v-model="form_values.description"
+          v-model="edit_pipe.description"
         />
       </el-form-item>
-
-      <!-- pipe schedule dialog -->
-      <el-dialog
-        custom-class="el-dialog--no-header el-dialog--no-footer"
-        width="42rem"
-        top="8vh"
-        :modal-append-to-body="false"
-        :visible.sync="show_pipe_schedule_dialog"
-      >
-        <PipeSchedulePanel
-          :pipe="edit_pipe"
-          @close="show_pipe_schedule_dialog = false"
-          @cancel="show_pipe_schedule_dialog = false"
-          @submit="updatePipeSchedule"
-        />
-      </el-dialog>
-
-      <!-- pipe deploy dialog -->
-      <el-dialog
-        custom-class="el-dialog--no-header el-dialog--no-footer"
-        width="56rem"
-        top="8vh"
-        :modal-append-to-body="false"
-        :visible.sync="show_pipe_deploy_dialog"
-      >
-        <PipeDeployPanel
-          :pipe="orig_pipe"
-          @close="show_pipe_deploy_dialog = false"
-        />
-      </el-dialog>
     </el-form>
 
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
         class="ttu b"
-        @click="$emit('cancel')"
+        @click="onCancel"
       >
         Cancel
       </el-button>
       <el-button
         class="ttu b"
         type="primary"
-        @click="submit"
+        @click="onSubmit"
       >
         Save changes
       </el-button>
@@ -134,12 +80,16 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
-  import { SCHEDULE_STATUS_ACTIVE, SCHEDULE_STATUS_INACTIVE } from '../constants/schedule'
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import PipeSchedulePanel from './PipeSchedulePanel.vue'
-  import PipeDeployPanel from './PipeDeployPanel.vue'
   import Validation from './mixins/validation'
+
+  const defaultAttrs = () => {
+    return {
+      name: '',
+      alias: '',
+      description: ''
+    }
+  }
 
   export default {
     props: {
@@ -154,29 +104,27 @@
       'show-footer': {
         type: Boolean,
         default: true
+      },
+      'pipe': {
+        type: Object,
+        default: () => { return defaultAttrs() }
       }
     },
     mixins: [Validation],
-    components: {
-      PipeSchedulePanel,
-      PipeDeployPanel
-    },
     watch: {
-      orig_pipe: {
-        handler: 'resetForm',
-        immedate: true,
+      pipe: {
+        handler: 'initPipe',
+        immediate: true,
         deep: true
       },
-      form_values: {
-        handler: 'updateStore',
+      edit_pipe: {
+        handler: 'updatePipe',
         deep: true
       }
     },
     data() {
       return {
-        show_pipe_schedule_dialog: false,
-        show_pipe_deploy_dialog: false,
-        form_values: null,
+        edit_pipe: defaultAttrs(),
         rules: {
           name: [
             { required: true, message: 'Please input a name', trigger: 'blur' }
@@ -188,54 +136,35 @@
       }
     },
     computed: {
-      ...mapState({
-        orig_pipe: state => state.pipe.orig_pipe,
-        edit_pipe: state => state.pipe.edit_pipe
-      }),
       identifier() {
-        var alias = this.form_values.alias
+        var alias = this.edit_pipe.alias
         return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
       },
       path() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
-      },
-      path_tooltip() {
-        return 'This is the API endpoint for this pipe. To run this pipe via our REST API, append "/run" to this endpoint.'
-      },
-      is_scheduled: {
-        get() {
-          return _.get(this.edit_pipe, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
-        },
-        set() {
-          var status = this.is_scheduled ? SCHEDULE_STATUS_INACTIVE : SCHEDULE_STATUS_ACTIVE
-          _.set(this.form_values, 'schedule_status', status)
-        }
       }
     },
-    mounted() {
-      this.resetForm(this.orig_pipe)
-    },
+
     methods: {
-      submit() {
+      onClose() {
+        this.initPipe()
+        this.$emit('close')
+      },
+      onCancel() {
+        this.initPipe()
+        this.$emit('cancel')
+      },
+      onSubmit() {
         this.$emit('submit', this.edit_pipe)
+      },
+      initPipe() {
+        this.edit_pipe = _.cloneDeep(this.pipe)
+      },
+      updatePipe() {
+        this.$emit('change', this.edit_pipe)
       },
       validate(callback) {
         this.$refs.form.validate(callback)
-      },
-      updateStore() {
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', this.form_values)
-      },
-      resetForm(form_values) {
-        this.form_values = _.cloneDeep(form_values)
-      },
-      updatePipeSchedule(attrs) {
-        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
-
-        var pipe = _.cloneDeep(this.edit_pipe)
-        _.assign(pipe, attrs)
-        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-
-        this.show_pipe_schedule_dialog = false
       },
       formValidateAlias(rule, value, callback) {
         if (value.length == 0) {
@@ -243,7 +172,7 @@
           return
         }
 
-        if (value == _.get(this.orig_pipe, 'alias', '')) {
+        if (value == _.get(this.pipe, 'alias', '')) {
           callback()
           return
         }

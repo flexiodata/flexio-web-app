@@ -231,9 +231,9 @@
       :visible.sync="show_pipe_properties_dialog"
     >
       <PipeDocumentForm
-        ref="pipe-document-form"
-        @close="revertProperties"
-        @cancel="revertProperties"
+        :pipe="edit_pipe"
+        @close="show_pipe_properties_dialog = false"
+        @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
       />
     </el-dialog>
@@ -489,19 +489,15 @@
           this.is_changed = false
         })
       },
-      revertProperties() {
-        this.cancelChanges()
-        this.show_pipe_properties_dialog = false
-      },
-      saveProperties() {
-        var doc_form = this.$refs['pipe-document-form']
-        doc_form.validate((valid) => {
-          if (!valid)
-            return
+      saveProperties(attrs) {
+        attrs = _.pick(attrs, ['name', 'description', 'alias'])
 
-          this.saveChanges().then(() => {
-            this.show_pipe_properties_dialog = false
-          })
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.saveChanges().then(() => {
+          this.show_pipe_properties_dialog = false
         })
       },
       saveSchedule(attrs) {
