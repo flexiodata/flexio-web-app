@@ -269,7 +269,6 @@
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
-  import VueSlideUpDown from 'vue-slide-up-down'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
   import LabelSwitch from './LabelSwitch.vue'
@@ -294,7 +293,6 @@
     components: {
       Multipane,
       MultipaneResizer,
-      VueSlideUpDown,
       Spinner,
       IconMessage,
       LabelSwitch,
