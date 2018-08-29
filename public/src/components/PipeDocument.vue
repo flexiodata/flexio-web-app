@@ -250,7 +250,7 @@
         :pipe="edit_pipe"
         @close="show_pipe_schedule_dialog = false"
         @cancel="show_pipe_schedule_dialog = false"
-        @submit="updatePipeSchedule"
+        @submit="saveSchedule"
       />
     </el-dialog>
 
@@ -504,7 +504,7 @@
           })
         })
       },
-      updatePipeSchedule(attrs) {
+      saveSchedule(attrs) {
         attrs = _.pick(attrs, ['schedule', 'schedule_status'])
 
         var pipe = _.cloneDeep(this.edit_pipe)

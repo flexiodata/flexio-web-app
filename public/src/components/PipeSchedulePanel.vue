@@ -3,7 +3,7 @@
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showHeader">
         <span class="flex-fill f4">Schedule '{{pipe.name}}'</span>
-        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
+        <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
 
@@ -118,14 +118,14 @@
     <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
         class="ttu b"
-        @click="$emit('cancel')"
+        @click="onCancel"
       >
         Cancel
       </el-button>
       <el-button
         class="ttu b"
         type="primary"
-        @click="submit"
+        @click="onSubmit"
       >
         Save changes
       </el-button>
@@ -261,7 +261,15 @@
       }
     },
     methods: {
-      submit() {
+      onClose() {
+        this.initPipe()
+        this.$emit('close')
+      },
+      onCancel() {
+        this.initPipe()
+        this.$emit('cancel')
+      },
+      onSubmit() {
         this.$emit('submit', this.edit_pipe)
       },
       initPipe() {
