@@ -63,6 +63,9 @@
       },
       active_prompt_idx: {
         handler: 'onActivePromptIdxChange'
+      },
+      activeItemIdx(val) {
+        this.active_prompt_idx = val
       }
     },
     data() {

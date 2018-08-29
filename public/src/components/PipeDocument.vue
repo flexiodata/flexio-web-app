@@ -466,6 +466,7 @@
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
         this.revertCodeEditor()
         this.is_changed = false
+        this.active_task_idx = -1
       },
       saveChanges() {
         this.is_saving = true
@@ -492,8 +493,8 @@
             })
           }
 
-          this.active_task_idx = -1
           this.is_changed = false
+          this.active_task_idx = -1
         })
       },
       saveProperties(attrs) {
