@@ -332,8 +332,11 @@
         handler: 'initSticky',
         immediate: true
       },
-      is_changed() {
-        this.save_cancel_zindex++
+      is_changed(val) {
+        this.$nextTick(() => {
+          this.save_cancel_zindex++
+          this.show_save_cancel = val
+        })
       },
       show_yaml() {
         this.transitioning_yaml = true
@@ -355,6 +358,7 @@
         has_run_once: false,
         has_errors: false,
         is_saving: false,
+        show_save_cancel: false,
         save_cancel_zindex: 2050
       }
     },
@@ -371,9 +375,6 @@
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
-      },
-      show_save_cancel() {
-        return this.is_changed
       },
       save_cancel_style() {
         return 'z-index: ' + this.save_cancel_zindex
