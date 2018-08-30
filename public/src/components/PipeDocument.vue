@@ -97,7 +97,7 @@
 
       <div class="flex flex-row h-100">
         <el-menu
-          class="bg-nearer-white"
+          class="flex-none bg-nearer-white"
           default-active="0"
         >
           <el-menu-item
@@ -109,7 +109,7 @@
         </el-menu>
 
         <multipane
-          class="vertical-panes"
+          class="flex-fill vertical-panes"
           layout="vertical"
         >
           <div
