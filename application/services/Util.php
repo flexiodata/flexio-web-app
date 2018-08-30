@@ -83,7 +83,11 @@ class Util
             $path = '/';
 
         if ($basepath === '/' || $basepath === '')
+        {
+            while (false !== strpos($path,'//'))
+                $path = str_replace('//','/',$path);
             return rtrim($path, '/');
+        }
 
         $parts = explode('/', trim($path,'/'));
         $out = [];
