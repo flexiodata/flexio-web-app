@@ -81,7 +81,19 @@
 
 <script>
   import marked from 'marked'
+  import util from '../utils'
   import CodeEditor from './CodeEditor.vue'
+
+  const default_python = util.btoaUnicode(`# basic hello world example
+def flexio_handler(context):
+    context.output.write("Hello, World.")
+`)
+
+  const default_javascript = util.btoaUnicode(`// basic hello world example
+exports.flexio_handler = function(context) {
+  context.output.write("Hello, World.")
+}
+`)
 
   const getDefaultValues = () => {
     return {
@@ -131,6 +143,9 @@
         immediate: true,
         deep: true
       },
+      'edit_values.lang': {
+        handler: 'onLangChange'
+      },
       is_changed: {
         handler: 'onChange'
       }
@@ -138,6 +153,8 @@
     data() {
       return {
         remote_options,
+        code_python: default_python,
+        code_javascript: default_javascript,
         orig_values: _.assign({}, getDefaultValues()),
         edit_values: _.assign({}, getDefaultValues()),
         lang_options: [
@@ -165,19 +182,44 @@
         var form_values = _.get(this.item, 'form_values', {})
         form_values = _.assign({}, getDefaultValues(), form_values)
         form_values.remote_state = form_values.path.length == 0 ? 'local' : 'remote'
+
+        if (_.get(form_values, 'code', '').length == 0) {
+          form_values.code = this.getCodeByLang(form_values.lang)
+        }
+
+        switch (form_values.lang) {
+          case 'python':
+            this.code_python = form_values.code
+            break
+          case 'javascript':
+            this.code_javascript = form_values.code
+            break
+        }
+
         this.orig_values = _.cloneDeep(form_values)
         this.edit_values = _.cloneDeep(form_values)
         this.$emit('update:isNextAllowed', true)
+      },
+      getCodeByLang(lang) {
+        switch (lang) {
+          case 'python': return this.code_python
+          case 'javascript': return this.code_javascript
+        }
+
+        return ''
       },
       onChange(val) {
         if (val) {
           this.$emit('active-item-change', this.index)
         }
       },
+      onLangChange(val) {
+        this.edit_values.code = this.getCodeByLang(val)
+      },
       onEditValuesChange() {
         var values = _.assign({}, this.edit_values)
-        values = _.omit(values, ['remote_state', values.remote_state == 'local' ? 'path' : 'code'])
-        console.log(values)
+        var is_local = values.remote_state == 'local' ? true : false
+        values = _.pick(values, ['op', 'lang', is_local ? 'code' : 'path'])
         this.$emit('item-change', values, this.index)
       }
     }
