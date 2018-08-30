@@ -18,6 +18,21 @@
       :model="edit_values"
     >
       <el-form-item
+        key="remote_state"
+        prop="remote_state"
+        label="Would you like to execute a remote or local script?"
+      >
+        <el-radio-group v-model="edit_values.remote_state">
+          <el-radio-button
+            :label="option.val"
+            :key="option.val"
+            v-for="option in remote_options"
+          >
+            {{option.label}}
+          </el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item
         key="lang"
         prop="lang"
         label="Language"
@@ -35,6 +50,7 @@
         key="path"
         prop="path"
         label="Remote path"
+        v-show="edit_values.remote_state == 'remote'"
       >
         <el-input
           autocomplete="off"
@@ -47,6 +63,7 @@
         key="code"
         prop="code"
         label="Code"
+        v-show="edit_values.remote_state == 'local'"
       >
         <CodeEditor
           class="bg-white ba b--black-10"
@@ -69,9 +86,16 @@
     return {
       op: 'execute',
       lang: 'python',
-      code: ''
+      path: '',
+      code: '',
+      remote_state: 'local'
     }
   }
+
+  const remote_options = [
+    { label: 'Local',  val: 'local'  },
+    { label: 'Remote', val: 'remote' }
+  ]
 
   export default {
     props: {
@@ -112,6 +136,7 @@
     },
     data() {
       return {
+        remote_options,
         orig_values: _.assign({}, getDefaultValues()),
         edit_values: _.assign({}, getDefaultValues()),
         lang_options: [
@@ -138,6 +163,7 @@
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
         form_values = _.assign({}, getDefaultValues(), form_values)
+        form_values.remote_state = form_values.path.length == 0 ? 'local' : 'remote'
         this.orig_values = _.cloneDeep(form_values)
         this.edit_values = _.cloneDeep(form_values)
         this.$emit('update:isNextAllowed', true)
@@ -148,7 +174,10 @@
         }
       },
       onEditValuesChange() {
-        this.$emit('item-change', this.edit_values, this.index)
+        var values = _.assign({}, this.edit_values)
+        values = _.omit(values, ['remote_state', values.remote_state == 'local' ? 'path' : 'code'])
+        console.log(values)
+        this.$emit('item-change', values, this.index)
       }
     }
   }
