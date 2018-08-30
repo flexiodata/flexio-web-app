@@ -20,5 +20,12 @@ class Test
 {
     public function run(&$results)
     {
+        // TEST: class syntax check
+
+        // BEGIN TEST
+        $class = new \Flexio\Api\Cron;
+        $actual = get_class($class);
+        $expected = 'Flexio\Api\Cron';
+        \Flexio\Tests\Check::assertString('A.1', 'new \Flexio\Api\Cron; basic class syntax check',  $actual, $expected, $results);
     }
 }
