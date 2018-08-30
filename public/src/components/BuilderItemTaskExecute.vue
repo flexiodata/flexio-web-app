@@ -55,6 +55,7 @@
         <el-input
           autocomplete="off"
           spellcheck="false"
+          placeholder="URL"
           :autofocus="true"
           v-model="edit_values.path"
         />
