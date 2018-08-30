@@ -159,8 +159,8 @@
                 <el-collapse-item name="web-ui">
                   <template slot="title">
                     <div class="flex flex-row items-center">
-                      <span class="f4">Web Interface</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added using the YAML or JSON in the sidebar.">
+                      <span class="f4">Input</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
@@ -191,8 +191,8 @@
                 <el-collapse-item name="task-list">
                   <template slot="title">
                     <div class="flex flex-row items-center">
-                      <span class="f4">Task List</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or the YAML or JSON in the sidebar.">
+                      <span class="f4">Task</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
@@ -212,8 +212,8 @@
                 <el-collapse-item name="output" :id="output_item_id">
                   <template slot="title">
                     <div class="flex flex-row items-center">
-                      <span class="f4">Result</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after a test run.">
+                      <span class="f4">Output</span>
+                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
