@@ -1,40 +1,12 @@
 task:
   op: execute
+  lang: python
+  code: ''
 
 prompt:
-  element: form
+  element: task-execute
   title: Execute
-  description: ''
-  cls: el-form--compact el-form__label-tiny
-  form_items:
-    - element: input
-      type: hidden
-      variable: op
-      value: execute
-    - element: markdown
-      value: |
-        <p class="mv0 ttu fw6 f7 moon-gray">Enter a remote script path</p>
-    - element: input
-      type: text
-      variable: path
-      label: Path
-      placeholder: Remote path
-    - element: markdown
-      value: |
-        <p class="mv0 ttu fw6 f7 moon-gray">&mdash; or inline your script &mdash;</p>
-    - element: select
-      variable: lang
-      label: Language
-      placeholder: Select language
-      value: javascript
-      options:
-        - label: Javascript
-          value: javascript
-        - label: Python
-          value: python
-    - element: code-editor
-      lang: python
-      transpose: base64
-      variable: code
-      label: Code
-      value: ''
+  form_values:
+    op: execute
+    lang: python
+    code: ''
