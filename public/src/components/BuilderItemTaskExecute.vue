@@ -1,0 +1,155 @@
+<template>
+  <div>
+    <div
+      class="tl pb3"
+      v-if="title.length > 0"
+    >
+      <h3 class="fw6 f3 mt0 mb2">{{title}}</h3>
+    </div>
+    <div
+      class="pb3 marked"
+      v-html="description"
+      v-show="show_description"
+    >
+    </div>
+    <el-form
+      class="el-form--cozy el-form__label-tiny"
+      label-position="top"
+      :model="edit_values"
+    >
+      <el-form-item
+        key="lang"
+        prop="lang"
+        label="Language"
+      >
+        <el-select v-model="edit_values.lang">
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in lang_options"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        key="path"
+        prop="path"
+        label="Remote path"
+      >
+        <el-input
+          autocomplete="off"
+          spellcheck="false"
+          :autofocus="true"
+          v-model="edit_values.path"
+        />
+      </el-form-item>
+      <el-form-item
+        key="code"
+        prop="code"
+        label="Code"
+      >
+        <CodeEditor
+          class="bg-white ba b--black-10"
+          style="line-height: 1.15; font-size: 13px"
+          transpose="base64"
+          :lang="edit_values.lang ? edit_values.lang : 'javascript'"
+          :options="{ minRows: 8, maxRows: 32 }"
+          v-model="edit_values.code"
+        />
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script>
+  import marked from 'marked'
+  import CodeEditor from './CodeEditor.vue'
+
+  const getDefaultValues = () => {
+    return {
+      op: 'execute',
+      lang: 'python',
+      code: ''
+    }
+  }
+
+  export default {
+    props: {
+      item: {
+        type: Object,
+        required: true
+      },
+      index: {
+        type: Number,
+        required: true
+      },
+      activeItemIdx: {
+        type: Number,
+        required: true
+      },
+      isNextAllowed: {
+        type: Boolean,
+        required: true
+      }
+    },
+    components: {
+      CodeEditor
+    },
+    watch: {
+      item: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
+      },
+      edit_values: {
+        handler: 'onEditValuesChange',
+        immediate: true,
+        deep: true
+      },
+      is_changed: {
+        handler: 'onChange'
+      }
+    },
+    data() {
+      return {
+        orig_values: _.assign({}, getDefaultValues()),
+        edit_values: _.assign({}, getDefaultValues()),
+        lang_options: [
+          { label: 'Python',     val: 'python' },
+          { label: 'Javascript', val: 'javascript' }
+        ]
+      }
+    },
+    computed: {
+      show_description() {
+        return this.description.length > 0
+      },
+      title() {
+        return _.get(this.item, 'title', 'Execute')
+      },
+      description() {
+        return marked(_.get(this.item, 'description', ''))
+      },
+      is_changed() {
+        return !_.isEqual(this.edit_values, this.orig_values)
+      }
+    },
+    methods: {
+      initSelf() {
+        var form_values = _.get(this.item, 'form_values', {})
+        form_values = _.assign({}, getDefaultValues(), form_values)
+        this.orig_values = _.cloneDeep(form_values)
+        this.edit_values = _.cloneDeep(form_values)
+        this.$emit('update:isNextAllowed', true)
+      },
+      onChange(val) {
+        if (val) {
+          this.$emit('active-item-change', this.index)
+        }
+      },
+      onEditValuesChange() {
+        this.$emit('item-change', this.edit_values, this.index)
+      }
+    }
+  }
+</script>
