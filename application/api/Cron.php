@@ -20,27 +20,6 @@ class Cron
 {
     public const JOB_SCHEDULE_CHECK_INTERVAL = 5; // check for jobs every 5 seconds
 
-    public const FREQ_ONE_MINUTE      = 'one-minute';
-    public const FREQ_FIVE_MINUTES    = 'five-minutes';
-    public const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
-    public const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
-    public const FREQ_HOURLY          = 'hourly';
-    public const FREQ_DAILY           = 'daily';
-    public const FREQ_WEEKLY          = 'weekly';
-    public const FREQ_MONTHLY         = 'monthly';
-
-    public const DAY_MONDAY    = 'mon';
-    public const DAY_TUESDAY   = 'tue';
-    public const DAY_WEDNESDAY = 'wed';
-    public const DAY_THURSDAY  = 'thu';
-    public const DAY_FRIDAY    = 'fri';
-    public const DAY_SATURDAY  = 'sat';
-    public const DAY_SUNDAY    = 'sun';
-
-    public const MONTH_FIRST     = 1;
-    public const MONTH_FIFTEENTH = 15;
-    public const MONTH_LAST      = 'last';
-
     private $table = array();
     private $last_update = '';
 
@@ -132,9 +111,9 @@ class Cron
                     }
                 }
 
-                if (($second < self::JOB_SCHEDULE_CHECK_INTERVAL) && array_key_exists(self::FREQ_ONE_MINUTE, $this->table))
+                if (($second < self::JOB_SCHEDULE_CHECK_INTERVAL) && array_key_exists(\Flexio\Base\Schedule::FREQ_ONE_MINUTE, $this->table))
                 {
-                    foreach ($this->table[self::FREQ_ONE_MINUTE] as $job)
+                    foreach ($this->table[\Flexio\Base\Schedule::FREQ_ONE_MINUTE] as $job)
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
@@ -143,9 +122,9 @@ class Cron
                     }
                 }
 
-                if (($minute % 5 == 0) && array_key_exists(self::FREQ_FIVE_MINUTES, $this->table))
+                if (($minute % 5 == 0) && array_key_exists(\Flexio\Base\Schedule::FREQ_FIVE_MINUTES, $this->table))
                 {
-                    foreach ($this->table[self::FREQ_FIVE_MINUTES] as $job)
+                    foreach ($this->table[\Flexio\Base\Schedule::FREQ_FIVE_MINUTES] as $job)
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
@@ -154,9 +133,9 @@ class Cron
                     }
                 }
 
-                if (($minute % 15 == 0) && array_key_exists(self::FREQ_FIFTEEN_MINUTES, $this->table))
+                if (($minute % 15 == 0) && array_key_exists(\Flexio\Base\Schedule::FREQ_FIFTEEN_MINUTES, $this->table))
                 {
-                    foreach ($this->table[self::FREQ_FIFTEEN_MINUTES] as $job)
+                    foreach ($this->table[\Flexio\Base\Schedule::FREQ_FIFTEEN_MINUTES] as $job)
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
@@ -165,9 +144,9 @@ class Cron
                     }
                 }
 
-                if (($minute % 30 == 0) && array_key_exists(self::FREQ_THIRTY_MINUTES, $this->table))
+                if (($minute % 30 == 0) && array_key_exists(\Flexio\Base\Schedule::FREQ_THIRTY_MINUTES, $this->table))
                 {
-                    foreach ($this->table[self::FREQ_THIRTY_MINUTES] as $job)
+                    foreach ($this->table[\Flexio\Base\Schedule::FREQ_THIRTY_MINUTES] as $job)
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
@@ -176,9 +155,9 @@ class Cron
                     }
                 }
 
-                if ($minute == 0 && array_key_exists(self::FREQ_HOURLY, $this->table))
+                if ($minute == 0 && array_key_exists(\Flexio\Base\Schedule::FREQ_HOURLY, $this->table))
                 {
-                    foreach ($this->table[self::FREQ_HOURLY] as $job)
+                    foreach ($this->table[\Flexio\Base\Schedule::FREQ_HOURLY] as $job)
                     {
                         print("running job...");
                         $pipe_eid = $job['pipe_eid'];
@@ -222,11 +201,11 @@ class Cron
 
             if (isset($schedule['frequency']))
             {
-                if ($schedule['frequency'] == self::FREQ_ONE_MINUTE ||
-                    $schedule['frequency'] == self::FREQ_FIVE_MINUTES ||
-                    $schedule['frequency'] == self::FREQ_FIFTEEN_MINUTES ||
-                    $schedule['frequency'] == self::FREQ_THIRTY_MINUTES ||
-                    $schedule['frequency'] == self::FREQ_HOURLY)
+                if ($schedule['frequency'] == \Flexio\Base\Schedule::FREQ_ONE_MINUTE ||
+                    $schedule['frequency'] == \Flexio\Base\Schedule::FREQ_FIVE_MINUTES ||
+                    $schedule['frequency'] == \Flexio\Base\Schedule::FREQ_FIFTEEN_MINUTES ||
+                    $schedule['frequency'] == \Flexio\Base\Schedule::FREQ_THIRTY_MINUTES ||
+                    $schedule['frequency'] == \Flexio\Base\Schedule::FREQ_HOURLY)
                 {
                     $timekey = $schedule['frequency'];
 
@@ -242,9 +221,10 @@ class Cron
                 }
             }
 
-
-            $timezone = isset($schedule['timezone']) ? $schedule['timezone'] : 'UTC';
-
+            // make sure the timezone is valid; if it's empty or invalid, use UTC
+            $timezone = isset($schedule['timezone']) ? $schedule['timezone'] : '';
+            if (\Flexio\Base\Schedule::isValidTimeZone($timezone) === false || $timezone === '')
+                $timezone = 'UTC';
 
             if (isset($schedule['times']) && is_array($schedule['times']))
             {
@@ -253,7 +233,7 @@ class Cron
                     if (!isset($time['hour']) || !isset($time['minute']))
                         continue;
 
-                    // find out what that time is in UTC
+                    // find out what the time is in UTC
                     $dt = new \DateTime('now', new \DateTimeZone($timezone));
                     $dt->setTime($time['hour'], $time['minute']);
                     $gmtime_parts = \Flexio\Base\Util::getDateTimeParts($dt->getTimestamp(), 'UTC');

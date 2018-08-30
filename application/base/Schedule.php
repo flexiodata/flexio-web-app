@@ -32,11 +32,60 @@ class Schedule
     ]
 }
 */
+    public const FREQ_ONE_MINUTE      = 'one-minute';
+    public const FREQ_FIVE_MINUTES    = 'five-minutes';
+    public const FREQ_FIFTEEN_MINUTES = 'fifteen-minutes';
+    public const FREQ_THIRTY_MINUTES  = 'thirty-minutes';
+    public const FREQ_HOURLY          = 'hourly';
+    public const FREQ_DAILY           = 'daily';
+    public const FREQ_WEEKLY          = 'weekly';
+    public const FREQ_MONTHLY         = 'monthly';
+
+    public const DAY_MONDAY    = 'mon';
+    public const DAY_TUESDAY   = 'tue';
+    public const DAY_WEDNESDAY = 'wed';
+    public const DAY_THURSDAY  = 'thu';
+    public const DAY_FRIDAY    = 'fri';
+    public const DAY_SATURDAY  = 'sat';
+    public const DAY_SUNDAY    = 'sun';
+
+    public const MONTH_FIRST     = 1;
+    public const MONTH_FIFTEENTH = 15;
+    public const MONTH_LAST      = 'last';
 
     public static function isValid($properties) : bool
     {
+        if (!is_array($properties))
+            return false;
+
         if (\Flexio\Base\ValidatorSchema::check($properties, self::SCHEDULE_SCHEMA)->hasErrors())
             return false;
+
+        // make sure timezone is a valid
+        $timezone = $properties['timezone'] ;
+        if (!self::isValidTimeZone($timezone))
+            return false;
+
+        return true;
+    }
+
+    public static function isValidTimeZone($timezone) : bool
+    {
+        if (!is_string($timezone))
+            return false;
+
+        // allow empty timezone for purposes of default
+        if (strlen($timezone) === 0)
+            return true;
+
+        try
+        {
+            $timezone = new \DateTimeZone($timezone);
+        }
+        catch (\Exception $e)
+        {
+            return false;
+        }
 
         return true;
     }
@@ -69,12 +118,12 @@ class Schedule
                         "hour": {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 24
+                            "maximum": 23
                         },
                         "minute": {
                             "type": "integer",
                             "minimum": 0,
-                            "maximum": 60
+                            "maximum": 59
                         }
                     }
                 }
