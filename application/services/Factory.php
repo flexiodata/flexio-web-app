@@ -176,6 +176,8 @@ class Factory
                 $auth_params = array(
                     'access_token' => $connection_info['access_token'] ?? '',
                     'refresh_token' => $connection_info['refresh_token'] ?? '',
+                    'region' => $connection_info['region'] ?? '',
+                    'bucket' => $connection_info['bucket'] ?? '',
                     'base_path' => $connection_info['base_path'] ?? ''
                 );
                 if (isset($connection_info['expires'])) $auth_params['expires'] = $connection_info['expires'];

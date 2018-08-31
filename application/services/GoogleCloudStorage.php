@@ -710,9 +710,21 @@ class GoogleCloudStorage implements \Flexio\IFace\IConnection, \Flexio\IFace\IFi
         {
             $bucket = $this->bucket;
             $path = $full_path;
+
+            if (strlen($this->base_path) > 0 && $this->base_path != '/')
+                $path = $this->base_path . '/' . $path;
+            
+            while (false !== strpos($path,'//'))
+                $path = str_replace('//','/',$path);
         }
          else
         {
+            if (strlen($this->base_path) > 0 && $this->base_path != '/')
+                $full_path = $this->base_path . '/' . $full_path;
+
+            while (false !== strpos($full_path, '//'))
+                $full_path = str_replace('//','/', $full_path);
+            
             $has_leading_slash = (substr($full_path, 0, 1) == '/');
             $has_trailing_slash = (substr($full_path, -1) == '/');
 
