@@ -183,7 +183,10 @@ exports.flexio_handler = function(context) {
         form_values = _.assign({}, getDefaultValues(), form_values)
         form_values.remote_state = form_values.path.length == 0 ? 'inline' : 'remote'
 
-        if (_.get(form_values, 'code', '').length == 0) {
+        var has_no_code = _.get(form_values, 'code', '').length == 0
+        var is_inline_script = form_values.remote_state == 'inline'
+
+        if (has_no_code) {
           form_values.code = this.getCodeByLang(form_values.lang)
 
           // when creating a new execute task, make sure we fire an 'item-change'
@@ -191,7 +194,9 @@ exports.flexio_handler = function(context) {
           // attempts to save the pipe without editing the code at all
           //
           // NOTE: we cannot use $nextTick here because this call happens multiple times
-          setTimeout(() => { this.onEditValuesChange() }, 1)
+          if (is_inline_script) {
+            setTimeout(() => { this.onEditValuesChange() }, 1)
+          }
         }
 
         switch (form_values.lang) {
