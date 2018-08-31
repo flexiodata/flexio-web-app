@@ -129,7 +129,7 @@
               @save-click="saveChanges"
               @run-click="testPipe"
             />
-            <div class="mv4 center mw-doc">
+            <div class="mv4 center mw-doc" style="padding-bottom: 8rem">
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
                 <el-collapse-item name="web-ui">
                   <template slot="title">
@@ -194,16 +194,11 @@
                     </div>
                   </template>
                   <div class="pa4 bg-white br2 css-white-box">
-                    <ProcessContent
-                      :process-eid="active_process_eid"
-                      v-if="active_process_eid.length > 0 && has_run_once"
-                    />
-                    <div
-                      class="tc f6"
-                      v-else-if="!has_run_once"
-                    >
-                      <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
-                    </div>
+                    <ProcessContent :process-eid="active_process_eid">
+                      <div class="tc f6" slot="empty">
+                        <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
+                      </div>
+                    </ProcessContent>
                   </div>
                 </el-collapse-item>
               </el-collapse>
@@ -519,7 +514,7 @@
           this.has_run_once = true
         })
 
-        this.scrollToItem(this.output_item_id)
+        this.scrollToItem(this.output_item_id, 300)
       },
       updateRoute() {
         // update the route
@@ -550,7 +545,7 @@
           })
         }, 100)
       },
-      scrollToItem(item_id) {
+      scrollToItem(item_id, timeout) {
         if (_.isString(item_id)) {
           setTimeout(() => {
             this.$scrollTo('#'+item_id, {
@@ -558,7 +553,7 @@
                 duration: 400,
                 offset: -32
             })
-          }, 10)
+          }, timeout ? timeout : 10)
         }
       }
     }

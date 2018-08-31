@@ -1,43 +1,46 @@
 <template>
   <div>
-    <div
-      class="bg-white ba b--black-10 flex flex-column justify-center"
-      style="height: 300px"
-      v-if="is_process_running"
-    >
-      <Spinner size="large" message="Running..." />
-    </div>
-    <div
-      v-else-if="stream_eid.length > 0 && !is_process_failed"
-    >
-      <StreamContent
-        :height="300"
-        :stream-eid="stream_eid"
-      />
-      <div class="mt3 tc">
-        <a
-          class="el-button el-button--primary ttu b no-underline"
-          :href="download_url"
-        >
-          Download
-        </a>
+    <transition name="slide-fade" mode="in-out">
+      <slot name="empty" v-if="!processEid || processEid.length == 0"></slot>
+      <div
+        class="bg-white ba b--black-10 flex flex-column justify-center"
+        style="height: 300px"
+        v-if="is_process_running"
+      >
+        <Spinner size="large" message="Running..." />
       </div>
-    </div>
-    <div
-      v-else-if="is_superuser && is_process_failed"
-    >
-      <CodeEditor
-        class="bg-white ba b--black-10"
-        lang="json"
-        :options="{
-          minRows: 12,
-          maxRows: 24,
-          lineNumbers: false,
-          readOnly: true
-        }"
-        v-model="process_info_str"
-      />
-    </div>
+      <div
+        v-else-if="stream_eid.length > 0 && !is_process_failed"
+      >
+        <StreamContent
+          :height="300"
+          :stream-eid="stream_eid"
+        />
+        <div class="mt3 tc">
+          <a
+            class="el-button el-button--primary ttu b no-underline"
+            :href="download_url"
+          >
+            Download
+          </a>
+        </div>
+      </div>
+      <div
+        v-else-if="is_superuser && is_process_failed"
+      >
+        <CodeEditor
+          class="bg-white ba b--black-10"
+          lang="json"
+          :options="{
+            minRows: 12,
+            maxRows: 24,
+            lineNumbers: false,
+            readOnly: true
+          }"
+          v-model="process_info_str"
+        />
+      </div>
+    </transition>
   </div>
 </template>
 
