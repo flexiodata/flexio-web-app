@@ -2,20 +2,5 @@ task:
   op: echo
 
 prompt:
-  element: form
+  element: task-echo
   title: Echo
-  description: ''
-  cls: el-form--compact el-form__label-tiny
-  label_position: top
-  label_width: 6rem
-  form_items:
-    - element: input
-      type: hidden
-      variable: op
-      value: echo
-    - element: input
-      type: textarea
-      variable: msg
-      label: Message
-      placeholder: Enter message
-      value: ''
