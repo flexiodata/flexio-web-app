@@ -165,7 +165,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                  <div class="pa4 bg-white br2 css-white-box">
                     <BuilderList
                       builder-mode="wizard"
                       :items="edit_ui_list"
@@ -197,7 +197,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                  <div class="pa4 bg-white br2 css-white-box">
                     <PipeBuilderList
                       ref="task-list"
                       :container-id="scrollbar_container_id"
@@ -218,7 +218,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="mv3 pa4 bg-white br2 css-white-box">
+                  <div class="pa4 bg-white br2 css-white-box">
                     <ProcessContent
                       :process-eid="active_process_eid"
                       v-if="active_process_eid.length > 0 && has_run_once"
