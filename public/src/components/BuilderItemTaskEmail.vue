@@ -28,7 +28,19 @@
         <el-input
           placeholder="Enter email address"
           autocomplete="off"
+          style="max-width: 30rem"
           v-model="edit_values.to"
+        />
+        <el-select
+          class="w-100"
+          multiple
+          filterable
+          allow-create
+          default-first-option
+          popper-class="dn"
+          placeholder="Enter email addresses"
+          v-model="edit_values.to"
+          v-if="false"
         />
       </el-form-item>
       <el-form-item
@@ -114,14 +126,14 @@
         form_errors: {},
         rules: {
           to: [
-            { required: true, message: 'Please input an email address', trigger: 'blur' },
+            { required: true, message: 'Please input an email address' },
             { type: 'email', message: 'Please input a valid email address', trigger: 'blur' }
           ],
           subject: [
-            { required: true, message: 'Please input a subject', trigger: 'blur' }
+            { required: true, message: 'Please input a subject' }
           ],
           body: [
-            { required: true, message: 'Please input a message', trigger: 'blur' }
+            { required: true, message: 'Please input a message' }
           ]
         }
       }
@@ -168,16 +180,11 @@
       },
       onChange(val) {
         if (val) {
+          this.$nextTick(() => { this.validateForm(true) })
           this.$emit('active-item-change', this.index)
         }
       },
       onEditValuesChange() {
-        if (this.$refs.form) {
-          this.$refs.form.validate((valid) => {
-            this.$emit('update:isNextAllowed', valid)
-            this.$refs.form.clearValidate()
-          })
-        }
         this.$emit('item-change', this.edit_values, this.index)
       }
     }
