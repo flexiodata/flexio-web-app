@@ -20,7 +20,7 @@
       <el-form-item
         key="remote_state"
         prop="remote_state"
-        label="Would you like to execute a remote or local script?"
+        label="Would you like to execute an inline script or a remote script?"
       >
         <el-radio-group v-model="edit_values.remote_state">
           <el-radio-button
@@ -49,7 +49,7 @@
       <el-form-item
         key="path"
         prop="path"
-        label="Remote path"
+        label="Remote script URL"
         v-show="edit_values.remote_state == 'remote'"
       >
         <el-input
@@ -64,7 +64,7 @@
         key="code"
         prop="code"
         label="Code"
-        v-show="edit_values.remote_state == 'local'"
+        v-show="edit_values.remote_state == 'inline'"
       >
         <CodeEditor
           class="bg-white ba b--black-10"
@@ -101,13 +101,13 @@ exports.flexio_handler = function(context) {
       lang: 'python',
       path: '',
       code: '',
-      remote_state: 'local'
+      remote_state: 'inline'
     }
   }
 
   const remote_options = [
-    { label: 'Local',  val: 'local'  },
-    { label: 'Remote', val: 'remote' }
+    { label: 'Inline script', val: 'inline' },
+    { label: 'Remote script', val: 'remote' }
   ]
 
   export default {
@@ -181,7 +181,7 @@ exports.flexio_handler = function(context) {
       initSelf() {
         var form_values = _.get(this.item, 'form_values', {})
         form_values = _.assign({}, getDefaultValues(), form_values)
-        form_values.remote_state = form_values.path.length == 0 ? 'local' : 'remote'
+        form_values.remote_state = form_values.path.length == 0 ? 'inline' : 'remote'
 
         if (_.get(form_values, 'code', '').length == 0) {
           form_values.code = this.getCodeByLang(form_values.lang)
@@ -218,7 +218,7 @@ exports.flexio_handler = function(context) {
       },
       onEditValuesChange() {
         var values = _.assign({}, this.edit_values)
-        var is_local = values.remote_state == 'local' ? true : false
+        var is_local = values.remote_state == 'inline' ? true : false
         values = _.pick(values, ['op', 'lang', is_local ? 'code' : 'path'])
         this.$emit('item-change', values, this.index)
       }
