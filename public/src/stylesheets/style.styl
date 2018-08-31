@@ -9,23 +9,34 @@
 
 // -- Vue.js transition classes --
 
-.slide-fade-enter-active,
-.slide-fade-leave-active
-  transition: all .3s ease
+// this replaces the need to have these classes
+// for all of our Vue transitions:
+//
+// .slide-fade-enter-active,
+// .slide-fade-leave-active
+//
+//.slide-from-top-enter-active,
+//.slide-from-top-leave-active
+//
+// etc.
+[class*=-enter-active]
+[class*=-leave-active]
+  transition: all .25s ease
 
 .slide-fade-enter,
 .slide-fade-leave-to
   transform: translateY(-20px)
   opacity: 0
 
-.slide-from-right-leave-active
-.slide-from-right-enter-active
-  transition: all .3s ease
+.slide-in-top-out-top-enter,
+.slide-in-top-out-top-leave-to
+  transform: translate(0, -100%)
+  opacity: 0
 
-.slide-from-right-enter
+.slide-in-right-out-top-enter
   transform: translate(100%, 0)
 
-.slide-from-right-leave-to
+.slide-in-right-out-top-leave-to
   //transform: translate(-50%, 0)
   transform: translate(0, -100%)
   opacity: 0

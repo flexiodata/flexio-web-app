@@ -3,7 +3,7 @@
     <div class="flex-fill">
       <h1 class="mv0 fw6 f3">{{title}}</h1>
     </div>
-    <transition name="slide-from-right" mode="out-in">
+    <transition name="slide-in-top-out-top" mode="out-in">
       <div
         key="actions"
         class="flex-none flex flex-row items-center pv1"
