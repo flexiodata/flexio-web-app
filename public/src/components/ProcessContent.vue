@@ -1,7 +1,9 @@
 <template>
   <div>
-    <transition name="slide-fade" mode="in-out">
-      <slot name="empty" v-if="!processEid || processEid.length == 0"></slot>
+    <transition name="slide-fade" mode="out-in">
+      <div v-if="!processEid || processEid.length == 0">
+        <slot name="empty"></slot>
+      </div>
       <div
         class="bg-white ba b--black-10 flex flex-column justify-center"
         style="height: 300px"
