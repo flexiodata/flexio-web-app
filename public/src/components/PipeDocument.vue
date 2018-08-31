@@ -67,34 +67,6 @@
 
     <!-- build view; build mode -->
     <div class="h-100" v-else>
-      <transition name="el-message-fade">
-        <div
-          role="alert"
-          class="el-message el-message--warning"
-          :style="save_cancel_style"
-          v-if="show_save_cancel"
-        >
-          <div class="el-message__content flex flex-row items-center nt1 nb1">
-            <div class="flex-fill f6 mr3">You have made changes to this pipe. Would you like to save your changes?</div>
-            <el-button
-              class="ttu b"
-              size="small"
-              @click="cancelChanges"
-            >
-              Cancel
-            </el-button>
-            <el-button
-              class="ttu b"
-              size="small"
-              type="primary"
-              @click="saveChanges"
-            >
-              Save changes
-            </el-button>
-          </div>
-        </div>
-      </transition>
-
       <div class="flex flex-row h-100">
         <el-menu
           class="flex-none bg-nearer-white"
@@ -148,11 +120,14 @@
           >
             <PipeDocumentHeader
               class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
-              @schedule-click="show_pipe_schedule_dialog = true"
-              @properties-click="show_pipe_properties_dialog = true"
-              @run-click="testPipe"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
+              :show-save-cancel="show_save_cancel"
+              @schedule-click="show_pipe_schedule_dialog = true"
+              @properties-click="show_pipe_properties_dialog = true"
+              @cancel-click="cancelChanges"
+              @save-click="saveChanges"
+              @run-click="testPipe"
             />
             <div class="mv4 center mw-doc">
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">

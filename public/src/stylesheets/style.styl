@@ -18,6 +18,18 @@
   transform: translateY(-20px)
   opacity: 0
 
+.slide-from-right-leave-active
+.slide-from-right-enter-active
+  transition: all .3s ease
+
+.slide-from-right-enter
+  transform: translate(100%, 0)
+
+.slide-from-right-leave-to
+  //transform: translate(-50%, 0)
+  transform: translate(0, -100%)
+  opacity: 0
+
 // -- hint.css --
 
 // turn off transitions for all hint.css tooltips

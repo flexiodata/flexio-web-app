@@ -3,46 +3,76 @@
     <div class="flex-fill">
       <h1 class="mv0 fw6 f3">{{title}}</h1>
     </div>
-    <div class="flex-none flex flex-row items-center pv1">
-      <el-button
-        plain
-        class="btn-header hint--bottom"
-        aria-label="Schedule"
-        :class="{ 'invisible': isModeRun }"
-        @click="$emit('schedule-click')"
+    <transition name="slide-from-right" mode="out-in">
+      <div
+        key="actions"
+        class="flex-none flex flex-row items-center pv1"
+        v-if="!showSaveCancel"
       >
-        <i class="material-icons">date_range</i>
-      </el-button>
-      <el-button
-        plain
-        class="btn-header hint--bottom"
-        aria-label="Properties"
-        :class="{ 'invisible': isModeRun }"
-        @click="$emit('properties-click')"
-      >
-        <i class="material-icons">edit</i>
-      </el-button>
-      <el-button
-        class="ttu b"
-        style="min-width: 5rem; margin: 0 1rem"
-        type="primary"
-        size="small"
-        :class="{ 'invisible': isModeRun }"
-        :disabled="!allowRun"
-        @click="$emit('run-click')"
-      >
-        Test
-      </el-button>
-      <div class="flex flex-row items-center justify-center">
-        <span class="ttu f6 fw6">Your pipe is</span>
-        <LabelSwitch
-          class="dib ml2 hint--bottom-left"
-          active-color="#13ce66"
-          aria-label="Turn pipe on"
-          v-model="is_pipe_mode_run"
-        />
+        <el-button
+          plain
+          class="btn-header hint--bottom"
+          aria-label="Schedule"
+          :class="{ 'invisible': isModeRun }"
+          @click="$emit('schedule-click')"
+        >
+          <i class="material-icons">date_range</i>
+        </el-button>
+        <el-button
+          plain
+          class="btn-header hint--bottom"
+          aria-label="Properties"
+          :class="{ 'invisible': isModeRun }"
+          @click="$emit('properties-click')"
+        >
+          <i class="material-icons">edit</i>
+        </el-button>
+        <el-button
+          class="ttu b"
+          style="min-width: 5rem; margin: 0 1rem"
+          type="primary"
+          size="small"
+          :class="{ 'invisible': isModeRun }"
+          :disabled="!allowRun"
+          @click="$emit('run-click')"
+        >
+          Test
+        </el-button>
+        <div
+          class="flex flex-row items-center justify-center"
+          style="padding: 5px 10px 6px; border-radius: 3px"
+        >
+          <span class="ttu f6 fw6">Your pipe is</span>
+          <LabelSwitch
+            class="dib ml2 hint--bottom-left"
+            active-color="#13ce66"
+            aria-label="Turn pipe on"
+            v-model="is_pipe_mode_run"
+          />
+        </div>
       </div>
-    </div>
+      <div
+        key="save-cancel"
+        class="flex-none flex flex-row items-center pv1"
+        v-if="showSaveCancel"
+      >
+        <el-button
+          class="ttu b"
+          size="small"
+          @click="$emit('cancel-click')"
+        >
+          Cancel
+        </el-button>
+        <el-button
+          class="ttu b"
+          size="small"
+          type="primary"
+          @click="$emit('save-click')"
+        >
+          Save changes
+        </el-button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -54,6 +84,10 @@
       title: {
         type: String,
         required: true
+      },
+      showSaveCancel: {
+        type: Boolean,
+        default: false
       },
       isModeRun: {
         type: Boolean,
