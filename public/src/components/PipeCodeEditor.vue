@@ -3,6 +3,7 @@
     <CodeEditor
       :class="editorCls"
       :lang.sync="lang"
+      :lint="true"
       :enable-json-view-toggle="!has_errors"
       :show-json-view-toggle="false"
       v-bind="$attrs"

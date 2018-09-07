@@ -57,7 +57,7 @@
       },
       lint: {
         type: Boolean,
-        default: true
+        default: false
       },
       transpose: {
         type: String,
