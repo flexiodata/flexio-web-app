@@ -514,6 +514,10 @@
           this.has_run_once = true
         })
 
+        // make sure the output is expanded
+        this.active_collapse_items = [].concat(this.active_collapse_items).concat(['output'])
+
+        // scroll to the output item
         this.scrollToItem(this.output_item_id, 300)
       },
       updateRoute() {
