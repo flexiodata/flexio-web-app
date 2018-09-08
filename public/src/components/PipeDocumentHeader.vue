@@ -40,7 +40,7 @@
         </el-button>
         <div
           class="flex flex-row items-center justify-center"
-          style="padding: 5px 10px 6px; border-radius: 3px"
+          style="padding: 5px 5px 6px 10px; border-radius: 3px"
         >
           <span class="ttu f6 fw6">Your pipe is</span>
           <LabelSwitch

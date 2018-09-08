@@ -50,7 +50,7 @@
       v-else-if="is_pipe_mode_run"
     >
       <PipeDocumentHeader
-        class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
+        class="relative z-7 bg-nearer-white sticky"
         :title="title"
         :is-mode-run.sync="is_pipe_mode_run"
       />
@@ -119,7 +119,7 @@
             :style="{ flexGrow: 1 }"
           >
             <PipeDocumentHeader
-              class="nl4 nr4 pv2 ph3 relative z-7 bg-nearer-white sticky"
+              class="relative z-7 bg-nearer-white sticky"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
@@ -572,11 +572,18 @@
   .vertical-panes > .pane ~ .pane
     border-left: 1px solid #ddd
 
+  /*
+  nl4 nr4 pv2 ph3
+  nl4 nr4 pv2 ph3
+  */
   .sticky
-    box-shadow: 0 1px 0 0 rgba(0,0,0,0.05)
+    margin: 0 -2.125rem
+    padding: 0.5rem 1.5rem
+    border-bottom: 1px solid rgba(0,0,0,0.05)
     transition: all 0.15s ease
 
   .sticky.js-is-sticky
   .sticky.js-is-stuck
-    box-shadow: 0 4px 24px -8px rgba(0,0,0,0.2)
+    border-bottom: 1px solid rgba(0,0,0,0.1)
+    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
 </style>
