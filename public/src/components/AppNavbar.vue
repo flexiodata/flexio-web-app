@@ -1,5 +1,5 @@
 <template>
-  <nav class="z-10" style="box-shadow: 0 2px 16px -5px rgba(0,0,0,0.2)">
+  <nav class="z-10 bb b--black-20">
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 54px">
       <div class="flex-fill flex flex-row items-center">
         <router-link to="/home" class="dib link v-mid min-w3 hint--bottom" aria-label="Home">
