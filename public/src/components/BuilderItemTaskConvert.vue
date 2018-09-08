@@ -14,8 +14,8 @@
     </div>
     <div class="flex flex-row flex-wrap">
       <el-form
-        class="el-form--compact el-form__label-tiny mr3 mb3 bg-nearer-white ba b--black-05 br2 pa4"
-        style="width: 300px"
+        class="el-form--compact el-form__label-tiny mr3 mb3 pa4 bg-nearer-white br2 ba b--black-05"
+        size="small"
         label-position="top"
         :model="edit_values.input"
       >
@@ -71,7 +71,7 @@
         >
           <el-switch v-model="edit_values.input.header" />
           <span
-            class="f6 pl2 pointer"
+            class="f8 pl2 pointer"
             @click.stop="edit_values.input.header = !edit_values.input.header"
           >
             First row header
@@ -79,8 +79,8 @@
         </el-form-item>
       </el-form>
       <el-form
-        class="el-form--compact el-form__label-tiny mr3 mb3 bg-nearer-white ba b--black-05 br2 pa4"
-        style="width: 300px"
+        class="el-form--compact el-form__label-tiny mr3 mb3 pa4 bg-nearer-white br2 ba b--black-05"
+        size="small"
         label-position="top"
         :model="edit_values.output"
       >
@@ -136,7 +136,7 @@
         >
           <el-switch v-model="edit_values.output.header" />
           <span
-            class="f6 pl2 pointer"
+            class="f8 pl2 pointer"
             @click.stop="edit_values.output.header = !edit_values.output.header"
           >
             First row header
