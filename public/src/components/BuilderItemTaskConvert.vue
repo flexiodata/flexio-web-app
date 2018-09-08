@@ -153,14 +153,14 @@
   import marked from 'marked'
 
   const format_options = [
-    { label: 'CSV',        val: 'csv'       },
-    { label: 'TSV',        val: 'tsv'       },
-    { label: 'Delimited',  val: 'delimited' },
-    { label: 'JSON',       val: 'json'      },
-    { label: 'PDF',        val: 'pdf'       },
-    { label: 'RSS',        val: 'rss'       },
-    { label: 'Atom',       val: 'atom'      },
-    { label: 'Table',      val: 'table'     }
+    { label: 'CSV',             val: 'csv'       },
+    { label: 'TSV',             val: 'tsv'       },
+    { label: 'Delimited Text',  val: 'delimited' },
+    { label: 'JSON',            val: 'json'      },
+    { label: 'PDF',             val: 'pdf'       },
+    { label: 'RSS',             val: 'rss'       },
+    { label: 'Atom',            val: 'atom'      },
+    { label: 'Table',           val: 'table'     }
   ]
 
   const delimiter_options = [
