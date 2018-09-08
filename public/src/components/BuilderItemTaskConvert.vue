@@ -164,18 +164,18 @@
   ]
 
   const delimiter_options = [
-    { label: 'None',       val: '{none}'      },
-    { label: 'Comma',      val: '{comma}'     },
-    { label: 'Tab',        val: '{tab}'       },
-    { label: 'Semicolon',  val: '{semicolon}' },
-    { label: 'Pipe',       val: '{pipe}'      },
-    { label: 'Space',      val: '{space}'     }
+    { label: 'None',       val: ''   },
+    { label: 'Comma',      val: ','  },
+    { label: 'Tab',        val: '\t' },
+    { label: 'Semicolon',  val: ';'  },
+    { label: 'Pipe',       val: '|'  },
+    { label: 'Space',      val: ' '  }
   ]
 
   const qualifier_options = [
-    { label: 'None',         val: '{none}'         },
-    { label: 'Double-quote', val: '{double-quote}' },
-    { label: 'Single-quote', val: '{single-quote}' }
+    { label: 'None',         val: ''   },
+    { label: 'Double-quote', val: '"'  },
+    { label: 'Single-quote', val: '\'' }
   ]
 
   const getDefaultValues = () => {
@@ -194,6 +194,27 @@
         header: true
       }
     })
+  }
+
+  const mapDelimiter = (v) => {
+    switch (v) {
+      default:            return v
+      case '{none}':      return ''
+      case '{comma}':     return ','
+      case '{tab}':       return '\t'
+      case '{semicolon}': return ';'
+      case '{pipe}':      return '|'
+      case '{space}':     return ' '
+    }
+  }
+
+  const mapQualifier = (v) => {
+    switch (v) {
+      default:               return v
+      case '{none}':         return ''
+      case '{double-quote}': return '"'
+      case '{single-quote}': return "'"
+    }
   }
 
   export default {
@@ -257,10 +278,19 @@
       initSelf() {
         console.log('convert')
         var form_values = _.get(this.item, 'form_values', {})
+        form_values = _.cloneDeep(form_values)
+
+        // TODO: this can be removed after awhile
+        // translate old delimiter and qualifier values
+        _.each(['input', 'output'], (key) => {
+          form_values[key]['delimiter'] = mapDelimiter(form_values[key]['delimiter'])
+          form_values[key]['qualifier'] = mapQualifier(form_values[key]['qualifier'])
+        })
 
         var orig_values = _.cloneDeep(this.orig_values)
         var edit_values = _.cloneDeep(this.edit_values)
 
+        // update values from item
         _.each(['input', 'output'], (key) => {
           orig_values[key] = _.assign({}, orig_values[key], form_values[key])
           edit_values[key] = _.assign({}, edit_values[key], form_values[key])
