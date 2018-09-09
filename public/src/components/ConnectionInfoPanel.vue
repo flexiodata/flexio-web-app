@@ -210,7 +210,7 @@
 
   const getDefaultInfo = () => {
     return {
-      method: '',
+      method: 'GET',
       url: '',
       auth: 'none',
       username: '',
@@ -225,7 +225,6 @@
   }
 
   const method_options = [
-    { val: '',        label: 'Default (none)' },
     { val: 'GET',     label: 'GET'            },
     { val: 'POST',    label: 'POST'           },
     { val: 'PUT',     label: 'PUT'            },
