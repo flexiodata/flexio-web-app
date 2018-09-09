@@ -1,12 +1,6 @@
 task:
   op: execute
-  lang: python
-  code: ''
 
 prompt:
   element: task-execute
   title: Execute
-  form_values:
-    op: execute
-    lang: python
-    code: ''

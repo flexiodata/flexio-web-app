@@ -4,8 +4,3 @@ task:
 prompt:
   element: task-connect
   title: Connect
-  form_values:
-    op: connect
-    alias: ''
-    connection: ''
-    test: 123

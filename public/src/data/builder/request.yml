@@ -4,10 +4,3 @@ task:
 prompt:
   element: task-request
   title: Request
-  form_values:
-    op: request
-    method: ''
-    url: ''
-    header: {}
-    params: {}
-    data: {}

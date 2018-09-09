@@ -4,6 +4,3 @@ task:
 prompt:
   element: task-write
   title: Write
-  form_values:
-    op: write
-    path: ''

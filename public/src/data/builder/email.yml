@@ -4,4 +4,3 @@ task:
 prompt:
   element: task-email
   title: Email
-  description: ''
