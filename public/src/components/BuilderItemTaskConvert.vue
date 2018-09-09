@@ -178,21 +178,29 @@
     { label: 'Single-quote', val: '\'' }
   ]
 
+  const getDefaultInputValues = () => {
+    return _.assign({}, {
+      format: 'json',
+      delimiter: ',',
+      qualifier: '"',
+      header: true
+    })
+  }
+
+  const getDefaultOutputValues = () => {
+    return _.assign({}, {
+      format: 'table',
+      delimiter: ',',
+      qualifier: '"',
+      header: true
+    })
+  }
+
   const getDefaultValues = () => {
     return _.assign({}, {
       op: 'convert',
-      input: {
-        format: 'json',
-        delimiter: '{comma}',
-        qualifier: '{double-quote}',
-        header: true
-      },
-      output: {
-        format: 'table',
-        delimiter: '{comma}',
-        qualifier: '{double-quote}',
-        header: true
-      }
+      input: getDefaultInputValues(),
+      output: getDefaultOutputValues()
     })
   }
 
@@ -276,9 +284,11 @@
     },
     methods: {
       initSelf() {
-        console.log('convert')
+        // initialize default values
         var form_values = _.get(this.item, 'form_values', {})
         form_values = _.cloneDeep(form_values)
+        form_values.input = _.assign({}, getDefaultInputValues(), form_values.input)
+        form_values.output = _.assign({}, getDefaultOutputValues(), form_values.output)
 
         // TODO: this can be removed after awhile
         // translate old delimiter and qualifier values
