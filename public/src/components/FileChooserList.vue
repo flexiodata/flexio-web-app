@@ -2,7 +2,7 @@
   <div>
     <div v-if="is_fetching">
       <div class="pa1 flex flex-row items-center">
-        <spinner size="small"></spinner>
+        <Spinner size="small" />
         <span class="ml2 f6">Loading...</span>
       </div>
     </div>

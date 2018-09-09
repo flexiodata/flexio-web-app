@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-column justify-center bg-white ba b--black-10" :style="inner_style" v-if="is_fetching">
-    <Spinner size="large"message="Loading preview..." />
+    <Spinner size="large" message="Loading preview..." />
   </div>
   <div v-else-if="is_image">
     <img :stream-eid="streamEid" :src="stream_content_url" :style="inner_style" class="dib">

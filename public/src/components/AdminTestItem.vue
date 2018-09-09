@@ -12,11 +12,7 @@
           style="width: 24px; height: 24px"
           v-else
         >
-          <Spinner
-            :size="16"
-            :line-size="2"
-            v-if="item.is_running"
-          />
+          <Spinner :size="16" :line-size="2" v-if="item.is_running" />
         </div>
       </span>
       <span class="f6 fw6 mr2">{{item.id}}</span>

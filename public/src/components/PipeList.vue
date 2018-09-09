@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
-      <spinner size="large" message="Loading pipes..."></spinner>
+      <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
   <empty-item class="flex-fill justify-center h-100" v-else-if="pipes.length == 0 && filter.length > 0">

@@ -1,7 +1,7 @@
 <template>
   <div v-if="is_fetching">
     <div class="flex flex-row justify-center items-center pa3" style="min-height: 8rem">
-      <spinner size="medium"></spinner>
+      <Spinner size="medium" />
       <span class="ml2 f5">Loading...</span>
     </div>
   </div>
