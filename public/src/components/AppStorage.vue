@@ -35,11 +35,7 @@
         @item-activate="onConnectionActivate"
       />
       <div class="flex-fill">
-        <FileChooser
-          class="pa2"
-          :connection="connection"
-          v-if="has_connection"
-        />
+        <FileChooser class="pa2" v-if="has_connection" />
       </div>
     </div>
     <div class="flex flex-column justify-center h-100" v-else>
@@ -89,6 +85,7 @@
       }),
       connections() {
         var items = _.filter(this.getAvailableConnections(), this.$_Connection_isStorage)
+        items = _.sortBy(items, 'name')
         return [LOCAL_STORAGE_ITEM].concat(items)
       },
       ctype() {
