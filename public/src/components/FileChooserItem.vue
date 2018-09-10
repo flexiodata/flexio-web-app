@@ -11,11 +11,11 @@
       <div class="flex flex-row items-center">
         <img v-if="is_dir" src="../assets/file-icon/folder-open-16.png" class="dib" alt="Folder">
         <img v-else src="../assets/file-icon/file-16.png" class="dib" alt="File">
-        <span class="dib ml1 f7">{{item.name}}</span>
+        <span class="dib ml1 f7 truncate">{{item.name}}</span>
       </div>
     </td>
-    <td class="css-item f7 tr">{{modified}}</td>
-    <td class="css-item f7 tr">
+    <td class="css-item f7 tr nowrap">{{modified}}</td>
+    <td class="css-item f7 tr nowrap">
       <span v-if="is_dir">&nbsp;</span>
       <span v-else-if="!has_filesize">&nbsp;</span>
       <span v-else>{{size}}</span>

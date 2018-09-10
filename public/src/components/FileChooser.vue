@@ -77,6 +77,9 @@
       connection: {
         type: Object
       },
+      selectedItems: {
+        type: Array
+      },
       showConnectionList: {
         type: Boolean,
         default: false
@@ -138,6 +141,7 @@
       reset(attrs) {
         this.connection_path = '/'
         this.items = []
+        this.$emit('update:selectedItems', [])
       },
       onHide() {
         var url_list = this.$refs['url-input-list']
@@ -149,6 +153,7 @@
       openFolder(path) {
         this.connection_path = _.defaultTo(path, this.getConnectionBasePath())
         this.items = []
+        this.$emit('update:selectedItems', [])
         this.$emit('open-folder', this.connection_path)
       },
       getConnectionIdentifier() {
@@ -168,6 +173,7 @@
       },
       updateItems(items, path) {
         this.items = items
+        this.$emit('update:selectedItems', items)
         this.$emit('selection-change', items, path)
       },
       onConnectionActivate(item) {
