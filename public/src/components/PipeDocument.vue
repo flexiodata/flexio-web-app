@@ -577,7 +577,7 @@
   nl4 nr4 pv2 ph3
   */
   .sticky
-    margin: 0 -2.125rem
+    margin: 0 -2rem
     padding: 0.5rem 1.5rem
     border-bottom: 1px solid rgba(0,0,0,0.05)
     transition: all 0.15s ease
