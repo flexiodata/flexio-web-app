@@ -2,9 +2,13 @@ import sys
 import json
 import csv
 import datetime
-
-
 import pprint
+
+real_stdout = sys.stdout
+real_print = print
+
+
+
 
 class StdinoutProxy(object):
     def __init__(self):
@@ -22,8 +26,8 @@ class StdinoutProxy(object):
 
     def send_message(self, payload):
         msg = b'--MSGqQp8mf~' + str(len(payload)).encode('utf-8') + b',' + payload
-        sys.stdout.buffer.write(msg)
-        sys.stdout.flush()
+        real_stdout.buffer.write(msg)
+        real_stdout.flush()
 
     def read_message(self):
         buf = b''
@@ -636,6 +640,16 @@ class Context(object):
     def connections(self):
         return context_connections_obj
 
+g_print_output = None
+def print_redirect_to_output(*args, **kwargs):
+    format_str = '{} ' * len(args)
+    format_str = format_str.rstrip(' ')
+    val = format_str.format(*args, **kwargs)
+    g_print_output.write(val)
+
+
+import builtins as __builtin__
+
 def run(handler):
 
     stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
@@ -645,6 +659,9 @@ def run(handler):
     output = Output(stdout_stream_info)
 
     context = Context(input, output)
+    global g_print_output
+    g_print_output = output
+    __builtin__.print = print_redirect_to_output
 
     handler(context)
 
