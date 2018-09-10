@@ -75,3 +75,4 @@ COPY render.js /fxnodejs/render.js
 # flexio bindings for python
 RUN mkdir /fxpython
 COPY flexio.py /usr/lib/python3.5/flexio.py
+COPY fxstart.py /fxpython/fxstart.py

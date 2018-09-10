@@ -1084,6 +1084,7 @@ class Execute extends \Flexio\Jobs\Base
 
         if ($this->lang == 'python')
         {
+            /*
             // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
             {
@@ -1100,12 +1101,13 @@ class Execute extends \Flexio\Jobs\Base
 
                 $this->code_base64 = base64_encode($this->code);
             }
+            */
 
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/script.py && timeout 3600s python3 /fxpython/script.py)'";
+            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/fxmodule.py && timeout 3600s python3 /fxpython/fxstart.py)'";
 
             $script_host = new ScriptHost();
             $script_host->setProcess($process);
