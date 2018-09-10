@@ -29,6 +29,7 @@
           type="textarea"
           placeholder="Enter message"
           autocomplete="off"
+          :autosize="{ minRows: 2, maxRows: 8}"
           v-model="edit_values.msg"
         />
       </el-form-item>

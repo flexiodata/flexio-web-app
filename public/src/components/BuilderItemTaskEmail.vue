@@ -61,9 +61,9 @@
       >
         <el-input
           type="textarea"
-          rows="4"
           placeholder="Enter message"
           autocomplete="off"
+          :autosize="{ minRows: 3, maxRows: 8}"
           v-model="edit_values.body"
         />
       </el-form-item>
@@ -78,7 +78,8 @@
     return {
       to: '',
       subject: '',
-      body: ''
+      body: '',
+      attachments: []
     }
   }
 
