@@ -70,19 +70,21 @@
     </el-form>
 
     <template v-if="edit_values.attachments.length > 0">
-      <div class="ttu fw6 f6 pb1 mt3 mb1 bb b--black-10">Attachments</div>
-      <div
-        class="flex flex-row items-center cursor-default darken-05"
-        :item="item"
-        :index="item_index"
-        v-for="(item, item_index) in edit_values.attachments"
-      >
-        <div class="flex-fill ph2 pv1 f6">{{item.file}}</div>
-        <div class="flex-none ph2 pv1 f6">
-          <i class="el-icon-close pointer b black-30 hover-black-60" @click="removeFile(item_index)"></i>
+      <div class="ttu fw6 f7 pb1 mt3 mb1 bb b--black-10">Attachments</div>
+      <div class="overflow-auto" style="max-height: 120px">
+        <div
+          class="flex flex-row items-center cursor-default darken-05"
+          :item="item"
+          :index="item_index"
+          v-for="(item, item_index) in edit_values.attachments"
+        >
+          <div class="flex-fill ph2 pv1 f7">{{item.file}}</div>
+          <div class="flex-none ph2 pv1 f6">
+            <i class="el-icon-close pointer b black-30 hover-black-60" @click="removeFile(item_index)"></i>
+          </div>
         </div>
       </div>
-      <div class="mb1"></div>
+      <div class="mb2"></div>
     </template>
 
     <el-button
