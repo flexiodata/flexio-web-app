@@ -4,6 +4,7 @@
       :items="prompts"
       :container-id="containerId"
       :active-item-idx.sync="active_prompt_idx"
+      :active-item-cls="'css-active-blue'"
       :show-insert-buttons="active_prompt_idx == -1"
       :show-edit-buttons="false"
       :show-numbers="false"

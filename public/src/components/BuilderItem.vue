@@ -249,6 +249,10 @@
         type: Number,
         default: -1
       },
+      activeItemCls: {
+        type: String,
+        default: 'css-active'
+      },
       showNumbers: {
         type: Boolean,
         default: true
@@ -344,7 +348,7 @@
         return _.assign({}, this.content_border_cls, {
           'pv4 br2 css-content': true,
           'ph4': this.showContentBorder || this.is_active,
-          'css-active': this.is_active,
+          [this.activeItemCls]: this.is_active,
           'o-40 no-pointer-events no-select': this.builder__is_editing && !this.is_active
         })
       },
@@ -404,4 +408,12 @@
     border-radius: 4px
     border-color: #fff
     box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)
+
+  .css-active-blue
+    margin-top: 1rem
+    margin-bottom: 1rem
+    border-radius: 8px
+    //border-color: #fff
+    border: 1px solid rgba(64, 158, 255, 1)
+    box-shadow: 0 0 0 6px rgba(64, 158, 255, 0.2)
 </style>
