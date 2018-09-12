@@ -410,10 +410,10 @@
     box-shadow: 0 4px 24px -4px rgba(0,0,0,0.2)
 
   .css-active-blue
-    margin-top: 1rem
-    margin-bottom: 1rem
-    border-radius: 8px
-    //border-color: #fff
-    border: 1px solid rgba(64, 158, 255, 1)
-    box-shadow: 0 0 0 6px rgba(64, 158, 255, 0.2)
+    margin-top: 0.75rem
+    margin-bottom: 0.75rem
+    padding: 1.25rem
+    border-radius: 6px
+    //border: 1px solid rgba(64, 158, 255, 1)
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 7px rgba(64, 158, 255, 0.3)
 </style>
