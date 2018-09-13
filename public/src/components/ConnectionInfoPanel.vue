@@ -34,7 +34,7 @@
       </el-form-item>
     </el-form>
 
-    <div class="mt3 ba b--black-10 br2">
+    <div class="mt4 ba b--black-10 br2">
       <el-tabs class="bg-white br2 ph3 pt1 pb3" v-model="active_tab_name">
         <el-tab-pane name="authorization">
           <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
