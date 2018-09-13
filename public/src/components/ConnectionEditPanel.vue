@@ -40,6 +40,7 @@
           label-position="top"
           :model="edit_connection"
           :rules="rules"
+          @validate="onValidateItem"
         >
           <div class="flex flex-row">
             <el-form-item
@@ -243,6 +244,7 @@
             { validator: this.formValidateAlias }
           ]
         },
+        form_errors: {},
         connection_info_form_errors: {}
       }
     },
@@ -309,7 +311,7 @@
           return true
         }
 
-        return false
+        return _.keys(this.form_errors).length > 0
       },
       connection_info: {
         get() {
@@ -420,7 +422,16 @@
 
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
-      }
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
+      },
     }
   }
 </script>
