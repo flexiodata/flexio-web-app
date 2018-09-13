@@ -102,6 +102,7 @@
         </el-form>
 
         <ConnectionInfoPanel
+          ref="connection-info-panel"
           :connection-info.sync="connection_info"
           :form-errors.sync="connection_info_form_errors"
           v-if="is_http"
@@ -339,10 +340,22 @@
             return
 
           var auth_panel = this.$refs['connection-authentication-panel']
+          var info_panel = this.$refs['connection-info-panel']
+
           if (auth_panel) {
             auth_panel.validate((valid2) => {
-              if (!valid2)
+              if (!valid2) {
                 return
+              }
+
+              // there are no errors in the form; do the submit
+              this.$emit('submit', this.edit_connection)
+            })
+          } else if (info_panel) {
+            info_panel.validate((valid3) => {
+              if (!valid3) {
+                return
+              }
 
               // there are no errors in the form; do the submit
               this.$emit('submit', this.edit_connection)

@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-form
+      ref="form"
       class="el-form--compact el-form__label-tiny"
       :model="form_values"
       :rules="rules"
@@ -323,6 +324,13 @@
         this.$nextTick(() => { this.emitting = false })
 
         this.$emit('update:connectionInfo', connection_info)
+      },
+      validate(callback) {
+        if (this.$refs.form) {
+          this.$refs.form.validate(callback)
+        } else {
+          callback(true)
+        }
       },
       doKeypairChange(item, index, key) {
         if (index == _.size(this.form_values[key]) - 1) {
