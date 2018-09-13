@@ -166,7 +166,7 @@
                 <el-collapse-item class="mb4 pv2 ph3 bg-white br2 css-white-box" name="task-list">
                   <template slot="title">
                     <div class="flex flex-row items-center">
-                      <span class="f4">Task</span>
+                      <span class="f4">Task List</span>
                       <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
