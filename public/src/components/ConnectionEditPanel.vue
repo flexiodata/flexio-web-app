@@ -102,6 +102,7 @@
 
         <ConnectionInfoPanel
           :connection-info.sync="connection_info"
+          :form-errors.sync="connection_info_form_errors"
           v-if="is_http"
         />
 
@@ -241,7 +242,8 @@
           alias: [
             { validator: this.formValidateAlias }
           ]
-        }
+        },
+        connection_info_form_errors: {}
       }
     },
     computed: {
@@ -295,7 +297,14 @@
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
+      has_http_errors() {
+        return _.keys(this.connection_info_form_errors).length > 0
+      },
       has_errors() {
+        if (this.is_http && this.has_http_errors) {
+          return true
+        }
+
         if (this.is_oauth && !this.is_connected) {
           return true
         }
