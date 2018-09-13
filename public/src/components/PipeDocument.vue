@@ -131,7 +131,7 @@
             />
             <div class="mv4 center mw-doc" style="padding-bottom: 8rem">
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="web-ui">
+                <el-collapse-item class="mb4 pv2 ph3 bg-white br2 css-white-box" name="web-ui">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Input</span>
@@ -163,7 +163,7 @@
                     </div>
                   </div>
                 </el-collapse-item>
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="task-list">
+                <el-collapse-item class="mb4 pv2 ph3 bg-white br2 css-white-box" name="task-list">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Task</span>
@@ -184,7 +184,7 @@
                     />
                   </div>
                 </el-collapse-item>
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="output" :id="output_item_id">
+                <el-collapse-item class="mb4 pv2 ph3 bg-white br2 css-white-box" name="output" :id="output_item_id">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Output</span>
