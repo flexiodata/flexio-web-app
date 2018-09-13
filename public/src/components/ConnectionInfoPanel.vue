@@ -3,17 +3,24 @@
     <el-form
       class="el-form--compact el-form__label-tiny"
       :model="form_values"
+      :rules="rules"
+      @validate="onValidateItem"
     >
-      <div class="flex flex-column flex-row-ns">
-        <el-form-item
-          class="w-25-ns min-w4-ns"
-          key="method"
-          label="Method"
-          prop="method"
+      <el-form-item
+        key="url"
+        label="Method &amp; URL"
+        prop="url"
+      >
+        <el-input
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="URL"
+          v-model="form_values.url"
         >
           <el-select
-            class="w-100"
+            style="width: 120px"
             placeholder="Method"
+            slot="prepend"
             v-model="form_values.method"
           >
             <el-option
@@ -23,26 +30,11 @@
               v-for="option in method_options"
             />
           </el-select>
-        </el-form-item>
-
-        <el-form-item
-          class="flex-fill ml3-ns"
-          key="url"
-          label="URL"
-          prop="url"
-        >
-          <el-input
-            class="w-100"
-            autocomplete="off"
-            spellcheck="false"
-            placeholder="URL"
-            v-model="form_values.url"
-          />
-        </el-form-item>
-      </div>
+        </el-input>
+      </el-form-item>
     </el-form>
 
-    <div class="mv3 ba b--black-10 br2">
+    <div class="mt3 ba b--black-10 br2">
       <el-tabs class="bg-white br2 ph3 pt1 pb3" v-model="active_tab_name">
         <el-tab-pane name="authorization">
           <div slot="label" class="tc" style="min-width: 3rem">Authorization</div>
@@ -243,9 +235,12 @@
 
   export default {
     props: {
-      'connectionInfo': {
+      connectionInfo: {
         type: Object,
         required: true
+      },
+      formErrors: {
+        type: Object
       }
     },
     components: {
@@ -261,6 +256,9 @@
       form_values: {
         handler: 'emitUpdate',
         deep: true
+      },
+      form_errors(val) {
+        this.$emit('update:formErrors', val)
       }
     },
     data() {
@@ -269,7 +267,14 @@
         emitting: false,
         method_options,
         auth_options,
-        form_values: getDefaultInfo()
+        form_values: getDefaultInfo(),
+        form_errors: {},
+        rules: {
+          url: [
+            { required: true, message: 'Please input a URL' },
+            { type: 'url', message: 'Please input a valid URL', trigger: 'blur' }
+          ]
+        }
       }
     },
     methods: {
@@ -346,7 +351,16 @@
       },
       onHeaderItemDelete(item, index) {
         this.doKeypairDelete(item, index, 'headers')
-      }
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
+      },
     }
   }
 </script>

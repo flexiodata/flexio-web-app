@@ -14,6 +14,7 @@
     </div>
     <ConnectionInfoPanel
       :connection-info.sync="edit_values"
+      :form-errors.sync="form_errors"
     />
   </div>
 </template>
@@ -57,12 +58,16 @@
       },
       is_changed: {
         handler: 'onChange'
+      },
+      form_errors(val) {
+        this.$emit('update:isNextAllowed', _.keys(val).length == 0)
       }
     },
     data() {
       return {
         orig_values: {},
-        edit_values: {}
+        edit_values: {},
+        form_errors: {}
       }
     },
     computed: {
