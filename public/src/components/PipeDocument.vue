@@ -131,7 +131,7 @@
             />
             <div class="mv4 center mw-doc" style="padding-bottom: 8rem">
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
-                <el-collapse-item name="web-ui">
+                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="web-ui">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Input</span>
@@ -140,7 +140,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="pa4 bg-white br2 css-white-box">
+                  <div class="pt3 ph3">
                     <BuilderList
                       builder-mode="wizard"
                       :items="edit_ui_list"
@@ -163,7 +163,7 @@
                     </div>
                   </div>
                 </el-collapse-item>
-                <el-collapse-item name="task-list">
+                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="task-list">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Task</span>
@@ -172,7 +172,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="pa4 bg-white br2 css-white-box">
+                  <div class="pt3 ph3">
                     <PipeBuilderList
                       ref="task-list"
                       :container-id="scrollbar_container_id"
@@ -184,7 +184,7 @@
                     />
                   </div>
                 </el-collapse-item>
-                <el-collapse-item name="output" :id="output_item_id">
+                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="output" :id="output_item_id">
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Output</span>
@@ -193,7 +193,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="pa4 bg-white br2 css-white-box">
+                  <div class="pt3 ph3">
                     <ProcessContent :process-eid="active_process_eid">
                       <div class="tc f6" slot="empty">
                         <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
