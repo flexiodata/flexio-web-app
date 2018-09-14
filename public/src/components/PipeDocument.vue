@@ -350,39 +350,46 @@
         tour_steps: [
           {
             target: '[data-v-step="0"]',
-            content: 'Step 1 of 5: This is a pipe. A pipe is a collection of tasks that run sequentially.',
+            content: '<div class="tl mb1"><div class="b mb1">Step 1 of 6:</div>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
+            header: {
+              title: 'Welcome to Flex.io!'
+            },
             params: {
               placement: 'none'
             }
           },
           {
             target: '[data-v-step="1"]',
-            content: 'Step 2 of 5: Pipes can execute functions as well as other common tasks. New tasks are added by clicking on the plus button.',
+            content: '<div class="tl mb1"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions as well as other common tasks. New tasks are added by clicking on the plus button.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="4"]',
-            content: 'Step 3 of 5: Run this pipe now by clicking the "Test" button.'
+            content: '<div class="tl mb1"><div class="b mb1">Step 3 of 6:</div>Run this pipe now by clicking the "Test" button.</div>'
           },
           {
             target: '[data-v-step="3"]',
-            content: 'The pipe output area shows the output of your pipe after it has been run.',
+            content: '<div class="tl mb1"><div class="b mb1">Step 4 of 6:</div>The pipe output area shows the output of your pipe after it has been run.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="6"]',
-            content: 'Now click the plus button to add a convert step to convert the JSON payload to a table. Click the "Test" button one more time to run the pipe and see the result.',
+            content: '<div class="tl mb1"><div class="b mb1">Step 5 of 6:</div>Click the plus button to see a list of tasks that can be added. Click "Email" to add an email task and click the "Test" button one more time.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="5"]',
-            content: 'Once your pipe is working properly, turn it on to deploy it in a production environment.'
+            content: '<div class="tl mb1"><div class="b mb1">Step 6 of 6:</div>Click the "Schedule" button to schedule this pipe to run every five minutes.</div>'
+          },
+          {
+            target: '[data-v-step="7"]',
+            content: '<div class="tl mb1"><div class="b mb1">Thanks for checking out Flex.io!</div> Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
           }
         ]
       }

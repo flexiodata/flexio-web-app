@@ -13,6 +13,7 @@
           plain
           class="btn-header hint--bottom"
           aria-label="Schedule"
+          data-v-step="5"
           :class="{ 'invisible': isModeRun }"
           @click="$emit('schedule-click')"
         >
@@ -48,7 +49,6 @@
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
             aria-label="Turn pipe on"
-            data-v-step="5"
             v-model="is_pipe_mode_run"
           />
         </div>
