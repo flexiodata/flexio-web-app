@@ -80,10 +80,10 @@
 
 <script>
   import { mapState } from 'vuex'
-  import Validation from './mixins/validation'
+  import MixinValidation from './mixins/validation'
 
   export default {
-    mixins: [Validation],
+    mixins: [MixinValidation],
     data() {
       return {
         old_password: '',

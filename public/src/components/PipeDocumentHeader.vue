@@ -32,7 +32,7 @@
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
-          data-v-step="3"
+          data-v-step="4"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
@@ -48,6 +48,7 @@
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
             aria-label="Turn pipe on"
+            data-v-step="5"
             v-model="is_pipe_mode_run"
           />
         </div>

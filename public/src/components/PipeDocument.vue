@@ -120,6 +120,7 @@
           >
             <PipeDocumentHeader
               class="relative z-7 bg-nearer-white sticky"
+              data-v-step="0"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
@@ -134,7 +135,6 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="web-ui"
-                  data-v-step="0"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -186,6 +186,7 @@
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
+                      data-v-step="2"
                       @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
@@ -195,7 +196,7 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
-                  data-v-step="2"
+                  data-v-step="3"
                   :id="output_item_id"
                 >
                   <template slot="title">
@@ -273,6 +274,7 @@
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import ProcessContent from './ProcessContent.vue'
+  import MixinConfig from './mixins/config'
 
   const PIPE_MODE_UNDEFINED = ''
   const PIPE_MODE_BUILD     = 'B'
@@ -282,6 +284,7 @@
   const PIPEDOC_VIEW_RUN    = 'run'
 
   export default {
+    mixins: [MixinConfig],
     components: {
       Multipane,
       MultipaneResizer,
@@ -346,28 +349,39 @@
         tour_steps: [
           {
             target: '[data-v-step="0"]',
-            content: 'This is our onboarding step 1',
+            content: 'This is a pipe. A pipe is a collection of tasks that run sequentially.',
             params: {
-              placement: 'left'
+              placement: 'none'
             }
           },
           {
             target: '[data-v-step="1"]',
-            content: 'This is our onboarding step 2',
+            content: 'Tasks can execute functions as well as other common tasks.',
             params: {
-              placement: 'left'
+              placement: 'top'
             }
           },
           {
             target: '[data-v-step="2"]',
-            content: 'This is our onboarding step 3',
+            content: 'New tasks are added by clicking on the plus button.',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="3"]',
-            content: 'This is our onboarding step 4'
+            content: 'The pipe output area shows the output of your pipe after it has been run.',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '[data-v-step="4"]',
+            content: 'Pipes can be tested by clicking the "Test" button.'
+          },
+          {
+            target: '[data-v-step="5"]',
+            content: 'Once your pipe is working properly, turn it on to deploy it in a production environment.'
           }
         ]
       }
@@ -587,7 +601,15 @@
             stickyBitStickyOffset: 0
           })
 
-          this.$tours['pipe-document-build-tour'].start()
+          var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
+
+          // for testing
+          //this.$_Config_reset(cfg_path)
+
+          if (this.$_Config_get(cfg_path, false) === false) {
+            this.$tours['pipe-document-build-tour'].start()
+            this.$_Config_set(cfg_path, true)
+          }
         }, 100)
       },
       scrollToItem(item_id, timeout) {
