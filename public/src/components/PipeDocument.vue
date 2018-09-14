@@ -131,7 +131,11 @@
             />
             <div class="mv4 center mw-doc" style="padding-bottom: 8rem">
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="web-ui">
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="web-ui"
+                  data-v-step="0"
+                >
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Input</span>
@@ -163,7 +167,11 @@
                     </div>
                   </div>
                 </el-collapse-item>
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="task-list">
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="task-list"
+                  data-v-step="1"
+                >
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Task List</span>
@@ -184,7 +192,12 @@
                     />
                   </div>
                 </el-collapse-item>
-                <el-collapse-item class="mb4 pv1 ph3 bg-white br2 css-white-box" name="output" :id="output_item_id">
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="output"
+                  data-v-step="2"
+                  :id="output_item_id"
+                >
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Output</span>
@@ -206,7 +219,6 @@
           </div>
         </multipane>
       </div>
-
     </div>
 
     <el-dialog
@@ -240,6 +252,7 @@
       />
     </el-dialog>
 
+    <v-tour name="pipe-document-build-tour" :steps="tour_steps"></v-tour>
   </div>
 </template>
 
@@ -251,7 +264,6 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
-  import LabelSwitch from './LabelSwitch.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -275,7 +287,6 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
-      LabelSwitch,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -296,11 +307,11 @@
         immediate: true
       },
       is_pipe_mode_run: {
-        handler: 'initSticky',
+        handler: 'initStickyAndTour',
         immediate: true
       },
       is_fetched: {
-        handler: 'initSticky',
+        handler: 'initStickyAndTour',
         immediate: true
       },
       is_changed(val) {
@@ -330,7 +341,35 @@
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
-        save_cancel_zindex: 2050
+        save_cancel_zindex: 2050,
+
+        tour_steps: [
+          {
+            target: '[data-v-step="0"]',
+            content: 'This is our onboarding step 1',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '[data-v-step="1"]',
+            content: 'This is our onboarding step 2',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '[data-v-step="2"]',
+            content: 'This is our onboarding step 3',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '[data-v-step="3"]',
+            content: 'This is our onboarding step 4'
+          }
+        ]
       }
     },
     computed: {
@@ -540,13 +579,15 @@
           }
         })
       },
-      initSticky() {
+      initStickyAndTour() {
         setTimeout(() => {
           stickybits('.sticky', {
             scrollEl: '#' + this.scrollbar_container_id,
             useStickyClasses: true,
             stickyBitStickyOffset: 0
           })
+
+          this.$tours['pipe-document-build-tour'].start()
         }, 100)
       },
       scrollToItem(item_id, timeout) {

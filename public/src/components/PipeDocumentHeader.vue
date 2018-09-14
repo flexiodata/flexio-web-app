@@ -32,6 +32,7 @@
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
+          data-v-step="3"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
