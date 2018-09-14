@@ -174,7 +174,7 @@
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
-                      <span class="f4">Task List</span>
+                      <span class="f4">Tasks</span>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
@@ -350,7 +350,7 @@
         tour_steps: [
           {
             target: '[data-v-step="pipe-onboarding-0"]',
-            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a quick one minute tour to learn how to get going with Flex.io.<br><br>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
+            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a one-minute tour to get going with Flex.io.<br><br>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
             header: {
               title: 'Welcome to Flex.io!'
             },
@@ -360,36 +360,36 @@
           },
           {
             target: '[data-v-step="pipe-onboarding-1"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions as well as other common tasks. New steps can be added by clicking on the plus button.</div>',
+            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-2"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Run this pipe now by clicking the "Test" button.</div>'
+            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
           },
           {
             target: '[data-v-step="pipe-onboarding-3"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>The output panel shows the output of your pipe after it has been run.</div>',
+            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-5"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>We\'ll add a sample email step with some basic info filled out for you.<br><br>Once the email step has been added, click the "Test" button to run the pipe one more time.</div>',
+            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-6"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Click the "Schedule" button to schedule this pipe to run every five minutes.</div>'
+            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
           },
           {
             target: '[data-v-step="pipe-onboarding-7"]',
-            content: '<div class="tl mv3"><div class="b mb1">Thanks for checking out Flex.io!</div> Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
+            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div> Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
           }
         ],
 
@@ -643,8 +643,8 @@
           var my_email = this_user.email
           var email_item = {
             "to": my_email,
-            "subject": "Latest Hacker News Articles from Flex.io",
-            "body": "Here's the latest HackerNews:\n\n${input}\n\n----\n\nSee here for more info: " + window.location.href,
+            "subject": "Latest Hacker News Articles via Flex.io",
+            "body": "Here's the latest from Hacker News:\n\n${input}\n\n----\n\nThis result was generated from the following Flex.io pipe: " + window.location.href,
             "attachments": [],
             "op": "email"
           }
@@ -656,7 +656,7 @@
           setTimeout(() => {
             this.edit_pipe = _.assign({}, edit_pipe)
             this.saveChanges()
-          }, 1500)
+          }, 500)
         }
       }
     }
