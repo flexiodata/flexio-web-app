@@ -5,7 +5,10 @@
         <router-link to="/home" class="dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <AppBreadcrumbs class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns pv1 b--black-10 bl" />
+        <router-link to="/pipes" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Pipes</router-link>
+        <router-link to="/connections" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Connections</router-link>
+        <router-link to="/storage" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Storage</router-link>
+        <AppBreadcrumbs class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -44,3 +47,17 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  @import '../stylesheets/variables.styl'
+
+  .nav-link
+    padding-top: 4px
+    padding-bottom: 2px
+    border-bottom: 2px solid transparent
+    color: $body-color
+    &.router-link-active
+    &:hover
+      border-bottom-color: $blue
+      color: $blue
+</style>
