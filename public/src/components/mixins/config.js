@@ -4,6 +4,11 @@ export default {
     $_Config_get(path, default_val) {
       var user = this.$store.getters.getActiveUser
       var cfg = _.get(user, 'config', {})
+
+      // allow config to be overridden by GET params
+      //var params = _.get(this.$route, 'query', {})
+      //if (params['app.prompt.onboarding.shown'] === 'true')
+
       return cfg[path] === undefined ? default_val : cfg[path]
     },
     $_Config_set(path, val) {

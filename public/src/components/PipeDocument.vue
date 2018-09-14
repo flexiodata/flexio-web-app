@@ -139,7 +139,7 @@
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Input</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
+                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="An optional web interface that can be used in a runtime enviroment to prompt users for parameters to use when running the pipe. Interface elements can be added by editing the 'ui' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
@@ -175,7 +175,7 @@
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Task List</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
+                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
@@ -191,6 +191,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
+                    <div data-v-step="6"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
@@ -202,7 +203,7 @@
                   <template slot="title">
                     <div class="flex flex-row items-center">
                       <span class="f4">Output</span>
-                      <span class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
+                      <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The output panel shows the output of the pipe after it has been run.">
                         <i class="el-icon-info blue"></i>
                       </span>
                     </div>
@@ -331,7 +332,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['web-ui', 'task-list', 'output'],
+        active_collapse_items: [/*'web-ui',*/'task-list', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
@@ -349,24 +350,21 @@
         tour_steps: [
           {
             target: '[data-v-step="0"]',
-            content: 'This is a pipe. A pipe is a collection of tasks that run sequentially.',
+            content: 'Step 1 of 5: This is a pipe. A pipe is a collection of tasks that run sequentially.',
             params: {
               placement: 'none'
             }
           },
           {
             target: '[data-v-step="1"]',
-            content: 'Tasks can execute functions as well as other common tasks.',
-            params: {
-              placement: 'top'
-            }
-          },
-          {
-            target: '[data-v-step="2"]',
-            content: 'New tasks are added by clicking on the plus button.',
+            content: 'Step 2 of 5: Pipes can execute functions as well as other common tasks. New tasks are added by clicking on the plus button.',
             params: {
               placement: 'left'
             }
+          },
+          {
+            target: '[data-v-step="4"]',
+            content: 'Step 3 of 5: Run this pipe now by clicking the "Test" button.'
           },
           {
             target: '[data-v-step="3"]',
@@ -376,8 +374,11 @@
             }
           },
           {
-            target: '[data-v-step="4"]',
-            content: 'Pipes can be tested by clicking the "Test" button.'
+            target: '[data-v-step="6"]',
+            content: 'Now click the plus button to add a convert step to convert the JSON payload to a table. Click the "Test" button one more time to run the pipe and see the result.',
+            params: {
+              placement: 'left'
+            }
           },
           {
             target: '[data-v-step="5"]',
@@ -604,7 +605,7 @@
           var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
           // for testing
-          //this.$_Config_reset(cfg_path)
+          this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
             this.$tours['pipe-document-build-tour'].start()
