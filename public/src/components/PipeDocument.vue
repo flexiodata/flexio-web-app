@@ -120,7 +120,7 @@
           >
             <PipeDocumentHeader
               class="relative z-7 bg-nearer-white sticky"
-              data-v-step="0"
+              data-v-step="pipe-onboarding-0"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
@@ -170,7 +170,7 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="task-list"
-                  data-v-step="1"
+                  data-v-step="pipe-onboarding-1"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -186,18 +186,18 @@
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
-                      data-v-step="2"
+                      data-v-step="pipe-onboarding-2"
                       @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="6"></div>
+                    <div data-v-step="pipe-onboarding-5"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
-                  data-v-step="3"
+                  data-v-step="pipe-onboarding-3"
                   :id="output_item_id"
                 >
                   <template slot="title">
@@ -254,7 +254,7 @@
       />
     </el-dialog>
 
-    <v-tour name="pipe-document-build-tour" :steps="tour_steps"></v-tour>
+    <v-tour name="pipe-document-build-tour" :steps="tour_steps" :callbacks="tour_callbacks"></v-tour>
   </div>
 </template>
 
@@ -349,8 +349,8 @@
 
         tour_steps: [
           {
-            target: '[data-v-step="0"]',
-            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
+            target: '[data-v-step="pipe-onboarding-0"]',
+            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a quick one minute tour to learn how to get going with Flex.io.<br><br>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
             header: {
               title: 'Welcome to Flex.io!'
             },
@@ -359,39 +359,43 @@
             }
           },
           {
-            target: '[data-v-step="1"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions as well as other common tasks. New tasks are added by clicking on the plus button.</div>',
+            target: '[data-v-step="pipe-onboarding-1"]',
+            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions as well as other common tasks. New steps can be added by clicking on the plus button.</div>',
             params: {
               placement: 'left'
             }
           },
           {
-            target: '[data-v-step="4"]',
+            target: '[data-v-step="pipe-onboarding-2"]',
             content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Run this pipe now by clicking the "Test" button.</div>'
           },
           {
-            target: '[data-v-step="3"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>The pipe output area shows the output of your pipe after it has been run.</div>',
+            target: '[data-v-step="pipe-onboarding-3"]',
+            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>The output panel shows the output of your pipe after it has been run.</div>',
             params: {
               placement: 'left'
             }
           },
           {
-            target: '[data-v-step="6"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Click the plus button to see a list of tasks that can be added. Click "Email" to add an email task and click the "Test" button one more time.</div>',
+            target: '[data-v-step="pipe-onboarding-5"]',
+            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>We\'ll add a sample email step with some basic info filled out for you.<br><br>Once the email step has been added, click the "Test" button to run the pipe one more time.</div>',
             params: {
               placement: 'left'
             }
           },
           {
-            target: '[data-v-step="5"]',
+            target: '[data-v-step="pipe-onboarding-6"]',
             content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Click the "Schedule" button to schedule this pipe to run every five minutes.</div>'
           },
           {
-            target: '[data-v-step="7"]',
+            target: '[data-v-step="pipe-onboarding-7"]',
             content: '<div class="tl mv3"><div class="b mb1">Thanks for checking out Flex.io!</div> Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
           }
-        ]
+        ],
+
+        tour_callbacks: {
+          onNextStep: this.onTourNextStepCallback
+        }
       }
     },
     computed: {
@@ -491,6 +495,7 @@
     },
     methods: {
       ...mapGetters([
+        'getActiveUser',
         'getActiveDocumentProcesses'
       ]),
       loadPipe() {
@@ -629,6 +634,29 @@
                 offset: -32
             })
           }, timeout ? timeout : 10)
+        }
+      },
+      onTourNextStepCallback(current_step) {
+        // moving from output to adding email task
+        if (current_step == 3) {
+          var this_user = this.getActiveUser()
+          var my_email = this_user.email
+          var email_item = {
+            "to": my_email,
+            "subject": "Latest Hacker News Articles from Flex.io",
+            "body": "Here's the latest HackerNews:\n\n${input}\n\n----\n\nSee here for more info: " + window.location.href,
+            "attachments": [],
+            "op": "email"
+          }
+
+          var edit_pipe = _.cloneDeep(this.edit_pipe)
+          var items = _.get(edit_pipe, 'task.items', [])
+          items.push(email_item)
+
+          setTimeout(() => {
+            this.edit_pipe = _.assign({}, edit_pipe)
+            this.saveChanges()
+          }, 1500)
         }
       }
     }
