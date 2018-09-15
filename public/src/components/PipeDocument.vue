@@ -69,14 +69,17 @@
     <div class="h-100" v-else>
       <div class="flex flex-row h-100">
         <el-menu
-          class="flex-none bg-nearer-white"
+          class="flex-none bg-nearer-white trans-a"
           default-active="0"
+          :style="{
+            width: show_yaml ? '0' : '49px'
+          }"
         >
           <el-menu-item
             index="0"
             @click="show_yaml = !show_yaml"
           >
-            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe YAML' : 'Show Pipe YAML'">code</i>
+            <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
           </el-menu-item>
         </el-menu>
 
@@ -97,6 +100,12 @@
               opacity: show_yaml ? '1' : '0.01'
             }"
           >
+            <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
+              <div class="f6 fw6 flex-fill">Pipe Definition</div>
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="show_yaml = false">
+                <i class="el-icon-close fw6"></i>
+              </div>
+            </div>
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
