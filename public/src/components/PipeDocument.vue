@@ -102,6 +102,9 @@
               ref="code-editor"
               type="yaml"
               editor-cls="bg-white h-100"
+              :class="{
+                'no-pointer-events': !show_yaml
+              }"
               :task-only="false"
               :has-errors.sync="has_errors"
               @save="saveChanges"
@@ -389,7 +392,7 @@
           },
           {
             target: '[data-v-step="pipe-onboarding-7"]',
-            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div> Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
+            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
           }
         ],
 
@@ -617,7 +620,7 @@
           var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
           // for testing
-          this.$_Config_reset(cfg_path)
+          //this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
             this.$tours['pipe-document-build-tour'].start()
