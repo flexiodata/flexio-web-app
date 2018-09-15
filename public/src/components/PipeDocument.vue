@@ -635,7 +635,7 @@
             this.$tours['pipe-document-build-tour'].start()
             this.$_Config_set(cfg_path, true)
           }
-        }, 100)
+        }, 500)
       },
       scrollToItem(item_id, timeout) {
         if (_.isString(item_id)) {
