@@ -12,6 +12,7 @@ import {
   ROUTE_HOME,
   ROUTE_SIGNIN,
   ROUTE_SIGNUP,
+  ROUTE_ONBOARD,
   ROUTE_FORGOTPASSWORD,
   ROUTE_RESETPASSWORD
 } from '../constants/route'
@@ -19,6 +20,7 @@ import {
 import SignInPage from '../components/SignInPage.vue'
 import SignUpPage from '../components/SignUpPage.vue'
 import ForgotPasswordPage from '../components/ForgotPasswordPage.vue'
+import OnboardingPage from '../components/OnboardingPage.vue'
 import ResetPasswordPage from '../components/ResetPasswordPage.vue'
 import PageNotFound from '../components/PageNotFound.vue'
 
@@ -39,6 +41,7 @@ const routes = [
   builder,
   home,
   pipes,
+  { path: '/onboard',        name: ROUTE_ONBOARD,        component: OnboardingPage     },
   { path: '/signin',         name: ROUTE_SIGNIN,         component: SignInPage         },
   { path: '/signup',         name: ROUTE_SIGNUP,         component: SignUpPage         },
   { path: '/forgotpassword', name: ROUTE_FORGOTPASSWORD, component: ForgotPasswordPage },
