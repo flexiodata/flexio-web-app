@@ -1,8 +1,8 @@
 {
     "eid_type": "PIP",
-    "name": "HackerNews Feed",
-    "alias": "hackernews-feed",
-    "description": "Get the latest from HackerNews",
+    "name": "Hacker News Feed",
+    "alias": "hacker-news-feed",
+    "description": "Get the latest from Hacker News",
     "task": {
         "op": "sequence",
         "items": [
