@@ -193,7 +193,7 @@ exports.flexio_handler = function(context) {
           form_values.code = this.getCodeByLang(form_values.lang)
 
           // when creating a new execute task, make sure we fire an 'item-change'
-          // even so that the pipe module knows about the default code if the users
+          // event so that the pipe module knows about the default code if the user
           // attempts to save the pipe without editing the code at all
           //
           // NOTE: we cannot use $nextTick here because this call happens multiple times
