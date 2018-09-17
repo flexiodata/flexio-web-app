@@ -34,14 +34,14 @@ RUN pip3 install fpdf
 RUN pip3 install openpyxl
 
 # web scraping, html parsing
-#RUN pip3 install scrapy                     >> /root/fxpython/Dockerfile
+#RUN pip3 install scrapy
 RUN pip3 install beautifulsoup4
 
 # language processing
 RUN pip3 install nltk
 RUN pip3 install gensim
 
-#RUN pip3 install spacy                      >> /root/fxpython/Dockerfile
+#RUN pip3 install spacy
 
 # machine learning
 RUN pip3 install tensorflow
