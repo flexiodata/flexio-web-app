@@ -289,7 +289,7 @@
         form_values = _.cloneDeep(form_values)
 
         // if the convert step doesn't have an input or output, use default values
-        var is_new = !_.has(this.form_values, 'input') || !_.has(this.form_values, 'output')
+        var is_new = !_.has(form_values, 'input') || !_.has(form_values, 'output')
 
         form_values.input = _.assign({}, getDefaultInputValues(), form_values.input)
         form_values.output = _.assign({}, getDefaultOutputValues(), form_values.output)
