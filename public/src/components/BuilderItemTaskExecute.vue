@@ -15,6 +15,7 @@
     <el-form
       class="el-form--cozy el-form__label-tiny"
       label-position="top"
+      inline
       :model="edit_values"
     >
       <el-form-item
@@ -47,6 +48,7 @@
         </el-select>
       </el-form-item>
       <el-form-item
+        class="w-100"
         key="path"
         prop="path"
         label="Remote script URL"
@@ -61,6 +63,7 @@
         />
       </el-form-item>
       <el-form-item
+        class="w-100"
         key="code"
         prop="code"
         label="Code"
