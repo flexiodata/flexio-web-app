@@ -287,6 +287,10 @@
         // initialize default values
         var form_values = _.get(this.item, 'form_values', {})
         form_values = _.cloneDeep(form_values)
+
+        // if the convert step doesn't have an input or output, use default values
+        var is_new = !_.has(form_values, 'input') || !_.has(form_values, 'output')
+
         form_values.input = _.assign({}, getDefaultInputValues(), form_values.input)
         form_values.output = _.assign({}, getDefaultOutputValues(), form_values.output)
 
@@ -308,6 +312,15 @@
 
         this.orig_values = orig_values
         this.edit_values = edit_values
+
+        if (is_new) {
+          // when creating a new convert task, make sure we fire an 'item-change'
+          // event so that the pipe module knows about the default config if the user
+          // attempts to save the pipe without editing the step at all
+          //
+          // NOTE: we cannot use $nextTick here because this call happens multiple times
+          setTimeout(() => { this.onEditValuesChange() }, 1)
+        }
       },
       getEditValues() {
         var input = _.assign({}, _.get(this.edit_values, 'input'))
