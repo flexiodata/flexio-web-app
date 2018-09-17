@@ -16,12 +16,15 @@ RUN pip3 install requests
 RUN pip3 install aiohttp
 RUN pip3 install arrow
 
-# numeric, plotting, data handling
+# numeric and data handling
 RUN pip3 install numpy
 RUN pip3 install scipy
+RUN pip3 install pandas
+
+# visualization
 RUN pip3 install matplotlib
 RUN pip3 install plotly
-RUN pip3 install pandas
+RUN pip3 install bokeh
 
 # pdf support
 RUN pip3 install pypdf2
