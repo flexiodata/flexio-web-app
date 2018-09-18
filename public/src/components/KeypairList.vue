@@ -13,6 +13,7 @@
       :count="items.length"
       @change="onItemChange"
       @delete="onItemDelete"
+      :class="{ [item.id]: true }"
     />
   </div>
 </template>
@@ -33,7 +34,7 @@
   export default {
     props: {
       value: {
-        type: Array,
+        type: Object,
         required: true
       },
       header: {
@@ -44,39 +45,62 @@
     components: {
       KeypairItem
     },
+    data() {
+      return {
+        is_dirty: false
+      }
+    },
     computed: {
       items: {
         get() {
-          return [].concat(this.value)
+          // convert object to array of keypairs
+          var items = []
+          var idx = 0
+
+          _.each(this.value, (val, key) => {
+            if (key && key.length > 0) {
+              items.push(newKeypairItem(key, val))
+            }
+          })
+
+          items.push(newKeypairItem())
+
+          return items
         },
-        set() {
-          // do nothing
+        set(value) {
+          // convert array to object
+          var obj = {}
+
+          _.each(value, (item) => {
+            if (item.key && item.key.length > 0) {
+              obj[item.key] = item.val
+            }
+          })
+
+          this.$emit('input', obj)
         }
       }
     },
     methods: {
       onItemChange(item, index) {
-        var items = _.cloneDeep(this.value)
+        var items = _.cloneDeep(this.items)
 
         if (index == _.size(items) - 1) {
           items = [].concat(items).concat(newKeypairItem())
         }
 
-        var arr = [].concat(items)
-        arr[index] = _.assign({}, item)
-        items = [].concat(arr)
+        _.set(items, '[' + index + ']', item)
 
         this.$emit('item-change', item, index)
-        this.$emit('input', items)
+        this.items = items
       },
       onItemDelete(item, index) {
-        var tmp = _.cloneDeep(this.value)
-        _.pullAt(tmp, [index])
+        var items = _.cloneDeep(this.items)
+        _.pullAt(items, [index])
 
         this.$nextTick(() => {
-          var items = [].concat(tmp)
           this.$emit('item-delete', item, index)
-          this.$emit('input', items)
+          this.items = items
         })
       }
     }
