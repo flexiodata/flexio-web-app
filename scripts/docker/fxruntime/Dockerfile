@@ -14,20 +14,25 @@ RUN apt-get -y install python3-pip
 RUN pip3 install requests
 RUN pip3 install aiohttp
 
-# image and datetime handling
-RUN pip3 install pillow
+# datetime handling
 RUN pip3 install arrow
+RUN pip3 install pendulum
 
 # numeric and data handling
 RUN pip3 install numpy
 RUN pip3 install scipy
+RUN pip3 install scikit-learn
 RUN pip3 install sympy
 RUN pip3 install pandas
 
 # visualization
 RUN pip3 install matplotlib
-RUN pip3 install plotly
 RUN pip3 install bokeh
+RUN pip3 install seaborn
+RUN pip3 install plotly
+
+# image handling
+RUN pip3 install pillow
 
 # pdf support
 RUN pip3 install pypdf2
