@@ -362,7 +362,7 @@
         tour_steps: [
           {
             target: '[data-v-step="pipe-onboarding-0"]',
-            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a one-minute tour to get going with Flex.io.<br><br>This is a pipe. A pipe is a collection of tasks that run sequentially.</div>',
+            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
             header: {
               title: 'Welcome to Flex.io!'
             },
@@ -401,7 +401,7 @@
           },
           {
             target: '[data-v-step="pipe-onboarding-7"]',
-            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click here to go to the pipe list to see other examples or to create your own pipes.</div>'
+            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
           }
         ],
 
@@ -656,7 +656,7 @@
           var email_item = {
             "to": my_email,
             "subject": "Latest Hacker News Articles via Flex.io",
-            "body": "Here's the latest from Hacker News:\n\n${input}\n\n----\n\nThis result was generated from the following Flex.io pipe: " + window.location.href,
+            "body": "Here's the latest from Hacker News:\n\n${input}\n\n----\n\nThis email was generated using a Flex.io pipe; you may edit it here: " + window.location.href,
             "attachments": [],
             "op": "email"
           }
