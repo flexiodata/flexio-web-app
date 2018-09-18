@@ -156,7 +156,7 @@
                       </span>
                     </div>
                   </template>
-                  <div class="pt3 ph3">
+                  <div class="pt3 ph3" v-if="false">
                     <BuilderList
                       builder-mode="wizard"
                       :items="edit_ui_list"

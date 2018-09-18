@@ -147,18 +147,11 @@
         <el-tab-pane name="form-data">
           <div slot="label" class="tc" style="min-width: 3rem">Form Data</div>
           <div class="mv2 mh3">
-            <KeypairItem
-              :item="{ key: 'Key', val: 'Value' }"
-              :is-static="true"
-            />
-            <KeypairItem
-              v-for="(item, index) in form_values.data"
-              :key="index"
-              :item="item"
-              :index="index"
-              :count="form_values.data.length"
-              @change="onFormDataItemChange"
-              @delete="onFormDataItemDelete"
+            <KeypairList
+              :header="{ key: 'Key', val: 'Value' }"
+              :items="form_values.data"
+              @item-change="onFormDataItemChange"
+              @item-delete="onFormDataItemDelete"
             />
           </div>
         </el-tab-pane>
@@ -166,18 +159,11 @@
         <el-tab-pane name="headers">
           <div slot="label" class="tc" style="min-width: 3rem">Headers</div>
           <div class="mv2 mh3">
-            <KeypairItem
-              :item="{ key: 'Key', val: 'Value' }"
-              :is-static="true"
-            />
-            <KeypairItem
-              v-for="(item, index) in form_values.headers"
-              :key="index"
-              :item="item"
-              :index="index"
-              :count="form_values.headers.length"
-              @change="onHeaderItemChange"
-              @delete="onHeaderItemDelete"
+            <KeypairList
+              :header="{ key: 'Key', val: 'Value' }"
+              :items="form_values.headers"
+              @item-change="onHeaderItemChange"
+              @item-delete="onHeaderItemDelete"
             />
           </div>
         </el-tab-pane>
@@ -189,7 +175,7 @@
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
-  import KeypairItem from './KeypairItem.vue'
+  import KeypairList from './KeypairList.vue'
 
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')
@@ -246,7 +232,7 @@
     },
     components: {
       ServiceIcon,
-      KeypairItem
+      KeypairList
     },
     watch: {
       connectionInfo: {
@@ -340,7 +326,6 @@
         var arr = [].concat(this.form_values[key])
         arr[index] = _.assign({}, item)
         this.form_values[key] = [].concat(arr)
-
       },
       doKeypairDelete(item, index, key) {
         var tmp = this.form_values[key]
