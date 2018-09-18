@@ -266,7 +266,14 @@
       />
     </el-dialog>
 
-    <v-tour name="pipe-document-build-tour" :steps="tour_steps" :callbacks="tour_callbacks"></v-tour>
+    <v-tour
+      name="pipe-document-build-tour"
+      :options="{
+        useKeyboardNavigation: false
+      }"
+      :steps="tour_steps"
+      :callbacks="tour_callbacks"
+    />
   </div>
 </template>
 
