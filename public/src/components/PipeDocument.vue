@@ -223,7 +223,7 @@
                   <div class="pt3 ph3">
                     <ProcessContent :process-eid="active_process_eid">
                       <div class="tc f6" slot="empty">
-                        <em>Configure your pipe logic using the task list, then click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button above to see a preview of the pipe's output.</em>
+                        <em>Click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button to see the result of your pipe logic here.</em>
                       </div>
                     </ProcessContent>
                   </div>
