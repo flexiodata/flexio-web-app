@@ -149,9 +149,7 @@
           <div class="mv2 mh3">
             <KeypairList
               :header="{ key: 'Key', val: 'Value' }"
-              :items="form_values.data"
-              @item-change="onFormDataItemChange"
-              @item-delete="onFormDataItemDelete"
+              v-model="form_values.data"
             />
           </div>
         </el-tab-pane>
@@ -161,9 +159,7 @@
           <div class="mv2 mh3">
             <KeypairList
               :header="{ key: 'Key', val: 'Value' }"
-              :items="form_values.headers"
-              @item-change="onHeaderItemChange"
-              @item-delete="onHeaderItemDelete"
+              v-model="form_values.headers"
             />
           </div>
         </el-tab-pane>
@@ -317,21 +313,6 @@
         } else {
           callback(true)
         }
-      },
-      doKeypairChange(item, index, key) {
-        if (index == _.size(this.form_values[key]) - 1) {
-          this.form_values[key] = [].concat(this.form_values[key]).concat(newKeypairItem())
-        }
-
-        var arr = [].concat(this.form_values[key])
-        arr[index] = _.assign({}, item)
-        this.form_values[key] = [].concat(arr)
-      },
-      doKeypairDelete(item, index, key) {
-        var tmp = this.form_values[key]
-        _.pullAt(tmp, [index])
-        this.form_values[key] = []
-        this.$nextTick(() => { this.form_values[key] = [].concat(tmp) })
       },
       onFormDataItemChange(item, index) {
         this.doKeypairChange(item, index, 'data')
