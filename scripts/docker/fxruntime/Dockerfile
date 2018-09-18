@@ -21,6 +21,7 @@ RUN pip3 install arrow
 # numeric and data handling
 RUN pip3 install numpy
 RUN pip3 install scipy
+RUN pip3 install sympy
 RUN pip3 install pandas
 
 # visualization
