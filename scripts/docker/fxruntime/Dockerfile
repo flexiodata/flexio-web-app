@@ -48,7 +48,6 @@ RUN pip3 install beautifulsoup4
 # language processing
 RUN pip3 install nltk
 RUN pip3 install gensim
-
 #RUN pip3 install spacy
 
 # machine learning
