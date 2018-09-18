@@ -10,10 +10,12 @@ RUN apt-get -y install curl
 # python3 runtime
 RUN apt-get -y install python3-pip
 
-# image, http, and datetime handling
-RUN pip3 install pillow
+# network
 RUN pip3 install requests
 RUN pip3 install aiohttp
+
+# image and datetime handling
+RUN pip3 install pillow
 RUN pip3 install arrow
 
 # numeric and data handling
