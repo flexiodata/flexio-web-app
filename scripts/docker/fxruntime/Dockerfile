@@ -10,6 +10,13 @@ RUN apt-get -y install curl
 # python3 runtime
 RUN apt-get -y install python3-pip
 
+## TEST: xcrapy
+#RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev
+#RUN pip3 install scrapy
+
+## TEST: twisted
+#RUN pip3 install twisted
+
 # network
 RUN pip3 install requests
 RUN pip3 install aiohttp
@@ -37,6 +44,9 @@ RUN pip3 install pillow
 # pdf support
 RUN pip3 install pypdf2
 RUN pip3 install fpdf
+
+# xml support
+RUN pip3 install lxml
 
 # excel support
 RUN pip3 install openpyxl
