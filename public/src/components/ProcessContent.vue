@@ -28,20 +28,25 @@
         </div>
       </div>
       <div
-        v-else-if="is_superuser && is_process_failed"
+        v-else-if="is_process_failed"
       >
-        <CodeEditor
-          class="bg-white ba b--black-10"
-          lang="json"
-          :show-json-view-toggle="false"
-          :options="{
-            minRows: 12,
-            maxRows: 24,
-            lineNumbers: false,
-            readOnly: true
-          }"
-          v-model="process_info_str"
-        />
+        <div class="bg-white ba b--black-10 pa4">
+          <IconMessage
+            class="tc"
+            title="Something went wrong."
+          >
+            <pre class="mb0 tl lh-title f7" v-if="!is_superuser">{{process_error.message}}</pre>
+          </IconMessage>
+          <div
+            class="overflow-auto"
+            v-if="is_superuser"
+          >
+            <template v-for="(val, key) in process_error">
+              <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
+              <pre class="mb0 tl lh-title f7">{{val}}</pre>
+            </template>
+          </div>
+        </div>
       </div>
     </transition>
   </div>
@@ -60,6 +65,7 @@
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
+  import IconMessage from './IconMessage.vue'
   import StreamContent from './StreamContent.vue'
 
   export default {
@@ -72,6 +78,7 @@
     components: {
       Spinner,
       CodeEditor,
+      IconMessage,
       StreamContent
     },
     watch: {
@@ -109,6 +116,9 @@
       },
       process_info_str() {
         return JSON.stringify(this.process_info, null, 2)
+      },
+      process_error() {
+        return _.get(this.process_info, 'error', {})
       },
       is_process_pending() {
         return this.process_status == PROCESS_STATUS_PENDING
