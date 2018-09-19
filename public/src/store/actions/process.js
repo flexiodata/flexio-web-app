@@ -55,16 +55,14 @@ export const fetchProcess = ({ commit, dispatch }, { eid, poll }) => {
     commit(types.FETCHED_PROCESS, response.body)
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
 
-    if (poll == true)
-    {
+    if (poll == true) {
       // poll the process while it is still running
       var status = _.get(response.body, 'process_status')
       if (_.includes([
             PROCESS_STATUS_PENDING,
             PROCESS_STATUS_WAITING,
             PROCESS_STATUS_RUNNING
-          ], status))
-      {
+          ], status)) {
         _.delay(function() {
           var eid = _.get(response.body, 'eid', '')
           dispatch('fetchProcess', { eid, poll: true })
@@ -129,6 +127,7 @@ export const runProcess = ({ commit, dispatch }, { eid, attrs }) => {
   }, response => {
     // error callback
     commit(types.STARTING_PROCESS, { eid, starting: false })
+    dispatch('fetchProcess', { eid })
     return response
   })
 }

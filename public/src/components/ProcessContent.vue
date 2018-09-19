@@ -7,9 +7,9 @@
       <div
         class="bg-white ba b--black-10 flex flex-column justify-center"
         style="height: 300px"
-        v-if="is_process_running"
+        v-if="is_process_pending || is_process_running"
       >
-        <Spinner size="large" message="Running..." />
+        <Spinner size="large" :message="is_process_running ? 'Running...' : 'Starting...'" />
       </div>
       <div
         v-else-if="stream_eid.length > 0 && !is_process_failed"
@@ -108,6 +108,9 @@
       },
       process_info_str() {
         return JSON.stringify(this.process_info, null, 2)
+      },
+      is_process_pending() {
+        return this.process_status == PROCESS_STATUS_PENDING
       },
       is_process_running() {
         return this.process_status == PROCESS_STATUS_RUNNING
