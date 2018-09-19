@@ -424,7 +424,15 @@ class Pipe
         {
             self::doTaskCasting($properties['task']);
         }
-        
+
+        if (isset($properties['ui']) && count($properties['ui']) === 0)
+            $properties['ui'] = (object)$properties['ui'];
+
+        if (isset($properties['ui']) && is_array($properties['ui']))
+        {
+            self::doTaskCasting($properties['ui']);
+        }
+
         return $properties;
     }
 }
