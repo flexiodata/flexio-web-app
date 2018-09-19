@@ -34,18 +34,35 @@
           <IconMessage
             class="tc"
             title="Something went wrong."
-          >
-            <pre class="mb0 tl lh-title f7" v-if="!is_superuser">{{process_error.message}}</pre>
-          </IconMessage>
+          />
+          <div class="mb3">
+            <el-radio-group size="small" v-model="pretty_state">
+              <el-radio-button label="pretty">Pretty</el-radio-button>
+              <el-radio-button label="raw">Raw</el-radio-button>
+            </el-radio-group>
+          </div>
           <div
             class="overflow-auto"
-            v-if="is_superuser"
+            v-if="pretty_state == 'pretty'"
           >
             <template v-for="(val, key) in process_error">
               <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
               <pre class="mb0 tl lh-title f7">{{val}}</pre>
             </template>
           </div>
+          <CodeEditor
+            class="bg-white ba b--black-10"
+            lang="json"
+            :show-json-view-toggle="false"
+            :options="{
+              minRows: 12,
+              maxRows: 24,
+              lineNumbers: false,
+              readOnly: true
+            }"
+            v-model="process_error_str"
+            v-else
+          />
         </div>
       </div>
     </transition>
@@ -99,6 +116,11 @@
         }
       }
     },
+    data() {
+      return {
+        pretty_state: 'pretty'
+      }
+    },
     computed: {
       is_superuser() {
         // limit to @flex.io users for now
@@ -114,11 +136,12 @@
       process_info() {
         return _.get(this.process, 'process_info', {})
       },
-      process_info_str() {
-        return JSON.stringify(this.process_info, null, 2)
-      },
       process_error() {
-        return _.get(this.process_info, 'error', {})
+        var error = _.get(this.process_info, 'error', {})
+        return this.is_superuser ? error : _.pick(error, ['code', 'message'])
+      },
+      process_error_str() {
+        return JSON.stringify(this.process_error, null, 2)
       },
       is_process_pending() {
         return this.process_status == PROCESS_STATUS_PENDING
