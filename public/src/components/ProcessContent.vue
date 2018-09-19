@@ -35,7 +35,7 @@
             class="tc"
             title="Something went wrong."
           />
-          <div class="mb3">
+          <div class="mb2">
             <el-radio-group size="small" v-model="pretty_state">
               <el-radio-button label="pretty">Pretty</el-radio-button>
               <el-radio-button label="raw">Raw</el-radio-button>
