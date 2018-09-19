@@ -156,6 +156,13 @@
                       </span>
                     </div>
                   </template>
+                  <div class="pt3 ph3">
+                    <KeypairList
+                      ref="input-list"
+                      :header="{ key: 'Key', val: 'Value' }"
+                      v-model="edit_input"
+                    />
+                  </div>
                   <div class="pt3 ph3" v-if="false">
                     <BuilderList
                       builder-mode="wizard"
@@ -285,6 +292,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
+  import KeypairList from './KeypairList.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -310,6 +318,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
+      KeypairList,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -442,6 +451,24 @@
         set(value) {
           try {
             var pipe = _.cloneDeep(value)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
+        }
+      },
+      edit_input: {
+        get() {
+          var input = _.get(this.edit_pipe, 'ui.input', {})
+          return _.isObject(input) ? input : {}
+        },
+        set(value) {
+          try {
+            var input = _.cloneDeep(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.set(pipe, 'ui.input', input)
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
@@ -615,6 +642,10 @@
       revertComponents() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
+          var input_list = this.$refs['input-list']
+          if (input_list && input_list.revert) {
+            input_list.revert()
+          }
           var editor = this.$refs['code-editor']
           if (editor && editor.revert) {
             editor.revert()

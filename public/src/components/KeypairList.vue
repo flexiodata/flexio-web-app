@@ -7,7 +7,7 @@
     />
     <KeypairItem
       v-for="(item, index) in items"
-      :key="index"
+      :key="item.id"
       :item="item"
       :index="index"
       :count="items.length"
@@ -21,11 +21,14 @@
 <script>
   import KeypairItem from './KeypairItem.vue'
 
+  var idx = 0
+
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')
     val = _.defaultTo(val, '')
 
     return {
+      id: 'keypair-item-' + (++idx),
       key,
       val
     }
@@ -45,43 +48,57 @@
     components: {
       KeypairItem
     },
-    data() {
-      return {
-        is_dirty: false
+    watch: {
+      value: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
       }
     },
-    computed: {
-      items: {
-        get() {
-          // convert object to array of keypairs
-          var items = []
-          var idx = 0
-
-          _.each(this.value, (val, key) => {
-            if (key && key.length > 0) {
-              items.push(newKeypairItem(key, val))
-            }
-          })
-
-          items.push(newKeypairItem())
-
-          return items
-        },
-        set(value) {
-          // convert array to object
-          var obj = {}
-
-          _.each(value, (item) => {
-            if (item.key && item.key.length > 0) {
-              obj[item.key] = item.val
-            }
-          })
-
-          this.$emit('input', obj)
-        }
+    data() {
+      return {
+        items: [],
+        is_editing: false
       }
     },
     methods: {
+      initSelf() {
+        if (this.is_editing) {
+          return
+        }
+
+        // convert object to array of keypairs
+        var items = []
+        var idx = 0
+
+        _.each(this.value, (val, key) => {
+          if (key && key.length > 0) {
+            items.push(newKeypairItem(key, val))
+          }
+        })
+
+        items.push(newKeypairItem())
+
+        this.items = items
+      },
+      emitChange() {
+        this.is_editing = true
+
+        // convert array to object
+        var obj = {}
+
+        _.each(this.items, (item) => {
+          if (item.key && item.key.length > 0) {
+            obj[item.key] = item.val
+          }
+        })
+
+        this.$emit('input', obj)
+      },
+      revert() {
+        this.is_editing = false
+        this.$nextTick(() => { this.initSelf() })
+      },
       onItemChange(item, index) {
         var items = _.cloneDeep(this.items)
 
@@ -89,18 +106,20 @@
           items = [].concat(items).concat(newKeypairItem())
         }
 
-        _.set(items, '[' + index + ']', item)
+        _.assign(items[index], item)
 
-        this.$emit('item-change', item, index)
         this.items = items
+        this.emitChange()
+        this.$emit('item-change', item, index)
       },
       onItemDelete(item, index) {
         var items = _.cloneDeep(this.items)
         _.pullAt(items, [index])
 
         this.$nextTick(() => {
-          this.$emit('item-delete', item, index)
           this.items = items
+          this.emitChange()
+          this.$emit('item-delete', item, index)
         })
       }
     }
