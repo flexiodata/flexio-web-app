@@ -146,7 +146,7 @@
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="web-ui"
+                  name="input"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -157,6 +157,7 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
+                    <p class="mt0 lh-copy f6 light-silver">The following POST parameters will be used when testing the pipe (to reference a variable use the syntax ${input.my_var} where `my_var` is one of the keys below).</p>
                     <KeypairList
                       ref="input-list"
                       :header="{ key: 'Key', val: 'Value' }"
@@ -188,7 +189,7 @@
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="task-list"
+                  name="tasks"
                   data-v-step="pipe-onboarding-1"
                 >
                   <template slot="title">
@@ -360,7 +361,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: [/*'web-ui',*/'task-list', 'output'],
+        active_collapse_items: ['input', 'tasks', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),

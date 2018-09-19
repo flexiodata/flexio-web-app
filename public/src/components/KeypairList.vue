@@ -13,7 +13,7 @@
       :count="items.length"
       @change="onItemChange"
       @delete="onItemDelete"
-      :class="{ [item.id]: true }"
+      v-bind="$attrs"
     />
   </div>
 </template>
@@ -35,6 +35,7 @@
   }
 
   export default {
+    inheritAttrs: false,
     props: {
       value: {
         type: Object,
