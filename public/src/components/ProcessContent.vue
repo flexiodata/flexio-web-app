@@ -33,6 +33,7 @@
         <CodeEditor
           class="bg-white ba b--black-10"
           lang="json"
+          :show-json-view-toggle="false"
           :options="{
             minRows: 12,
             maxRows: 24,
