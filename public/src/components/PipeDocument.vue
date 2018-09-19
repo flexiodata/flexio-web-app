@@ -146,7 +146,7 @@
               <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="web-ui"
+                  name="input"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -156,6 +156,14 @@
                       </span>
                     </div>
                   </template>
+                  <div class="pt3 ph3">
+                    <p class="mt0 lh-copy f6 light-silver">The following POST parameters will be used when testing the pipe (to reference a variable use the syntax ${input.my_var} where `my_var` is one of the keys below).</p>
+                    <KeypairList
+                      ref="input-list"
+                      :header="{ key: 'Key', val: 'Value' }"
+                      v-model="edit_input"
+                    />
+                  </div>
                   <div class="pt3 ph3" v-if="false">
                     <BuilderList
                       builder-mode="wizard"
@@ -181,7 +189,7 @@
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
-                  name="task-list"
+                  name="tasks"
                   data-v-step="pipe-onboarding-1"
                 >
                   <template slot="title">
@@ -285,6 +293,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
+  import KeypairList from './KeypairList.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -310,6 +319,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
+      KeypairList,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -351,7 +361,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: [/*'web-ui',*/'task-list', 'output'],
+        active_collapse_items: ['input', 'tasks', 'output'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
@@ -442,6 +452,24 @@
         set(value) {
           try {
             var pipe = _.cloneDeep(value)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          }
+          catch(e)
+          {
+            // TODO: add error handling
+          }
+        }
+      },
+      edit_input: {
+        get() {
+          var input = _.get(this.edit_pipe, 'ui.input', {})
+          return _.isObject(input) ? input : {}
+        },
+        set(value) {
+          try {
+            var input = _.cloneDeep(value)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.set(pipe, 'ui.input', input)
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
           }
           catch(e)
@@ -587,16 +615,18 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
+        var run_attrs = _.get(this.edit_pipe, 'ui.input', {})
 
         _.assign(attrs, {
           parent_eid: this.eid,
-          process_mode: PROCESS_MODE_BUILD,
+          process_mode: PROCESS_MODE_BUILD/*,
           run: true // this will automatically run the process and start polling the process
+          */
         })
 
         this.$store.dispatch('createProcess', { attrs }).then(response => {
-          // we've manually run the pipe once so we can now show an output result
-          this.has_run_once = true
+          var eid = response.body.eid
+          this.$store.dispatch('runProcess', { eid, attrs: run_attrs })
         })
 
         // make sure the output is expanded
@@ -615,6 +645,10 @@
       revertComponents() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
+          var input_list = this.$refs['input-list']
+          if (input_list && input_list.revert) {
+            input_list.revert()
+          }
           var editor = this.$refs['code-editor']
           if (editor && editor.revert) {
             editor.revert()

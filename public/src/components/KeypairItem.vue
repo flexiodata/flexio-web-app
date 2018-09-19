@@ -57,7 +57,7 @@
       },
       'key-placeholder': {
         type: String,
-        default: 'Key'
+        default: 'New key'
       },
       'val-placeholder': {
         type: String,

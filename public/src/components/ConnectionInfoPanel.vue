@@ -148,6 +148,7 @@
           <div slot="label" class="tc" style="min-width: 3rem">Form Data</div>
           <div class="mv2 mh3">
             <KeypairList
+              ref="data-list"
               :header="{ key: 'Key', val: 'Value' }"
               v-model="form_values.data"
             />
@@ -158,6 +159,7 @@
           <div slot="label" class="tc" style="min-width: 3rem">Headers</div>
           <div class="mv2 mh3">
             <KeypairList
+              ref="headers-list"
               :header="{ key: 'Key', val: 'Value' }"
               v-model="form_values.headers"
             />
@@ -280,6 +282,11 @@
             })
           }
         })
+
+        setTimeout(() => {
+          this.$refs['data-list'].revert()
+          this.$refs['headers-list'].revert()
+        }, 1)
       },
       emitUpdate() {
         var connection_info = _.cloneDeep(this.form_values)
