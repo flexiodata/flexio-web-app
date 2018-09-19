@@ -101,16 +101,34 @@ export const fetchProcessLog = ({ commit, dispatch }, { eid }) => {
 // ----------------------------------------------------------------------- //
 
 export const cancelProcess = ({ commit, dispatch }, { eid }) => {
-  commit(types.CANCELING_PROCESS, { eid })
+  commit(types.CANCELING_PROCESS, { eid, canceling: true })
 
   return api.cancelProcess({ eid }).then(response => {
     // success callback
     commit(types.CANCELED_PROCESS, { process: response.body })
-    commit(types.CANCELING_PROCESS, { eid })
+    commit(types.CANCELING_PROCESS, { eid, canceling: false })
     return response
   }, response => {
     // error callback
-    commit(types.CANCELING_PROCESS, { eid })
+    commit(types.CANCELING_PROCESS, { eid, canceling: false })
+    return response
+  })
+}
+
+export const runProcess = ({ commit, dispatch }, { eid, attrs }) => {
+  commit(types.STARTING_PROCESS, { eid, starting: true })
+
+  return api.runProcess({ eid, attrs }).then(response => {
+    // success callback
+    commit(types.STARTED_PROCESS, { process: { eid } })
+    commit(types.STARTING_PROCESS, { eid, starting: false })
+
+    dispatch('fetchProcess', { eid, poll: true })
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.STARTING_PROCESS, { eid, starting: false })
     return response
   })
 }

@@ -50,8 +50,11 @@
   import { mapGetters } from 'vuex'
   import { API_V2_ROOT } from '../api/resources'
   import {
+    PROCESS_STATUS_PENDING,
     PROCESS_STATUS_RUNNING,
-    PROCESS_STATUS_FAILED
+    PROCESS_STATUS_CANCELLED,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED
   } from '../constants/process'
 
   import Spinner from 'vue-simple-spinner'
@@ -77,7 +80,13 @@
       },
       process_status(val, old_val) {
         // we just finished running a process; fetch the process log
-        if (old_val === PROCESS_STATUS_RUNNING) {
+        if (_.includes([
+              PROCESS_STATUS_RUNNING,
+              PROCESS_STATUS_PENDING], old_val) &&
+            _.includes([
+              PROCESS_STATUS_CANCELLED,
+              PROCESS_STATUS_FAILED,
+              PROCESS_STATUS_COMPLETED], val)) {
           this.fetchProcessLog()
         }
       }

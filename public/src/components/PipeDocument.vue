@@ -614,16 +614,18 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
+        var run_attrs = _.get(this.edit_pipe, 'ui.input', {})
 
         _.assign(attrs, {
           parent_eid: this.eid,
-          process_mode: PROCESS_MODE_BUILD,
+          process_mode: PROCESS_MODE_BUILD/*,
           run: true // this will automatically run the process and start polling the process
+          */
         })
 
         this.$store.dispatch('createProcess', { attrs }).then(response => {
-          // we've manually run the pipe once so we can now show an output result
-          this.has_run_once = true
+          var eid = response.body.eid
+          this.$store.dispatch('runProcess', { eid, attrs: run_attrs })
         })
 
         // make sure the output is expanded
