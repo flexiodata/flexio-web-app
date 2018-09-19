@@ -116,12 +116,12 @@ export const cancelProcess = ({ commit, dispatch }, { eid }) => {
 export const runProcess = ({ commit, dispatch }, { eid, attrs }) => {
   commit(types.STARTING_PROCESS, { eid, starting: true })
 
+  dispatch('fetchProcess', { eid, poll: true })
+
   return api.runProcess({ eid, attrs }).then(response => {
     // success callback
     commit(types.STARTED_PROCESS, { process: { eid } })
     commit(types.STARTING_PROCESS, { eid, starting: false })
-
-    dispatch('fetchProcess', { eid, poll: true })
 
     return response
   }, response => {

@@ -106,18 +106,12 @@
     },
     watch: {
       processEid: {
-        handler: 'onProcessChange',
+        handler: 'fetchProcessLog',
         immediate: true
       },
       process_status(val, old_val) {
         // we just finished running a process; fetch the process log
-        if (_.includes([
-              PROCESS_STATUS_RUNNING,
-              PROCESS_STATUS_PENDING], old_val) &&
-            _.includes([
-              PROCESS_STATUS_CANCELLED,
-              PROCESS_STATUS_FAILED,
-              PROCESS_STATUS_COMPLETED], val)) {
+        if (old_val === PROCESS_STATUS_RUNNING || old_val === PROCESS_STATUS_PENDING) {
           this.fetchProcessLog()
         }
       }
@@ -178,11 +172,6 @@
         if (this.processEid.length > 0) {
           this.$store.dispatch('fetchProcessLog', { eid: this.processEid })
         }
-      },
-      onProcessChange() {
-        this.force_loading = true
-        setTimeout(() => { this.force_loading = false }, 500)
-        this.fetchProcessLog()
       }
     }
   }
