@@ -88,6 +88,10 @@ class ExecuteProxy
 
     public function run() : void
     {
+        // generate a key which will be used as a kind of password
+        $access_key = \Flexio\Base\Util::generateRandomString(20);
+
+        /*
         // start a zeromq server -- let OS choose port
         $address = self::getLocalIpAddress();
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
@@ -101,12 +105,30 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: could not determine bind port");
         $port = (int)$port;
 
+        $ipc_address = "tcp://$address:$port";
+        */
+
+        // start a zeromq server -- let OS choose port
+        //$address = self::getLocalIpAddress();
+        $host_socket_path = "/dev/shm/ipc-exec-$access_key";
+        $container_socket_path = "/tmp/ipc-endpoint";
+        $container_ipc_address = "ipc://$container_socket_path";
+
+        $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
+        $server->bind("ipc://$host_socket_path");
+        //$port = $server->getSockOpt(\ZMQ::SOCKOPT_LAST_ENDPOINT); 
+        //var_dump($port);
+
+        if (file_exists($host_socket_path))
+        {
+            register_shutdown_function('unlink', $host_socket_path);
+        }
+
+
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
        // $server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
-        // generate a key which will be used as a kind of password
-        $access_key = \Flexio\Base\Util::generateRandomString(20);
 
         // run the container command
 
@@ -118,11 +140,7 @@ class ExecuteProxy
         //echo $cmd;
         //ob_end_flush();
         //flush();
-        $cmd = "$dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
-
-
-
-
+        $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
         exec("$cmd  > /dev/null  &");
 
         $start_time = microtime(true);
@@ -176,7 +194,7 @@ class ExecuteProxy
                 // if we haven't yet received our first call after 8 seconds, something is wrong;
                 // terminate the execute job with an exception
                 
-                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: could not determine bind port");
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
             }
 
             if ((microtime(true) - $start_time) > 16)
