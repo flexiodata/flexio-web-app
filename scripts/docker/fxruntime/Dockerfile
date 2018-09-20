@@ -95,6 +95,9 @@ RUN pip3 install gensim
 RUN pip3 install tensorflow
 RUN pip3 install keras
 
+# data generation
+RUN pip3 install faker
+
 # Amazon AWS
 RUN pip3 install boto3
 
@@ -107,9 +110,6 @@ RUN pip3 install boto3
 
 # POTENTIAL: language processing
 # RUN pip3 install spacy
-
-# POTENTIAL: data generation
-#RUN pip3 install faker
 
 
 
