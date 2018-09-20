@@ -17,6 +17,9 @@ RUN apt-get -y install python3-pip
 ## TEST: twisted
 #RUN pip3 install twisted
 
+# for communication between container and host
+RUN pip3 install zmq
+
 # network
 RUN pip3 install requests
 RUN pip3 install aiohttp
