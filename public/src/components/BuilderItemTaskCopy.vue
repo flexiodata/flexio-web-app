@@ -14,26 +14,29 @@
     </div>
 
     <div class="el-form el-form--cozy el-form__label-tiny">
-      <h4 class="fw6">1. Choose source</h4>
-      <BuilderComponentConnectionChooser
-        class="mb3"
-        :connection-identifier.sync="source_connection_identifier"
-        :show-result="has_available_source_connection"
-      >
-        <el-button
-          slot="buttons"
-          plain
-          size="tiny"
-          class="ttu b"
-          @click="clearConnection"
+      <div>
+        <h4 class="fw6">1. Choose source</h4>
+        <BuilderComponentConnectionChooser
+          class="mb3"
+          :connection-identifier.sync="source_connection_identifier"
+          :show-result="has_available_source_connection"
         >
-          Use Different Connection
-        </el-button>
-      </BuilderComponentConnectionChooser>
+          <el-button
+            slot="buttons"
+            plain
+            size="tiny"
+            class="ttu b"
+            @click="clearConnection"
+          >
+            Use Different Connection
+          </el-button>
+        </BuilderComponentConnectionChooser>
+      </div>
       <template v-if="has_available_source_connection">
         <label class="el-form-item__label">Source path</label>
         <el-input
-          v-model="edit_values.from"
+          v-model="source_path"
+          spellcheck="false"
         >
           <el-button
             slot="append"
@@ -47,26 +50,29 @@
         </el-input>
       </template>
 
-      <h4 class="fw6 mt4">2. Choose destination</h4>
-      <BuilderComponentConnectionChooser
-        class="mb3"
-        :connection-identifier.sync="destination_connection_identifier"
-        :show-result="has_available_destination_connection"
-      >
-        <el-button
-          slot="buttons"
-          plain
-          size="tiny"
-          class="ttu b"
-          @click="clearConnection"
+      <div v-if="has_available_source_connection">
+        <h4 class="fw6 mt4">2. Choose destination</h4>
+        <BuilderComponentConnectionChooser
+          class="mb3"
+          :connection-identifier.sync="destination_connection_identifier"
+          :show-result="has_available_destination_connection"
         >
-          Use Different Connection
-        </el-button>
-      </BuilderComponentConnectionChooser>
+          <el-button
+            slot="buttons"
+            plain
+            size="tiny"
+            class="ttu b"
+            @click="clearConnection"
+          >
+            Use Different Connection
+          </el-button>
+        </BuilderComponentConnectionChooser>
+      </div>
       <template v-if="has_available_destination_connection">
         <label class="el-form-item__label">Destination path</label>
         <el-input
-          v-model="edit_values.to"
+          v-model="destination_path"
+          spellcheck="false"
         >
           <el-button
             slot="append"
@@ -119,6 +125,7 @@
 
 <script>
   import marked from 'marked'
+  import util from '../utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
@@ -167,9 +174,11 @@
         this.$emit('update:isNextAllowed', this.has_available_connections)
       },
       source_connection_identifier() {
+        this.source_path = ''
         this.$emit('active-item-change', this.index)
       },
       destination_connection_identifier() {
+        this.destination_path = ''
         this.$emit('active-item-change', this.index)
       },
       edit_values: {
@@ -198,12 +207,41 @@
       description() {
         return marked(_.get(this.item, 'description', ''))
       },
-      paths() {
-        var paths = _.get(this.edit_values, 'path', [])
-        if (!_.isArray(paths)) {
-          return [paths]
+      source_path: {
+        get() {
+          var after_path = util.afterNth(this.edit_values.from, '/', 2)
+          return '/' + after_path
+        },
+        set(value) {
+          if (this.source_connection_identifier.length == 0) {
+            return this.edit_values.from = ''
+          }
+
+          var path = value
+          if (path.indexOf('/') != 0) {
+            path = '/' + path
+          }
+
+          this.edit_values.from = '/' + this.source_connection_identifier + path
         }
-        return paths
+      },
+      destination_path: {
+        get() {
+          var after_path = util.afterNth(this.edit_values.to, '/', 2)
+          return '/' + after_path
+        },
+        set(value) {
+          if (this.destination_connection_identifier.length == 0) {
+            return this.edit_values.to = ''
+          }
+
+          var path = value
+          if (path.indexOf('/') != 0) {
+            path = '/' + path
+          }
+
+          this.edit_values.to = '/' + this.destination_connection_identifier + path
+        }
       },
       source_connection() {
         return this.$_Connection_getConnectionByIdentifier(this.source_connection_identifier)
