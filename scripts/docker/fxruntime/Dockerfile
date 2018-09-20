@@ -13,6 +13,9 @@ RUN apt-get -y install wget
 RUN apt-get -y install apt-utils
 RUN apt-get -y install curl
 
+# zeromq libraries
+RUN apt-get -y install libzmq3-dev libzmq5
+
 # python3 runtime
 RUN apt-get -y install python3-pip
 
