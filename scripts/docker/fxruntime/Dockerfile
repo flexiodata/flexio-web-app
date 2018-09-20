@@ -117,9 +117,26 @@ RUN pip3 install boto3
 # nodejs libraries
 ########################################
 
-# nodejs: yarn package manager; for downloading libraries using yarn
+# yarn package manager; for downloading libraries using yarn
 RUN npm install -g yarn
 
-# nodejs: lodash
+# utility
+RUN yarn add underscore
 RUN yarn add lodash
+RUN yarn add async
+
+# network
+RUN yarn add request
+
+# datetime
+RUN yarn add moment
+
+# html
+RUN yarn add cheerio
+
+# validation
+RUN yarn add validator
+
+# data generation
+RUN yarn add faker
 
