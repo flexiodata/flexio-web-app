@@ -22,11 +22,6 @@ RUN apt-get -y install nodejs
 
 # puppeteer prequisites for rendering
 RUN apt-get -y install chromium-browser libgconf2-4
-#RUN mkdir /fxrender
-#RUN echo {} > /fxrender/package.json
-#RUN cd /fxrender && npm install puppeteer
-#RUN cd /fxrender && npm install command-line-args
-#COPY kits.js /fxrender/kits.js
 
 # flexio bindings for python
 RUN mkdir /fxpython
