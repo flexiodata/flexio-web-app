@@ -1,0 +1,25 @@
+{
+    "eid_type": "PIP",
+    "name": "Sample Data Generator",
+    "alias": "sample-data-generator",
+    "description": "Generate a set of sample data to download",
+    "task": {
+      "op": "sequence",
+      "items": [
+        {
+          "op": "execute",
+          "lang": "python",
+          "code": "CiMgUHl0aG9uIEZha2VyCiMgUHJvamVjdDogaHR0cHM6Ly9naXRodWIuY29tL2pva2Uyay9mYWtlcgojIERvY3VtZW50YXRpb246IGh0dHBzOi8vZmFrZXIucmVhZHRoZWRvY3MuaW8vZW4vbGF0ZXN0L2luZGV4Lmh0bWwKCmltcG9ydCBqc29uCmltcG9ydCBjb2xsZWN0aW9ucwpmcm9tIGZha2VyIGltcG9ydCBGYWtlcgoKZmFrZSA9IEZha2VyKCkKcmVzdWx0ID0gW10KCmZvciB4IGluIHJhbmdlKDEwKToKICAgIGl0ZW0gPSBjb2xsZWN0aW9ucy5PcmRlcmVkRGljdCgpCiAgICBpdGVtWyJuYW1lIl0gPSBmYWtlLm5hbWUoKSwKICAgIGl0ZW1bImFkZHJlc3MiXSA9IGZha2Uuc3RyZWV0X2FkZHJlc3MoKSwKICAgIGl0ZW1bImNpdHkiXSA9IGZha2UuY2l0eSgpLAogICAgaXRlbVsic3RhdGUiXSA9IGZha2Uuc3RhdGUoKSwKICAgIGl0ZW1bInppcCJdID0gZmFrZS56aXBjb2RlKCksCiAgICBpdGVtWyJqb2IiXSA9IGZha2Uuam9iKCkKICAgIHJlc3VsdC5hcHBlbmQoaXRlbSkKCnJlc3VsdCA9IGpzb24uZHVtcHMocmVzdWx0KQpwcmludChyZXN1bHQpCgo="
+        },
+        {
+          "op": "convert",
+          "input": {
+            "format": "json"
+          },
+          "output": {
+            "format": "table"
+          }
+        }
+      ]
+    }
+  }
