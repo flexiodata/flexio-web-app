@@ -35,6 +35,7 @@
 </template>
 
 <script>
+  import util from '../utils'
   import FileChooser from './FileChooser.vue'
   import FileChooserItem from './FileChooserItem.vue'
   import MixinConnection from './mixins/connection'
@@ -50,12 +51,19 @@
       showResult: {
         type: Boolean,
         default: false
-      }/*
-      allowMultiple,
-      allowFolders,
-      foldersOnly,
-      filetypeFilter
-      */
+      },
+      allowMultiple: {
+        type: Boolean
+      },
+      allowFolders: {
+        type: Boolean
+      },
+      foldersOnly: {
+        type: Boolean
+      },
+      filetypeFilter: {
+        type: String
+      }
     },
     mixins: [MixinConnection],
     components: {
@@ -90,14 +98,8 @@
           return
         }
 
-        var afterFirst = function(str, char, cnt) {
-          if (!_.isNumber(cnt)) { cnt = 1 }
-          var retval = str.substr(str.indexOf('/') + 1)
-          return cnt <= 1 ? retval : afterFirst(retval, char, cnt-1)
-        }
-
         var name = path.substr(path.lastIndexOf('/') + 1)
-        var remote_path = '/' + afterFirst(path, '/', 2)
+        var remote_path = '/' + util.afterNth(path, '/', 2)
 
         var folder = {
           name,
