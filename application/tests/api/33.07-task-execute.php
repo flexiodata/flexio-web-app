@@ -59,7 +59,37 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!\n"
         }';
-        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task basic print to stdout',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (python) execute task print to stdout',  $actual, $expected, $results);
+
+        // BEGIN TEST
+        $script = <<<EOD
+import sys
+sys.stdout.write('Hello, World!')
+EOD;
+        $task = \Flexio\Tests\Task::create([
+            ["op" => "execute", "lang" => "python", "code" => base64_encode($script)]
+        ]);
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/processes",
+            'token' => $token,
+            'content_type' => 'application/json',
+            'params' => json_encode(["task" => $task])
+        ));
+        $response = json_decode($result['response'],true);
+        $objeid = $response['eid'] ?? '';
+        $result = \Flexio\Tests\Util::callApi(array(
+            'method' => 'POST',
+            'url' => "$apibase/$userid/processes/$objeid/run",
+            'token' => $token
+        ));
+        $actual = $result;
+        $expected = '{
+            "code": 200,
+            "content_type": "text/plain;charset=UTF-8",
+            "response": "Hello, World!"
+        }';
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (python) execute task writing to stdout',  $actual, $expected, $results);
 
         // BEGIN TEST
         $script = <<<EOD
@@ -88,7 +118,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!\n"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task task basic print to stdout',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (javascript) execute task print to stdout',  $actual, $expected, $results);
     }
 }
 
