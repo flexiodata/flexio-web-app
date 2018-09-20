@@ -10,6 +10,10 @@ RUN apt-get -y install curl
 # python3 runtime
 RUN apt-get -y install python3-pip
 
+# for communication between container and host
+RUN pip3 install zmq
+RUN pip3 install json-rpc
+
 # image, http, and datetime handling
 RUN pip3 install pillow
 RUN pip3 install requests
