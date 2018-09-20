@@ -132,6 +132,9 @@ RUN yarn add moment
 # html
 RUN yarn add cheerio
 
+# visualization
+RUN yarn add d3-node
+
 # validation
 RUN yarn add validator
 
