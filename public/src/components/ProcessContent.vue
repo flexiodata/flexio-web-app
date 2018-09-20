@@ -20,7 +20,7 @@
       <!-- failed -->
       <div
         class="bg-white ba b--black-10 pa4 overflow-y-auto"
-        style="height: 600px"
+        style="max-height: 600px"
         v-else-if="is_process_failed"
       >
         <IconMessage
