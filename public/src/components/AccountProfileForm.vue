@@ -87,7 +87,7 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import Validation from './mixins/validation'
+  import MixinValidation from './mixins/validation'
 
   const defaultInfo = () => {
     return {
@@ -98,7 +98,7 @@
   }
 
   export default {
-    mixins: [Validation],
+    mixins: [MixinValidation],
     data() {
       return {
         orig_info: defaultInfo(),

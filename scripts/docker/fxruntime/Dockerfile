@@ -10,39 +10,55 @@ RUN apt-get -y install curl
 # python3 runtime
 RUN apt-get -y install python3-pip
 
-# for communication between container and host
-RUN pip3 install zmq
-RUN pip3 install json-rpc
+## TEST: xcrapy
+#RUN apt-get install -y libffi-dev libxml2-dev libxslt-dev lib32z1-dev libssl-dev
+#RUN pip3 install scrapy
 
-# image, http, and datetime handling
-RUN pip3 install pillow
+## TEST: twisted
+#RUN pip3 install twisted
+
+# network
 RUN pip3 install requests
 RUN pip3 install aiohttp
-RUN pip3 install arrow
 
-# numeric, plotting, data handling
+# datetime handling
+RUN pip3 install arrow
+RUN pip3 install pendulum
+
+# numeric and data handling
 RUN pip3 install numpy
 RUN pip3 install scipy
-RUN pip3 install matplotlib
-RUN pip3 install plotly
+RUN pip3 install scikit-learn
+RUN pip3 install sympy
 RUN pip3 install pandas
+
+# visualization
+RUN pip3 install matplotlib
+RUN pip3 install bokeh
+RUN pip3 install seaborn
+RUN pip3 install plotly
+
+# image handling
+RUN pip3 install pillow
 
 # pdf support
 RUN pip3 install pypdf2
 RUN pip3 install fpdf
 
+# xml support
+RUN pip3 install lxml
+
 # excel support
 RUN pip3 install openpyxl
 
 # web scraping, html parsing
-#RUN pip3 install scrapy                     >> /root/fxpython/Dockerfile
+#RUN pip3 install scrapy
 RUN pip3 install beautifulsoup4
 
 # language processing
 RUN pip3 install nltk
 RUN pip3 install gensim
-
-#RUN pip3 install spacy                      >> /root/fxpython/Dockerfile
+#RUN pip3 install spacy
 
 # machine learning
 RUN pip3 install tensorflow

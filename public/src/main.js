@@ -38,6 +38,7 @@ import {
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 import VueScrollTo from 'vue-scrollto'
+import VueTour from 'vue-tour'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
@@ -95,6 +96,11 @@ Vue.prototype.$prompt = MessageBox.prompt
 // setup for VueScrollTo (programmatic scrolling)
 
 Vue.use(VueScrollTo)
+
+// setup for VueTour
+
+require('vue-tour/dist/vue-tour.css')
+Vue.use(VueTour)
 
 /*
 // global directives (move to a new file if we get too many here)

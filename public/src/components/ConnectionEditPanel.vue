@@ -40,6 +40,7 @@
           label-position="top"
           :model="edit_connection"
           :rules="rules"
+          @validate="onValidateItem"
         >
           <div class="flex flex-row">
             <el-form-item
@@ -101,7 +102,9 @@
         </el-form>
 
         <ConnectionInfoPanel
+          ref="connection-info-panel"
           :connection-info.sync="connection_info"
+          :form-errors.sync="connection_info_form_errors"
           v-if="is_http"
         />
 
@@ -241,7 +244,9 @@
           alias: [
             { validator: this.formValidateAlias }
           ]
-        }
+        },
+        form_errors: {},
+        connection_info_form_errors: {}
       }
     },
     computed: {
@@ -295,12 +300,19 @@
       submit_label() {
         return this.mode == 'edit' ? 'Save changes' : 'Create connection'
       },
+      has_http_errors() {
+        return _.keys(this.connection_info_form_errors).length > 0
+      },
       has_errors() {
+        if (this.is_http && this.has_http_errors) {
+          return true
+        }
+
         if (this.is_oauth && !this.is_connected) {
           return true
         }
 
-        return false
+        return _.keys(this.form_errors).length > 0
       },
       connection_info: {
         get() {
@@ -328,10 +340,22 @@
             return
 
           var auth_panel = this.$refs['connection-authentication-panel']
+          var info_panel = this.$refs['connection-info-panel']
+
           if (auth_panel) {
             auth_panel.validate((valid2) => {
-              if (!valid2)
+              if (!valid2) {
                 return
+              }
+
+              // there are no errors in the form; do the submit
+              this.$emit('submit', this.edit_connection)
+            })
+          } else if (info_panel) {
+            info_panel.validate((valid3) => {
+              if (!valid3) {
+                return
+              }
 
               // there are no errors in the form; do the submit
               this.$emit('submit', this.edit_connection)
@@ -411,7 +435,16 @@
 
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
-      }
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
+      },
     }
   }
 </script>

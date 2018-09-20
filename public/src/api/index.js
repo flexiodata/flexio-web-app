@@ -91,6 +91,7 @@ export default {
   fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                             },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                           },
   cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})           },
+  runProcess:                     function({ eid, attrs })              { return ProcessResource[POS] ({ eid, p1: 'run' }, attrs)           },
 
   // process (other)
   fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                  },

@@ -1,19 +1,63 @@
 <template>
   <div>
     <transition name="slide-fade" mode="out-in">
+      <!-- no content -->
       <div v-if="!processEid || processEid.length == 0">
-        <slot name="empty"></slot>
+        <slot name="empty">
+          <div class="tc f6">
+            <em>There is no content to show.</em>
+          </div>
+        </slot>
       </div>
+      <!-- loading -->
       <div
         class="bg-white ba b--black-10 flex flex-column justify-center"
         style="height: 300px"
-        v-if="is_process_running"
+        v-else-if="is_process_pending || is_process_running || force_loading"
       >
-        <Spinner size="large" message="Running..." />
+        <Spinner size="large" :message="is_process_pending ? 'Starting...' : 'Running...'" />
       </div>
+      <!-- failed -->
       <div
-        v-else-if="stream_eid.length > 0 && !is_process_failed"
+        class="bg-white ba b--black-10 pa4 overflow-y-auto"
+        style="height: 600px"
+        v-else-if="is_process_failed"
       >
+        <IconMessage
+          class="tc"
+          title="Something went wrong."
+        />
+        <div class="mb2">
+          <el-radio-group size="small" v-model="pretty_state">
+            <el-radio-button label="pretty">Pretty</el-radio-button>
+            <el-radio-button label="raw">Raw</el-radio-button>
+          </el-radio-group>
+        </div>
+        <div
+          class="overflow-auto"
+          v-if="pretty_state == 'pretty'"
+        >
+          <template v-for="(val, key) in process_error">
+            <h4 class="f8 fw6 ttu moon-gray bb b--black-05 mb1 mt3 pb1">{{key}}</h4>
+            <pre class="mb0 tl lh-title f7">{{val}}</pre>
+          </template>
+        </div>
+        <CodeEditor
+          class="bg-white ba b--black-10"
+          lang="json"
+          :show-json-view-toggle="false"
+          :options="{
+            minRows: 12,
+            maxRows: 24,
+            lineNumbers: false,
+            readOnly: true
+          }"
+          v-model="process_error_str"
+          v-else
+        />
+      </div>
+      <!-- show content -->
+      <div v-else-if="stream_eid.length > 0">
         <StreamContent
           :height="300"
           :stream-eid="stream_eid"
@@ -27,21 +71,6 @@
           </a>
         </div>
       </div>
-      <div
-        v-else-if="is_superuser && is_process_failed"
-      >
-        <CodeEditor
-          class="bg-white ba b--black-10"
-          lang="json"
-          :options="{
-            minRows: 12,
-            maxRows: 24,
-            lineNumbers: false,
-            readOnly: true
-          }"
-          v-model="process_info_str"
-        />
-      </div>
     </transition>
   </div>
 </template>
@@ -50,12 +79,16 @@
   import { mapGetters } from 'vuex'
   import { API_V2_ROOT } from '../api/resources'
   import {
+    PROCESS_STATUS_PENDING,
     PROCESS_STATUS_RUNNING,
-    PROCESS_STATUS_FAILED
+    PROCESS_STATUS_CANCELLED,
+    PROCESS_STATUS_FAILED,
+    PROCESS_STATUS_COMPLETED
   } from '../constants/process'
 
   import Spinner from 'vue-simple-spinner'
   import CodeEditor from './CodeEditor.vue'
+  import IconMessage from './IconMessage.vue'
   import StreamContent from './StreamContent.vue'
 
   export default {
@@ -68,6 +101,7 @@
     components: {
       Spinner,
       CodeEditor,
+      IconMessage,
       StreamContent
     },
     watch: {
@@ -77,9 +111,15 @@
       },
       process_status(val, old_val) {
         // we just finished running a process; fetch the process log
-        if (old_val === PROCESS_STATUS_RUNNING) {
+        if (old_val === PROCESS_STATUS_RUNNING || old_val === PROCESS_STATUS_PENDING) {
           this.fetchProcessLog()
         }
+      }
+    },
+    data() {
+      return {
+        force_loading: false,
+        pretty_state: 'pretty'
       }
     },
     computed: {
@@ -97,8 +137,15 @@
       process_info() {
         return _.get(this.process, 'process_info', {})
       },
-      process_info_str() {
-        return JSON.stringify(this.process_info, null, 2)
+      process_error() {
+        var error = _.get(this.process_info, 'error', {})
+        return this.is_superuser ? error : _.pick(error, ['code', 'message'])
+      },
+      process_error_str() {
+        return JSON.stringify(this.process_error, null, 2)
+      },
+      is_process_pending() {
+        return this.process_status == PROCESS_STATUS_PENDING
       },
       is_process_running() {
         return this.process_status == PROCESS_STATUS_RUNNING
@@ -125,7 +172,7 @@
         if (this.processEid.length > 0) {
           this.$store.dispatch('fetchProcessLog', { eid: this.processEid })
         }
-      },
+      }
     }
   }
 </script>

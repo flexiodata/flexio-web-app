@@ -69,7 +69,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { ROUTE_SIGNIN } from '../constants/route'
-  import Validation from './mixins/validation'
+  import MixinValidation from './mixins/validation'
 
   const defaultInfo = () => {
     return {
@@ -80,7 +80,7 @@
   }
 
   export default {
-    mixins: [Validation],
+    mixins: [MixinValidation],
     data() {
       return {
         edit_info: defaultInfo(),

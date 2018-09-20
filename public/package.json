@@ -1,6 +1,6 @@
 {
   "name": "flexio",
-  "version": "1.29.1",
+  "version": "1.30.1",
   "description": "Flex.io Client Web Application",
   "author": "David Z. Williams <dave@flex.io>",
   "private": true,
@@ -34,6 +34,7 @@
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.8.0",
     "vue-simple-spinner": "^1.2.8",
+    "vue-tour": "^1.0.1",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

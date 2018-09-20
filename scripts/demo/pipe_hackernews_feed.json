@@ -1,0 +1,17 @@
+{
+    "eid_type": "PIP",
+    "name": "Hacker News Feed",
+    "alias": "hacker-news-feed",
+    "description": "Get the latest from Hacker News",
+    "task": {
+        "op": "sequence",
+        "items": [
+            {
+                "op": "execute",
+                "lang": "python",
+                "code": "aW1wb3J0IHJlcXVlc3RzCgojIGhhbmRsZXIgdG8gY29tbXVuaWNhdGUgd2l0aCBGbGV4LmlvIGNhbGxpbmcgY29udGV4dApkZWYgZmxleGlvX2hhbmRsZXIoY29udGV4dCk6CiAgCiAgICByZXN1bHRzID0gJycKICAKICAgICMgZ2V0IDUgbmV3IHN0b3JpZXMgZnJvbSBIYWNrZXIgTmV3cyAoaHR0cHM6Ly9naXRodWIuY29tL0hhY2tlck5ld3MvQVBJKQogICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5nZXQoImh0dHBzOi8vaGFja2VyLW5ld3MuZmlyZWJhc2Vpby5jb20vdjAvbmV3c3Rvcmllcy5qc29uIikKICAgIHN0b3JpZXMgPSByZXNwb25zZS5qc29uKClbOjVdCiAgICAKICAgICMgZ2V0IG5ldyBzdG9yeSBpbmZvCiAgICBmb3IgaSBpbiBzdG9yaWVzOgogICAgICAgIHJlc3BvbnNlID0gcmVxdWVzdHMuZ2V0KCJodHRwczovL2hhY2tlci1uZXdzLmZpcmViYXNlaW8uY29tL3YwL2l0ZW0vIiArIHN0cihpKSArICIuanNvbiIpCiAgICAgICAgc3RvcnkgPSByZXNwb25zZS5qc29uKCkKICAgICAgICByZXN1bHRzICs9IHN0b3J5LmdldCgndGl0bGUnLCcobm8gdGl0bGUpJykgKyAiXG4iCiAgICAgICAgcmVzdWx0cyArPSBzdG9yeS5nZXQoJ3VybCcsJyhubyB1cmwpJykgKyAiXG5cbiIKICAgICAgICAKICAgICMgcmV0dXJuIHRoZSBsaXN0IG9mIG5ldyBzdG9yaWVzCiAgICBjb250ZXh0Lm91dHB1dC53cml0ZShyZXN1bHRzKQoKICAgICAg"
+            }
+        ]
+    }
+}
+

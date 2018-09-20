@@ -13,10 +13,10 @@
 <script>
   import { ROUTE_SIGNIN } from '../constants/route'
   import SignUpForm from './SignUpForm.vue'
-  import Redirect from './mixins/redirect'
+  import MixinRedirect from './mixins/redirect'
 
   export default {
-    mixins: [Redirect],
+    mixins: [MixinRedirect],
     components: {
       SignUpForm
     },

@@ -13,6 +13,7 @@
           plain
           class="btn-header hint--bottom"
           aria-label="Schedule"
+          data-v-step="pipe-onboarding-6"
           :class="{ 'invisible': isModeRun }"
           @click="$emit('schedule-click')"
         >
@@ -32,6 +33,7 @@
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
+          data-v-step="pipe-onboarding-2"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"

@@ -7,6 +7,12 @@
 @import "./element-ui-ext/style.styl"
 @import "./codemirror-ext/style.styl"
 
+.v-step
+  z-index: 11
+
+.v-step__content
+  line-height: 1.4
+
 // -- Vue.js transition classes --
 
 // this replaces the need to have these classes
@@ -118,7 +124,8 @@
   max-width: 1024px
 
 .css-white-box
-  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2)
+  box-shadow: 0 4px 16px -8px rgba(0,0,0,0.4)
+  //box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2)
 
 .css-valign
   position: relative
