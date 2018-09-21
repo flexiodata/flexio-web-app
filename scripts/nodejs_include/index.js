@@ -4,7 +4,7 @@ var utf8 = require('utf8')
 var fs = require('fs')
 var Flexio = require('flexio-sdk-js')
 
-class StdinoutProxy {
+class CallProxy {
 
     constructor() {
         this.stdin = fs.openSync('/dev/stdin', 'rs')
@@ -217,7 +217,7 @@ class StdinoutProxy {
 }
 
 
-var proxy = new StdinoutProxy()
+var proxy = new CallProxy()
 
 
 class InputEnv {
@@ -654,7 +654,7 @@ function run(handler) {
 
 module.exports = {
 
-    StdinoutProxy,
+    CallProxy,
     run
 
 };

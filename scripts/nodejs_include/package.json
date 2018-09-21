@@ -15,6 +15,7 @@
     "request": ">=2.82.0",
     "flexio-sdk-js": "^1.7.9",
     "puppeteer": "^1.0.0",
-    "command-line-args": "4.0.7"
+    "command-line-args": "4.0.7",
+    "zmq": ">=2.15.3"
   }
 }

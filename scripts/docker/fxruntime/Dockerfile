@@ -13,6 +13,9 @@ RUN apt-get -y install wget
 RUN apt-get -y install apt-utils
 RUN apt-get -y install curl
 
+# zeromq libraries
+RUN apt-get -y install libzmq3-dev libzmq5
+
 # python3 runtime
 RUN apt-get -y install python3-pip
 
@@ -90,6 +93,9 @@ RUN pip3 install gensim
 RUN pip3 install tensorflow
 RUN pip3 install keras
 
+# validation
+RUN pip3 install cerberus
+
 # data generation
 RUN pip3 install faker
 
@@ -128,6 +134,9 @@ RUN yarn add moment
 
 # html
 RUN yarn add cheerio
+
+# visualization
+RUN yarn add d3-node
 
 # validation
 RUN yarn add validator
