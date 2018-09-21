@@ -4,7 +4,7 @@
     style="padding-bottom: 8rem"
   >
     <div class="center" style="max-width: 42rem">
-      <div class="mt4 mt5-ns bg-white css-white-box br2">
+      <div class="mt4 mt5-ns bg-white br2 css-white-box">
         <el-tabs
           class="bg-white br2 pv4 pl3"
           tab-position="left"
