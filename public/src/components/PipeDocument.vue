@@ -1,13 +1,13 @@
 <template>
   <!-- pipe fetching -->
-  <div class="bg-nearer-white" v-if="is_fetching">
+  <div class="bg-nearer-white" v-if="is_fetching && !force_render">
     <div class="h-100 flex flex-row items-center justify-center">
       <Spinner size="large" message="Loading..." />
     </div>
   </div>
 
   <!-- pipe fetched -->
-  <div class="bg-nearer-white" v-else-if="is_fetched">
+  <div class="bg-nearer-white" v-else-if="is_fetched && !force_render">
     <!-- runtime view; run mode; no ui steps -->
     <div
       class="h-100 pa4 overflow-y-scroll"
@@ -157,12 +157,7 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
-                    <p class="mt0 lh-copy f6 light-silver">The following POST parameters will be used when testing the pipe (to reference a variable use the syntax ${input.my_var} where `my_var` is one of the keys below).</p>
-                    <KeypairList
-                      ref="input-list"
-                      :header="{ key: 'Key', val: 'Value' }"
-                      v-model="edit_input"
-                    />
+                    <ProcessInput v-model="edit_input" />
                   </div>
                   <div class="pt3 ph3" v-if="false">
                     <BuilderList
@@ -293,7 +288,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
-  import KeypairList from './KeypairList.vue'
+  import ProcessInput from './ProcessInput.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -319,7 +314,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
-      KeypairList,
+      ProcessInput,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -374,7 +369,9 @@
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
+        force_render: false,
         save_cancel_zindex: 2050,
+        process_input: {},
 
         tour_steps: [
           {
@@ -560,7 +557,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.revertComponents()
+        this.forceRender()
         this.active_task_idx = -1
       },
       saveChanges() {
@@ -580,7 +577,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revertComponents()
+            this.forceRender()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -642,22 +639,9 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      revertComponents() {
-        this.$nextTick(() => {
-          // one of the few times we need to do something imperatively
-          var input_list = this.$refs['input-list']
-          if (input_list && input_list.revert) {
-            input_list.revert()
-          }
-          var editor = this.$refs['code-editor']
-          if (editor && editor.revert) {
-            editor.revert()
-          }
-          var task_list = this.$refs['task-list']
-          if (task_list && task_list.revert) {
-            task_list.revert()
-          }
-        })
+      forceRender() {
+        this.force_render = true
+        this.$nextTick(() => { this.force_render = false })
       },
       initStickyAndTour() {
         setTimeout(() => {

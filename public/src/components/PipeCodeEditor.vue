@@ -136,9 +136,6 @@
         this.is_editing = false
         this.$nextTick(() => { this.is_inited = true })
       },
-      revert() {
-        this.initFromPipeTask(true)
-      },
       onErrorChange() {
         this.$emit('update:hasErrors', this.has_errors ? true : false)
       },

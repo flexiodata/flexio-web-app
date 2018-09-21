@@ -85,10 +85,6 @@
       })
     },
     methods: {
-      revert() {
-        this.is_editing = false
-        this.initFromPipeTask(this.value)
-      },
       promptFromTask(task, task_idx) {
         var prompt
 
