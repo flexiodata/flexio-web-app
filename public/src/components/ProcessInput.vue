@@ -95,7 +95,7 @@
           headers: {},
           data: '',
           ui: {
-            form_type: 'raw',
+            form_type: 'multipart/form-data',
             raw_type: 'application/json',
             form_data: {},
             x_www_form_urlencoded: {},
