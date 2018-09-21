@@ -234,7 +234,7 @@
                   <div class="pt3 ph3">
                     <ProcessContent :process-eid="active_process_eid">
                       <div class="tc f6" slot="empty">
-                        <em>Click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                        <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                       </div>
                     </ProcessContent>
                   </div>

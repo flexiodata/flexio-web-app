@@ -27,7 +27,7 @@
             Disconnect from your {{service_name}} account
           </el-button>
         </div>
-        <div class="br2 bg-near-white mt4 pa3" v-if="is_box || is_dropbox || is_google_drive">
+        <div class="br2 bg-nearer-white mt4 pa3" v-if="is_box || is_dropbox || is_google_drive">
           <div class="mw6 center">
             <div class="mb3 lh-copy ttu fw6 f6">
               Additional configuration
@@ -61,7 +61,7 @@
             </el-form>
           </div>
         </div>
-        <div class="br2 bg-near-white mt4 pa3" v-else-if="is_google_cloud_storage">
+        <div class="br2 bg-nearer-white mt4 pa3" v-else-if="is_google_cloud_storage">
           <div class="mw6 center">
             <div class="mb3 lh-copy ttu fw6 f6">
               Additional configuration
@@ -114,7 +114,7 @@
             </el-form>
           </div>
         </div>
-        <div class="br2 bg-near-white mt4 pa3" v-else-if="is_github">
+        <div class="br2 bg-nearer-white mt4 pa3" v-else-if="is_github">
           <div class="mw6 center">
             <div class="mb3 lh-copy ttu fw6 f6">
               Additional configuration
@@ -429,7 +429,7 @@
             <div class="f8 lh-copy" v-if="is_postgres">
               <p class="mt1"><strong>NOTE:</strong> If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.</p>
               <p>In addition, you’ll need to grant SELECT access so that Flex.io is allowed to retrieve data from your database. The command is:</p>
-              <p class="bg-near-white pv1 ph2 mb0"><code>GRANT SELECT ON your_database.your_table TO your_username@'34.205.178.37' IDENTIFIED BY 'your_password';</code></p>
+              <p class="bg-nearer-white pv1 ph2 mb0"><code>GRANT SELECT ON your_database.your_table TO your_username@'34.205.178.37' IDENTIFIED BY 'your_password';</code></p>
             </div>
           </el-form-item>
 

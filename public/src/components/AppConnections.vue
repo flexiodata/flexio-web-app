@@ -26,8 +26,9 @@
         :selected-item.sync="connection"
         :items="connections"
         :item-options="{
-          'item-cls': 'min-w5 pa3 pr2 darken-05',
-          'item-style': 'margin: 0.125rem',
+          'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
+          'item-style': 'margin: 3px',
+          'selected-cls': 'relative b--black-10 bg-nearer-white',
           'show-dropdown': true,
           'dropdown-items': ['delete']
         }"
