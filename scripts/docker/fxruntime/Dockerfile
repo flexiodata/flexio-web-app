@@ -128,6 +128,7 @@ RUN yarn add async
 
 # network
 RUN yarn add request
+RUN yarn add axios
 
 # datetime
 RUN yarn add moment
