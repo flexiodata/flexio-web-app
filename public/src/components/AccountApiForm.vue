@@ -6,12 +6,12 @@
     <div v-else>
       <div
         class="flex flex-row items-center hide-child"
-        :class="showOnlyOne ? '' : 'br2 darken-05'"
+        :class="showOnlyOne ? '' : 'br2 hover-bg-nearer-white'"
         v-for="(token, index) in tokens"
       >
         <div
           class="flex-fill pv2 ph3"
-          :class="showOnlyOne ? 'f5 min-w5 mr3 bg-black-05' : ''"
+          :class="showOnlyOne ? 'f5 min-w5 mr3 bg-nearer-white' : ''"
         ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
         <div class="pv2 tr">
           <el-button
