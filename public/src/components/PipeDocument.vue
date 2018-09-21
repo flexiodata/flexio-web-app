@@ -160,6 +160,11 @@
                     <ProcessInput
                       ref="process-input"
                       v-model="edit_input"
+                      v-if="false"
+                    />
+                    <ProcessInput
+                      ref="process-input"
+                      v-model="process_input"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -614,7 +619,7 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_attrs = _.get(this.edit_pipe, 'ui.input', {})
+        var run_attrs = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,

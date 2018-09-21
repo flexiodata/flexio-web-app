@@ -8,20 +8,26 @@
       <el-form-item label="How would you like to send the form data?">
         <el-radio-group
           size="small"
-          v-model="input_type"
+          v-model="edit_value.ui.form_type"
         >
-          <el-radio-button label="form-data" />
-          <el-radio-button label="x-www-form-urlencoded" />
-          <el-radio-button label="raw" />
+          <el-radio-button
+            :label="option.val"
+            :key="option.val"
+            v-for="option in form_options"
+          >
+            {{option.label}}
+          </el-radio-button>
         </el-radio-group>
       </el-form-item>
       <el-form-item
         label="What content type header would you like to use?"
-        v-if="input_type == 'raw'"
+        v-if="edit_value.ui.form_type == 'raw'"
       >
+        <!-- TODO: Added 1px top margin to make it line up. I don't care... -->
         <el-select
           size="small"
-          v-model="raw_type"
+          style="margin-top: 1px"
+          v-model="edit_value.ui.raw_type"
         >
           <el-option
             :label="option.label"
@@ -34,27 +40,27 @@
     </el-form>
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
-      v-model="form_data_value"
-      v-show="input_type == 'form-data'"
+      v-model="edit_value.ui.form_data"
+      v-show="edit_value.ui.form_type == 'multipart/form-data'"
     />
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
-      v-model="x_www_form_urlencoded_data"
-      v-show="input_type == 'x-www-form-urlencoded'"
+      v-model="edit_value.ui.x_www_form_urlencoded"
+      v-show="edit_value.ui.form_type == 'application/x-www-form-urlencoded'"
     />
-    <div v-show="input_type == 'raw'">
+    <div v-show="edit_value.ui.form_type == 'raw'">
       <KeypairList
         :header="{ key: 'Key', val: 'Value' }"
-        v-model="json_value"
+        v-model="edit_value.ui.json"
         v-if="false"
       />
       <CodeEditor
         class="bg-white ba b--black-10"
         style="line-height: 1.15; font-size: 13px"
-        :lang="raw_type == 'application/json' ? 'json' : ''"
+        :lang="edit_value.ui.raw_type == 'application/json' ? 'json' : ''"
         :show-json-view-toggle="false"
         :options="{ minRows: 8, maxRows: 20 }"
-        v-model="raw_value"
+        v-model="edit_value.ui.raw"
       />
     </div>
   </div>
@@ -75,11 +81,35 @@
       KeypairList,
       CodeEditor
     },
+    watch: {
+      edit_value: {
+        handler: 'emitChange',
+        immediate: true,
+        deep: true
+      }
+    },
     data() {
       return {
         force_render: false,
+        edit_value: {
+          headers: {},
+          data: '',
+          ui: {
+            form_type: 'raw',
+            raw_type: 'application/json',
+            form_data: {},
+            x_www_form_urlencoded: {},
+            json: {},
+            raw: ''
+          }
+        },
+        form_options: [
+          { label: 'form-data',             val: 'multipart/form-data'               },
+          { label: 'x-www-form-urlencoded', val: 'application/x-www-form-urlencoded' },
+          { label: 'raw',                   val: 'raw'                               }
+        ],
         raw_options: [
-          { label: 'Text',                                val: 'text'                   },
+          { label: 'Text',                                val: ''                       },
           { label: 'Text (text/plain)',                   val: 'text/plain'             },
           { label: 'JSON (application/json)',             val: 'application/json'       },
           { label: 'Javascript (application/javascript)', val: 'application/javascript' },
@@ -89,63 +119,67 @@
         ]
       }
     },
-    computed: {
-      input_type: {
-        get() {
-          return _.get(this.value, 'type', 'raw')
-        },
-        set(value) {
-          this.emitObject({ type: value })
-        }
-      },
-      raw_type: {
-        get() {
-          return _.get(this.value, 'raw_type', 'application/json')
-        },
-        set(value) {
-          this.emitObject({ raw_type: value })
-        }
-      },
-      form_data_value: {
-        get() {
-          return _.get(this.value, 'form_data', {})
-        },
-        set(value) {
-          this.emitObject({ form_data: value })
-        }
-      },
-      x_www_form_urlencoded_data: {
-        get() {
-          return _.get(this.value, 'x_www_form_urlencoded', {})
-        },
-        set(value) {
-          this.emitObject({ x_www_form_urlencoded: value })
-        }
-      },
-      json_value: {
-        get() {
-          return _.get(this.value, 'json', {})
-        },
-        set(value) {
-          this.emitObject({ json: value })
-        }
-      },
-      raw_value: {
-        get() {
-          return _.get(this.value, 'raw', '')
-        },
-        set(value) {
-          this.emitObject({ raw: value })
-        }
-      }
-    },
     methods: {
       revert() {
         this.force_render = true
         this.$nextTick(() => { this.force_render = false })
       },
-      emitObject(obj) {
-        this.$emit('input', _.assign({}, this.value, obj))
+      getContentType() {
+        var ui = this.edit_value.ui
+        var form_type = ui.form_type
+        var raw_type = ui.raw_type
+        return form_type == 'raw' ? raw_type : form_type
+      },
+      getHeaders() {
+        var headers = {}
+        var content_type = this.getContentType()
+        if (content_type.length > 0) {
+          headers['Content-Type'] = content_type
+        }
+        return headers
+      },
+      getData() {
+        var ui = this.edit_value.ui
+        var form_type = ui.form_type
+        var raw_type = ui.raw_type
+
+        if (form_type == 'raw') {
+          if (raw_type == 'application/json') {
+            try {
+              var json = JSON.parse(ui.raw)
+              return json
+            }
+            catch(e) {
+              return {
+                error: {
+                  msg: 'Malformed JSON.'
+                }
+              }
+            }
+          } else {
+            return ui.raw
+          }
+        } else if (form_type == 'multipart/form-data') {
+          var data = ui.form_data
+
+          const form_data = new FormData()
+          _.keys(data).forEach(key => {
+            form_data.append(key, data[key])
+          })
+
+          return form_data
+        } else if (form_type == 'application/x-www-form-urlencoded') {
+          var data = ui.x_www_form_urlencoded
+          var str = Object.keys(data).map(key => key + '=' + data[key]).join('&')
+          return str
+        }
+      },
+      emitChange() {
+        var value = _.assign({}, this.edit_value, {
+          headers: this.getHeaders(),
+          data: this.getData()
+        })
+        this.$emit('input', value)
       }
     }
   }
