@@ -1,13 +1,13 @@
 <template>
   <!-- pipe fetching -->
-  <div class="bg-nearer-white" v-if="is_fetching && !force_render">
+  <div class="bg-nearer-white" v-if="is_fetching">
     <div class="h-100 flex flex-row items-center justify-center">
       <Spinner size="large" message="Loading..." />
     </div>
   </div>
 
   <!-- pipe fetched -->
-  <div class="bg-nearer-white" v-else-if="is_fetched && !force_render">
+  <div class="bg-nearer-white" v-else-if="is_fetched">
     <!-- runtime view; run mode; no ui steps -->
     <div
       class="h-100 pa4 overflow-y-scroll"
@@ -157,7 +157,10 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
-                    <ProcessInput v-model="edit_input" />
+                    <ProcessInput
+                      ref="process-input"
+                      v-model="edit_input"
+                    />
                   </div>
                   <div class="pt3 ph3" v-if="false">
                     <BuilderList
@@ -369,7 +372,6 @@
         has_errors: false,
         is_saving: false,
         show_save_cancel: false,
-        force_render: false,
         save_cancel_zindex: 2050,
         process_input: {},
 
@@ -557,7 +559,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.forceRender()
+        this.revert()
         this.active_task_idx = -1
       },
       saveChanges() {
@@ -577,7 +579,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.forceRender()
+            this.revert()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -639,9 +641,22 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      forceRender() {
-        this.force_render = true
-        this.$nextTick(() => { this.force_render = false })
+      revert() {
+        this.$nextTick(() => {
+          // one of the few times we need to do something imperatively
+          var input_list = this.$refs['process-input']
+          if (input_list && input_list.revert) {
+            input_list.revert()
+          }
+          var editor = this.$refs['code-editor']
+          if (editor && editor.revert) {
+            editor.revert()
+          }
+          var task_list = this.$refs['task-list']
+          if (task_list && task_list.revert) {
+            task_list.revert()
+          }
+        })
       },
       initStickyAndTour() {
         setTimeout(() => {

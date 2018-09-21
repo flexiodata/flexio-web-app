@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!force_render">
     <KeypairList
       ref="input-list"
       :header="{ key: 'Key', val: 'Value' }"
@@ -21,6 +21,11 @@
     components: {
       KeypairList
     },
+    data() {
+      return {
+        force_render: false
+      }
+    },
     computed: {
       edit_value: {
         get() {
@@ -29,6 +34,12 @@
         set(value) {
           this.$emit('input', value)
         }
+      }
+    },
+    methods: {
+      revert() {
+        this.force_render = true
+        this.$nextTick(() => { this.force_render = false })
       }
     }
   }
