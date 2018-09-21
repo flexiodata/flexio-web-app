@@ -157,11 +157,14 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
-                    <p class="mt0 lh-copy f6 light-silver">The following POST parameters will be used when testing the pipe (to reference a variable use the syntax ${input.my_var} where `my_var` is one of the keys below).</p>
-                    <KeypairList
-                      ref="input-list"
-                      :header="{ key: 'Key', val: 'Value' }"
+                    <ProcessInput
+                      ref="process-input"
                       v-model="edit_input"
+                      v-if="false"
+                    />
+                    <ProcessInput
+                      ref="process-input"
+                      v-model="process_input"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -293,7 +296,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
-  import KeypairList from './KeypairList.vue'
+  import ProcessInput from './ProcessInput.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -319,7 +322,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
-      KeypairList,
+      ProcessInput,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -375,6 +378,7 @@
         is_saving: false,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
+        process_input: {},
 
         tour_steps: [
           {
@@ -560,7 +564,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.revertComponents()
+        this.revert()
         this.active_task_idx = -1
       },
       saveChanges() {
@@ -580,7 +584,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revertComponents()
+            this.revert()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -615,7 +619,7 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_attrs = _.get(this.edit_pipe, 'ui.input', {})
+        var run_attrs = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
@@ -642,10 +646,10 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      revertComponents() {
+      revert() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
-          var input_list = this.$refs['input-list']
+          var input_list = this.$refs['process-input']
           if (input_list && input_list.revert) {
             input_list.revert()
           }
