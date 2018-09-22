@@ -48,6 +48,11 @@ class CallProxy {
     }
 
 
+    close() {
+        this.requester.close()
+        this.requester = null
+    }
+
     onMessage(reply) {
         
         var result = undefined, call_id = ''

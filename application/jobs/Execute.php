@@ -189,18 +189,19 @@ class ExecuteProxy
                 }
             }
 
-            if ($call_count == 0 && (microtime(true) - $start_time) > 16)
+            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
             {
-                // if we haven't yet received our first call after 8 seconds, something is wrong;
+                // if we haven't yet received our first call after 30 seconds, something is wrong;
                 // terminate the execute job with an exception
                 
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
             }
 
+            /*
             if ((microtime(true) - $start_time) > 16)
             {
                 die("TIMED OUT");
-            }
+            }*/
         }
     }
 
