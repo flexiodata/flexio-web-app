@@ -12,6 +12,7 @@
         <el-button
           plain
           class="btn-header hint--bottom"
+          style="background: transparent"
           aria-label="Schedule"
           data-v-step="pipe-onboarding-6"
           :class="{ 'invisible': isModeRun }"
@@ -22,6 +23,7 @@
         <el-button
           plain
           class="btn-header hint--bottom"
+          style="background: transparent"
           aria-label="Properties"
           :class="{ 'invisible': isModeRun }"
           @click="$emit('properties-click')"

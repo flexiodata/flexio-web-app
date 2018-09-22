@@ -136,8 +136,8 @@
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
-              @schedule-click="show_pipe_schedule_dialog = true"
-              @properties-click="show_pipe_properties_dialog = true"
+              @schedule-click="openScheduleDialog"
+              @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
               @run-click="testPipe"
@@ -596,6 +596,14 @@
 
           this.active_task_idx = -1
         })
+      },
+      openPropertiesDialog() {
+        this.show_pipe_properties_dialog = true
+        this.$store.track('Opened Properties Dialog')
+      },
+      openScheduleDialog() {
+        this.show_pipe_schedule_dialog = true
+        this.$store.track('Opened Schedule Dialog')
       },
       saveProperties(attrs) {
         attrs = _.pick(attrs, ['name', 'description', 'alias'])
