@@ -380,6 +380,7 @@
         save_cancel_zindex: 2050,
         process_input: {},
 
+        tour_current_step: 0,
         tour_steps: [
           {
             target: '[data-v-step="pipe-onboarding-0"]',
@@ -427,7 +428,10 @@
         ],
 
         tour_callbacks: {
-          onNextStep: this.onTourNextStepCallback
+          onStart: this.onTourStart,
+          onStop: this.onTourStop,
+          onPreviousStep: this.onTourPrevStep,
+          onNextStep: this.onTourNextStep
         }
       }
     },
@@ -713,7 +717,24 @@
           }, timeout ? timeout : 10)
         }
       },
-      onTourNextStepCallback(current_step) {
+      onTourStart() {
+        this.tour_current_step = 0
+        var current_step = this.tour_current_step
+        this.$store.track('Started Tour', { current_step })
+      },
+      onTourStop() {
+        var current_step = this.tour_current_step
+        var finished = (current_step == this.tour_steps.length - 1) ? true : false
+        this.$store.track('Stopped Tour', { current_step, finished })
+      },
+      onTourPrevStep(current_step) {
+        this.$store.track('Clicked Tour Previous Button', { current_step })
+        this.tour_current_step--
+      },
+      onTourNextStep(current_step) {
+        this.$store.track('Clicked Tour Next Button', { current_step })
+        this.tour_current_step++
+
         // moving from output to adding email task
         if (current_step == 3) {
           var this_user = this.getActiveUser()
