@@ -535,11 +535,13 @@
               type: 'warning'
             }).then(() => {
               doSet()
+              this.$store.track("Turned Pipe Off")
             }).catch(() => {
-              // do nothing
+              this.$store.track("Turned Pipe Off (Canceled)")
             })
           } else {
             doSet()
+            this.$store.track("Turned Pipe On")
           }
         }
       }
@@ -638,6 +640,8 @@
 
         // scroll to the output item
         this.scrollToItem(this.output_item_id, 300)
+
+        this.$store.track('Tested Pipe')
       },
       updateRoute() {
         // update the route
