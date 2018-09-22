@@ -45,7 +45,7 @@
             <div slot="label">API</div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
-              <p class="lh-copy f6">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
+              <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm class="pa3 ba b--black-10 br2" />
             </div>
           </el-tab-pane>
