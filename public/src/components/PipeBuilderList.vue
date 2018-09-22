@@ -195,6 +195,8 @@
         this.$nextTick(() => {
           this.active_prompt_idx = idx
         })
+
+        this.$store.track('Added ' + _.startCase(task.op) + ' Task')
       },
       deleteStep(idx) {
         var items = _.cloneDeep(this.value.items)
