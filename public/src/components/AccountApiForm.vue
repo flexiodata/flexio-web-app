@@ -1,8 +1,10 @@
 <template>
   <div>
-    <EmptyItem v-if="tokens.length == 0">
-      <span slot="text">No API keys to show</span>
-    </EmptyItem>
+    <slot name="empty" v-if="tokens.length == 0">
+      <div class="pv2 ph3 tc f6">
+        <em>No API keys to show</em>
+      </div>
+    </slot>
     <div v-else>
       <div
         class="flex flex-row items-center hide-child"
@@ -11,14 +13,16 @@
       >
         <div
           class="flex-fill pv2 ph3"
-          :class="showOnlyOne ? 'f5 min-w5 mr3 bg-nearer-white' : ''"
-        ><pre class="ma0"><code>{{token.access_code}}</code></pre></div>
+          :class="showOnlyOne ? 'br2 min-w5 mr2 bg-nearer-white' : ''"
+        >
+          <pre class="ma0"><code>{{token.access_code}}</code></pre>
+        </div>
         <div class="pv2 tr">
           <el-button
             type="plain"
-            size="mini"
             class="hint--top"
             aria-label="Copy to Clipboard"
+            :size="showOnlyOne ? 'small' : 'mini'"
             :data-clipboard-text="token.access_code"
           >
             <span class="ttu b">Copy</span>
@@ -49,7 +53,6 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import EmptyItem from './EmptyItem.vue'
 
   export default {
     props: {
@@ -61,9 +64,6 @@
         type: Boolean,
         default: false
       }
-    },
-    components: {
-      EmptyItem
     },
     computed: {
       ...mapState({
