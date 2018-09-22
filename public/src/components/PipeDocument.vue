@@ -77,7 +77,7 @@
         >
           <el-menu-item
             index="0"
-            @click="show_yaml = !show_yaml"
+            @click="showYaml(true)"
           >
             <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
           </el-menu-item>
@@ -102,7 +102,7 @@
           >
             <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="show_yaml = false">
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
             </div>
@@ -674,6 +674,14 @@
             task_list.revert()
           }
         })
+      },
+      showYaml(show) {
+        this.show_yaml = !!show
+        if (!!show) {
+          this.$store.track('Opened Pipe Definition')
+        } else {
+          this.$store.track('Closed Pipe Definition')
+        }
       },
       initStickyAndTour() {
         setTimeout(() => {
