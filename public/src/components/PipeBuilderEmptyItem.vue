@@ -9,33 +9,13 @@
 </template>
 
 <script>
-  import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
-  import ConnectionChooserList from './ConnectionChooserList.vue'
   import BuilderItemTaskChooser from './BuilderItemTaskChooser.vue'
-  import ConnectionEditPanel from './ConnectionEditPanel.vue'
 
   export default {
     components: {
-      ConnectionChooserList,
-      BuilderItemTaskChooser,
-      ConnectionEditPanel
-    },
-    data() {
-      return {
-        edit_mode: 'add',
-        edit_connection: undefined,
-        show_connection_dialog: false,
-        ops: ['request', 'execute', 'echo']
-      }
+      BuilderItemTaskChooser
     },
     methods: {
-      selectConnection(connection) {
-        this.$emit('insert-step', 0, {
-          op: 'connect',
-          connection: _.get(connection, 'eid', ''),
-          alias: 'my-alias'
-        })
-      },
       selectTask(task) {
         this.$emit('insert-step', 0, task)
       }
