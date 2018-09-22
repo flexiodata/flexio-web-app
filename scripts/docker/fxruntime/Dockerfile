@@ -128,12 +128,16 @@ RUN yarn add async
 
 # network
 RUN yarn add request
+RUN yarn add axios
 
 # datetime
 RUN yarn add moment
 
 # html
 RUN yarn add cheerio
+
+# visualization
+RUN yarn add d3-node
 
 # validation
 RUN yarn add validator

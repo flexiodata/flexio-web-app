@@ -4,7 +4,7 @@
     style="padding-bottom: 8rem"
   >
     <div class="center" style="max-width: 42rem">
-      <div class="mt4 mt5-ns bg-white css-white-box br2">
+      <div class="mt4 mt5-ns bg-white br2 css-white-box">
         <el-tabs
           class="bg-white br2 pv4 pl3"
           tab-position="left"
@@ -45,7 +45,7 @@
             <div slot="label">API</div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
-              <p class="lh-copy f6">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
+              <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
               <AccountApiForm class="pa3 ba b--black-10 br2" />
             </div>
           </el-tab-pane>

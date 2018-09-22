@@ -26,9 +26,6 @@ export const createToken = ({ commit, dispatch }) => {
   return api.createToken().then(response => {
     // success callback
     commit(types.CREATED_TOKEN, { attrs: response.body })
-
-    dispatch('analyticsTrack', { event_name: 'Created API Key' })
-
     return response
   }, response => {
     // error callback

@@ -77,7 +77,7 @@
         >
           <el-menu-item
             index="0"
-            @click="show_yaml = !show_yaml"
+            @click="showYaml(true)"
           >
             <i class="material-icons nl2 nr2 hint--right" :aria-label="show_yaml ? 'Hide Pipe Definition' : 'Show Pipe Definition'">code</i>
           </el-menu-item>
@@ -102,7 +102,7 @@
           >
             <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
-              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="show_yaml = false">
+              <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
             </div>
@@ -136,8 +136,8 @@
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
-              @schedule-click="show_pipe_schedule_dialog = true"
-              @properties-click="show_pipe_properties_dialog = true"
+              @schedule-click="openScheduleDialog"
+              @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
               @run-click="testPipe"
@@ -157,11 +157,14 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
-                    <p class="mt0 lh-copy f6 light-silver">The following POST parameters will be used when testing the pipe (to reference a variable use the syntax ${input.my_var} where `my_var` is one of the keys below).</p>
-                    <KeypairList
-                      ref="input-list"
-                      :header="{ key: 'Key', val: 'Value' }"
+                    <ProcessInput
+                      ref="process-input"
                       v-model="edit_input"
+                      v-if="false"
+                    />
+                    <ProcessInput
+                      ref="process-input"
+                      v-model="process_input"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -231,7 +234,7 @@
                   <div class="pt3 ph3">
                     <ProcessContent :process-eid="active_process_eid">
                       <div class="tc f6" slot="empty">
-                        <em>Click the <code class="ph1 ba b--black-10 bg-near-white br2">Test</code> button to see the result of your pipe logic here.</em>
+                        <em>Click the <code class="ph1 ba b--black-10 bg-nearer-white br2">Test</code> button to see the result of your pipe logic here.</em>
                       </div>
                     </ProcessContent>
                   </div>
@@ -293,7 +296,7 @@
   import { Multipane, MultipaneResizer } from 'vue-multipane'
   import Spinner from 'vue-simple-spinner'
   import IconMessage from './IconMessage.vue'
-  import KeypairList from './KeypairList.vue'
+  import ProcessInput from './ProcessInput.vue'
   import BuilderDocument from './BuilderDocument.vue'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderList from './PipeBuilderList.vue'
@@ -319,7 +322,7 @@
       MultipaneResizer,
       Spinner,
       IconMessage,
-      KeypairList,
+      ProcessInput,
       BuilderDocument,
       BuilderList,
       PipeBuilderList,
@@ -375,7 +378,9 @@
         is_saving: false,
         show_save_cancel: false,
         save_cancel_zindex: 2050,
+        process_input: {},
 
+        tour_current_step: 0,
         tour_steps: [
           {
             target: '[data-v-step="pipe-onboarding-0"]',
@@ -423,7 +428,10 @@
         ],
 
         tour_callbacks: {
-          onNextStep: this.onTourNextStepCallback
+          onStart: this.onTourStart,
+          onStop: this.onTourStop,
+          onPreviousStep: this.onTourPrevStep,
+          onNextStep: this.onTourNextStep
         }
       }
     },
@@ -531,11 +539,13 @@
               type: 'warning'
             }).then(() => {
               doSet()
+              this.$store.track("Turned Pipe Off")
             }).catch(() => {
-              // do nothing
+              this.$store.track("Turned Pipe Off (Canceled)")
             })
           } else {
             doSet()
+            this.$store.track("Turned Pipe On")
           }
         }
       }
@@ -560,7 +570,7 @@
       },
       cancelChanges() {
         this.$store.commit('pipe/INIT_PIPE', this.orig_pipe)
-        this.revertComponents()
+        this.revert()
         this.active_task_idx = -1
       },
       saveChanges() {
@@ -580,7 +590,7 @@
             })
 
             this.$store.commit('pipe/INIT_PIPE', response.body)
-            this.revertComponents()
+            this.revert()
           } else {
             this.$message({
               message: 'There was a problem updating the pipe.',
@@ -590,6 +600,14 @@
 
           this.active_task_idx = -1
         })
+      },
+      openPropertiesDialog() {
+        this.show_pipe_properties_dialog = true
+        this.$store.track('Opened Properties Dialog')
+      },
+      openScheduleDialog() {
+        this.show_pipe_schedule_dialog = true
+        this.$store.track('Opened Schedule Dialog')
       },
       saveProperties(attrs) {
         attrs = _.pick(attrs, ['name', 'description', 'alias'])
@@ -615,7 +633,7 @@
       },
       testPipe() {
         var attrs = _.pick(this.edit_pipe, ['task'])
-        var run_attrs = _.get(this.edit_pipe, 'ui.input', {})
+        var run_attrs = this.process_input
 
         _.assign(attrs, {
           parent_eid: this.eid,
@@ -634,6 +652,8 @@
 
         // scroll to the output item
         this.scrollToItem(this.output_item_id, 300)
+
+        this.$store.track('Tested Pipe')
       },
       updateRoute() {
         // update the route
@@ -642,10 +662,10 @@
         _.set(new_route, 'params.view', view)
         this.$router.replace(new_route)
       },
-      revertComponents() {
+      revert() {
         this.$nextTick(() => {
           // one of the few times we need to do something imperatively
-          var input_list = this.$refs['input-list']
+          var input_list = this.$refs['process-input']
           if (input_list && input_list.revert) {
             input_list.revert()
           }
@@ -658,6 +678,14 @@
             task_list.revert()
           }
         })
+      },
+      showYaml(show) {
+        this.show_yaml = !!show
+        if (!!show) {
+          this.$store.track('Opened Pipe Definition')
+        } else {
+          this.$store.track('Closed Pipe Definition')
+        }
       },
       initStickyAndTour() {
         setTimeout(() => {
@@ -689,7 +717,24 @@
           }, timeout ? timeout : 10)
         }
       },
-      onTourNextStepCallback(current_step) {
+      onTourStart() {
+        this.tour_current_step = 0
+        var current_step = this.tour_current_step
+        this.$store.track('Started Tour', { current_step })
+      },
+      onTourStop() {
+        var current_step = this.tour_current_step
+        var finished = (current_step == this.tour_steps.length - 1) ? true : false
+        this.$store.track('Stopped Tour', { current_step, finished })
+      },
+      onTourPrevStep(current_step) {
+        this.$store.track('Clicked Tour Previous Button', { current_step })
+        this.tour_current_step--
+      },
+      onTourNextStep(current_step) {
+        this.$store.track('Clicked Tour Next Button', { current_step })
+        this.tour_current_step++
+
         // moving from output to adding email task
         if (current_step == 3) {
           var this_user = this.getActiveUser()

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!force_render">
     <KeypairItem
       :item="header"
       :is-static="true"
@@ -7,7 +7,6 @@
     />
     <KeypairItem
       v-for="(item, index) in items"
-      :key="item.id"
       :item="item"
       :index="index"
       :count="items.length"
@@ -21,14 +20,11 @@
 <script>
   import KeypairItem from './KeypairItem.vue'
 
-  var idx = 0
-
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')
     val = _.defaultTo(val, '')
 
     return {
-      id: 'keypair-item-' + (++idx),
       key,
       val
     }
@@ -49,56 +45,51 @@
     components: {
       KeypairItem
     },
-    watch: {
-      value: {
-        handler: 'initSelf',
-        immediate: true,
-        deep: true
-      }
-    },
     data() {
       return {
-        items: [],
-        is_editing: false
+        force_render: false
+      }
+    },
+    computed: {
+      items: {
+        get() {
+          var items = this.toArray(this.value)
+          items.push(newKeypairItem())
+          return items
+        },
+        set(value) {
+          // do nothing
+        }
       }
     },
     methods: {
-      initSelf() {
-        if (this.is_editing) {
-          return
-        }
-
+      forceRender() {
+        this.force_render = true
+        this.$nextTick(() => { this.force_render = false })
+      },
+      toArray(obj) {
         // convert object to array of keypairs
         var items = []
-        var idx = 0
 
-        _.each(this.value, (val, key) => {
+        _.each(obj, (val, key) => {
           if (key && key.length > 0) {
             items.push(newKeypairItem(key, val))
           }
         })
 
-        items.push(newKeypairItem())
-
-        this.items = items
+        return items
       },
-      emitChange() {
-        this.is_editing = true
-
+      toObject(arr) {
         // convert array to object
         var obj = {}
 
-        _.each(this.items, (item) => {
+        _.each(arr, (item) => {
           if (item.key && item.key.length > 0) {
             obj[item.key] = item.val
           }
         })
 
-        this.$emit('input', obj)
-      },
-      revert() {
-        this.is_editing = false
-        this.$nextTick(() => { this.initSelf() })
+        return obj
       },
       onItemChange(item, index) {
         var items = _.cloneDeep(this.items)
@@ -109,19 +100,17 @@
 
         _.assign(items[index], item)
 
-        this.items = items
-        this.emitChange()
+        this.$emit('input', this.toObject(items))
         this.$emit('item-change', item, index)
       },
       onItemDelete(item, index) {
         var items = _.cloneDeep(this.items)
         _.pullAt(items, [index])
 
-        this.$nextTick(() => {
-          this.items = items
-          this.emitChange()
-          this.$emit('item-delete', item, index)
-        })
+        this.$emit('input', this.toObject(items))
+        this.$emit('item-delete', item, index)
+
+        this.forceRender()
       }
     }
   }

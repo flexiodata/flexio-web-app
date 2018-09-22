@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!force_render">
     <el-form
       ref="form"
       class="el-form--compact el-form__label-tiny"
@@ -249,6 +249,7 @@
     data() {
       return {
         active_tab_name: 'authorization',
+        force_render: false,
         emitting: false,
         method_options,
         auth_options,
@@ -283,10 +284,11 @@
           }
         })
 
-        setTimeout(() => {
-          this.$refs['data-list'].revert()
-          this.$refs['headers-list'].revert()
-        }, 1)
+        this.forceRender()
+      },
+      forceRender() {
+        this.force_render = true
+        this.$nextTick(() => { this.force_render = false })
       },
       emitUpdate() {
         var connection_info = _.cloneDeep(this.form_values)

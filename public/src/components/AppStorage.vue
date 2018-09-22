@@ -26,8 +26,9 @@
         :selected-item.sync="connection"
         :items="connections"
         :item-options="{
-          'item-cls': 'min-w5 pa3 pr2 darken-05',
-          'item-style': 'margin: 0.125rem',
+          'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
+          'item-style': 'margin: 3px',
+          'selected-cls': 'relative b--black-10 bg-nearer-white',
           'show-dropdown': false,
           'show-identifier': true,
           'show-url': false
@@ -115,32 +116,6 @@
       tryFetchConnections() {
         if (!this.is_fetched && !this.is_fetching)
           this.$store.dispatch('fetchConnections')
-      },
-      tryUpdateConnection(attrs, modal) {
-        var eid = attrs.eid
-        var ctype = _.get(attrs, 'connection_type', '')
-        var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
-
-        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
-        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
-
-        // update the connection and make it available
-        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
-          if (response.ok) {
-            modal.close()
-
-            // try to connect to the connection
-            this.$store.dispatch('testConnection', { eid, attrs })
-
-            if (is_pending)
-            {
-              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
-              this.$store.track('Created Connection', analytics_payload)
-            }
-          } else {
-            // TODO: add error handling
-          }
-        })
       },
       onConnectionActivate(item) {
         this.connection = _.assign({}, item)

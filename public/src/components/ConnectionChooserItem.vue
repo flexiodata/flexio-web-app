@@ -94,7 +94,7 @@
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
       },
       cls() {
-        var sel_cls = this.selectedCls ? this.selectedCls : 'bg-near-white'
+        var sel_cls = this.selectedCls ? this.selectedCls : 'bg-nearer-white'
         sel_cls = this.is_selected ? sel_cls : 'bg-white'
 
         if (_.get(this, 'layout', '') == 'list') {
