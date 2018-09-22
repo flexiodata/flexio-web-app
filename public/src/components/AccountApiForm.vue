@@ -91,7 +91,11 @@
           this.$store.dispatch('fetchTokens')
       },
       createApiKey() {
-        this.$store.dispatch('createToken')
+        this.$store.dispatch('createToken').then(response => {
+          if (response.ok) {
+            this.$store.track('Created API Key')
+          }
+        })
       },
       deleteKey(token) {
         this.$store.dispatch('deleteToken', { eid: token.eid })

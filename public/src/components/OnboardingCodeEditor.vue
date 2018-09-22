@@ -301,20 +301,20 @@
         }
       },
       copy() {
-        this.$store.track('Copied Code Example', {
-          title: this.title,
-          code: this.edit_code
-        })
+        //this.$store.track('Copied Code Example', {
+        //  title: this.title,
+        //  code: this.edit_code
+        //})
       },
       run() {
         if (typeof this.run_fn == 'function')
         {
           Flexio.setup(this.apiKey, this.sdkOptions)
 
-          this.$store.track('Ran Code Example', {
-            title: this.title,
-            code: this.edit_code
-          })
+          //this.$store.track('Ran Code Example', {
+          //  title: this.title,
+          //  code: this.edit_code
+          //})
 
           this.is_loading = true
 

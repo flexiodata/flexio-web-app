@@ -89,9 +89,9 @@
       onOnboardingItemChange(id) {
         var item = _.find(this.items, { id })
 
-        this.$store.track('Switched Onboarding Item', {
-          title: item.name
-        })
+        //this.$store.track('Switched Onboarding Item', {
+        //  title: item.name
+        //})
       }
     }
   }
