@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import initialState from '../state'
+import getDefaultState from '../state'
 
 // -- default properties to add to their respective objects when being added to the store --
 
@@ -149,9 +149,5 @@ export const removeObject      = (state, objs) => { removeAbstract(state, objs) 
 export const removeObjectKeys  = (state, objs, keys) => { removeKeys(state, objs, keys) }
 
 export const resetState = (state) => {
-  var init = initialState()
-
-  for (var f in state) {
-    Vue.set(state, f, init[f])
-  }
+  Object.assign(state, getDefaultState())
 }

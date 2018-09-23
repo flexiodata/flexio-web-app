@@ -4,13 +4,13 @@ import modules from './modules'
 import mutations from './mutations/index'
 import actions from './actions/index'
 import * as getters from './getters'
-import initialState from './state'
+import getDefaultState from './state'
 
 // use Vuex for centralized state management
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: initialState(),
+  state: getDefaultState(),
   modules,
   mutations,
   actions,

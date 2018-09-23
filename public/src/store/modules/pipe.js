@@ -2,18 +2,26 @@ import _ from 'lodash'
 import Flexio from 'flexio-sdk-js'
 import utilSdkJs from '../../utils/sdk-js'
 
-const state = {
-  eid: '',
-  orig_pipe: {},
-  edit_pipe: {},
-  syntax_error: '',
-  edit_keys: ['eid', 'name', 'alias', 'description', 'pipe_mode', 'schedule', 'schedule_status', 'task', 'ui'],
-  fetching: false,
-  fetched: false,
-  changed: false
+const getDefaultState = () => {
+  return {
+    eid: '',
+    orig_pipe: {},
+    edit_pipe: {},
+    syntax_error: '',
+    edit_keys: ['eid', 'name', 'alias', 'description', 'pipe_mode', 'schedule', 'schedule_status', 'task', 'ui'],
+    fetching: false,
+    fetched: false,
+    changed: false
+  }
 }
 
+const state = getDefaultState()
+
 const mutations = {
+  RESET_STATE (state) {
+    Object.assign(state, getDefaultState())
+  },
+
   FETCHING_PIPE (state, fetching) {
     state.fetching = fetching
 

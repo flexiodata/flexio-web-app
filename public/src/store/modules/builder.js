@@ -3,21 +3,29 @@ import { ROUTE_BUILDER } from '../../constants/route'
 
 const VFS_TYPE_DIR = 'DIR'
 
-const state = {
-  route: '',
-  def: {},
-  task: {},
-  pipe: {},
-  process: {},
-  prompts: [],
-  attrs: {},
-  active_prompt: {},
-  active_prompt_idx: -1,
-  fetching: false,
-  fetched: false
+const getDefaultState = () => {
+  return {
+    route: '',
+    def: {},
+    task: {},
+    pipe: {},
+    process: {},
+    prompts: [],
+    attrs: {},
+    active_prompt: {},
+    active_prompt_idx: -1,
+    fetching: false,
+    fetched: false
+  }
 }
 
+const state = getDefaultState()
+
 const mutations = {
+  RESET_STATE (state) {
+    Object.assign(state, getDefaultState())
+  },
+
   FETCHING_DEF (state, fetching) {
     state.fetching = fetching
 
