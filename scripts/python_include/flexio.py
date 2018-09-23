@@ -12,9 +12,6 @@ from zmq.utils.monitor import recv_monitor_message
 from types import ModuleType
 
 
-real_stdout = sys.stdout
-real_print = print
-
 def convert_binary_to_base64(var, moniker):
     if isinstance(var, list):
         for key, value in enumerate(var):
@@ -622,10 +619,6 @@ def create_context():
 def run(handler):
 
     context = create_context()
-
-    global g_print_output
-    g_print_output = context.output
-    __builtin__.print = print_redirect_to_output
 
     if isinstance(handler, ModuleType):
         func = getattr(handler, 'flexio_handler', None)

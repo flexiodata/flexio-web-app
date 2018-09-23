@@ -16,6 +16,8 @@
     "flexio-sdk-js": "^1.7.9",
     "puppeteer": "^1.0.0",
     "command-line-args": "4.0.7",
-    "zmq": ">=2.15.3"
+    "zeromq": ">=4.6.0",
+    "deasync": ">=0.1.13",
+    "deepcopy": ">=1.0.0"
   }
 }
