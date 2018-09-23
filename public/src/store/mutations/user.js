@@ -1,5 +1,5 @@
 import * as types from '../mutation-types'
-import { addUser, updateUser, resetState } from './helpers'
+import { addUser, updateUser, removeObject } from './helpers'
 
 export default {
 
@@ -34,7 +34,7 @@ export default {
   [types.DELETING_USER] (state, { eid, attrs }) {},
 
   [types.DELETED_USER] (state, { eid, attrs }) {
-    resetState(state)
+    removeObject(state, { eid })
   },
 
   // ----------------------------------------------------------------------- //
@@ -58,7 +58,8 @@ export default {
   [types.SIGNING_OUT]: (state) => {},
 
   [types.SIGNED_OUT]: (state) => {
-    resetState(state)
+    state.user_fetched = false
+    state.active_user_eid = ''
   },
 
   [types.SIGNING_UP]: (state) => {},
