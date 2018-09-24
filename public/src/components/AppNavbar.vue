@@ -2,12 +2,13 @@
   <nav class="z-10 bb b--black-20">
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 54px">
       <div class="flex-fill flex flex-row items-center">
-        <router-link to="/home" class="dib link v-mid min-w3 hint--bottom" aria-label="Home">
+        <router-link to="/home" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link to="/pipes" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Pipes</router-link>
-        <router-link to="/connections" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Connections</router-link>
-        <router-link to="/storage" class="ml2 ml4-ns fw6 f6 ttu link nav-link">Storage</router-link>
+        <router-link to="/dashboard" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Dashboard</router-link>
+        <router-link to="/pipes" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Pipes</router-link>
+        <router-link to="/connections" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Connections</router-link>
+        <router-link to="/storage" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Storage</router-link>
         <AppBreadcrumbs class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
       </div>
       <div class="flex-none">
@@ -56,8 +57,9 @@
     padding-bottom: 2px
     border-bottom: 2px solid transparent
     color: $body-color
+    transition: border 0.3s ease-in-out
+
     &.router-link-active
     &:hover
       border-bottom-color: $blue
-      color: $blue
 </style>
