@@ -28,16 +28,11 @@ RUN apt-get -y install chromium-browser libgconf2-4
 
 # flexio bindings for python
 RUN mkdir /fxpython
-COPY flexio.py /usr/lib/python3.5/flexio.py
-COPY fxstart.py /fxpython/fxstart.py
 
 # flexio bindings for nodejs
 RUN mkdir /fxnodejs
 COPY package.json /fxnodejs/package.json
 RUN cd /fxnodejs && npm install
-COPY index.js /fxnodejs/index.js
-COPY run.js /fxnodejs/run.js
-COPY render.js /fxnodejs/render.js
 
 # for communication between container and host
 RUN pip3 install zmq
@@ -144,6 +139,15 @@ RUN yarn add validator
 
 # data generation
 RUN yarn add faker
+
+
+COPY flexio.py /usr/lib/python3.5/flexio.py
+COPY fxstart.py /fxpython/fxstart.py
+
+COPY index.js /fxnodejs/index.js
+COPY run.js /fxnodejs/run.js
+COPY render.js /fxnodejs/render.js
+
 
 # POTENTIAL: csv
 # node-cvg
