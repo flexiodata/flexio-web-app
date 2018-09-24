@@ -380,6 +380,7 @@
         save_cancel_zindex: 2050,
         process_input: {},
 
+        tour_started: false,
         tour_current_step: 0,
         tour_steps: [
           {
@@ -720,7 +721,10 @@
       onTourStart() {
         this.tour_current_step = 0
         var current_step = this.tour_current_step
-        this.$store.track('Started Tour', { current_step })
+        if (!this.tour_started) {
+          this.$store.track('Started Tour', { current_step })
+        }
+        this.tour_started = true
       },
       onTourStop() {
         var current_step = this.tour_current_step

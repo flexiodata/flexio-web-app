@@ -27,11 +27,10 @@ class Cron
     {
         // the scheduler script uses UTC as its timezone
         date_default_timezone_set('UTC');
-        $dt = \Flexio\Base\Util::getDateTimeParts();
-        printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
 
+        // run the loop once
         $scheduler = new static();
-        $scheduler->loop();
+        $scheduler->loop(1);
     }
 
     public function loop(int $count = null) : void

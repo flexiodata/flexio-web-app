@@ -138,13 +138,13 @@
           {
             var pipe = response.body
             var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
-            this.$store.track('Created Pipe: New', analytics_payload)
+            this.$store.track('Created Pipe', analytics_payload)
 
             this.openPipe(response.body.eid)
           }
            else
           {
-            this.$store.track('Created Pipe: New (Error)')
+            this.$store.track('Created Pipe (Error)')
           }
         })
       },

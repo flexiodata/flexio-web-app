@@ -141,11 +141,37 @@ RUN yarn add validator
 RUN yarn add faker
 
 
-
 COPY flexio.py /usr/lib/python3.5/flexio.py
 COPY fxstart.py /fxpython/fxstart.py
 
 COPY index.js /fxnodejs/index.js
 COPY run.js /fxnodejs/run.js
 COPY render.js /fxnodejs/render.js
+
+
+# POTENTIAL: csv
+# node-cvg
+# csv
+
+# POTENTIAL: pdf
+# pdfkit
+
+# POTENTIAL: image
+# graphicsmagick
+# mmagemagick
+# sharp
+# spritesmith
+
+# POTENTIAL: markdown
+# marked
+# markdown
+
+# POTENTIAL: visualization
+# chart.js
+
+# POTENTIAL: workflow
+# gulp
+
+# POTENTIAL: parsing
+# body-parser
 

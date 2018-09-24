@@ -7,7 +7,10 @@
       @open-folder="openFolder"
       v-if="file_chooser_mode == 'filechooser'"
     />
-    <div class="flex flex-row h-100" v-if="connections.length > 0">
+    <div
+      class="flex flex-row h-100 overflow-hidden"
+      v-if="connections.length > 0"
+    >
       <div
         class="flex-none overflow-y-auto"
         v-if="showConnectionList"

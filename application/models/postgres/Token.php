@@ -181,7 +181,7 @@ class Token extends ModelBase
         return true;
     }
 
-    public function getInfoFromAccessCode(string $code) // TODO: add return type
+    public function getEidFromAccessCode(string $code) // TODO: add return type
     {
         $filter = array('access_code' => $code);
         $tokens = $this->list($filter);
@@ -189,6 +189,6 @@ class Token extends ModelBase
         if (count($tokens) === 0)
             return false; // don't flag an error, but acknowledge that object doesn't exist
 
-        return $tokens[0]; // access code is unique
+        return $tokens[0]['eid']; // access code is unique
     }
 }
