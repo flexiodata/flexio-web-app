@@ -370,8 +370,8 @@ class Admin
         //printf("Scheduler time is: %02d:%02d\n", $dt['hours'], $dt['minutes']);
         $result = array('success' => true);
 
-        $scheduler = new \Flexio\Api\Cron;
-        $scheduler->loop(1);
+        $cron = new \Flexio\Api\Cron;
+        $cron->run();
     }
 
     private static function checkServerSettings() : array
