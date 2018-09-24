@@ -465,15 +465,20 @@ class Api
 
         try
         {
-            $token_info = \Flexio\System\System::getModel()->token->getInfoFromAccessCode($requesting_user_token);
-            if ($token_info)
-            {
-                $user = \Flexio\Object\User::load($token_info['owned_by']);
-                if ($user->getStatus() === \Model::STATUS_DELETED)
-                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+            $token_eid = \Flexio\Object\Token::getEidFromAccessCode($requesting_user_token);
+            if ($token_eid === false)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-                $user_eid_from_token = $user->getEid();
-            }
+            $token = \Flexio\Object\Token::load($token_eid);
+            if ($token->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $token_info = $token->get();
+            $user = \Flexio\Object\User::load($token_info['owned_by']);
+            if ($user->getStatus() === \Model::STATUS_DELETED)
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
+
+            $user_eid_from_token = $user->getEid();
         }
         catch (\Flexio\Base\Exception $e)
         {
