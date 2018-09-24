@@ -87,7 +87,7 @@
       },
       onSignedUpAndIn() {
         this.$emit('signed-up')
-        setTimeout(function() { window.location = '/app/learn' }, 500)
+        setTimeout(function() { window.location = '/app/onboard' }, 500)
       }
     }
   }

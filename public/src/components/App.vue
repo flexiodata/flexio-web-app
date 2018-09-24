@@ -1,10 +1,11 @@
-<template>
+'<template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
     <AppNavbar v-if="show_intercom_button && show_navbar" />
     <router-view class="flex-fill"></router-view>
 
+    <!-- TODO: 09/14/2018: Remove? I believe we're done with the onboarding modal -->
     <!-- onboarding dialog -->
-    <div v-if="config_show_onboarding">
+    <div v-if="config_show_onboarding && false">
       <el-dialog
         custom-class="el-dialog--no-header el-dialog--no-footer"
         width="56rem"

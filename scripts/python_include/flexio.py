@@ -1,128 +1,83 @@
 import sys
+import os
+import random
+import string
 import json
 import csv
 import datetime
 import pprint
+import zmq
+import base64
+from zmq.utils.monitor import recv_monitor_message
+from types import ModuleType
 
-real_stdout = sys.stdout
-real_print = print
 
+def convert_binary_to_base64(var, moniker):
+    if isinstance(var, list):
+        for key, value in enumerate(var):
+            var[key] = convert_binary_to_base64(var[key], moniker)
+    elif isinstance(var, dict):
+        for key, value in var.items():
+            var[key] = convert_binary_to_base64(var[key], moniker)
+    elif isinstance(var, (bytes, bytearray)):
+        return moniker + base64.b64encode(var).decode()
+    return var
 
+def convert_base64_to_binary(var, moniker):
+    moniker_len = len(moniker)
+    if isinstance(var, list):
+        for key, value in enumerate(var):
+            var[key] = convert_base64_to_binary(var[key], moniker)
+    elif isinstance(var, dict):
+        for key, value in var.items():
+            var[key] = convert_base64_to_binary(var[key], moniker)
+    elif isinstance(var, str) and var[:moniker_len] == moniker:
+        return base64.b64decode(var[moniker_len:].encode())
+    return var
 
-
-class StdinoutProxy(object):
+class CallProxy(object):
     def __init__(self):
-        self.inited = False
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.REQ)
+        self.socket.connect(os.environ['FLEXIO_RUNTIME_SERVER'])
+        self.socket.setsockopt(zmq.RCVTIMEO, 250)
+        self.monitor = self.socket.get_monitor_socket(zmq.EVENT_CLOSED)
 
-    def invoke(self, func, params):
-        payload = self.encodepart(func)
-        for param in params:
-            payload = payload + self.encodepart(param)
-        self.send_message(payload)
-        response = self.read_message()
-        result, nextoff = self.decodepart(response, 0)
-        return result
-        #print("Received reply %s" % response)
+    def invoke(self, method, params = []):
 
-    def send_message(self, payload):
-        msg = b'--MSGqQp8mf~' + str(len(payload)).encode('utf-8') + b',' + payload
-        real_stdout.buffer.write(msg)
-        real_stdout.flush()
+        call_id = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(20))
 
-    def read_message(self):
-        buf = b''
+        #params = [ '~'+call_id+'/bin.b64:' + base64.b64encode(x).decode() if isinstance(x, (bytes, bytearray)) else x for x in params ]
+        payload = {
+            "version": 1,
+            "access_key": os.environ['FLEXIO_RUNTIME_KEY'],
+            "method": method,
+            "params": params,
+            "id": call_id
+        }
+
+        moniker = '~' + call_id + '/bin.b64:'
+        convert_binary_to_base64(payload['params'], moniker)
+
+        self.socket.send(json.dumps(payload).encode())
+
         while True:
-            buf += sys.stdin.buffer.read(1)
-            if len(buf) > 100:
-                break
-            if buf == b'--MSGqQp8mf~':
-                lenstr = b''
-                while True:
-                    ch = sys.stdin.buffer.read(1)
-                    if ch < b'0' or ch > b'9':
-                        break
-                    lenstr = lenstr + ch
-                if ch != b',':
-                    #print("***" + ch.decode() + "***" + lenstr.decode())
+            try:
+                resobj = self.socket.recv_json()
+                return convert_base64_to_binary(resobj['result'], moniker)
+            except zmq.ZMQError:
+                pass
+            
+            try:
+                evt = recv_monitor_message(self.monitor, zmq.NOBLOCK)
+                if evt['event'] == zmq.EVENT_CLOSED:
+                    print("Connection broken")
                     sys.exit(1)
-                    return None
-                msglen = int(lenstr.decode())
-                return sys.stdin.buffer.read(msglen)
-        return None
+            except zmq.ZMQError:
+                pass
 
-    def encodepart(self, var):
-        if var is None:
-            return b'N0,'
-        type = b's'
-        if isinstance(var, (bytes,bytearray)):
-            type = b'B'
-        if isinstance(var, bool):
-            type = b'b'
-            var = b'1' if var else b'0'
-        elif isinstance(var, int):
-            type = b'i'
-            var = str(var).encode('utf-8')
-        elif isinstance(var, str):
-            type = b's'
-            var = var.encode('utf-8')
-        elif isinstance(var, list):
-            type = b'a'
-            arraypayload = b''
-            for l in var:
-                arraypayload = arraypayload + self.encodepart(l)
-            var = arraypayload
-        elif isinstance(var, dict):
-            type = b'o'
-            objpayload = b''
-            for key,value in var.items():
-                objpayload = objpayload + self.encodepart(key) + self.encodepart(value)
-            var = objpayload
-        return type + str(len(var)).encode('utf-8') + b',' + var
 
-    def decodeparts(self, vars):
-        off = 0
-        res = []
-        while off is not None:
-            if off >= len(vars):
-                break
-            content, off = self.decodepart(vars, off)
-            res.append(content)
-        return res
-
-    def decodepart(self, var, offset):
-        commapos = var.find(b',', offset)
-        if commapos == -1:
-            return None, None
-        type = chr(var[offset])
-        lenpart = int(var[offset+1:commapos].decode())
-        start = commapos+1
-        end = start+lenpart
-        part = var[start:end]
-        if end >= len(var):
-            end = None
-        if type == 'i':
-            return int(part.decode('utf-8')), end
-        elif type == 'b':
-            return False if part == b'0' else True, end
-        elif type == 'B':
-            return part, end
-        elif type == 's':
-            return part.decode('utf-8'), end
-        elif type == 'a':
-            return self.decodeparts(part), end
-        elif type == 'o':
-            off = 0
-            res = {}
-            while off is not None:
-                key, off = self.decodepart(part, off)
-                if off is not None:
-                    value, off = self.decodepart(part, off)
-                    res[key] = value
-            return res, end
-        elif type == 'N':
-            return None, end
-
-proxy = StdinoutProxy()
+proxy = CallProxy()
 
 
 
@@ -650,19 +605,24 @@ def print_redirect_to_output(*args, **kwargs):
 
 import builtins as __builtin__
 
-def run(handler):
 
+
+def create_context():
     stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
     stdout_stream_info = proxy.invoke('getOutputStreamInfo', ['_fxstdout_'])
 
     input = Input(stdin_stream_info)
     output = Output(stdout_stream_info)
 
-    context = Context(input, output)
-    global g_print_output
-    g_print_output = output
-    __builtin__.print = print_redirect_to_output
+    return Context(input, output)
 
-    handler(context)
+def run(handler):
 
+    context = create_context()
 
+    if isinstance(handler, ModuleType):
+        func = getattr(handler, 'flexio_handler', None)
+        if callable(func):
+            func(context)
+    else:
+        handler(context)

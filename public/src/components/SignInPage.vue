@@ -15,10 +15,10 @@
   import { mapState } from 'vuex'
   import { ROUTE_SIGNUP, ROUTE_FORGOTPASSWORD } from '../constants/route'
   import SignInForm from './SignInForm.vue'
-  import Redirect from './mixins/redirect'
+  import MixinRedirect from './mixins/redirect'
 
   export default {
-    mixins: [Redirect],
+    mixins: [MixinRedirect],
     components: {
       SignInForm
     },

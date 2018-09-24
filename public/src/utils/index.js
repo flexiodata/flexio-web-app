@@ -1,4 +1,12 @@
 
+var isNumber = (value) => {
+  return !isNaN(parseFloat(value)) && isFinite(value)
+}
+
+var isHiddenInDOM = (el) => {
+  return (el.offsetParent === null)
+}
+
 var pluralize = (cnt, many_str, one_str, zero_str) => {
   cnt = parseInt(''+cnt)
   if (cnt > 1)  return many_str
@@ -15,8 +23,14 @@ var slugify = (str) => {
   return str
 }
 
-var isHidden = (el) => {
-  return (el.offsetParent === null)
+var afterNth = (str, char, cnt) => {
+  if (!isNumber(cnt)) { cnt = 1 }
+  var retval = str.substr(str.indexOf('/') + 1)
+  return cnt <= 1 ? retval : afterNth(retval, char, cnt-1)
+}
+
+var afterFirst = (str, char) => {
+  return afterNth(str, char, 1)
 }
 
 var fallbackCss = (el_id, href) => {
@@ -26,8 +40,7 @@ var fallbackCss = (el_id, href) => {
   // append test element to document body
   document.body.appendChild(tmp_el)
 
-  if (tmp_el && !isHidden(tmp_el))
-  {
+  if (tmp_el && !isHiddenInDOM(tmp_el)) {
     var head_el = document.head || document.getElementsByTagName('head')[0]
 
     // create link tag
@@ -60,8 +73,12 @@ var atobUnicode = (str) => {
 }
 
 export default {
+  isNumber: isNumber,
+  isHiddenInDOM: isHiddenInDOM,
   pluralize: pluralize,
   slugify: slugify,
+  afterNth: afterNth,
+  afterFirst: afterFirst,
   fallbackCss: fallbackCss,
   sanitizeMasked: sanitizeMasked,
   btoaUnicode: btoaUnicode,

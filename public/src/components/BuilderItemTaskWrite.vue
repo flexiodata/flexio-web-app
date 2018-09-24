@@ -31,7 +31,8 @@
     <template v-if="has_available_connection">
       <h4 class="fw6">2. Choose location</h4>
       <el-input
-        v-model="edit_values.path"
+        v-model="write_path"
+        spellcheck="false"
       >
         <el-button
           slot="append"
@@ -57,6 +58,7 @@
       <BuilderComponentFileChooser
         ref="file-chooser"
         :connection-identifier="connection_identifier"
+        :folders-only="true"
         :allow-multiple="false"
         :show-result="false"
         v-if="show_file_chooser_dialog"
@@ -82,6 +84,7 @@
 
 <script>
   import marked from 'marked'
+  import util from '../utils'
   import { mapGetters } from 'vuex'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
@@ -129,6 +132,7 @@
         this.$emit('update:isNextAllowed', this.has_available_connection)
       },
       connection_identifier() {
+        this.write_path = ''
         this.$emit('active-item-change', this.index)
       },
       edit_values: {
@@ -154,6 +158,24 @@
       },
       description() {
         return marked(_.get(this.item, 'description', ''))
+      },
+      write_path: {
+        get() {
+          var after_path = util.afterNth(this.edit_values.path, '/', 2)
+          return '/' + after_path
+        },
+        set(value) {
+          if (this.connection_identifier.length == 0) {
+            return this.edit_values.path = ''
+          }
+
+          var path = value
+          if (path.indexOf('/') != 0) {
+            path = '/' + path
+          }
+
+          this.edit_values.path = '/' + this.connection_identifier + path
+        }
       },
       store_connection() {
         return this.$_Connection_getConnectionByIdentifier(this.connection_identifier)

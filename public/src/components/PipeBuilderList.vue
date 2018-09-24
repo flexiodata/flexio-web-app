@@ -73,6 +73,7 @@
       return {
         is_inited: false,
         is_editing: false,
+        is_inserting: false,
         has_errors: false,
         task_items: [],
         prompts: [],
@@ -181,16 +182,20 @@
         this.prompts = [].concat(prompts)
 
         this.$emit('input', { op: 'sequence', items })
+        this.$store.track('Added ' + _.startCase(item.op) + ' Task')
       },
       insertStep(idx, task) {
         var items = _.get(this.value, 'items', [])
         items = _.cloneDeep(items)
         if (task) {
           items.splice(idx, 0, task)
+          this.$store.track('Added ' + _.startCase(task.op) + ' Task')
         } else {
           items.splice(idx, 0, { op: '' })
+          this.$store.track('Clicked Insert Task Button')
         }
         this.is_editing = false
+        this.is_inserting = true
         this.$emit('input', { op: 'sequence', items })
         this.$nextTick(() => {
           this.active_prompt_idx = idx
@@ -227,12 +232,22 @@
         }
       },
       itemCancel() {
+        if (this.is_inserting) {
+          this.$store.track('Added Task (Canceled)')
+        }
+
         this.is_editing = false
+        this.is_inserting = false
         this.active_prompt_idx = -1
         this.$emit('cancel')
       },
       itemSave() {
+        if (this.is_inserting) {
+          this.$store.track('Added Task (Saved)')
+        }
+
         this.is_editing = false
+        this.is_inserting = false
         this.active_prompt_idx = -1
         this.$emit('save')
       },

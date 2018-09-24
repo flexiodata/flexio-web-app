@@ -63,9 +63,19 @@ export default {
 
   // ----------------------------------------------------------------------- //
 
-  [types.CANCELING_PROCESS] (state, { eid }) {},
+  [types.CANCELING_PROCESS] (state, { eid }) {
+  },
 
   [types.CANCELED_PROCESS] (state, process) {
+    updateProcess(state, process)
+  },
+
+  // ----------------------------------------------------------------------- //
+
+  [types.STARTING_PROCESS] (state, { eid }) {
+  },
+
+  [types.STARTED_PROCESS] (state, process) {
     updateProcess(state, process)
   }
 

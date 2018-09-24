@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!force_render">
     <el-form
       ref="form"
       class="el-form--compact el-form__label-tiny"
@@ -147,18 +147,10 @@
         <el-tab-pane name="form-data">
           <div slot="label" class="tc" style="min-width: 3rem">Form Data</div>
           <div class="mv2 mh3">
-            <KeypairItem
-              :item="{ key: 'Key', val: 'Value' }"
-              :is-static="true"
-            />
-            <KeypairItem
-              v-for="(item, index) in form_values.data"
-              :key="index"
-              :item="item"
-              :index="index"
-              :count="form_values.data.length"
-              @change="onFormDataItemChange"
-              @delete="onFormDataItemDelete"
+            <KeypairList
+              ref="data-list"
+              :header="{ key: 'Key', val: 'Value' }"
+              v-model="form_values.data"
             />
           </div>
         </el-tab-pane>
@@ -166,18 +158,10 @@
         <el-tab-pane name="headers">
           <div slot="label" class="tc" style="min-width: 3rem">Headers</div>
           <div class="mv2 mh3">
-            <KeypairItem
-              :item="{ key: 'Key', val: 'Value' }"
-              :is-static="true"
-            />
-            <KeypairItem
-              v-for="(item, index) in form_values.headers"
-              :key="index"
-              :item="item"
-              :index="index"
-              :count="form_values.headers.length"
-              @change="onHeaderItemChange"
-              @delete="onHeaderItemDelete"
+            <KeypairList
+              ref="headers-list"
+              :header="{ key: 'Key', val: 'Value' }"
+              v-model="form_values.headers"
             />
           </div>
         </el-tab-pane>
@@ -189,7 +173,7 @@
 <script>
   import { CONNECTION_TYPE_HTTP } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
-  import KeypairItem from './KeypairItem.vue'
+  import KeypairList from './KeypairList.vue'
 
   const newKeypairItem = (key, val) => {
     key = _.defaultTo(key, '')
@@ -212,8 +196,8 @@
       access_token: '',
       refresh_token: '',
       expires: '',
-      headers: [],
-      data: []
+      headers: {},
+      data: {}
     }
   }
 
@@ -246,7 +230,7 @@
     },
     components: {
       ServiceIcon,
-      KeypairItem
+      KeypairList
     },
     watch: {
       connectionInfo: {
@@ -265,6 +249,7 @@
     data() {
       return {
         active_tab_name: 'authorization',
+        force_render: false,
         emitting: false,
         method_options,
         auth_options,
@@ -294,30 +279,19 @@
 
           if (_.isPlainObject(val)) {
             _.each(val, (val2, key2) => {
-              this.form_values[key] = [].concat(this.form_values[key]).concat(newKeypairItem(key2, val2))
+              this.form_values[key][key2] = val2
             })
           }
         })
 
-        // add "ghost" items
-        this.form_values.data = [].concat(this.form_values.data).concat(newKeypairItem())
-        this.form_values.headers = [].concat(this.form_values.headers).concat(newKeypairItem())
+        this.forceRender()
+      },
+      forceRender() {
+        this.force_render = true
+        this.$nextTick(() => { this.force_render = false })
       },
       emitUpdate() {
         var connection_info = _.cloneDeep(this.form_values)
-
-        // map 'data' values
-        var data = _.keyBy(this.form_values.data, 'key')
-        data = _.pickBy(data, (val, key) => { return key.length > 0 })
-        data = _.mapValues(data, 'val')
-
-        // map 'headers' values
-        var headers = _.keyBy(this.form_values.headers, 'key')
-        headers = _.pickBy(headers, (val, key) => { return key.length > 0 })
-        headers = _.mapValues(headers, 'val')
-
-        connection_info.data = data
-        connection_info.headers = headers
 
         // make sure our update below doesn't trigger another call to 'initSelf'
         this.emitting = true
@@ -331,34 +305,6 @@
         } else {
           callback(true)
         }
-      },
-      doKeypairChange(item, index, key) {
-        if (index == _.size(this.form_values[key]) - 1) {
-          this.form_values[key] = [].concat(this.form_values[key]).concat(newKeypairItem())
-        }
-
-        var arr = [].concat(this.form_values[key])
-        arr[index] = _.assign({}, item)
-        this.form_values[key] = [].concat(arr)
-
-      },
-      doKeypairDelete(item, index, key) {
-        var tmp = this.form_values[key]
-        _.pullAt(tmp, [index])
-        this.form_values[key] = []
-        this.$nextTick(() => { this.form_values[key] = [].concat(tmp) })
-      },
-      onFormDataItemChange(item, index) {
-        this.doKeypairChange(item, index, 'data')
-      },
-      onFormDataItemDelete(item, index) {
-        this.doKeypairDelete(item, index, 'data')
-      },
-      onHeaderItemChange(item, index) {
-        this.doKeypairChange(item, index, 'headers')
-      },
-      onHeaderItemDelete(item, index) {
-        this.doKeypairDelete(item, index, 'headers')
       },
       onValidateItem(key, valid) {
         var errors = _.assign({}, this.form_errors)

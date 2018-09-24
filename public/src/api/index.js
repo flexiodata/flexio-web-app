@@ -19,6 +19,8 @@ import {
   VfsResource
 } from './resources'
 
+import axios from 'axios'
+
 /*
   // global Vue object
   Vue.http.get('/someUrl', [options]).then(successCallback, errorCallback);
@@ -91,6 +93,19 @@ export default {
   fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                             },
   createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                           },
   cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})           },
+
+  // `attrs` differs here from other calls in that it wraps up all of the options (headers, etc.)
+  runProcess: function({ eid, attrs }) {
+    var config = {
+      method: 'post',
+      url: '/api/v2/me/processes/' + eid + '/run',
+      withCredentials: true,
+      headers: attrs.headers,
+      data: attrs.data
+    }
+
+    return axios(config)
+  },
 
   // process (other)
   fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                  },

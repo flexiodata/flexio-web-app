@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div
-      class="z-6 absolute right-0 mt2 mr2"
+      class="z-6 absolute right-0 mt1 mr1"
       :style="json_view_toggle_style"
       v-if="is_json_kind && showJsonViewToggle"
     >

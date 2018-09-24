@@ -3,221 +3,184 @@
 var utf8 = require('utf8')
 var fs = require('fs')
 var Flexio = require('flexio-sdk-js')
+var zmq = require('zeromq')
 
-class StdinoutProxy {
-
-    constructor() {
-        this.stdin = fs.openSync('/dev/stdin', 'rs')
-        this.stdout = fs.openSync('/dev/stdout', 'w')
-    }
+var proxy, context
 
 
-    invokeAsync(func, params, callback) {
-        // placeholder for future async version of invoke
-        var res = this.invokeSync(func, params)
-        var err = null
-        callback(err, res)
-    }
+class CallProxy {
 
 
-    invokeSync(func, params) {
-        var payload = this.encodePart(func)
-        for (var i = 0; i < params.length; ++i) {
-            payload += this.encodePart(params[i])
+    constructor(config) {
+
+        var pThis = this
+
+        this.server = process.env.hasOwnProperty('FLEXIO_RUNTIME_SERVER') ? ''+process.env.FLEXIO_RUNTIME_SERVER : ''
+        this.access_key = process.env.hasOwnProperty('FLEXIO_RUNTIME_KEY') ? ''+process.env.FLEXIO_RUNTIME_KEY : ''
+        this.requester = null
+        this.calls = {}
+
+        if (config !== null && typeof config == 'object') {
+            if (config.hasOwnProperty('server')) {
+                this.server = config.server
+            }
+            if (config.hasOwnProperty('access_key')) {
+                this.access_key = config.access_key
+            }
         }
+
+
+        if (this.server.length > 0)
+        {
+            this.requester = zmq.socket('req')
+            this.requester.connect(this.server)
+
+            this.requester.on("message", function(msg) {
+                msg = msg.toString()
+                //console.log("RECEIVED MESSAGE " + msg)
+                pThis.onMessage(msg)
+            })
+
+            process.on('SIGINT', function() {
+                pThis.requester.close();
+            });
+        }
+
+
+    }
+
+
+    close() {
+        this.requester.close()
+        this.requester = null
+    }
+
+    onMessage(reply) {
         
-        this.sendMessageSync(payload)
+        var result = undefined, call_id = ''
 
-        const response = this.readMessageSync()
-        if (response === null)
-            throw('Cannot read message')
-        //console.log("Received reply " + response)
-        var decoded_part = this.decodePart(response, 0)
-        return decoded_part.value
-    }
-
-    sendMessageSync(payload) {
-        var msg = '--MSGqQp8mf~' + payload.length + ',' + payload
-        fs.writeSync(this.stdout, msg, null, 'binary')
-        //fs.fdatasyncSync(process.stdout.fd)
-    }
-
-    readMessageSync() {
-        var buf = ''
-        var data = new Buffer(1)
-        var ch
-        while (true) {
-            fs.readSync(this.stdin, data, 0, 1, null)
-            ch = String.fromCharCode(data[0])
-            buf += ch
-            if (buf.length > 100) {
-                break
-            }
-            if (buf == '--MSGqQp8mf~') {
-                var lenstr = ''
-                var ch
-                while (true) {
-                    fs.readSync(this.stdin, data, 0, 1, null)
-                    ch = String.fromCharCode(data[0])
-                    if (ch < '0' || ch > '9') {
-                        break
-                    }
-                    lenstr += ch
-                }
-                if (ch != ',') {
-                    //print("***" + ch.decode() + "***" + lenstr.decode())
-                    return null
-                }
-                var msglen = parseInt(lenstr)
-                data = new Buffer(msglen)
-
-                // OLD CODE: 
-                // fs.readSync(this.stdin, data, 0, msglen, null)
-
-                var bytes_read = 0
-                var offset = 0
-                var left_to_read = msglen
-                while (left_to_read > 0)
-                {
-                    bytes_read = fs.readSync(this.stdin, data, offset, left_to_read, null)
-                    offset += bytes_read
-                    left_to_read -= bytes_read
-                }
-
-                //if (bytes_read != msglen)
-                //{
-                //    throw "Bytes read mismatch. Wanted " + msglen + " Got " + bytes_read;
-                //}
-
-                //return this.u8arrToString(data)
-                return data.toString('binary')
-            }
+        try
+        {
+            reply = JSON.parse(reply)
+            if (!reply.hasOwnProperty('id'))
+                throw "Call response is missing id"
+            if (reply.hasOwnProperty('result'))
+                result = reply.result
+            call_id = reply.id
+            var moniker = '~' + call_id + '/bin.b64:'
+            result = this.convertBase64ToBinary(result, moniker)
         }
-        return null
+        catch (e)
+        {
+        }
+
+        if (this.calls.hasOwnProperty(call_id))
+        {
+            var callback = this.calls[call_id]
+            delete this.calls[call_id]
+            callback(result)
+        }
+    }
+
+    invokeAsync(method, params) {
+
+        var pThis = this
+
+        var call_id = [...Array(20)].map(i=>(~~(Math.random()*36)).toString(36)).join('')
+        var moniker = '~' + call_id + '/bin.b64:'
+
+        var payload = {
+            "version": 1,
+            "access_key": this.access_key,
+            "method": method,
+            "params": this.convertBinaryToBase64(params, moniker),
+            "id": call_id
+        }
+
+        return new Promise(function(resolve, reject) {
+            pThis.calls[call_id] = resolve
+            var msg = JSON.stringify(payload)
+            //console.log("SENDING " + msg)
+            pThis.requester.send(msg)
+        })
+    }
+
+
+    invokeSync(method, params) {
+
+        var done = false
+        var result = undefined
+
+        this.invokeAsync(method, params).then(function(r) {
+            //console.log("Function returned")
+            result = r
+            done = true
+        }).catch(function(err) {
+
+        })
+
+        //console.log("waiting")
+        require('deasync').loopWhile(function(){return !done})
+        //console.log("done waiting")
+
+        return result
+    }
+
+
+    convertBinaryToBase64(obj, moniker)
+    {
+        var res, k, len
+
+        if (Array.isArray(obj)) {
+            res = []
+            len = obj.length
+            for (k = 0; k < len; ++k) {
+                res.push(this.convertBinaryToBase64(obj[k], moniker))
+            }
+            return res
+        } else if (Object.prototype.toString.call(obj) === '[object Object]' /* if is plain object */) {
+            res = {}
+            for (k in obj) {
+                if (obj.hasOwnProperty(k)) {
+                    res[k] = this.convertBinaryToBase64(obj[k], moniker)
+                }
+            }
+            return res
+        } else if (obj instanceof Buffer) {
+            return moniker + obj.toString('base64')
+        } else {
+            return obj
+        }
+          
     }
     
-    
+    convertBase64ToBinary(obj, moniker)
+    {
+        var res, k, len
 
-    encodePart(v) {
-        if (v === null)
-            return 'N0,'
-        var type = 's'
-        if (v instanceof Buffer) {
-            type = 'B'
-            v = v.toString('binary')
-        } else if (typeof(v) === 'boolean') {
-            type = 'b'
-            v = (v ? '1' : '0')
-        } else if (Number.isInteger(v)) {
-            type = 'i'
-            v = ''+v
-        }  else if (typeof(v) === 'number') {
-            type = 'f'
-            v = ''+v
-        } else if (typeof(v) === 'string' || v instanceof String) {
-            type = 's'
-            v = utf8.encode(v)
-        } else if (Array.isArray(v)) {
-            type = 'a'
-            var arrpayload = ''
-            for (var i = 0; i < v.length; ++i) {
-                arrpayload += this.encodePart(v[i])
+        if (Array.isArray(obj)) {
+            res = []
+            len = obj.length
+            for (k = 0; k < len; ++k) {
+                res.push(this.convertBase64ToBinary(obj[k], moniker))
             }
-            v = arrpayload
-        } else if (typeof(v) == 'object') {
-            type = 'o'
-            var objpayload = ''
-            var keys = Object.keys(v)
-            for (var i = 0; i < keys.length; ++i) {
-                objpayload += this.encodePart(keys[i])
-                objpayload += this.encodePart(v[keys[i]])
-            }
-            v = objpayload
-        }
-        return type + v.length + ',' + v
-    }
-
-
-    decodeParts(vars) {
-        var off = 0
-        var res = []
-        while (off !== null) {
-            if (off >= vars.length) {
-                break;
-            }
-            var decoded_part = this.decodePart(vars, off)
-            res.push(decoded_part.value)
-            off = decoded_part.next
-        }
-        return res
-    }
-
-    decodePart(v, offset) {
-        var commapos = v.indexOf(',', offset)
-        if (commapos == -1) {
-            return { value: null, next: null }
-        }
-        var type = v[offset]
-        var lenpart = parseInt(v.slice(offset+1,commapos))
-        var start = commapos+1
-        var end = start+lenpart
-        var part = v.slice(start,end)
-        if (end >= v.length) {
-            end = null
-        }
-        if (type == 'i') {
-            return { value: parseInt(part), next: end }
-        }
-        if (type == 'f') {
-            return { value: parseFloat(part), next: end }
-        }
-        else if (type == 'b') {
-            return { value: (part == '0' ? false : true), next: end }
-        }
-        else if (type == 'B') {
-            var len = part.length
-            var buf = new Buffer(part, 'binary')
-            return { value: buf, next: end }
-        }
-        else if (type == 's') {
-            return { value: utf8.decode(part), next: end }
-        }
-        else if (type == 'a') {
-            return { value: this.decodeParts(part), next: end }
-        }
-        else if (type == 'o') {
-            var key, value
-            var off = 0
-            var res = {}
-            while (off !== null) {
-                var decoded_part = this.decodePart(part, off)
-                key = decoded_part.value
-                off = decoded_part.next
-                if (off !== null) {
-                    decoded_part = this.decodePart(part, off)
-                    value = decoded_part.value
-                    off = decoded_part.next
-                    res[key] = value
+            return res
+        } else if (Object.prototype.toString.call(obj) === '[object Object]' /* if is plain object */) {
+            res = {}
+            for (k in obj) {
+                if (obj.hasOwnProperty(k)) {
+                    res[k] = this.convertBase64ToBinary(obj[k], moniker)
                 }
             }
-            return { value: res, next: end }
+            return res
+        } else if ((typeof obj === 'string' || obj instanceof String) && obj.substr(0, moniker.length) == moniker) {
+            return Buffer.from(obj.substr(moniker.length), 'base64')
+        } else {
+            return obj
         }
-        else if (type == 'N') {
-            return { value: null, next: end }
-        }
-        else if (type == 'E') {
-            throw new Error(part)
-        }
-        else throw "Unknown marshal payload: " + v
-    }
-
-    test() {
-        console.log("Hello")
     }
 }
 
-
-var proxy = new StdinoutProxy()
 
 
 class InputEnv {
@@ -610,7 +573,6 @@ class Context {
         return this._form
     }
 
-
 }
 
 
@@ -620,8 +582,6 @@ class Context {
 var inited = false
 var input = null
 var output = null
-var context = new Context()
-context.proxy = proxy
 
 function checkModuleInit(callback) {
     if (inited) {
@@ -645,6 +605,10 @@ function checkModuleInit(callback) {
 
 
 function run(handler) {
+    proxy = new CallProxy()
+    context = new Context()
+    context.proxy = proxy
+    
     checkModuleInit(function() {
         handler(context)
     })
@@ -654,7 +618,7 @@ function run(handler) {
 
 module.exports = {
 
-    StdinoutProxy,
+    CallProxy,
     run
 
 };

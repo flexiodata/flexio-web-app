@@ -8,7 +8,10 @@
 @import "./codemirror-ext/style.styl"
 
 .v-step
-  z-index: 1
+  z-index: 11
+
+.v-step__content
+  line-height: 1.4
 
 // -- Vue.js transition classes --
 
@@ -121,7 +124,8 @@
   max-width: 1024px
 
 .css-white-box
-  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2)
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1), 0 4px 16px -8px rgba(0,0,0,0.2)
+  //box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.2)
 
 .css-valign
   position: relative
@@ -157,7 +161,7 @@
   transition: all 0.2s ease
 
   &:hover
-    background-color: $bg-near-white
+    background-color: $bg-nearer-white
     border-color: rgba(0,0,0,0.1)
     border-bottom-color: rgba(0,0,0,0.15)
     box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)

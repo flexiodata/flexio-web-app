@@ -80,7 +80,7 @@ export const signUp = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNING_UP, false)
 
     var analytics_payload = _.omit(attrs, ['password'])
-    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed Up' }))
+    //dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed Up' }))
 
     return response
   }, response => {
@@ -101,7 +101,7 @@ export const signIn = ({ commit, dispatch }, { attrs }) => {
     commit(types.SIGNING_IN, false)
 
     var analytics_payload = _.omit(attrs, ['password'])
-    dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed In' }))
+    //dispatch('analyticsTrack', _.assign(analytics_payload, { event_name: 'Signed In' }))
 
     return response
   }, response => {
@@ -119,6 +119,11 @@ export const signOut = ({ commit, dispatch }) => {
     // success callback
     commit(types.SIGNED_OUT)
     commit(types.SIGNING_OUT, false)
+
+    // reset store state
+    commit('RESET_STATE')
+    commit('builder/RESET_STATE')
+    commit('pipe/RESET_STATE')
 
     dispatch('analyticsTrack', { event_name: 'Signed Out' })
 

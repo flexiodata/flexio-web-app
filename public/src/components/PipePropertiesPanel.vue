@@ -81,7 +81,7 @@
 
 <script>
   import { OBJECT_TYPE_PIPE } from '../constants/object-type'
-  import Validation from './mixins/validation'
+  import MixinValidation from './mixins/validation'
 
   const defaultAttrs = () => {
     return {
@@ -110,7 +110,7 @@
         default: () => { return defaultAttrs() }
       }
     },
-    mixins: [Validation],
+    mixins: [MixinValidation],
     watch: {
       pipe: {
         handler: 'initPipe',

@@ -58,103 +58,172 @@ class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
 
+    public $code = '';
     public $pipes = [null,null,null];
     public $process = null;
     public $check_sig = '';
     public $callbacks = null;
+    public $compile_error = '';
 
-    public function initialize($cmd, $callbacks) : bool
+    private static function getLocalIpAddress() : string
     {
+        if (isset($_SERVER['SERVER_ADDR']))
+            $result =  $_SERVER['SERVER_ADDR'];
+             else
+            $result = trim(shell_exec("hostname -I | cut -d' ' -f1"));
+
+        // check IP address for valid format
+        if (!filter_var($result, FILTER_VALIDATE_IP))
+            return '127.0.0.1';
+
+        return $result;
+    }
+
+    public function initialize($engine, $code, $callbacks) : bool
+    {
+        $this->engine = $engine;
         $this->callbacks = $callbacks;
-
-        $descriptor_spec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
-
-        $this->process = proc_open($cmd, $descriptor_spec, $this->pipes);
-        if (!is_resource($this->process))
-        {
-            $this->process = null;
-            return false;
-        }
-
-        stream_set_blocking($this->pipes[0], true);  // write to here
-        stream_set_blocking($this->pipes[1], false); // read from here
+        $this->code = $code;
         return true;
     }
 
     public function run() : void
     {
-        while (!feof($this->pipes[1]))
+        // generate a key which will be used as a kind of password
+        $access_key = \Flexio\Base\Util::generateRandomString(20);
+
+        /*
+        // start a zeromq server -- let OS choose port
+        $address = self::getLocalIpAddress();
+        $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
+        $server->bind("tcp://$address:*");
+
+        // figure out what port OS chose
+        $port = $server->getSockOpt(\ZMQ::SOCKOPT_LAST_ENDPOINT);
+        $colon = strrpos($port, ':');
+        $port = ($colon !== false ? substr($port, $colon+1) : '');
+        if (strlen($port) == 0)
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: could not determine bind port");
+        $port = (int)$port;
+
+        $address = self::getLocalIpAddress();
+        $ipc_address = "tcp://$address:$port";
+        */
+
+        // start a zeromq server -- let OS choose port
+
+        $host_socket_path = "/dev/shm/ipc-exec-$access_key";
+        $container_socket_path = "/tmp/ipc-endpoint";
+        $container_ipc_address = "ipc://$container_socket_path";
+
+        $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
+        $server->bind("ipc://$host_socket_path");
+
+        if (file_exists($host_socket_path))
         {
-            $read_streams = array( $this->pipes[1] );
-            $write_streams = NULL;
-            $except_streams = NULL;
-            $res = stream_select($read_streams, $write_streams, $except_streams, 1);
-            if ($res === false)
-                break;
+            register_shutdown_function('unlink', $host_socket_path);
+        }
 
-            if ($res > 0)
+
+        // recv() should time out every 250 ms
+        $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
+        //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
+
+
+        // run the container command
+
+        $dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($dockerbin))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        //$cmd = "./update-docker-images && $dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        //echo $cmd;
+        //ob_end_flush();
+        //flush();
+
+        $engine = $this->engine;
+
+        $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        
+        //echo "./update-docker-images && $cmd";
+        //ob_end_flush();
+        //flush();
+        
+        exec("$cmd  > /dev/null  &");
+
+        $start_time = microtime(true);
+        $connection_established = false;
+        $call_count = 0;
+
+        while (true)
+        {
+            $message = $server->recv();
+
+            if ($message !== false)
             {
-                $ch = fread($this->pipes[1], 1);
+                $message = @json_decode($message);
+                
+                if ($message === null)
+                    throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: decoding fault");
+                $message = (array)$message;
 
-                $this->check_sig = substr($this->check_sig . $ch, 0, 12);
-
-                if ($this->check_sig == self::MESSAGE_SIGNATURE)
+                if (isset($message['access_key']) && $message['access_key'] == $access_key)
                 {
-                    $length = '';
-                    $this->check_sig = '';
+                    $method = ($message['method'] ?? '');
 
-                    for ($i = 0; $i < 12; ++$i)
+                    if ($method == 'get_script')
                     {
-                        $ch = fread($this->pipes[1], 1);
-                        if ($ch < '0' || $ch > '9')
-                            break;
-                        $length .= $ch;
+                        $response = [ 'result' => $this->code, 'id' => $message['id'] ];
+                        $server->send(json_encode($response));
+                    }
+                    else if ($method == 'compile_error')
+                    {
+                        $retval = call_user_func_array([ $this, 'func_'.$method ], $message['params'] ?? ['']);
+                        $response = [ 'result' => true, 'id' => $message['id'] ];
+                        $server->send(json_encode($response));
+                    }
+                    else if ($method == 'exit_loop')
+                    {
+                        $response = [ 'result' => true, 'id' => $message['id'] ];
+                        $server->send(json_encode($response));
+                        break;
+                    }
+                    else
+                    {
+                        $this->onMessage($server, $message);
                     }
 
-                    if ($ch == ',')
-                    {
-                        $length = (int)$length;
-
-                        $payload = '';
-                        $remaining = $length;
-                        while ($remaining > 0)
-                        {
-                            $want = min(8192, $remaining);
-                            $chunk = fread($this->pipes[1], $want);
-                            $remaining -= strlen($chunk);
-                            $payload .= $chunk;
-                        }
-
-                        if (strlen($payload) == $length)
-                        {
-                            $this->onMessage($payload);
-                        }
-                         else
-                        {
-                            //echo "Only got " . strlen($payload) . " wanted $length";
-                        }
-                    }
-
+                    ++$call_count;
                 }
             }
 
-            //var_dump($res);
-        }
+            if ($call_count == 0 && (microtime(true) - $start_time) > 30)
+            {
+                // if we haven't yet received our first call after 30 seconds, something is wrong;
+                // terminate the execute job with an exception
+                
+                throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
+            }
 
-/*
-        echo "Stderr from child process was:\n";
-        $str = fread($this->pipes[2], 8192);
-        echo $str;
-        die($str);
-*/
+            /*
+            if ((microtime(true) - $start_time) > 16)
+            {
+                die("TIMED OUT");
+            }
+            */
+            
+        }
+    }
+
+    public function func_compile_error($error)
+    {
+        $this->compile_error .= $error;
     }
 
     public function getStdError() : ?string
     {
+        return $this->compile_error;
+
         $res = fread($this->pipes[2], 8192);
         if ($res === false)
             return null;
@@ -163,189 +232,63 @@ class ExecuteProxy
         return $res;
     }
 
-    public static function encodepart($val) : string
+
+
+
+
+    public function onMessage(\ZMQSocket $server, array $msg) : void
     {
-        if (is_null($val))
-        {
-            return 'N0,';
-        }
-        else if ($val instanceof BinaryData)
-        {
-            $type = 'B';
-            $val = $val->data;
-        }
-        else if (is_int($val))
-        {
-            $type = 'i';
-            $val = (string)$val;
-        }
-        else if (is_bool($val))
-        {
-            $type = 'b';
-            $val = $val ? '1':'0';
-        }
-        else if (is_array($val))
-        {
-            if (count($val) == 0 || array_keys($val) === range(0, count($val) - 1))
-            {
-                // sequential array
-                $type = 'a';
-                $payload = '';
-                foreach ($val as $v)
-                {
-                    $payload .= self::encodepart($v);
-                }
-                $val = $payload;
-            }
-             else
-            {
-                // assoc array
-                $type = 'o';
-                $payload = '';
-                foreach ($val as $k => $v)
-                {
-                    $payload .= self::encodepart($k);
-                    $payload .= self::encodepart($v);
-                }
-                $val = $payload;
-            }
-        }
-        else if (is_object($val))
-        {
-            // assoc array passed as object
-            $type = 'o';
-            $payload = '';
-            foreach ((array)$val as $k => $v)
-            {
-                $payload .= self::encodepart($k);
-                $payload .= self::encodepart($v);
-            }
-            $val = $payload;
-        }
-        else
-        {
-            $type = 's';
-        }
+        if (!isset($msg['id']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: missing id");
 
-        return $type . strlen($val) . ',' . $val;
-    }
+        if (!isset($msg['method']))
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: missing method");
 
-    public function parseCallString($s) // TODO: add return type
-    {
-        $offset = 0;
-        $strlen = strlen($s);
-
-        $result = [];
-
-        while ($offset < $strlen)
-        {
-            // get type -- and make sure it's supported
-            $type = substr($s, $offset, 1);
-            $offset++;
-
-            if (strpos("sibfaoBN", $type) === false)
-                return false; // unsupported type
-
-            // find comma
-            $comma_offset = false;
-            for ($i = $offset; $i < min($strlen,$offset+11); ++$i)
-            {
-                if ($s[$i] == ',')
-                {
-                    $comma_offset = $i;
-                    break;
-                }
-                if (strpos("01234567889", $s[$i]) === false)
-                    return false; // length must be integer
-            }
-            if ($comma_offset === false || $comma_offset == $offset)
-                return false;
-
-            // get length
-            $length = intval(substr($s, $offset, $comma_offset - $offset));
-
-            // get content
-            $offset = $comma_offset+1;
-            $content = substr($s, $offset, $length);
-            $offset += $length;
-
-            if ($type == 'B')
-                $content = new BinaryData($content);
-            if ($type == 'i')
-                $content = (int)$content;
-            if ($type == 'f')
-                $content = floatval($content);
-            else if ($type == 'N')
-                $content = null;
-            else if ($type == 'b')
-                $content = ($content == '0' ? false : true);
-            else if ($type == 'a')
-                $content = $this->parseCallString($content);
-            else if ($type == 'o')
-            {
-                // objects are stored in <key><value><key><value>... format
-                $arr = $this->parseCallString($content);
-                $size = count($arr);
-
-                if (($size % 2) != 0)
-                    return false;
-
-                $content = [];
-                for ($idx = 0; $idx < $size; $idx += 2)
-                {
-                    $content[ $arr[$idx] ] = $arr[$idx+1];
-                }
-
-                $content = (object)$content;
-            }
-
-            $result[] = $content;
-        }
-
-        return $result;
-    }
-
-    public function sendMessage($msg) : void
-    {
-        fwrite($this->pipes[0], self::MESSAGE_SIGNATURE . strlen($msg) . ',' . $msg);
-        fflush($this->pipes[0]);
-    }
-
-    public function onMessage($msg) : void
-    {
-        $arr = $this->parseCallString($msg);
-        //var_dump($arr);
-
-        if ($arr === false || count($arr) == 0)
-        {
-            // bad parse -- send exception
-            $this->sendMessage("E19,Request parse error");
-            /*
-            $msg = "Request parse error" . var_export($msg,true);
-            $msg = "E" . strlen($msg) . ',' . $msg;
-            $this->sendMessage($msg);
-            */
-            return;
-        }
-
-        $func = array_shift($arr);
+        $id = $msg['id'];
+        $method = $msg['method'];
+        $args = [];
+        if (isset($msg['params']))
+            $args = $msg['params'];
 
         // check if function exists
-        if (!method_exists($this->callbacks, 'func_' . $func))
+        if (!method_exists($this->callbacks, 'func_' . $method))
         {
-            // bad parse -- send exception
-            $this->sendMessage("E14,Unknown method");
-            return;
+            throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: unknown method '$method' invoked");
         }
 
+        $moniker = "~$id/bin.b64:";
+        $moniker_len = strlen($moniker);
+
+        array_walk_recursive($args, function(&$v, $k) use ($moniker, $moniker_len) {
+            if (is_string($v) && substr($v, 0, $moniker_len) == $moniker)
+                $v = new BinaryData(base64_decode(substr($v, $moniker_len)));
+        });
+
         // make function call
-        $retval = call_user_func_array([ $this->callbacks, 'func_'.$func ], $arr);
+        if (!is_array($args))
+            $args = [ $args ];
+        $retval = call_user_func_array([ $this->callbacks, 'func_'.$method ], $args);
+
+
+        if (is_array($retval))
+        {
+            array_walk_recursive($retval, function(&$v, $k) use ($moniker, $moniker_len) {
+                if ($v instanceof BinaryData)
+                    $v = $moniker . base64_encode($v->data);
+            });
+        }
+         else
+        {
+            if ($retval instanceof BinaryData)
+                $retval = $moniker . base64_encode($retval->data);
+        }
+
 
         //  Send reply back to client
-        $this->sendMessage(self::encodepart($retval));
+        $response = [ 'result' => $retval, 'id' => $msg['id'] ];
+        $server->send(json_encode($response));
     }
 }
-
 
 class ScriptHost
 {
@@ -494,9 +437,26 @@ class ScriptHost
         $this->process->getStdout()->copyFrom($this->runjob_stdin);
     }
 
-    public function func_debug(string $message) : void
+    public function func_upper($str)
     {
-        die($message);
+        // tester function -- makes string uppercase
+        
+        if ($str instanceof BinaryData) {
+            $str->data = strtoupper($str->data);
+            return [ 'a' => [ $str ] ];
+        }
+
+        return strtoupper($str);
+    }
+
+    public function func_debug($message) : void
+    {
+        if ($message instanceof BinaryData) {
+            var_dump("BINARY DATA");
+        }
+        var_dump($message);
+        die();
+        //die($message);
     }
 
     public function func_getConnections() : array
@@ -947,29 +907,6 @@ class Execute extends \Flexio\Jobs\Base
         });
 
         return $contents;
-
-/*
-// DEPRECATED: code to load directly from URL
-
-        $url = $path;
-
-        // load the service
-        $connection_info = array(
-            'connection_type' => \Flexio\Services\Factory::TYPE_HTTP
-        );
-
-        $service = \Flexio\Services\Factory::create($connection_info);
-        if ($service === false)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::NO_SERVICE);
-
-        // get the contents
-        $contents = '';
-        $service->read(array('path'=>$url), function($data) use (&$contents) {
-            $contents .= $data;
-        });
-
-        return $contents;
-*/
     }
 
     public function validate() : array
@@ -1082,50 +1019,22 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
-        if ($this->lang == 'python')
+        if ($this->lang == 'python' || $this->lang == 'javascript')
         {
-            /*
-            // if a flexio_hander is specified, call it, otherwise let the script handle everything
-            if (strpos($this->code, "flexio_handler") !== false)
-            {
-                // add code that invokes the main handler -- this is the preferred
-                // way of coding python scripts
-                if (false !== strpos($this->code, "\r\n"))
-                    $endl = "\r\n";
-                    else
-                    $endl = "\n";
-
-                $this->code .= $endl . "import flexio as flexioext";
-                $this->code .= $endl . "flexioext.run(flexio_handler)";
-                $this->code .= $endl;
-
-                $this->code_base64 = base64_encode($this->code);
-            }
-            */
-
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
-
-            $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c '(echo ".$this->code_base64." | base64 -d > /fxpython/fxmodule.py && timeout 3600s python3 /fxpython/fxstart.py)'";
 
             $script_host = new ScriptHost();
             $script_host->setProcess($process);
 
             $ep = new ExecuteProxy;
-            $ep->initialize($cmd, $script_host);
+            $ep->initialize($this->lang, $this->code, $script_host);
             $ep->run();
 
             $err = $ep->getStdError();
 
-            if (isset($err))
-            {
-                $err = trim(str_replace('read unix @->/var/run/docker.sock: read: connection reset by peer', '', $err));
-                if (strlen($err) == 0)
-                    $err = null;
-            }
-
-            if (isset($err))
+            if (strlen($err) > 0)
             {
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }

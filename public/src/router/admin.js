@@ -8,6 +8,7 @@ import AdminBuilder from '../components/AdminBuilder.vue'
 import AdminCodeTranslator from '../components/AdminCodeTranslator.vue'
 import AdminCode from '../components/AdminCode.vue'
 import AdminModals from '../components/AdminModals.vue'
+import AdminPrototype from '../components/AdminPrototype.vue'
 
 export default {
   path: '/admin',
@@ -43,6 +44,10 @@ export default {
     {
       path: 'modals',
       component: AdminModals
+    },
+    {
+      path: 'prototype',
+      component: AdminPrototype
     }
   ]
 }

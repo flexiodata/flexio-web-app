@@ -1,0 +1,92 @@
+<template>
+  <div class="overflow-y-auto">
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a1"  ref="a1" >1</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a2"  ref="a2" >2</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a3"  ref="a3" >3</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a4"  ref="a4" >4</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a5"  ref="a5" >5</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a6"  ref="a6" >6</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a7"  ref="a7" >7</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a8"  ref="a8" >8</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a9"  ref="a9" >9</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a10" ref="a10">10</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a11" ref="a11">11</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a12" ref="a12">12</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a13" ref="a13">13</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a14" ref="a14">14</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a15" ref="a15">15</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a16" ref="a16">16</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a17" ref="a17">17</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a18" ref="a18">18</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a19" ref="a19">19</div>
+    <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a20" ref="a20">20</div>
+
+    <PopperStep :target="$refs['a1']" v-if="is_mounted && false">
+      Test123
+    </PopperStep>
+
+    <PopperTour v-if="is_mounted"
+      :steps="steps"
+    />
+  </div>
+</template>
+
+<script>
+  import PopperStep from './PopperStep.vue'
+  import PopperTour from './PopperTour.vue'
+
+  export default {
+    components: {
+      PopperStep,
+      PopperTour
+    },
+    data() {
+      return {
+        is_mounted: false,
+        steps: [
+          {
+            target: '#a1',
+            title: '<div class="tc f3 mv1">Welcome to Flex.io!</div>',
+            content: '<div><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
+            popperOptions: {
+              placement: 'none'
+            }
+          },
+          {
+            target: '#a2',
+            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>'
+          },
+          {
+            target: '#a3',
+            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
+          },
+          {
+            target: '#a4',
+            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '#a5',
+            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
+            params: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '#a6',
+            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
+          },
+          {
+            target: '#a7',
+            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
+          }
+        ]
+      }
+    },
+    mounted() {
+      this.is_mounted = true
+    }
+  }
+</script>

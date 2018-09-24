@@ -18,13 +18,13 @@
         <!-- placeholder for consistent spacing -->
         <i class="invisible material-icons">chevron_right</i>
       </div>
-      <div class="bg-white css-white-box">
+      <div class="bg-white br2 css-white-box">
         <div class="pa3">
           <div class="dib">
             <help-items
               help-message="I need help getting started with Flex.io..."
               :items="['quick-start', 'sdk-and-cli', 'api-docs', 'templates', 'help']"
-              :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-white hover-bg-near-white'"
+              :item-cls="'f6 fw6 ttu br2 ma1 pv3 w4 pointer silver hover-blue bg-white hover-bg-nearer-white'"
             ></help-items>
           </div>
         </div>
@@ -41,7 +41,7 @@
           Manage API Keys <i class="material-icons">chevron_right</i>
         </router-link>
       </div>
-      <div class="bg-white css-white-box">
+      <div class="bg-white br2 css-white-box">
         <div class="pa3">
           <div class="dib">
             <account-api-form
@@ -67,7 +67,7 @@
           View Activity <i class="material-icons">chevron_right</i>
         </router-link>
       </div>
-      <div class="bg-white css-white-box">
+      <div class="bg-white br2 css-white-box">
         <div class="pa3">
           <stats-pipes-run :chart-height="280"></stats-pipes-run>
         </div>
@@ -101,13 +101,13 @@
           {
             var pipe = response.body
             var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
-            this.$store.track('Created Pipe: New', analytics_payload)
+            this.$store.track('Created Pipe', analytics_payload)
 
             this.openPipe(response.body.eid)
           }
            else
           {
-            this.$store.track('Created Pipe: New (Error)')
+            this.$store.track('Created Pipe (Error)')
           }
         })
       },

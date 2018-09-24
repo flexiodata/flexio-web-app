@@ -55,16 +55,14 @@ export const fetchProcess = ({ commit, dispatch }, { eid, poll }) => {
     commit(types.FETCHED_PROCESS, response.body)
     commit(types.FETCHING_PROCESS, { eid, fetching: false })
 
-    if (poll == true)
-    {
+    if (poll == true) {
       // poll the process while it is still running
       var status = _.get(response.body, 'process_status')
       if (_.includes([
             PROCESS_STATUS_PENDING,
             PROCESS_STATUS_WAITING,
             PROCESS_STATUS_RUNNING
-          ], status))
-      {
+          ], status)) {
         _.delay(function() {
           var eid = _.get(response.body, 'eid', '')
           dispatch('fetchProcess', { eid, poll: true })
@@ -106,11 +104,25 @@ export const cancelProcess = ({ commit, dispatch }, { eid }) => {
   return api.cancelProcess({ eid }).then(response => {
     // success callback
     commit(types.CANCELED_PROCESS, { process: response.body })
-    commit(types.CANCELING_PROCESS, { eid })
     return response
   }, response => {
     // error callback
-    commit(types.CANCELING_PROCESS, { eid })
+    return response
+  })
+}
+
+export const runProcess = ({ commit, dispatch }, { eid, attrs }) => {
+  commit(types.STARTING_PROCESS, { eid })
+
+  dispatch('fetchProcess', { eid, poll: true })
+
+  return api.runProcess({ eid, attrs }).then(response => {
+    // success callback
+    commit(types.STARTED_PROCESS, { process: { eid, process_status: PROCESS_STATUS_RUNNING } })
+    return response
+  }, response => {
+    // error callback
+    dispatch('fetchProcess', { eid })
     return response
   })
 }

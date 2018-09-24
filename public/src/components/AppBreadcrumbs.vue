@@ -13,6 +13,7 @@
     <el-breadcrumb-item
       to="/pipes"
       v-if="is_pipes"
+      data-v-step="pipe-onboarding-7"
     >
       <span class="hint--bottom fw4" aria-label="Back to pipe list">Pipes</span>
     </el-breadcrumb-item>

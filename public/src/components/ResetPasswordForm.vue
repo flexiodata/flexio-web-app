@@ -68,10 +68,10 @@
 <script>
   import _ from 'lodash'
   import api from '../api'
-  import Validation from './mixins/validation'
+  import MixinValidation from './mixins/validation'
 
   export default {
-    mixins: [Validation],
+    mixins: [MixinValidation],
     data() {
       return {
         email: _.get(this.$route, 'query.email', ''),
