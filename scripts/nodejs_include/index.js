@@ -4,7 +4,9 @@ var utf8 = require('utf8')
 var fs = require('fs')
 var Flexio = require('flexio-sdk-js')
 var zmq = require('zeromq')
-var deepcopy = require('deepcopy')
+
+var proxy, context
+
 
 class CallProxy {
 
@@ -179,8 +181,6 @@ class CallProxy {
     }
 }
 
-
-var proxy = new CallProxy()
 
 
 class InputEnv {
@@ -573,7 +573,6 @@ class Context {
         return this._form
     }
 
-
 }
 
 
@@ -583,8 +582,6 @@ class Context {
 var inited = false
 var input = null
 var output = null
-var context = new Context()
-context.proxy = proxy
 
 function checkModuleInit(callback) {
     if (inited) {
@@ -608,6 +605,10 @@ function checkModuleInit(callback) {
 
 
 function run(handler) {
+    proxy = new CallProxy()
+    context = new Context()
+    context.proxy = proxy
+    
     checkModuleInit(function() {
         handler(context)
     })

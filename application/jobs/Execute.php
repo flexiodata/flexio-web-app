@@ -79,8 +79,9 @@ class ExecuteProxy
         return $result;
     }
 
-    public function initialize($code, $callbacks) : bool
+    public function initialize($engine, $code, $callbacks) : bool
     {
+        $this->engine = $engine;
         $this->callbacks = $callbacks;
         $this->code = $code;
         return true;
@@ -105,19 +106,18 @@ class ExecuteProxy
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: could not determine bind port");
         $port = (int)$port;
 
+        $address = self::getLocalIpAddress();
         $ipc_address = "tcp://$address:$port";
         */
 
         // start a zeromq server -- let OS choose port
-        //$address = self::getLocalIpAddress();
+
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
         $container_socket_path = "/tmp/ipc-endpoint";
         $container_ipc_address = "ipc://$container_socket_path";
 
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
         $server->bind("ipc://$host_socket_path");
-        //$port = $server->getSockOpt(\ZMQ::SOCKOPT_LAST_ENDPOINT); 
-        //var_dump($port);
 
         if (file_exists($host_socket_path))
         {
@@ -127,7 +127,7 @@ class ExecuteProxy
 
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
-       // $server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
+        //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
 
         // run the container command
@@ -140,7 +140,15 @@ class ExecuteProxy
         //echo $cmd;
         //ob_end_flush();
         //flush();
-        $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+
+        $engine = $this->engine;
+
+        $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        
+        //echo "./update-docker-images && $cmd";
+        //ob_end_flush();
+        //flush();
+        
         exec("$cmd  > /dev/null  &");
 
         $start_time = microtime(true);
@@ -201,7 +209,9 @@ class ExecuteProxy
             if ((microtime(true) - $start_time) > 16)
             {
                 die("TIMED OUT");
-            }*/
+            }
+            */
+            
         }
     }
 
@@ -1009,7 +1019,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
-        if ($this->lang == 'python')
+        if ($this->lang == 'python' || $this->lang == 'javascript')
         {
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
@@ -1019,7 +1029,7 @@ class Execute extends \Flexio\Jobs\Base
             $script_host->setProcess($process);
 
             $ep = new ExecuteProxy;
-            $ep->initialize($this->code, $script_host);
+            $ep->initialize($this->lang, $this->code, $script_host);
             $ep->run();
 
             $err = $ep->getStdError();

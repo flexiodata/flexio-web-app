@@ -16,6 +16,7 @@ import flexio as flexioext
 import sys
 import subprocess
 import select
+import os
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK
 
@@ -26,13 +27,27 @@ str = proxy.invoke("get_script", [])
 print("GOT " + str)
 
 
-file = open("/fxpython/script.py", "w")
-file.write(str)
-file.close()
 
 
+engine = os.environ['FLEXIO_EXECUTE_ENGINE']
 
-p = subprocess.Popen(["/usr/bin/python3", "-c", "import flexio as f; import script as s; f.run(s)"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd='/fxpython')
+if engine == 'python':
+    file = open("/fxpython/script.py", "w")
+    file.write(str)
+    file.close()
+    cwd = '/fxpython'
+    command = ["/usr/bin/python3", "-c", "import flexio as f; import script as s; f.run(s)"]
+elif engine == 'javascript':
+    file = open("/fxnodejs/script.js", "w")
+    file.write(str)
+    file.close()
+    cwd = '/fxnodejs'
+    command = ["/usr/bin/node", "script.js"]
+else:
+    sys.exit("Error: unknown execution engine")
+
+
+p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
 
 stdout_fileno = p.stdout.fileno()
 stderr_fileno = p.stderr.fileno()
