@@ -145,3 +145,29 @@ RUN yarn add validator
 # data generation
 RUN yarn add faker
 
+# POTENTIAL: csv
+# node-cvg
+# csv
+
+# POTENTIAL: pdf
+# pdfkit
+
+# POTENTIAL: image
+# graphicsmagick
+# mmagemagick
+# sharp
+# spritesmith
+
+# POTENTIAL: markdown
+# marked
+# markdown
+
+# POTENTIAL: visualization
+# chart.js
+
+# POTENTIAL: workflow
+# gulp
+
+# POTENTIAL: parsing
+# body-parser
+
