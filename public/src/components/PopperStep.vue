@@ -1,6 +1,7 @@
 <template>
   <Popper
     class="vue-popper-step"
+    :target="target"
     :options="popperOptions"
     v-bind="$attrs"
   >
@@ -72,10 +73,54 @@
 <script>
   import Popper from './Popper.vue'
 
+  const isNil = (v) => { return v === undefined || v === null }
+  const getType = (v) => { return v === undefined ? 'undefined' : v === null ? 'null' : v.constructor.name.toLowerCase() }
+
+  /**
+  * Find the nearest scrollable parent
+  * copied from https://stackoverflow.com/questions/35939886/find-first-scrollable-parent
+  *
+  * @param Element element
+  * @return Element
+  */
+  function _getScrollParent(element) {
+    var style = window.getComputedStyle(element)
+    var excludeStaticParent = (style.position === 'absolute')
+    var overflowRegex = /(auto|scroll)/
+
+    if (style.position === 'fixed') {
+      return document.body
+    }
+
+    for (var parent = element; (parent = parent.parentElement);) {
+      style = window.getComputedStyle(parent)
+      if (excludeStaticParent && style.position === 'static') {
+        continue
+      }
+      if (overflowRegex.test(style.overflow + style.overflowY + style.overflowX)) return parent
+    }
+
+    return document.body
+  }
+
+  /**
+  * scroll a scrollable element to a child element
+  *
+  * @param Element parent
+  * @param Element element
+  * @return Null
+  */
+  function _scrollParentToElement(parent, element) {
+    parent.scrollTop = element.offsetTop - parent.offsetTop;
+  }
+
   export default {
     inheritAttrs: false,
     name: 'vue-popper-step',
     props: {
+      target: {
+        default: null
+      },
       title: {
         type: String,
         default: ''
@@ -139,6 +184,31 @@
     },
     components: {
       Popper
+    },
+    mounted() {
+      this.scrollToTarget()
+    },
+    methods: {
+      scrollToTarget() {
+        var target_el
+        var type = getType(this.target)
+
+        if (isNil(this.target)) {
+          return
+        } else if (type == 'string') {
+          target_el = document.querySelector(this.target)
+        } else if (type == 'htmldivelement') {
+          target_el = this.target
+        }
+
+        // scroll to element
+        var scroll_parent = _getScrollParent(target_el)
+
+        if (scroll_parent !== document.body) {
+          // target is within a scrollable element
+          _scrollParentToElement(scroll_parent, target_el)
+        }
+      }
     }
   }
 </script>

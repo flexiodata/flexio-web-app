@@ -140,7 +140,7 @@
       jumpClick(idx) {
         this.custom_callbacks.onJump()
         this.current_step = idx
-      }
+      },
     }
   }
 </script>

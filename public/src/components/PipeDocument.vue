@@ -711,9 +711,9 @@
         if (_.isString(item_id)) {
           setTimeout(() => {
             this.$scrollTo('#'+item_id, {
-                container: '#'+this.scrollbar_container_id,
-                duration: 400,
-                offset: -32
+              container: '#'+this.scrollbar_container_id,
+              duration: 400,
+              offset: -32
             })
           }, timeout ? timeout : 10)
         }

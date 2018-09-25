@@ -1,5 +1,5 @@
 <template>
-  <div class="overflow-y-auto">
+  <div class="overflow-x-hidden overflow-y-auto">
     <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a1"  ref="a1" >1</div>
     <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a2"  ref="a2" >2</div>
     <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a3"  ref="a3" >3</div>
@@ -68,7 +68,7 @@
             }
           },
           {
-            target: '#20',
+            target: '#a20',
             content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
             params: {
               placement: 'left'
