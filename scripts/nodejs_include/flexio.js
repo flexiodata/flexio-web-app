@@ -6,6 +6,8 @@ var Flexio = require('flexio-sdk-js')
 var zmq = require('zeromq')
 
 var proxy, context
+var input = null
+var output = null
 
 
 class CallProxy {
@@ -502,16 +504,30 @@ class Output {
             }
         }
     }
-
-
 }
 
+
+class Result {
+    json(obj) {
+        output.contentType = "application/json"
+        output.write(JSON.stringify(obj))
+        proxy.close()
+    }
+
+    end(content) {
+        if (content !== null && content !== undefined) {
+            output.write(content)
+        }
+        proxy.close()
+    }
+}
 
 
 class Context {
 
     constructor() {
         var pThis = this
+        this.res = new Result()
         this._query = null
         this._form = null
         this._vars = {}
@@ -580,9 +596,6 @@ class Context {
 
 
 var inited = false
-var input = null
-var output = null
-
 function checkModuleInit(callback) {
     if (inited) {
         callback()
