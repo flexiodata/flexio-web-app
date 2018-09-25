@@ -20,6 +20,8 @@
         :skip-click="skipClick"
         :done-click="doneClick"
         :jump-click="jumpClick"
+        :show-dots="showDots"
+        :allow-jump="allowJump"
         :is-first-step="is_first_step"
         :is-last-step="is_last_step"
         v-bind="step"
@@ -56,6 +58,14 @@
       autoStart: {
         type: Boolean,
         default: true
+      },
+      showDots: {
+        type: Boolean,
+        default: true
+      },
+      allowJump: {
+        type: Boolean,
+        default: false
       },
       steps: {
         type: Array,
