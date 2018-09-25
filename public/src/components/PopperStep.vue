@@ -202,10 +202,10 @@
         var scroll_parent = _getScrollParent(target_el)
 
         if (scroll_parent === document.body) {
-          zenscroll.intoView(target_el, 400, () => { this.is_scrolling = false })
+          zenscroll.center(target_el, 400, 0, () => { this.is_scrolling = false })
         } else {
           var scroller = zenscroll.createScroller(scroll_parent)
-          scroller.intoView(target_el, 400, () => { this.is_scrolling = false })
+          scroller.center(target_el, 400, 0, () => { this.is_scrolling = false })
         }
       }
     }

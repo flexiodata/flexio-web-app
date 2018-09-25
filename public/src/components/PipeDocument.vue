@@ -214,7 +214,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="pipe-onboarding-5" class="relative o-0" style="top: -150px"></div>
+                    <div data-v-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
@@ -760,7 +760,7 @@
             this.edit_pipe = _.assign({}, edit_pipe)
             this.saveChanges().then(() => {
               this.tour_current_step++
-              callback(true)
+              setTimeout(() => { callback(true) }, 1)
             })
           }, 500)
         } else {
