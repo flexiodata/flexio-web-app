@@ -1,6 +1,7 @@
 <template>
   <Popper
     class="vue-popper-step"
+    :class="is_scrolling ? 'o-0' : ''"
     :target="target"
     :options="popperOptions"
     v-bind="$attrs"
@@ -71,6 +72,7 @@
 </template>
 
 <script>
+  import zenscroll from 'zenscroll'
   import Popper from './Popper.vue'
 
   const isNil = (v) => { return v === undefined || v === null }
@@ -101,17 +103,6 @@
     }
 
     return document.body
-  }
-
-  /**
-  * scroll a scrollable element to a child element
-  *
-  * @param Element parent
-  * @param Element element
-  * @return Null
-  */
-  function _scrollParentToElement(parent, element) {
-    parent.scrollTop = element.offsetTop - parent.offsetTop;
   }
 
   export default {
@@ -175,21 +166,31 @@
       jumpClick: {
         type: Function
       },
+      scrollToTarget: {
+        type: Function
+      },
       isFirstStep: {
         type: Boolean
       },
       isLastStep: {
         type: Boolean
-      }
+      },
     },
     components: {
       Popper
+    },
+    data() {
+      return {
+        is_scrolling: false
+      }
     },
     mounted() {
       this.scrollToTarget()
     },
     methods: {
       scrollToTarget() {
+        this.is_scrolling = true
+
         var target_el
         var type = getType(this.target)
 
@@ -201,12 +202,13 @@
           target_el = this.target
         }
 
-        // scroll to element
         var scroll_parent = _getScrollParent(target_el)
 
-        if (scroll_parent !== document.body) {
-          // target is within a scrollable element
-          _scrollParentToElement(scroll_parent, target_el)
+        if (scroll_parent === document.body) {
+          zenscroll.intoView(target_el, 400, () => { this.is_scrolling = false })
+        } else {
+          var scroller = zenscroll.createScroller(scroll_parent)
+          scroller.intoView(target_el, 400, () => { this.is_scrolling = false })
         }
       }
     }
@@ -214,6 +216,9 @@
 </script>
 
 <style lang="stylus" scoped>
+  .o-0
+    opacity: 0
+
   .vue-popper__header
     margin-bottom: 1rem
 
