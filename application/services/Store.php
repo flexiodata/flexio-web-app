@@ -139,9 +139,11 @@ class Store implements \Flexio\IFace\IConnection, \Flexio\IFace\IFileSystem
 
     public function exists(string $path) : bool
     {
-        // TODO: implement
-        throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNIMPLEMENTED);
-        return false;
+        $stream = $this->getStreamFromPath($path);
+        if (!$stream)
+            return false;
+
+        return true;
     }
 
     public function createFile(string $path, array $properties = []) : bool

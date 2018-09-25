@@ -144,11 +144,11 @@ class ExecuteProxy
         $engine = $this->engine;
 
         $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
-        
+
         //echo "./update-docker-images && $cmd";
         //ob_end_flush();
         //flush();
-        
+
         exec("$cmd  > /dev/null  &");
 
         $start_time = microtime(true);
@@ -162,7 +162,7 @@ class ExecuteProxy
             if ($message !== false)
             {
                 $message = @json_decode($message);
-                
+
                 if ($message === null)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: decoding fault");
                 $message = (array)$message;
@@ -201,7 +201,7 @@ class ExecuteProxy
             {
                 // if we haven't yet received our first call after 30 seconds, something is wrong;
                 // terminate the execute job with an exception
-                
+
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
             }
 
@@ -211,7 +211,7 @@ class ExecuteProxy
                 die("TIMED OUT");
             }
             */
-            
+
         }
     }
 
@@ -440,7 +440,7 @@ class ScriptHost
     public function func_upper($str)
     {
         // tester function -- makes string uppercase
-        
+
         if ($str instanceof BinaryData) {
             $str->data = strtoupper($str->data);
             return [ 'a' => [ $str ] ];
@@ -625,13 +625,12 @@ class ScriptHost
         return $info['handle'];
     }
 
-    public function func_fs_exists(string $path) : int
+    public function func_fs_exists(string $path) : bool
     {
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
         return $vfs->exists($path);
     }
-
 
     private function __getOutputStreamInfo(string $name) : ?array
     {
