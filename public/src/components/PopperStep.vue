@@ -25,9 +25,10 @@
           <div
             class="vue-popper-step__dot"
             :class="{
-              'vue-popper-step__dot--active': step_idx == index
+              'vue-popper-step__dot--active': step_idx == index,
+              'vue-popper-step__dot--clickable': allowJump
             }"
-            @click="jumpClick(step_idx)"
+            @click="allowJump ? jumpClick(step_idx) : () => {}"
             v-for="(item, step_idx) in steps"
           >
           </div>
@@ -128,6 +129,10 @@
         default: () => []
       },
       showDots: {
+        type: Boolean,
+        default: true
+      },
+      allowJump: {
         type: Boolean,
         default: false
       },
@@ -267,11 +272,10 @@
 
   .vue-popper-step__dots
     text-align: center
-    margin: 0.5rem 0
+    margin: 0.5rem 0 -0.5rem
 
   .vue-popper-step__dot
     display: inline-block
-    cursor: pointer
     background-color: #fff
     opacity: .25
     border-radius 100%
@@ -279,6 +283,9 @@
     height: 6px
     margin: 0 3px
     transition: opacity .2s ease
+
+  .vue-popper-step__dot--clickable
+    cursor: pointer
     &:hover
       opacity: .5
 
