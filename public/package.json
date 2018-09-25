@@ -24,6 +24,7 @@
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
     "moment": "^2.17.1",
+    "popper.js": "^1.14.4",
     "stickybits": "^3.3.1",
     "vue": "^2.5.13",
     "vue-chartjs": "^3.0.2",
@@ -34,7 +35,6 @@
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.8.0",
     "vue-simple-spinner": "^1.2.8",
-    "vue-tour": "^1.0.1",
     "vuex": "^3.0.1",
     "zenscroll": "^4.0.2"
   },

@@ -79,7 +79,6 @@
       }
     },
     mounted() {
-      this.$tours[this.name] = this
       if (this.autoStart === true) {
         this.start()
       }

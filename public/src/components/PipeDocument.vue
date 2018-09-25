@@ -277,11 +277,8 @@
       />
     </el-dialog>
 
-    <v-tour
-      name="pipe-document-build-tour"
-      :options="{
-        useKeyboardNavigation: false
-      }"
+    <PopperTour
+      ref="tour"
       :steps="tour_steps"
       :callbacks="tour_callbacks"
     />
@@ -306,6 +303,8 @@
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import ProcessContent from './ProcessContent.vue'
+  import PopperTour from './PopperTour.vue'
+
   import MixinConfig from './mixins/config'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -331,7 +330,8 @@
       PipeDocumentRunPanel,
       PipePropertiesPanel,
       PipeSchedulePanel,
-      ProcessContent
+      ProcessContent,
+      PopperTour
     },
     watch: {
       eid: {
@@ -385,18 +385,16 @@
         tour_steps: [
           {
             target: '[data-v-step="pipe-onboarding-0"]',
-            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
-            header: {
-              title: 'Welcome to Flex.io!'
-            },
-            params: {
+            title: '<div class="tc mv1 f3">Welcome to Flex.io!</div>',
+            content: '<div><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
+            popperOptions: {
               placement: 'none'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-1"]',
             content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
-            params: {
+            popperOptions: {
               placement: 'left'
             }
           },
@@ -407,14 +405,14 @@
           {
             target: '[data-v-step="pipe-onboarding-3"]',
             content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
-            params: {
+            popperOptions: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-5"]',
             content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
-            params: {
+            popperOptions: {
               placement: 'left'
             }
           },
@@ -430,8 +428,9 @@
 
         tour_callbacks: {
           onStart: this.onTourStart,
-          onStop: this.onTourStop,
-          onPreviousStep: this.onTourPrevStep,
+          onFinish: this.onTourStop,
+          onSkip: this.onTourStop,
+          onPrevStep: this.onTourPrevStep,
           onNextStep: this.onTourNextStep
         }
       }
@@ -702,7 +701,7 @@
           //this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
-            this.$tours['pipe-document-build-tour'].start()
+            this.$refs['tour'].start()
             this.$_Config_set(cfg_path, true)
           }
         }, 500)

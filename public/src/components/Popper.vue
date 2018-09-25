@@ -86,8 +86,8 @@
   $body_border_radius = 0.5625rem
   $body_padding = 1rem
   $body_min_width = 10rem
-  $body_max_width = 30rem
-  $body_font_size = 0.875rem
+  $body_max_width = 22rem
+  $body_font_size = inherit
 
   $triangle_bg_color = #50596c
   $triangle_border_color = #50596c
