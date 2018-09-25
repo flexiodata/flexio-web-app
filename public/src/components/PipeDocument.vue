@@ -279,6 +279,7 @@
 
     <PopperTour
       ref="tour"
+      :auto-start="false"
       :steps="tour_steps"
       :callbacks="tour_callbacks"
     />
