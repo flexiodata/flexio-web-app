@@ -23,8 +23,8 @@
         <div class="pv3" @click.stop>
           <el-switch
             class="hint--bottom"
-            :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
-            v-model="is_scheduled"
+            :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
+            v-model="is_deployed"
           />
         </div>
       </div>
@@ -36,8 +36,8 @@
           <el-dropdown-menu style="min-width: 10rem; margin-left: -12px; margin-top: -8px" slot="dropdown">
             <el-dropdown-item class="flex flex-row items-center ph2" command="open"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
             <el-dropdown-item class="flex flex-row items-center ph2" command="duplicate"><i class="material-icons mr3">content_copy</i> Duplicate</el-dropdown-item>
-            <el-dropdown-item class="flex flex-row items-center ph2" command="schedule"><i class="material-icons mr3">date_range</i> Schedule</el-dropdown-item>
-            <el-dropdown-item class="flex flex-row items-center ph2" command="deploy"><i class="material-icons mr3">archive</i> Deploy</el-dropdown-item>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="schedule" v-if="false"><i class="material-icons mr3">date_range</i> Schedule</el-dropdown-item>
+            <el-dropdown-item class="flex flex-row items-center ph2" command="deploy" v-if="false"><i class="material-icons mr3">archive</i> Deploy</el-dropdown-item>
             <div class="mv2 bt b--black-10"></div>
             <el-dropdown-item class="flex flex-row items-center ph2" command="delete"><i class="material-icons mr3">delete</i> Delete</el-dropdown-item>
           </el-dropdown-menu>
@@ -55,6 +55,10 @@
   import { OBJECT_STATUS_TRASH } from '../constants/object-status'
   import util from '../utils'
   import ServiceIcon from './ServiceIcon.vue'
+
+  const PIPE_MODE_UNDEFINED = ''
+  const PIPE_MODE_BUILD     = 'B'
+  const PIPE_MODE_RUN       = 'R'
 
   export default {
     props: {
@@ -76,6 +80,7 @@
       has_description() {
         return _.get(this.item, 'description', '').length > 0
       },
+      /*
       is_scheduled: {
         get() {
           return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
@@ -99,6 +104,39 @@
           }
 
           this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+        }
+      },
+      */
+      is_deployed: {
+        get() {
+          return _.get(this.item, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+        },
+        set(value) {
+          var doSet = () => {
+            var pipe_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+
+            var attrs = {
+              pipe_mode
+            }
+
+            this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+          }
+
+          if (value === false) {
+            this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
+              confirmButtonText: 'TURN PIPE OFF',
+              cancelButtonText: 'CANCEL',
+              type: 'warning'
+            }).then(() => {
+              doSet()
+              this.$store.track("Turned Pipe Off")
+            }).catch(() => {
+              this.$store.track("Turned Pipe Off (Canceled)")
+            })
+          } else {
+            doSet()
+            this.$store.track("Turned Pipe On")
+          }
         }
       },
       owner_username() {
