@@ -42,7 +42,7 @@ elif engine == 'javascript':
     file.write(str)
     file.close()
     cwd = '/fxnodejs'
-    command = ["/usr/bin/node", "script.js"]
+    command = ["/usr/bin/node", "-e", "var f = require('./flexio'); var s = require('./script'); f.run(s)"]
 else:
     sys.exit("Error: unknown execution engine")
 

@@ -144,7 +144,7 @@ RUN yarn add faker
 COPY flexio.py /usr/lib/python3.5/flexio.py
 COPY fxstart.py /fxpython/fxstart.py
 
-COPY flexio.py /fxnodejs/flexio.js
+COPY flexio.js /fxnodejs/flexio.js
 COPY run.js /fxnodejs/run.js
 COPY render.js /fxnodejs/render.js
 

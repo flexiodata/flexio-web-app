@@ -605,9 +605,21 @@ function checkModuleInit(callback) {
 
 
 function run(handler) {
+
+    if (handler.hasOwnProperty('flexio_handler')) {
+        handler = handler.flexio_handler
+    }
+
     proxy = new CallProxy()
     context = new Context()
     context.proxy = proxy
+    
+    handler(null)
+    return;
+
+
+
+
     
     checkModuleInit(function() {
         handler(context)

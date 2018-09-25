@@ -625,6 +625,14 @@ class ScriptHost
         return $info['handle'];
     }
 
+    public function func_fs_exists(string $path) : int
+    {
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+        return $vfs->exists($path);
+    }
+
+
     private function __getOutputStreamInfo(string $name) : ?array
     {
         if ($name === '_fxstdout_')
