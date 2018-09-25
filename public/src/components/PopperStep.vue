@@ -249,7 +249,7 @@
     display: inline-block
     line-height: 1rem
     outline: none
-    padding: .5rem .75rem
+    padding: .375rem .625rem
     text-align: center
     text-decoration: none
     transition: all .2s ease
