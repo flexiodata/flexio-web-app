@@ -141,14 +141,14 @@
 
   .vue-popper__button
     background: transparent
-    border: .05rem solid #fff
-    border-radius: .2rem
+    border: .0625rem solid #fff
+    border-radius: .25rem
     color: #fff
     cursor: pointer
     display: inline-block
     line-height: 1rem
     outline: none
-    padding: .4rem .6rem
+    padding: .5rem .75rem
     text-align: center
     text-decoration: none
     transition: all .2s ease
@@ -159,7 +159,7 @@
       color: #50596c
 
   .vue-popper__button + .vue-popper__button
-    margin-left: 0.4rem
+    margin-left: 0.375rem
 
   .vue-popper__button-skip
     margin-right: 2rem

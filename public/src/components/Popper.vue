@@ -83,17 +83,17 @@
   $body_bg_color = #50596c
   $body_fg_color = #fff
   $body_border_color = #50596c
-  $body_border_radius = 4px
-  $body_padding = 16px
-  $body_min_width = 150px
-  $body_max_width = 450px
-  $body_font_size = 14px
+  $body_border_radius = 0.5625rem
+  $body_padding = 1rem
+  $body_min_width = 10rem
+  $body_max_width = 30rem
+  $body_font_size = 0.875rem
 
   $triangle_bg_color = #50596c
   $triangle_border_color = #50596c
-  $triangle_size = 10px
+  $triangle_size = .625rem
 
-  $distance = 10px
+  $distance = .875rem
 
   .vue-popper
     background: $body_bg_color

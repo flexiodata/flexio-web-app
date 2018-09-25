@@ -22,7 +22,7 @@
     <div class="ma3 pa3 br2 ba b--black-05 bg-near-white" id="a20" ref="a20">20</div>
 
     <PopperStep :target="$refs['a1']" v-if="is_mounted && false">
-      Test123
+      Test Content
     </PopperStep>
 
     <PopperTour v-if="is_mounted"
