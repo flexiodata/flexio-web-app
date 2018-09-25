@@ -34,12 +34,12 @@
   import PopperStep from './PopperStep.vue'
 
   const DEFAULT_CALLBACKS = {
-    onSkip: () => {},
     onStart: () => {},
-    onFinish: () => {},
+    onFinish: (callback) => { callback(true) },
+    onSkip: (callback) => { callback(true) },
     onJump: () => {},
-    onPrevStep: (current_step) => {},
-    onNextStep: (current_step) => {}
+    onPrevStep: (current_step, callback) => { callback(true) },
+    onNextStep: (current_step, callback) => { callback(true) }
   }
 
   const DEFAULT_OPTIONS = {
@@ -84,13 +84,13 @@
       }
     },
     computed: {
-      custom_options() {
+      our_options() {
         return {
           ...DEFAULT_OPTIONS,
           ...this.options
         }
       },
-      custom_callbacks() {
+      our_callbacks() {
         return {
           ...DEFAULT_CALLBACKS,
           ...this.callbacks
@@ -112,32 +112,44 @@
     methods: {
       start(start_step) {
         setTimeout(() => {
-          this.custom_callbacks.onStart()
+          this.our_callbacks.onStart()
           this.current_step = typeof start_step !== 'undefined' ? parseInt(start_step, 10) : 0
-        }, this.custom_options.start_timeout)
+        }, this.our_options.start_timeout)
       },
       prevClick() {
         if (this.current_step > 0) {
-          this.custom_callbacks.onPrevStep(this.current_step)
-          this.current_step--
+          this.our_callbacks.onPrevStep(this.current_step, (allowed) => {
+            if (!!allowed) {
+              this.current_step--
+            }
+          })
         }
       },
       nextClick() {
         if (this.current_step < this.step_count - 1 && this.current_step !== -1) {
-          this.custom_callbacks.onNextStep(this.current_step)
-          this.current_step++
+          this.our_callbacks.onNextStep(this.current_step, (allowed) => {
+            if (!!allowed) {
+              this.current_step++
+            }
+          })
         }
       },
       skipClick() {
-        this.custom_callbacks.onSkip()
-        this.current_step = -1
+        this.our_callbacks.onSkip((allowed) => {
+          if (!!allowed) {
+            this.current_step = -1
+          }
+        })
       },
       doneClick() {
-        this.custom_callbacks.onFinish()
-        this.current_step = -1
+        this.our_callbacks.onFinish((allowed) => {
+          if (!!allowed) {
+            this.current_step = -1
+          }
+        })
       },
       jumpClick(idx) {
-        this.custom_callbacks.onJump()
+        this.our_callbacks.onJump()
         this.current_step = idx
       }
     }

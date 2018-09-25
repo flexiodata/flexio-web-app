@@ -725,18 +725,19 @@
         }
         this.tour_started = true
       },
-      onTourStop() {
+      onTourStop(callback) {
         var current_step = this.tour_current_step
         var finished = (current_step == this.tour_steps.length - 1) ? true : false
         this.$store.track('Stopped Tour', { current_step, finished })
+        callback(true)
       },
-      onTourPrevStep(current_step) {
+      onTourPrevStep(current_step, callback) {
         this.$store.track('Clicked Tour Previous Button', { current_step })
         this.tour_current_step--
+        callback(true)
       },
-      onTourNextStep(current_step) {
+      onTourNextStep(current_step, callback) {
         this.$store.track('Clicked Tour Next Button', { current_step })
-        this.tour_current_step++
 
         // moving from output to adding email task
         if (current_step == 3) {
@@ -756,8 +757,13 @@
 
           setTimeout(() => {
             this.edit_pipe = _.assign({}, edit_pipe)
-            this.saveChanges()
+            this.saveChanges().then(() => {
+              this.tour_current_step++
+              callback(true)
+            })
           }, 500)
+        } else {
+          callback(true)
         }
       }
     }
