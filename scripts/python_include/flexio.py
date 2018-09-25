@@ -250,7 +250,12 @@ class ContextFs(object):
 
         handle = proxy.invoke('commitVfsStreamHandle', [handle])
 
-        
+
+    def exists(self, path):
+ 
+        return proxy.invoke('fs_exists', [path])
+
+
 
 context_fs = ContextFs()
 

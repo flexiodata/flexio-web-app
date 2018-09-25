@@ -589,29 +589,39 @@ function checkModuleInit(callback) {
         return
     } else {
         inited = true
-        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_'], function(err, stdin_stream_info) {
+        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_']).then((stdin_stream_info) => {
             input = new Input(stdin_stream_info)
             context.input = input
-            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_'], function(err, stdout_stream_info) {
+            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_']).then((stdout_stream_info) => {
                 output = new Output(stdout_stream_info)
                 context.output = output
+                inited = true
                 callback()
-            })
-        })
+            }).catch((err)=>{ console.log("Error initializing stdin stream"); process.exit(1); })
+        }).catch((err)=>{ console.log("Error initializing stdout stream"); process.exit(1); })
     }
 }
 
 
-
+function isFunction(f) {
+    return f && {}.toString.call(f) === '[object Function]';
+}
 
 function run(handler) {
-    proxy = new CallProxy()
-    context = new Context()
-    context.proxy = proxy
-    
-    checkModuleInit(function() {
-        handler(context)
-    })
+
+    if (handler.hasOwnProperty('flexio_handler')) {
+        handler = handler.flexio_handler
+    }
+
+    if (isFunction(handler)) {
+        proxy = new CallProxy()
+        context = new Context()
+        context.proxy = proxy
+        
+        checkModuleInit(function() {
+            handler(context)
+        })
+    }
 }
 
 
