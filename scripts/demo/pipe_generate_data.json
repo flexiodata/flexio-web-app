@@ -1,8 +1,8 @@
 {
     "eid_type": "PIP",
-    "name": "Example: Sample Data Generator",
-    "alias": "example-sample-data-generator",
-    "description": "Generate a set of sample data to download",
+    "name": "Example: Generate Sample Data API Feed",
+    "alias": "example-generate-data",
+    "description": "Generate sample data that can be returned via an API call",
     "task": {
       "op": "sequence",
       "items": [

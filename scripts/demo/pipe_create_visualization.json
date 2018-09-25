@@ -1,8 +1,8 @@
 {
     "eid_type": "PIP",
-    "name": "Create a Chart",
-    "alias": "create-chart",
-    "description": "Create a chart using Python Matplotlib",
+    "name": "Example: Visualize Data from an API Feed",
+    "alias": "example-visualize-data-from-an-api-feed",
+    "description": "Visualize data from an API feed using Python Matplotlib",
     "task": {
         "op": "sequence",
         "items": [
