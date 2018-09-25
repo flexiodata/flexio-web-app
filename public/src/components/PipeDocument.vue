@@ -214,7 +214,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="pipe-onboarding-5"></div>
+                    <div data-v-step="pipe-onboarding-5" class="relative o-0" style="top: -150px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
