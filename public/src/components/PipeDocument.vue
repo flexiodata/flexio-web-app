@@ -214,7 +214,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
+                    <div data-v-step="pipe-onboarding-4" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
@@ -387,43 +387,43 @@
           {
             target: '[data-v-step="pipe-onboarding-0"]',
             title: '<div class="tc mv1 f3">Welcome to Flex.io!</div>',
-            content: '<div><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
+            content: '<div><div class="mb2 b">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
             popperOptions: {
               placement: 'none'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-1"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
             popperOptions: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-2"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
           },
           {
             target: '[data-v-step="pipe-onboarding-3"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 4 of 6:</div>And here\'s the pipe output.</div>',
+            popperOptions: {
+              placement: 'left'
+            }
+          },
+          {
+            target: '[data-v-step="pipe-onboarding-4"]',
+            content: '<div class="mb3"><div class="mb2 b">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
             popperOptions: {
               placement: 'left'
             }
           },
           {
             target: '[data-v-step="pipe-onboarding-5"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
-            popperOptions: {
-              placement: 'left'
-            }
+            content: '<div class="mb3"><div class="mb2 b">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
           },
           {
             target: '[data-v-step="pipe-onboarding-6"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-7"]',
-            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
           }
         ],
 

@@ -14,7 +14,7 @@
           class="btn-header hint--bottom"
           style="background: transparent"
           aria-label="Schedule"
-          data-v-step="pipe-onboarding-6"
+          data-v-step="pipe-onboarding-5"
           :class="{ 'invisible': isModeRun }"
           @click="$emit('schedule-click')"
         >

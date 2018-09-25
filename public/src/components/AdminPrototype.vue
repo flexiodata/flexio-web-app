@@ -47,40 +47,40 @@
           {
             target: '#a1',
             title: '<div class="tc mv1 f3">Welcome to Flex.io!</div>',
-            content: '<div><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
+            content: '<div><div class="mb2 b">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
             popperOptions: {
               placement: 'none'
             }
           },
           {
             target: '#a19',
-            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>'
           },
           {
             target: '#a3',
-            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
           },
           {
             target: '#a4',
-            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 4 of 6:</div>And here\'s the pipe output.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '#a20',
-            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
+            content: '<div class="mb3"><div class="mb2 b">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
             params: {
               placement: 'left'
             }
           },
           {
             target: '#a6',
-            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
           },
           {
             target: '#a7',
-            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
+            content: '<div class="mb3"><div class="mb2 b">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
           }
         ]
       }
