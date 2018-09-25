@@ -756,13 +756,11 @@
           var items = _.get(edit_pipe, 'task.items', [])
           items.push(email_item)
 
-          setTimeout(() => {
-            this.edit_pipe = _.assign({}, edit_pipe)
-            this.saveChanges().then(() => {
-              this.tour_current_step++
-              setTimeout(() => { callback(true) }, 1)
-            })
-          }, 500)
+          this.edit_pipe = _.assign({}, edit_pipe)
+          this.saveChanges().then(() => {
+            this.tour_current_step++
+            setTimeout(() => { callback(true) }, 1)
+          })
         } else {
           callback(true)
         }
