@@ -105,7 +105,7 @@
     color: $body_fg_color
     line-height: 1.4
     font-size: $body_font_size
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1)
+    box-shadow: 0 8px 16px -6px rgba(0,0,0,0.6)
 
   .vue-popper .vue-popper__arrow,
   .vue-popper .vue-popper__arrow::after
