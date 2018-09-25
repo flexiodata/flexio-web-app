@@ -239,6 +239,21 @@
                     </ProcessContent>
                   </div>
                 </el-collapse-item>
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="deployment"
+                >
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Deployment</span>
+                    </div>
+                  </template>
+                  <div class="pt3 ph3">
+                    <PipeDeployPanel
+                      :show-schedule.sync="show_pipe_schedule_dialog"
+                    />
+                  </div>
+                </el-collapse-item>
               </el-collapse>
             </div>
           </div>
@@ -303,6 +318,7 @@
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
   import PopperTour from './PopperTour.vue'
 
@@ -331,6 +347,7 @@
       PipeDocumentRunPanel,
       PipePropertiesPanel,
       PipeSchedulePanel,
+      PipeDeployPanel,
       ProcessContent,
       PopperTour
     },
@@ -365,7 +382,7 @@
     data() {
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['input', 'tasks', 'output'],
+        active_collapse_items: ['input', 'tasks', 'output', 'deployment'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
