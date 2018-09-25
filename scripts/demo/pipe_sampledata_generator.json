@@ -1,7 +1,7 @@
 {
     "eid_type": "PIP",
-    "name": "Sample Data Generator",
-    "alias": "sample-data-generator",
+    "name": "Example: Sample Data Generator",
+    "alias": "example-sample-data-generator",
     "description": "Generate a set of sample data to download",
     "task": {
       "op": "sequence",

@@ -1,0 +1,16 @@
+{
+    "eid_type": "PIP",
+    "name": "Example: Email Results of a Python Function",
+    "alias": "example-email-results-of-python-function",
+    "description": "Get the top 5 stories from the Firebase Hacker News Feed and deliver via email",
+    "task": {
+        "op": "sequence",
+        "items": [
+            {
+                "op": "execute",
+                "lang": "python",
+                "code": "aW1wb3J0IHJlcXVlc3RzCgojIGhhbmRsZXIgdG8gY29tbXVuaWNhdGUgd2l0aCBGbGV4LmlvIGNhbGxpbmcgY29udGV4dApkZWYgZmxleGlvX2hhbmRsZXIoY29udGV4dCk6CiAgCiAgICAjIGdldCB0aGUgbnVtYmVyIG9mIHN0b3JpZXMgdG8gcmV0dXJuIGZyb20gdGhlIGlucHV0IHBhcmFtcwogICAgIyByZXR1cm4gNSBzdG9yaWVzIGJ5IGRlZmF1bHQKICAgIHN0b3J5X2NvdW50ID0gNSAgCiAgICBmb3Iga2V5LCB2YWx1ZSBpbiBjb250ZXh0LmZvcm0uaXRlbXMoKToKICAgICAgICBpZiAoa2V5ICE9ICdjb3VudCcpOgogICAgICAgICAgICBjb250aW51ZQogICAgICAgIHRyeToKICAgICAgICAgICAgc3RvcnlfY291bnQgPSBpbnQodmFsdWUpCiAgICAgICAgICAgIHN0b3J5X2NvdW50ID0gbWF4KDEsIG1pbihzdG9yeV9jb3VudCwgMTAwKSkgICAgICAgICAgICAKICAgICAgICBleGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgcGFzcwogIAogICAgIyBnZXQgbmV3IHN0b3JpZXMgZnJvbSBIYWNrZXIgTmV3cyAoaHR0cHM6Ly9naXRodWIuY29tL0hhY2tlck5ld3MvQVBJKQogICAgcmVzcG9uc2UgPSByZXF1ZXN0cy5nZXQoImh0dHBzOi8vaGFja2VyLW5ld3MuZmlyZWJhc2Vpby5jb20vdjAvbmV3c3Rvcmllcy5qc29uIikKICAgIHN0b3JpZXMgPSByZXNwb25zZS5qc29uKClbOnN0b3J5X2NvdW50XQogICAgCiAgICAjIGdldCBuZXcgc3RvcnkgaW5mbwogICAgcmVzdWx0cyA9ICcnCiAgICBmb3IgaSBpbiBzdG9yaWVzOgogICAgICAgIHJlc3BvbnNlID0gcmVxdWVzdHMuZ2V0KCJodHRwczovL2hhY2tlci1uZXdzLmZpcmViYXNlaW8uY29tL3YwL2l0ZW0vIiArIHN0cihpKSArICIuanNvbiIpCiAgICAgICAgc3RvcnkgPSByZXNwb25zZS5qc29uKCkKICAgICAgICBpZiAoc3RvcnkgaXMgbm90IE5vbmUpOgogICAgICAgICAgICByZXN1bHRzICs9IHN0b3J5LmdldCgndGl0bGUnLCcobm8gdGl0bGUpJykgKyAiXG4iCiAgICAgICAgICAgIHJlc3VsdHMgKz0gc3RvcnkuZ2V0KCd1cmwnLCcobm8gdXJsKScpICsgIlxuXG4iCiAgICAgICAgCiAgICAjIHJldHVybiB0aGUgbGlzdCBvZiBuZXcgc3RvcmllcwogICAgY29udGV4dC5vdXRwdXQud3JpdGUocmVzdWx0cykKCiAgICAgIA=="
+            }
+        ]
+    }
+}
