@@ -149,7 +149,7 @@ class ExecuteProxy
         //ob_end_flush();
         //flush();
         
-        exec("$cmd  > /dev/null  &");
+        exec("$cmd  > /dev/null &");
 
         $start_time = microtime(true);
         $connection_established = false;
@@ -205,13 +205,12 @@ class ExecuteProxy
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
             }
 
-            /*
+         
             if ((microtime(true) - $start_time) > 16)
             {
                 die("TIMED OUT");
             }
-            */
-            
+        
         }
     }
 
