@@ -598,11 +598,17 @@ class ScriptHost
 
     public function func_getVfsStreamHandle(string $path) : int
     {
+/*
+        // TODO: this code is causing the second read of a file to fail
+        // in the python bindings:
+        result1 = context.fs.read('/home/file.txt') // first read works
+        result2 = context.fs.read('/home/file.txt') // second read immediately after first read returns nothing
+
         if (isset($this->input_map[$path]))
         {
-            return $this->input_map[$path];
+            return $this->input_map[$path]['handle'];
         }
-
+*/
         $stream = \Flexio\Base\Stream::create();
         $streamwriter = $stream->getWriter();
 
