@@ -92,8 +92,23 @@ class Render extends \Flexio\Jobs\Base
         if ($url === null && isset($items[0]['path']))
             $url = $items[0]['path'];
 
-        if ($url === null || strlen($url) == 0)
-            throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+        // TODO: test: don't require a URL to allow content to be passed in directly
+        // if ($url === null || strlen($url) == 0)
+        //     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
+
+        // if we don't have a URL, get the content from stdin
+        $content = null;
+        if ($url === null)
+        {
+            $data = '';
+
+            $instream = $process->getStdin();
+            $reader = $instream->getReader();
+            while (($chunk = $reader->read(16384)) !== false)
+                $data .= $chunk;
+
+            $content = base64_encode($data);
+        }
 
         $outstream = $process->getStdout();
         $outstream_properties = array(
@@ -109,13 +124,14 @@ class Render extends \Flexio\Jobs\Base
             $hide_scrollbars = '--hide-scrollbars';
 
         $cmd = "$dockerbin run -a stdin -a stdout -a stderr --rm -i fxruntime sh -c 'timeout 30s nodejs /fxnodejs/render.js ".
-               "--url $url ".
                "--format $format ".
                "--paper $paper ".
                (isset($scale) ? "--scale $scale ":"").
                ($landscape ? "--landscape ":"").
                ($full ? "--fullPage ":"").
                (isset($width) && isset($height) ? "--viewport.width $width --viewport.height $height ":"").
+               (isset($url) ? "--url $url ":"").
+               (isset($content) ? "--content $content ":"").
                "'";
 
         $fp = popen($cmd, "r");

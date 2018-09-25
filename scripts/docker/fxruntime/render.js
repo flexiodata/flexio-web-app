@@ -3,6 +3,7 @@ const commandLineArgs = require('command-line-args')
 
 const options = commandLineArgs([
    { name: 'url' },
+   { name: 'content' },
    { name: 'format', defaultValue: "png" },
    { name: 'paper' },
    { name: 'landscape', type: Boolean },
@@ -17,7 +18,7 @@ const options = commandLineArgs([
 
 (async () => {
   var output_filename = '/tmp/output.' + options.format;
-  
+
 
   //console.log(options);
   //process.exit()
@@ -34,12 +35,23 @@ const options = commandLineArgs([
 
  //await page.goto(options.url,{waitUntil:"load"})
 // await page.goto(options.url,{waitUntil:"networkidle2"})
- await page.goto(options.url);
+
+
+ if (options.hasOwnProperty('content')) {
+    // content is base64 encoded
+    content = options.content;
+    content = Buffer.from(content, 'base64').toString('utf-8');
+    await page.setContent(content)
+ }
+
+ if (options.hasOwnProperty('url')) {
+    await page.goto(options.url);
+ }
 
  // await page.injectFile(`${__dirname}/kits.js`);
  //await page.addScriptTag({path:`${__dirname}/kits.js`})
  //await page.waitForFunction(() => { if (window.page2image.scrollToBottom()) {return window.page2image.checkIfImageBeenLoaded() } return false; })
- 
+
   //await page.goto(options.url);
 
  // await page.waitForNavigation({timeout:3000})
@@ -89,7 +101,7 @@ const options = commandLineArgs([
 
   var rs = require('fs').createReadStream(output_filename);
   rs.pipe(process.stdout);
-  
+
   //const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
   //await snooze(3000)
 })();
