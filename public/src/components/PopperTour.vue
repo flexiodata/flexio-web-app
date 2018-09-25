@@ -7,15 +7,19 @@
       :next-click="nextClick"
       :skip-click="skipClick"
       :done-click="doneClick"
+      :jump-click="jumpClick"
       :is-first-step="is_first_step"
       :is-last-step="is_last_step"
     >
       <PopperStep
         :key="index"
+        :index="index"
+        :steps="steps"
         :prev-click="prevClick"
         :next-click="nextClick"
         :skip-click="skipClick"
         :done-click="doneClick"
+        :jump-click="jumpClick"
         :is-first-step="is_first_step"
         :is-last-step="is_last_step"
         v-bind="step"
@@ -33,6 +37,7 @@
     onSkip: () => {},
     onStart: () => {},
     onFinish: () => {},
+    onJump: () => {},
     onPrevStep: (current_step) => {},
     onNextStep: (current_step) => {}
   }
@@ -80,28 +85,28 @@
       }
     },
     computed: {
-      custom_options () {
+      custom_options() {
         return {
           ...DEFAULT_OPTIONS,
           ...this.options
         }
       },
-      custom_callbacks () {
+      custom_callbacks() {
         return {
           ...DEFAULT_CALLBACKS,
           ...this.callbacks
         }
       },
-      is_running () {
+      is_running() {
         return this.current_step > -1 && this.current_step < this.step_count
       },
-      is_first_step () {
+      is_first_step() {
         return this.current_step === 0
       },
-      is_last_step () {
+      is_last_step() {
         return this.current_step === this.steps.length - 1
       },
-      step_count () {
+      step_count() {
         return this.steps.length
       }
     },
@@ -131,6 +136,10 @@
       doneClick() {
         this.custom_callbacks.onFinish()
         this.current_step = -1
+      },
+      jumpClick(idx) {
+        this.custom_callbacks.onJump()
+        this.current_step = idx
       }
     }
   }

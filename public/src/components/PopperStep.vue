@@ -16,6 +16,20 @@
           <div v-if="content.length > 0" v-html="content"></div>
           <div v-else>No content has been specified.</div>
         </slot>
+        <div
+          class="vue-popper-step__dots"
+          v-if="showDots"
+        >
+          <div
+            class="vue-popper-step__dot"
+            :class="{
+              'vue-popper-step__dot--active': step_idx == index
+            }"
+            @click="jumpClick(step_idx)"
+            v-for="(item, step_idx) in steps"
+          >
+          </div>
+        </div>
       </div>
     </slot>
 
@@ -70,6 +84,17 @@
         type: String,
         default: ''
       },
+      index: {
+        type: Number
+      },
+      steps: {
+        type: Array,
+        default: () => []
+      },
+      showDots: {
+        type: Boolean,
+        default: false
+      },
       popperOptions: {
         type: Object,
         default: () => { return {} }
@@ -102,6 +127,9 @@
       doneClick: {
         type: Function
       },
+      jumpClick: {
+        type: Function
+      },
       isFirstStep: {
         type: Boolean
       },
@@ -123,7 +151,7 @@
     margin: 0
 
   .vue-popper__footer
-    margin-top: 1rem
+    margin-top: 1.5rem
 
     // .flex
     display: flex
@@ -164,8 +192,23 @@
   .vue-popper__button-skip
     margin-right: 2rem
 
-  .flex-fill
-    flex: 1 1;
-    min-width: 0; /* 1 */
-    min-height: 0; /* 1 */
+  .vue-popper-step__dots
+    text-align: center
+    margin: 0.5rem 0
+
+  .vue-popper-step__dot
+    display: inline-block
+    cursor: pointer
+    background-color: #fff
+    opacity: .25
+    border-radius 100%
+    width: 6px
+    height: 6px
+    margin: 0 3px
+    transition: opacity .2s ease
+    &:hover
+      opacity: .5
+
+  .vue-popper-step__dot--active
+    opacity: 1
 </style>

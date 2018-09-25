@@ -46,14 +46,14 @@
         steps: [
           {
             target: '#a1',
-            title: '<div class="tc f3 mv1">Welcome to Flex.io!</div>',
+            title: '<div class="tc mv1 f3">Welcome to Flex.io!</div>',
             content: '<div><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
             popperOptions: {
               placement: 'none'
             }
           },
           {
-            target: '#a2',
+            target: '#a19',
             content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>'
           },
           {
@@ -68,7 +68,7 @@
             }
           },
           {
-            target: '#a5',
+            target: '#20',
             content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
             params: {
               placement: 'left'
