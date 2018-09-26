@@ -132,7 +132,7 @@
           >
             <PipeDocumentHeader
               class="relative z-7 bg-nearer-white sticky"
-              data-v-step="pipe-onboarding-0"
+              data-tour-step="pipe-onboarding-0"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
@@ -193,7 +193,7 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
-                  data-v-step="pipe-onboarding-1"
+                  data-tour-step="pipe-onboarding-1"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -209,18 +209,18 @@
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
-                      data-v-step="pipe-onboarding-2"
+                      data-tour-step="pipe-onboarding-2"
                       @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="pipe-onboarding-4" class="relative o-0" style="top: -220px"></div>
+                    <div data-tour-step="pipe-onboarding-4" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
-                  data-v-step="pipe-onboarding-3"
+                  data-tour-step="pipe-onboarding-3"
                   :id="output_item_id"
                 >
                   <template slot="title">
@@ -305,7 +305,9 @@
 
 <script>
   import stickybits from 'stickybits'
+  import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
+  import tours from '../data/tour/index-keyed'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
@@ -333,49 +335,21 @@
   const PIPEDOC_VIEW_BUILD  = 'build'
   const PIPEDOC_VIEW_RUN    = 'run'
 
-  const tour_steps = [
-    {
-      target: '[data-v-step="pipe-onboarding-0"]',
-      title: '<div class="tc mv1 f3">Welcome to Flex.io!</div>',
-      content: '<div><div class="mb2 b">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
-      popperOptions: {
-        placement: 'none'
-      }
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-1"]',
-      content: '<div class="mb3"><div class="mb2 b">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
-      popperOptions: {
-        placement: 'left'
-      }
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-2"]',
-      content: '<div class="mb3"><div class="mb2 b">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-3"]',
-      content: '<div class="mb3"><div class="mb2 b">Step 4 of 6:</div>And here\'s the pipe output.</div>',
-      popperOptions: {
-        placement: 'left'
-      }
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-4"]',
-      content: '<div class="mb3"><div class="mb2 b">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
-      popperOptions: {
-        placement: 'left'
-      }
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-5"]',
-      content: '<div class="mb3"><div class="mb2 b">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
-    },
-    {
-      target: '[data-v-step="pipe-onboarding-6"]',
-      content: '<div class="mb3"><div class="mb2 b">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
-    }
-  ]
+  const processTourSteps = (arr) => {
+    return _.map(arr, (item) => {
+      return _.assign(item, {
+        title: marked(item.title || ''),
+        content: marked(item.content || '')
+      })
+    })
+  }
+
+  const our_tours = {}
+  Object.keys(tours).map((key, idx) => {
+    our_tours[key] = processTourSteps(tours[key])
+  })
+
+  const tour_steps = our_tours['hacker-news-feed']
 
   export default {
     mixins: [MixinConfig],

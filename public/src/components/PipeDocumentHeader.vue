@@ -24,7 +24,7 @@
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
-          data-v-step="pipe-onboarding-2"
+          data-tour-step="pipe-onboarding-2"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
