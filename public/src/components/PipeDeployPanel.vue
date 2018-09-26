@@ -62,7 +62,8 @@
         required: true
       },
       deploymentItems: {
-        type: Array
+        type: Array,
+        default: () => { return [] }
       },
       showSchedulePanel: {
         type: Boolean,
@@ -78,7 +79,7 @@
           {
             key: 'manual',
             label: 'Run manually',
-            always_on: true,
+            always_on: false,
             is_pro: false
           },
           {
@@ -107,7 +108,8 @@
       },
       checklist: {
         get() {
-          return _.uniq(['manual'].concat(this.deploymentItems))
+          //return _.uniq(['manual'].concat(this.deploymentItems))
+          return this.deploymentItems
         },
         set(value) {
           this.$emit('update:deploymentItems', value)
