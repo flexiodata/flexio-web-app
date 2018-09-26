@@ -76,6 +76,9 @@ class CallProxy(object):
             except zmq.ZMQError:
                 pass
 
+    def close(self):
+        self.socket.close()
+        self.socket = None
 
 proxy = CallProxy()
 
@@ -217,6 +220,31 @@ context_connections_obj = ContextConnections()
 
 
 
+class ContextFsFile(object):
+    
+    def __init__(self, handle, writing):
+        self.handle = handle
+        self.writing = writing
+        pass
+
+    def __del__(self):
+        if self.handle != 0 and self.writing:
+            self.close()
+
+    def read(self, len = -1):
+        buf = proxy.invoke('read', [self.handle, len])
+        if buf is False:
+            return False
+        return buf
+
+    def write(self, data='', connection=''):
+        proxy.invoke('write', [self.handle, data])
+
+    def close(self):
+        if self.handle != 0 and self.writing:
+            proxy.invoke('fsCommit', [self.handle])
+            self.writing = False
+            self.handle = False
 
 
 class ContextFs(object):
@@ -224,8 +252,18 @@ class ContextFs(object):
     def __init__(self):
         pass
 
-    def read(self, path):
-        handle = proxy.invoke('getVfsStreamHandle', [path])
+    def create(self, path, connection=''):
+        handle = proxy.invoke('fsCreate', [path, connection])
+        f = ContextFsFile(handle, writing=True)
+        return f
+
+    def open(self, path, connection=''):
+        handle = proxy.invoke('fsOpen', ['r+', path, connection])
+        f = ContextFsFile(handle, writing=False)
+        return f
+
+    def read(self, path, connection=''):
+        handle = proxy.invoke('fsOpen', ['r+', path, connection])
 
         buf = b''
         while True:
@@ -235,10 +273,9 @@ class ContextFs(object):
             buf += chunk
         return buf
 
-
-    def write(self, path, data):
+    def write(self, path, data='', connection=''):
  
-        handle = proxy.invoke('createVfsStreamHandle', [path])
+        handle = proxy.invoke('fsOpen', ['w', path, connection])
 
         idx = 0
         buf = data
@@ -248,12 +285,15 @@ class ContextFs(object):
             proxy.invoke('write', [handle, chunk])
             idx = idx + 1
 
-        handle = proxy.invoke('commitVfsStreamHandle', [handle])
+        handle = proxy.invoke('fsCommit', [handle])
 
-
-    def exists(self, path):
+    def exists(self, path, connection=''):
  
-        return proxy.invoke('fs_exists', [path])
+        return proxy.invoke('fsExists', [path, connection])
+
+    def remove(self, path, connection=''):
+ 
+        return proxy.invoke('fsRemove', [path, connection])
 
 
 
@@ -557,6 +597,20 @@ class PipeFunctions(object):
         proxy.invoke('runJob', [json.dumps(params)])
 
 
+class Result(object):
+    def __init__(self, output):
+        self.output = output
+
+    def json(self, obj):
+        self.output.content_type = "application/json"
+        self.output.write(json.dumps(obj))
+        proxy.close()
+
+    def end(self, content):
+        self.output.write(content)
+        proxy.close()
+
+
 class Context(object):
     def __init__(self, input, output):
         self.input = input
@@ -565,6 +619,7 @@ class Context(object):
         self._form = None
         self._files = None
         self.pipe = PipeFunctions()
+        self.res = Result(output)
 
     @property
     def query(self):

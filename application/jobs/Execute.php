@@ -595,8 +595,29 @@ class ScriptHost
         return $res;
     }
 
-    public function func_getVfsStreamHandle(string $path) : int
+    public function func_fsCreate(string $path, string $connection) : int
     {
+        $stream = \Flexio\Base\Stream::create();
+        $stream->setName($path);
+        $streamwriter = $stream->getWriter();
+
+        $this->output_streams[] = $stream;
+        $info = array('handle' => count($this->output_streams)-1,
+                      'name' => $path,
+                      'size' => 0,
+                      'content_type' => 'application/octet-stream');
+
+        $this->output_map[$path] = $info;
+        return $info['handle'];
+    }
+
+    public function func_fsOpen(string $mode, string $path, string $connection) : int
+    {
+        if ($mode == 'w')
+        {
+            return $this->fsOpenWrite($path, $connection);
+        }
+
 /*
         // TODO: this code is causing the second read of a file to fail
         // in the python bindings:
@@ -609,6 +630,7 @@ class ScriptHost
         }
 */
         $stream = \Flexio\Base\Stream::create();
+        $stream->setName($path);
         $streamwriter = $stream->getWriter();
 
 
@@ -630,7 +652,50 @@ class ScriptHost
         return $info['handle'];
     }
 
-    public function func_fs_exists(string $path) : bool
+    public function fsOpenWrite(string $path, string $connection) : int
+    {
+        $key = \Flexio\Base\Util::generateRandomString(20);
+
+        $stream = \Flexio\Base\Stream::create();
+        $stream->setName($path);
+
+        $this->output_streams[] = $stream;
+        $info = array('handle' => count($this->output_streams)-1,
+                      'name' => $key,
+                      'size' => 0,
+                      'content_type' => 'application/octet-stream');
+
+        $this->output_map[$key] = $info;
+
+        return $info['handle'];
+    }
+
+    public function func_fsCommit(int $stream_idx /* handle */)
+    {
+        if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
+            return false;
+
+        $writer = $this->getOutputWriter($stream_idx);
+        if (is_null($writer))
+            return false;
+
+        $this->output_writers[$stream_idx] = null;
+        $writer = null;
+
+
+        $stream = $this->output_streams[$stream_idx];
+        $reader = $stream->getReader();
+
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+
+
+        $files = $vfs->write($stream->getName(), function($length) use (&$reader) {
+            return $reader->read($length);
+        });
+    }
+
+    public function func_fsExists(string $path) : bool
     {
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
@@ -825,50 +890,9 @@ class ScriptHost
         }
         else
         {
+            var_dump($data);
             $writer->write((string)$data);
         }
-    }
-
-    public function func_createVfsStreamHandle(string $path) : int
-    {
-        $key = \Flexio\Base\Util::generateRandomString(20);
-
-        $stream = \Flexio\Base\Stream::create();
-        $stream->setName($path);
-
-        $this->output_streams[] = $stream;
-        $info = array('handle' => count($this->output_streams)-1,
-                      'name' => $key,
-                      'size' => 0,
-                      'content_type' => 'application/octet-stream');
-
-        $this->output_map[$key] = $info;
-
-        return $info['handle'];
-    }
-
-    public function func_commitVfsStreamHandle(int $stream_idx /* handle */)
-    {
-        if ($stream_idx < 0 || $stream_idx >= count($this->output_streams))
-            return false;
-
-        $writer = $this->getOutputWriter($stream_idx);
-        if (is_null($writer))
-            return false;
-
-        $this->output_writers[$stream_idx] = null;
-        $writer = null;
-
-
-        $stream = $this->output_streams[$stream_idx];
-        $reader = $stream->getReader();
-
-        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
-        $vfs->setProcess($this->process);
-
-        $files = $vfs->write($stream->getName(), function($length) use (&$reader) {
-            return $reader->read($length);
-        });
     }
 
     public function func_read(int $stream_idx, $length) // TODO: add return type
