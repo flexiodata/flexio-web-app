@@ -45,11 +45,10 @@
         </div>
       </div>
     </el-checkbox-group>
-    <div class="mt3 pa4 tc bg-nearer-white">
+    <div class="mt3 pv3 ph4 tc bg-nearer-white">
       <h4 class="fw6">Turn this pipe on to deploy and run it.</h4>
       <div
-        class="flex flex-row items-center justify-center"
-        style="padding: 5px 5px 6px 10px; border-radius: 3px"
+        class="flex flex-row items-center justify-center mv3"
       >
         <span class="ttu f6 fw6">Your pipe is</span>
         <LabelSwitch

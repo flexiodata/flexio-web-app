@@ -169,15 +169,7 @@
   })
 
   const defaultAttrs = () => {
-    return {
-      schedule: {
-        frequency: schedule.SCHEDULE_FREQUENCY_DAILY,
-        timezone: TIMEZONE_UTC,
-        days: [],
-        times: [{ hour: 8, minute: 0 }]
-      },
-      schedule_status: schedule.SCHEDULE_STATUS_INACTIVE
-    }
+    return _.cloneDeep(schedule.PIPE_SCHEDULE_DEFAULTS)
   }
 
   export default {

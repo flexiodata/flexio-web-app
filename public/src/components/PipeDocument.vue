@@ -308,6 +308,7 @@
   import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
   import tours from '../data/tour/index-keyed'
+  import { SCHEDULE_STATUS_ACTIVE, PIPE_SCHEDULE_DEFAULTS } from '../constants/schedule'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
@@ -552,6 +553,17 @@
         set(value) {
           var pipe = _.cloneDeep(this.edit_pipe)
           _.set(pipe, 'ui.deployment', value)
+
+          // activate scheduling on the pipe when turning
+          // on scheduling in the deployment panel
+          if (_.includes(value, 'schedule')) {
+            var attrs = _.pick(pipe, ['schedule', 'schedule_status'])
+            attrs = _.omitBy(attrs, _.isNil)
+            attrs = _.assign({}, PIPE_SCHEDULE_DEFAULTS, attrs)
+            attrs.schedule_status = SCHEDULE_STATUS_ACTIVE
+            _.assign(pipe, attrs)
+          }
+
           this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
           this.saveChanges()
         }
