@@ -35,7 +35,7 @@
       </div>
     </el-checkbox-group>
     <div class="mt3 pa4 tc bg-nearer-white">
-      <h4>Turn this pipe on to deploy and run it.</h4>
+      <h4 class="fw6">Turn this pipe on to deploy and run it.</h4>
       <div
         class="flex flex-row items-center justify-center"
         style="padding: 5px 5px 6px 10px; border-radius: 3px"
