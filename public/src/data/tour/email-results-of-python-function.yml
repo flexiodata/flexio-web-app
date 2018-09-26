@@ -1,6 +1,6 @@
 - target: '[data-tour-step="pipe-onboarding-0"]'
   title: |
-    <div class="tc mv1 f3">Welcome to Flex.io!</div>
+    <div class="tc mv1 f3">Hi {{first_name}}, welcome to Flex.io!</div>
   content: |
     Here's a two-minute tour to help you get started building serverless pipes with Flex.io.
   popperOptions:
