@@ -62,6 +62,9 @@
     created() {
       this.tryFetchPipes()
     },
+    mounted() {
+      this.$store.track('Visited Pipes Page')
+    },
     methods: {
       duplicatePipe(item) {
         var attrs = {
