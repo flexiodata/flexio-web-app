@@ -143,10 +143,14 @@
               @run-click="testPipe"
             />
             <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
-              <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
+              <el-collapse
+                class="el-collapse--plain"
+                v-model="active_collapse_items"
+              >
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="input"
+                  data-tour-step="pipe-onboarding-2"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -193,10 +197,9 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
-                  data-tour-step="pipe-onboarding-1"
                 >
                   <template slot="title">
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
                       <span class="f4">Tasks</span>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
@@ -209,18 +212,17 @@
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
-                      data-tour-step="pipe-onboarding-2"
                       @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-tour-step="pipe-onboarding-4" class="relative o-0" style="top: -220px"></div>
+                    <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
-                  data-tour-step="pipe-onboarding-3"
+                  data-tour-step="pipe-onboarding-4"
                   :id="output_item_id"
                 >
                   <template slot="title">
@@ -242,6 +244,7 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="deployment"
+                  data-tour-step="pipe-onboarding-6"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">

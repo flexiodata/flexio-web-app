@@ -6,45 +6,62 @@
   popperOptions:
     placement: none
   style:
-    maxWidth: 36rem
+    maxWidth: 32rem
     fontSize: 1rem
     lineHeight: 1.5
-    marginTop: 1rem
+    marginTop: -2rem
     padding: 1.5rem
 - target: '[data-tour-step="pipe-onboarding-1"]'
   content: |
-    **Step 2 of 6:**
+    **Pipe Tasks:**
 
     Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.
   popperOptions:
-    placement: left
+    placement: left-start
 - target: '[data-tour-step="pipe-onboarding-2"]'
   content: |
-    **Step 3 of 6:**
+    **Parameter Testing:**
 
-    Click on the "Test" button to run this pipe.
+    Easily test functions with parameters of your choosing.
+  popperOptions:
+    placement: left
 - target: '[data-tour-step="pipe-onboarding-3"]'
   content: |
-    **Step 4 of 6:**
+    **Run Button:**
+
+    Click on the "Test" button to run this pipe.
+- target: '[data-tour-step="pipe-onboarding-4"]'
+  content: |
+    **Pipe Results:**
 
     And here's the pipe output.
   popperOptions:
     placement: left
-- target: '[data-tour-step="pipe-onboarding-4"]'
+- target: '[data-tour-step="pipe-onboarding-5"]'
   content: |
-    **Step 5 of 6:**
+    **Add New Pipe Task:**
 
     Now we've added a new task to your pipe. The output from the execute task is passed to the input of this email task.
 
     Now test your pipe again and check your inbox.
   popperOptions:
     placement: left
-- target: '[data-tour-step="pipe-onboarding-5"]'
-  content: |
-    **Step 6 of 6:**
-
-    Finally, click the "Schedule" button and set the pipe to run every five minutes.
 - target: '[data-tour-step="pipe-onboarding-6"]'
   content: |
+    **Deployment Options:**
+
+    Choose your deployment options. This pipe is scheduled to run every five minutes.
+  popperOptions:
+    placement: left
+- target: '[data-tour-step="pipe-onboarding-7"]'
+  content: |
+    **Pipe Activation:**
+
+    Finally, activate your pipe by turning it on and then watch your inbox. Come back and turn if off whenever you'd like.
+- target: '[data-tour-step="pipe-onboarding-8"]'
+  content: |
     Thanks for checking out Flex.io!
+
     Click the pipe list to see other examples or create your own pipes.
+  popperOptions:
+    placement: top-start
