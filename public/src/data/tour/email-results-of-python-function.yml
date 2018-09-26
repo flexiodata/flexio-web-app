@@ -57,7 +57,7 @@
   content: |
     **Pipe Activation:**
 
-    Finally, activate your pipe by turning it on and then watch your inbox. Come back and turn if off whenever you'd like.
+    Finally, activate your pipe by turning it on and then watch your inbox. Come back and turn it off whenever you'd like.
 - target: '[data-tour-step="pipe-onboarding-8"]'
   content: |
     Thanks for checking out Flex.io!

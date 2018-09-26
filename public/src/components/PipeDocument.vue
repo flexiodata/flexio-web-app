@@ -720,7 +720,7 @@
           var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
           // for testing
-          this.$_Config_reset(cfg_path)
+          //this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
             this.$refs['tour'].start()
@@ -792,6 +792,10 @@
             this.tour_current_step++
             setTimeout(() => { callback(true) }, 1)
           })
+        } else if (current_step == 5) {
+          this.deployment_items = [].concat(['schedule'])
+          this.tour_current_step++
+          setTimeout(() => { callback(true) }, 1)
         } else {
           this.tour_current_step++
           callback(true)
