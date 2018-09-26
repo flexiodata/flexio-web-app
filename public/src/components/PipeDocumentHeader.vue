@@ -24,7 +24,7 @@
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
-          data-tour-step="pipe-onboarding-2"
+          data-tour-step="pipe-onboarding-3"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
@@ -40,6 +40,7 @@
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
             aria-label="Turn pipe on"
+            data-tour-step="pipe-onboarding-7"
             v-model="is_pipe_mode_run"
           />
         </div>

@@ -88,19 +88,19 @@
         deployment_options: [
           {
             key: 'schedule',
-            label: 'Schedule the pipe to run at a set time',
+            label: 'Run on a schedule',
             always_on: false,
             is_pro: false
           },
           {
             key: 'api',
-            label: 'Run this pipe from an API endpoint',
+            label: 'Run using an API endpoint',
             always_on: false,
             is_pro: true
           },
           {
             key: 'manual',
-            label: 'Run manually',
+            label: 'Run using a Flex.io Web Interface',
             always_on: false,
             is_pro: false
           }

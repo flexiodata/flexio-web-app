@@ -168,14 +168,14 @@
     },
     methods: {
       openPipe() {
+        this.$store.track('Opened Pipe', this.getAnalyticsPayload(this.item))
         this.$router.push(this.pipe_route)
       },
-      trashPipe() {
-        var attrs = {
-          eid_status: OBJECT_STATUS_TRASH
-        }
+      getAnalyticsPayload(pipe) {
+        var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias'])
+        _.assign(analytics_payload, { title: pipe.name })
 
-        this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })
+        return analytics_payload
       },
       onCommand(cmd) {
         switch (cmd) {
@@ -187,7 +187,6 @@
           case 'schedule':  return this.$emit('schedule', this.item)
           case 'deploy':    return this.$emit('deploy', this.item)
           case 'delete':    return this.$emit('delete', this.item)
-          case 'trash':     return this.trashPipe()
         }
       }
     }

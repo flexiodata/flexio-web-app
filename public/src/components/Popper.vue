@@ -92,6 +92,7 @@
   $triangle_bg_color = #50596c
   $triangle_border_color = #50596c
   $triangle_size = .625rem
+  $triangle_offset = .75rem
 
   $distance = .875rem
 
@@ -130,6 +131,7 @@
     .vue-popper__arrow
       bottom: $triangle_size * -1
       left: 50%
+      margin: 0 $triangle_offset
       border-top-color: $triangle_border_color
       border-bottom-width: 0
       &::after
@@ -143,6 +145,7 @@
     .vue-popper__arrow
       top: $triangle_size * -1
       left: 50%
+      margin: 0 $triangle_offset
       border-bottom-color: $triangle_border_color
       border-top-width: 0
       &::after
@@ -156,6 +159,7 @@
     .vue-popper__arrow
       left: $triangle_size * -1
       top: 50%
+      margin: $triangle_offset 0
       border-right-color: $triangle_border_color
       border-left-width: 0
       &::after
@@ -169,6 +173,7 @@
     .vue-popper__arrow
       right: $triangle_size * -1
       top: 50%
+      margin: $triangle_offset 0
       border-left-color: $triangle_border_color
       border-right-width: 0
       &::after

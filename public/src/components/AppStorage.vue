@@ -105,6 +105,9 @@
     created() {
       this.tryFetchConnections()
     },
+    mounted() {
+      this.$store.track('Visited Storage Page')
+    },
     methods: {
       ...mapGetters([
         'getAvailableConnections'
