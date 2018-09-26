@@ -33,12 +33,28 @@
           </el-button>
         </span>
       </div>
-
     </el-checkbox-group>
+    <div class="mt3 pa4 tc bg-nearer-white">
+      <h4>Turn this pipe on to deploy and run it.</h4>
+      <div
+        class="flex flex-row items-center justify-center"
+        style="padding: 5px 5px 6px 10px; border-radius: 3px"
+      >
+        <span class="ttu f6 fw6">Your pipe is</span>
+        <LabelSwitch
+          class="dib ml2 hint--bottom-left"
+          active-color="#13ce66"
+          aria-label="Turn pipe on"
+          v-model="is_pipe_mode_run"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import LabelSwitch from './LabelSwitch.vue'
+
   export default {
     props: {
       isModeRun: {
@@ -52,6 +68,9 @@
         type: Boolean,
         default: false
       }
+    },
+    components: {
+      LabelSwitch
     },
     data() {
       return {
@@ -78,6 +97,14 @@
       }
     },
     computed: {
+      is_pipe_mode_run: {
+        get() {
+          return this.isModeRun
+        },
+        set(value) {
+          this.$emit('update:isModeRun', value)
+        }
+      },
       checklist: {
         get() {
           return _.uniq(['manual'].concat(this.deploymentItems))
@@ -100,6 +127,3 @@
     }
   }
 </script>
-
-
-schedule, api, trigger (or email input)
