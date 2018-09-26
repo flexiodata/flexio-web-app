@@ -70,6 +70,17 @@
   import KeypairList from './KeypairList.vue'
   import CodeEditor from './CodeEditor.vue'
 
+  const getDefaultUiValues = () => {
+    return _.assign({}, {
+      form_type: 'multipart/form-data',
+      raw_type: 'application/json',
+      form_data: {},
+      x_www_form_urlencoded: {},
+      json: {},
+      raw: ''
+    })
+  }
+
   export default {
     props: {
       value: {
@@ -82,6 +93,11 @@
       CodeEditor
     },
     watch: {
+      value: {
+        handler: 'initSelf',
+        immediate: true,
+        deep: true
+      },
       edit_value: {
         handler: 'emitChange',
         immediate: true,
@@ -90,18 +106,12 @@
     },
     data() {
       return {
+        is_emitting: false,
         force_render: false,
         edit_value: {
           headers: {},
           data: '',
-          ui: {
-            form_type: 'multipart/form-data',
-            raw_type: 'application/json',
-            form_data: {},
-            x_www_form_urlencoded: {},
-            json: {},
-            raw: ''
-          }
+          ui: getDefaultUiValues()
         },
         form_options: [
           { label: 'form-data',             val: 'multipart/form-data'               },
@@ -174,12 +184,26 @@
           return str
         }
       },
+      initSelf(value) {
+        if (this.is_emitting) {
+          return
+        }
+
+        var tmp = _.cloneDeep(this.edit_value)
+        _.set(tmp, 'ui', _.assign(getDefaultUiValues(), value))
+        this.edit_value = _.assign({}, tmp)
+        this.revert()
+      },
       emitChange() {
+        this.is_emitting = true
+
         var value = _.assign({}, this.edit_value, {
           headers: this.getHeaders(),
           data: this.getData()
         })
         this.$emit('input', value)
+
+        this.$nextTick(() => { this.is_emitting = false })
       }
     }
   }

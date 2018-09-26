@@ -109,7 +109,7 @@
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
-              type="yaml"
+              type="json"
               editor-cls="bg-white h-100"
               :class="{
                 'no-pointer-events': !show_yaml
@@ -761,8 +761,18 @@
       onTourNextStep(current_step, callback) {
         this.$store.track('Clicked Tour Next Button', { current_step })
 
-        // moving from output to adding email task
-        if (current_step == 3) {
+        if (current_step == 1) {
+          this.process_input = {
+            form_data: {
+              count: 3
+            }
+          }
+
+          this.tour_current_step++
+          setTimeout(() => { callback(true) }, 1)
+
+        } else if (current_step == 3) {
+          // moving from output to adding email task
           var this_user = this.getActiveUser()
           var my_email = this_user.email
           var email_item = {
