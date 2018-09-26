@@ -795,8 +795,8 @@ class User
 
             // legacy
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_data.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_visualization.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_thumbnail.json')
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_visualize_data_from_an_api_feed.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_render_webpage.json')
         );
 
         return $objects;
