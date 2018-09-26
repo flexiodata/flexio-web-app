@@ -768,6 +768,7 @@
             setTimeout(() => { callback(true) }, 1)
           })
         } else {
+          this.tour_current_step++
           callback(true)
         }
       }
