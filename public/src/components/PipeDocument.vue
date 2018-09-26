@@ -350,7 +350,7 @@
     our_tours[key] = processTourSteps(tours[key])
   })
 
-  const tour_steps = our_tours['hacker-news-feed']
+  const tour_steps = our_tours['email-results-of-python-function']
 
   export default {
     mixins: [MixinConfig],
@@ -717,7 +717,7 @@
           var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
 
           // for testing
-          //this.$_Config_reset(cfg_path)
+          this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
             this.$refs['tour'].start()
