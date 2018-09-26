@@ -16,22 +16,33 @@
         <el-tag
           class="ttu b ml2"
           size="mini"
-          v-if="item.is_pro"
+          v-if="false && item.is_pro"
         >
           Pro
         </el-tag>
-        <span
-          class="ml2"
+        <el-button
+          size="tiny"
+          style="margin-left: 8px"
+          @click="show_schedule = true"
           v-if="item.key == 'schedule' && is_schedule_deployed"
         >
+          Configure...
+        </el-button>
+
+        <div
+          class="mt2 pa2 br2 ba b--black-05 bg-nearer-white"
+          style="margin-left: 24px"
+          v-if="false && item.key == 'schedule' && is_schedule_deployed"
+        >
+          <span class="f6">Your pipe will run every five minutes.</span>
           <el-button
             type="text"
-            style="padding: 0"
+            style="padding: 0; margin-left: 8px"
             @click="show_schedule = true"
           >
             Configure...
           </el-button>
-        </span>
+        </div>
       </div>
     </el-checkbox-group>
     <div class="mt3 pa4 tc bg-nearer-white">
@@ -77,8 +88,8 @@
       return {
         deployment_options: [
           {
-            key: 'manual',
-            label: 'Run manually',
+            key: 'schedule',
+            label: 'Schedule the pipe to run at a set time',
             always_on: false,
             is_pro: false
           },
@@ -89,8 +100,8 @@
             is_pro: true
           },
           {
-            key: 'schedule',
-            label: 'Schedule the pipe to run at a set time',
+            key: 'manual',
+            label: 'Run manually',
             always_on: false,
             is_pro: false
           }
