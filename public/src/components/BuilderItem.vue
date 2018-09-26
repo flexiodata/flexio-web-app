@@ -400,7 +400,7 @@
 
 <style lang="stylus" scoped>
   .css-content
-    transition: all 0.2s ease
+    transition: all 0.15s ease
 
   .css-active
     margin-left: -4px
