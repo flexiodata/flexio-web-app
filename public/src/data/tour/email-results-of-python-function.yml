@@ -2,11 +2,15 @@
   title: |
     <div class="tc mv1 f3">Welcome to Flex.io!</div>
   content: |
-    **Step 1 of 6:**
-
-    Here's a two-minute tour to help you get started with Flex.io.
+    Here's a two-minute tour to help you get started building serverless pipes with Flex.io.
   popperOptions:
     placement: none
+  style:
+    maxWidth: 36rem
+    fontSize: 1rem
+    lineHeight: 1.5
+    marginTop: 1rem
+    padding: 1.5rem
 - target: '[data-tour-step="pipe-onboarding-1"]'
   content: |
     **Step 2 of 6:**
