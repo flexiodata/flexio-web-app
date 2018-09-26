@@ -782,6 +782,34 @@ class User
         $objects = array(
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
 
+            /*
+            TODO:
+
+            Example: Server-Side Input Validation
+            Description: Validate input with a server-side implementation that hides data used to validate
+            * Demonstrates how to use input area for testing
+            * Demonstrates reading from server-side data to validate/invalidate data
+
+            Example: Use both Python and NodeJS to Manipulate API Results
+            Description: Transform JSON from Github Jobs API with NodeJS and Lodash and then summarize it with Python and pandas.
+            * Demonstrates fact that various libraries are supported; execute is more than bare-bones
+            * Demonstrates fact that executes can be chained together
+
+            Example: Process Incoming Emails
+            * Demonstrates ability to email pipes
+            * Demonstrates how to extract parts from incoming email and process it
+
+            Example: Keyword API
+            Description: Create an API from keywords from a website
+            * Demonstrates how to parse data from a website
+            * Demonstrates how to create an use an API endpoint to get pipe contents
+
+            Example: Extract keywords from Gmail
+            Description: Access APIs that require Oauth
+            * Demonstrates ability to access APIs that use Oauth
+            * Demonstrates ability to read read/manipulate Gmail
+            */
+
             // Example: Email Results of a Python Function
             // Description: Get the top 5 stories from the Firebase Hacker News Feed and deliver via email
             // * Demonstrates scheduling
