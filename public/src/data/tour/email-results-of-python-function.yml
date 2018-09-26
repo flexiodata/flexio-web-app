@@ -13,33 +13,33 @@
     padding: 1.5rem
 - target: '[data-tour-step="pipe-onboarding-1"]'
   content: |
-    **Pipe Tasks:**
+    **Pipe Tasks**
 
     Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.
   popperOptions:
     placement: left-start
 - target: '[data-tour-step="pipe-onboarding-2"]'
   content: |
-    **Parameter Testing:**
+    **Parameter Testing**
 
     Easily test functions with parameters of your choosing.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-3"]'
   content: |
-    **Run Button:**
+    **Run Button**
 
     Click on the "Test" button to run this pipe.
 - target: '[data-tour-step="pipe-onboarding-4"]'
   content: |
-    **Pipe Results:**
+    **Pipe Results**
 
     And here's the pipe output.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-5"]'
   content: |
-    **Add New Pipe Task:**
+    **Add New Pipe Task**
 
     Now we've added a new task to your pipe. The output from the execute task is passed to the input of this email task.
 
@@ -48,14 +48,14 @@
     placement: left
 - target: '[data-tour-step="pipe-onboarding-6"]'
   content: |
-    **Deployment Options:**
+    **Deployment Options**
 
     Choose your deployment options. This pipe is scheduled to run every five minutes.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-7"]'
   content: |
-    **Pipe Activation:**
+    **Pipe Activation**
 
     Finally, activate your pipe by turning it on and then watch your inbox. Come back and turn it off whenever you'd like.
 - target: '[data-tour-step="pipe-onboarding-8"]'
