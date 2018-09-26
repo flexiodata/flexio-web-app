@@ -6,7 +6,7 @@
         plain
         class="btn-header hint--bottom"
         style="background: transparent"
-        aria-label="Properties"
+        aria-label="Edit Properties"
         :class="{ 'invisible': isModeRun }"
         @click="$emit('properties-click')"
       >
