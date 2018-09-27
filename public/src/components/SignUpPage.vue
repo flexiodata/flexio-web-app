@@ -11,12 +11,13 @@
 </template>
 
 <script>
-  import { ROUTE_SIGNIN } from '../constants/route'
+  import { ROUTE_ONBOARD, ROUTE_SIGNIN } from '../constants/route'
   import SignUpForm from './SignUpForm.vue'
+  import MixinConfig from './mixins/config'
   import MixinRedirect from './mixins/redirect'
 
   export default {
-    mixins: [MixinRedirect],
+    mixins: [MixinConfig, MixinRedirect],
     components: {
       SignUpForm
     },
@@ -36,7 +37,13 @@
         this.$router.push(this.signin_route)
       },
       onSignedIn() {
-        this.$_Redirect_redirect()
+        var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
+
+        if (this.$_Config_get(cfg_path, false) === false) {
+          this.$router.push({ name: ROUTE_ONBOARD })
+        } else {
+          this.$_Redirect_redirect()
+        }
       }
     }
   }
