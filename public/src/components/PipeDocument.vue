@@ -407,7 +407,8 @@
       // add user's first name to the tour
       var this_user = this.getActiveUser()
       var first_name = this_user.first_name
-      tour_steps[0].title.replace(/{{first_name}}/, first_name)
+      var first_step = tour_steps[0]
+      first_step.title = first_step.title.replace(/{{first_name}}/, first_name)
 
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
