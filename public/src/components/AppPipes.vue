@@ -66,6 +66,9 @@
       this.$store.track('Visited Pipes Page')
     },
     methods: {
+      openPipe(eid) {
+        this.$router.push({ name: ROUTE_PIPES, params: { eid } })
+      },
       duplicatePipe(item) {
         var attrs = {
           copy_eid: item.eid,
