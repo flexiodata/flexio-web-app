@@ -311,7 +311,11 @@
   import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
   import tours from '../data/tour/index-keyed'
-  import { SCHEDULE_STATUS_ACTIVE, PIPE_SCHEDULE_DEFAULTS } from '../constants/schedule'
+  import {
+    SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_FREQUENCY_FIVE_MINUTES,
+    PIPE_SCHEDULE_DEFAULTS
+  } from '../constants/schedule'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
@@ -800,8 +804,17 @@
           })
         } else if (current_step == 5) {
           this.deployment_items = [].concat(['schedule'])
-          this.tour_current_step++
-          setTimeout(() => { callback(true) }, 1)
+
+          // now set the frequency to every 5 minutes
+          setTimeout(() => {
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.set(pipe, 'schedule.frequency', SCHEDULE_FREQUENCY_FIVE_MINUTES)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.saveChanges().then(() => {
+              this.tour_current_step++
+              setTimeout(() => { callback(true) }, 1)
+            })
+          }, 200)
         } else {
           this.tour_current_step++
           callback(true)
