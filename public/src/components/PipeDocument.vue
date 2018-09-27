@@ -169,6 +169,7 @@
                     <ProcessInput
                       ref="process-input"
                       v-model="process_input"
+                      :process-data.sync="process_data"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -433,6 +434,7 @@
         show_save_cancel: false,
         save_cancel_zindex: 2050,
         process_input: {},
+        process_data: {},
 
         tour_started: false,
         tour_current_step: 0,
@@ -774,10 +776,8 @@
         this.$store.track('Clicked Tour Next Button', { current_step })
 
         if (current_step == 1) {
-          this.process_input = {
-            form_data: {
-              count: 3
-            }
+          this.process_data = {
+            count: 3
           }
 
           this.tour_current_step++
