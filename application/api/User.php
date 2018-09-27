@@ -790,24 +790,20 @@ class User
             * Demonstrates how to use input area for testing
             * Demonstrates reading from server-side data to validate/invalidate data
 
-            Example: Use both Python and NodeJS to Manipulate API Results
-            Description: Transform JSON from Github Jobs API with NodeJS and Lodash and then summarize it with Python and pandas.
-            * Demonstrates fact that various libraries are supported; execute is more than bare-bones
-            * Demonstrates fact that executes can be chained together
-
-            Example: Process Incoming Emails
-            * Demonstrates ability to email pipes
-            * Demonstrates how to extract parts from incoming email and process it
+            Example: Access APIs that require Oauth
+            Description: Extract keywords from Gmail
+            * Demonstrates ability to access APIs that use Oauth
+            * Demonstrates ability to read read/manipulate Gmail
 
             Example: Keyword API
             Description: Create an API from keywords from a website
             * Demonstrates how to parse data from a website
             * Demonstrates how to create an use an API endpoint to get pipe contents
 
-            Example: Extract keywords from Gmail
-            Description: Access APIs that require Oauth
-            * Demonstrates ability to access APIs that use Oauth
-            * Demonstrates ability to read read/manipulate Gmail
+            Example: Process Incoming Emails
+            * Demonstrates ability to email pipes
+            * Demonstrates how to extract parts from incoming email and process it
+
             */
 
             // Example: Email Results of a Python Function
@@ -820,6 +816,12 @@ class User
             // Description: Aggregate, de-duplicate and save recent stories from Hacker News to local storage
             // * Demonstrates saving results to local storage
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_save_data_to_local_storage.json'),
+
+            // Example: Analyze Data with Nodejs and Python
+            // Description: Analyze Job Postings on GitHub Jobs with Nodejs Lodash and Python Pandas
+            // * Demonstrates fact that various libraries are supported; execute is more than bare-bones
+            // * Demonstrates fact that executes can be chained together
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_analyze_data_with_nodejs_and_python.json'),
 
             // legacy
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_sample_data_api_feed.json'),

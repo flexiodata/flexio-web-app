@@ -9,7 +9,10 @@
 
     <!-- use <el-form> classes for consistent spacing -->
     <div class="el-form el-form--cozy el-form__label-tiny">
-      <div class="el-form-item flex flex-row items-center">
+      <div
+        class="el-form-item flex flex-row items-center"
+        v-if="showToggle"
+      >
         <el-switch
           class="hint--bottom"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
@@ -174,19 +177,23 @@
 
   export default {
     props: {
-      'title': {
+      title: {
         type: String,
         default: ''
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: true
       },
-      'show-footer': {
+      showFooter: {
         type: Boolean,
         default: true
       },
-      'pipe': {
+      showToggle: {
+        type: Boolean,
+        default: false
+      },
+      pipe: {
         type: Object,
         default: () => { return {} }
       }

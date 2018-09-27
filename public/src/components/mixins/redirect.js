@@ -7,20 +7,21 @@ import { ROUTE_HOME } from '../../constants/route'
 export default {
   methods: {
     $_Redirect_redirect: function(redirect) {
-      if (!_.isString(redirect))
-      {
+      if (!_.isString(redirect)) {
         // grab the redirect from the query string if it exists
         redirect = _.get(this.$route, 'query.redirect', '')
       }
 
       // fix problem with /app/app when redirecting
-      if (redirect.substr(0, 5) == '/app/')
+      if (redirect.substr(0, 5) == '/app/') {
         redirect = redirect.substr(4)
+      }
 
-      if (redirect && redirect.length > 0)
+      if (redirect && redirect.length > 0) {
         this.$router.push({ path: redirect })
-         else
+      } else {
         this.$router.push({ name: ROUTE_HOME })
+      }
     }
   }
 }

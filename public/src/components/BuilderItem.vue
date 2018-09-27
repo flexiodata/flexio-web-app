@@ -362,6 +362,10 @@
         return this.available_components.indexOf(this.content_component) != -1
       },
       task_icon() {
+        if (this.item.icon) {
+          return _.get(this.item, 'icon.name')
+        }
+
         switch (this.item.element) {
           case 'file-chooser':   return 'insert_drive_file'
           case 'form':           return 'edit'
@@ -370,6 +374,10 @@
         }
       },
       task_color() {
+        if (this.item.icon) {
+          return _.get(this.item, 'icon.bg_color')
+        }
+
         switch (this.item.element) {
           case 'file-chooser':   return '#0ab5f3'
           case 'form':           return '#0ab5f3'

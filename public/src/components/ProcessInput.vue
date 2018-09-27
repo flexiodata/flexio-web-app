@@ -8,7 +8,7 @@
       <el-form-item label="How would you like to send the form data?">
         <el-radio-group
           size="small"
-          v-model="edit_value.ui.form_type"
+          v-model="ui.form_type"
         >
           <el-radio-button
             :label="option.val"
@@ -21,13 +21,13 @@
       </el-form-item>
       <el-form-item
         label="What content type header would you like to use?"
-        v-if="edit_value.ui.form_type == 'raw'"
+        v-if="ui.form_type == 'raw'"
       >
         <!-- TODO: Added 1px top margin to make it line up. I don't care... -->
         <el-select
           size="small"
           style="margin-top: 1px"
-          v-model="edit_value.ui.raw_type"
+          v-model="ui.raw_type"
         >
           <el-option
             :label="option.label"
@@ -40,27 +40,27 @@
     </el-form>
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
-      v-model="edit_value.ui.form_data"
-      v-show="edit_value.ui.form_type == 'multipart/form-data'"
+      v-model="ui.form_data"
+      v-show="ui.form_type == 'multipart/form-data'"
     />
     <KeypairList
       :header="{ key: 'Key', val: 'Value' }"
-      v-model="edit_value.ui.x_www_form_urlencoded"
-      v-show="edit_value.ui.form_type == 'application/x-www-form-urlencoded'"
+      v-model="ui.x_www_form_urlencoded"
+      v-show="ui.form_type == 'application/x-www-form-urlencoded'"
     />
-    <div v-show="edit_value.ui.form_type == 'raw'">
+    <div v-show="ui.form_type == 'raw'">
       <KeypairList
         :header="{ key: 'Key', val: 'Value' }"
-        v-model="edit_value.ui.json"
+        v-model="ui.json"
         v-if="false"
       />
       <CodeEditor
         class="bg-white ba b--black-10"
         style="line-height: 1.15; font-size: 13px"
-        :lang="edit_value.ui.raw_type == 'application/json' ? 'json' : ''"
+        :lang="ui.raw_type == 'application/json' ? 'json' : ''"
         :show-json-view-toggle="false"
         :options="{ minRows: 8, maxRows: 20 }"
-        v-model="edit_value.ui.raw"
+        v-model="ui.raw"
       />
     </div>
   </div>
@@ -86,6 +86,9 @@
       value: {
         type: Object,
         required: true
+      },
+      processData: {
+        type: Object
       }
     },
     components: {
@@ -93,26 +96,19 @@
       CodeEditor
     },
     watch: {
-      value: {
-        handler: 'initSelf',
-        immediate: true,
+      ui: {
+        handler: 'emitChange',
         deep: true
       },
-      edit_value: {
-        handler: 'emitChange',
-        immediate: true,
+      processData: {
+        handler: 'updateFromData',
         deep: true
       }
     },
     data() {
       return {
-        is_emitting: false,
         force_render: false,
-        edit_value: {
-          headers: {},
-          data: '',
-          ui: getDefaultUiValues()
-        },
+        ui: getDefaultUiValues(),
         form_options: [
           { label: 'form-data',             val: 'multipart/form-data'               },
           { label: 'x-www-form-urlencoded', val: 'application/x-www-form-urlencoded' },
@@ -135,7 +131,7 @@
         this.$nextTick(() => { this.force_render = false })
       },
       getContentType() {
-        var ui = this.edit_value.ui
+        var ui = this.ui
         var form_type = ui.form_type
         var raw_type = ui.raw_type
         return form_type == 'raw' ? raw_type : form_type
@@ -149,7 +145,7 @@
         return headers
       },
       getData() {
-        var ui = this.edit_value.ui
+        var ui = this.ui
         var form_type = ui.form_type
         var raw_type = ui.raw_type
 
@@ -184,26 +180,20 @@
           return str
         }
       },
-      initSelf(value) {
-        if (this.is_emitting) {
-          return
-        }
-
-        var tmp = _.cloneDeep(this.edit_value)
-        _.set(tmp, 'ui', _.assign(getDefaultUiValues(), value))
-        this.edit_value = _.assign({}, tmp)
+      updateFromData(data) {
+        this.ui.form_data = _.cloneDeep(data)
+        this.ui.x_www_form_urlencoded = _.cloneDeep(data)
+        this.ui.json = _.cloneDeep(data)
+        this.ui.raw = JSON.stringify(data, null, 2)
         this.revert()
+        this.emitChange()
       },
       emitChange() {
-        this.is_emitting = true
-
-        var value = _.assign({}, this.edit_value, {
+        var value = {
           headers: this.getHeaders(),
           data: this.getData()
-        })
+        }
         this.$emit('input', value)
-
-        this.$nextTick(() => { this.is_emitting = false })
       }
     }
   }

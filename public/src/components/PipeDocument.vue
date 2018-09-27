@@ -109,7 +109,7 @@
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
-              type="json"
+              type="yaml"
               editor-cls="bg-white h-100"
               :class="{
                 'no-pointer-events': !show_yaml
@@ -169,6 +169,7 @@
                     <ProcessInput
                       ref="process-input"
                       v-model="process_input"
+                      :process-data.sync="process_data"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -271,6 +272,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
     >
       <PipePropertiesPanel
@@ -287,6 +289,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_schedule_dialog"
     >
       <PipeSchedulePanel
@@ -311,7 +314,11 @@
   import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
   import tours from '../data/tour/index-keyed'
-  import { SCHEDULE_STATUS_ACTIVE, PIPE_SCHEDULE_DEFAULTS } from '../constants/schedule'
+  import {
+    SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_FREQUENCY_FIVE_MINUTES,
+    PIPE_SCHEDULE_DEFAULTS
+  } from '../constants/schedule'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
@@ -407,7 +414,8 @@
       // add user's first name to the tour
       var this_user = this.getActiveUser()
       var first_name = this_user.first_name
-      tour_steps[0].title.replace(/{{first_name}}/, first_name)
+      var first_step = tour_steps[0]
+      first_step.title = first_step.title.replace(/{{first_name}}/, first_name)
 
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
@@ -426,6 +434,7 @@
         show_save_cancel: false,
         save_cancel_zindex: 2050,
         process_input: {},
+        process_data: {},
 
         tour_started: false,
         tour_current_step: 0,
@@ -755,7 +764,11 @@
       onTourStop(callback) {
         var current_step = this.tour_current_step
         var finished = (current_step == this.tour_steps.length - 1) ? true : false
-        this.$store.track('Stopped Tour', { current_step, finished })
+        if (finished) {
+          this.$store.track('Finished Tour', { current_step })
+        } else {
+          this.$store.track('Skipped Tour', { current_step })
+        }
         callback(true)
       },
       onTourPrevStep(current_step, callback) {
@@ -767,10 +780,8 @@
         this.$store.track('Clicked Tour Next Button', { current_step })
 
         if (current_step == 1) {
-          this.process_input = {
-            form_data: {
-              count: 3
-            }
+          this.process_data = {
+            count: 3
           }
 
           this.tour_current_step++
@@ -799,8 +810,17 @@
           })
         } else if (current_step == 5) {
           this.deployment_items = [].concat(['schedule'])
-          this.tour_current_step++
-          setTimeout(() => { callback(true) }, 1)
+
+          // now set the frequency to every 5 minutes
+          setTimeout(() => {
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.set(pipe, 'schedule.frequency', SCHEDULE_FREQUENCY_FIVE_MINUTES)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.saveChanges().then(() => {
+              this.tour_current_step++
+              setTimeout(() => { callback(true) }, 1)
+            })
+          }, 200)
         } else {
           this.tour_current_step++
           callback(true)

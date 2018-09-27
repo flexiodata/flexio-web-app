@@ -20,7 +20,7 @@
       this.$store.dispatch('fetchPipes').then(response => {
         if (response.ok) {
           var pipes = response.data
-          var pipe = _.find(pipes, { alias: 'hacker-news-feed' })
+          var pipe = _.find(pipes, { alias: 'example-email-results-of-python-function' })
           var eid = pipe.eid
 
           var cfg_path = 'app.prompt.onboarding.pipeDocument.build.shown'
