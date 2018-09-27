@@ -271,6 +271,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
     >
       <PipePropertiesPanel
@@ -287,6 +288,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_schedule_dialog"
     >
       <PipeSchedulePanel
