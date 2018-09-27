@@ -205,12 +205,12 @@ class ExecuteProxy
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::GENERAL, "Execute proxy: IPC timeout");
             }
 
-         
+         /*
             if ((microtime(true) - $start_time) > 16)
             {
                 die("TIMED OUT");
             }
-        
+        */
         }
     }
 

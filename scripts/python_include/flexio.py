@@ -681,8 +681,13 @@ def run(handler):
     context = create_context()
 
     if isinstance(handler, ModuleType):
+        func = getattr(handler, 'flex_handler', None)
+        if callable(func):
+            func(context)
+            return
         func = getattr(handler, 'flexio_handler', None)
         if callable(func):
             func(context)
+            return
     else:
         handler(context)

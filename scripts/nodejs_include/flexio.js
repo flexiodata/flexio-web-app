@@ -622,7 +622,10 @@ function isFunction(f) {
 
 function run(handler) {
 
-    if (handler.hasOwnProperty('flexio_handler')) {
+    if (handler.hasOwnProperty('flex_handler')) {
+        handler = handler.flex_handler
+    }
+    else if (handler.hasOwnProperty('flexio_handler')) {
         handler = handler.flexio_handler
     }
 
