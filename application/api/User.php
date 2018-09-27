@@ -790,19 +790,20 @@ class User
             * Demonstrates how to use input area for testing
             * Demonstrates reading from server-side data to validate/invalidate data
 
-            Example: Process Incoming Emails
-            * Demonstrates ability to email pipes
-            * Demonstrates how to extract parts from incoming email and process it
+            Example: Access APIs that require Oauth
+            Description: Extract keywords from Gmail
+            * Demonstrates ability to access APIs that use Oauth
+            * Demonstrates ability to read read/manipulate Gmail
 
             Example: Keyword API
             Description: Create an API from keywords from a website
             * Demonstrates how to parse data from a website
             * Demonstrates how to create an use an API endpoint to get pipe contents
 
-            Example: Extract keywords from Gmail
-            Description: Access APIs that require Oauth
-            * Demonstrates ability to access APIs that use Oauth
-            * Demonstrates ability to read read/manipulate Gmail
+            Example: Process Incoming Emails
+            * Demonstrates ability to email pipes
+            * Demonstrates how to extract parts from incoming email and process it
+
             */
 
             // Example: Email Results of a Python Function
