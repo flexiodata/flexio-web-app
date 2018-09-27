@@ -790,11 +790,6 @@ class User
             * Demonstrates how to use input area for testing
             * Demonstrates reading from server-side data to validate/invalidate data
 
-            Example: Use both Python and NodeJS to Manipulate API Results
-            Description: Transform JSON from Github Jobs API with NodeJS and Lodash and then summarize it with Python and pandas.
-            * Demonstrates fact that various libraries are supported; execute is more than bare-bones
-            * Demonstrates fact that executes can be chained together
-
             Example: Process Incoming Emails
             * Demonstrates ability to email pipes
             * Demonstrates how to extract parts from incoming email and process it
@@ -820,6 +815,12 @@ class User
             // Description: Aggregate, de-duplicate and save recent stories from Hacker News to local storage
             // * Demonstrates saving results to local storage
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_save_data_to_local_storage.json'),
+
+            // Example: Analyze Data with Nodejs and Python
+            // Description: Analyze Job Postings on GitHub Jobs with Nodejs Lodash and Python Pandas
+            // * Demonstrates fact that various libraries are supported; execute is more than bare-bones
+            // * Demonstrates fact that executes can be chained together
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_analyze_data_with_nodejs_and_python.json'),
 
             // legacy
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_sample_data_api_feed.json'),
