@@ -16,7 +16,7 @@
               >{{item.alias}}</div>
             </div>
             <div class="dn db-l mw7" v-if="has_description">
-              <h4 class="f6 fw4 mt1 mb0 lh-copy silver">{{item.description}}</h4>
+              <h4 class="f6 fw4 mt1 mb0 lh-copy light-silver">{{item.description}}</h4>
             </div>
           </div>
         </router-link>

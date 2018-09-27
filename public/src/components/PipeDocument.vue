@@ -764,7 +764,11 @@
       onTourStop(callback) {
         var current_step = this.tour_current_step
         var finished = (current_step == this.tour_steps.length - 1) ? true : false
-        this.$store.track('Stopped Tour', { current_step, finished })
+        if (finished) {
+          this.$store.track('Finished Tour', { current_step })
+        } else {
+          this.$store.track('Skipped Tour', { current_step })
+        }
         callback(true)
       },
       onTourPrevStep(current_step, callback) {
