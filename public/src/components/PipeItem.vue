@@ -1,21 +1,25 @@
 <template>
   <article
-    class="css-list-item mv3-l pv3 ph3 bb ba-l br2-l pointer no-select shadow-sui-segment-l trans-pm"
+    class="mv3-l bb ba-l br2-l pointer no-select trans-pm shadow-sui-segment-l css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
       <div class="flex-fill mr2 fw6 f6 f5-ns">
-        <div class="flex-ns flex-row items-center">
-          <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
-          <div
-            class="dib f8 black-40 mt1 mt0-ns pv1 ph2 bg-nearer-white br1"
-            style="box-shadow: 0 3px 2px -3px rgba(0,0,0,0.3)"
-            v-if="item.alias"
-          >{{item.alias}}</div>
-        </div>
-        <div class="dn db-l mw7" v-if="has_description">
-          <h4 class="f6 fw4 mt1 mb0 lh-copy">{{item.description}}</h4>
-        </div>
+        <router-link class="link" :to="pipe_route">
+          <div class="pa3">
+            <div class="flex-ns flex-row items-center">
+              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
+              <div
+                class="dib f8 black-40 mt1 mt0-ns pv1 ph2 bg-nearer-white br1"
+                style="box-shadow: 0 3px 2px -3px rgba(0,0,0,0.3)"
+                v-if="item.alias"
+              >{{item.alias}}</div>
+            </div>
+            <div class="dn db-l mw7" v-if="has_description">
+              <h4 class="f6 fw4 mt1 mb0 lh-copy silver">{{item.description}}</h4>
+            </div>
+          </div>
+        </router-link>
       </div>
       <div class="flex-none nt3 nb3">
         <div class="pv3" @click.stop>
@@ -26,7 +30,7 @@
           />
         </div>
       </div>
-      <div class="flex-none pl2 nt3 nr3 nb3" @click.stop>
+      <div class="flex-none pl2" @click.stop>
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>
