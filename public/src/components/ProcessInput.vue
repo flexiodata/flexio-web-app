@@ -106,6 +106,7 @@
     },
     data() {
       return {
+        is_initing: false,
         is_emitting: false,
         force_render: false,
         edit_value: {
@@ -189,12 +190,20 @@
           return
         }
 
+        this.is_initing = true
+
         var tmp = _.cloneDeep(this.edit_value)
         _.set(tmp, 'ui', _.assign(getDefaultUiValues(), value))
         this.edit_value = _.assign({}, tmp)
         this.revert()
+
+        this.$nextTick(() => { this.is_initing = false })
       },
       emitChange() {
+        if (this.is_initing) {
+          return
+        }
+
         this.is_emitting = true
 
         var value = _.assign({}, this.edit_value, {
