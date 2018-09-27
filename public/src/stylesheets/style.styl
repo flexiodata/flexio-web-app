@@ -24,8 +24,16 @@
 //.slide-from-top-leave-active
 //
 // etc.
-[class*=-enter-active]
-[class*=-leave-active]
+//[class*=-enter-active]
+//[class*=-leave-active]
+//  transition: all .15s ease
+
+.el-fade-in-enter-active,
+.el-fade-in-leave-active
+  transition: all .15s ease
+
+.slide-fade-enter-active,
+.slide-fade-leave-active
   transition: all .15s ease
 
 .slide-fade-enter,
@@ -33,10 +41,19 @@
   transform: translateY(-20px)
   opacity: 0
 
+/*
+.slide-in-top-out-top-enter-active,
+.slide-in-top-out-top-leave-active
+  transition: all .15s ease
+
 .slide-in-top-out-top-enter,
 .slide-in-top-out-top-leave-to
   transform: translate(0, -100%)
   opacity: 0
+
+.slide-in-right-out-top-enter-active,
+.slide-in-right-out-top-leave-active
+  transition: all .15s ease
 
 .slide-in-right-out-top-enter
   transform: translate(100%, 0)
@@ -45,6 +62,7 @@
   //transform: translate(-50%, 0)
   transform: translate(0, -100%)
   opacity: 0
+*/
 
 // -- hint.css --
 
