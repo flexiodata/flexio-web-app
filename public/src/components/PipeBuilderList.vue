@@ -28,6 +28,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import * as ops from '../constants/task-op'
   import builder_defs from '../data/builder'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderEmptyItem from './PipeBuilderEmptyItem.vue'
@@ -90,6 +91,21 @@
         this.is_editing = false
         this.initFromPipeTask(this.value)
       },
+      getIconFromTask(task) {
+        switch (_.get(task, 'op')) {
+          case ops.TASK_OP_CONVERT:    return { name: 'settings',         bg_color: '#f4823a' }
+          case ops.TASK_OP_CONNECT:    return { name: 'repeat',           bg_color: '#0ab5f3' }
+          case ops.TASK_OP_COPY:       return { name: 'content_copy',     bg_color: '#f4823a' }
+          case ops.TASK_OP_ECHO:       return { name: 'settings_remote',  bg_color: '#65c16f' }
+          case ops.TASK_OP_EMAIL_SEND: return { name: 'mail_outline',     bg_color: '#0ab5f3' }
+          case ops.TASK_OP_EXECUTE:    return { name: 'code',             bg_color: '#a089e5' }
+          case ops.TASK_OP_READ:       return { name: 'input',            bg_color: '#0ab5f3' }
+          case ops.TASK_OP_REQUEST:    return { name: 'http',             bg_color: '#0ab5f3' }
+          case ops.TASK_OP_WRITE:      return { name: 'input',            bg_color: '#0ab5f3' }
+        }
+
+        return {}
+      },
       promptFromTask(task, task_idx) {
         var prompt
 
@@ -139,7 +155,8 @@
         }
 
         // associate prompt with task
-        prompt = _.assign({}, prompt, { task_idx })
+        var icon = this.getIconFromTask(task)
+        prompt = _.assign({}, prompt, { task_idx, icon })
         prompt = _.cloneDeep(prompt)
 
         return prompt
