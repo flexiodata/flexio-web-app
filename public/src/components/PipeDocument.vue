@@ -109,7 +109,7 @@
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
-              type="json"
+              type="yaml"
               editor-cls="bg-white h-100"
               :class="{
                 'no-pointer-events': !show_yaml
