@@ -10,8 +10,8 @@
             <div class="flex-ns flex-row items-center">
               <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
               <div
-                class="dib f8 black-40 mt1 mt0-ns pv1 ph2 bg-nearer-white br1"
-                style="box-shadow: 0 3px 2px -3px rgba(0,0,0,0.3)"
+                class="dib f8 black-40 mt1 mt0-ns pv1 ph2 bg-nearer-white br2"
+                style="box-shadow: inset 0 0 1px rgba(0,0,0,0.2)"
                 v-if="item.alias"
               >{{item.alias}}</div>
             </div>
