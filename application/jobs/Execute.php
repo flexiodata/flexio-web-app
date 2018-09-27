@@ -836,7 +836,16 @@ class ScriptHost
         if (is_null($reader))
             return false;
 
-        $res = $reader->read($length);
+        if ($length === -1 || $length === null)
+        {
+            $res = '';
+            while (($chunk = $reader->read(4096)) !== false)
+                $res .= $chunk;
+        }
+         else
+        {
+            $res = $reader->read($length);
+        }
 
         if ($res === false)
             return false;

@@ -231,7 +231,7 @@ class ContextFsFile(object):
         if self.handle != 0 and self.writing:
             self.close()
 
-    def read(self, len = -1):
+    def read(self, len = None):
         buf = proxy.invoke('read', [self.handle, len])
         if buf is False:
             return False
