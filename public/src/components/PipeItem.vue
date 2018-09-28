@@ -35,7 +35,7 @@
           <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>
           </span>
-          <el-dropdown-menu style="min-width: 10rem; margin-left: -12px; margin-top: -8px" slot="dropdown">
+          <el-dropdown-menu style="min-width: 10rem; margin-top: -0.5rem" slot="dropdown">
             <el-dropdown-item class="flex flex-row items-center ph2" command="open"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
             <el-dropdown-item class="flex flex-row items-center ph2" command="duplicate"><i class="material-icons mr3">content_copy</i> Duplicate</el-dropdown-item>
             <div class="mv2 bt b--black-10"></div>
