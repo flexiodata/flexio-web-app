@@ -153,10 +153,12 @@
 
     methods: {
       onClose() {
+        this.revert()
         this.initPipe()
         this.$emit('close')
       },
       onCancel() {
+        this.revert()
         this.initPipe()
         this.$emit('cancel')
       },
@@ -168,6 +170,12 @@
       },
       updatePipe() {
         this.$emit('change', this.edit_pipe)
+      },
+      revert() {
+        if (this.$refs.form) {
+          this.$refs.form.revertFields()
+        }
+        this.form_errors = {}
       },
       validate(callback) {
         this.$refs.form.validate(callback)
