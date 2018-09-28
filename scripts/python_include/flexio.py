@@ -25,7 +25,6 @@ class CallProxy(object):
 
         call_id = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(20))
 
-        #params = [ '~'+call_id+'/bin.b64:' + base64.b64encode(x).decode() if isinstance(x, (bytes, bytearray)) else x for x in params ]
         payload = {
             "version": 1,
             "access_key": os.environ['FLEXIO_RUNTIME_KEY'],
@@ -57,7 +56,6 @@ class CallProxy(object):
     def close(self):
         self.socket.close()
         self.socket = None
-
 
     def convert_binary_to_base64(self, var, moniker):
         if isinstance(var, list):
