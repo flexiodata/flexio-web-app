@@ -85,13 +85,6 @@ while p.poll() is None:
                 proxy.invoke("compile_error", [buf.decode()])
 
 
-
-
-
-
-
-
-
 proxy.invoke("exit_loop")
 
 #proxy.invoke("debug", [ val ])

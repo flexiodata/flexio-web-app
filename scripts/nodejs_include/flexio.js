@@ -13,7 +13,6 @@ var output = null
 class CallProxy {
 
     constructor(config) {
-
         var pThis = this
 
         this.server = process.env.hasOwnProperty('FLEXIO_RUNTIME_SERVER') ? ''+process.env.FLEXIO_RUNTIME_SERVER : ''
@@ -32,25 +31,34 @@ class CallProxy {
 
         if (this.server.length > 0)
         {
-            this.requester = zmq.socket('req')
-            this.requester.connect(this.server)
-
-            this.requester.on("message", function(msg) {
-                msg = msg.toString()
-                //console.log("RECEIVED MESSAGE " + msg)
-                pThis.onMessage(msg)
-            })
-
-            process.on('SIGINT', function() {
-                pThis.requester.close();
-                pThis.requester = null
-            });
+            this.open()
         }
+
+        process.on('SIGINT', function() {
+            pThis.close()
+        });
+    }
+
+    open() {
+        var pThis = this
+
+        this.close()
+        
+        this.requester = zmq.socket('req')
+        this.requester.connect(this.server)
+
+        this.requester.on("message", function(msg) {
+            msg = msg.toString()
+            //console.log("RECEIVED MESSAGE " + msg)
+            pThis.onMessage(msg)
+        })
     }
 
     close() {
-        this.requester.close()
-        this.requester = null
+        if (this.requester) {
+            this.requester.close()
+            this.requester = null
+        }
     }
 
     onMessage(reply) {

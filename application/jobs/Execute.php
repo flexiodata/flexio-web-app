@@ -54,6 +54,34 @@ class BinaryData
     }
 }
 
+$g_dockerbin = '';
+$gc_container_list = [];
+function gc_container_cleanup()
+{
+    global $gc_container_list;
+    global $g_dockerbin;
+
+    foreach ($gc_container_list as $container_name => $v)
+    {
+        $cmd = "$g_dockerbin kill $container_name";
+        @exec("$cmd > /dev/null &");
+    }
+}
+
+function gc_container_add($container_name)
+{
+    global $gc_container_list;
+    $gc_container_list[$container_name] = true;
+}
+
+function gc_container_remove($container_name)
+{
+    global $gc_container_list;
+    unset($gc_container_list[$container_name]);
+}
+
+
+
 class ExecuteProxy
 {
     private const MESSAGE_SIGNATURE = '--MSGqQp8mf~';
@@ -87,11 +115,7 @@ class ExecuteProxy
         return true;
     }
 
-    public function run() : void
-    {
-        // generate a key which will be used as a kind of password
-        $access_key = \Flexio\Base\Util::generateRandomString(20);
-
+ 
         /*
         // start a zeromq server -- let OS choose port
         $address = self::getLocalIpAddress();
@@ -110,6 +134,13 @@ class ExecuteProxy
         $ipc_address = "tcp://$address:$port";
         */
 
+
+    public function run() : void
+    {
+        // generate a key which will be used as a kind of password
+        $access_key = \Flexio\Base\Util::generateRandomString(20);
+        $container_name = 'fxexec-' . $access_key;
+ 
         // start a zeromq server -- let OS choose port
 
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
@@ -124,32 +155,37 @@ class ExecuteProxy
             register_shutdown_function('unlink', $host_socket_path);
         }
 
-
         // recv() should time out every 250 ms
         $server->setSockOpt(\ZMQ::SOCKOPT_RCVTIMEO, 250);
         //$server->setSockOpt(\ZMQ::SOCKOPT_SNDTIMEO, 250);
 
-
         // run the container command
-
-        $dockerbin = \Flexio\System\System::getBinaryPath('docker');
-        if (is_null($dockerbin))
+        global $g_dockerbin;
+        $g_dockerbin = \Flexio\System\System::getBinaryPath('docker');
+        if (is_null($g_dockerbin))
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        //$cmd = "./update-docker-images && $dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        //$cmd = "./update-docker-images && $g_dockerbin run --rm -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=tcp://$address:$port -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
         //echo $cmd;
         //ob_end_flush();
         //flush();
 
         $engine = $this->engine;
-
-        $cmd = "$dockerbin run --rm -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
+        $cmd = "$g_dockerbin run --rm --name $container_name -v $host_socket_path:$container_socket_path -e FLEXIO_RUNTIME_KEY=$access_key -e FLEXIO_RUNTIME_SERVER=$container_ipc_address -e FLEXIO_EXECUTE_ENGINE=$engine -i fxruntime timeout 3600s python3 /fxpython/fxstart.py";
 
         //echo "./update-docker-images && $cmd";
         //ob_end_flush();
         //flush();
         
         exec("$cmd > /dev/null &");
+
+        // should the script host crash for any reason, the container could be left running;
+        // the following function adds this container to a list that of containers that
+        // will be terminated if the execute job abnormally exits; If the execute job exits
+        // normally, no GC will be done
+        gc_container_add($container_name);
+
+        register_shutdown_function('Flexio\Jobs\gc_container_cleanup');
 
         $start_time = microtime(true);
         $connection_established = false;
@@ -212,6 +248,9 @@ class ExecuteProxy
             }
         */
         }
+
+        // docker container stopped normally, so it does not need to be terminated; remove from the container GC list
+        gc_container_remove($container_name);
     }
 
     public function func_compile_error($error)
@@ -457,6 +496,12 @@ class ScriptHost
         var_dump($message);
         die();
         //die($message);
+    }
+
+    public function func_crash()
+    {
+        $obj = null;
+        $obj->crash();
     }
 
     public function func_getConnections() : array
