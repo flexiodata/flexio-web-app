@@ -21,3 +21,10 @@ export const SCHEDULE_WEEK_DAY_THU              = 'thu'
 export const SCHEDULE_WEEK_DAY_FRI              = 'fri'
 export const SCHEDULE_WEEK_DAY_SAT              = 'sat'
 export const SCHEDULE_WEEK_DAY_SUN              = 'sun'
+
+export const SCHEDULE_DEFAULTS = {
+  frequency: SCHEDULE_FREQUENCY_DAILY,
+  timezone: 'UTC',
+  days: [],
+  times: [{ hour: 8, minute: 0 }]
+}

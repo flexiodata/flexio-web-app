@@ -60,7 +60,6 @@
     },
     computed: {
       runtime_link() {
-        console.log(window.location)
         return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
       },
       is_pipe_mode_run: {

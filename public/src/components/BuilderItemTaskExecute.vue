@@ -88,13 +88,13 @@
   import CodeEditor from './CodeEditor.vue'
 
   const default_python = util.btoaUnicode(`# basic hello world example
-def flexio_handler(context):
-    context.output.write("Hello, World.")
+def flexio_handler(flex):
+    flex.res.end("Hello, World.")
 `)
 
   const default_javascript = util.btoaUnicode(`// basic hello world example
-exports.flexio_handler = function(context) {
-  context.output.write("Hello, World.")
+exports.flexio_handler = function(flex) {
+  flex.res.end("Hello, World.")
 }
 `)
 

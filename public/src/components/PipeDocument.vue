@@ -132,7 +132,7 @@
           >
             <PipeDocumentHeader
               class="relative z-7 bg-nearer-white sticky"
-              data-v-step="pipe-onboarding-0"
+              data-tour-step="pipe-onboarding-0"
               :title="title"
               :is-mode-run.sync="is_pipe_mode_run"
               :show-save-cancel="show_save_cancel"
@@ -142,11 +142,15 @@
               @save-click="saveChanges"
               @run-click="testPipe"
             />
-            <div class="mv4 center mw-doc" style="padding-bottom: 8rem">
-              <el-collapse class="el-collapse--plain" v-model="active_collapse_items">
+            <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
+              <el-collapse
+                class="el-collapse--plain"
+                v-model="active_collapse_items"
+              >
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="input"
+                  data-tour-step="pipe-onboarding-2"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -165,6 +169,7 @@
                     <ProcessInput
                       ref="process-input"
                       v-model="process_input"
+                      :process-data.sync="process_data"
                     />
                   </div>
                   <div class="pt3 ph3" v-if="false">
@@ -193,10 +198,9 @@
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
-                  data-v-step="pipe-onboarding-1"
                 >
                   <template slot="title">
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
                       <span class="f4">Tasks</span>
                       <span v-if="false" class="ml1 lh-1 hint--bottom hint--large" aria-label="The task list defines the actual logic for the pipe that will be run. Steps can be added either using the interface below or by editing the 'task' node in the YAML sidebar.">
                         <i class="el-icon-info blue"></i>
@@ -209,18 +213,17 @@
                       :container-id="scrollbar_container_id"
                       :has-errors.sync="has_errors"
                       :active-item-idx.sync="active_task_idx"
-                      data-v-step="pipe-onboarding-2"
                       @cancel="cancelChanges"
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-v-step="pipe-onboarding-5"></div>
+                    <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
-                  data-v-step="pipe-onboarding-3"
+                  data-tour-step="pipe-onboarding-4"
                   :id="output_item_id"
                 >
                   <template slot="title">
@@ -239,6 +242,24 @@
                     </ProcessContent>
                   </div>
                 </el-collapse-item>
+                <el-collapse-item
+                  class="mb4 pv1 ph3 bg-white br2 css-white-box"
+                  name="deployment"
+                  data-tour-step="pipe-onboarding-6"
+                >
+                  <template slot="title">
+                    <div class="flex flex-row items-center">
+                      <span class="f4">Deployment</span>
+                    </div>
+                  </template>
+                  <div class="pt3 ph3">
+                    <PipeDeployPanel
+                      :is-mode-run.sync="is_pipe_mode_run"
+                      :deployment-items.sync="deployment_items"
+                      :show-schedule-panel.sync="show_pipe_schedule_dialog"
+                    />
+                  </div>
+                </el-collapse-item>
               </el-collapse>
             </div>
           </div>
@@ -251,6 +272,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_properties_dialog"
     >
       <PipePropertiesPanel
@@ -267,6 +289,7 @@
       width="42rem"
       top="8vh"
       :modal-append-to-body="false"
+      :close-on-click-modal="false"
       :visible.sync="show_pipe_schedule_dialog"
     >
       <PipeSchedulePanel
@@ -277,11 +300,9 @@
       />
     </el-dialog>
 
-    <v-tour
-      name="pipe-document-build-tour"
-      :options="{
-        useKeyboardNavigation: false
-      }"
+    <PopperTour
+      ref="tour"
+      :auto-start="false"
       :steps="tour_steps"
       :callbacks="tour_callbacks"
     />
@@ -290,7 +311,15 @@
 
 <script>
   import stickybits from 'stickybits'
+  import marked from 'marked'
   import { mapState, mapGetters } from 'vuex'
+  import tours from '../data/tour/index-keyed'
+  import {
+    SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_STATUS_INACTIVE,
+    SCHEDULE_FREQUENCY_FIVE_MINUTES,
+    SCHEDULE_DEFAULTS
+  } from '../constants/schedule'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
   import { Multipane, MultipaneResizer } from 'vue-multipane'
@@ -305,7 +334,10 @@
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
+  import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
+  import PopperTour from './PopperTour.vue'
+
   import MixinConfig from './mixins/config'
 
   const PIPE_MODE_UNDEFINED = ''
@@ -314,6 +346,22 @@
 
   const PIPEDOC_VIEW_BUILD  = 'build'
   const PIPEDOC_VIEW_RUN    = 'run'
+
+  const processTourSteps = (arr) => {
+    return _.map(arr, (item) => {
+      return _.assign(item, {
+        title: marked(item.title || ''),
+        content: marked(item.content || '')
+      })
+    })
+  }
+
+  const our_tours = {}
+  Object.keys(tours).map((key, idx) => {
+    our_tours[key] = processTourSteps(tours[key])
+  })
+
+  const tour_steps = our_tours['email-results-of-python-function']
 
   export default {
     mixins: [MixinConfig],
@@ -331,7 +379,9 @@
       PipeDocumentRunPanel,
       PipePropertiesPanel,
       PipeSchedulePanel,
-      ProcessContent
+      PipeDeployPanel,
+      ProcessContent,
+      PopperTour
     },
     watch: {
       eid: {
@@ -362,9 +412,15 @@
       }
     },
     data() {
+      // add user's first name to the tour
+      var this_user = this.getActiveUser()
+      var first_name = this_user.first_name
+      var first_step = tour_steps[0]
+      first_step.title = first_step.title.replace(/{{first_name}}/, first_name)
+
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['input', 'tasks', 'output'],
+        active_collapse_items: ['input', 'tasks', 'output', 'deployment'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
@@ -379,59 +435,17 @@
         show_save_cancel: false,
         save_cancel_zindex: 2050,
         process_input: {},
+        process_data: {},
 
         tour_started: false,
         tour_current_step: 0,
-        tour_steps: [
-          {
-            target: '[data-v-step="pipe-onboarding-0"]',
-            content: '<div class="tl mv3"><div class="b mb1">Step 1 of 6:</div>Here\'s a two-minute tour to help you get started with Flex.io.</div>',
-            header: {
-              title: 'Welcome to Flex.io!'
-            },
-            params: {
-              placement: 'none'
-            }
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-1"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 2 of 6:</div>Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.</div>',
-            params: {
-              placement: 'left'
-            }
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-2"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 3 of 6:</div>Click on the "Test" button to run this pipe.</div>'
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-3"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 4 of 6:</div>And here\'s the pipe output.</div>',
-            params: {
-              placement: 'left'
-            }
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-5"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 5 of 6:</div>Now we\'ve added a new task to your pipe. The output from the execute task is passed to the input of this email task.<br><br>Now test your pipe again and check your inbox.</div>',
-            params: {
-              placement: 'left'
-            }
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-6"]',
-            content: '<div class="tl mb3"><div class="b mb1">Step 6 of 6:</div>Finally, click the "Schedule" button and set the pipe to run every five minutes.</div>'
-          },
-          {
-            target: '[data-v-step="pipe-onboarding-7"]',
-            content: '<div class="tl mb3"><div class="b mb1">Thanks for checking out Flex.io!</div>Click the pipe list to see other examples or create your own pipes.</div>'
-          }
-        ],
+        tour_steps,
 
         tour_callbacks: {
           onStart: this.onTourStart,
-          onStop: this.onTourStop,
-          onPreviousStep: this.onTourPrevStep,
+          onFinish: this.onTourStop,
+          onSkip: this.onTourStop,
+          onPrevStep: this.onTourPrevStep,
           onNextStep: this.onTourNextStep
         }
       }
@@ -548,6 +562,29 @@
             doSet()
             this.$store.track("Turned Pipe On")
           }
+        }
+      },
+      deployment_items: {
+        get() {
+          return _.get(this.edit_pipe, 'ui.deployment', [])
+        },
+        set(value) {
+          var pipe = _.cloneDeep(this.edit_pipe)
+          _.set(pipe, 'ui.deployment', value)
+
+          // activate or deactivate scheduling on the pipe when setting
+          // scheduling in the deployment panel
+          if (_.includes(value, 'schedule')) {
+            if (_.isNil(_.get(pipe, 'schedule'))) {
+              _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
+            }
+            pipe.schedule_status = SCHEDULE_STATUS_ACTIVE
+          } else {
+            pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
+          }
+
+          this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          this.saveChanges()
         }
       }
     },
@@ -702,7 +739,7 @@
           //this.$_Config_reset(cfg_path)
 
           if (this.$_Config_get(cfg_path, false) === false) {
-            this.$tours['pipe-document-build-tour'].start()
+            this.$refs['tour'].start()
             this.$_Config_set(cfg_path, true)
           }
         }, 500)
@@ -711,9 +748,9 @@
         if (_.isString(item_id)) {
           setTimeout(() => {
             this.$scrollTo('#'+item_id, {
-                container: '#'+this.scrollbar_container_id,
-                duration: 400,
-                offset: -32
+              container: '#'+this.scrollbar_container_id,
+              duration: 400,
+              offset: -80
             })
           }, timeout ? timeout : 10)
         }
@@ -726,21 +763,34 @@
         }
         this.tour_started = true
       },
-      onTourStop() {
+      onTourStop(callback) {
         var current_step = this.tour_current_step
         var finished = (current_step == this.tour_steps.length - 1) ? true : false
-        this.$store.track('Stopped Tour', { current_step, finished })
+        if (finished) {
+          this.$store.track('Finished Tour', { current_step })
+        } else {
+          this.$store.track('Skipped Tour', { current_step })
+        }
+        callback(true)
       },
-      onTourPrevStep(current_step) {
+      onTourPrevStep(current_step, callback) {
         this.$store.track('Clicked Tour Previous Button', { current_step })
         this.tour_current_step--
+        callback(true)
       },
-      onTourNextStep(current_step) {
+      onTourNextStep(current_step, callback) {
         this.$store.track('Clicked Tour Next Button', { current_step })
-        this.tour_current_step++
 
-        // moving from output to adding email task
-        if (current_step == 3) {
+        if (current_step == 1) {
+          this.process_data = {
+            count: 3
+          }
+
+          this.tour_current_step++
+          setTimeout(() => { callback(true) }, 1)
+
+        } else if (current_step == 3) {
+          // moving from output to adding email task
           var this_user = this.getActiveUser()
           var my_email = this_user.email
           var email_item = {
@@ -755,10 +805,27 @@
           var items = _.get(edit_pipe, 'task.items', [])
           items.push(email_item)
 
+          this.edit_pipe = _.assign({}, edit_pipe)
+          this.saveChanges().then(() => {
+            this.tour_current_step++
+            setTimeout(() => { callback(true) }, 1)
+          })
+        } else if (current_step == 5) {
+          this.deployment_items = [].concat(['schedule'])
+
+          // now set the frequency to every 5 minutes
           setTimeout(() => {
-            this.edit_pipe = _.assign({}, edit_pipe)
-            this.saveChanges()
-          }, 500)
+            var pipe = _.cloneDeep(this.edit_pipe)
+            _.set(pipe, 'schedule.frequency', SCHEDULE_FREQUENCY_FIVE_MINUTES)
+            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+            this.saveChanges().then(() => {
+              this.tour_current_step++
+              setTimeout(() => { callback(true) }, 1)
+            })
+          }, 200)
+        } else {
+          this.tour_current_step++
+          callback(true)
         }
       }
     }

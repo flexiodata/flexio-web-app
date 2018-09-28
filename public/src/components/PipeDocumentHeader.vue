@@ -1,41 +1,30 @@
 <template>
   <div class="flex flex-row items-center">
-    <div class="flex-fill">
+    <div class="flex-fill flex flex-row items-center">
       <h1 class="mv0 fw6 f3">{{title}}</h1>
+      <el-button
+        plain
+        class="btn-header hint--bottom"
+        style="background: transparent"
+        aria-label="Edit Properties"
+        :class="{ 'invisible': isModeRun }"
+        @click="$emit('properties-click')"
+      >
+        <i class="material-icons v-mid">edit</i>
+      </el-button>
     </div>
-    <transition name="slide-in-top-out-top" mode="out-in">
+      <transition name="el-fade-in" mode="out-in">
       <div
         key="actions"
         class="flex-none flex flex-row items-center pv1"
         v-if="!showSaveCancel"
       >
         <el-button
-          plain
-          class="btn-header hint--bottom"
-          style="background: transparent"
-          aria-label="Schedule"
-          data-v-step="pipe-onboarding-6"
-          :class="{ 'invisible': isModeRun }"
-          @click="$emit('schedule-click')"
-        >
-          <i class="material-icons">date_range</i>
-        </el-button>
-        <el-button
-          plain
-          class="btn-header hint--bottom"
-          style="background: transparent"
-          aria-label="Properties"
-          :class="{ 'invisible': isModeRun }"
-          @click="$emit('properties-click')"
-        >
-          <i class="material-icons">edit</i>
-        </el-button>
-        <el-button
           class="ttu b"
           style="min-width: 5rem; margin: 0 1rem"
           type="primary"
           size="small"
-          data-v-step="pipe-onboarding-2"
+          data-tour-step="pipe-onboarding-3"
           :class="{ 'invisible': isModeRun }"
           :disabled="!allowRun"
           @click="$emit('run-click')"
@@ -51,6 +40,7 @@
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
             aria-label="Turn pipe on"
+            data-tour-step="pipe-onboarding-7"
             v-model="is_pipe_mode_run"
           />
         </div>
@@ -120,8 +110,10 @@
 
 <style lang="stylus" scoped>
   .btn-header
-    background: transparent
     border: 0
     padding: 0
-    margin: 0 0 0 1rem
+    margin-left: 0.5rem
+    opacity: 0.3
+    &:hover
+      opacity: 1
 </style>

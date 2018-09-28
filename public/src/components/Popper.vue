@@ -83,17 +83,18 @@
   $body_bg_color = #50596c
   $body_fg_color = #fff
   $body_border_color = #50596c
-  $body_border_radius = 4px
-  $body_padding = 16px
-  $body_min_width = 150px
-  $body_max_width = 450px
-  $body_font_size = 14px
+  $body_border_radius = 0.25rem
+  $body_padding = 1rem
+  $body_min_width = 10rem
+  $body_max_width = 22rem
+  $body_font_size = 0.875rem
 
   $triangle_bg_color = #50596c
   $triangle_border_color = #50596c
-  $triangle_size = 10px
+  $triangle_size = .625rem
+  $triangle_offset = .75rem
 
-  $distance = 10px
+  $distance = .875rem
 
   .vue-popper
     background: $body_bg_color
@@ -105,7 +106,7 @@
     color: $body_fg_color
     line-height: 1.4
     font-size: $body_font_size
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1)
+    box-shadow: 0 8px 16px -6px rgba(0,0,0,0.6)
 
   .vue-popper .vue-popper__arrow,
   .vue-popper .vue-popper__arrow::after
@@ -130,6 +131,7 @@
     .vue-popper__arrow
       bottom: $triangle_size * -1
       left: 50%
+      margin: 0 $triangle_offset
       border-top-color: $triangle_border_color
       border-bottom-width: 0
       &::after
@@ -143,6 +145,7 @@
     .vue-popper__arrow
       top: $triangle_size * -1
       left: 50%
+      margin: 0 $triangle_offset
       border-bottom-color: $triangle_border_color
       border-top-width: 0
       &::after
@@ -156,6 +159,7 @@
     .vue-popper__arrow
       left: $triangle_size * -1
       top: 50%
+      margin: $triangle_offset 0
       border-right-color: $triangle_border_color
       border-left-width: 0
       &::after
@@ -169,6 +173,7 @@
     .vue-popper__arrow
       right: $triangle_size * -1
       top: 50%
+      margin: $triangle_offset 0
       border-left-color: $triangle_border_color
       border-right-width: 0
       &::after

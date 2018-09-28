@@ -12,28 +12,6 @@ from zmq.utils.monitor import recv_monitor_message
 from types import ModuleType
 
 
-def convert_binary_to_base64(var, moniker):
-    if isinstance(var, list):
-        for key, value in enumerate(var):
-            var[key] = convert_binary_to_base64(var[key], moniker)
-    elif isinstance(var, dict):
-        for key, value in var.items():
-            var[key] = convert_binary_to_base64(var[key], moniker)
-    elif isinstance(var, (bytes, bytearray)):
-        return moniker + base64.b64encode(var).decode()
-    return var
-
-def convert_base64_to_binary(var, moniker):
-    moniker_len = len(moniker)
-    if isinstance(var, list):
-        for key, value in enumerate(var):
-            var[key] = convert_base64_to_binary(var[key], moniker)
-    elif isinstance(var, dict):
-        for key, value in var.items():
-            var[key] = convert_base64_to_binary(var[key], moniker)
-    elif isinstance(var, str) and var[:moniker_len] == moniker:
-        return base64.b64decode(var[moniker_len:].encode())
-    return var
 
 class CallProxy(object):
     def __init__(self):
@@ -47,7 +25,6 @@ class CallProxy(object):
 
         call_id = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(20))
 
-        #params = [ '~'+call_id+'/bin.b64:' + base64.b64encode(x).decode() if isinstance(x, (bytes, bytearray)) else x for x in params ]
         payload = {
             "version": 1,
             "access_key": os.environ['FLEXIO_RUNTIME_KEY'],
@@ -57,14 +34,14 @@ class CallProxy(object):
         }
 
         moniker = '~' + call_id + '/bin.b64:'
-        convert_binary_to_base64(payload['params'], moniker)
+        self.convert_binary_to_base64(payload['params'], moniker)
 
         self.socket.send(json.dumps(payload).encode())
 
         while True:
             try:
                 resobj = self.socket.recv_json()
-                return convert_base64_to_binary(resobj['result'], moniker)
+                return self.convert_base64_to_binary(resobj['result'], moniker)
             except zmq.ZMQError:
                 pass
             
@@ -75,6 +52,34 @@ class CallProxy(object):
                     sys.exit(1)
             except zmq.ZMQError:
                 pass
+
+    def close(self):
+        self.socket.close()
+        self.socket = None
+
+    def convert_binary_to_base64(self, var, moniker):
+        if isinstance(var, list):
+            for key, value in enumerate(var):
+                var[key] = self.convert_binary_to_base64(var[key], moniker)
+        elif isinstance(var, dict):
+            for key, value in var.items():
+                var[key] = self.convert_binary_to_base64(var[key], moniker)
+        elif isinstance(var, (bytes, bytearray)):
+            return moniker + base64.b64encode(var).decode()
+        return var
+
+    def convert_base64_to_binary(self, var, moniker):
+        moniker_len = len(moniker)
+        if isinstance(var, list):
+            for key, value in enumerate(var):
+                var[key] = self.convert_base64_to_binary(var[key], moniker)
+        elif isinstance(var, dict):
+            for key, value in var.items():
+                var[key] = self.convert_base64_to_binary(var[key], moniker)
+        elif isinstance(var, str) and var[:moniker_len] == moniker:
+            return base64.b64decode(var[moniker_len:].encode())
+        return var
+
 
 
 proxy = CallProxy()
@@ -217,6 +222,31 @@ context_connections_obj = ContextConnections()
 
 
 
+class ContextFsFile(object):
+    
+    def __init__(self, handle, writing):
+        self.handle = handle
+        self.writing = writing
+        pass
+
+    def __del__(self):
+        if self.handle != 0 and self.writing:
+            self.close()
+
+    def read(self, len = None):
+        buf = proxy.invoke('read', [self.handle, len])
+        if buf is False:
+            return False
+        return buf
+
+    def write(self, data='', connection=''):
+        proxy.invoke('write', [self.handle, data])
+
+    def close(self):
+        if self.handle != 0 and self.writing:
+            proxy.invoke('fsCommit', [self.handle])
+            self.writing = False
+            self.handle = False
 
 
 class ContextFs(object):
@@ -224,8 +254,18 @@ class ContextFs(object):
     def __init__(self):
         pass
 
-    def read(self, path):
-        handle = proxy.invoke('getVfsStreamHandle', [path])
+    def create(self, path, connection=''):
+        handle = proxy.invoke('fsCreate', [path, connection])
+        f = ContextFsFile(handle, writing=True)
+        return f
+
+    def open(self, path, connection=''):
+        handle = proxy.invoke('fsOpen', ['r+', path, connection])
+        f = ContextFsFile(handle, writing=False)
+        return f
+
+    def read(self, path, connection=''):
+        handle = proxy.invoke('fsOpen', ['r+', path, connection])
 
         buf = b''
         while True:
@@ -235,10 +275,9 @@ class ContextFs(object):
             buf += chunk
         return buf
 
-
-    def write(self, path, data):
+    def write(self, path, data='', connection=''):
  
-        handle = proxy.invoke('createVfsStreamHandle', [path])
+        handle = proxy.invoke('fsOpen', ['w', path, connection])
 
         idx = 0
         buf = data
@@ -248,9 +287,17 @@ class ContextFs(object):
             proxy.invoke('write', [handle, chunk])
             idx = idx + 1
 
-        handle = proxy.invoke('commitVfsStreamHandle', [handle])
+        handle = proxy.invoke('fsCommit', [handle])
 
-        
+    def exists(self, path, connection=''):
+ 
+        return proxy.invoke('fsExists', [path, connection])
+
+    def remove(self, path, connection=''):
+ 
+        return proxy.invoke('fsRemove', [path, connection])
+
+
 
 context_fs = ContextFs()
 
@@ -552,6 +599,20 @@ class PipeFunctions(object):
         proxy.invoke('runJob', [json.dumps(params)])
 
 
+class Result(object):
+    def __init__(self, output):
+        self.output = output
+
+    def json(self, obj):
+        self.output.content_type = "application/json"
+        self.output.write(json.dumps(obj))
+        proxy.close()
+
+    def end(self, content):
+        self.output.write(content)
+        proxy.close()
+
+
 class Context(object):
     def __init__(self, input, output):
         self.input = input
@@ -560,6 +621,7 @@ class Context(object):
         self._form = None
         self._files = None
         self.pipe = PipeFunctions()
+        self.res = Result(output)
 
     @property
     def query(self):
@@ -621,8 +683,13 @@ def run(handler):
     context = create_context()
 
     if isinstance(handler, ModuleType):
+        func = getattr(handler, 'flex_handler', None)
+        if callable(func):
+            func(context)
+            return
         func = getattr(handler, 'flexio_handler', None)
         if callable(func):
             func(context)
+            return
     else:
         handler(context)

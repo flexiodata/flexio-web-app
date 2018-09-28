@@ -1,8 +1,8 @@
 {
     "eid_type": "PIP",
-    "name": "Create a Thumbnail",
-    "alias": "create-thumbnail",
-    "description": "Create a thumbnail of a webpage",
+    "name": "Example: Render Webpage",
+    "alias": "example-render-webpage",
+    "description": "Render a webpage, resize it, and return it as a thumbnail",
     "task": {
         "op": "sequence",
         "items": [

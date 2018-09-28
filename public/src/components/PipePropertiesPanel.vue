@@ -13,11 +13,12 @@
       label-position="top"
       :model="edit_pipe"
       :rules="rules"
+      @validate="onValidateItem"
     >
       <el-form-item
         key="name"
-        label="Name"
         prop="name"
+        label="Name"
       >
         <el-input
           placeholder="Enter name"
@@ -28,8 +29,8 @@
       </el-form-item>
       <el-form-item
         key="alias"
-        label="API Endpoint"
         prop="alias"
+        label="API Endpoint"
       >
         <el-input
           placeholder="Enter alias"
@@ -49,8 +50,8 @@
       </el-form-item>
       <el-form-item
         key="description"
-        label="Description"
         prop="description"
+        label="Description"
       >
         <el-input
           type="textarea"
@@ -71,6 +72,7 @@
       <el-button
         class="ttu b"
         type="primary"
+        :disabled="has_errors"
         @click="onSubmit"
       >
         Save changes
@@ -132,7 +134,8 @@
           alias: [
             { validator: this.formValidateAlias }
           ]
-        }
+        },
+        form_errors: {}
       }
     },
     computed: {
@@ -142,15 +145,20 @@
       },
       path() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
+      has_errors() {
+        return _.keys(this.form_errors).length > 0
       }
     },
 
     methods: {
       onClose() {
+        this.revert()
         this.initPipe()
         this.$emit('close')
       },
       onCancel() {
+        this.revert()
         this.initPipe()
         this.$emit('cancel')
       },
@@ -162,6 +170,12 @@
       },
       updatePipe() {
         this.$emit('change', this.edit_pipe)
+      },
+      revert() {
+        if (this.$refs.form) {
+          this.$refs.form.resetFields()
+        }
+        this.form_errors = {}
       },
       validate(callback) {
         this.$refs.form.validate(callback)
@@ -185,6 +199,15 @@
             callback()
           }
         })
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
       }
     }
   }

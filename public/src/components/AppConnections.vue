@@ -125,6 +125,7 @@
       this.tryFetchConnections()
     },
     mounted() {
+      this.$store.track('Visited Connections Page')
       this.selectConnection(_.first(this.connections))
     },
     methods: {

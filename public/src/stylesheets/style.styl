@@ -7,11 +7,10 @@
 @import "./element-ui-ext/style.styl"
 @import "./codemirror-ext/style.styl"
 
-.v-step
-  z-index: 11
+// -- VuePopper styles --
 
-.v-step__content
-  line-height: 1.4
+.vue-popper-step
+  z-index: 11
 
 // -- Vue.js transition classes --
 
@@ -25,19 +24,36 @@
 //.slide-from-top-leave-active
 //
 // etc.
-[class*=-enter-active]
-[class*=-leave-active]
-  transition: all .25s ease
+//[class*=-enter-active]
+//[class*=-leave-active]
+//  transition: all .15s ease
+
+.el-fade-in-enter-active,
+.el-fade-in-leave-active
+  transition: all .15s ease
+
+.slide-fade-enter-active,
+.slide-fade-leave-active
+  transition: all .15s ease
 
 .slide-fade-enter,
 .slide-fade-leave-to
   transform: translateY(-20px)
   opacity: 0
 
+/*
+.slide-in-top-out-top-enter-active,
+.slide-in-top-out-top-leave-active
+  transition: all .15s ease
+
 .slide-in-top-out-top-enter,
 .slide-in-top-out-top-leave-to
   transform: translate(0, -100%)
   opacity: 0
+
+.slide-in-right-out-top-enter-active,
+.slide-in-right-out-top-leave-active
+  transition: all .15s ease
 
 .slide-in-right-out-top-enter
   transform: translate(100%, 0)
@@ -46,6 +62,7 @@
   //transform: translate(-50%, 0)
   transform: translate(0, -100%)
   opacity: 0
+*/
 
 // -- hint.css --
 

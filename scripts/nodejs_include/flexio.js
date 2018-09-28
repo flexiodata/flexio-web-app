@@ -6,10 +6,11 @@ var Flexio = require('flexio-sdk-js')
 var zmq = require('zeromq')
 
 var proxy, context
+var input = null
+var output = null
 
 
 class CallProxy {
-
 
     constructor(config) {
 
@@ -29,7 +30,6 @@ class CallProxy {
             }
         }
 
-
         if (this.server.length > 0)
         {
             this.requester = zmq.socket('req')
@@ -43,12 +43,10 @@ class CallProxy {
 
             process.on('SIGINT', function() {
                 pThis.requester.close();
+                pThis.requester = null
             });
         }
-
-
     }
-
 
     close() {
         this.requester.close()
@@ -376,8 +374,6 @@ class Input {
         if row is None:
             raise StopIteration
         return row
-
-
 */
 
 
@@ -385,7 +381,6 @@ class Input {
 
 
 class Output {
-
 
     constructor(info) {
         if (info) {
@@ -478,7 +473,6 @@ class Output {
         proxy.invokeSync('insertRows', [this._handle, rows])
     }
 
-
     castValue(value) {
         if (value instanceof Date) {
             var y = value.getFullYear(), m = value.getMonth()+1, d = value.getDate()
@@ -502,16 +496,30 @@ class Output {
             }
         }
     }
-
-
 }
 
+
+class Result {
+    json(obj) {
+        output.contentType = "application/json"
+        output.write(JSON.stringify(obj))
+        proxy.close()
+    }
+
+    end(content) {
+        if (content !== null && content !== undefined) {
+            output.write(content)
+        }
+        proxy.close()
+    }
+}
 
 
 class Context {
 
     constructor() {
         var pThis = this
+        this.res = new Result()
         this._query = null
         this._form = null
         this._vars = {}
@@ -572,7 +580,6 @@ class Context {
         }
         return this._form
     }
-
 }
 
 
@@ -580,38 +587,48 @@ class Context {
 
 
 var inited = false
-var input = null
-var output = null
-
 function checkModuleInit(callback) {
     if (inited) {
         callback()
         return
     } else {
         inited = true
-        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_'], function(err, stdin_stream_info) {
+        proxy.invokeAsync('getInputStreamInfo', ['_fxstdin_']).then((stdin_stream_info) => {
             input = new Input(stdin_stream_info)
             context.input = input
-            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_'], function(err, stdout_stream_info) {
+            proxy.invokeAsync('getOutputStreamInfo', ['_fxstdout_']).then((stdout_stream_info) => {
                 output = new Output(stdout_stream_info)
                 context.output = output
-                callback()
-            })
-        })
+                inited = true
+                setTimeout(callback)
+            }).catch((err)=>{ console.log("Error initializing stdout stream"); process.exit(1); })
+        }).catch((err)=>{ console.log("Error initializing stdin stream"); process.exit(1); })
     }
 }
 
 
-
+function isFunction(f) {
+    return f && {}.toString.call(f) === '[object Function]';
+}
 
 function run(handler) {
-    proxy = new CallProxy()
-    context = new Context()
-    context.proxy = proxy
-    
-    checkModuleInit(function() {
-        handler(context)
-    })
+
+    if (handler.hasOwnProperty('flex_handler')) {
+        handler = handler.flex_handler
+    }
+    else if (handler.hasOwnProperty('flexio_handler')) {
+        handler = handler.flexio_handler
+    }
+
+    if (isFunction(handler)) {
+        proxy = new CallProxy()
+        context = new Context()
+        context.proxy = proxy
+        
+        checkModuleInit(function() {
+            handler(context)
+        })
+    }
 }
 
 

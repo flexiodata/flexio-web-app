@@ -9,7 +9,10 @@
 
     <!-- use <el-form> classes for consistent spacing -->
     <div class="el-form el-form--cozy el-form__label-tiny">
-      <div class="el-form-item flex flex-row items-center">
+      <div
+        class="el-form-item flex flex-row items-center"
+        v-if="showToggle"
+      >
         <el-switch
           class="hint--bottom"
           :aria-label="is_scheduled ? 'Scheduled' : 'Not Scheduled'"
@@ -170,31 +173,30 @@
 
   const defaultAttrs = () => {
     return {
-      schedule: {
-        frequency: schedule.SCHEDULE_FREQUENCY_DAILY,
-        timezone: TIMEZONE_UTC,
-        days: [],
-        times: [{ hour: 8, minute: 0 }]
-      },
+      schedule: _.cloneDeep(schedule.SCHEDULE_DEFAULTS),
       schedule_status: schedule.SCHEDULE_STATUS_INACTIVE
     }
   }
 
   export default {
     props: {
-      'title': {
+      title: {
         type: String,
         default: ''
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: true
       },
-      'show-footer': {
+      showFooter: {
         type: Boolean,
         default: true
       },
-      'pipe': {
+      showToggle: {
+        type: Boolean,
+        default: false
+      },
+      pipe: {
         type: Object,
         default: () => { return {} }
       }
@@ -277,10 +279,7 @@
 
         if (_.isNil(_.get(edit_pipe, 'schedule'))) {
           _.set(edit_pipe, 'schedule', _.get(defaultAttrs(), 'schedule'))
-        }
-
-        if (_.isNil(_.get(edit_pipe, 'schedule_status'))) {
-          _.set(edit_pipe, 'schedule_status', _.get(defaultAttrs(), 'schedule_status'))
+          edit_pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
         }
 
         this.edit_pipe = edit_pipe

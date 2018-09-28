@@ -88,6 +88,9 @@
       AccountApiForm,
       HelpItems
     },
+    mounted() {
+      this.$store.track('Visited Dashboard Page')
+    },
     methods: {
       openPipe(eid) {
         this.$router.push({ name: ROUTE_PIPES, params: { eid } })

@@ -781,13 +781,52 @@ class User
 
         $objects = array(
             array('eid_type' => \Model::TYPE_CONNECTION, 'path' => $demo_dir . 'connection_amazons3.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_hackernews_feed.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_sampledata_generator.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_clean_csv.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_convert_csv.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_thumbnail.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_pivot_table.json'),
-            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_create_chart.json')
+
+            /*
+            TODO:
+
+            Example: Server-Side Input Validation
+            Description: Validate input with a server-side implementation that hides data used to validate
+            * Demonstrates how to use input area for testing
+            * Demonstrates reading from server-side data to validate/invalidate data
+
+            Example: Access APIs that require Oauth
+            Description: Extract keywords from Gmail
+            * Demonstrates ability to access APIs that use Oauth
+            * Demonstrates ability to read read/manipulate Gmail
+
+            Example: Keyword API
+            Description: Create an API from keywords from a website
+            * Demonstrates how to parse data from a website
+            * Demonstrates how to create an use an API endpoint to get pipe contents
+
+            Example: Process Incoming Emails
+            * Demonstrates ability to email pipes
+            * Demonstrates how to extract parts from incoming email and process it
+
+            */
+
+            // Example: Email Results of a Python Function
+            // Description: Get the top 5 stories from the Firebase Hacker News Feed and deliver via email
+            // * Demonstrates scheduling
+            // * Demonstrates emailing of results
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_email_results_of_python_function.json'),
+
+            // Example: Save Data to Local Storage
+            // Description: Aggregate, de-duplicate and save recent stories from Hacker News to local storage
+            // * Demonstrates saving results to local storage
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_save_data_to_local_storage.json'),
+
+            // Example: Analyze Data with Nodejs and Python
+            // Description: Analyze Job Postings on GitHub Jobs with Nodejs Lodash and Python Pandas
+            // * Demonstrates fact that various libraries are supported; execute is more than bare-bones
+            // * Demonstrates fact that executes can be chained together
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_analyze_data_with_nodejs_and_python.json'),
+
+            // legacy
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_sample_data_api_feed.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_visualize_data_from_an_api_feed.json'),
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_render_webpage.json')
         );
 
         return $objects;

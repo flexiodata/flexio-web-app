@@ -1,8 +1,8 @@
 {
     "eid_type": "PIP",
-    "name": "Hacker News Feed",
-    "alias": "hacker-news-feed",
-    "description": "Get the latest from Hacker News",
+    "name": "Example: Email Results of a Python Function",
+    "alias": "example-email-results-of-python-function",
+    "description": "Get the top 5 stories from the Firebase Hacker News Feed and deliver via email",
     "task": {
         "op": "sequence",
         "items": [

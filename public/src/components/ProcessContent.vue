@@ -25,7 +25,7 @@
       >
         <IconMessage
           class="tc"
-          title="Something went wrong."
+          title="Oops, looks like something went wrong. :-/"
         />
         <div class="mb2">
           <el-radio-group size="small" v-model="pretty_state">

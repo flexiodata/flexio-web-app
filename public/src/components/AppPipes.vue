@@ -30,41 +30,8 @@
       :filter="filter"
       :show-header="true"
       @item-duplicate="duplicatePipe"
-      @item-schedule="openPipeScheduleDialog"
-      @item-deploy="openPipeDeployDialog"
       @item-delete="tryDeletePipe"
     />
-
-    <!-- pipe schedule dialog -->
-    <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="42rem"
-      top="8vh"
-      :modal-append-to-body="false"
-      :visible.sync="show_pipe_schedule_dialog"
-    >
-      <PipeSchedulePanel
-        :pipe="active_pipe"
-        @close="show_pipe_schedule_dialog = false"
-        @cancel="show_pipe_schedule_dialog = false"
-        @submit="trySchedulePipe"
-      />
-    </el-dialog>
-
-    <!-- pipe deploy dialog -->
-    <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer"
-      width="56rem"
-      top="8vh"
-      :modal-append-to-body="false"
-      :visible.sync="show_pipe_deploy_dialog"
-    >
-      <PipeDeployPanel
-        :pipe="active_pipe"
-        @close="show_pipe_deploy_dialog = false"
-      />
-    </el-dialog>
-
   </div>
 </template>
 
@@ -72,25 +39,17 @@
   import { ROUTE_PIPES } from '../constants/route'
   import { OBJECT_STATUS_AVAILABLE } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
-  import Flexio from 'flexio-sdk-js'
   import Spinner from 'vue-simple-spinner'
   import PipeList from './PipeList.vue'
-  import PipeSchedulePanel from './PipeSchedulePanel.vue'
-  import PipeDeployPanel from './PipeDeployPanel.vue'
 
   export default {
     components: {
       Spinner,
-      PipeList,
-      PipeSchedulePanel,
-      PipeDeployPanel
+      PipeList
     },
     data() {
       return {
-        filter: '',
-        active_pipe: {},
-        show_pipe_schedule_dialog: false,
-        show_pipe_deploy_dialog: false
+        filter: ''
       }
     },
     computed: {
@@ -103,19 +62,12 @@
     created() {
       this.tryFetchPipes()
     },
+    mounted() {
+      this.$store.track('Visited Pipes Page')
+    },
     methods: {
       openPipe(eid) {
         this.$router.push({ name: ROUTE_PIPES, params: { eid } })
-      },
-      openPipeScheduleDialog(item) {
-        this.active_pipe = item
-        this.show_pipe_schedule_dialog = true
-        this.$store.track('Clicked `Schedule` Button In Pipe List', this.getAnalyticsPayload(item))
-      },
-      openPipeDeployDialog(item) {
-        this.active_pipe = item
-        this.show_pipe_deploy_dialog = true
-        this.$store.track('Clicked `Deploy` Button In Pipe List', this.getAnalyticsPayload(item))
       },
       duplicatePipe(item) {
         var attrs = {
@@ -134,16 +86,13 @@
           attrs = { name: 'Untitled Pipe' }
 
         this.$store.dispatch('createPipe', { attrs }).then(response => {
-          if (response.ok)
-          {
+          if (response.ok) {
             var pipe = response.body
-            var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias', 'created'])
+            var analytics_payload = _.pick(pipe, ['eid', 'name', 'alias', 'created'])
             this.$store.track('Created Pipe', analytics_payload)
 
             this.openPipe(response.body.eid)
-          }
-           else
-          {
+          } else {
             this.$store.track('Created Pipe (Error)')
           }
         })
@@ -160,44 +109,6 @@
         }).catch(() => {
           // do nothing
         })
-      },
-      trySchedulePipe(attrs) {
-        var eid = _.get(attrs, 'eid', '')
-        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
-        this.$store.dispatch('updatePipe', { eid, attrs }).then(response => {
-          if (response.ok)
-          {
-            var frequency = _.get(response.body, 'schedule.frequency', '')
-            var schedule_status = _.get(response.body, 'schedule_status', '')
-            var analytics_payload = this.getAnalyticsPayload(attrs)
-
-            _.assign(analytics_payload, {
-              frequency,
-              schedule_status
-            })
-
-            this.$store.track('Scheduled Pipe', analytics_payload)
-
-            this.show_pipe_schedule_dialog = false
-          }
-           else
-          {
-            // TODO: add error handling
-          }
-        })
-      },
-      getAnalyticsPayload(pipe) {
-        // do this until we fix the object ref issue in the Flex.io JS SDK
-        var task_obj = _.cloneDeep(pipe.task)
-        var edit_code = Flexio.pipe(task_obj).toCode()
-        var analytics_payload = _.pick(pipe, ['eid', 'name', 'description', 'alias'])
-
-        _.assign(analytics_payload, {
-          title: pipe.name,
-          code: edit_code
-        })
-
-        return analytics_payload
       },
       onNewPipeClick() {
         this.tryCreatePipe()
