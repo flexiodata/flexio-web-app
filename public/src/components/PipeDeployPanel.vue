@@ -46,7 +46,13 @@
       </div>
     </el-checkbox-group>
     <div class="mt3 pv3 ph4 tc bg-nearer-white">
-      <h4 class="fw6">Turn this pipe on to deploy and run it.</h4>
+      <h4 class="fw6">
+        <transition name="el-zoom-in-center" mode="out-in">
+          <span v-bind:key="is_deployed">
+            {{is_deployed ? 'Turn this pipe off to edit and test it.' : 'Turn this pipe on to deploy and run it.'}}
+          </span>
+        </transition>
+      </h4>
       <div
         class="flex flex-row items-center justify-center mv3"
       >

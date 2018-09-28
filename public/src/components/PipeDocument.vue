@@ -22,14 +22,14 @@
       </div>
     </div>
 
-    <!-- pipe is deployed; runtime view -->
+    <!-- runtime view; pipe is deployed -->
     <BuilderDocument
       class="h-100 overflow-y-scroll"
       :definition="edit_pipe"
       v-else-if="is_runtime && is_deployed"
     />
 
-    <!-- pipe is not deployed; runtime view -->
+    <!-- runtime view; pipe is not deployed -->
     <div
       class="h-100 pa4 overflow-y-scroll"
       v-else-if="is_runtime && !is_deployed"
@@ -39,28 +39,6 @@
           <IconMessage title="This pipe cannot be run in a browser.">
             If you are the owner of this pipe, please turn it on. If this pipe was shared with you, please contact the person who shared it with you to have it turned on.
           </IconMessage>
-        </div>
-      </div>
-    </div>
-
-    <!-- pipe is deployed; build view -->
-    <div
-      class="h-100 pa4 pt0 overflow-y-scroll"
-      :id="scrollbar_container_id"
-      v-else-if="is_deployed"
-    >
-      <PipeDocumentHeader
-        class="relative z-7 bg-nearer-white sticky"
-        :title="title"
-        :is-mode-run.sync="is_deployed"
-      />
-      <div class="mt5 mb4 center mw-doc">
-        <div class="pa4 pt3 bg-white br2 css-white-box">
-          <PipeDocumentRunPanel
-            class="tc"
-            :eid="eid"
-            :is-mode-run.sync="is_deployed"
-          />
         </div>
       </div>
     </div>
@@ -142,15 +120,29 @@
               @save-click="saveChanges"
               @run-click="testPipe"
             />
+
+            <!-- run panel; visible when pipe is deployed -->
+            <div class="mv4 center mw-doc" v-if="is_deployed">
+              <div class="pa4 pt3 bg-white br2 css-white-box">
+                <PipeDocumentRunPanel
+                  class="tc"
+                  :eid="eid"
+                  :is-mode-run.sync="is_deployed"
+                />
+              </div>
+            </div>
+
             <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
               <el-collapse
                 class="el-collapse--plain"
                 v-model="active_collapse_items"
               >
+                <!-- input panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="input"
                   data-tour-step="pipe-onboarding-2"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -196,9 +188,12 @@
                     </div>
                   </div>
                 </el-collapse-item>
+
+                <!-- tasks panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
@@ -221,11 +216,14 @@
                     <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
+
+                <!-- output panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
                   data-tour-step="pipe-onboarding-4"
                   :id="output_item_id"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -550,8 +548,10 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonText: 'TURN PIPE OFF',
-              cancelButtonText: 'CANCEL',
+              confirmButtonClass: 'ttu b',
+              cancelButtonClass: 'ttu b',
+              confirmButtonText: 'Turn pipe off',
+              cancelButtonText: 'Cancel',
               type: 'warning'
             }).then(() => {
               doSet()

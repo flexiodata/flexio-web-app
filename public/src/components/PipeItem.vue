@@ -98,8 +98,10 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonText: 'TURN PIPE OFF',
-              cancelButtonText: 'CANCEL',
+              confirmButtonClass: 'ttu b',
+              cancelButtonClass: 'ttu b',
+              confirmButtonText: 'Turn pipe off',
+              cancelButtonText: 'Cancel',
               type: 'warning'
             }).then(() => {
               doSet()
