@@ -34,7 +34,7 @@
       <LabelSwitch
         class="dib ml2"
         active-color="#13ce66"
-        v-model="is_pipe_mode_run"
+        v-model="is_deployed"
       />
     </div>
     <p class="mt2 moon-gray f8 i">(you may turn this pipe off to edit it)</p>
@@ -62,7 +62,7 @@
       runtime_link() {
         return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
       },
-      is_pipe_mode_run: {
+      is_deployed: {
         get() {
           return this.isModeRun
         },

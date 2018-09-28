@@ -55,7 +55,7 @@
           class="dib ml2 hint--bottom-left"
           active-color="#13ce66"
           aria-label="Turn pipe on"
-          v-model="is_pipe_mode_run"
+          v-model="is_deployed"
         />
       </div>
     </div>
@@ -108,7 +108,7 @@
       }
     },
     computed: {
-      is_pipe_mode_run: {
+      is_deployed: {
         get() {
           return this.isModeRun
         },

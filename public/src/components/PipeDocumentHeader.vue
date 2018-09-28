@@ -41,7 +41,7 @@
             active-color="#13ce66"
             aria-label="Turn pipe on"
             data-tour-step="pipe-onboarding-7"
-            v-model="is_pipe_mode_run"
+            v-model="is_deployed"
           />
         </div>
       </div>
@@ -96,7 +96,7 @@
       LabelSwitch
     },
     computed: {
-      is_pipe_mode_run: {
+      is_deployed: {
         get() {
           return this.isModeRun
         },

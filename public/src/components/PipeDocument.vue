@@ -8,10 +8,10 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <!-- runtime view; run mode; no ui steps -->
+    <!-- pipe is deployed; runtime view; no ui steps -->
     <div
       class="h-100 pa4 overflow-y-scroll"
-      v-if="is_view_runtime && is_pipe_mode_run && edit_ui_list.length == 0"
+      v-if="is_runtime && is_deployed && edit_ui_list.length == 0"
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
@@ -22,17 +22,17 @@
       </div>
     </div>
 
-    <!-- runtime view; run mode -->
+    <!-- pipe is deployed; runtime view -->
     <BuilderDocument
       class="h-100 overflow-y-scroll"
       :definition="edit_pipe"
-      v-else-if="is_view_runtime && is_pipe_mode_run"
+      v-else-if="is_runtime && is_deployed"
     />
 
-    <!-- runtime view; build mode -->
+    <!-- pipe is not deployed; runtime view -->
     <div
       class="h-100 pa4 overflow-y-scroll"
-      v-else-if="is_view_runtime && !is_pipe_mode_run"
+      v-else-if="is_runtime && !is_deployed"
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
@@ -43,29 +43,29 @@
       </div>
     </div>
 
-    <!-- build view; run mode -->
+    <!-- pipe is deployed; build view -->
     <div
       class="h-100 pa4 pt0 overflow-y-scroll"
       :id="scrollbar_container_id"
-      v-else-if="is_pipe_mode_run"
+      v-else-if="is_deployed"
     >
       <PipeDocumentHeader
         class="relative z-7 bg-nearer-white sticky"
         :title="title"
-        :is-mode-run.sync="is_pipe_mode_run"
+        :is-mode-run.sync="is_deployed"
       />
       <div class="mt5 mb4 center mw-doc">
         <div class="pa4 pt3 bg-white br2 css-white-box">
           <PipeDocumentRunPanel
             class="tc"
             :eid="eid"
-            :is-mode-run.sync="is_pipe_mode_run"
+            :is-mode-run.sync="is_deployed"
           />
         </div>
       </div>
     </div>
 
-    <!-- build view; build mode -->
+    <!-- build view -->
     <div class="h-100" v-else>
       <div class="flex flex-row h-100">
         <el-menu
@@ -134,7 +134,7 @@
               class="relative z-7 bg-nearer-white sticky"
               data-tour-step="pipe-onboarding-0"
               :title="title"
-              :is-mode-run.sync="is_pipe_mode_run"
+              :is-mode-run.sync="is_deployed"
               :show-save-cancel="show_save_cancel"
               @schedule-click="openScheduleDialog"
               @properties-click="openPropertiesDialog"
@@ -255,7 +255,7 @@
                   </template>
                   <div class="pt3 ph3">
                     <PipeDeployPanel
-                      :is-mode-run.sync="is_pipe_mode_run"
+                      :is-mode-run.sync="is_deployed"
                       :deployment-items.sync="deployment_items"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                     />
@@ -393,7 +393,7 @@
         handler: 'updateRoute',
         immediate: true
       },
-      is_pipe_mode_run: {
+      is_deployed: {
         handler: 'initStickyAndTour',
         immediate: true
       },
@@ -528,14 +528,14 @@
           }
         }
       },
-      is_view_runtime() {
+      is_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN
       },
       active_process_eid() {
         var process = _.last(this.getActiveDocumentProcesses())
         return _.get(process, 'eid', '')
       },
-      is_pipe_mode_run: {
+      is_deployed: {
         get() {
           return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
