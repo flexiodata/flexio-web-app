@@ -12,7 +12,6 @@ var output = null
 
 class CallProxy {
 
-
     constructor(config) {
 
         var pThis = this
@@ -31,7 +30,6 @@ class CallProxy {
             }
         }
 
-
         if (this.server.length > 0)
         {
             this.requester = zmq.socket('req')
@@ -45,12 +43,10 @@ class CallProxy {
 
             process.on('SIGINT', function() {
                 pThis.requester.close();
+                pThis.requester = null
             });
         }
-
-
     }
-
 
     close() {
         this.requester.close()
@@ -378,8 +374,6 @@ class Input {
         if row is None:
             raise StopIteration
         return row
-
-
 */
 
 
@@ -387,7 +381,6 @@ class Input {
 
 
 class Output {
-
 
     constructor(info) {
         if (info) {
@@ -479,7 +472,6 @@ class Output {
         }
         proxy.invokeSync('insertRows', [this._handle, rows])
     }
-
 
     castValue(value) {
         if (value instanceof Date) {
@@ -588,7 +580,6 @@ class Context {
         }
         return this._form
     }
-
 }
 
 
@@ -609,9 +600,9 @@ function checkModuleInit(callback) {
                 output = new Output(stdout_stream_info)
                 context.output = output
                 inited = true
-                callback()
-            }).catch((err)=>{ console.log("Error initializing stdin stream"); process.exit(1); })
-        }).catch((err)=>{ console.log("Error initializing stdout stream"); process.exit(1); })
+                setTimeout(callback)
+            }).catch((err)=>{ console.log("Error initializing stdout stream"); process.exit(1); })
+        }).catch((err)=>{ console.log("Error initializing stdin stream"); process.exit(1); })
     }
 }
 
