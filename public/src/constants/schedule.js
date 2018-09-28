@@ -22,12 +22,9 @@ export const SCHEDULE_WEEK_DAY_FRI              = 'fri'
 export const SCHEDULE_WEEK_DAY_SAT              = 'sat'
 export const SCHEDULE_WEEK_DAY_SUN              = 'sun'
 
-export const PIPE_SCHEDULE_DEFAULTS = {
-  schedule: {
-    frequency: SCHEDULE_FREQUENCY_DAILY,
-    timezone: 'UTC',
-    days: [],
-    times: [{ hour: 8, minute: 0 }]
-  },
-  schedule_status: SCHEDULE_STATUS_INACTIVE
+export const SCHEDULE_DEFAULTS = {
+  frequency: SCHEDULE_FREQUENCY_DAILY,
+  timezone: 'UTC',
+  days: [],
+  times: [{ hour: 8, minute: 0 }]
 }
