@@ -2,14 +2,13 @@
   <nav class="z-10 bb b--black-20">
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 54px">
       <div class="flex-fill flex flex-row items-center">
-        <router-link to="/home" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
+        <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link to="/dashboard" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Dashboard</router-link>
-        <router-link to="/pipes" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Pipes</router-link>
-        <router-link to="/connections" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Connections</router-link>
-        <router-link to="/storage" class="ph1 ml2 ml3-ns fw6 f6 ttu link nav-link">Storage</router-link>
-        <AppBreadcrumbs class="flex flex-row items-center ml2 ml3-ns pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
+        <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Pipes</router-link>
+        <router-link to="/connections" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Connections</router-link>
+        <router-link to="/storage" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Storage</router-link>
+        <AppBreadcrumbs class="flex flex-row items-center pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
