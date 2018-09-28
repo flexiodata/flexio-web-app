@@ -1,6 +1,6 @@
 <template>
   <article
-    class="mv3-l bb ba-l br2-l pointer no-select trans-pm shadow-sui-segment-l css-list-item"
+    class="mv3-l bb ba-l br2-l pointer no-select trans-pm css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
