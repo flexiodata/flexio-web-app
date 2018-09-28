@@ -1,7 +1,7 @@
 <template>
   <!-- pipe fetching -->
   <div class="bg-nearer-white" v-if="is_fetching">
-    <div class="h-100 flex flex-row items-center justify-center">
+    <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading..." />
     </div>
   </div>
@@ -316,8 +316,9 @@
   import tours from '../data/tour/index-keyed'
   import {
     SCHEDULE_STATUS_ACTIVE,
+    SCHEDULE_STATUS_INACTIVE,
     SCHEDULE_FREQUENCY_FIVE_MINUTES,
-    PIPE_SCHEDULE_DEFAULTS
+    SCHEDULE_DEFAULTS
   } from '../constants/schedule'
   import { PROCESS_MODE_BUILD } from '../constants/process'
 
@@ -571,14 +572,15 @@
           var pipe = _.cloneDeep(this.edit_pipe)
           _.set(pipe, 'ui.deployment', value)
 
-          // activate scheduling on the pipe when turning
-          // on scheduling in the deployment panel
+          // activate or deactivate scheduling on the pipe when setting
+          // scheduling in the deployment panel
           if (_.includes(value, 'schedule')) {
-            var attrs = _.pick(pipe, ['schedule', 'schedule_status'])
-            attrs = _.omitBy(attrs, _.isNil)
-            attrs = _.assign({}, PIPE_SCHEDULE_DEFAULTS, attrs)
-            attrs.schedule_status = SCHEDULE_STATUS_ACTIVE
-            _.assign(pipe, attrs)
+            if (_.isNil(_.get(pipe, 'schedule'))) {
+              _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
+            }
+            pipe.schedule_status = SCHEDULE_STATUS_ACTIVE
+          } else {
+            pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
           }
 
           this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)

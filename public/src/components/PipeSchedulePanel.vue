@@ -172,7 +172,10 @@
   })
 
   const defaultAttrs = () => {
-    return _.cloneDeep(schedule.PIPE_SCHEDULE_DEFAULTS)
+    return {
+      schedule: _.cloneDeep(schedule.SCHEDULE_DEFAULTS),
+      schedule_status: schedule.SCHEDULE_STATUS_INACTIVE
+    }
   }
 
   export default {
@@ -276,10 +279,7 @@
 
         if (_.isNil(_.get(edit_pipe, 'schedule'))) {
           _.set(edit_pipe, 'schedule', _.get(defaultAttrs(), 'schedule'))
-        }
-
-        if (_.isNil(_.get(edit_pipe, 'schedule_status'))) {
-          _.set(edit_pipe, 'schedule_status', _.get(defaultAttrs(), 'schedule_status'))
+          edit_pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
         }
 
         this.edit_pipe = edit_pipe

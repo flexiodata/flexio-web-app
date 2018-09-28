@@ -1,10 +1,13 @@
 <template>
+  <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
-  <div class="flex flex-column overflow-y-auto" v-else>
+
+  <!-- fetched -->
+  <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
     <!-- control bar -->
     <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
       <div class="flex flex-row">
