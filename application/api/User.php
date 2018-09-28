@@ -785,11 +785,6 @@ class User
             /*
             TODO:
 
-            Example: Server-Side Input Validation
-            Description: Validate input with a server-side implementation that hides data used to validate
-            * Demonstrates how to use input area for testing
-            * Demonstrates reading from server-side data to validate/invalidate data
-
             Example: Access APIs that require Oauth
             Description: Extract keywords from Gmail
             * Demonstrates ability to access APIs that use Oauth
@@ -822,6 +817,12 @@ class User
             // * Demonstrates fact that various libraries are supported; execute is more than bare-bones
             // * Demonstrates fact that executes can be chained together
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_analyze_data_with_nodejs_and_python.json'),
+
+            // Example: Server-Side Input Validation
+            // Description: Validate input with a server-side logic that hides data used to validate with Python Cerberus
+            // * Demonstrates how to use input area for testing
+            // * Demonstrates reading from server-side data to validate/invalidate data
+            array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_serverside_input_validation.json'),
 
             // legacy
             array('eid_type' => \Model::TYPE_PIPE,'path' => $demo_dir . 'pipe_generate_sample_data_api_feed.json'),
