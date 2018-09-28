@@ -13,6 +13,7 @@
       label-position="top"
       :model="edit_pipe"
       :rules="rules"
+      @validate="onValidateItem"
     >
       <el-form-item
         key="name"
@@ -71,6 +72,7 @@
       <el-button
         class="ttu b"
         type="primary"
+        :disabled="has_errors"
         @click="onSubmit"
       >
         Save changes
@@ -132,7 +134,8 @@
           alias: [
             { validator: this.formValidateAlias }
           ]
-        }
+        },
+        form_errors: {}
       }
     },
     computed: {
@@ -142,6 +145,9 @@
       },
       path() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
+      has_errors() {
+        return _.keys(this.form_errors).length > 0
       }
     },
 
@@ -185,6 +191,15 @@
             callback()
           }
         })
+      },
+      onValidateItem(key, valid) {
+        var errors = _.assign({}, this.form_errors)
+        if (valid) {
+          errors = _.omit(errors, [key])
+        } else {
+          errors[key] = true
+        }
+        this.form_errors = _.assign({}, errors)
       }
     }
   }
