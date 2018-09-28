@@ -1,37 +1,41 @@
 <template>
+  <!-- pipes fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
-  <div class="flex flex-column overflow-y-auto" v-else>
-    <!-- control bar -->
-    <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <div class="f2 dn db-ns mr3">Pipes</div>
-          <el-input
-            class="w-100 mw5 mr3"
-            placeholder="Filter items..."
-            @keydown.esc.native="filter = ''"
-            v-model="filter"
-          />
-        </div>
-        <div class="flex-none flex flex-row items-center">
-          <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+
+  <!-- pipes fetched -->
+  <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
+    <div class="center">
+      <!-- control bar -->
+      <div class="pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
+        <div class="flex flex-row">
+          <div class="flex-fill flex flex-row items-center">
+            <div class="f2 dn db-ns mr3">Pipes</div>
+            <el-input
+              class="w-100 mw5 mr3"
+              placeholder="Filter items..."
+              @keydown.esc.native="filter = ''"
+              v-model="filter"
+            />
+          </div>
+          <div class="flex-none flex flex-row items-center">
+            <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- list -->
-    <PipeList
-      class="pl4-l pr4-l pb4-l"
-      style="max-width: 1152px"
-      :filter="filter"
-      :show-header="true"
-      @item-duplicate="duplicatePipe"
-      @item-delete="tryDeletePipe"
-    />
+      <!-- list -->
+      <PipeList
+        class="pl4-l pr4-l pb4-l"
+        style="max-width: 1152px"
+        :filter="filter"
+        :show-header="true"
+        @item-duplicate="duplicatePipe"
+        @item-delete="tryDeletePipe"
+      /></div>
   </div>
 </template>
 
