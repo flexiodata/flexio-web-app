@@ -173,7 +173,7 @@
       },
       revert() {
         if (this.$refs.form) {
-          this.$refs.form.revertFields()
+          this.$refs.form.resetFields()
         }
         this.form_errors = {}
       },
