@@ -17,8 +17,8 @@
     >
       <el-form-item
         key="name"
-        label="Name"
         prop="name"
+        label="Name"
       >
         <el-input
           placeholder="Enter name"
@@ -29,8 +29,8 @@
       </el-form-item>
       <el-form-item
         key="alias"
-        label="API Endpoint"
         prop="alias"
+        label="API Endpoint"
       >
         <el-input
           placeholder="Enter alias"
@@ -50,8 +50,8 @@
       </el-form-item>
       <el-form-item
         key="description"
-        label="Description"
         prop="description"
+        label="Description"
       >
         <el-input
           type="textarea"
