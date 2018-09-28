@@ -1,10 +1,13 @@
 <template>
+  <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading connections..." />
     </div>
   </div>
-  <div class="flex flex-column" v-else>
+
+  <!-- fetched -->
+  <div class="flex flex-column" v-else-if="is_fetched">
     <!-- control bar -->
     <div class="flex-none pa3 ph4-l relative bg-white bb b--black-05">
       <div class="flex flex-row">

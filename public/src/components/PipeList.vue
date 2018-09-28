@@ -4,16 +4,19 @@
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
-  <empty-item class="flex-fill justify-center h-100" v-else-if="pipes.length == 0 && filter.length > 0">
+
+  <EmptyItem class="flex-fill justify-center h-100" v-else-if="pipes.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes match the filter criteria</span>
-  </empty-item>
-  <empty-item class="flex-fill justify-center h-100" v-else-if="pipes.length == 0">
+  </EmptyItem>
+
+  <EmptyItem class="flex-fill justify-center h-100" v-else-if="pipes.length == 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes to show</span>
-  </empty-item>
+  </EmptyItem>
+
   <div v-else>
-    <pipe-item
+    <PipeItem
       v-for="(pipe, index) in pipes"
       :item="pipe"
       :index="index"

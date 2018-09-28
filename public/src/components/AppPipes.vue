@@ -1,12 +1,12 @@
 <template>
-  <!-- pipes fetching -->
+  <!-- fetching -->
   <div v-if="is_fetching">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
   </div>
 
-  <!-- pipes fetched -->
+  <!-- fetched -->
   <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
     <div class="center">
       <!-- control bar -->
@@ -35,7 +35,8 @@
         :show-header="true"
         @item-duplicate="duplicatePipe"
         @item-delete="tryDeletePipe"
-      /></div>
+      />
+    </div>
   </div>
 </template>
 

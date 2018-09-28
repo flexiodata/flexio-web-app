@@ -1,20 +1,19 @@
 <template>
-  <div
-    class="bg-nearer-white ph4 overflow-y-scroll relative"
-    style="padding-bottom: 8rem"
-    :id="doc_id"
-  >
-    <div
-      class="h-100 flex flex-row items-center justify-center"
-      v-if="is_fetching"
-    >
+  <!-- fetching -->
+  <div class="bg-nearer-white" v-if="is_fetching">
+    <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading..." />
     </div>
+  </div>
+
+  <!-- fetched -->
+  <div
+    class="bg-nearer-white ph4 overflow-y-scroll relative"
+    :id="doc_id"
+    v-else-if="is_fetched"
+  >
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
-    <div
-      class="mt4 mb3 relative z-7 bg-nearer-white"
-      v-if="is_fetched"
-    >
+    <div class="mt4 mb3 relative z-7 bg-nearer-white">
       <div class="center tc mw-builder-doc" v-if="show_title">
         <h1 class="mv0 pv3 fw6">{{title}}</h1>
       </div>
@@ -23,10 +22,7 @@
         <p class="mt0 mb4 pv3 lh-copy">{{description}}</p>
       </div>
     </div>
-    <div
-      class="center mw-builder-doc"
-      v-if="is_fetched"
-    >
+    <div class="center mw-builder-doc" style="padding-bottom: 8rem">
       <BuilderList
         class="flex-fill"
         builder-mode="wizard"
@@ -45,6 +41,7 @@
         @open-pipe="openPipe"
       />
 
+      <!-- output panel for dev testing only -->
       <div
         class="fixed z-8 dn db-l ml4 pa3 bg-white br2 css-white-box css-output"
         v-if="false"

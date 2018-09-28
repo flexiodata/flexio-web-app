@@ -22,8 +22,9 @@
       </div>
       <div class="flex-none nt3 nb3">
         <div class="pv3" @click.stop>
-          <el-switch
-            class="hint--bottom"
+          <LabelSwitch
+            class="dib ml2 hint--bottom"
+            active-color="#13ce66"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             v-model="is_deployed"
           />
@@ -49,6 +50,7 @@
 <script>
   import { ROUTE_PIPES } from '../constants/route'
   import { SCHEDULE_STATUS_ACTIVE } from '../constants/schedule'
+  import LabelSwitch from './LabelSwitch.vue'
 
   const PIPE_MODE_UNDEFINED = ''
   const PIPE_MODE_BUILD     = 'B'
@@ -60,6 +62,9 @@
         type: Object,
         required: true
       }
+    },
+    components: {
+      LabelSwitch
     },
     computed: {
       input_type() {
