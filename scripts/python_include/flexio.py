@@ -12,28 +12,6 @@ from zmq.utils.monitor import recv_monitor_message
 from types import ModuleType
 
 
-def convert_binary_to_base64(var, moniker):
-    if isinstance(var, list):
-        for key, value in enumerate(var):
-            var[key] = convert_binary_to_base64(var[key], moniker)
-    elif isinstance(var, dict):
-        for key, value in var.items():
-            var[key] = convert_binary_to_base64(var[key], moniker)
-    elif isinstance(var, (bytes, bytearray)):
-        return moniker + base64.b64encode(var).decode()
-    return var
-
-def convert_base64_to_binary(var, moniker):
-    moniker_len = len(moniker)
-    if isinstance(var, list):
-        for key, value in enumerate(var):
-            var[key] = convert_base64_to_binary(var[key], moniker)
-    elif isinstance(var, dict):
-        for key, value in var.items():
-            var[key] = convert_base64_to_binary(var[key], moniker)
-    elif isinstance(var, str) and var[:moniker_len] == moniker:
-        return base64.b64decode(var[moniker_len:].encode())
-    return var
 
 class CallProxy(object):
     def __init__(self):
@@ -57,14 +35,14 @@ class CallProxy(object):
         }
 
         moniker = '~' + call_id + '/bin.b64:'
-        convert_binary_to_base64(payload['params'], moniker)
+        self.convert_binary_to_base64(payload['params'], moniker)
 
         self.socket.send(json.dumps(payload).encode())
 
         while True:
             try:
                 resobj = self.socket.recv_json()
-                return convert_base64_to_binary(resobj['result'], moniker)
+                return self.convert_base64_to_binary(resobj['result'], moniker)
             except zmq.ZMQError:
                 pass
             
@@ -79,6 +57,32 @@ class CallProxy(object):
     def close(self):
         self.socket.close()
         self.socket = None
+
+
+    def convert_binary_to_base64(self, var, moniker):
+        if isinstance(var, list):
+            for key, value in enumerate(var):
+                var[key] = self.convert_binary_to_base64(var[key], moniker)
+        elif isinstance(var, dict):
+            for key, value in var.items():
+                var[key] = self.convert_binary_to_base64(var[key], moniker)
+        elif isinstance(var, (bytes, bytearray)):
+            return moniker + base64.b64encode(var).decode()
+        return var
+
+    def convert_base64_to_binary(self, var, moniker):
+        moniker_len = len(moniker)
+        if isinstance(var, list):
+            for key, value in enumerate(var):
+                var[key] = self.convert_base64_to_binary(var[key], moniker)
+        elif isinstance(var, dict):
+            for key, value in var.items():
+                var[key] = self.convert_base64_to_binary(var[key], moniker)
+        elif isinstance(var, str) and var[:moniker_len] == moniker:
+            return base64.b64decode(var[moniker_len:].encode())
+        return var
+
+
 
 proxy = CallProxy()
 
@@ -231,7 +235,7 @@ class ContextFsFile(object):
         if self.handle != 0 and self.writing:
             self.close()
 
-    def read(self, len = -1):
+    def read(self, len = None):
         buf = proxy.invoke('read', [self.handle, len])
         if buf is False:
             return False
