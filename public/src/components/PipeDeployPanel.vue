@@ -20,14 +20,22 @@
         >
           Pro
         </el-tag>
-        <el-button
-          size="tiny"
-          style="margin-left: 8px"
-          @click="show_schedule = true"
+        <div
+          class="f6"
+          style="margin-left: 24px"
           v-if="item.key == 'schedule' && is_schedule_deployed"
         >
-          Configure...
-        </el-button>
+          <div class="dib mt2 pt2 bt b--black-05">
+            <span>{{schedule_str}}</span>
+            <el-button
+              type="text"
+              style="margin-left: 4px; padding: 0"
+              @click="show_schedule = true"
+            >
+              Configure...
+            </el-button>
+          </div>
+        </div>
 
         <div
           class="mt2 pa2 br2 ba b--black-05 bg-nearer-white"
@@ -69,12 +77,18 @@
 </template>
 
 <script>
+  import moment from 'moment'
+  import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
   export default {
     props: {
       isModeRun: {
         type: Boolean,
+        required: true
+      },
+      schedule: {
+        type: Object,
         required: true
       },
       deploymentItems: {
@@ -141,6 +155,57 @@
       },
       is_schedule_deployed() {
         return _.includes(this.checklist, 'schedule')
+      },
+      schedule_str() {
+        var s = this.schedule
+        switch (s.frequency) {
+          case sched.SCHEDULE_FREQUENCY_ONE_MINUTE:
+            return 'Your pipe will run every minute'
+          case sched.SCHEDULE_FREQUENCY_FIVE_MINUTES:
+            return 'Your pipe will run every 5 minutes'
+          case sched.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES:
+            return 'Your pipe will run every 15 minutes'
+          case sched.SCHEDULE_FREQUENCY_THIRTY_MINUTES:
+            return 'Your pipe will run every 30 minutes'
+          case sched.SCHEDULE_FREQUENCY_HOURLY:
+            return 'Your pipe will run every hour'
+          case sched.SCHEDULE_FREQUENCY_DAILY:
+            return 'Your pipe will run daily at the following times: ' + this.getTimeStr()
+          case sched.SCHEDULE_FREQUENCY_WEEKLY:
+            return 'Your pipe will run at ' + this.getTimeStr() + ' on the following days: ' + this.getDayStr()
+          case sched.SCHEDULE_FREQUENCY_MONTHLY:
+            return 'Your pipe will run at ' + this.getTimeStr() + ' on the following days: ' + this.getMonthDayStr()
+        }
+      }
+    },
+    methods: {
+      getTimeStr() {
+        var times = _.get(this.schedule, 'times', [])
+        times = _.map(times, (t) => {
+          return moment().hour(t.hour).minute(t.minute).format('LT');
+        })
+        return times.join(', ')
+      },
+      getDayStr() {
+        var days = _.get(this.schedule, 'days', [])
+        days = _.map(days, (d) => {
+          return moment().isoWeekday(d).format('dddd')
+        })
+        return days.join(', ')
+      },
+      getMonthDayStr() {
+        var days = _.get(this.schedule, 'days', [])
+        days = _.map(days, (d) => {
+          switch (d) {
+            case 1:
+              return 'First day'
+            case 15:
+              return 'Fifteenth day'
+            case 'last':
+              return 'Last day'
+          }
+        })
+        return days.join(', ')
       }
     }
   }

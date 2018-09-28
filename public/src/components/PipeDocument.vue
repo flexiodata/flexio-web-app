@@ -254,6 +254,7 @@
                   <div class="pt3 ph3">
                     <PipeDeployPanel
                       :is-mode-run.sync="is_deployed"
+                      :schedule="pipe_schedule"
                       :deployment-items.sync="deployment_items"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                     />
@@ -462,6 +463,9 @@
       },
       title() {
         return _.get(this.orig_pipe, 'name', '')
+      },
+      pipe_schedule() {
+        return _.get(this.edit_pipe, 'schedule', {})
       },
       save_cancel_style() {
         return 'z-index: ' + this.save_cancel_zindex
