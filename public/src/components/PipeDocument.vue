@@ -748,7 +748,7 @@
             this.$scrollTo('#'+item_id, {
               container: '#'+this.scrollbar_container_id,
               duration: 400,
-              offset: -32
+              offset: -80
             })
           }, timeout ? timeout : 10)
         }
