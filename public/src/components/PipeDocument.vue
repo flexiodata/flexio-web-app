@@ -1,7 +1,7 @@
 <template>
   <!-- pipe fetching -->
   <div class="bg-nearer-white" v-if="is_fetching">
-    <div class="h-100 flex flex-row items-center justify-center">
+    <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading..." />
     </div>
   </div>
