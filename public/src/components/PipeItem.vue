@@ -23,7 +23,7 @@
       <div class="flex-none nt3 nb3">
         <div class="pv3" @click.stop>
           <LabelSwitch
-            class="dib ml2 hint--bottom"
+            class="dib hint--bottom"
             active-color="#13ce66"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             v-model="is_deployed"
