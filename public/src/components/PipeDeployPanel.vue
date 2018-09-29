@@ -21,21 +21,19 @@
           Pro
         </el-tag>
         <div
-          class="f8 lh-copy"
+          class="mt1 f8 lh-copy"
           style="margin-left: 24px"
           v-if="item.key == 'schedule' && is_schedule_deployed"
         >
-          <div class="mt2">
-            <span class="mr1">{{schedule_str}}</span>
-            <el-button
-              type="text"
-              size="tiny"
-              style="padding: 0; border: 0"
-              @click="show_schedule = true"
-            >
-              Configure...
-            </el-button>
-          </div>
+          <span class="mr1">{{schedule_str}}</span>
+          <el-button
+            type="text"
+            size="tiny"
+            style="padding: 0; border: 0"
+            @click="show_schedule = true"
+          >
+            Configure...
+          </el-button>
         </div>
       </div>
     </el-checkbox-group>
