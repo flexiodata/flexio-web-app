@@ -13,8 +13,8 @@
         >
           {{item.label}}
         </el-checkbox>
-        <div class="mt1 f8 fw6 lh-copy" style="margin-left: 24px">
-          <template v-if="item.key == 'schedule' && is_schedule_deployed">
+        <div class="f8 fw6 lh-copy" style="margin-left: 24px">
+          <div class="mt1" v-if="item.key == 'schedule' && is_schedule_deployed">
             <span style="margin-right: 6px">{{schedule_str}}</span>
             <el-button
               type="text"
@@ -30,8 +30,8 @@
             >
               Copy
             </el-button>
-          </template>
-          <template v-if="item.key == 'api' && is_api_deployed">
+          </div>
+          <div class="mt1" v-if="item.key == 'api' && is_api_deployed">
             <span style="margin-right: 6px">{{api_path}}</span>
             <el-button
               type="text"
@@ -50,7 +50,7 @@
             >
               Copy
             </el-button>
-          </template>
+          </div>
         </div>
       </div>
     </el-checkbox-group>
