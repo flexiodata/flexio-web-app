@@ -254,8 +254,10 @@
                   <div class="pt3 ph3">
                     <PipeDeployPanel
                       :is-mode-run.sync="is_deployed"
+                      :identifier="pipe_identifier"
                       :schedule="pipe_schedule"
                       :deployment-items.sync="deployment_items"
+                      :show-properties-panel.sync="show_pipe_properties_dialog"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                     />
                   </div>
@@ -464,9 +466,6 @@
       title() {
         return _.get(this.orig_pipe, 'name', '')
       },
-      pipe_schedule() {
-        return _.get(this.edit_pipe, 'schedule', {})
-      },
       save_cancel_style() {
         return 'z-index: ' + this.save_cancel_zindex
       },
@@ -529,6 +528,13 @@
             // TODO: add error handling
           }
         }
+      },
+      pipe_identifier() {
+        var alias = this.edit_pipe.alias
+        return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
+      },
+      pipe_schedule() {
+        return _.get(this.edit_pipe, 'schedule', {})
       },
       is_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN

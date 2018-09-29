@@ -13,27 +13,44 @@
         >
           {{item.label}}
         </el-checkbox>
-        <el-tag
-          class="ttu b ml2"
-          size="mini"
-          v-if="false && item.is_pro"
-        >
-          Pro
-        </el-tag>
-        <div
-          class="mt1 f8 lh-copy"
-          style="margin-left: 24px"
-          v-if="item.key == 'schedule' && is_schedule_deployed"
-        >
-          <span class="mr1">{{schedule_str}}</span>
-          <el-button
-            type="text"
-            size="tiny"
-            style="padding: 0; border: 0"
-            @click="show_schedule = true"
-          >
-            Configure...
-          </el-button>
+        <div class="mt1 f8 fw6 lh-copy" style="margin-left: 24px">
+          <template v-if="item.key == 'schedule' && is_schedule_deployed">
+            <span style="margin-right: 6px">{{schedule_str}}</span>
+            <el-button
+              type="text"
+              size="tiny"
+              style="padding: 0; border: 0"
+              @click="show_schedule = true"
+            >
+              Edit...
+            </el-button>
+            <el-button
+              class="invisible"
+              size="tiny"
+            >
+              Copy
+            </el-button>
+          </template>
+          <template v-if="item.key == 'api' && is_api_deployed">
+            <span style="margin-right: 6px">{{api_path}}</span>
+            <el-button
+              type="text"
+              size="tiny"
+              style="padding: 0; border: 0"
+              @click="show_properties = true"
+            >
+              Edit...
+            </el-button>
+            <el-button
+              type="plain"
+              class="hint--top"
+              aria-label="Copy to Clipboard"
+              size="tiny"
+              :data-clipboard-text="api_path"
+            >
+              Copy
+            </el-button>
+          </template>
         </div>
       </div>
     </el-checkbox-group>
@@ -71,6 +88,10 @@
         type: Boolean,
         required: true
       },
+      identifier: {
+        type: String,
+        required: true
+      },
       schedule: {
         type: Object,
         required: true
@@ -93,25 +114,22 @@
           {
             key: 'schedule',
             label: 'Run on a schedule',
-            always_on: false,
-            is_pro: false
           },
           {
             key: 'api',
             label: 'Run using an API endpoint',
-            always_on: false,
-            is_pro: true
           },
           {
             key: 'manual',
             label: 'Run using a Flex.io Web Interface',
-            always_on: false,
-            is_pro: false
           }
         ]
       }
     },
     computed: {
+      api_path() {
+        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
       is_deployed: {
         get() {
           return this.isModeRun
@@ -129,6 +147,14 @@
           this.$emit('update:deploymentItems', value)
         }
       },
+      show_properties: {
+        get() {
+          return this.showPropertiesPanel
+        },
+        set(value) {
+          this.$emit('update:showPropertiesPanel', value)
+        }
+      },
       show_schedule: {
         get() {
           return this.showSchedulePanel
@@ -140,25 +166,28 @@
       is_schedule_deployed() {
         return _.includes(this.checklist, 'schedule')
       },
+      is_api_deployed() {
+        return _.includes(this.checklist, 'api')
+      },
       schedule_str() {
         var s = this.schedule
         switch (s.frequency) {
           case sched.SCHEDULE_FREQUENCY_ONE_MINUTE:
-            return 'Your pipe will run every minute'
+            return 'Every minute'
           case sched.SCHEDULE_FREQUENCY_FIVE_MINUTES:
-            return 'Your pipe will run every 5 minutes'
+            return 'Every 5 minutes'
           case sched.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES:
-            return 'Your pipe will run every 15 minutes'
+            return 'Every 15 minutes'
           case sched.SCHEDULE_FREQUENCY_THIRTY_MINUTES:
-            return 'Your pipe will run every 30 minutes'
+            return 'Every 30 minutes'
           case sched.SCHEDULE_FREQUENCY_HOURLY:
-            return 'Your pipe will run every hour'
+            return 'Every hour'
           case sched.SCHEDULE_FREQUENCY_DAILY:
-            return 'Your pipe will run every day at ' + this.getTimeStr()
+            return 'Every day at ' + this.getTimeStr()
           case sched.SCHEDULE_FREQUENCY_WEEKLY:
-            return 'Your pipe will run every ' + this.getDayStr() + ' of every week at ' + this.getTimeStr()
+            return 'Every ' + this.getDayStr() + ' of every week at ' + this.getTimeStr()
           case sched.SCHEDULE_FREQUENCY_MONTHLY:
-            return 'Your pipe will run on the ' + this.getMonthDayStr() + ' of every month at ' + this.getTimeStr()
+            return 'On the ' + this.getMonthDayStr() + ' of every month at ' + this.getTimeStr()
         }
       }
     },
