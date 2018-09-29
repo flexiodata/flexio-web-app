@@ -21,35 +21,21 @@
           Pro
         </el-tag>
         <div
-          class="f6"
+          class="f8"
           style="margin-left: 24px"
           v-if="item.key == 'schedule' && is_schedule_deployed"
         >
-          <div class="dib mt2 pt2 bt b--black-05">
+          <div class="mt2">
             <span>{{schedule_str}}</span>
             <el-button
               type="text"
+              size="tiny"
               style="margin-left: 4px; padding: 0"
               @click="show_schedule = true"
             >
               Configure...
             </el-button>
           </div>
-        </div>
-
-        <div
-          class="mt2 pa2 br2 ba b--black-05 bg-nearer-white"
-          style="margin-left: 24px"
-          v-if="false && item.key == 'schedule' && is_schedule_deployed"
-        >
-          <span class="f6">Your pipe will run every five minutes.</span>
-          <el-button
-            type="text"
-            style="padding: 0; margin-left: 8px"
-            @click="show_schedule = true"
-          >
-            Configure...
-          </el-button>
         </div>
       </div>
     </el-checkbox-group>
@@ -170,11 +156,11 @@
           case sched.SCHEDULE_FREQUENCY_HOURLY:
             return 'Your pipe will run every hour'
           case sched.SCHEDULE_FREQUENCY_DAILY:
-            return 'Your pipe will run daily at the following times: ' + this.getTimeStr()
+            return 'Your pipe will run every day at ' + this.getTimeStr()
           case sched.SCHEDULE_FREQUENCY_WEEKLY:
-            return 'Your pipe will run at ' + this.getTimeStr() + ' on the following days: ' + this.getDayStr()
+            return 'Your pipe will run every ' + this.getDayStr() + ' of every week at ' + this.getTimeStr()
           case sched.SCHEDULE_FREQUENCY_MONTHLY:
-            return 'Your pipe will run at ' + this.getTimeStr() + ' on the following days: ' + this.getMonthDayStr()
+            return 'Your pipe will run on the ' + this.getMonthDayStr() + ' of every month at ' + this.getTimeStr()
         }
       }
     },
@@ -198,11 +184,11 @@
         days = _.map(days, (d) => {
           switch (d) {
             case 1:
-              return 'First day'
+              return 'first day'
             case 15:
-              return 'Fifteenth day'
+              return 'fifteenth day'
             case 'last':
-              return 'Last day'
+              return 'last day'
           }
         })
         return days.join(', ')
