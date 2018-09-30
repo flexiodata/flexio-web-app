@@ -28,7 +28,7 @@
             </el-button>
           </div>
           <div v-if="item.key == 'api' && is_api_deployed">
-            <span style="margin-right: 6px">{{api_path}}</span>
+            <span style="margin-right: 6px">{{api_url}}</span>
             <el-button
               type="text"
               size="tiny"
@@ -42,10 +42,32 @@
               class="hint--top"
               aria-label="Copy to Clipboard"
               size="tiny"
-              :data-clipboard-text="api_path"
+              :data-clipboard-text="api_url"
             >
               Copy
             </el-button>
+          </div>
+          <div v-if="item.key == 'web' && is_web_deployed">
+            <span style="margin-right: 6px">{{runtime_url}}</span>
+            <el-button
+              type="plain"
+              class="hint--top"
+              aria-label="Copy to Clipboard"
+              size="tiny"
+              :data-clipboard-text="api_url"
+            >
+              Copy
+            </el-button>
+            <br>
+            <el-button
+              type="text"
+              size="tiny"
+              style="padding: 0; border: 0"
+              @click="show_runtime_configure = true"
+            >
+              Configure...
+            </el-button>
+
           </div>
         </div>
       </div>
@@ -84,6 +106,10 @@
         type: Boolean,
         required: true
       },
+      eid: {
+        type: String,
+        required: true
+      },
       identifier: {
         type: String,
         required: true
@@ -97,6 +123,10 @@
         default: () => { return [] }
       },
       showSchedulePanel: {
+        type: Boolean,
+        default: false
+      },
+      showRuntimeConfigurePanel: {
         type: Boolean,
         default: false
       }
@@ -116,15 +146,18 @@
             label: 'Run using an API endpoint',
           },
           {
-            key: 'manual',
+            key: 'web',
             label: 'Run using a Flex.io Web Interface',
           }
         ]
       }
     },
     computed: {
-      api_path() {
+      api_url() {
         return 'https://api.flex.io/v1/me/pipes/' + this.identifier
+      },
+      runtime_url() {
+        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
       },
       is_deployed: {
         get() {
@@ -136,7 +169,6 @@
       },
       checklist: {
         get() {
-          //return _.uniq(['manual'].concat(this.deploymentItems))
           return this.deploymentItems
         },
         set(value) {
@@ -149,6 +181,14 @@
         },
         set(value) {
           this.$emit('update:showPropertiesPanel', value)
+        }
+      },
+      show_runtime_configure: {
+        get() {
+          return this.showRuntimeConfigurePanel
+        },
+        set(value) {
+          this.$emit('update:showRuntimeConfigurePanel', value)
         }
       },
       show_schedule: {
@@ -164,6 +204,9 @@
       },
       is_api_deployed() {
         return _.includes(this.checklist, 'api')
+      },
+      is_web_deployed() {
+        return _.includes(this.checklist, 'web')
       },
       schedule_str() {
         var s = this.schedule

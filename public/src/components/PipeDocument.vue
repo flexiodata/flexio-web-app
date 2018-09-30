@@ -114,7 +114,6 @@
               :title="title"
               :is-mode-run.sync="is_deployed"
               :show-save-cancel="show_save_cancel"
-              @schedule-click="openScheduleDialog"
               @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
@@ -254,10 +253,12 @@
                   <div class="pt3 ph3">
                     <PipeDeployPanel
                       :is-mode-run.sync="is_deployed"
+                      :eid="eid"
                       :identifier="pipe_identifier"
                       :schedule="pipe_schedule"
                       :deployment-items.sync="deployment_items"
                       :show-properties-panel.sync="show_pipe_properties_dialog"
+                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                     />
                   </div>
@@ -269,6 +270,7 @@
       </div>
     </div>
 
+    <!-- pipe properties dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
@@ -282,6 +284,23 @@
         @close="show_pipe_properties_dialog = false"
         @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
+      />
+    </el-dialog>
+
+    <!-- pipe runtime configure dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer"
+      width="42rem"
+      top="8vh"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :visible.sync="show_runtime_configure_dialog"
+    >
+      <PipeRuntimeConfigurePanel
+        :pipe="edit_pipe"
+        @close="show_runtime_configure_dialog = false"
+        @cancel="show_runtime_configure_dialog = false"
+        @submit="saveRuntime"
       />
     </el-dialog>
 
@@ -335,6 +354,7 @@
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
+  import PipeRuntimeConfigurePanel from './PipeRuntimeConfigurePanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
@@ -380,6 +400,7 @@
       PipeDocumentHeader,
       PipeDocumentRunPanel,
       PipePropertiesPanel,
+      PipeRuntimeConfigurePanel,
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
@@ -429,6 +450,7 @@
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
+        show_runtime_configure_dialog: false,
         show_yaml: false,
         transitioning_yaml: false,
         has_run_once: false,
@@ -654,6 +676,10 @@
         this.show_pipe_properties_dialog = true
         this.$store.track('Opened Properties Dialog')
       },
+      openRuntimeConfigureDialog() {
+        this.show_runtime_configure_dialog = true
+        this.$store.track('Opened Runtime Configure Dialog')
+      },
       openScheduleDialog() {
         this.show_pipe_schedule_dialog = true
         this.$store.track('Opened Schedule Dialog')
@@ -667,6 +693,17 @@
 
         this.saveChanges().then(() => {
           this.show_pipe_properties_dialog = false
+        })
+      },
+      saveRuntime(attrs) {
+        attrs = _.pick(attrs, ['ui'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.saveChanges().then(() => {
+          this.show_runtime_configure_dialog = false
         })
       },
       saveSchedule(attrs) {
