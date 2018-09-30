@@ -289,7 +289,7 @@
 
     <!-- pipe runtime configure dialog -->
     <el-dialog
-      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body is-almost-fullscreen"
+      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body"
       :fullscreen="true"
       :modal-append-to-body="false"
       :close-on-click-modal="false"

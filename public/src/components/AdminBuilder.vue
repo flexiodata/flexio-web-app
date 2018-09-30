@@ -68,6 +68,7 @@
       return {
         lang: 'yaml',
         edit_code,
+        edit_json: {},
         error_msg: '',
         code_expanded: true
       }

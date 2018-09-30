@@ -7,7 +7,36 @@
       </div>
     </div>
 
-    <div class="flex-fill bg-black-05">Pipe Runtime Configure Panel</div>
+    <div class="flex-fill flex flex-row items-stretch relative ba b--black-10">
+      <div
+        class="flex flex-column trans-w"
+        :style="code_expanded ? 'width: 40%' : 'width: 30px'"
+      >
+        <CodeEditor
+          class="flex-fill"
+          :class="!code_expanded ? 'o-40 no-pointer-events no-select' : ''"
+          :show-json-view-toggle="false"
+          :lang.sync="lang"
+          style="font-size: 13px"
+          v-show="code_expanded"
+          v-model="edit_code"
+        />
+      </div>
+      <div class="flex-fill flex flex-column bl b--black-20">
+        <el-alert
+          type="error"
+          show-icon
+          :title="error_msg"
+          :closable="false"
+          v-show="error_msg.length > 0"
+        />
+        <BuilderDocument
+          class="h-100"
+          :class="error_msg.length > 0 ? 'o-40 no-pointer-events no-select' : ''"
+          :definition="edit_json"
+        />
+      </div>
+    </div>
 
     <div class="mt3 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
@@ -29,14 +58,9 @@
 </template>
 
 <script>
-  const defaultAttrs = () => {
-    return {
-      name: '',
-      alias: '',
-      description: '',
-      ui: {}
-    }
-  }
+  import yaml from 'js-yaml'
+  import CodeEditor from './CodeEditor.vue'
+  import BuilderDocument from './BuilderDocument.vue'
 
   export default {
     props: {
@@ -57,20 +81,28 @@
         default: () => { return defaultAttrs() }
       }
     },
+    components: {
+      CodeEditor,
+      BuilderDocument
+    },
     watch: {
       pipe: {
         handler: 'initPipe',
         immediate: true,
         deep: true
       },
-      edit_pipe: {
-        handler: 'updatePipe',
-        deep: true
+      edit_code: {
+        handler: 'updateJSON',
+        immediate: true
       }
     },
     data() {
       return {
-        edit_pipe: defaultAttrs()
+        lang: 'yaml',
+        edit_code: '',
+        edit_json: {},
+        error_msg: '',
+        code_expanded: true
       }
     },
     computed: {
@@ -90,16 +122,34 @@
         this.$emit('cancel')
       },
       onSubmit() {
-        this.$emit('submit', this.edit_pipe)
+        var edit_pipe = _.cloneDeep(this.pipe)
+        _.assign(edit_pipe, this.edit_json)
+        this.$emit('submit', edit_pipe)
       },
       initPipe() {
-        this.edit_pipe = _.cloneDeep(this.pipe)
-      },
-      updatePipe() {
-        this.$emit('change', this.edit_pipe)
+        this.edit_code = yaml.safeDump(_.get(this.pipe, 'ui', {}))
       },
       revert() {
-        // TODO
+        // TODO: need to do anything?
+      },
+      updateJSON() {
+        var res = ''
+        try {
+          if (this.lang == 'yaml') {
+            // YAML view
+            res = yaml.safeLoad(this.edit_code)
+          } else {
+            // JSON view
+            res = JSON.parse(this.edit_code)
+          }
+
+          this.error_msg = ''
+          this.edit_json = { ui: res }
+        }
+        catch(e)
+        {
+          this.error_msg = 'Parse error: ' + e.message
+        }
       }
     }
   }
