@@ -107,7 +107,7 @@
     },
     computed: {
       has_errors() {
-        return false
+        return this.error_msg.length > 0
       }
     },
     methods: {
