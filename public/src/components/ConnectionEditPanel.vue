@@ -2,7 +2,7 @@
   <div>
     <div class="w-100 mb4" v-if="showHeader">
       <div class="flex flex-row items-center" v-if="showTitle">
-        <span class="flex-fill f4">{{our_title}}</span>
+        <span class="flex-fill f4 lh-title">{{our_title}}</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="$emit('close')"></i>
       </div>
       <div

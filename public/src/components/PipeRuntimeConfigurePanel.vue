@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-center" v-if="showHeader">
-        <span class="flex-fill f4">Configure Runtime for '{{pipe.name}}'</span>
+      <div class="flex flex-row items-start">
+        <span class="flex-fill f4 lh-title">Configure Runtime for '{{pipe.name}}'</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
