@@ -72,7 +72,7 @@
             }"
             :style="{
               maxWidth: '50%',
-              minWidth: show_yaml ? '100px' : '1px',
+              minWidth: show_yaml ? '200px' : '1px',
               width: show_yaml ? '20%' : '1px',
               marginLeft: show_yaml ? '0' : '-2px',
               opacity: show_yaml ? '1' : '0.01'
@@ -80,6 +80,14 @@
           >
             <div class="flex flex-row items-center bg-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
+              <el-radio-group
+                class="mh2"
+                size="micro"
+                v-model="yaml_view"
+              >
+                <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+                <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
+              </el-radio-group>
               <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
@@ -87,11 +95,12 @@
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
-              type="yaml"
               editor-cls="bg-white h-100"
+              :type="yaml_view"
               :class="{
                 'no-pointer-events': !show_yaml
               }"
+              :show-json-view-toggle="false"
               :task-only="false"
               :has-errors.sync="has_errors"
               @save="saveChanges"
@@ -450,6 +459,7 @@
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
         show_runtime_configure_dialog: false,
+        yaml_view: 'yaml',
         show_yaml: false,
         transitioning_yaml: false,
         has_run_once: false,

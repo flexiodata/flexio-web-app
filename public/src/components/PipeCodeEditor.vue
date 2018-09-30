@@ -5,7 +5,6 @@
       :lang.sync="lang"
       :lint="true"
       :enable-json-view-toggle="!has_errors"
-      :show-json-view-toggle="true"
       v-bind="$attrs"
       v-model="edit_code"
     />
