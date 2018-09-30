@@ -78,7 +78,7 @@
               opacity: show_yaml ? '1' : '0.01'
             }"
           >
-            <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
+            <div class="flex flex-row items-center bg-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
               <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
