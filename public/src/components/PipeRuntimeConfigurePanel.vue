@@ -7,13 +7,22 @@
       </div>
     </div>
 
-    <div class="flex-fill flex flex-row items-stretch relative ba b--black-10">
+    <multipane
+      class="flex-fill vertical-panes ba b--black-10"
+      layout="vertical"
+    >
       <div
-        class="flex flex-column trans-w"
-        :style="code_expanded ? 'width: 40%' : 'width: 30px'"
+        class="pane"
+        :style="{
+          maxWidth: '50%',
+          minWidth: '200px',
+          width: '20%',
+          marginLeft: '0',
+          opacity: '1'
+        }"
       >
         <CodeEditor
-          class="flex-fill"
+          class="h-100"
           :class="!code_expanded ? 'o-40 no-pointer-events no-select' : ''"
           :show-json-view-toggle="false"
           :lang.sync="lang"
@@ -22,7 +31,11 @@
           v-model="edit_code"
         />
       </div>
-      <div class="flex-fill flex flex-column bl b--black-20">
+      <multipane-resizer />
+      <div
+        class="pane bl b--black-20"
+        :style="{ flexGrow: 1 }"
+      >
         <el-alert
           type="error"
           show-icon
@@ -36,7 +49,7 @@
           :definition="edit_json"
         />
       </div>
-    </div>
+    </multipane>
 
     <div class="mt3 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
@@ -59,6 +72,7 @@
 
 <script>
   import yaml from 'js-yaml'
+  import { Multipane, MultipaneResizer } from 'vue-multipane'
   import CodeEditor from './CodeEditor.vue'
   import BuilderDocument from './BuilderDocument.vue'
 
@@ -82,6 +96,8 @@
       }
     },
     components: {
+      Multipane,
+      MultipaneResizer,
       CodeEditor,
       BuilderDocument
     },
@@ -154,3 +170,12 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .vertical-panes
+    width: 100%
+    height: 100%
+
+  .vertical-panes > .pane ~ .pane
+    border-left: 1px solid #ddd
+</style>
