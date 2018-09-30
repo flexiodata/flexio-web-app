@@ -50,7 +50,8 @@
           class="flex-none bg-nearer-white trans-a"
           default-active="0"
           :style="{
-            width: show_yaml ? '0' : '49px'
+            width: show_yaml ? '0' : '49px',
+            opacity: show_yaml ? '0' : '1'
           }"
         >
           <el-menu-item
@@ -78,7 +79,7 @@
               opacity: show_yaml ? '1' : '0.01'
             }"
           >
-            <div class="flex flex-row items-center bg-white bb b--black-10 pa2">
+            <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
               <el-radio-group
                 class="mh2"
