@@ -22,7 +22,6 @@
       >
         <el-input
           placeholder="Enter name"
-          style="max-width: 36rem"
           :autofocus="true"
           v-model="edit_pipe.name"
         />
@@ -34,17 +33,15 @@
       >
         <el-input
           placeholder="Enter alias"
-          class="mr1"
-          style="max-width: 36rem"
           v-model="edit_pipe.alias"
         >
-          <template slot="prepend">https://api.flex.io/v1/me/pipes/</template>
+          <template slot="prepend"><div class="nl2 nr2">https://api.flex.io/v1/me/pipes/</div></template>
           <template slot="append">
             <el-button
               class="hint--top"
               aria-label="Copy to Clipboard"
               :data-clipboard-text="path"
-            ><span class="ttu b">Copy</span></el-button>
+            ><i class="material-icons md-18 nl2 nr2">assignment</i></el-button>
           </template>
         </el-input>
       </el-form-item>

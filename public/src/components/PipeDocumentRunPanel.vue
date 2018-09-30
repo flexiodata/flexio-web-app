@@ -19,7 +19,7 @@
               class="hint--top"
               aria-label="Copy to Clipboard"
               :data-clipboard-text="runtime_link"
-            ><span class="ttu b">Copy</span></el-button>
+            ><i class="material-icons md-18 nl2 nr2">assignment</i></el-button>
           </template>
         </el-input>
         <p>

@@ -7,14 +7,10 @@
         :class="index == 0 ? 'bt' : ''"
         v-for="(item, index) in deployment_options"
       >
-        <el-checkbox
-          :label="item.key"
-          :disabled="item.always_on"
-        >
-          {{item.label}}
-        </el-checkbox>
+        <el-checkbox :label="item.key">{{item.label}}</el-checkbox>
+
         <div class="f8 fw6 lh-copy" style="margin-left: 24px">
-          <div class="mt1" v-if="item.key == 'schedule' && is_schedule_deployed">
+          <div v-if="item.key == 'schedule' && is_schedule_deployed">
             <span style="margin-right: 6px">{{schedule_str}}</span>
             <el-button
               type="text"
@@ -31,7 +27,7 @@
               Copy
             </el-button>
           </div>
-          <div class="mt1" v-if="item.key == 'api' && is_api_deployed">
+          <div v-if="item.key == 'api' && is_api_deployed">
             <span style="margin-right: 6px">{{api_path}}</span>
             <el-button
               type="text"
