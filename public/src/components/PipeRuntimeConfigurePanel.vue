@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <div class="w-100 mb4" v-if="showHeader">
+  <div class="flex flex-column h-100">
+    <div class="w-100 mb3" v-if="showHeader">
       <div class="flex flex-row items-start">
         <span class="flex-fill f4 lh-title">Configure Runtime for '{{pipe.name}}'</span>
         <i class="el-icon-close pointer f3 black-30 hover-black-60" @click="onClose"></i>
       </div>
     </div>
 
-    <div>Pipe Runtime Configure Panel</div>
+    <div class="flex-fill bg-black-05">Pipe Runtime Configure Panel</div>
 
-    <div class="mt4 w-100 flex flex-row justify-end" v-if="showFooter">
+    <div class="mt3 w-100 flex flex-row justify-end" v-if="showFooter">
       <el-button
         class="ttu b"
         @click="onCancel"

@@ -4,6 +4,10 @@
 
 .el-dialog
   max-width: 100vw
+  &.is-almost-fullscreen
+    margin: 2vh 1vw
+    width: 98vw
+    height 96vh
 
 .el-dialog--no-header
   .el-dialog__body
@@ -21,6 +25,10 @@
   .el-dialog__body
     padding-top: 10px
     padding-bottom: 10px
+
+.el-dialog--full-body
+  .el-dialog__body
+    height: 100%
 
 // -- el-message --
 
