@@ -57,13 +57,12 @@
             >
               Edit...
             </el-button>
-
             <el-button
               type="plain"
               class="hint--top"
               aria-label="Copy to Clipboard"
               size="tiny"
-              :data-clipboard-text="api_url"
+              :data-clipboard-text="runtime_url"
             >
               Copy
             </el-button>
