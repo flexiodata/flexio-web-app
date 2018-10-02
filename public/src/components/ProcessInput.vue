@@ -115,7 +115,7 @@
           { label: 'raw',                   val: 'raw'                               }
         ],
         raw_options: [
-          { label: 'Text',                                val: ''                       },
+          { label: 'Text (none)',                         val: ''                       },
           { label: 'Text (text/plain)',                   val: 'text/plain'             },
           { label: 'JSON (application/json)',             val: 'application/json'       },
           { label: 'Javascript (application/javascript)', val: 'application/javascript' },
