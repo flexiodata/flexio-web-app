@@ -14,12 +14,15 @@ from types import ModuleType
 
 
 class CallProxy(object):
-    def __init__(self):
+    def __init__(self, monitor=False):
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REQ)
         self.socket.connect(os.environ['FLEXIO_RUNTIME_SERVER'])
         self.socket.setsockopt(zmq.RCVTIMEO, 250)
-        self.monitor = self.socket.get_monitor_socket(zmq.EVENT_CLOSED)
+        if monitor:
+            self.monitor = self.socket.get_monitor_socket(zmq.EVENT_CLOSED)
+        else:
+            self.monitor = None
 
     def invoke(self, method, params = []):
 
@@ -45,13 +48,14 @@ class CallProxy(object):
             except zmq.ZMQError:
                 pass
             
-            try:
-                evt = recv_monitor_message(self.monitor, zmq.NOBLOCK)
-                if evt['event'] == zmq.EVENT_CLOSED:
-                    print("Connection broken")
-                    sys.exit(1)
-            except zmq.ZMQError:
-                pass
+            if self.monitor:
+                try:
+                    evt = recv_monitor_message(self.monitor, zmq.NOBLOCK)
+                    if evt['event'] == zmq.EVENT_CLOSED:
+                        print("Connection broken")
+                        sys.exit(1)
+                except zmq.ZMQError:
+                    pass
 
     def close(self):
         self.socket.close()
@@ -288,6 +292,11 @@ class ContextFs(object):
             idx = idx + 1
 
         handle = proxy.invoke('fsCommit', [handle])
+
+
+    def list(self, path, connection=''):
+ 
+        return proxy.invoke('fsList', [path, connection])
 
     def exists(self, path, connection=''):
  
@@ -608,8 +617,9 @@ class Result(object):
         self.output.write(json.dumps(obj))
         proxy.close()
 
-    def end(self, content):
-        self.output.write(content)
+    def end(self, content=None):
+        if content is not None:
+            self.output.write(content)
         proxy.close()
 
 

@@ -147,8 +147,9 @@ class ExecuteProxy
         $container_socket_path = "/tmp/ipc-endpoint";
         $container_ipc_address = "ipc://$container_socket_path";
 
+        $dsn = "ipc://$host_socket_path";
         $server = new \ZMQSocket(new \ZMQContext(), \ZMQ::SOCKET_REP);
-        $server->bind("ipc://$host_socket_path");
+        $server->bind($dsn);
 
         if (file_exists($host_socket_path))
         {
@@ -186,9 +187,9 @@ class ExecuteProxy
         gc_container_add($container_name);
 
 
-        register_shutdown_function(function() use (&$server) {
+        register_shutdown_function(function() use (&$server, $dsn) {
             \Flexio\Jobs\gc_container_cleanup();
-            $server->close();
+            $server->unbind($dsn);
         });
 
         $start_time = microtime(true);
@@ -745,6 +746,14 @@ class ScriptHost
         $vfs->setProcess($this->process);
         return $vfs->exists($path);
     }
+
+    public function func_fsList(string $path, string $connection)
+    {
+        $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
+        $vfs->setProcess($this->process);
+        return $vfs->list($path);
+    }
+
 
     public function func_getOutputStreamInfo(string $name) : ?array
     {

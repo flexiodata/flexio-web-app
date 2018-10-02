@@ -17,12 +17,51 @@ import sys
 import subprocess
 import select
 import os
+import threading
+import zmq
+from zmq.utils.monitor import recv_monitor_message
 from fcntl import fcntl, F_GETFL, F_SETFL
 from os import O_NONBLOCK
 
-context = flexioext.create_context()
 
-proxy = flexioext.CallProxy()
+context = flexioext.create_context()
+proxy = flexioext.CallProxy(monitor=False)
+
+
+# EVENT_MAP = {}
+# print("Event names:")
+# for name in dir(zmq):
+#     if name.startswith('EVENT_'):
+#         value = getattr(zmq, name)
+#         print("%21s : %4i" % (name, value))
+# EVENT_MAP[value] = name
+# sys.stdout.flush()
+
+def event_monitor(monitor):
+    #print("MONITOR STARTED")
+    #sys.stdout.flush()
+    while monitor.poll():
+        evt = recv_monitor_message(monitor)
+        #print("Event: {}".format(evt))
+        #sys.stdout.flush()
+        if evt['event'] == zmq.EVENT_CLOSED:
+            #print("SHUTTING DOWN")
+            #sys.stdout.flush()
+            monitor.close()
+            os._exit(1)
+            break
+        #if evt['event'] == zmq.EVENT_MONITOR_STOPPED:
+        #    break
+    monitor.close()
+
+#zmq.EVENT_CLOSED
+monitor_socket = proxy.socket.get_monitor_socket(zmq.EVENT_CLOSED)
+t = threading.Thread(target=event_monitor, args=(monitor_socket,))
+t.start()
+
+
+
+
 str = proxy.invoke("get_script", [])
 print("GOT " + str)
 
