@@ -185,7 +185,11 @@ class ExecuteProxy
         // normally, no GC will be done
         gc_container_add($container_name);
 
-        register_shutdown_function('Flexio\Jobs\gc_container_cleanup');
+
+        register_shutdown_function(function() use (&$server) {
+            \Flexio\Jobs\gc_container_cleanup();
+            $server->close();
+        });
 
         $start_time = microtime(true);
         $connection_established = false;
