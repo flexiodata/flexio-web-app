@@ -2,23 +2,6 @@
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
     <AppNavbar v-if="show_intercom_button && show_navbar" />
     <router-view class="flex-fill bt b--black-05"></router-view>
-
-    <!-- TODO: 09/14/2018: Remove? I believe we're done with the onboarding modal -->
-    <!-- onboarding dialog -->
-    <div v-if="config_show_onboarding && false">
-      <el-dialog
-        custom-class="el-dialog--no-header el-dialog--no-footer"
-        width="56rem"
-        top="8vh"
-        :modal-append-to-body="false"
-        :close-on-click-modal="false"
-        :close-on-press-escape="false"
-        :visible.sync="show_onboarding_modal"
-      >
-        <OnboardingPanel @close="onOnboardingClose" />
-      </el-dialog>
-    </div>
-
     <button
       id="open-intercom-inbox"
       class="fixed bottom-0 right-0 pointer darken-10 bn br-100 white bg-blue"
@@ -31,33 +14,18 @@
 
 <script>
   import {
-    ROUTE_BUILDER,
     ROUTE_SIGNIN,
     ROUTE_SIGNUP,
     ROUTE_FORGOTPASSWORD,
-    ROUTE_RESETPASSWORD,
-    ROUTE_HOME_LEARN
+    ROUTE_RESETPASSWORD
   } from '../constants/route'
   import { mapState, mapGetters } from 'vuex'
   import AppNavbar from './AppNavbar.vue'
-  import OnboardingPanel from './OnboardingPanel.vue'
 
   export default {
     name: 'App',
     components: {
-      AppNavbar,
-      OnboardingPanel
-    },
-    watch: {
-      route_name: {
-        handler: 'checkRoute',
-        immediate: true
-      }
-    },
-    data() {
-      return {
-        show_onboarding_modal: true
-      }
+      AppNavbar
     },
     computed: {
       ...mapState([
@@ -66,12 +34,14 @@
       route_name() {
         return _.get(this.$route, 'name', '')
       },
+      is_logged_in() {
+        return this.active_user_eid.length > 0
+      },
       show_navbar() {
-        return true
+        return this.is_logged_in
       },
       show_intercom_button() {
-        switch (this.$route.name)
-        {
+        switch (this.route_name) {
           case ROUTE_SIGNIN:
           case ROUTE_SIGNUP:
           case ROUTE_FORGOTPASSWORD:
@@ -84,59 +54,6 @@
         }
 
         return true
-      },
-      config_show_onboarding() {
-        // don't ever show the onboarding modal when the user enters via the builder
-        if (this.$route.name == ROUTE_BUILDER)
-          return false
-
-        // we have to do 'config_show_onboarding' as a computed value since
-        // we need to wait to check if we have an active user or not
-        if (this.active_user_eid.length == 0)
-          return false
-
-        // allow onboarding modal to be shown programmatically
-        var params = _.get(this.$route, 'query', {})
-        if (params['app.prompt.onboarding.shown'] === 'true')
-          return true
-
-        var cfg = _.get(this.getActiveUser(), 'config')
-        if (this.show_intercom_button && _.get(cfg, 'app.prompt.onboarding.shown') !== true)
-          return true
-
-        return false
-      }
-    },
-    methods: {
-      ...mapGetters([
-        'getActiveUser'
-      ]),
-      checkRoute() {
-        if (this.$route.name == ROUTE_BUILDER) {
-          this.show_onboarding_modal = false
-          this.updateOnboardingConfig()
-        }
-      },
-      updateOnboardingConfig() {
-        var cfg = _.get(this.getActiveUser(), 'config', {})
-        if (_.isArray(cfg))
-          cfg = {}
-        cfg['app.prompt.onboarding.shown'] = true
-
-        this.$store.dispatch('updateUser', { eid: this.active_user_eid, attrs: { config: cfg } })
-      },
-      onOnboardingClose() {
-        this.show_onboarding_modal = false
-
-        setTimeout(() => {
-          // redirect to the app learning if the user
-          // just signed up and saw the onboarding dialog
-          if (this.$route.name != ROUTE_HOME_LEARN) {
-            this.$router.push({ name: ROUTE_HOME_LEARN })
-          }
-
-          this.updateOnboardingConfig()
-        }, 10)
       }
     }
   }
