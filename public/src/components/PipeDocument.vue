@@ -372,9 +372,9 @@
 
   import MixinConfig from './mixins/config'
 
-  const PIPE_MODE_UNDEFINED = ''
-  const PIPE_MODE_BUILD     = 'B'
-  const PIPE_MODE_RUN       = 'R'
+  const DEPLOY_MODE_UNDEFINED = ''
+  const DEPLOY_MODE_BUILD     = 'B'
+  const DEPLOY_MODE_RUN       = 'R'
 
   const PIPEDOC_VIEW_BUILD  = 'build'
   const PIPEDOC_VIEW_RUN    = 'run'
@@ -578,11 +578,11 @@
       },
       is_deployed: {
         get() {
-          return _.get(this.orig_pipe, 'deploy_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.orig_pipe, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
         },
         set(value) {
           var doSet = () => {
-            var deploy_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var deploy_mode = value === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
             _.assign(pipe, { deploy_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)

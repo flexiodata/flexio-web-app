@@ -52,9 +52,9 @@
   import { SCHEDULE_STATUS_ACTIVE } from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
-  const PIPE_MODE_UNDEFINED = ''
-  const PIPE_MODE_BUILD     = 'B'
-  const PIPE_MODE_RUN       = 'R'
+  const DEPLOY_MODE_UNDEFINED = ''
+  const DEPLOY_MODE_BUILD     = 'B'
+  const DEPLOY_MODE_RUN       = 'R'
 
   export default {
     props: {
@@ -83,11 +83,11 @@
       */
       is_deployed: {
         get() {
-          return _.get(this.item, 'deploy_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.item, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
         },
         set(value) {
           var doSet = () => {
-            var deploy_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var deploy_mode = value === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
 
             var attrs = {
               deploy_mode
