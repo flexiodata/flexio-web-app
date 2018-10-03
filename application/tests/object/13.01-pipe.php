@@ -231,9 +231,9 @@ class Test
             },
             "task" : {
             },
-            "pipe_mode" : "B",
             "schedule" : null,
-            "schedule_status" : null,
+            "deploy_schedule" : null,
+            "deploy_mode" : "B",
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null

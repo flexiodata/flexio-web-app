@@ -56,9 +56,9 @@ EOT;
     $db->exec($sql);
 
     // STEP 2: populate the new field
-    // public const PIPE_MODE_UNDEFINED  = '';
-    // public const PIPE_MODE_BUILD      = 'B';
-    // public const PIPE_MODE_RUN        = 'R';
+    // public const PIPE_DEPLOY_MODE_UNDEFINED  = '';
+    // public const PIPE_DEPLOY_MODE_BUILD      = 'B';
+    // public const PIPE_DEPLOY_MODE_RUN        = 'R';
     $sql = <<<EOT
         update tbl_pipe set pipe_mode = 'B' where pipe_mode = '';
 EOT;

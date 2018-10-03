@@ -94,17 +94,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if the pipe mode is set, make sure it's valid; otherwise default to 'build'
-        if (isset($properties) && isset($properties['pipe_mode']))
+        // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
+        if (isset($properties) && isset($properties['deploy_mode']))
         {
-            switch ($properties['pipe_mode'])
+            switch ($properties['deploy_mode'])
             {
                 default:
-                    $properties['pipe_mode'] = \Model::PIPE_MODE_BUILD;
+                    $properties['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_BUILD;
                     break;
 
-                case \Model::PIPE_MODE_BUILD:
-                case \Model::PIPE_MODE_RUN:
+                case \Model::PIPE_DEPLOY_MODE_BUILD:
+                case \Model::PIPE_DEPLOY_MODE_RUN:
                     // leave what's there
                     break;
             }
@@ -121,16 +121,16 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
 
         // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
-        if (isset($properties) && isset($properties['schedule_status']))
+        if (isset($properties) && isset($properties['deploy_schedule']))
         {
-            switch ($properties['schedule_status'])
+            switch ($properties['deploy_schedule'])
             {
                 default:
-                    $properties['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
+                    $properties['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
-                case \Model::PIPE_STATUS_INACTIVE:
-                case \Model::PIPE_STATUS_ACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
                     // leave what's there
                     break;
             }
@@ -179,17 +179,17 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['task'] = json_encode($properties['task']);
         }
 
-        // if the pipe mode is set, make sure it's valid; otherwise default to 'build'
-        if (isset($properties) && isset($properties['pipe_mode']))
+        // if the deploy mode is set, make sure it's valid; otherwise default to 'build'
+        if (isset($properties) && isset($properties['deploy_mode']))
         {
-            switch ($properties['pipe_mode'])
+            switch ($properties['deploy_mode'])
             {
                 default:
-                    $properties['pipe_mode'] = \Model::PIPE_MODE_BUILD;
+                    $properties['deploy_mode'] = \Model::PIPE_DEPLOY_MODE_BUILD;
                     break;
 
-                case \Model::PIPE_MODE_BUILD:
-                case \Model::PIPE_MODE_RUN:
+                case \Model::PIPE_DEPLOY_MODE_BUILD:
+                case \Model::PIPE_DEPLOY_MODE_RUN:
                     // leave what's there
                     break;
             }
@@ -206,16 +206,16 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         }
 
         // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
-        if (isset($properties) && isset($properties['schedule_status']))
+        if (isset($properties) && isset($properties['deploy_schedule']))
         {
-            switch ($properties['schedule_status'])
+            switch ($properties['deploy_schedule'])
             {
                 default:
-                    $properties['schedule_status'] = \Model::PIPE_STATUS_INACTIVE;
+                    $properties['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
-                case \Model::PIPE_STATUS_INACTIVE:
-                case \Model::PIPE_STATUS_ACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
                     // leave what's there
                     break;
             }
@@ -358,9 +358,9 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "description" => null,
                 "ui" => null,
                 "task" => null,
-                "pipe_mode" => null,
                 "schedule" => null,
-                "schedule_status" => null,
+                "deploy_mode" => null,
+                "deploy_schedule" => null,
                 "owned_by" => null,
                 "created" => null,
                 "updated" => null

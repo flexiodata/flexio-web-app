@@ -166,13 +166,13 @@ class Model
     public const CONNECTION_STATUS_UNAVAILABLE = 'U';
     public const CONNECTION_STATUS_ERROR       = 'E';
 
-    public const PIPE_STATUS_UNDEFINED  = '';
-    public const PIPE_STATUS_ACTIVE     = 'A';
-    public const PIPE_STATUS_INACTIVE   = 'I';
+    public const PIPE_DEPLOY_MODE_UNDEFINED  = '';
+    public const PIPE_DEPLOY_MODE_BUILD      = 'B';
+    public const PIPE_DEPLOY_MODE_RUN        = 'R';
 
-    public const PIPE_MODE_UNDEFINED  = '';
-    public const PIPE_MODE_BUILD      = 'B';
-    public const PIPE_MODE_RUN        = 'R';
+    public const PIPE_DEPLOY_STATUS_UNDEFINED  = '';
+    public const PIPE_DEPLOY_STATUS_ACTIVE     = 'A';
+    public const PIPE_DEPLOY_STATUS_INACTIVE   = 'I';
 
     public const ROLE_UNDEFINED     = '';
     public const ROLE_ADMINISTRATOR = 'A';

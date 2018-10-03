@@ -27,9 +27,9 @@ class Pipe extends ModelBase
                 'description'     => array('type' => 'string', 'required' => false, 'default' => ''),
                 'ui'              => array('type' => 'string', 'required' => false, 'default' => '{}'),
                 'task'            => array('type' => 'string', 'required' => false, 'default' => '{}'),
-                'pipe_mode'       => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_MODE_BUILD),
                 'schedule'        => array('type' => 'string', 'required' => false, 'default' => ''),
-                'schedule_status' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_STATUS_INACTIVE),
+                'deploy_mode'     => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_MODE_BUILD),
+                'deploy_schedule' => array('type' => 'string', 'required' => false, 'default' => \Model::PIPE_DEPLOY_STATUS_INACTIVE),
                 'owned_by'        => array('type' => 'string', 'required' => false, 'default' => ''),
                 'created_by'      => array('type' => 'string', 'required' => false, 'default' => '')
             ))->hasErrors()) === true)
@@ -40,10 +40,10 @@ class Pipe extends ModelBase
         if (\Model::isValidStatus($process_arr['eid_status']) === false)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
+        if ($process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_BUILD && $process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_RUN)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
-        if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
+        if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
         $db = $this->getDatabase();
@@ -124,9 +124,9 @@ class Pipe extends ModelBase
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'string', 'required' => false),
                 'task'            => array('type' => 'string', 'required' => false),
-                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'string', 'required' => false),
-                'schedule_status' => array('type' => 'string', 'required' => false),
+                'deploy_mode'     => array('type' => 'string', 'required' => false),
+                'deploy_schedule' => array('type' => 'string', 'required' => false),
                 'owned_by'        => array('type' => 'string', 'required' => false),
                 'created_by'      => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
@@ -170,17 +170,17 @@ class Pipe extends ModelBase
                 }
             }
 
-            // make sure the pipe mode is valid
-            if (isset($process_arr['pipe_mode']))
+            // make sure the deploy mode is valid
+            if (isset($process_arr['deploy_mode']))
             {
-                if ($process_arr['pipe_mode'] != \Model::PIPE_MODE_BUILD && $process_arr['pipe_mode'] != \Model::PIPE_MODE_RUN)
+                if ($process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_BUILD && $process_arr['deploy_mode'] != \Model::PIPE_DEPLOY_MODE_RUN)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
-            // make sure the schedule status is an 'A' or an 'I'
-            if (isset($process_arr['schedule_status']))
+            // make sure the deploy schedule status is an 'A' or an 'I'
+            if (isset($process_arr['deploy_schedule']))
             {
-                if ($process_arr['schedule_status'] != \Model::PIPE_STATUS_ACTIVE && $process_arr['schedule_status'] != \Model::PIPE_STATUS_INACTIVE)
+                if ($process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_ACTIVE && $process_arr['deploy_schedule'] != \Model::PIPE_DEPLOY_STATUS_INACTIVE)
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
             }
 
@@ -228,9 +228,9 @@ class Pipe extends ModelBase
                               'description'     => $row['description'],
                               'ui'              => $row['ui'],
                               'task'            => $row['task'],
-                              'pipe_mode'       => $row['pipe_mode'],
                               'schedule'        => $row['schedule'],
-                              'schedule_status' => $row['schedule_status'],
+                              'deploy_mode'     => $row['deploy_mode'],
+                              'deploy_schedule' => $row['deploy_schedule'],
                               'owned_by'        => $row['owned_by'],
                               'created_by'      => $row['created_by'],
                               'created'         => \Flexio\Base\Util::formatDate($row['created']),
@@ -286,7 +286,7 @@ class Pipe extends ModelBase
 
     public function getScheduledPipes() : array
     {
-        $sql = "select eid, schedule from tbl_pipe where schedule_status = 'A'";
+        $sql = "select eid, schedule from tbl_pipe where deploy_mode = '".\Model::PIPE_DEPLOY_MODE_RUN."' and deploy_schedule = '".\Model::PIPE_DEPLOY_STATUS_ACTIVE."'";
         $res = $this->getDatabase()->query($sql);
         if (!$res)
             return array();

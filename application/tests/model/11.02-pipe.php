@@ -94,7 +94,7 @@ class Test
             'ui' => '{}',
             'task' => '{}',
             'schedule' => '',
-            'schedule_status' => \Model::PIPE_STATUS_INACTIVE,
+            'deploy_schedule' => \Model::PIPE_DEPLOY_STATUS_INACTIVE,
             'owned_by' => '',
             'created_by' => ''
         );
@@ -166,12 +166,12 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'pipe_mode' => \Model::PIPE_MODE_BUILD
+            'deploy_mode' => \Model::PIPE_DEPLOY_MODE_BUILD
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'pipe_mode' => \Model::PIPE_MODE_BUILD
+            'deploy_mode' => \Model::PIPE_DEPLOY_MODE_BUILD
         );
         \Flexio\Tests\Check::assertInArray('C.6', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
@@ -190,12 +190,12 @@ class Test
         // BEGIN TEST
         $handle = \Flexio\Base\Util::generateHandle();
         $info = array(
-            'schedule_status' => 'A'
+            'deploy_schedule' => 'A'
         );
         $eid = $model->create($info);
         $actual = $model->get($eid);
         $expected = array(
-            'schedule_status' => \Model::PIPE_STATUS_ACTIVE
+            'deploy_schedule' => \Model::PIPE_DEPLOY_STATUS_ACTIVE
         );
         \Flexio\Tests\Check::assertInArray('C.8', '\Flexio\Model\Pipe::create(); in pipe creation, make sure parameter is set when specified',  $actual, $expected, $results);
 
@@ -205,7 +205,7 @@ class Test
         {
             $handle = \Flexio\Base\Util::generateHandle();
             $info = array(
-                'schedule_status' => 'D' // valid inputs are A and I
+                'deploy_schedule' => 'D' // valid inputs are A and I
             );
             $eid = $model->create($info);
         }
