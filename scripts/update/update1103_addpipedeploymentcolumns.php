@@ -5,7 +5,7 @@
  *
  * Project:  Flex.io App
  * Author:   Aaron L. Williams
- * Created:  2018-07-13
+ * Created:  2018-10-03
  *
  * @package flexio
  * @subpackage Database_Update
@@ -48,19 +48,32 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: add the new field
+    // STEP 1: rename various deploy columns
+    $db->exec("alter table tbl_pipe rename column pipe_mode to deploy_mode;");
+    $db->exec("alter table tbl_pipe rename column schedule_status to deploy_schedule;");
+
+    // STEP 2: add new deploy columns
     $sql = <<<EOT
         alter table tbl_pipe
-            add column pipe_mode varchar(1) NOT NULL default '';
+            add column deploy_api varchar(1) NOT NULL default 'I',
+            add column deploy_ui varchar(1) NOT NULL default 'I';
 EOT;
     $db->exec($sql);
 
-    // STEP 2: populate the new field
-    // public const PIPE_DEPLOY_MODE_UNDEFINED  = '';
-    // public const PIPE_DEPLOY_MODE_BUILD      = 'B';
-    // public const PIPE_DEPLOY_MODE_RUN        = 'R';
+    // STEP 3: rename/add appropriate indexes
     $sql = <<<EOT
-        update tbl_pipe set pipe_mode = 'B' where pipe_mode = '';
+        alter index idx_pipe_schedule_status rename to idx_pipe_deploy_schedule;
+        create index idx_pipe_deploy_api on tbl_pipe (deploy_api);
+        create index idx_pipe_deploy_ui on tbl_pipe (deploy_ui);
+        create index idx_pipe_deploy_mode on tbl_pipe (deploy_mode);
+EOT;
+    $db->exec($sql);
+
+
+    // STEP 3: populate the deploy_mode with 'B' (for build mode) if
+    // not already populated
+    $sql = <<<EOT
+        update tbl_pipe set deploy_mode='B' where deploy_mode = '';
 EOT;
     $db->exec($sql);
 }

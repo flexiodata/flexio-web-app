@@ -238,7 +238,6 @@ class Test
                 "task": {
                     "op": "echo"
                 },
-                "pipe_mode": "B",
                 "schedule": {
                     "frequency": "",
                     "timezone": "UTC",
@@ -250,7 +249,10 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_mode": "B",
+                "deploy_schedule": "I",
+                "deploy_api": "A",
+                "deploy_ui": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -269,7 +271,6 @@ class Test
             "task": {
                 "op": "echo"
             },
-            "pipe_mode": "B",
             "schedule": {
                 "timezone": "UTC",
                 "days": ["mon","tue","wed","thu","fri"],
@@ -280,7 +281,10 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I",
+            "deploy_mode": "B",
+            "deploy_schedule": "I",
+            "deploy_api": "A",
+            "deploy_ui": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
@@ -301,7 +305,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "schedule_status": ""
+                "deploy_schedule": ""
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -310,7 +314,7 @@ class Test
         {
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.1', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -324,7 +328,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "schedule_status": "bad"
+                "deploy_schedule": "bad"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -334,7 +338,7 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.2', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -348,7 +352,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -358,7 +362,7 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.3', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -375,7 +379,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "schedule_status": "A"
+                "deploy_schedule": "A"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -385,7 +389,7 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "schedule_status": "A"
+            "deploy_schedule": "A"
         }';
         \Flexio\Tests\Check::assertInArray('B.4', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -399,7 +403,7 @@ class Test
             'token' => $token1, // valid token for user
             'content_type' => 'application/json',
             'params' => '{
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -409,7 +413,7 @@ class Test
             "eid": "'.$objeid1.'",
             "eid_type": "PIP",
             "eid_status": "A",
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.5', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -435,7 +439,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -457,7 +461,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.6', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -477,7 +481,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -493,7 +497,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.7', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -513,7 +517,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -529,7 +533,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.8', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -549,7 +553,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -565,7 +569,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.9', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -585,7 +589,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -601,7 +605,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.10', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -621,7 +625,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -637,7 +641,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.11', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -657,7 +661,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -673,7 +677,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.12', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -693,7 +697,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -709,7 +713,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.13', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -730,7 +734,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -746,7 +750,7 @@ class Test
                 "days": [],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.14', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -766,7 +770,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -796,7 +800,7 @@ class Test
                     "days": [],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -826,7 +830,7 @@ class Test
                     "days": ["mon","tue","wed","thu","fri","sat","sun","last",1,15],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -842,7 +846,7 @@ class Test
                 "days": ["mon","tue","wed","thu","fri","sat","sun","last",1,15],
                 "times": []
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.17', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -862,7 +866,7 @@ class Test
                     "days": ["saturday"],
                     "times": []
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -894,7 +898,7 @@ class Test
                         {}
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -933,7 +937,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -958,7 +962,7 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I"
+            "deploy_schedule": "I"
         }';
         \Flexio\Tests\Check::assertInArray('B.20', 'POST /:userid/pipes/:objeid; check variations in schedule and schedule status',  $actual, $expected, $results);
 
@@ -983,7 +987,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -1018,7 +1022,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -1053,7 +1057,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -1088,7 +1092,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -1123,7 +1127,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -1158,7 +1162,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);

@@ -91,7 +91,6 @@ class Test
                 "task": {
                     "op": "echo"
                 },
-                "pipe_mode": "B",
                 "schedule": {
                     "frequency": "",
                     "timezone": "UTC",
@@ -103,7 +102,10 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_mode": "B",
+                "deploy_schedule": "I",
+                "deploy_api": "A",
+                "deploy_ui": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -121,7 +123,6 @@ class Test
             "task": {
                 "op": "echo"
             },
-            "pipe_mode": "B",
             "schedule": {
                 "timezone": "UTC",
                 "days": ["mon","tue","wed","thu","fri"],
@@ -132,7 +133,10 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I",
+            "deploy_mode": "B",
+            "deploy_schedule": "I",
+            "deploy_api": "A",
+            "deploy_ui": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
@@ -165,7 +169,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": ""
+                "deploy_schedule": ""
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -188,7 +192,7 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I",
+            "deploy_schedule": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
@@ -218,7 +222,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "bad"
+                "deploy_schedule": "bad"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -241,7 +245,7 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I",
+            "deploy_schedule": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
@@ -271,7 +275,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "I"
+                "deploy_schedule": "I"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -294,7 +298,7 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "I",
+            "deploy_schedule": "I",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"
@@ -324,7 +328,7 @@ class Test
                         }
                     ]
                 },
-                "schedule_status": "A"
+                "deploy_schedule": "A"
             }'
         );
         $result = \Flexio\Tests\Util::callApi($params);
@@ -347,7 +351,7 @@ class Test
                     }
                 ]
             },
-            "schedule_status": "A",
+            "deploy_schedule": "A",
             "owned_by": {
                 "eid": "'.$userid1.'",
                 "eid_type": "USR"

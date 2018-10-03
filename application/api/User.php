@@ -785,15 +785,15 @@ class User
             /*
             TODO:
 
-            Example: Access APIs that require Oauth
-            Description: Extract keywords from Gmail
-            * Demonstrates ability to access APIs that use Oauth
-            * Demonstrates ability to read read/manipulate Gmail
-
             Example: Keyword API
             Description: Create an API from keywords from a website
             * Demonstrates how to parse data from a website
             * Demonstrates how to create an use an API endpoint to get pipe contents
+
+            Example: Access APIs that require Oauth
+            Description: Extract keywords from Gmail
+            * Demonstrates ability to access APIs that use Oauth
+            * Demonstrates ability to read read/manipulate Gmail
 
             Example: Process Incoming Emails
             * Demonstrates ability to email pipes

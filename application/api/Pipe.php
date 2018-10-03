@@ -47,9 +47,11 @@ class Pipe
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
-                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
-                'schedule_status' => array('type' => 'string', 'required' => false)
+                'deploy_mode'     => array('type' => 'string', 'required' => false),
+                'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_api'      => array('type' => 'string', 'required' => false),
+                'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 
@@ -208,9 +210,11 @@ class Pipe
                 'description'     => array('type' => 'string', 'required' => false),
                 'ui'              => array('type' => 'object', 'required' => false),
                 'task'            => array('type' => 'object', 'required' => false),
-                'pipe_mode'       => array('type' => 'string', 'required' => false),
                 'schedule'        => array('type' => 'object', 'required' => false),
-                'schedule_status' => array('type' => 'string', 'required' => false)
+                'deploy_mode'     => array('type' => 'string', 'required' => false),
+                'deploy_schedule' => array('type' => 'string', 'required' => false),
+                'deploy_api'      => array('type' => 'string', 'required' => false),
+                'deploy_ui'       => array('type' => 'string', 'required' => false)
             ))->hasErrors()) === true)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX);
 

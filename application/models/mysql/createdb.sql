@@ -150,7 +150,11 @@ CREATE INDEX idx_acl_created ON tbl_acl (created);
 -- Table structure for table tbl_pipe
 --
 
--- schedule_status values
+-- deploy_mode values:
+--    B - build
+--    R - run
+
+-- deploy_schedule, deploy_api, deploy_ui values:
 --    A - active
 --    I - inactive
 
@@ -162,11 +166,13 @@ CREATE TABLE tbl_pipe (
   alias text default '',
   name text default '',
   description text default '',
-  ui text default '',
   task text default '',
-  pipe_mode char(1) NOT NULL default '',
   schedule text default '',
-  schedule_status char(1) NOT NULL default 'I',
+  ui text default '',
+  deploy_mode char(1) NOT NULL default 'B',
+  deploy_schedule char(1) NOT NULL default 'I',
+  deploy_api char(1) NOT NULL default 'I',
+  deploy_ui char(1) NOT NULL default 'I',
   owned_by char(12) NOT NULL default '',
   created_by char(12) NOT NULL default '',
   created timestamp NULL default NULL,
@@ -175,9 +181,12 @@ CREATE TABLE tbl_pipe (
   UNIQUE KEY (eid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE INDEX idx_pipe_schedule_status ON tbl_pipe (schedule_status);
-CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
 CREATE INDEX idx_pipe_alias ON tbl_pipe (alias);
+CREATE INDEX idx_pipe_deploy_mode ON tbl_pipe (deploy_mode);
+CREATE INDEX idx_pipe_deploy_schedule ON tbl_pipe (deploy_schedule);
+CREATE INDEX idx_pipe_deploy_api ON tbl_pipe (deploy_api);
+CREATE INDEX idx_pipe_deploy_ui ON tbl_pipe (deploy_ui);
+CREATE INDEX idx_pipe_owned_by ON tbl_pipe (owned_by);
 CREATE INDEX idx_pipe_created ON tbl_pipe (created);
 
 

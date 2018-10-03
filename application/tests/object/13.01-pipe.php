@@ -227,13 +227,15 @@ class Test
             "alias" : null,
             "name" : null,
             "description" : null,
-            "ui" : {
-            },
             "task" : {
             },
-            "pipe_mode" : "B",
             "schedule" : null,
-            "schedule_status" : null,
+            "ui" : {
+            },
+            "deploy_mode": "B",
+            "deploy_schedule": "I",
+            "deploy_api": "A",
+            "deploy_ui": "I",
             "owned_by" : {
                 "eid" : null,
                 "eid_type" : null
