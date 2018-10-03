@@ -5,7 +5,7 @@
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
-        <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Pipes</router-link>
+        <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 10px" data-tour-step="pipe-onboarding-8">Pipes</router-link>
         <router-link to="/connections" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Connections</router-link>
         <router-link to="/storage" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Storage</router-link>
         <AppBreadcrumbs class="flex flex-row items-center pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
