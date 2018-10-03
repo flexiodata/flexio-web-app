@@ -661,7 +661,7 @@ class ScriptHost
         return $this->__getInputStreamInfo($name);
     }
 
-    public function func_fsCreate(string $path, string $connection) : int
+    public function func_fsCreate(string $path, string $connection) : ?array
     {
         $stream = \Flexio\Base\Stream::create();
         $stream->setName($path);
@@ -673,10 +673,13 @@ class ScriptHost
         $this->files[] = $file;
         $handle = count($this->files)-1;
 
-        return $handle;
+        return array('handle' => $handle,
+                     'name' => '',
+                     'size' => $file->stream->getSize(),
+                     'content_type' => $file->stream->getMimeType());
     }
 
-    public function func_fsOpen(string $mode, string $path, string $connection) : int
+    public function func_fsOpen(string $mode, string $path, string $connection) : ?array
     {
         if ($mode == 'w')
         {
@@ -702,10 +705,13 @@ class ScriptHost
         $this->files[] = $file;
         $handle = count($this->files)-1;
 
-        return $handle;
+        return array('handle' => $handle,
+                     'name' => '',
+                     'size' => $file->stream->getSize(),
+                     'content_type' => $file->stream->getMimeType());
     }
 
-    public function fsOpenWrite(string $path, string $connection) : int
+    public function fsOpenWrite(string $path, string $connection) : ?array
     {
         $key = \Flexio\Base\Util::generateRandomString(20);
 
@@ -717,7 +723,10 @@ class ScriptHost
         $this->files[] = $file;
         $handle = count($this->files)-1;
 
-        return $handle;
+        return array('handle' => $handle,
+                     'name' => '',
+                     'size' => $file->stream->getSize(),
+                     'content_type' => $file->stream->getMimeType());
     }
 
     public function func_fsCommit(int $stream_idx /* handle */)
