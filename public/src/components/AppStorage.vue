@@ -8,19 +8,7 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="pa3 ph4-l relative bg-white bb b--black-05">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <div class="f2">Storage</div>
-        </div>
-        <div class="flex-none flex flex-row items-center" v-if="false">
-          <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex flex-row h-100" v-if="connections.length > 0">
+    <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <AbstractList
         ref="list"
         class="br b--black-05 overflow-y-auto"
@@ -45,12 +33,10 @@
         />
       </div>
     </div>
-    <div class="flex flex-column justify-center h-100" v-else>
-      <EmptyItem>
-        <i slot="icon" class="material-icons">repeat</i>
-        <span slot="text">No storage items to show</span>
-      </EmptyItem>
-    </div>
+    <EmptyItem class="flex flex-column justify-center h-100" v-else>
+      <i slot="icon" class="material-icons">repeat</i>
+      <span slot="text">No storage items to show</span>
+    </EmptyItem>
   </div>
 </template>
 

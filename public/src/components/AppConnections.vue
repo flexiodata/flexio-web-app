@@ -8,38 +8,29 @@
 
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
-    <!-- control bar -->
-    <div class="flex-none pa3 ph4-l relative bg-white bb b--black-05">
-      <div class="flex flex-row">
-        <div class="flex-fill flex flex-row items-center">
-          <div class="f2">Connections</div>
-        </div>
-        <div class="flex-none flex flex-row items-center ml3">
-          <el-button type="primary" class="ttu b" @click="show_connection_new_dialog = true">New Connection</el-button>
-        </div>
-      </div>
-    </div>
-
     <div class="flex-fill flex flex-row" v-if="connections.length > 0">
-      <AbstractList
-        ref="list"
-        class="br b--black-05 overflow-y-auto"
-        layout="list"
-        item-component="AbstractConnectionChooserItem"
-        :selected-item.sync="connection"
-        :items="connections"
-        :item-options="{
-          'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
-          'item-style': 'margin: 3px',
-          'selected-cls': 'relative b--black-10 bg-nearer-white',
-          'show-dropdown': true,
-          'dropdown-items': ['delete']
-        }"
-        @item-activate="selectConnection"
-        @item-delete="tryDeleteConnection"
-        v-if="connections.length > 0"
-      />
-      <div class="flex-fill overflow-y-auto" v-if="connection">
+
+      <div class="flex flex-column overflow-y-auto">
+        <AbstractList
+          ref="list"
+          class="br b--black-05"
+          layout="list"
+          item-component="AbstractConnectionChooserItem"
+          :selected-item.sync="connection"
+          :items="connections"
+          :item-options="{
+            'item-cls': 'min-w5 pa3 pr2 ba b--white bg-white hover-bg-nearer-white',
+            'item-style': 'margin: 3px',
+            'selected-cls': 'relative b--black-10 bg-nearer-white',
+            'show-dropdown': true,
+            'dropdown-items': ['delete']
+          }"
+          @item-activate="selectConnection"
+          @item-delete="tryDeleteConnection"
+          v-if="connections.length > 0"
+        /></div>
+
+      <div class="flex-fill overflow-y-scroll" v-if="connection">
         <ConnectionEditPanel
           class="pa3 pa4-l"
           style="max-width: 60rem"
