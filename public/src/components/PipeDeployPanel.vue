@@ -113,7 +113,7 @@
         required: true
       },
       schedule: {
-        type: Object,
+        // must be an object or null
         required: true
       },
       deploymentItems: {
