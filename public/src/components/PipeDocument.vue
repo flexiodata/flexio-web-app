@@ -453,7 +453,7 @@
 
       return {
         active_view: _.get(this.$route, 'params.view', PIPEDOC_VIEW_BUILD),
-        active_collapse_items: ['input', 'tasks', 'output', 'deployment'],
+        active_collapse_items: ['tasks', 'output', 'deployment'],
         active_ui_idx: 0,
         active_task_idx: -1,
         scrollbar_container_id: _.uniqueId('pane-'),
