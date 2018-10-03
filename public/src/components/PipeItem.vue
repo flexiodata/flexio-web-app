@@ -10,7 +10,7 @@
             <div class="flex-l flex-row items-center">
               <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
               <div
-                class="dib f8 black-40 mt1 mt0-l pa1 bg-nearer-white ba b--black-05 br2"
+                class="dib f8 code black-40 mt1 mt0-l pa1 bg-nearer-white ba b--black-05 br2"
                 v-if="item.alias"
               >{{item.alias}}</div>
             </div>
