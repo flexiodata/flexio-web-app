@@ -16,7 +16,7 @@
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
         class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue bg-near-white darken-05'"
+        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item'"
         :key="item.op"
         @click="itemClick(item)"
         v-for="(item, index) in items"
