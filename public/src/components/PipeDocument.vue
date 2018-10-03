@@ -163,7 +163,7 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
-                    <p class="mt0 ttu fw6 f7 moon-gray">Add optional pipe input for passing arguments to the pipe as POST parameters</p>
+                    <p class="mt0 ttu fw6 f7 moon-gray">Test this pipe with the following POST parameters</p>
                     <ProcessInput
                       ref="process-input"
                       v-model="edit_input"
