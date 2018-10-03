@@ -120,6 +120,9 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['schedule'] = json_encode($schedule);
         }
 
+
+        // TODO: clean up the following overly-verbose implementation:
+
         // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
         if (isset($properties) && isset($properties['deploy_schedule']))
         {
@@ -127,6 +130,36 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             {
                 default:
                     $properties['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
+        }
+
+        if (isset($properties) && isset($properties['deploy_api']))
+        {
+            switch ($properties['deploy_api'])
+            {
+                default:
+                    $properties['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
+        }
+
+        if (isset($properties) && isset($properties['deploy_ui']))
+        {
+            switch ($properties['deploy_ui'])
+            {
+                default:
+                    $properties['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
                 case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
@@ -205,6 +238,8 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             $properties['schedule'] = json_encode($schedule);
         }
 
+        // TODO: clean up the following overly-verbose implementation:
+
         // if the schedule status is set, make sure it's valid; otherwise default to 'inactive'
         if (isset($properties) && isset($properties['deploy_schedule']))
         {
@@ -212,6 +247,36 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
             {
                 default:
                     $properties['deploy_schedule'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
+        }
+
+        if (isset($properties) && isset($properties['deploy_api']))
+        {
+            switch ($properties['deploy_api'])
+            {
+                default:
+                    $properties['deploy_api'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
+                    break;
+
+                case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
+                case \Model::PIPE_DEPLOY_STATUS_ACTIVE:
+                    // leave what's there
+                    break;
+            }
+        }
+
+        if (isset($properties) && isset($properties['deploy_ui']))
+        {
+            switch ($properties['deploy_ui'])
+            {
+                default:
+                    $properties['deploy_ui'] = \Model::PIPE_DEPLOY_STATUS_INACTIVE;
                     break;
 
                 case \Model::PIPE_DEPLOY_STATUS_INACTIVE:
@@ -361,6 +426,8 @@ class Pipe extends \Flexio\Object\Base implements \Flexio\IFace\IObject
                 "schedule" => null,
                 "deploy_mode" => null,
                 "deploy_schedule" => null,
+                "deploy_api" => null,
+                "deploy_ui" => null,
                 "owned_by" => null,
                 "created" => null,
                 "updated" => null
