@@ -1,7 +1,7 @@
 '<template>
   <div id="app" class="flex flex-column fixed absolute--fill overflow-hidden">
     <AppNavbar v-if="show_intercom_button && show_navbar" />
-    <router-view class="flex-fill"></router-view>
+    <router-view class="flex-fill bt b--black-05"></router-view>
 
     <!-- TODO: 09/14/2018: Remove? I believe we're done with the onboarding modal -->
     <!-- onboarding dialog -->

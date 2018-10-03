@@ -1,6 +1,6 @@
 <template>
-  <nav class="z-10 bb b--black-20">
-    <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 54px">
+  <nav class="z-10">
+    <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 56px">
       <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
@@ -8,7 +8,6 @@
         <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 10px" data-tour-step="pipe-onboarding-8">Pipes</router-link>
         <router-link to="/connections" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Connections</router-link>
         <router-link to="/storage" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Storage</router-link>
-        <AppBreadcrumbs class="flex flex-row items-center pl2 pl3-ns pv1 b--black-10 bl" v-if="false" />
       </div>
       <div class="flex-none">
         <div v-if="user_fetching"></div>
@@ -28,12 +27,10 @@
 
 <script>
   import { mapState } from 'vuex'
-  import AppBreadcrumbs from './AppBreadcrumbs.vue'
   import UserDropdown from './UserDropdown.vue'
 
   export default {
     components: {
-      AppBreadcrumbs,
       UserDropdown
     },
     computed: {

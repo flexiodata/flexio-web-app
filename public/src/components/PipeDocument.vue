@@ -51,7 +51,8 @@
           default-active="0"
           :style="{
             width: show_yaml ? '0' : '49px',
-            opacity: show_yaml ? '0' : '1'
+            opacity: show_yaml ? '0' : '1',
+            borderRight: 0
           }"
         >
           <el-menu-item
@@ -79,7 +80,7 @@
               opacity: show_yaml ? '1' : '0.01'
             }"
           >
-            <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
+            <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
               <el-radio-group
                 class="mh2"
@@ -896,15 +897,11 @@
     height: 100%
 
   .vertical-panes > .pane ~ .pane
-    border-left: 1px solid #ddd
+    border-left: 1px solid rgba(0,0,0,0.05)
 
-  /*
-  nl4 nr4 pv2 ph3
-  nl4 nr4 pv2 ph3
-  */
   .sticky
     margin: 0 -2rem
-    padding: 0.5rem 1.5rem
+    padding: 0.5rem 1rem
     border-bottom: 1px solid rgba(0,0,0,0.05)
     transition: all 0.15s ease
 
