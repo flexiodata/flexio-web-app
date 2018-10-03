@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="w-100 mb4" v-if="showHeader">
-      <div class="flex flex-row items-center" v-if="showHeader">
+      <div class="flex flex-row items-start">
         <div class="flex-fill tc">
           <span class="f3 b">Welcome to Flex.io, {{first_name}}!</span>
         </div>

@@ -8,10 +8,10 @@
 
   <!-- pipe fetched -->
   <div class="bg-nearer-white" v-else-if="is_fetched">
-    <!-- runtime view; run mode; no ui steps -->
+    <!-- pipe is deployed; runtime view; no ui steps -->
     <div
       class="h-100 pa4 overflow-y-scroll"
-      v-if="is_view_runtime && is_pipe_mode_run && edit_ui_list.length == 0"
+      v-if="is_runtime && is_deployed && edit_ui_list.length == 0"
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
@@ -22,17 +22,17 @@
       </div>
     </div>
 
-    <!-- runtime view; run mode -->
+    <!-- runtime view; pipe is deployed -->
     <BuilderDocument
       class="h-100 overflow-y-scroll"
       :definition="edit_pipe"
-      v-else-if="is_view_runtime && is_pipe_mode_run"
+      v-else-if="is_runtime && is_deployed"
     />
 
-    <!-- runtime view; build mode -->
+    <!-- runtime view; pipe is not deployed -->
     <div
       class="h-100 pa4 overflow-y-scroll"
-      v-else-if="is_view_runtime && !is_pipe_mode_run"
+      v-else-if="is_runtime && !is_deployed"
     >
       <div class="mv4 center mw-doc">
         <div class="pa4 bg-white br2 tc css-white-box">
@@ -43,36 +43,15 @@
       </div>
     </div>
 
-    <!-- build view; run mode -->
-    <div
-      class="h-100 pa4 pt0 overflow-y-scroll"
-      :id="scrollbar_container_id"
-      v-else-if="is_pipe_mode_run"
-    >
-      <PipeDocumentHeader
-        class="relative z-7 bg-nearer-white sticky"
-        :title="title"
-        :is-mode-run.sync="is_pipe_mode_run"
-      />
-      <div class="mt5 mb4 center mw-doc">
-        <div class="pa4 pt3 bg-white br2 css-white-box">
-          <PipeDocumentRunPanel
-            class="tc"
-            :eid="eid"
-            :is-mode-run.sync="is_pipe_mode_run"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- build view; build mode -->
+    <!-- build view -->
     <div class="h-100" v-else>
       <div class="flex flex-row h-100">
         <el-menu
           class="flex-none bg-nearer-white trans-a"
           default-active="0"
           :style="{
-            width: show_yaml ? '0' : '49px'
+            width: show_yaml ? '0' : '49px',
+            opacity: show_yaml ? '0' : '1'
           }"
         >
           <el-menu-item
@@ -94,7 +73,7 @@
             }"
             :style="{
               maxWidth: '50%',
-              minWidth: show_yaml ? '100px' : '1px',
+              minWidth: show_yaml ? '200px' : '1px',
               width: show_yaml ? '20%' : '1px',
               marginLeft: show_yaml ? '0' : '-2px',
               opacity: show_yaml ? '1' : '0.01'
@@ -102,6 +81,14 @@
           >
             <div class="flex flex-row items-center bg-nearer-white bb b--black-10 pa2">
               <div class="f6 fw6 flex-fill">Pipe Definition</div>
+              <el-radio-group
+                class="mh2"
+                size="micro"
+                v-model="yaml_view"
+              >
+                <el-radio-button label="json"><span class="fw6">JSON</span></el-radio-button>
+                <el-radio-button label="yaml"><span class="fw6">YAML</span></el-radio-button>
+              </el-radio-group>
               <div class="pointer f5 black-30 hover-black-60 hint--bottom-left" aria-label="Hide Pipe Definition" @click="showYaml(false)">
                 <i class="el-icon-close fw6"></i>
               </div>
@@ -109,11 +96,12 @@
             <PipeCodeEditor
               class="h-100"
               ref="code-editor"
-              type="yaml"
               editor-cls="bg-white h-100"
+              :type="yaml_view"
               :class="{
                 'no-pointer-events': !show_yaml
               }"
+              :show-json-view-toggle="false"
               :task-only="false"
               :has-errors.sync="has_errors"
               @save="saveChanges"
@@ -134,23 +122,36 @@
               class="relative z-7 bg-nearer-white sticky"
               data-tour-step="pipe-onboarding-0"
               :title="title"
-              :is-mode-run.sync="is_pipe_mode_run"
+              :is-mode-run.sync="is_deployed"
               :show-save-cancel="show_save_cancel"
-              @schedule-click="openScheduleDialog"
               @properties-click="openPropertiesDialog"
               @cancel-click="cancelChanges"
               @save-click="saveChanges"
               @run-click="testPipe"
             />
+
+            <!-- run panel; visible when pipe is deployed -->
+            <div class="mv4 center mw-doc" v-if="is_deployed">
+              <div class="pa4 pt3 bg-white br2 css-white-box">
+                <PipeDocumentRunPanel
+                  class="tc"
+                  :eid="eid"
+                  :is-mode-run.sync="is_deployed"
+                />
+              </div>
+            </div>
+
             <div class="mv4 center mw-doc" style="padding-bottom: 12rem">
               <el-collapse
                 class="el-collapse--plain"
                 v-model="active_collapse_items"
               >
+                <!-- input panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="input"
                   data-tour-step="pipe-onboarding-2"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -161,6 +162,7 @@
                     </div>
                   </template>
                   <div class="pt3 ph3">
+                    <p class="mt0 ttu fw6 f7 moon-gray">Add optional pipe input for passing arguments to the pipe as POST parameters</p>
                     <ProcessInput
                       ref="process-input"
                       v-model="edit_input"
@@ -195,9 +197,12 @@
                     </div>
                   </div>
                 </el-collapse-item>
+
+                <!-- tasks panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="tasks"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center" data-tour-step="pipe-onboarding-1">
@@ -220,11 +225,14 @@
                     <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
                   </div>
                 </el-collapse-item>
+
+                <!-- output panel; visible when pipe is not deployed -->
                 <el-collapse-item
                   class="mb4 pv1 ph3 bg-white br2 css-white-box"
                   name="output"
                   data-tour-step="pipe-onboarding-4"
                   :id="output_item_id"
+                  v-if="!is_deployed"
                 >
                   <template slot="title">
                     <div class="flex flex-row items-center">
@@ -254,8 +262,13 @@
                   </template>
                   <div class="pt3 ph3">
                     <PipeDeployPanel
-                      :is-mode-run.sync="is_pipe_mode_run"
+                      :is-mode-run.sync="is_deployed"
+                      :eid="eid"
+                      :identifier="pipe_identifier"
+                      :schedule="pipe_schedule"
                       :deployment-items.sync="deployment_items"
+                      :show-properties-panel.sync="show_pipe_properties_dialog"
+                      :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                     />
                   </div>
@@ -267,6 +280,7 @@
       </div>
     </div>
 
+    <!-- pipe properties dialog -->
     <el-dialog
       custom-class="el-dialog--no-header el-dialog--no-footer"
       width="42rem"
@@ -280,6 +294,22 @@
         @close="show_pipe_properties_dialog = false"
         @cancel="show_pipe_properties_dialog = false"
         @submit="saveProperties"
+      />
+    </el-dialog>
+
+    <!-- pipe runtime configure dialog -->
+    <el-dialog
+      custom-class="el-dialog--no-header el-dialog--no-footer el-dialog--full-body"
+      :fullscreen="true"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :visible.sync="show_runtime_configure_dialog"
+    >
+      <PipeRuntimeConfigurePanel
+        :pipe="edit_pipe"
+        @close="show_runtime_configure_dialog = false"
+        @cancel="show_runtime_configure_dialog = false"
+        @submit="saveRuntime"
       />
     </el-dialog>
 
@@ -333,6 +363,7 @@
   import PipeDocumentHeader from './PipeDocumentHeader.vue'
   import PipeDocumentRunPanel from './PipeDocumentRunPanel.vue'
   import PipePropertiesPanel from './PipePropertiesPanel.vue'
+  import PipeRuntimeConfigurePanel from './PipeRuntimeConfigurePanel.vue'
   import PipeSchedulePanel from './PipeSchedulePanel.vue'
   import PipeDeployPanel from './PipeDeployPanel.vue'
   import ProcessContent from './ProcessContent.vue'
@@ -378,6 +409,7 @@
       PipeDocumentHeader,
       PipeDocumentRunPanel,
       PipePropertiesPanel,
+      PipeRuntimeConfigurePanel,
       PipeSchedulePanel,
       PipeDeployPanel,
       ProcessContent,
@@ -392,7 +424,7 @@
         handler: 'updateRoute',
         immediate: true
       },
-      is_pipe_mode_run: {
+      is_deployed: {
         handler: 'initStickyAndTour',
         immediate: true
       },
@@ -427,6 +459,8 @@
         output_item_id: _.uniqueId('item-'),
         show_pipe_schedule_dialog: false,
         show_pipe_properties_dialog: false,
+        show_runtime_configure_dialog: false,
+        yaml_view: 'yaml',
         show_yaml: false,
         transitioning_yaml: false,
         has_run_once: false,
@@ -527,14 +561,21 @@
           }
         }
       },
-      is_view_runtime() {
+      pipe_identifier() {
+        var alias = this.edit_pipe.alias
+        return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
+      },
+      pipe_schedule() {
+        return _.get(this.edit_pipe, 'schedule', {})
+      },
+      is_runtime() {
         return this.active_view == PIPEDOC_VIEW_RUN
       },
       active_process_eid() {
         var process = _.last(this.getActiveDocumentProcesses())
         return _.get(process, 'eid', '')
       },
-      is_pipe_mode_run: {
+      is_deployed: {
         get() {
           return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
         },
@@ -549,8 +590,10 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonText: 'TURN PIPE OFF',
-              cancelButtonText: 'CANCEL',
+              confirmButtonClass: 'ttu b',
+              cancelButtonClass: 'ttu b',
+              confirmButtonText: 'Turn pipe off',
+              cancelButtonText: 'Cancel',
               type: 'warning'
             }).then(() => {
               doSet()
@@ -643,6 +686,10 @@
         this.show_pipe_properties_dialog = true
         this.$store.track('Opened Properties Dialog')
       },
+      openRuntimeConfigureDialog() {
+        this.show_runtime_configure_dialog = true
+        this.$store.track('Opened Runtime Configure Dialog')
+      },
       openScheduleDialog() {
         this.show_pipe_schedule_dialog = true
         this.$store.track('Opened Schedule Dialog')
@@ -656,6 +703,17 @@
 
         this.saveChanges().then(() => {
           this.show_pipe_properties_dialog = false
+        })
+      },
+      saveRuntime(attrs) {
+        attrs = _.pick(attrs, ['ui'])
+
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, attrs)
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+
+        this.saveChanges().then(() => {
+          this.show_runtime_configure_dialog = false
         })
       },
       saveSchedule(attrs) {

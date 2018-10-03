@@ -312,6 +312,7 @@
         this.$store.commit('builder/INIT_DEF', this.definition)
       },
       initSticky() {
+        /*
         setTimeout(() => {
           stickybits('.sticky', {
             scrollEl: '#' + this.doc_id,
@@ -319,6 +320,7 @@
             stickyBitStickyOffset: 32
           })
         }, 100)
+        */
       }
     }
   }

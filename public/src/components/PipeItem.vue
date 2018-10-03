@@ -1,6 +1,6 @@
 <template>
   <article
-    class="mv3-l bb ba-l br2-l pointer no-select trans-pm shadow-sui-segment-l css-list-item"
+    class="mv3-l bb ba-l br2-l pointer no-select trans-pm css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -23,7 +23,7 @@
       <div class="flex-none nt3 nb3">
         <div class="pv3" @click.stop>
           <LabelSwitch
-            class="dib ml2 hint--bottom"
+            class="dib hint--bottom"
             active-color="#13ce66"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             v-model="is_deployed"
@@ -35,7 +35,7 @@
           <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>
           </span>
-          <el-dropdown-menu style="min-width: 10rem; margin-left: -12px; margin-top: -8px" slot="dropdown">
+          <el-dropdown-menu style="min-width: 10rem; margin-top: -0.5rem" slot="dropdown">
             <el-dropdown-item class="flex flex-row items-center ph2" command="open"><i class="material-icons mr3">edit</i> Edit</el-dropdown-item>
             <el-dropdown-item class="flex flex-row items-center ph2" command="duplicate"><i class="material-icons mr3">content_copy</i> Duplicate</el-dropdown-item>
             <div class="mv2 bt b--black-10"></div>
@@ -98,8 +98,10 @@
 
           if (value === false) {
             this.$confirm('This pipe is turned on and is possibly being used in a production environment. Are you sure you want to continue?', 'Really turn pipe off?', {
-              confirmButtonText: 'TURN PIPE OFF',
-              cancelButtonText: 'CANCEL',
+              confirmButtonClass: 'ttu b',
+              cancelButtonClass: 'ttu b',
+              confirmButtonText: 'Turn pipe off',
+              cancelButtonText: 'Cancel',
               type: 'warning'
             }).then(() => {
               doSet()
