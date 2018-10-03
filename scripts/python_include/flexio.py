@@ -223,96 +223,7 @@ context_connections_obj = ContextConnections()
 
 
 
-
-
-
-class ContextFsFile(object):
-    
-    def __init__(self, handle, writing):
-        self.handle = handle
-        self.writing = writing
-        pass
-
-    def __del__(self):
-        if self.handle != 0 and self.writing:
-            self.close()
-
-    def read(self, len = None):
-        buf = proxy.invoke('read', [self.handle, len])
-        if buf is False:
-            return False
-        return buf
-
-    def write(self, data='', connection=''):
-        proxy.invoke('write', [self.handle, data])
-
-    def close(self):
-        if self.handle != 0 and self.writing:
-            proxy.invoke('fsCommit', [self.handle])
-            self.writing = False
-            self.handle = False
-
-
-class ContextFs(object):
-
-    def __init__(self):
-        pass
-
-    def create(self, path, connection=''):
-        handle = proxy.invoke('fsCreate', [path, connection])
-        f = ContextFsFile(handle, writing=True)
-        return f
-
-    def open(self, path, connection=''):
-        handle = proxy.invoke('fsOpen', ['r+', path, connection])
-        f = ContextFsFile(handle, writing=False)
-        return f
-
-    def read(self, path, connection=''):
-        handle = proxy.invoke('fsOpen', ['r+', path, connection])
-
-        buf = b''
-        while True:
-            chunk = proxy.invoke('read', [handle, 4096])
-            if chunk is False:
-                break
-            buf += chunk
-        return buf
-
-    def write(self, path, data='', connection=''):
- 
-        handle = proxy.invoke('fsOpen', ['w', path, connection])
-
-        idx = 0
-        buf = data
-        while len(buf) > 0:
-            chunk = buf[:4096]
-            buf = buf[4096:]
-            proxy.invoke('write', [handle, chunk])
-            idx = idx + 1
-
-        handle = proxy.invoke('fsCommit', [handle])
-
-
-    def list(self, path, connection=''):
- 
-        return proxy.invoke('fsList', [path, connection])
-
-    def exists(self, path, connection=''):
- 
-        return proxy.invoke('fsExists', [path, connection])
-
-    def remove(self, path, connection=''):
- 
-        return proxy.invoke('fsRemove', [path, connection])
-
-
-
-context_fs = ContextFs()
-
-
-
-class Input(object):
+class Stream(object):
 
     # used for setting fetch style
     Dictionary = 1
@@ -330,6 +241,7 @@ class Input(object):
             self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
+            self._need_commit = False
         else:
             self._name = ''
             self._content_type = 'application/octet-stream'
@@ -341,14 +253,29 @@ class Input(object):
             self._fetch_style = self.Dictionary
             self._casts = None
             self._casting = True
+            self._need_commit = False
+
+    def __del__(self):
+        if self._handle != 0 and self._need_commit:
+            self.close()
 
     @property
     def name(self):
         return self._name
 
+    @name.setter
+    def name(self, value):
+        self._name = value
+        proxy.invoke('setOutputStreamInfo', [self._handle, {'name':value}])
+
     @property
     def content_type(self):
         return self._content_type
+
+    @content_type.setter
+    def content_type(self, value):
+        self._content_type = value
+        proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
 
     @property
     def size(self):
@@ -387,6 +314,17 @@ class Input(object):
     @casting.setter
     def casting(self, value):
         self._casting = value
+
+    def create(self, name=None, content_type='text/plain', structure=None):
+        properties = { 'content_type': content_type }
+        if name:
+            properties['name'] = name
+        if structure:
+            properties['structure'] = structure
+        if proxy.invoke('managedCreate', [self._handle, properties]) is False:
+            return False
+        else:
+            return self
 
     def read(self, length=None):
         if length is None:
@@ -470,48 +408,6 @@ class Input(object):
             except KeyError:
                 continue
 
-class Output(object):
-    def __init__(self, info):
-        if info:
-            self._name = info['name']
-            self._content_type = info['content_type']
-            self._size = info['size']
-            self._handle = info['handle']
-        else:
-            self._name = ''
-            self._content_type = 'application/octet-stream'
-            self._size = 0
-            self._handle = -1
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'name':value}])
-
-    @property
-    def content_type(self):
-        return self._content_type
-
-    @content_type.setter
-    def content_type(self, value):
-        self._content_type = value
-        proxy.invoke('setOutputStreamInfo', [self._handle, {'content_type':value}])
-
-    def create(self, name=None, content_type='text/plain', structure=None):
-        properties = { 'content_type': content_type }
-        if name:
-            properties['name'] = name
-        if structure:
-            properties['structure'] = structure
-        if proxy.invoke('managedCreate', [self._handle, properties]) is False:
-            return False
-        else:
-            return self
-
     def write(self, data):
         proxy.invoke('write', [self._handle, data])
 
@@ -521,6 +417,10 @@ class Output(object):
     def insert_rows(self, rows):
         proxy.invoke('insertRows', [self._handle, rows])
 
+    def close(self):
+        if self._handle != 0 and self._need_commit:
+            proxy.invoke('fsCommit', [self._handle])
+            self._need_commit = False
 
 class PipeFunctions(object):
     def __init__(self):
@@ -608,6 +508,66 @@ class PipeFunctions(object):
         proxy.invoke('runJob', [json.dumps(params)])
 
 
+
+
+class ContextFs(object):
+
+    def __init__(self):
+        pass
+
+    def create(self, path, connection=''):
+        info = proxy.invoke('fsCreate', [path, connection])
+        stream = Stream(info)
+        stream._need_commit = True
+        return stream
+
+    def open(self, path, connection=''):
+        info = proxy.invoke('fsOpen', ['r+', path, connection])
+        return Stream(info)
+
+    def read(self, path, connection=''):
+        info = proxy.invoke('fsOpen', ['r+', path, connection])
+        handle = info['handle']
+
+        buf = b''
+        while True:
+            chunk = proxy.invoke('read', [handle, 4096])
+            if chunk is False:
+                break
+            buf += chunk
+        return buf
+
+    def write(self, path, data='', connection=''):
+ 
+        info = proxy.invoke('fsOpen', ['w', path, connection])
+        handle = info['handle']
+
+        idx = 0
+        buf = data
+        while len(buf) > 0:
+            chunk = buf[:4096]
+            buf = buf[4096:]
+            proxy.invoke('write', [handle, chunk])
+            idx = idx + 1
+
+        handle = proxy.invoke('fsCommit', [handle])
+
+
+    def list(self, path, connection=''):
+ 
+        return proxy.invoke('fsList', [path, connection])
+
+    def exists(self, path, connection=''):
+ 
+        return proxy.invoke('fsExists', [path, connection])
+
+    def remove(self, path, connection=''):
+ 
+        return proxy.invoke('fsRemove', [path, connection])
+
+
+
+
 class Result(object):
     def __init__(self, output):
         self.output = output
@@ -631,6 +591,7 @@ class Context(object):
         self._form = None
         self._files = None
         self.pipe = PipeFunctions()
+        self.context_fs = ContextFs()
         self.res = Result(output)
 
     @property
@@ -652,7 +613,7 @@ class Context(object):
             fileinfo = proxy.invoke('getFilesParameters', [])
             for key, value in fileinfo.items():
                 info  = proxy.invoke('getInputStreamInfo', [key])
-                self.files[key] = Input(info)
+                self.files[key] = Stream(info)
         return self._files
 
     @property
@@ -661,7 +622,7 @@ class Context(object):
 
     @property
     def fs(self):
-        return context_fs
+        return self.context_fs
 
     @property
     def connections(self):
@@ -683,10 +644,10 @@ def create_context():
     stdin_stream_info  = proxy.invoke('getInputStreamInfo', ['_fxstdin_'])
     stdout_stream_info = proxy.invoke('getOutputStreamInfo', ['_fxstdout_'])
 
-    input = Input(stdin_stream_info)
-    output = Output(stdout_stream_info)
+    input_stream = Stream(stdin_stream_info)
+    output_stream = Stream(stdout_stream_info)
 
-    return Context(input, output)
+    return Context(input_stream, output_stream)
 
 def run(handler):
 
