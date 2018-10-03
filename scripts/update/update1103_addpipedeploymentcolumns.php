@@ -48,15 +48,15 @@ if (is_null($db))
 
 try
 {
-    // STEP 1: rename/add the deployment fields
+    // STEP 1: rename various deploy columns
+    $db->exec("alter table tbl_pipe rename column pipe_mode to deploy_mode;");
+    $db->exec("alter table tbl_pipe rename column schedule_status to deploy_schedule;");
 
-
+    // STEP 2: add new deploy columns
     $sql = <<<EOT
-    alter table tbl_pipe
-         rename column pipe_mode to deploy_mode,
-         rename column schedule_status to deploy_schedule,
-         add column deploy_api varchar(1) NOT NULL default 'I',
-         add column deploy_ui varchar(1) NOT NULL default 'I';
+        alter table tbl_pipe
+            add column deploy_api varchar(1) NOT NULL default 'I',
+            add column deploy_ui varchar(1) NOT NULL default 'I';
 EOT;
     $db->exec($sql);
 
