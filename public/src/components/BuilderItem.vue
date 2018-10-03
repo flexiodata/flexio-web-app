@@ -153,7 +153,7 @@
           @click="$emit('delete-step', index)"
           v-show="showDeleteButtons"
         >
-          <i class="el-icon-close pointer f3 black-30 hover-black-60"></i>
+          <i class="material-icons pointer f3 black-30 hover-black-60">delete</i>
         </el-button>
       </div>
 

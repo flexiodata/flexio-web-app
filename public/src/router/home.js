@@ -24,10 +24,10 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      // redirect to /dashboard
+      // redirect to /pipes
       path: '',
       name: ROUTE_HOME,
-      redirect: '/dashboard'
+      redirect: '/pipes'
     },
     {
       path: '/dashboard',
