@@ -10,7 +10,7 @@
         :class="showTitle ? 'mt2 pt2 bt b--black-10' : ''"
         v-if="has_connection"
       >
-        <service-icon :type="ctype" class="flex-none dib v-top br2 square-4" />
+        <ServiceIcon :type="ctype" class="flex-none dib v-top br2 square-4" />
         <div class="flex-fill flex flex-column ml2">
           <div class="f4 fw6 lh-title">{{service_name}}</div>
           <div class="f6 fw4 mt1">{{service_description}}</div>
@@ -29,7 +29,7 @@
     </div>
 
     <div>
-      <service-list
+      <ServiceList
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
