@@ -33,6 +33,10 @@
 
   const tasks = [
     {
+      op: 'execute',
+      name: 'Execute',
+      icon: 'code'
+    },{
       op: 'connect',
       name: 'Connect',
       icon: 'repeat'
@@ -56,10 +60,6 @@
       op: 'convert',
       name: 'Convert',
       icon: 'settings'
-    },{
-      op: 'execute',
-      name: 'Execute',
-      icon: 'code'
     },{
       op: 'echo',
       name: 'Echo',
