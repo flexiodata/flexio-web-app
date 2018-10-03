@@ -1,7 +1,7 @@
 <template>
   <nav class="z-10 bb b--black-20">
     <div class="flex flex-row items-center bg-white pv1 ph2 ph3-ns" style="min-height: 54px">
-      <div class="flex-fill flex flex-row items-center">
+      <div class="flex-fill flex flex-row items-center" style="letter-spacing: 0.03em">
         <router-link to="/pipes" class="mr3 dib link v-mid min-w3 hint--bottom" aria-label="Home">
           <img src="../assets/logo-flexio-navbar.png" class="dib" alt="Flex.io">
         </router-link>
