@@ -60,7 +60,7 @@ try
 EOT;
     $db->exec($sql);
 
-    // STEP 2: rename/add appropriate indexes
+    // STEP 3: rename/add appropriate indexes
     $sql = <<<EOT
         alter index idx_pipe_schedule_status rename to idx_pipe_deploy_schedule;
         create index idx_pipe_deploy_api on tbl_pipe (deploy_api);
