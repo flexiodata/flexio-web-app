@@ -349,7 +349,7 @@
               }
 
               // there are no errors in the form; do the submit
-              this.$emit('submit', this.edit_connection)
+              this.submitConnection(this.edit_connection)
             })
           } else if (info_panel) {
             info_panel.validate((valid3) => {
@@ -358,11 +358,11 @@
               }
 
               // there are no errors in the form; do the submit
-              this.$emit('submit', this.edit_connection)
+              this.submitConnection(this.edit_connection)
             })
           } else {
             // there are no errors in the form; do the submit
-            this.$emit('submit', this.edit_connection)
+            this.submitConnection(this.edit_connection)
           }
         })
       },
@@ -435,6 +435,42 @@
 
         var update_attrs = _.assign({}, attrs, { connection_info })
         this.edit_connection = _.assign({}, this.edit_connection, update_attrs)
+      },
+      submitConnection(attrs) {
+        var eid = attrs.eid
+        var ctype = _.get(attrs, 'connection_type', '')
+        var is_pending = _.get(attrs, 'eid_status', '') === OBJECT_STATUS_PENDING
+
+        attrs = _.pick(attrs, ['name', 'alias', 'description', 'connection_info'])
+        _.assign(attrs, { eid_status: OBJECT_STATUS_AVAILABLE })
+
+        // update the connection and make it available
+        this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
+          if (response.ok) {
+            this.$message({
+              message: is_pending ? 'The connection was created successfully.' : 'The connection was updated successfully.',
+              type: 'success'
+            })
+
+            // try to connect to the connection
+            this.$store.dispatch('testConnection', { eid, attrs })
+
+            if (is_pending) {
+              var analytics_payload = _.pick(attrs, ['eid', 'name', 'alias', 'description', 'connection_type'])
+              this.$store.track('Created Connection', analytics_payload)
+              this.$emit('create-connection', attrs)
+            } else {
+              this.$emit('edit-connection', attrs)
+            }
+          } else {
+            this.$message({
+              message: is_pending ? 'There was a problem creating the connection.' : 'There was a problem updating the connection.',
+              type: 'error'
+            })
+
+            this.$store.track('Created Connection (Error)')
+          }
+        })
       },
       onValidateItem(key, valid) {
         var errors = _.assign({}, this.form_errors)

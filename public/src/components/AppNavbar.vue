@@ -49,7 +49,7 @@
       <ConnectionEditPanel
         @close="show_connection_new_dialog = false"
         @cancel="show_connection_new_dialog = false"
-        @submit="tryUpdateConnection"
+        @create-connection="show_connection_new_dialog = false"
         v-if="show_connection_new_dialog"
       />
     </el-dialog>
@@ -65,10 +65,17 @@
     ROUTE_HOME_CONNECTIONS,
   } from '../constants/route'
   import UserDropdown from './UserDropdown.vue'
+  import ConnectionEditPanel from './ConnectionEditPanel.vue'
 
   export default {
     components: {
-      UserDropdown
+      UserDropdown,
+      ConnectionEditPanel
+    },
+    data() {
+      return {
+        show_connection_new_dialog: false
+      }
     },
     computed: {
       ...mapState([
@@ -126,7 +133,7 @@
         this.tryCreatePipe(attrs)
       },
       onNewConnectionClick() {
-        alert('TODO')
+        this.show_connection_new_dialog = true
       }
     }
   }
