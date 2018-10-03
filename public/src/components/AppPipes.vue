@@ -20,7 +20,7 @@
             v-model="filter"
           />
         </div>
-        <div class="flex-none flex flex-row items-center">
+        <div class="flex-none flex flex-row items-center" v-if="false">
           <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
         </div>
       </div>
@@ -85,8 +85,9 @@
           this.$store.dispatch('fetchPipes')
       },
       tryCreatePipe(attrs) {
-        if (!_.isObject(attrs))
+        if (!_.isObject(attrs)) {
           attrs = { name: 'Untitled Pipe' }
+        }
 
         this.$store.dispatch('createPipe', { attrs }).then(response => {
           if (response.ok) {
