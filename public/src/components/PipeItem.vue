@@ -83,14 +83,14 @@
       */
       is_deployed: {
         get() {
-          return _.get(this.item, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.item, 'deploy_mode') == PIPE_MODE_RUN ? true : false
         },
         set(value) {
           var doSet = () => {
-            var pipe_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var deploy_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
 
             var attrs = {
-              pipe_mode
+              deploy_mode
             }
 
             this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })

@@ -578,13 +578,13 @@
       },
       is_deployed: {
         get() {
-          return _.get(this.orig_pipe, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.orig_pipe, 'deploy_mode') == PIPE_MODE_RUN ? true : false
         },
         set(value) {
           var doSet = () => {
-            var pipe_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var deploy_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
             var pipe = _.cloneDeep(this.edit_pipe)
-            _.assign(pipe, { pipe_mode })
+            _.assign(pipe, { deploy_mode })
             this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
             this.saveChanges()
           }
