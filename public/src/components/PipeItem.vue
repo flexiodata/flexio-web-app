@@ -78,7 +78,7 @@
       },
       /*
       is_scheduled() {
-        return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+        return _.get(this.item, 'deploy_schedule') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
       */
       is_deployed: {

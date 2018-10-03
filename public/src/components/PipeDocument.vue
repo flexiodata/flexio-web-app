@@ -622,9 +622,9 @@
             if (_.isNil(_.get(pipe, 'schedule'))) {
               _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
             }
-            pipe.schedule_status = SCHEDULE_STATUS_ACTIVE
+            pipe.deploy_schedule = SCHEDULE_STATUS_ACTIVE
           } else {
-            pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
+            pipe.deploy_schedule = SCHEDULE_STATUS_INACTIVE
           }
 
           this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
@@ -718,7 +718,7 @@
         })
       },
       saveSchedule(attrs) {
-        attrs = _.pick(attrs, ['schedule', 'schedule_status'])
+        attrs = _.pick(attrs, ['schedule', 'deploy_schedule'])
 
         var pipe = _.cloneDeep(this.edit_pipe)
         _.assign(pipe, attrs)
