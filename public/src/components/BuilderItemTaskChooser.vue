@@ -54,7 +54,7 @@
       icon: 'settings_remote'
     },{
       op: 'oauth',
-      name: 'OAuth Helper',
+      name: 'OAuth',
       icon: 'security'
     },{
       op: 'connect',
