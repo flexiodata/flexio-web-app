@@ -588,6 +588,21 @@ class Context {
         }
         return this._form
     }
+
+    json(obj) {
+        this.output.contentType = "application/json"
+        this.output.write(JSON.stringify(obj))
+        proxy.close()
+        process.exit(0)
+    }
+
+    end(content) {
+        if (content !== null && content !== undefined) {
+            this.output.write(content)
+        }
+        proxy.close()
+        process.exit(0)
+    }
 }
 
 
