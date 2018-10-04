@@ -567,22 +567,6 @@ class ContextFs(object):
 
 
 
-
-class Result(object):
-    def __init__(self, output):
-        self.output = output
-
-    def json(self, obj):
-        self.output.content_type = "application/json"
-        self.output.write(json.dumps(obj))
-        proxy.close()
-
-    def end(self, content=None):
-        if content is not None:
-            self.output.write(content)
-        proxy.close()
-
-
 class Context(object):
     def __init__(self, input, output):
         self.input = input
@@ -592,7 +576,6 @@ class Context(object):
         self._files = None
         self.pipe = PipeFunctions()
         self.context_fs = ContextFs()
-        self.res = Result(output)
 
     @property
     def query(self):
@@ -627,6 +610,21 @@ class Context(object):
     @property
     def connections(self):
         return context_connections_obj
+
+    def json(self, obj):
+        self.output.content_type = "application/json"
+        self.output.write(json.dumps(obj))
+        proxy.close()
+        sys.exit()
+    
+    def end(self, content=None, content_type=None):
+        if content_type is not None:
+            self.output.content_type = content_type
+        if content is not None:
+            self.output.write(content)
+        proxy.close()
+        sys.exit()
+
 
 g_print_output = None
 def print_redirect_to_output(*args, **kwargs):
