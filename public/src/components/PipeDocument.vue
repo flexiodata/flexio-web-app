@@ -875,6 +875,9 @@
           // turn scheduling on and set the frequency to every 5 minutes
           var pipe = _.cloneDeep(this.edit_pipe)
 
+          // activate schedule deployment flag
+          _.set(pipe, 'deploy_schedule', ACTIVE)
+
           // initialize schedule object (defaults)
           if (_.isNil(_.get(pipe, 'schedule'))) {
             _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
