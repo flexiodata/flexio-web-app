@@ -37,6 +37,22 @@
       name: 'Execute',
       icon: 'code'
     },{
+      op: 'request',
+      name: 'Request',
+      icon: 'http'
+    },{
+      op: 'convert',
+      name: 'Convert',
+      icon: 'settings'
+    },{
+      op: 'email',
+      name: 'Email',
+      icon: 'mail_outline'
+    },{
+      op: 'echo',
+      name: 'Echo',
+      icon: 'settings_remote'
+    },{
       op: 'oauth',
       name: 'OAuth Helper',
       icon: 'security'
@@ -44,10 +60,6 @@
       op: 'connect',
       name: 'Connect',
       icon: 'repeat'
-    },{
-      op: 'request',
-      name: 'Request',
-      icon: 'http'
     },{
       op: 'read',
       name: 'Read',
@@ -60,18 +72,6 @@
       op: 'copy',
       name: 'Copy',
       icon: 'content_copy'
-    },{
-      op: 'convert',
-      name: 'Convert',
-      icon: 'settings'
-    },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote'
-    },{
-      op: 'email',
-      name: 'Email',
-      icon: 'mail_outline'
     }
   ]
 
@@ -151,7 +151,7 @@
         return marked(this.description)
       },
       items() {
-        return _.isArray(this.ops) ? _.filter(this.tasks, (t) => { return this.ops.indexOf(t.op) != -1 }) : tasks
+        return _.isArray(this.ops) ? _.filter(this.tasks, (t) => { return this.ops.indexOf(t.op) != -1 }) : this.tasks
       }
     },
     methods: {
