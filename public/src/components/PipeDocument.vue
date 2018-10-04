@@ -78,7 +78,7 @@
               width: show_yaml ? '20%' : '1px',
               marginLeft: show_yaml ? '0' : '-2px',
               opacity: show_yaml ? '1' : '0.01',
-              boxShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+              boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
               zIndex: 9
             }"
           >
@@ -919,5 +919,5 @@
   .sticky.js-is-sticky
   .sticky.js-is-stuck
     border-bottom: 1px solid rgba(0,0,0,0.1)
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1)
+    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
 </style>
