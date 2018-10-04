@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "execute",  // string, required
-    "lang": "",       // string, required, enum: python|javascript
+    "lang": "",       // string, required, enum: python|javascript|nodejs
     "code": "",       // string (base64 encoded string of code to run); either "code" or "path" is required
     "path": "",       // string (url to remote code to execute); either "code" or "path" is required
     "integrity": ""   // string (integrity check; sha256, sha384, sha512 allowed with format: <sha-type>:<integrity-check>
@@ -29,7 +29,7 @@ namespace Flexio\Jobs;
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['execute']),
-        'lang'       => array('required' => true,  'enum' => ['python','javascript']),
+        'lang'       => array('required' => true,  'enum' => ['python','javascript','nodejs']),
         'code'       => array('required' => false, 'type' => 'string'),
         'path'       => array('required' => false, 'type' => 'string'),
         'integrity'  => array('required' => false, 'type' => 'string')
@@ -115,7 +115,7 @@ class ExecuteProxy
         return true;
     }
 
- 
+
         /*
         // start a zeromq server -- let OS choose port
         $address = self::getLocalIpAddress();
@@ -140,7 +140,7 @@ class ExecuteProxy
         // generate a key which will be used as a kind of password
         $access_key = \Flexio\Base\Util::generateRandomString(20);
         $container_name = 'fxexec-' . $access_key;
- 
+
         // start a zeromq server -- let OS choose port
 
         $host_socket_path = "/dev/shm/ipc-exec-$access_key";
@@ -177,7 +177,7 @@ class ExecuteProxy
         //echo "./update-docker-images && $cmd";
         //ob_end_flush();
         //flush();
-        
+
         exec("$cmd > /dev/null &");
 
         // should the script host crash for any reason, the container could be left running;
@@ -669,7 +669,7 @@ class ScriptHost
         $file = new ScriptHostFile();
         $file->stream = $stream;
         $file->writer = $stream->getWriter();
-        
+
         $this->files[] = $file;
         $handle = count($this->files)-1;
 
@@ -1066,7 +1066,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
-        if ($this->lang == 'python' || $this->lang == 'javascript')
+        if ($this->lang == 'python' || $this->lang == 'javascript' || $this->lang == 'nodejs')
         {
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
@@ -1086,7 +1086,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
         }
-        else if ($this->lang == 'javascript')
+        else if ($this->lang == 'javascript' || $this->lang == 'nodejs')
         {
             // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
@@ -1172,7 +1172,7 @@ class Execute extends \Flexio\Jobs\Base
 
             return $str;
         }
-         else if ($lang == 'javascript')
+         else if ($lang == 'javascript' || $lang == 'nodejs')
         {
             return true;
         }
