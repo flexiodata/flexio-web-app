@@ -122,7 +122,7 @@
             items: [{
               op: 'execute',
               lang: 'python',
-              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LnJlcy5lbmQoIkhlbGxvLCBXb3JsZC4iKQo='
+              code: 'IyBiYXNpYyBoZWxsbyB3b3JsZCBleGFtcGxlCmRlZiBmbGV4X2hhbmRsZXIoZmxleCk6CiAgICBmbGV4LmVuZCgiSGVsbG8sIFdvcmxkLiIpCg=='
             }]
           }
         }
