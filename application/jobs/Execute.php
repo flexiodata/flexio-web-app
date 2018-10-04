@@ -1005,6 +1005,10 @@ class Execute extends \Flexio\Jobs\Base
         // get the language
         $this->lang = $job_params['lang'];
 
+        // allow 'nodejs' as an alternate for javascript
+        if ($this->lang == 'nodejs')
+            $this->lang = 'javascript';
+
         // if code is specified, get the contents from the supplied code
         $code = $job_params['code'] ?? false;
         if ($code !== false)
@@ -1066,7 +1070,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
-        if ($this->lang == 'python' || $this->lang == 'javascript' || $this->lang == 'nodejs')
+        if ($this->lang == 'python' || $this->lang == 'javascript')
         {
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
@@ -1086,7 +1090,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
         }
-        else if ($this->lang == 'javascript' || $this->lang == 'nodejs')
+        else if ($this->lang == 'javascript')
         {
             // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
