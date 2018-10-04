@@ -77,7 +77,9 @@
               minWidth: show_yaml ? '200px' : '1px',
               width: show_yaml ? '20%' : '1px',
               marginLeft: show_yaml ? '0' : '-2px',
-              opacity: show_yaml ? '1' : '0.01'
+              opacity: show_yaml ? '1' : '0.01',
+              boxShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+              zIndex: 9
             }"
           >
             <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
@@ -917,5 +919,5 @@
   .sticky.js-is-sticky
   .sticky.js-is-stuck
     border-bottom: 1px solid rgba(0,0,0,0.1)
-    box-shadow: 0 4px 16px -6px rgba(0,0,0,0.2)
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1)
 </style>
