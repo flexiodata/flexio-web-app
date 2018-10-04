@@ -79,7 +79,7 @@
               marginLeft: show_yaml ? '0' : '-2px',
               opacity: show_yaml ? '1' : '0.01',
               boxShadow: '2px 2px 6px rgba(0,0,0,0.1)',
-              zIndex: 9
+              zIndex: show_yaml ? 2 : 0
             }"
           >
             <div class="flex flex-row items-center bg-nearer-white bb b--black-05 pa2">
