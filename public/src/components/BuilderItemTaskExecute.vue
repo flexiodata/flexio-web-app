@@ -89,12 +89,12 @@
 
   const default_python = util.btoaUnicode(`# basic hello world example
 def flex_handler(flex):
-    flex.res.end("Hello, World.")
+    flex.end("Hello, World.")
 `)
 
   const default_javascript = util.btoaUnicode(`// basic hello world example
 exports.flex_handler = function(flex) {
-  flex.res.end("Hello, World.")
+  flex.end("Hello, World.")
 }
 `)
 
