@@ -126,8 +126,8 @@ import json
 
 def flex_handler(flex):
 
-    connection_alias = '${alias}'
-    auth_token = flex.connections[connection_alias].get_access_token()
+    connection_identifier = '${alias}'
+    auth_token = flex.connections[connection_identifier].get_access_token()
 
     flex.end(auth_token)
 `
