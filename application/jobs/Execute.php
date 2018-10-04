@@ -19,7 +19,7 @@ namespace Flexio\Jobs;
 // DESCRIPTION:
 {
     "op": "execute",  // string, required
-    "lang": "",       // string, required, enum: python|javascript|nodejs
+    "lang": "",       // string, required, enum: python|nodejs|javascript
     "code": "",       // string (base64 encoded string of code to run); either "code" or "path" is required
     "path": "",       // string (url to remote code to execute); either "code" or "path" is required
     "integrity": ""   // string (integrity check; sha256, sha384, sha512 allowed with format: <sha-type>:<integrity-check>
@@ -29,7 +29,7 @@ namespace Flexio\Jobs;
 $validator = \Flexio\Base\Validator::create();
 if (($validator->check($params, array(
         'op'         => array('required' => true,  'enum' => ['execute']),
-        'lang'       => array('required' => true,  'enum' => ['python','javascript','nodejs']),
+        'lang'       => array('required' => true,  'enum' => ['python','nodejs','javascript']),
         'code'       => array('required' => false, 'type' => 'string'),
         'path'       => array('required' => false, 'type' => 'string'),
         'integrity'  => array('required' => false, 'type' => 'string')
@@ -1005,9 +1005,10 @@ class Execute extends \Flexio\Jobs\Base
         // get the language
         $this->lang = $job_params['lang'];
 
-        // allow 'nodejs' as an alternate for javascript
-        if ($this->lang == 'nodejs')
-            $this->lang = 'javascript';
+        // allow 'javascript' as an alternate for nodejs for backward compatability
+        // TODO: remove after migrating all old references
+        if ($this->lang == 'javascript')
+            $this->lang = 'nodejs';
 
         // if code is specified, get the contents from the supplied code
         $code = $job_params['code'] ?? false;
@@ -1070,7 +1071,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INTEGRITY_FAILED);
         }
 
-        if ($this->lang == 'python' || $this->lang == 'javascript')
+        if ($this->lang == 'python' || $this->lang == 'nodejs')
         {
             $dockerbin = \Flexio\System\System::getBinaryPath('docker');
             if (is_null($dockerbin))
@@ -1090,7 +1091,7 @@ class Execute extends \Flexio\Jobs\Base
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::INVALID_SYNTAX, $err);
             }
         }
-        else if ($this->lang == 'javascript')
+        else if ($this->lang == 'nodejs')
         {
             // if a flexio_hander is specified, call it, otherwise let the script handle everything
             if (strpos($this->code, "flexio_handler") !== false)
@@ -1176,7 +1177,7 @@ class Execute extends \Flexio\Jobs\Base
 
             return $str;
         }
-         else if ($lang == 'javascript' || $lang == 'nodejs')
+         else if ($lang == 'nodejs')
         {
             return true;
         }
