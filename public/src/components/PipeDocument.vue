@@ -266,11 +266,11 @@
                       :is-mode-run.sync="is_deployed"
                       :eid="eid"
                       :identifier="pipe_identifier"
-                      :schedule="pipe_schedule"
-                      :deployment-items.sync="deployment_items"
                       :show-properties-panel.sync="show_pipe_properties_dialog"
                       :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
+                      @updated-deployment="onDeploymentUpdated"
+                      v-bind="deploy_pipe_attrs"
                     />
                   </div>
                 </el-collapse-item>
@@ -346,8 +346,6 @@
   import { mapState, mapGetters } from 'vuex'
   import tours from '../data/tour/index-keyed'
   import {
-    SCHEDULE_STATUS_ACTIVE,
-    SCHEDULE_STATUS_INACTIVE,
     SCHEDULE_FREQUENCY_FIVE_MINUTES,
     SCHEDULE_DEFAULTS
   } from '../constants/schedule'
@@ -371,6 +369,9 @@
   import PopperTour from './PopperTour.vue'
 
   import MixinConfig from './mixins/config'
+
+  const ACTIVE = 'A'
+  const INACTIVE = 'I'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
@@ -562,6 +563,15 @@
           }
         }
       },
+      deploy_pipe_attrs() {
+        return _.pick(this.edit_pipe, [
+          'deploy_mode',
+          'deploy_schedule',
+          'deploy_api',
+          'deploy_ui',
+          'schedule'
+        ])
+      },
       pipe_identifier() {
         var alias = this.edit_pipe.alias
         return alias.length > 0 ? alias : _.get(this.edit_pipe, 'eid', '')
@@ -606,29 +616,6 @@
             doSet()
             this.$store.track("Turned Pipe On")
           }
-        }
-      },
-      deployment_items: {
-        get() {
-          return _.get(this.edit_pipe, 'ui.deployment', [])
-        },
-        set(value) {
-          var pipe = _.cloneDeep(this.edit_pipe)
-          _.set(pipe, 'ui.deployment', value)
-
-          // activate or deactivate scheduling on the pipe when setting
-          // scheduling in the deployment panel
-          if (_.includes(value, 'schedule')) {
-            if (_.isNil(_.get(pipe, 'schedule'))) {
-              _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
-            }
-            pipe.deploy_schedule = SCHEDULE_STATUS_ACTIVE
-          } else {
-            pipe.deploy_schedule = SCHEDULE_STATUS_INACTIVE
-          }
-
-          this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-          this.saveChanges()
         }
       }
     },
@@ -814,6 +801,21 @@
           }, timeout ? timeout : 10)
         }
       },
+      onDeploymentUpdated(value) {
+        var pipe = _.cloneDeep(this.edit_pipe)
+        _.assign(pipe, value)
+
+        // add default scheduling options to the pipe when
+        // turning scheduling on for the first time
+        if (_.get(pipe, 'deploy_schedule') == ACTIVE) {
+          if (_.isNil(_.get(pipe, 'schedule'))) {
+            _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
+          }
+        }
+
+        this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+        this.saveChanges()
+      },
       onTourStart() {
         this.tour_current_step = 0
         var current_step = this.tour_current_step
@@ -870,18 +872,22 @@
             setTimeout(() => { callback(true) }, 1)
           })
         } else if (current_step == 5) {
-          this.deployment_items = [].concat(['schedule'])
+          // turn scheduling on and set the frequency to every 5 minutes
+          var pipe = _.cloneDeep(this.edit_pipe)
 
-          // now set the frequency to every 5 minutes
-          setTimeout(() => {
-            var pipe = _.cloneDeep(this.edit_pipe)
-            _.set(pipe, 'schedule.frequency', SCHEDULE_FREQUENCY_FIVE_MINUTES)
-            this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
-            this.saveChanges().then(() => {
-              this.tour_current_step++
-              setTimeout(() => { callback(true) }, 1)
-            })
-          }, 200)
+          // initialize schedule object (defaults)
+          if (_.isNil(_.get(pipe, 'schedule'))) {
+            _.set(pipe, 'schedule', SCHEDULE_DEFAULTS)
+          }
+
+          // set frequency to 5 minutes
+          _.set(pipe, 'schedule.frequency', SCHEDULE_FREQUENCY_FIVE_MINUTES)
+
+          this.$store.commit('pipe/UPDATE_EDIT_PIPE', pipe)
+          this.saveChanges().then(() => {
+            this.tour_current_step++
+            setTimeout(() => { callback(true) }, 1)
+          })
         } else {
           this.tour_current_step++
           callback(true)

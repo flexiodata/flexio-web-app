@@ -10,7 +10,7 @@
         <el-checkbox :label="item.key">{{item.label}}</el-checkbox>
 
         <div class="f8 fw6 lh-copy" style="margin-left: 24px">
-          <div v-if="item.key == 'schedule' && is_schedule_deployed">
+          <div v-if="item.key == 'deploy_schedule' && is_schedule_deployed">
             <span style="margin-right: 6px">{{schedule_str}}</span>
             <el-button
               type="text"
@@ -27,7 +27,7 @@
               Copy
             </el-button>
           </div>
-          <div v-if="item.key == 'api' && is_api_deployed">
+          <div v-if="item.key == 'deploy_api' && is_api_deployed">
             <span style="margin-right: 6px">{{api_url}}</span>
             <el-button
               type="text"
@@ -47,7 +47,7 @@
               Copy
             </el-button>
           </div>
-          <div v-if="item.key == 'web' && is_web_deployed">
+          <div v-if="item.key == 'deploy_ui' && is_web_deployed">
             <span style="margin-right: 6px">{{runtime_url}}</span>
             <el-button
               type="text"
@@ -98,6 +98,9 @@
   import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
+  const ACTIVE = 'A'
+  const INACTIVE = 'I'
+
   export default {
     props: {
       isModeRun: {
@@ -116,9 +119,9 @@
         // must be an object or null
         required: true
       },
-      deploymentItems: {
-        type: Array,
-        default: () => { return [] }
+      showPropertiesPanel: {
+        type: Boolean,
+        default: false
       },
       showSchedulePanel: {
         type: Boolean,
@@ -127,6 +130,24 @@
       showRuntimeConfigurePanel: {
         type: Boolean,
         default: false
+      },
+
+      // from v-bind:pipe_deploy_attrs in pipe document
+      deploy_mode: {
+        type: String,
+        required: true
+      },
+      deploy_schedule: {
+        type: String,
+        required: true
+      },
+      deploy_api: {
+        type: String,
+        required: true
+      },
+      deploy_ui: {
+        type: String,
+        required: true
       }
     },
     components: {
@@ -136,15 +157,15 @@
       return {
         deployment_options: [
           {
-            key: 'schedule',
+            key: 'deploy_schedule',
             label: 'Run on a schedule',
           },
           {
-            key: 'api',
+            key: 'deploy_api',
             label: 'Run using an API endpoint',
           },
           {
-            key: 'web',
+            key: 'deploy_ui',
             label: 'Run using a Flex.io Web Interface',
           }
         ]
@@ -163,14 +184,6 @@
         },
         set(value) {
           this.$emit('update:isModeRun', value)
-        }
-      },
-      checklist: {
-        get() {
-          return this.deploymentItems
-        },
-        set(value) {
-          this.$emit('update:deploymentItems', value)
         }
       },
       show_properties: {
@@ -197,14 +210,29 @@
           this.$emit('update:showSchedulePanel', value)
         }
       },
+      checklist: {
+        get() {
+          var arr = _.map(this.deployment_options, (d) => {
+            return this[d.key] === ACTIVE ? d.key : false
+          })
+          return _.compact(arr)
+        },
+        set(value) {
+          var obj = {}
+          _.each(this.deployment_options, (d) => {
+            obj[d.key] = _.includes(value, d.key) ? ACTIVE : INACTIVE
+          })
+          this.$emit('updated-deployment', obj)
+        }
+      },
       is_schedule_deployed() {
-        return _.includes(this.checklist, 'schedule')
+        return _.includes(this.checklist, 'deploy_schedule')
       },
       is_api_deployed() {
-        return _.includes(this.checklist, 'api')
+        return _.includes(this.checklist, 'deploy_api')
       },
       is_web_deployed() {
-        return _.includes(this.checklist, 'web')
+        return _.includes(this.checklist, 'deploy_ui')
       },
       schedule_str() {
         var s = this.schedule
