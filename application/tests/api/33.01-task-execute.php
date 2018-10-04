@@ -53,8 +53,9 @@ EOD;
         // BEGIN TEST
         $script = <<<EOD
 exports.flexio_handler = function(context) {
-    context.output.content_type = "text/plain"
-    context.output.write('Hello, World!')
+    context.output.content_type = "text/plain";
+    context.output.write('Hello, World!');
+    context.end();
 }
 EOD;
         $task = \Flexio\Tests\Task::create([

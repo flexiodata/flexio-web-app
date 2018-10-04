@@ -33,7 +33,7 @@ class Test
         // TEST: execute task sha256 integrity check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -52,7 +52,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.1', 'Process Execute; (javascript) execute task with lowercase sha256 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -71,7 +71,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task with uppercase sha256 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -97,7 +97,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (javascript) execute task with sha256 integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -123,7 +123,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('A.4', 'Process Execute; (javascript) execute task with sha256 format (sha512 indicated) integrity failure',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -152,7 +152,7 @@ class Test
         // TEST: execute task sha384 integrity check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -171,7 +171,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (javascript) execute task with sha384 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,You!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -200,7 +200,7 @@ class Test
         // TEST: execute task sha512 integrity check
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,World!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,World!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",
@@ -219,7 +219,7 @@ class Test
         \Flexio\Tests\Check::assertInArray('C.1', 'Process Execute; (javascript) execute task with sha512 integrity check',  $actual, $expected, $results);
 
         // BEGIN TEST
-        $script = "exports.flexio_handler=function(context){context.output.content_type='text/plain';context.output.write('Hello,You!');}";
+        $script = "exports.flexio_handler=function(context){context.end('Hello,You!');}";
         $task = \Flexio\Tests\Task::create([
             [
                 "op" => "execute",

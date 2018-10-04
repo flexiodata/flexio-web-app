@@ -35,7 +35,7 @@ class Test
         // BEGIN TEST
         $script = <<<EOD
 from collections import OrderedDict
-def flexio_handler(context):
+def flexio_handler(flexio):
     vars = OrderedDict(sorted(context.vars.items()))
     for v in vars:
         context.output.write(str(v) + ";")
@@ -76,6 +76,7 @@ exports.flexio_handler = function(context) {
         context.output.write(p + ";");
     }
     context.output.content_type = "text/plain";
+    context.end()
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
@@ -149,6 +150,7 @@ exports.flexio_handler = function(context) {
     result = context.vars['a'] + context.vars['b'] + context.vars.b + context.vars.a
     context.output.write(result)
     context.output.content_type = "text/plain";
+    context.end()
 }
 EOD;
         $task = \Flexio\Tests\Task::create([

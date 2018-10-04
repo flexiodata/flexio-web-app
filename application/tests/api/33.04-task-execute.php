@@ -76,6 +76,7 @@ exports.flexio_handler = function(context) {
         context.output.write(p + ":" + params[p] + ";");
     }
     context.output.content_type = "text/plain";
+    context.end();
 }
 EOD;
         $task = \Flexio\Tests\Task::create([

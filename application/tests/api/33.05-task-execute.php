@@ -81,6 +81,7 @@ exports.flexio_handler = function(context) {
         context.output.write(p + ":" + params[p] + ";");
     }
     context.output.content_type = "text/plain";
+    context.end();
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
@@ -122,6 +123,7 @@ exports.flexio_handler = function(context) {
     for (key in obj) {
         context.output.write(key+":"+obj[key]+";");
     }
+    context.end()
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
