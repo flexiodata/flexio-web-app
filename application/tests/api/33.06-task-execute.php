@@ -35,7 +35,7 @@ class Test
         // BEGIN TEST
         $script = <<<EOD
 from collections import OrderedDict
-def flexio_handler(flexio):
+def flexio_handler(context):
     vars = OrderedDict(sorted(context.vars.items()))
     for v in vars:
         context.output.write(str(v) + ";")
