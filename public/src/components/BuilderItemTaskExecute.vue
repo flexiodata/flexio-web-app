@@ -73,7 +73,7 @@
           class="bg-white ba b--black-10"
           style="line-height: 1.15; font-size: 13px"
           transpose="base64"
-          :lang="edit_values.lang ? edit_values.lang : 'javascript'"
+          :lang="code_editor_lang"
           :options="{ minRows: 8, maxRows: 32 }"
           v-model="edit_values.code"
         />
@@ -161,8 +161,9 @@ exports.flex_handler = function(flex) {
         orig_values: _.assign({}, getDefaultValues()),
         edit_values: _.assign({}, getDefaultValues()),
         lang_options: [
-          { label: 'Python',     val: 'python' },
-          { label: 'Javascript', val: 'javascript' }
+          { label: 'Python',  val: 'python' },
+          { label: 'Node.js', val: 'nodejs' }
+          //{ label: 'Javascript', val: 'javascript' }
         ]
       }
     },
@@ -178,6 +179,15 @@ exports.flex_handler = function(flex) {
       },
       is_changed() {
         return !_.isEqual(this.edit_values, this.orig_values)
+      },
+      code_editor_lang() {
+        switch (this.edit_values.lang) {
+          case 'python':     return 'python'
+          case 'nodejs':     return 'javascript'
+          case 'javascript': return 'javascript'
+        }
+
+        return 'python'
       }
     },
     methods: {
@@ -206,6 +216,7 @@ exports.flex_handler = function(flex) {
           case 'python':
             this.code_python = form_values.code
             break
+          case 'nodejs':
           case 'javascript':
             this.code_javascript = form_values.code
             break
@@ -217,7 +228,8 @@ exports.flex_handler = function(flex) {
       },
       getCodeByLang(lang) {
         switch (lang) {
-          case 'python': return this.code_python
+          case 'python':     return this.code_python
+          case 'nodejs':     return this.code_javascript
           case 'javascript': return this.code_javascript
         }
 
