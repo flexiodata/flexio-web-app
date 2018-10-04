@@ -28,37 +28,20 @@
         Use Different Connection
       </el-button>
     </BuilderComponentConnectionChooser>
-    <el-form
-      class="el-form--compact el-form__label-tiny"
-      :model="edit_values"
-      v-if="has_available_connection"
-    >
-      <el-form-item
-        key="alias"
-        prop="alias"
-        label="How would you like to refer to this connection in this pipe?"
-      >
-        <div class="w5">
-          <el-input
-            placeholder="Alias"
-            v-model="edit_values['alias']"
-          />
-        </div>
-      </el-form-item>
-    </el-form>
   </div>
 </template>
 
 <script>
   import marked from 'marked'
   import { mapGetters } from 'vuex'
+  import util from '../utils'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
   import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
-      op: 'connect',
+      op: 'oauth',
       connection: '',
       alias: ''
     }
@@ -133,6 +116,30 @@
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
+      base64_code() {
+        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var code = `# Click the "Test" button to return your OAuth token
+
+import requests
+import json
+
+def flex_handler(flex):
+
+    connection_alias = '${alias}'
+    auth_token = flex.connections[connection_alias].get_access_token()
+
+    flex.end(auth_token)
+`
+
+        return util.btoaUnicode(code)
+      },
+      execute_task() {
+        return {
+          op: 'execute',
+          lang: 'python',
+          code: this.base64_code
+        }
       }
     },
     methods: {
@@ -156,7 +163,7 @@
         }
       },
       onEditValuesChange() {
-        this.$emit('item-change', this.edit_values, this.index)
+        this.$emit('item-change', this.execute_task, this.index)
       }
     }
   }

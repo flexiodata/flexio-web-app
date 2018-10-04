@@ -1,0 +1,6 @@
+task:
+  op: oauth
+
+prompt:
+  element: task-oauth
+  title: OAuth Helper

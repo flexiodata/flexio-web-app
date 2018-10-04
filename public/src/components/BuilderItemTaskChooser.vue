@@ -37,6 +37,10 @@
       name: 'Execute',
       icon: 'code'
     },{
+      op: 'oauth',
+      name: 'OAuth Helper',
+      icon: 'security'
+    },{
       op: 'connect',
       name: 'Connect',
       icon: 'repeat'

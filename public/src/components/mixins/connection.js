@@ -10,6 +10,11 @@ export default {
         return alias.length > 0 ? alias == id : c.eid == id
       })
     },
+    $_Connection_getConnectionIdentifier(c) {
+      var alias = _.get(c, 'alias', '')
+      var eid = _.get(c, 'eid', '')
+      return alias.length > 0 ? alias : eid
+    },
     $_Connection_getInfo(c, key, def) {
       var connection_type = c.connection_type || c
       var info = _.find(connections, { connection_type })
