@@ -180,6 +180,7 @@ class System
             {
                 case 'task':
                 case 'javascript':
+                case 'nodejs':
                 case 'python':
                     throw new \Flexio\Base\Exception(\Flexio\Base\Error::INSUFFICIENT_RIGHTS);
             }
@@ -223,6 +224,7 @@ class System
 
             // python/javascript
             case 'javascript':
+            case 'nodejs':
             case 'python':
                 {
                     $code = base64_decode($value);

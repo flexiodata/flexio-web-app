@@ -80,7 +80,7 @@ exports.flexio_handler = function(context) {
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -102,7 +102,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "process.time.started;process.time.unix;process.user.email;process.user.firstname;process.user.lastname;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (nodejs) execute task default variable keys',  $actual, $expected, $results);
 
 
         // TEST: execute task basic variable assignment
@@ -154,7 +154,7 @@ exports.flexio_handler = function(context) {
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -176,7 +176,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "bccb"
         }';
-        \Flexio\Tests\Check::assertInArray('B.2', 'Process Execute; (javascript) execute task default variable keys',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.2', 'Process Execute; (nodejs) execute task default variable keys',  $actual, $expected, $results);
     }
 }
 

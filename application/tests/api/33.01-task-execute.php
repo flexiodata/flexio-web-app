@@ -59,7 +59,7 @@ exports.flexio_handler = function(context) {
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::runProcess($apibase, $userid, $token, $task);
         $actual = $result;
@@ -68,7 +68,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task basic functionality',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (nodejs) execute task basic functionality',  $actual, $expected, $results);
     }
 }
 

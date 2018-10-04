@@ -96,7 +96,7 @@ EOD;
 Console.log('Hello, World!')
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -118,7 +118,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "Hello, World!\n"
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (javascript) execute task print to stdout',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (nodejs) execute task print to stdout',  $actual, $expected, $results);
     }
 }
 
