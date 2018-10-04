@@ -521,12 +521,15 @@ class ContextFs(object):
         stream._need_commit = True
         return stream
 
-    def open(self, path, connection=''):
-        info = proxy.invoke('fsOpen', ['r+', path, connection])
-        return Stream(info)
+    def open(self, path, mode='r', connection=''):
+        info = proxy.invoke('fsOpen', [mode, path, connection])
+        stream = Stream(info)
+        if mode == 'w' or mode == 'w+' or mode == 'a' or mode == 'a+':
+            stream._need_commit = True
+        return stream
 
     def read(self, path, connection=''):
-        info = proxy.invoke('fsOpen', ['r+', path, connection])
+        info = proxy.invoke('fsOpen', ['r', path, connection])
         handle = info['handle']
 
         buf = b''
