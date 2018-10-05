@@ -9,14 +9,14 @@
       v-show="text_width"
     />
     <transition name="el-zoom-in-center" mode="out-in">
-      <span
+      <div
         class="absolute top-0 lh-1 ttu b pointer"
         :style="text_style"
         @click.stop="onChange"
         v-bind:key="value"
       >
         {{value ? activeLabel : inactiveLabel}}
-      </span>
+      </div>
     </transition>
     <div class="relative overflow-hidden">
       <div class="absolute no-pointer-events dib lh-1 ttu b invisible" :style="hidden_text_style" ref="active-text">{{activeLabel}}</div>
@@ -39,6 +39,10 @@
       height: {
         type: Number,
         required: false
+      },
+      spacing: {
+        type: String,
+        default: '0.5rem'
       },
       activeLabel: {
         type: String,
@@ -83,7 +87,7 @@
     },
     computed: {
       text_width() {
-        var spacing = 30
+        var spacing = 16 - 2 /* circle width - offset */
         var atw = this.active_text_width + spacing
         var itw = this.inactive_text_width + spacing
         return _.isNumber(this.width) ? this.width : this.value ? atw : itw
@@ -97,6 +101,8 @@
         var styles = []
         styles.push('left: 1000px')
         styles.push('top: 1000px')
+        styles.push('padding-left: ' + this.spacing)
+        styles.push('padding-right: ' + this.spacing)
         styles.push('font-size: 14px')
         return styles.join('; ')
       },
@@ -105,7 +111,7 @@
         styles.push(this.value ? 'color: ' + this.activeLabelColor : 'color: ' + this.inactiveLabelColor)
         styles.push('top: 50%')
         styles.push('margin-top: -' + (Math.floor(this.text_height / 2)) + 'px')
-        styles.push(this.value ? 'left: 8px' : 'right: 8px')
+        styles.push(this.value ? 'left: ' + this.spacing : 'right: ' + this.spacing)
         styles.push('font-size: 14px')
         return styles.join('; ')
       }
