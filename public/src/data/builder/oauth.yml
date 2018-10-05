@@ -3,4 +3,4 @@ task:
 
 prompt:
   element: task-oauth
-  title: OAuth
+  title: Connect to OAuth
