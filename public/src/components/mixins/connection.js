@@ -28,7 +28,7 @@ export default {
     },
     $_Connection_isOauth(c) {
       return this.$_Connection_getInfo(c, 'is_oauth', false)
-    }
+    },
     $_Connection_isStorage(c) {
       return this.$_Connection_getInfo(c, 'is_storage', false)
     }

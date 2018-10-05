@@ -14,6 +14,7 @@
     </div>
     <BuilderComponentConnectionChooser
       class="mb3"
+      :filter-by="filter_by"
       :connection-identifier.sync="edit_values.connection"
       :show-result="has_available_connection"
       v-on="$listeners"
@@ -116,6 +117,11 @@
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
+      filter_by() {
+        return (item) => {
+          return this.$_Connection_isOauth(item)
+        }
       },
       base64_code() {
         var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)

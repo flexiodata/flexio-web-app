@@ -17,7 +17,7 @@
         style="max-height: 277px"
         selected-cls="bg-white"
         :connection-identifier="connectionIdentifier"
-        :connection-type-filter="connectionTypeFilter"
+        :filter-by="filterBy"
         :show-selection-checkmark="true"
         @item-activate="chooseConnection"
         @item-fix="fixConnection"
@@ -45,6 +45,7 @@
       <ConnectionEditPanel
         :mode="edit_mode"
         :connection="edit_connection"
+        :filter-by="filterBy"
         @close="show_connection_dialog = false"
         @cancel="show_connection_dialog = false"
         @submit="tryUpdateConnection"
@@ -71,6 +72,9 @@
       connectionTypeFilter: {
         type: String,
         default: ''
+      },
+      filterBy: {
+        type: Function
       },
       showResult: {
         type: Boolean,
@@ -104,16 +108,10 @@
         return _.get(conn, 'alias', '') || _.get(conn, 'eid', '')
       },
       connections() {
-        return this.getAvailableConnections()
-      },
-      connections_of_type() {
-        var connection_type = this.connectionTypeFilter
-        return _.filter(this.connections, { connection_type })
+        var conns = this.getAvailableConnections()
+        return this.filterBy ? _.filter(conns, this.filterBy) : conns
       },
       has_connections() {
-        if (this.connectionTypeFilter.length > 0) {
-          return this.connections_of_type.length > 0
-        }
         return this.connections.length > 0
       },
       store_connection() {
@@ -190,8 +188,7 @@
         this.$store.dispatch('updateConnection', { eid, attrs }).then(response => {
           var connection = response.body
 
-          if (response.ok)
-          {
+          if (response.ok) {
             // TODO: shouldn't we do this in the ConnectionEditPanel?
             // try to connect to the connection
             this.$store.dispatch('testConnection', { eid, attrs })
@@ -205,9 +202,7 @@
 
             this.chooseConnection(connection)
             this.show_connection_dialog = false
-          }
-           else
-          {
+          } else {
             //this.$store.track('Created Connection In Template Builder (Error)')
           }
         })

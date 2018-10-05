@@ -30,6 +30,7 @@
 
     <div>
       <ServiceList
+        :filter-by="filterBy"
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
@@ -207,6 +208,9 @@
       connection: {
         type: Object,
         default: () => { return {} }
+      },
+      filterBy: {
+        type: Function
       },
       mode: {
         type: String,

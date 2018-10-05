@@ -17,7 +17,7 @@
 
     <BuilderComponentConnectionChooser
       :connection-identifier.sync="edit_connection.eid"
-      :connection-type-filter="ctype"
+      :filter-by="filter_by"
       :show-result="is_before_active"
       @choose-connection="chooseConnection"
       v-on="$listeners"
@@ -104,6 +104,17 @@
       },
       ctype() {
         return _.get(this.item, 'connection_type', '')
+      },
+      filter_by() {
+        var ctype = this.ctype
+
+        if (ctype.length > 0) {
+          return function(item) {
+            return _.get(item, 'connection_type', '') == ctype
+          }
+        } else {
+          return undefined
+        }
       },
       connections() {
         return this.getAvailableConnections()

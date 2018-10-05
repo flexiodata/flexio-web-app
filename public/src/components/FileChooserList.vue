@@ -42,31 +42,31 @@
 
   export default {
     props: {
-      'path': {
+      path: {
         type: [String, Boolean],
         default: '/'
       },
-      'empty-message': {
+      emptyMessage: {
         type: String,
         default: ''
       },
-      'folders-only': {
+      foldersOnly: {
         type: Boolean,
         default: false
       },
-      'allow-multiple': {
+      allowMultiple: {
         type: Boolean,
         default: true
       },
-      'allow-folders': {
+      allowFolders: {
         type: Boolean,
         default: true
       },
-      'filetype-filter': {
+      filetypeFilter: {
         type: Array,
         default: () => { return [] }
       },
-      'fire-selection-change-on-init': {
+      fireSelectionChangeOnInit: {
         type: Boolean,
         default: false
       }
