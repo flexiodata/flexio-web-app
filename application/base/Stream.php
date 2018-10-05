@@ -124,7 +124,7 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
                 $this->memory_table_writer->close();
                 $this->memory_table_writer = null;
 
-                $this->storagefs_writer = $this->stream->switchToDiskStorage($this);
+                $this->storagefs_writer = $this->stream->switchToDiskStorage();
                 return $this->storagefs_writer->write($data);
             }
 
@@ -140,7 +140,7 @@ class StreamWriter implements \Flexio\IFace\IStreamWriter
             $datalen = strlen($data);
             if ($curlen + $datalen > 2000000) // if memory buffer is greater than 2MB, convert to a disk stream
             {
-                $this->storagefs_writer = $this->stream->switchToDiskStorage($this);
+                $this->storagefs_writer = $this->stream->switchToDiskStorage();
                 return $this->storagefs_writer->write($data);
             }
 
@@ -271,7 +271,7 @@ class Stream implements \Flexio\IFace\IStream
         }
     }
 
-    public function switchToDiskStorage(\Flexio\Base\StreamWriter $writer) : \Flexio\IFace\IStreamWriter
+    public function switchToDiskStorage() : \Flexio\IFace\IStreamWriter
     {
         $storagefs = $this->getStorageFs();
 
@@ -509,23 +509,24 @@ class Stream implements \Flexio\IFace\IStream
         }
     }
 
-    public function getWriter() : \Flexio\IFace\IStreamWriter
+    public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
     {
-        $this->buffer = '';
+        if ($access == 'w+' || $access == 'w')
+            $this->buffer = '';
 
         $this->prepareStorage();
 
         if ($this->memory_db)
         {
             $writer = \Flexio\Base\StreamWriter::create($this);
-            $writer->memory_table_writer = $this->memory_db->getWriter();
+            $writer->memory_table_writer = $this->memory_db->getWriter($access);
             return $writer;
         }
          else if (!is_null($this->storagefs_path))
         {
             $file = $this->getStorageFs()->open($this->storagefs_path);
             $file->setStructure($this->properties['structure']);
-            return $file->getWriter();
+            return $file->getWriter($access);
         }
          else
         {

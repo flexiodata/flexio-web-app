@@ -33,8 +33,16 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         $this->close();
     }
 
-    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null, $truncate = false) : bool
+    public function init($fspath /* can be string, or handle, or sqlite object */, $structure = null, $mode = 'r+') : bool
     {
+        // make sure mode is allowed value
+        $mode = str_replace('b', '', $mode);
+        $idx = array_search($mode, ['r','r+', 'w', 'w+', 'a', 'a+','+']);
+        if ($idx === false)
+        {
+            return false; // unknown mode
+        }
+
         if ($structure !== null && count($structure) > 0)
         {
             $this->structure = $structure;
@@ -73,7 +81,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
         $exists = file_exists($fspath);
 
 
-        if ($truncate && $structure !== null)
+        if (($mode == 'w' || $mode == 'w+') && $structure !== null)
         {
             // caller wants to start a new table
             try
@@ -92,24 +100,26 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
             return true;
         }
 
-
-        if ($truncate)
+        /*
+        if ($access == \Flexio\IFace\IStream::ACCESS_TRUNCATE)
         {
             $mode = 'w+b';
         }
          else
         {
-
-            $mode =  $exists ? 'r+b' : 'w+b';
+            if ($access == \Flexio\IFace\IStream::ACCESS_READ)
+                $mode = 'rb';
+            else
+                $mode =  $exists ? 'r+b' : 'w+b';
         }
-
+        */
 
         $this->fspath = $fspath;
 
         if (IS_DEBUG())
-            $this->file = fopen($fspath, $mode);
+            $this->file = fopen($fspath, $mode . 'b');
              else
-            $this->file = @fopen($fspath, $mode);
+            $this->file = @fopen($fspath, $mode . 'b');
 
         if ($exists)
         {
@@ -131,6 +141,7 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
              else
             {
                 fseek($this->file, 0, SEEK_SET);
+                //fseek($this->file, 0, $access == \Flexio\IFace\IStream::ACCESS_APPEND ? SEEK_END : SEEK_SET);
             }
         }
 
@@ -527,17 +538,17 @@ class StorageFsFile
 
     public function getReader() : \Flexio\IFace\IStreamReader
     {
-        return $this->openStream(false);
+        return $this->openStream('r');
     }
 
-    public function getWriter() : \Flexio\IFace\IStreamWriter
+    public function getWriter($mode = 'w+') : \Flexio\IFace\IStreamWriter
     {
-        return $this->openStream(true);
+        return $this->openStream($mode);
     }
 
     public function getInserter() : \Flexio\IFace\IStreamWriter
     {
-        return $this->openStream(false);
+        return $this->openStream($mode = 'r+');
     }
 
     public function setStructure(array $structure) : void
@@ -546,22 +557,22 @@ class StorageFsFile
         $this->structure = $structure;
     }
 
-    private function openStream($truncate = false) : \Flexio\Services\StorageFileReaderWriter
+    private function openStream($mode) : \Flexio\Services\StorageFileReaderWriter
     {
         $stream = new StorageFileReaderWriter();
 
         if ($this->sqlite)
         {
-            $stream->init($this->sqlite, $this->structure, $truncate);
+            $stream->init($this->sqlite, $this->structure, $mode);
         }
         else if ($this->file)
         {
-            $stream->init($this->file, $this->structure, false);
+            $stream->init($this->file, $this->structure, $mode);
             $this->file = null;
         }
         else
         {
-            $stream->init($this->fspath, $this->structure, $truncate);
+            $stream->init($this->fspath, $this->structure, $mode);
         }
 
         return $stream;
