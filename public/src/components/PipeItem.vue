@@ -25,6 +25,7 @@
           <LabelSwitch
             class="dib hint--bottom"
             active-color="#13ce66"
+            :width="58"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             v-model="is_deployed"
           />

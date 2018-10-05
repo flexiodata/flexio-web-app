@@ -87,7 +87,7 @@
     },
     computed: {
       text_width() {
-        var spacing = 16 - 2 /* circle width - offset */
+        var spacing = 16 + 1 /* circle width - offset */
         var atw = this.active_text_width + spacing
         var itw = this.inactive_text_width + spacing
         return _.isNumber(this.width) ? this.width : this.value ? atw : itw

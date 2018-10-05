@@ -86,6 +86,7 @@
           class="dib ml2 hint--bottom-left"
           active-color="#13ce66"
           aria-label="Turn pipe on"
+          :width="58"
           v-model="is_deployed"
         />
       </div>
