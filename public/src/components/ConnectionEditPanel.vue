@@ -184,31 +184,31 @@
 
   export default {
     props: {
-      'title': {
+      title: {
         type: String,
         default: ''
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: true
       },
-      'show-footer': {
+      showFooter: {
         type: Boolean,
         default: true
       },
-      'show-title': {
+      showTitle: {
         type: Boolean,
         default: true
       },
-      'show-steps': {
+      showSteps: {
         type: Boolean,
         default: true
       },
-      'connection': {
+      connection: {
         type: Object,
         default: () => { return {} }
       },
-      'mode': {
+      mode: {
         type: String,
         default: 'add'
       }
