@@ -30,6 +30,7 @@
     </BuilderComponentConnectionChooser>
     <el-form
       class="el-form--compact el-form__label-tiny"
+      label-position="top"
       :model="edit_values"
       v-if="has_available_connection"
     >

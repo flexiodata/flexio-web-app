@@ -29,6 +29,27 @@
         Use Different Connection
       </el-button>
     </BuilderComponentConnectionChooser>
+    <el-form
+      class="el-form--compact el-form__label-tiny"
+      label-position="top"
+      :model="edit_values"
+      v-if="has_available_connection"
+    >
+      <el-form-item
+        key="alias"
+        prop="alias"
+        label="What langauge would you like to output?"
+      >
+        <el-select v-model="edit_values.lang">
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in lang_options"
+          />
+        </el-select>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -43,8 +64,7 @@
   const getDefaultValues = () => {
     return {
       op: 'oauth',
-      connection: '',
-      alias: ''
+      lang: 'python'
     }
   }
 
@@ -93,7 +113,12 @@
     data() {
       return {
         orig_values: getDefaultValues(),
-        edit_values: getDefaultValues()
+        edit_values: getDefaultValues(),
+        lang_options: [
+          { label: 'Python',  val: 'python' },
+          { label: 'Node.js', val: 'nodejs' }
+          //{ label: 'Javascript', val: 'javascript' }
+        ]
       }
     },
     computed: {
@@ -123,7 +148,29 @@
           return this.$_Connection_isOauth(item)
         }
       },
-      base64_code() {
+      lang() {
+        return _.get(this.edit_values, 'lang', 'python')
+      },
+      base64_nodejs() {
+        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var code = `// This function returns the OAuth access token from the specified connection.
+// Click the "Test" button to echo back your OAuth token.
+
+exports.flex_handler = function(flex) {
+
+  // The connection identifier can be either the alias that you specified
+  // or the eid of the connection.
+  var connection_identifier = '${alias}'
+  //var auth_token = flex.connections[connection_identifier].get_access_token()
+
+  // We're simply echoing the OAuth token here. You can use this token
+  // for native API calls to the connected service.
+  flex.end('auth_token')
+}
+`
+        return util.btoaUnicode(code)
+      },
+      base64_python() {
         var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
         var code = `# This function returns the OAuth access token from the specified connection.
 # Click the "Test" button to echo back your OAuth token.
@@ -145,10 +192,18 @@ def flex_handler(flex):
 
         return util.btoaUnicode(code)
       },
+      base64_code() {
+        switch (this.lang) {
+          case 'nodejs': return this.base64_nodejs
+          case 'python': return this.base64_python
+        }
+
+        return ''
+      },
       execute_task() {
         return {
           op: 'execute',
-          lang: 'python',
+          lang: this.lang,
           code: this.base64_code
         }
       }
