@@ -125,16 +125,21 @@
       },
       base64_code() {
         var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
-        var code = `# Click the "Test" button to return your OAuth token
+        var code = `# This function returns the OAuth access token from the specified connection.
+# Click the "Test" button to echo back your OAuth token.
 
 import requests
 import json
 
 def flex_handler(flex):
 
+    # The connection identifier can be either the alias that you specified
+    # or the eid of the connection.
     connection_identifier = '${alias}'
     auth_token = flex.connections[connection_identifier].get_access_token()
 
+    # We're simply echoing the OAuth token here. You can use this token
+    # for native API calls to the connected service.
     flex.end(auth_token)
 `
 
