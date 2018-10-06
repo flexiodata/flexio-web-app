@@ -229,30 +229,26 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
     public function getFileInfo(string $path) : array
     {
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
         try
         {
-            $service = $this->getService($connection_identifier);
+            $connection_identifier = '';
+            $rpath = '';
+            $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+
+            return $service->getFileInfo($rpath);
         }
         catch(\Exception $e)
         {
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE); // use unavailable rather than 'no-service' so path behavior is consistent
         }
-
-        return $service->getFileInfo($rpath);
     }
 
     public function exists(string $path) : bool
     {
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->exists($rpath);
     }
 
@@ -264,12 +260,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->createFile($rpath, $properties);
     }
 
@@ -281,12 +275,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->createDirectory($rpath, $properties);
     }
 
@@ -298,12 +290,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->open([ 'path' => $rpath ]);
     }
 
@@ -315,12 +305,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->unlink($rpath);
     }
 
@@ -335,12 +323,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if (strlen(trim($path)) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->read([ 'path' => $rpath ], $callback);
     }
 
@@ -356,13 +342,12 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         if (strlen(trim($pathstr)) == 0)
             throw new \Flexio\Base\Exception(\Flexio\Base\Error::UNAVAILABLE);
 
-
         $arr = $this->splitPath($pathstr);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
 
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($pathstr, $connection_identifier, $rpath);
+        
         $arr = [ 'path' => $rpath ];
         if (is_array($path))
         {
@@ -381,12 +366,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             $path = $path['path'] ?? '';
         }
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
-
-        $service = $this->getService($connection_identifier);
-
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+        
         return $service->insert([ 'path' => $rpath ], $rows);
     }
 
@@ -426,11 +409,35 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
     }
 
-    public function getServiceFromPath(string $path) // TODO: add return type
+    public function getServiceFromPath(string $path, string &$connection_identifier, string &$rpath) // TODO: add return type
     {
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
+        $service_identifier_len = strpos($path, '://');
+        if ($service_identifier_len !== false)
+        {
+            $service_identifier_len += 3;
+            $rpath_start = 0; // url remote paths include the protocol and the ://
+        }
+         else
+        {
+            $is_url = false;
+            $service_identifier_len = strpos($path, ':');
+            if ($service_identifier_len !== false)
+            {
+                $rpath_start = $service_identifier_len+1;
+            } 
+        }
+
+        if ($service_identifier_len !== false)
+        {
+            $connection_identifier = substr($path, 0, $service_identifier_len);
+            $rpath = substr($path, $rpath_start);
+        }
+         else
+        {
+            $arr = $this->splitPath($path);
+            $connection_identifier = $arr[0];
+            $rpath = rtrim(trim($arr[1]), '/');
+        }
 
         return $this->getService($connection_identifier);
     }
