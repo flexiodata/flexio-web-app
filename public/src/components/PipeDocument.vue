@@ -50,8 +50,8 @@
           class="flex-none bg-nearer-white trans-a"
           default-active="0"
           :style="{
-            width: show_yaml ? '0' : '49px',
-            opacity: show_yaml ? '0' : '1',
+            width: show_yaml || is_deployed ? '0' : '49px',
+            opacity: show_yaml || is_deployed ? '0' : '1',
             borderRight: 0
           }"
         >
