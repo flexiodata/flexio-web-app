@@ -15,14 +15,16 @@
 
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
-        class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item'"
+        class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--bottom hint--medium-large"
         :key="item.op"
+        :aria-label="item.tooltip"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
-        <i class="material-icons md-48">{{item.icon}}</i>
-        <div class="mt2">{{item.name}}</div>
+        <div class="flex flex-column justify-center items-center">
+          <i class="material-icons md-48">{{item.icon}}</i>
+          <div class="mt2 f6 fw6 ttu">{{item.name}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -35,43 +37,53 @@
     {
       op: 'execute',
       name: 'Execute',
-      icon: 'code'
+      icon: 'code',
+      tooltip: 'Execute an inline or remote Python or Node.js function.'
     },{
       op: 'request',
       name: 'Request',
-      icon: 'http'
+      icon: 'http',
+      tooltip: 'Make an HTTP request; output will be sent to the next step of your pipe.'
     },{
       op: 'convert',
       name: 'Convert',
-      icon: 'settings'
+      icon: 'settings',
+      tooltip: 'Convert the output of the previous step in your pipe to a different format (e.g., JSON to CSV)'
     },{
       op: 'email',
       name: 'Email',
-      icon: 'mail_outline'
+      icon: 'mail_outline',
+      tooltip: 'Email a notification, variable and/or attachments using Flex.io or your own SMTP email service.'
     },{
       op: 'echo',
       name: 'Echo',
-      icon: 'settings_remote'
+      icon: 'settings_remote',
+      tooltip: 'Echo a message or variable to the next step in your pipe.'
     },{
       op: 'oauth',
       name: 'OAuth',
-      icon: 'security'
+      icon: 'security',
+      tooltip: 'Set up an OAuth-type connection and output an execute step that returns your OAuth token.'
     },{
       op: 'connect',
       name: 'Connect',
-      icon: 'repeat'
+      icon: 'repeat',
+      tooltip: 'Create or add an external connection (OAuth, token, etc.) to call from your function.'
     },{
       op: 'read',
       name: 'Read',
-      icon: 'input'
+      icon: 'input',
+      tooltip: 'Read files from storage-type connections (e.g., Dropbox, MySQL, GitHub).'
     },{
       op: 'write',
       name: 'Write',
-      icon: 'input'
+      icon: 'input',
+      tooltip: 'Write files to storage-type connections (e.g., Dropbox, MySQL, GitHub).'
     },{
       op: 'copy',
       name: 'Copy',
-      icon: 'content_copy'
+      icon: 'content_copy',
+      tooltip: 'Copy files or directories from one storage-type connection to a different storage-type connection.'
     }
   ]
 
