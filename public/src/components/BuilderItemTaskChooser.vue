@@ -17,7 +17,7 @@
       <div
         class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--top hint--medium-large"
         :key="item.op"
-        :aria-label="item.tooltip"
+        :aria-label="item.description"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
@@ -32,98 +32,7 @@
 
 <script>
   import marked from 'marked'
-
-  const tasks = [
-    {
-      op: 'execute',
-      name: 'Execute',
-      icon: 'code',
-      tooltip: 'Execute an inline or remote Python or Node.js function.'
-    },{
-      op: 'request',
-      name: 'Request',
-      icon: 'http',
-      tooltip: 'Make an HTTP request; output will be sent to the next step of your pipe.'
-    },{
-      op: 'convert',
-      name: 'Convert',
-      icon: 'settings',
-      tooltip: 'Convert the output of the previous step in your pipe to a different format (e.g., JSON to CSV)'
-    },{
-      op: 'email',
-      name: 'Email',
-      icon: 'mail_outline',
-      tooltip: 'Email a notification, variable and/or attachments using Flex.io or your own SMTP email service.'
-    },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote',
-      tooltip: 'Echo a message or variable to the next step in your pipe.'
-    },{
-      op: 'oauth',
-      name: 'OAuth',
-      icon: 'security',
-      tooltip: 'Set up an OAuth-type connection and output an execute step that returns your OAuth token.'
-    },{
-      op: 'connect',
-      name: 'Connect',
-      icon: 'repeat',
-      tooltip: 'Create or add an external connection (OAuth, token, etc.) to call from your function.'
-    },{
-      op: 'read',
-      name: 'Read',
-      icon: 'input',
-      tooltip: 'Read files from storage-type connections (e.g., Dropbox, MySQL, GitHub).'
-    },{
-      op: 'write',
-      name: 'Write',
-      icon: 'input',
-      tooltip: 'Write files to storage-type connections (e.g., Dropbox, MySQL, GitHub).'
-    },{
-      op: 'copy',
-      name: 'Copy',
-      icon: 'content_copy',
-      tooltip: 'Copy files or directories from one storage-type connection to a different storage-type connection.'
-    }
-  ]
-
-  /*
-  const tasks = [
-    {
-      op: 'create',
-      name: 'Create',
-      icon: 'photo_filter'
-    },{
-      op: 'delete',
-      name: 'Delete',
-      icon: 'delete'
-    },{
-      op: 'exit',
-      name: 'Exit',
-      icon: 'cancel'
-    },{
-      op: 'filter',
-      name: 'Filter',
-      icon: 'filter_list'
-    },{
-      op: 'list',
-      name: 'List',
-      icon: 'list'
-    },{
-      op: 'mkdir',
-      name: 'Mkdir',
-      icon: 'folder'
-    },{
-      op: 'render',
-      name: 'Render',
-      icon: 'photo'
-    },{
-      op: 'select',
-      name: 'Select',
-      icon: 'view_carousel'
-    }
-  ]
-  */
+  import * as tasks from '../constants/task-info'
 
   export default {
     props: {
