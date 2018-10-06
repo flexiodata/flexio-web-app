@@ -23,7 +23,7 @@ const COPY = {
   name: 'Copy',
   description: 'Copy files or directories from one storage-type connection to a different storage-type connection.',
   icon: 'content_copy',
-  bg_color: 'bg-task-orange'
+  bg_color: 'bg-task-blue'
 }
 
 const ECHO = {
@@ -31,7 +31,7 @@ const ECHO = {
   name: 'Echo',
   description: 'Echo a message or variable to the next step in your pipe.',
   icon: 'settings_remote',
-  bg_color: 'bg-task-green'
+  bg_color: 'bg-task-blue'
 }
 
 const EMAIL_SEND = {
