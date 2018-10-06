@@ -161,11 +161,11 @@ exports.flex_handler = function(flex) {
   // The connection identifier can be either the alias that you specified
   // or the eid of the connection.
   var connection_identifier = '${alias}'
-  //var auth_token = flex.connections[connection_identifier].get_access_token()
+  var auth_token = flex.connections[connection_identifier].getAccessToken()
 
   // We're simply echoing the OAuth token here. You can use this token
   // for native API calls to the connected service.
-  flex.end('auth_token')
+  flex.end(auth_token)
 }
 `
         return util.btoaUnicode(code)
