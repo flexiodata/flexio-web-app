@@ -51,6 +51,7 @@
           class="br1 square-3"
           :icon="task_icon"
           :bg-color="task_color"
+          :bg-color-cls="task_color_cls"
           v-else
         />
       </div>
@@ -383,6 +384,11 @@
           case 'form':           return '#0ab5f3'
           case 'schedule':       return '#0ab5f3'
           case 'summary':        return '#009900'
+        }
+      },
+      task_color_cls() {
+        if (this.item.icon) {
+          return _.get(this.item, 'icon.bg_color_cls')
         }
       }
     },

@@ -29,6 +29,7 @@
 <script>
   import { mapState } from 'vuex'
   import * as ops from '../constants/task-op'
+  import * as task_info from '../constants/task-info'
   import builder_defs from '../data/builder'
   import BuilderList from './BuilderList.vue'
   import PipeBuilderEmptyItem from './PipeBuilderEmptyItem.vue'
@@ -76,6 +77,7 @@
         is_editing: false,
         is_inserting: false,
         has_errors: false,
+        task_info,
         task_items: [],
         prompts: [],
         active_prompt_idx: -1
@@ -92,18 +94,10 @@
         this.initFromPipeTask(this.value)
       },
       getIconFromTask(task) {
-        switch (_.get(task, 'op')) {
-          case ops.TASK_OP_CONVERT:    return { name: 'settings',         bg_color: '#f4823a' }
-          case ops.TASK_OP_CONNECT:    return { name: 'repeat',           bg_color: '#0ab5f3' }
-          case ops.TASK_OP_COPY:       return { name: 'content_copy',     bg_color: '#f4823a' }
-          case ops.TASK_OP_ECHO:       return { name: 'settings_remote',  bg_color: '#65c16f' }
-          case ops.TASK_OP_EMAIL_SEND: return { name: 'mail_outline',     bg_color: '#0ab5f3' }
-          case ops.TASK_OP_EXECUTE:    return { name: 'code',             bg_color: '#a089e5' }
-          case ops.TASK_OP_READ:       return { name: 'input',            bg_color: '#0ab5f3' }
-          case ops.TASK_OP_REQUEST:    return { name: 'http',             bg_color: '#0ab5f3' }
-          case ops.TASK_OP_WRITE:      return { name: 'input',            bg_color: '#0ab5f3' }
+        var found_task = _.find(this.task_info, { op: _.get(task, 'op') })
+        if (found_task) {
+          return { name: found_task.icon, bg_color_cls: found_task.bg_color }
         }
-
         return {}
       },
       promptFromTask(task, task_idx) {
