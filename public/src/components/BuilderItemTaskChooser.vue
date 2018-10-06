@@ -15,7 +15,7 @@
 
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
-        class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--bottom hint--medium-large"
+        class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--top hint--medium-large"
         :key="item.op"
         :aria-label="item.tooltip"
         @click="itemClick(item)"
