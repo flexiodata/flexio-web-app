@@ -429,5 +429,5 @@
     padding: 1.5rem
     border-radius: 6px
     //border: 1px solid rgba(64, 158, 255, 1)
-    box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 7px rgba(64, 158, 255, 0.3)
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 4px rgba(64, 158, 255, 0.4)
 </style>
