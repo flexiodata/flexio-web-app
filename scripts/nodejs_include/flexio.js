@@ -523,6 +523,19 @@ class Result {
 }
 
 
+
+class ContextConnection {
+    getAccessToken() {
+        return proxy.invokeSync('getConnectionAccessToken', [this.eid])
+    }
+}
+
+class ContextConnections {
+
+}
+
+
+
 class Context {
 
     constructor() {
@@ -530,6 +543,7 @@ class Context {
         this.res = new Result()
         this._query = null
         this._form = null
+        this._connections = null
         this._vars = {}
         this._vars_inited = false
 
@@ -587,6 +601,23 @@ class Context {
             this._form = proxy.invokeSync('getFormParameters', [])
         }
         return this._form
+    }
+
+    get connections() {
+        if (this._connections === null) {
+            this._connections = new ContextConnections()
+            var i, c, conns = proxy.invokeSync('getConnections', [])
+            for (i = 0; i < conns.length; ++i) {
+                c = new ContextConnection()
+                c.eid = conns[i].eid
+                c.alias = conns[i].alias
+                c.name = conns[i].name
+                c.description = conns[i].description
+                this._connections[c.eid] = c
+                this._connections[c.alias] = c
+            }
+        }
+        return this._connections
     }
 
     json(obj) {
