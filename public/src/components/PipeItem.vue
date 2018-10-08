@@ -21,32 +21,32 @@
         </router-link>
       </div>
       <div class="flex-none flex flex-row items-center">
-        <div class="ph1 hint--top" aria-label="Run on a schedule">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="schedule_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_schedule }"
+            class="material-icons md-21"
+            :class="is_deployed_schedule ? 'blue' : 'o-10'"
           >
             schedule
           </i>
         </div>
-        <div class="ph1 hint--top" aria-label="Run using an API endpoint">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="api_endpoint_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_api }"
+            class="material-icons md-21"
+            :class="is_deployed_api ? 'blue' : 'o-10'"
           >
             code
           </i>
         </div>
-        <div class="ph1 hint--top" aria-label="Run using a Flex.io Web Interface">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="runtime_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_ui }"
+            class="material-icons md-21"
+            :class="is_deployed_ui ? 'blue' : 'o-10'"
           >
             offline_bolt
           </i>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3">
+      <div class="flex-none nt3 nb3 ml3 ml4-l">
         <div class="pv3" @click.stop>
           <LabelSwitch
             class="dib hint--top"
@@ -75,6 +75,7 @@
 </template>
 
 <script>
+  import pipe_util from '../utils/pipe'
   import { ROUTE_PIPES } from '../constants/route'
   import LabelSwitch from './LabelSwitch.vue'
 
@@ -150,6 +151,25 @@
       },
       pipe_route() {
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
+      },
+      schedule_str() {
+        return pipe_util.getDeployScheduleStr(this.item.schedule)
+      },
+      api_endpoint_url() {
+        var identifier = pipe_util.getIdentifier(this.item)
+        return pipe_util.getDeployApiUrl(identifier)
+      },
+      runtime_url() {
+        return pipe_util.getDeployRuntimeUrl(this.item.eid)
+      },
+      schedule_tooltip() {
+        return this.is_deployed_schedule ? this.schedule_str : 'Not scheduled'
+      },
+      api_endpoint_tooltip() {
+        return this.is_deployed_api ? this.api_endpoint_url : 'Not deployed as an API endpoint'
+      },
+      runtime_tooltip() {
+        return this.is_deployed_ui ? this.runtime_url : 'Not deployed as a Flex.io Web Interface'
       }
     },
     methods: {

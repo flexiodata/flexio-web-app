@@ -145,6 +145,51 @@ class Process extends ModelBase
 
     public function summary(array $filter) : array
     {
+        // returns the number of processes per pipe for a particular owner,
+        // along with the average and total times for those processes
+
+        $db = $this->getDatabase();
+        $allowed_items = array('eid', 'eid_status', 'owned_by', 'created_min', 'created_max', 'parent_eid');
+        $filter_expr = \Filter::build($db, $filter, $allowed_items);
+        $limit_expr = \Limit::build($db, $filter);
+
+        try
+        {
+            $sql = "select owned_by as owned_by, ".
+            "              parent_eid as parent_eid, ".
+            "              avg(extract(epoch from (finished - started))) as average_time, ".
+            "              sum(extract(epoch from (finished - started))) as total_time, ".
+            "              count(*) as total_count ".
+            "       from tbl_process ".
+            "       where $filter_expr ".
+            "       group by owned_by, parent_eid ".
+            "       order by parent_eid $limit_expr";
+            $rows = $db->fetchAll($sql);
+         }
+         catch (\Exception $e)
+         {
+             throw new \Flexio\Base\Exception(\Flexio\Base\Error::READ_FAILED);
+         }
+
+        $output = array();
+        foreach ($rows as $row)
+        {
+            $parent_eid = '';
+            if (\Flexio\Base\Eid::isValid($row['parent_eid']))
+                $parent_eid = $row['parent_eid'];
+
+            $output[] = array('user_eid'     => $row['owned_by'],
+                              'pipe_eid'     => $parent_eid,
+                              'total_count'  => $row['total_count'],
+                              'total_time'   => $row['total_time'],
+                              'average_time' => $row['average_time']);
+        }
+
+        return $output;
+    }
+
+    public function summary_daily(array $filter) : array
+    {
         // returns the number of processes per pipe per day for a particular owner,
         // along with the average and total times for those processes
 
