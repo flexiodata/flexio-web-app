@@ -143,7 +143,7 @@ class Process extends ModelBase
         }
     }
 
-    public function stats(array $filter) : array
+    public function summary(array $filter) : array
     {
         // returns the number of processes per pipe for a particular owner,
         // along with the average and total times for those processes
@@ -163,7 +163,7 @@ class Process extends ModelBase
             "       from tbl_process ".
             "       where $filter_expr ".
             "       group by owned_by, parent_eid ".
-            "       order by created, parent_eid $limit_expr";
+            "       order by parent_eid $limit_expr";
             $rows = $db->fetchAll($sql);
          }
          catch (\Exception $e)
@@ -188,7 +188,7 @@ class Process extends ModelBase
         return $output;
     }
 
-    public function summary(array $filter) : array
+    public function summary_daily(array $filter) : array
     {
         // returns the number of processes per pipe per day for a particular owner,
         // along with the average and total times for those processes

@@ -93,8 +93,8 @@ class Api
         // processes
         'POS /:userid/processes'                      => '\Flexio\Api\Process::create',
         'GET /:userid/processes'                      => '\Flexio\Api\Process::list',
-        'GET /:userid/processes/stats'                => '\Flexio\Api\Process::stats', // grand totals
-        'GET /:userid/processes/summary'              => '\Flexio\Api\Process::summary', // daily totals; TODO: combine with stats, rename
+        'GET /:userid/processes/summary'              => '\Flexio\Api\Process::summary', // grand totals
+        'GET /:userid/processes/summary/daily'        => '\Flexio\Api\Process::summary_daily', // daily totals; TODO: combine with stats, rename
         'POS /:userid/processes/:objeid'              => '\Flexio\Api\Process::set',
         'GET /:userid/processes/:objeid'              => '\Flexio\Api\Process::get',
         'DEL /:userid/processes/:objeid'              => '\Flexio\Api\Process::delete',
@@ -123,6 +123,7 @@ class Api
         'GET /admin/info/pipes'                       => '\Flexio\Api\Admin::pipes',
         'GET /admin/info/processes'                   => '\Flexio\Api\Admin::processes',
         'GET /admin/info/processes/summary'           => '\Flexio\Api\Admin::process_summary',
+        'GET /admin/info/processes/summary/daily'     => '\Flexio\Api\Admin::process_summary_daily',
         'GET /admin/tests/configure'                  => '\Flexio\Tests\Base::configure',
         'GET /admin/tests/run'                        => '\Flexio\Tests\Base::run',
 

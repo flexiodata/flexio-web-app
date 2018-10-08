@@ -274,7 +274,7 @@ class Process
         return;
     }
 
-    public static function stats(\Flexio\Api\Request $request) : void
+    public static function summary(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -329,7 +329,7 @@ class Process
         \Flexio\Api\Response::sendContent($result);
     }
 
-    public static function summary(\Flexio\Api\Request $request) : void
+    public static function summary_daily(\Flexio\Api\Request $request) : void
     {
         $query_params = $request->getQueryParams();
         $requesting_user_eid = $request->getRequestingUser();
@@ -362,7 +362,7 @@ class Process
 
         $filter = array('owned_by' => $owner_user_eid, 'eid_status' => \Model::STATUS_AVAILABLE);
         $filter = array_merge($validated_query_params, $filter); // give precedence to fixed owner/status
-        $stats = \Flexio\Object\Process::summary($filter);
+        $stats = \Flexio\Object\Process::summary_daily($filter);
 
         $result = array();
         foreach ($stats as $s)
