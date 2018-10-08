@@ -96,6 +96,7 @@
 
 <script>
   import moment from 'moment'
+  import pipe_util from '../utils/pipe'
   import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
@@ -173,12 +174,6 @@
       }
     },
     computed: {
-      api_url() {
-        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
-      },
-      runtime_url() {
-        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
-      },
       is_deployed: {
         get() {
           return this.isModeRun
@@ -236,55 +231,13 @@
         return _.includes(this.checklist, 'deploy_ui')
       },
       schedule_str() {
-        var s = this.schedule
-        switch (s.frequency) {
-          case sched.SCHEDULE_FREQUENCY_ONE_MINUTE:
-            return 'Every minute'
-          case sched.SCHEDULE_FREQUENCY_FIVE_MINUTES:
-            return 'Every 5 minutes'
-          case sched.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES:
-            return 'Every 15 minutes'
-          case sched.SCHEDULE_FREQUENCY_THIRTY_MINUTES:
-            return 'Every 30 minutes'
-          case sched.SCHEDULE_FREQUENCY_HOURLY:
-            return 'Every hour'
-          case sched.SCHEDULE_FREQUENCY_DAILY:
-            return 'Every day at ' + this.getTimeStr()
-          case sched.SCHEDULE_FREQUENCY_WEEKLY:
-            return 'Every ' + this.getDayStr() + ' of every week at ' + this.getTimeStr()
-          case sched.SCHEDULE_FREQUENCY_MONTHLY:
-            return 'On the ' + this.getMonthDayStr() + ' of every month at ' + this.getTimeStr()
-        }
-      }
-    },
-    methods: {
-      getTimeStr() {
-        var times = _.get(this.schedule, 'times', [])
-        times = _.map(times, (t) => {
-          return moment().hour(t.hour).minute(t.minute).format('LT');
-        })
-        return times.join(', ')
+        return pipe_util.getDeployScheduleStr(this.schedule)
       },
-      getDayStr() {
-        var days = _.get(this.schedule, 'days', [])
-        days = _.map(days, (d) => {
-          return moment().isoWeekday(d).format('dddd')
-        })
-        return days.join(', ')
+      api_url() {
+        return pipe_util.getDeployApiUrl(this.identifier)
       },
-      getMonthDayStr() {
-        var days = _.get(this.schedule, 'days', [])
-        days = _.map(days, (d) => {
-          switch (d) {
-            case 1:
-              return 'first day'
-            case 15:
-              return 'fifteenth day'
-            case 'last':
-              return 'last day'
-          }
-        })
-        return days.join(', ')
+      runtime_url() {
+        return pipe_util.getDeployRuntimeUrl(this.eid)
       }
     }
   }
