@@ -41,13 +41,13 @@ import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
-import util from './utils'
+import dom_utils from './utils/dom'
 import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 
 // fallback css (if there's no Internet connection)
 
-util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
+dom_utils.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
 // setup for Element UI
 

