@@ -31,6 +31,12 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return json_encode($object);
     }
 
+    public static function stats(array $filter) : array
+    {
+        $result = \Flexio\System\System::getModel()->process->stats($filter);
+        return $result;
+    }
+
     public static function summary(array $filter) : array
     {
         $result = \Flexio\System\System::getModel()->process->summary($filter);
