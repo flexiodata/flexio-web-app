@@ -21,32 +21,32 @@
         </router-link>
       </div>
       <div class="flex-none flex flex-row items-center">
-        <div class="hint--top" style="padding: 0 2px" :aria-label="schedule_tooltip">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="schedule_tooltip">
           <i
             class="material-icons md-21"
-            :class="is_deployed_schedule ? 'blue' : 'o-20'"
+            :class="is_deployed_schedule ? 'blue' : 'o-10'"
           >
             schedule
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 2px" :aria-label="api_endpoint_tooltip">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="api_endpoint_tooltip">
           <i
             class="material-icons md-21"
-            :class="is_deployed_api ? 'blue' : 'o-20'"
+            :class="is_deployed_api ? 'blue' : 'o-10'"
           >
             code
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 2px" :aria-label="runtime_tooltip">
+        <div class="hint--top" style="padding: 0 1px" :aria-label="runtime_tooltip">
           <i
             class="material-icons md-21"
-            :class="is_deployed_ui ? 'blue' : 'o-20'"
+            :class="is_deployed_ui ? 'blue' : 'o-10'"
           >
             offline_bolt
           </i>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3">
+      <div class="flex-none nt3 nb3 ml3 ml4-l">
         <div class="pv3" @click.stop>
           <LabelSwitch
             class="dib hint--top"
