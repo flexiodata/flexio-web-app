@@ -153,18 +153,18 @@
       },
       base64_nodejs() {
         var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
-        var code = `// This function returns the OAuth access token from the specified connection.
-// Click the "Test" button to echo back your OAuth token.
+        var code = `// this function returns an oauth access token to access the service specified
+// in a connection; click the "TEST" button to echo the oauth token
 
 exports.flex_handler = function(flex) {
 
-  // The connection identifier can be either the alias that you specified
-  // or the eid of the connection.
+  // get the oauth access token for the connection from the connection
+  // identifier, which can be the connection alias or connection eid
   var connection_identifier = '${alias}'
   var auth_token = flex.connections[connection_identifier].getAccessToken()
 
-  // We're simply echoing the OAuth token here. You can use this token
-  // for native API calls to the connected service.
+  // echo the oauth token; use this token to make authenticated API calls
+  // to the service defined in the connection
   flex.end(auth_token)
 }
 `
