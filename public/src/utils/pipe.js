@@ -32,8 +32,17 @@ const getMonthDayStr = (s) => {
   return days.join(', ')
 }
 
+const getIdentifier = (pipe) => {
+  var alias = _.get(pipe, 'alias', '')
+  return alias.length > 0 ? alias : _.get(pipe, 'eid', '')
+}
+
 const getDeployScheduleStr = (s) => {
-  switch (s.frequency) {
+  if (_.isNil(s)) {
+    return ''
+  }
+
+  switch (_.get(s, 'frequency', '')) {
     case sched.SCHEDULE_FREQUENCY_ONE_MINUTE:
       return 'Every minute'
     case sched.SCHEDULE_FREQUENCY_FIVE_MINUTES:
@@ -51,6 +60,8 @@ const getDeployScheduleStr = (s) => {
     case sched.SCHEDULE_FREQUENCY_MONTHLY:
       return 'On the ' + getMonthDayStr(s) + ' of every month at ' + getTimeStr(s)
   }
+
+  return ''
 }
 
 const getDeployApiUrl = (identifier) => {
@@ -62,6 +73,7 @@ const getDeployRuntimeUrl = (eid) => {
 }
 
 export default {
+  getIdentifier,
   getDeployScheduleStr,
   getDeployApiUrl,
   getDeployRuntimeUrl

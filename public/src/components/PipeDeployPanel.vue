@@ -28,7 +28,7 @@
             </el-button>
           </div>
           <div v-if="item.key == 'deploy_api' && is_api_deployed">
-            <span style="margin-right: 6px">{{api_url}}</span>
+            <span style="margin-right: 6px">{{api_endpoint_url}}</span>
             <el-button
               type="text"
               size="tiny"
@@ -42,7 +42,7 @@
               class="hint--top"
               aria-label="Copy to Clipboard"
               size="tiny"
-              :data-clipboard-text="api_url"
+              :data-clipboard-text="api_endpoint_url"
             >
               Copy
             </el-button>
@@ -233,7 +233,7 @@
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.schedule)
       },
-      api_url() {
+      api_endpoint_url() {
         return pipe_util.getDeployApiUrl(this.identifier)
       },
       runtime_url() {
