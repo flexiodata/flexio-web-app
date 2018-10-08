@@ -142,11 +142,10 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
 
 
-        $arr = $this->splitPath($path);
-        $connection_identifier = $arr[0];
-        $rpath = rtrim(trim($arr[1]), '/');
+        $connection_identifier = '';
+        $rpath = '';
+        $service = $this->getServiceFromPath($path, $connection_identifier, $rpath);
 
-        $service = $this->getService($connection_identifier);
         $service_list = $service->list($rpath);
 
         $results = array();
@@ -471,7 +470,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $s3_service;
         }
 
-        if ($connection_identifier == 'home')
+        if ($connection_identifier == 'home' || $connection_identifier == 'local' || $connection_identifier == 'flex')
         {
             if ($this->store_service === null)
             {
