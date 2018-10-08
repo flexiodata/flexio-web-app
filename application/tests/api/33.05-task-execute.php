@@ -81,10 +81,11 @@ exports.flexio_handler = function(context) {
         context.output.write(p + ":" + params[p] + ";");
     }
     context.output.content_type = "text/plain";
+    context.end();
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -111,7 +112,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task context post parameters routed to context form',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (nodejs) execute task context post parameters routed to context form',  $actual, $expected, $results);
 
 
         // BEGIN TEST
@@ -122,10 +123,11 @@ exports.flexio_handler = function(context) {
     for (key in obj) {
         context.output.write(key+":"+obj[key]+";");
     }
+    context.end()
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -153,7 +155,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (javascript) execute task context post parameters routed to context input',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('B.1', 'Process Execute; (nodejs) execute task context post parameters routed to context input',  $actual, $expected, $results);
     }
 }
 

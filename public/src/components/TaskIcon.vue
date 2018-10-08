@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center justify-center" :style="styl">
+  <div class="flex flex-row items-center justify-center" :class="cls" :style="styl">
     <span class="material-icons">{{icon}}</span>
   </div>
 </template>
@@ -15,16 +15,29 @@
         type: String,
         default: '#fff'
       },
-      bgColor: {
+      bgColorCls: {
         type: String,
-        default: '#555'
+        default: ''
+      },
+      bgColor: {
+        type: String
       }
     },
     computed: {
+      cls() {
+        var arr = []
+        if (this.bgColorCls.length > 0) { arr.push(this.bgColorCls) }
+        return arr.join(' ')
+      },
       styl() {
+        var bg_color
+        if (this.bgColor || this.bgColorCls.length == 0) {
+          bg_color = this.bgColor || '#555'
+        }
+
         return {
           color: this.color,
-          backgroundColor: this.bgColor
+          backgroundColor: bg_color
         }
       }
     }

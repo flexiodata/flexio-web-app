@@ -62,7 +62,7 @@
         type: Boolean
       },
       filetypeFilter: {
-        type: String
+        type: Array
       }
     },
     mixins: [MixinConnection],

@@ -96,7 +96,7 @@ EOD;
 Console.log('Hello, World!')
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -112,13 +112,19 @@ EOD;
             'url' => "$apibase/$userid/processes/$objeid/run",
             'token' => $token
         ));
+        $response = json_decode($result['response'],true);
         $actual = $result;
+        $actual['response'] = $response;
         $expected = '{
-            "code": 200,
-            "content_type": "text/plain;charset=UTF-8",
-            "response": "Hello, World!\n"
+            "code": 400,
+            "content_type": "application/json",
+            "response": {
+                "error": {
+                    "code": "invalid-syntax"
+                }
+            }
         }';
-        \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (javascript) execute task print to stdout',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.3', 'Process Execute; (nodejs) in nodejs, a handler is needed to shut down the script',  $actual, $expected, $results);
     }
 }
 

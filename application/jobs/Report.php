@@ -88,6 +88,7 @@ class Report extends \Flexio\Jobs\Base
             var payload = context.proxy.invokeSync('getReportPayload', [])
 
             context.output.write(payload)
+            cotnext.end()
         }
 EOT;*/
 
@@ -123,6 +124,8 @@ EOT;*/
             }).catch(v => {
                 context.output.write("Problem! " + v)
             })
+
+            context.end()
         }
 
 EOT;

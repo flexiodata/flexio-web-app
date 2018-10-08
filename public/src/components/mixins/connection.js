@@ -10,6 +10,11 @@ export default {
         return alias.length > 0 ? alias == id : c.eid == id
       })
     },
+    $_Connection_getConnectionIdentifier(c) {
+      var alias = _.get(c, 'alias', '')
+      var eid = _.get(c, 'eid', '')
+      return alias.length > 0 ? alias : eid
+    },
     $_Connection_getInfo(c, key, def) {
       var connection_type = c.connection_type || c
       var info = _.find(connections, { connection_type })
@@ -20,6 +25,9 @@ export default {
     },
     $_Connection_getServiceName(c) {
       return this.$_Connection_getInfo(c, 'service_name', '')
+    },
+    $_Connection_isOauth(c) {
+      return this.$_Connection_getInfo(c, 'is_oauth', false)
     },
     $_Connection_isStorage(c) {
       return this.$_Connection_getInfo(c, 'is_storage', false)

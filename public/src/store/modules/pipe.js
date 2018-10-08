@@ -8,7 +8,19 @@ const getDefaultState = () => {
     orig_pipe: {},
     edit_pipe: {},
     syntax_error: '',
-    edit_keys: ['eid', 'name', 'alias', 'description', 'pipe_mode', 'schedule', 'schedule_status', 'task', 'ui'],
+    edit_keys: [
+      'eid',
+      'name',
+      'alias',
+      'description',
+      'schedule',
+      'deploy_mode',
+      'deploy_schedule',
+      'deploy_api',
+      'deploy_ui',
+      'task',
+      'ui'
+    ],
     fetching: false,
     fetched: false,
     changed: false

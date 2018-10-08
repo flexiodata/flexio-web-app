@@ -36,5 +36,5 @@ interface IStream
     public function getStructure();
     public function getFileInfo();
     public function getReader() : \Flexio\IFace\IStreamReader;
-    public function getWriter() : \Flexio\IFace\IStreamWriter;
+    public function getWriter($mode = 'w+') : \Flexio\IFace\IStreamWriter;
 }

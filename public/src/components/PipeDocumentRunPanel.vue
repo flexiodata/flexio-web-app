@@ -38,6 +38,7 @@
         <LabelSwitch
           class="dib ml2"
           active-color="#13ce66"
+          :width="58"
           v-model="is_deployed"
         />
       </div>

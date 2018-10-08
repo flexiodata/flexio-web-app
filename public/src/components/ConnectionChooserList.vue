@@ -28,9 +28,8 @@
   export default {
     inheritAttrs: false,
     props: {
-      connectionTypeFilter: {
-        type: String,
-        default: ''
+      filterBy: {
+        type: Function
       }
     },
     components: {
@@ -43,9 +42,8 @@
         'is_fetching': 'connections_fetching'
       }),
       items() {
-        var items = this.getAvailableConnections()
-        var connection_type = this.connectionTypeFilter
-        return connection_type.length == 0 ? items : _.filter(items, { connection_type })
+        var conns = this.getAvailableConnections()
+        return this.filterBy ? _.filter(conns, this.filterBy) : conns
       }
     },
     methods: {

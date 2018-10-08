@@ -76,7 +76,7 @@ if engine == 'python':
     file.close()
     cwd = '/fxpython'
     command = ["/usr/bin/python3", "-c", "import flexio as f; import script as s; f.run(s)"]
-elif engine == 'javascript':
+elif engine == 'nodejs':
     file = open("/fxnodejs/script.js", "w")
     file.write(str)
     file.close()
@@ -174,10 +174,10 @@ proxy.invoke("exit_loop")
 #     while True:
 #         try:
 #             resobj = socket.recv_json()
-#             return resobj['result'] 
+#             return resobj['result']
 #         except zmq.ZMQError:
 #             pass
-        
+
 #         try:
 #             evt = recv_monitor_message(monitor, zmq.NOBLOCK)
 #             if evt['event'] == zmq.EVENT_CLOSED:

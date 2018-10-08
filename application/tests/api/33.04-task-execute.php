@@ -76,10 +76,11 @@ exports.flexio_handler = function(context) {
         context.output.write(p + ":" + params[p] + ";");
     }
     context.output.content_type = "text/plain";
+    context.end();
 }
 EOD;
         $task = \Flexio\Tests\Task::create([
-            ["op" => "execute", "lang" => "javascript", "code" => base64_encode($script)]
+            ["op" => "execute", "lang" => "nodejs", "code" => base64_encode($script)]
         ]);
         $result = \Flexio\Tests\Util::callApi(array(
             'method' => 'POST',
@@ -101,7 +102,7 @@ EOD;
             "content_type": "text/plain;charset=UTF-8",
             "response": "param1:a;param2:b;param3:c;"
         }';
-        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (javascript) execute task context query parameters',  $actual, $expected, $results);
+        \Flexio\Tests\Check::assertInArray('A.2', 'Process Execute; (nodejs) execute task context query parameters',  $actual, $expected, $results);
     }
 }
 

@@ -14,6 +14,7 @@
     </div>
     <BuilderComponentConnectionChooser
       class="mb3"
+      :filter-by="filter_by"
       :connection-identifier.sync="edit_values.connection"
       :show-result="has_available_connection"
       v-on="$listeners"
@@ -37,14 +38,16 @@
       <el-form-item
         key="alias"
         prop="alias"
-        label="How would you like to refer to this connection in this pipe?"
+        label="What langauge would you like to output?"
       >
-        <div class="w5">
-          <el-input
-            placeholder="Alias"
-            v-model="edit_values['alias']"
+        <el-select v-model="edit_values.lang">
+          <el-option
+            :label="option.label"
+            :value="option.val"
+            :key="option.val"
+            v-for="option in lang_options"
           />
-        </div>
+        </el-select>
       </el-form-item>
     </el-form>
   </div>
@@ -53,15 +56,15 @@
 <script>
   import marked from 'marked'
   import { mapGetters } from 'vuex'
+  import util from '../utils'
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import BuilderComponentConnectionChooser from './BuilderComponentConnectionChooser.vue'
   import MixinConnection from './mixins/connection'
 
   const getDefaultValues = () => {
     return {
-      op: 'connect',
-      connection: '',
-      alias: ''
+      op: 'oauth',
+      lang: 'python'
     }
   }
 
@@ -110,7 +113,12 @@
     data() {
       return {
         orig_values: getDefaultValues(),
-        edit_values: getDefaultValues()
+        edit_values: getDefaultValues(),
+        lang_options: [
+          { label: 'Python',  val: 'python' },
+          { label: 'Node.js', val: 'nodejs' }
+          //{ label: 'Javascript', val: 'javascript' }
+        ]
       }
     },
     computed: {
@@ -134,6 +142,70 @@
       },
       has_available_connection() {
         return _.get(this.store_connection, 'connection_status', '') == CONNECTION_STATUS_AVAILABLE
+      },
+      filter_by() {
+        return (item) => {
+          return this.$_Connection_isOauth(item)
+        }
+      },
+      lang() {
+        return _.get(this.edit_values, 'lang', 'python')
+      },
+      base64_nodejs() {
+        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var code = `// This function returns the OAuth access token from the specified connection.
+// Click the "Test" button to echo back your OAuth token.
+
+exports.flex_handler = function(flex) {
+
+  // The connection identifier can be either the alias that you specified
+  // or the eid of the connection.
+  var connection_identifier = '${alias}'
+  var auth_token = flex.connections[connection_identifier].getAccessToken()
+
+  // We're simply echoing the OAuth token here. You can use this token
+  // for native API calls to the connected service.
+  flex.end(auth_token)
+}
+`
+        return util.btoaUnicode(code)
+      },
+      base64_python() {
+        var alias = this.$_Connection_getConnectionIdentifier(this.store_connection)
+        var code = `# This function returns the OAuth access token from the specified connection.
+# Click the "Test" button to echo back your OAuth token.
+
+import requests
+import json
+
+def flex_handler(flex):
+
+    # The connection identifier can be either the alias that you specified
+    # or the eid of the connection.
+    connection_identifier = '${alias}'
+    auth_token = flex.connections[connection_identifier].get_access_token()
+
+    # We're simply echoing the OAuth token here. You can use this token
+    # for native API calls to the connected service.
+    flex.end(auth_token)
+`
+
+        return util.btoaUnicode(code)
+      },
+      base64_code() {
+        switch (this.lang) {
+          case 'nodejs': return this.base64_nodejs
+          case 'python': return this.base64_python
+        }
+
+        return ''
+      },
+      execute_task() {
+        return {
+          op: 'execute',
+          lang: this.lang,
+          code: this.base64_code
+        }
       }
     },
     methods: {
@@ -157,7 +229,7 @@
         }
       },
       onEditValuesChange() {
-        this.$emit('item-change', this.edit_values, this.index)
+        this.$emit('item-change', this.execute_task, this.index)
       }
     }
   }

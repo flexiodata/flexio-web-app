@@ -2,6 +2,7 @@
   <div>
     <p class="mt0 ttu fw6 f7 moon-gray">Choose a starting task (e.g., click 'Execute' to add a function)</p>
     <BuilderItemTaskChooser
+      style="max-width: 48rem"
       :show-title="false"
       @task-chooser-select-task="selectTask"
     />

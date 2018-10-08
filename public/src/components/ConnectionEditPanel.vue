@@ -30,6 +30,7 @@
 
     <div>
       <ServiceList
+        :filter-by="filterBy"
         @item-activate="createPendingConnection"
         v-show="!has_connection"
       />
@@ -184,31 +185,34 @@
 
   export default {
     props: {
-      'title': {
+      title: {
         type: String,
         default: ''
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: true
       },
-      'show-footer': {
+      showFooter: {
         type: Boolean,
         default: true
       },
-      'show-title': {
+      showTitle: {
         type: Boolean,
         default: true
       },
-      'show-steps': {
+      showSteps: {
         type: Boolean,
         default: true
       },
-      'connection': {
+      connection: {
         type: Object,
         default: () => { return {} }
       },
-      'mode': {
+      filterBy: {
+        type: Function
+      },
+      mode: {
         type: String,
         default: 'add'
       }

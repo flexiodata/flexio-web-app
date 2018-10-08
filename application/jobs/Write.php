@@ -66,8 +66,11 @@ class Write extends \Flexio\Jobs\Base
             }
             $create_params['mime_type'] = $stream_properties['mime_type'];
 
-
-            $service = $vfs->getServiceFromPath($path); // this will return or service, or throw
+            // call getServiceFromPath() -- this will return a service object, or throw
+            $connection_identifier = '';
+            $rpath = '';
+            $service = $vfs->getServiceFromPath($path, $connection_identifier, $rpath);
+            
             // check if the service only supports write(), and if so, go to the catch
             if (($service->getFlags() & \Flexio\IFace\IFileSystem::FLAG_HAS_OPEN) == 0)
                 throw new \Exception(""); // go to the catch and use $vfs->write()

@@ -15,14 +15,16 @@
 
     <div class="flex flex-row flex-wrap items-center nl2">
       <div
-        class="flex flex-column justify-center items-center"
-        :class="'f6 fw6 ttu br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item'"
+        class="br2 ma2 pv3 w4 pointer silver hover-blue ba css-list-item hint--top hint--medium-large"
         :key="item.op"
+        :aria-label="item.description"
         @click="itemClick(item)"
         v-for="(item, index) in items"
       >
-        <i class="material-icons md-48">{{item.icon}}</i>
-        <div class="mt2">{{item.name}}</div>
+        <div class="flex flex-column justify-center items-center">
+          <i class="material-icons md-48">{{item.icon}}</i>
+          <div class="mt2 f6 fw6 ttu">{{item.name}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -30,84 +32,7 @@
 
 <script>
   import marked from 'marked'
-
-  const tasks = [
-    {
-      op: 'execute',
-      name: 'Execute',
-      icon: 'code'
-    },{
-      op: 'connect',
-      name: 'Connect',
-      icon: 'repeat'
-    },{
-      op: 'request',
-      name: 'Request',
-      icon: 'http'
-    },{
-      op: 'read',
-      name: 'Read',
-      icon: 'input'
-    },{
-      op: 'write',
-      name: 'Write',
-      icon: 'input'
-    },{
-      op: 'copy',
-      name: 'Copy',
-      icon: 'content_copy'
-    },{
-      op: 'convert',
-      name: 'Convert',
-      icon: 'settings'
-    },{
-      op: 'echo',
-      name: 'Echo',
-      icon: 'settings_remote'
-    },{
-      op: 'email',
-      name: 'Email',
-      icon: 'mail_outline'
-    }
-  ]
-
-  /*
-  const tasks = [
-    {
-      op: 'create',
-      name: 'Create',
-      icon: 'photo_filter'
-    },{
-      op: 'delete',
-      name: 'Delete',
-      icon: 'delete'
-    },{
-      op: 'exit',
-      name: 'Exit',
-      icon: 'cancel'
-    },{
-      op: 'filter',
-      name: 'Filter',
-      icon: 'filter_list'
-    },{
-      op: 'list',
-      name: 'List',
-      icon: 'list'
-    },{
-      op: 'mkdir',
-      name: 'Mkdir',
-      icon: 'folder'
-    },{
-      op: 'render',
-      name: 'Render',
-      icon: 'photo'
-    },{
-      op: 'select',
-      name: 'Select',
-      icon: 'view_carousel'
-    }
-  ]
-  */
+  import * as tasks from '../constants/task-info'
 
   export default {
     props: {
@@ -147,7 +72,7 @@
         return marked(this.description)
       },
       items() {
-        return _.isArray(this.ops) ? _.filter(this.tasks, (t) => { return this.ops.indexOf(t.op) != -1 }) : tasks
+        return _.isArray(this.ops) ? _.filter(this.tasks, (t) => { return this.ops.indexOf(t.op) != -1 }) : this.tasks
       }
     },
     methods: {

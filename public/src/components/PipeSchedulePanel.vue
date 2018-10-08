@@ -174,7 +174,7 @@
   const defaultAttrs = () => {
     return {
       schedule: _.cloneDeep(schedule.SCHEDULE_DEFAULTS),
-      schedule_status: schedule.SCHEDULE_STATUS_INACTIVE
+      deploy_schedule: schedule.SCHEDULE_STATUS_INACTIVE
     }
   }
 
@@ -247,11 +247,11 @@
       },
       is_scheduled: {
         get() {
-          return _.get(this.edit_pipe, 'schedule_status') == schedule.SCHEDULE_STATUS_ACTIVE ? true : false
+          return _.get(this.edit_pipe, 'deploy_schedule') == schedule.SCHEDULE_STATUS_ACTIVE ? true : false
         },
         set() {
           var status = this.is_scheduled ? schedule.SCHEDULE_STATUS_INACTIVE : schedule.SCHEDULE_STATUS_ACTIVE
-          this.edit_pipe = _.assign({}, this.edit_pipe, { 'schedule_status': status })
+          this.edit_pipe = _.assign({}, this.edit_pipe, { 'deploy_schedule': status })
         }
       },
       show_times() {
@@ -279,7 +279,7 @@
 
         if (_.isNil(_.get(edit_pipe, 'schedule'))) {
           _.set(edit_pipe, 'schedule', _.get(defaultAttrs(), 'schedule'))
-          edit_pipe.schedule_status = SCHEDULE_STATUS_INACTIVE
+          edit_pipe.deploy_schedule = SCHEDULE_STATUS_INACTIVE
         }
 
         this.edit_pipe = edit_pipe

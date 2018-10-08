@@ -51,6 +51,7 @@
           class="br1 square-3"
           :icon="task_icon"
           :bg-color="task_color"
+          :bg-color-cls="task_color_cls"
           v-else
         />
       </div>
@@ -384,6 +385,11 @@
           case 'schedule':       return '#0ab5f3'
           case 'summary':        return '#009900'
         }
+      },
+      task_color_cls() {
+        if (this.item.icon) {
+          return _.get(this.item, 'icon.bg_color_cls')
+        }
       }
     },
     methods: {
@@ -423,5 +429,5 @@
     padding: 1.5rem
     border-radius: 6px
     //border: 1px solid rgba(64, 158, 255, 1)
-    box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 7px rgba(64, 158, 255, 0.3)
+    box-shadow: 0 0 0 1px rgba(64, 158, 255, 1), 0 0 0 4px rgba(64, 158, 255, 0.4)
 </style>

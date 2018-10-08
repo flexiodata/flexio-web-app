@@ -20,6 +20,9 @@
       layout: {
         type: String,
         default: 'grid' // 'grid' or 'list'
+      },
+      filterBy: {
+        type: Function
       }
     },
     components: {
@@ -28,7 +31,7 @@
     computed: {
       filtered_services() {
         var services = connections
-        return services
+        return this.filterBy ? _.filter(services, this.filterBy) : services
       },
       services() {
         return _.reject(this.filtered_services, { connection_type: CONNECTION_TYPE_HOME })

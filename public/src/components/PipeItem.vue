@@ -25,6 +25,7 @@
           <LabelSwitch
             class="dib hint--bottom"
             active-color="#13ce66"
+            :width="58"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             v-model="is_deployed"
           />
@@ -52,9 +53,9 @@
   import { SCHEDULE_STATUS_ACTIVE } from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
-  const PIPE_MODE_UNDEFINED = ''
-  const PIPE_MODE_BUILD     = 'B'
-  const PIPE_MODE_RUN       = 'R'
+  const DEPLOY_MODE_UNDEFINED = ''
+  const DEPLOY_MODE_BUILD     = 'B'
+  const DEPLOY_MODE_RUN       = 'R'
 
   export default {
     props: {
@@ -78,19 +79,19 @@
       },
       /*
       is_scheduled() {
-        return _.get(this.item, 'schedule_status') == SCHEDULE_STATUS_ACTIVE ? true : false
+        return _.get(this.item, 'deploy_schedule') == SCHEDULE_STATUS_ACTIVE ? true : false
       },
       */
       is_deployed: {
         get() {
-          return _.get(this.item, 'pipe_mode') == PIPE_MODE_RUN ? true : false
+          return _.get(this.item, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
         },
         set(value) {
           var doSet = () => {
-            var pipe_mode = value === false ? PIPE_MODE_BUILD : PIPE_MODE_RUN
+            var deploy_mode = value === false ? DEPLOY_MODE_BUILD : DEPLOY_MODE_RUN
 
             var attrs = {
-              pipe_mode
+              deploy_mode
             }
 
             this.$store.dispatch('updatePipe', { eid: this.item.eid, attrs })

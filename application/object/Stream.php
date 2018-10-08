@@ -359,7 +359,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         return $file->getReader();
     }
 
-    public function getWriter() : \Flexio\IFace\IStreamWriter
+    public function getWriter($access = 'w+') : \Flexio\IFace\IStreamWriter
     {
         if ($this->isCached() === false)
             $this->populateCache();
@@ -378,7 +378,7 @@ class Stream extends \Flexio\Object\Base implements \Flexio\IFace\IObject, \Flex
         try
         {
             $file = $storagefs->open($this->getPath(), $props);
-            return $file->getWriter();
+            return $file->getWriter($access);
         }
         catch (\Flexio\Base\Exception $e)
         {
