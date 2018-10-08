@@ -128,6 +128,9 @@ RUN yarn add axios
 # datetime
 RUN yarn add moment
 
+# numeric and data
+RUN yarn add csv
+
 # html
 RUN yarn add cheerio
 
