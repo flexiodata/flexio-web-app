@@ -20,10 +20,36 @@
           </div>
         </router-link>
       </div>
-      <div class="flex-none nt3 nb3">
+      <div class="flex-none flex flex-row items-center">
+        <div class="ph1 hint--top" aria-label="Run on a schedule">
+          <i
+            class="material-icons md-18 fw6"
+            :class="{ 'o-20': !is_deployed_schedule }"
+          >
+            schedule
+          </i>
+        </div>
+        <div class="ph1 hint--top" aria-label="Run using an API endpoint">
+          <i
+            class="material-icons md-18 fw6"
+            :class="{ 'o-20': !is_deployed_api }"
+          >
+            code
+          </i>
+        </div>
+        <div class="ph1 hint--top" aria-label="Run using a Flex.io Web Interface">
+          <i
+            class="material-icons md-18 fw6"
+            :class="{ 'o-20': !is_deployed_ui }"
+          >
+            offline_bolt
+          </i>
+        </div>
+      </div>
+      <div class="flex-none nt3 nb3 ml3">
         <div class="pv3" @click.stop>
           <LabelSwitch
-            class="dib hint--bottom"
+            class="dib hint--top"
             active-color="#13ce66"
             :width="58"
             :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
@@ -50,12 +76,14 @@
 
 <script>
   import { ROUTE_PIPES } from '../constants/route'
-  import { SCHEDULE_STATUS_ACTIVE } from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
   const DEPLOY_MODE_RUN       = 'R'
+
+  const ACTIVE = 'A'
+  const INACTIVE = 'I'
 
   export default {
     props: {
@@ -77,11 +105,15 @@
       has_description() {
         return _.get(this.item, 'description', '').length > 0
       },
-      /*
-      is_scheduled() {
-        return _.get(this.item, 'deploy_schedule') == SCHEDULE_STATUS_ACTIVE ? true : false
+      is_deployed_schedule() {
+        return _.get(this.item, 'deploy_schedule', INACTIVE) == ACTIVE
       },
-      */
+      is_deployed_api() {
+        return _.get(this.item, 'deploy_api', INACTIVE) == ACTIVE
+      },
+      is_deployed_ui() {
+        return _.get(this.item, 'deploy_ui', INACTIVE) == ACTIVE
+      },
       is_deployed: {
         get() {
           return _.get(this.item, 'deploy_mode') == DEPLOY_MODE_RUN ? true : false
