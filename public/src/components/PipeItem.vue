@@ -23,24 +23,24 @@
       <div class="flex-none flex flex-row items-center">
         <div class="hint--top" style="padding: 0 2px" :aria-label="schedule_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_schedule }"
+            class="material-icons md-21"
+            :class="is_deployed_schedule ? 'blue' : 'o-20'"
           >
             schedule
           </i>
         </div>
         <div class="hint--top" style="padding: 0 2px" :aria-label="api_endpoint_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_api }"
+            class="material-icons md-21"
+            :class="is_deployed_api ? 'blue' : 'o-20'"
           >
             code
           </i>
         </div>
         <div class="hint--top" style="padding: 0 2px" :aria-label="runtime_tooltip">
           <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_ui }"
+            class="material-icons md-21"
+            :class="is_deployed_ui ? 'blue' : 'o-20'"
           >
             offline_bolt
           </i>
