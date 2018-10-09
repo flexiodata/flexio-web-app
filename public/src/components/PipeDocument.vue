@@ -115,6 +115,9 @@
             :class="{
               'no-pointer-events': !show_yaml
             }"
+            :style="{
+              zIndex: show_yaml ? 3 : 0
+            }"
           />
           <div
             class="pane pa4 pt0 overflow-y-scroll"
