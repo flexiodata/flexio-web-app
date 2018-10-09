@@ -37,6 +37,7 @@
     },
     data() {
       return {
+        force_loading: false,
         filter: ''
       }
     },
