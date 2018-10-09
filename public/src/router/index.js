@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import account from './account'
+import activity from './activity'
 import admin from './admin'
 import builder from './builder'
 import home from './home'
@@ -37,6 +38,7 @@ const basepath_redirect = {
 const routes = [
   basepath_redirect,
   account,
+  activity,
   admin,
   builder,
   home,

@@ -6,6 +6,8 @@ export default {
   // ----------------------------------------------------------------------- //
 
   [types.FETCHING_PROCESSES] (state, { pipe_eid, fetching }) {
+    state.processes_fetching = fetching
+
     // if we're trying to fetch processes for a pipe that's not
     // in our store, add a very basic pipe object to the store
     if (fetching === true && !_.has(state.objects, pipe_eid))
@@ -24,6 +26,9 @@ export default {
 
     // set the pipe's process fetched flag
     updatePipe(state, pipe_eid, { processes_fetched: true })
+
+    // set our fetched flag so we know we've queried the backend
+    state.processes_fetched = true
   },
 
   // ----------------------------------------------------------------------- //

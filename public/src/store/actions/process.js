@@ -8,7 +8,7 @@ import {
 
 // ----------------------------------------------------------------------- //
 
-export const fetchProcesses = ({ commit }, { attrs }) => {
+export const fetchProcesses = ({ commit }, attrs) => {
   var pipe_eid = _.get(attrs, 'parent_eid', '')
 
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
