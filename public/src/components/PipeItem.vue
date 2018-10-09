@@ -12,8 +12,9 @@
         Name
       </div>
       <router-link
-        class="flex-fill link"
+        class="flex-fill link hint--top hint--large"
         :to="pipe_route"
+        :aria-label="item.description"
         v-else
       >
         <div class="pa3">
