@@ -1,6 +1,6 @@
 <template>
   <article
-    class="mv3-l bb ba-l br2-l pointer no-select trans-pm css-list-item"
+    class="pv2 bb pointer no-select trans-pm css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -20,14 +20,14 @@
           </div>
         </router-link>
       </div>
-      <div class="flex-none flex flex-row items-center f6 fw6 w3">
+      <div class="dn db-l f6 fw6 w3">
         {{execution_cnt}}
       </div>
-      <div class="flex-none flex flex-row items-center f6 fw6 w3">
+      <div class="dn db-l f6 fw6 w3">
         {{total_duration}}
       </div>
-      <div class="flex-none flex flex-row items-center ml3 ml4-l">
-        <div class="hint--top" style="padding: 0 1px" :aria-label="schedule_tooltip">
+      <div class="dn db-ns ml3 ml4-l">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="schedule_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_schedule ? 'blue' : 'o-10'"
@@ -35,7 +35,7 @@
             schedule
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 1px" :aria-label="api_endpoint_tooltip">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="api_endpoint_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_api ? 'blue' : 'o-10'"
@@ -43,7 +43,7 @@
             code
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 1px" :aria-label="runtime_tooltip">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="runtime_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_ui ? 'blue' : 'o-10'"
