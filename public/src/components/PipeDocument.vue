@@ -266,13 +266,11 @@
                   <div class="pt3 ph3">
                     <PipeDeployPanel
                       :is-mode-run.sync="is_deployed"
-                      :eid="eid"
-                      :identifier="pipe_identifier"
+                      :pipe="edit_pipe"
                       :show-properties-panel.sync="show_pipe_properties_dialog"
                       :show-runtime-configure-panel.sync="show_runtime_configure_dialog"
                       :show-schedule-panel.sync="show_pipe_schedule_dialog"
                       @updated-deployment="onDeploymentUpdated"
-                      v-bind="deploy_pipe_attrs"
                     />
                   </div>
                 </el-collapse-item>
@@ -564,15 +562,6 @@
             // TODO: add error handling
           }
         }
-      },
-      deploy_pipe_attrs() {
-        return _.pick(this.edit_pipe, [
-          'deploy_mode',
-          'deploy_schedule',
-          'deploy_api',
-          'deploy_ui',
-          'schedule'
-        ])
       },
       pipe_identifier() {
         var alias = this.edit_pipe.alias

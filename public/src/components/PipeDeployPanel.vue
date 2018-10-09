@@ -109,16 +109,17 @@
         type: Boolean,
         required: true
       },
-      eid: {
-        type: String,
-        required: true
-      },
-      identifier: {
-        type: String,
-        required: true
-      },
-      schedule: {
-        // must be an object or null
+      /*
+        'eid'
+        'pipe_identifier'
+        'deploy_mode',
+        'deploy_schedule',
+        'deploy_api',
+        'deploy_ui',
+        'schedule'
+      */
+      pipe: {
+        type: Object,
         required: true
       },
       showPropertiesPanel: {
@@ -132,24 +133,6 @@
       showRuntimeConfigurePanel: {
         type: Boolean,
         default: false
-      },
-
-      // from v-bind:pipe_deploy_attrs in pipe document
-      deploy_mode: {
-        type: String,
-        required: true
-      },
-      deploy_schedule: {
-        type: String,
-        required: true
-      },
-      deploy_api: {
-        type: String,
-        required: true
-      },
-      deploy_ui: {
-        type: String,
-        required: true
       }
     },
     components: {
@@ -209,7 +192,7 @@
       checklist: {
         get() {
           var arr = _.map(this.deployment_options, (d) => {
-            return this[d.key] === ACTIVE ? d.key : false
+            return _.get(this.pipe, [d.key], INACTIVE) === ACTIVE ? d.key : false
           })
           return _.compact(arr)
         },
@@ -231,13 +214,16 @@
         return _.includes(this.checklist, 'deploy_ui')
       },
       schedule_str() {
-        return pipe_util.getDeployScheduleStr(this.schedule)
+        var schedule = _.get(this.pipe, 'schedule')
+        return pipe_util.getDeployScheduleStr(schedule)
       },
       api_endpoint_url() {
-        return pipe_util.getDeployApiUrl(this.identifier)
+        var identifier = pipe_util.getIdentifier(this.pipe)
+        return pipe_util.getDeployApiUrl(identifier)
       },
       runtime_url() {
-        return pipe_util.getDeployRuntimeUrl(this.eid)
+        var eid = _.get(this.pipe, 'eid', '')
+        return pipe_util.getDeployRuntimeUrl(eid)
       }
     }
   }

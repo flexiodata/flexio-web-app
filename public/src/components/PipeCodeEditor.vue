@@ -104,7 +104,8 @@
 
         try {
           // TODO: remove 'omitDeep' once we get rid of task eids
-          var task = omitDeep(this.value, ['eid'])
+          var pipe = _.cloneDeep(this.value)
+          var task = omitDeep(pipe, ['eid'])
 
           switch (this.type) {
             case 'json':
