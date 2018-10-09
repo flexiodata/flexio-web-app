@@ -1,6 +1,7 @@
 <template>
   <article
-    class="bb pointer no-select trans-pm css-list-item"
+    class="bb pointer no-select trans-pm"
+    :class="isHeader ? 'b--black-10' : 'css-list-item'"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -8,52 +9,84 @@
         <router-link class="link" :to="pipe_route">
           <div class="pa3">
             <div class="flex-l flex-row items-center">
-              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
-              <div
-                class="dib f8 code black-40 mt1 mt0-l pa1 bg-nearer-white ba b--black-05 br2"
-                v-if="item.alias"
-              >{{item.alias}}</div>
+              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title truncate">{{item.name}}</h3>
             </div>
-            <div class="dn db-l mw7" v-if="has_description">
-              <h4 class="f6 fw4 mt1 mb0 lh-copy light-silver">{{item.description}}</h4>
+            <div class="dn db-ns mw7" v-if="has_description">
+              <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate">{{item.description}}</h5>
             </div>
           </div>
         </router-link>
       </div>
-      <div class="dn db-l f6 fw6 w3">
+      <div
+        class="dn db-l f6 tr"
+        :class="isHeader ? 'fw6' : ''"
+        style="width: 100px"
+      >
         {{execution_cnt}}
       </div>
-      <div class="dn db-l f6 fw6 w3">
-        {{total_duration}}
+      <div
+        class="dn db-l ml3 ml4-l tr"
+        style="width: 100px"
+      >
+        <div
+          class="f6 fw6"
+          v-if="isHeader"
+        >
+          Deployment
+        </div>
+        <div
+          v-else
+        >
+          <div
+            class="hint--top"
+            style="margin: 0 -1px"
+            :aria-label="schedule_tooltip"
+          >
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_schedule ? 'blue' : 'o-10'"
+            >
+              schedule
+            </i>
+          </div>
+          <div
+            class="hint--top"
+            style="margin: 0 -1px"
+            :aria-label="api_endpoint_tooltip"
+          >
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_api ? 'blue' : 'o-10'"
+            >
+              code
+            </i>
+          </div>
+          <div
+            class="hint--top"
+            style="margin: 0 -1px"
+            :aria-label="runtime_tooltip"
+          >
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_ui ? 'blue' : 'o-10'"
+            >
+              offline_bolt
+            </i>
+          </div>
+        </div>
       </div>
-      <div class="dn db-ns ml3 ml4-l">
-        <div class="hint--top" style="margin: 0 -1px" :aria-label="schedule_tooltip">
-          <i
-            class="material-icons md-21"
-            :class="is_deployed_schedule ? 'blue' : 'o-10'"
-          >
-            schedule
-          </i>
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 80px">
+        <div
+          class="f6 fw6"
+          v-if="isHeader"
+        >
+          Status
         </div>
-        <div class="hint--top" style="margin: 0 -1px" :aria-label="api_endpoint_tooltip">
-          <i
-            class="material-icons md-21"
-            :class="is_deployed_api ? 'blue' : 'o-10'"
-          >
-            code
-          </i>
-        </div>
-        <div class="hint--top" style="margin: 0 -1px" :aria-label="runtime_tooltip">
-          <i
-            class="material-icons md-21"
-            :class="is_deployed_ui ? 'blue' : 'o-10'"
-          >
-            offline_bolt
-          </i>
-        </div>
-      </div>
-      <div class="flex-none nt3 nb3 ml3 ml4-l">
-        <div class="pv3" @click.stop>
+        <div
+          class="pv3"
+          @click.stop
+          v-else
+        >
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -64,7 +97,11 @@
         </div>
       </div>
       <div class="flex-none pl2" @click.stop>
-        <el-dropdown trigger="click" @command="onCommand">
+        <el-dropdown
+          trigger="click"
+          :class="{ 'invisible': isHeader }"
+          @command="onCommand"
+        >
           <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>
           </span>
@@ -94,7 +131,11 @@
 
   export default {
     props: {
-      'item': {
+      isHeader: {
+        type: Boolean,
+        default: false
+      },
+      item: {
         type: Object,
         required: true
       }
@@ -159,16 +200,16 @@
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
       execution_cnt() {
-        return _.get(this.item, 'stats.total_count', '')
+        return this.isHeader ? 'Executions' : _.get(this.item, 'stats.total_count', '--')
       },
       total_duration() {
         var val = _.get(this.item, 'stats.total_time', '')
         if (val.length == 0) {
-          return ''
+          return this.isHeader ? 'Duration' : '--'
         }
         val = parseFloat(val)
         val = val.toFixed(2)
-        return val + ' sec'
+        return val + ' seconds'
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)

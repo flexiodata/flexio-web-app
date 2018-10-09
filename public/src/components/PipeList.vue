@@ -17,6 +17,12 @@
 
   <div v-else>
     <PipeItem
+      :is-header="true"
+      :item="{
+        name: 'Name'
+      }"
+    />
+    <PipeItem
       v-for="(pipe, index) in pipes"
       :item="pipe"
       :index="index"
