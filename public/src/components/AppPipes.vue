@@ -84,8 +84,9 @@
         this.$store.dispatch('createPipe', { attrs })
       },
       tryFetchPipes() {
-        if (!this.is_fetched && !this.is_fetching)
+        if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('fetchPipes')
+        }
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))
