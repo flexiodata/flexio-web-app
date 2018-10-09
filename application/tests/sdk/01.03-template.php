@@ -27,6 +27,7 @@ class Test
 Flexio.pipe()
 .javascript(function(context) {
     context.output.write('Hello ' + context.query.name + '!')
+    context.end()
 })
 .run({ query: { name: 'World' } }, function(err, response) {
     console.log(response.text)

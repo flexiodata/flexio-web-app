@@ -36,6 +36,7 @@ Flexio.pipe()
             totals.females++;
     }
     context.output.write(JSON.stringify(totals))
+    context.end()
 })
 .run(function(err, response) {
     console.log(response.text)
