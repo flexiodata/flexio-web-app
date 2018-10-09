@@ -433,9 +433,23 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
          else
         {
-            $arr = $this->splitPath($path);
-            $connection_identifier = $arr[0];
-            $rpath = rtrim(trim($arr[1]), '/');
+            //$connection_identifier = 'flex';
+            //$rpath = $path;
+
+            try
+            {
+                $arr = $this->splitPath($path);
+                $connection_identifier = $arr[0];
+                $rpath = rtrim(trim($arr[1]), '/');
+
+                return $this->getService($connection_identifier);
+            }
+            catch (\Exception $e)
+            {
+                // connection not found -- use flexio storage
+                $connection_identifier = 'flex';
+                $rpath = $path;
+            }
         }
 
         return $this->getService($connection_identifier);
@@ -470,7 +484,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
             return $s3_service;
         }
 
-        if ($connection_identifier == 'home' || $connection_identifier == 'local' || $connection_identifier == 'flex')
+        if ($connection_identifier == 'home' || $connection_identifier == 'flex' || $connection_identifier == 'flexio')
         {
             if ($this->store_service === null)
             {
