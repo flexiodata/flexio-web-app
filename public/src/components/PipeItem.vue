@@ -1,42 +1,43 @@
 <template>
   <article
-    class="bb pointer no-select trans-pm"
-    :class="isHeader ? 'b--black-10' : 'css-list-item'"
+    class="pointer no-select trans-pm"
+    :class="isHeader ? 'thead' : 'tbody'"
     @click="openPipe"
   >
-    <div class="flex flex-row items-center">
-      <div class="flex-fill mr2 fw6 f6 f5-ns">
-        <router-link class="link" :to="pipe_route">
-          <div class="pa3">
-            <div class="flex-l flex-row items-center">
-              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title truncate">{{item.name}}</h3>
-            </div>
-            <div class="dn db-ns mw7" v-if="has_description">
-              <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate">{{item.description}}</h5>
-            </div>
-          </div>
-        </router-link>
-      </div>
+    <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
-        class="dn db-l f6 tr"
-        :class="isHeader ? 'fw6' : ''"
+        class="flex-fill pa3"
+        v-if="isHeader"
+      >
+        Name
+      </div>
+      <router-link
+        class="flex-fill link"
+        :to="pipe_route"
+        v-else
+      >
+        <div class="pa3">
+          <div class="flex-l flex-row items-center">
+            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
+          </div>
+          <div class="dn db-ns mw7" v-if="has_description">
+            <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
+          </div>
+        </div>
+      </router-link>
+      <div
+        class="dn db-l tr"
         style="width: 100px"
       >
-        {{execution_cnt}}
+        <div v-if="isHeader">Executions</div>
+        <div class="f6" v-else>{{execution_cnt}}</div>
       </div>
       <div
         class="dn db-l ml3 ml4-l tr"
         style="width: 100px"
       >
-        <div
-          class="f6 fw6"
-          v-if="isHeader"
-        >
-          Deployment
-        </div>
-        <div
-          v-else
-        >
+        <div v-if="isHeader">Deployment</div>
+        <div v-else>
           <div
             class="hint--top"
             style="margin: 0 -1px"
@@ -76,17 +77,8 @@
         </div>
       </div>
       <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 80px">
-        <div
-          class="f6 fw6"
-          v-if="isHeader"
-        >
-          Status
-        </div>
-        <div
-          class="pv3"
-          @click.stop
-          v-else
-        >
+        <div v-if="isHeader">Status</div>
+        <div class="pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -200,7 +192,7 @@
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
       execution_cnt() {
-        return this.isHeader ? 'Executions' : _.get(this.item, 'stats.total_count', '--')
+        return _.get(this.item, 'stats.total_count', '--')
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
@@ -243,3 +235,22 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  // match Element UI's .el-table thead styling
+  .thead
+    border-bottom: 1px solid #ebeef5
+    color: #909399
+    font-size: 14px
+  .th
+    font-weight: bold
+  .tbody
+    &:hover
+      .td
+        background-color: #f5f7fa
+      .title
+      .description
+        color: #409eff
+  .td
+    border-bottom: 1px solid #ebeef5
+</style>
