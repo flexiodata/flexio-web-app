@@ -83,9 +83,9 @@
       >
         <span class="ttu f6 fw6">Your pipe is</span>
         <LabelSwitch
-          class="dib ml2 hint--bottom-left"
+          class="dib ml2 hint--bottom"
           active-color="#13ce66"
-          aria-label="Turn pipe on"
+          :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
           :width="58"
           v-model="is_deployed"
         />
