@@ -1,6 +1,6 @@
 <template>
   <article
-    class="pv2 bb pointer no-select trans-pm css-list-item"
+    class="bb pointer no-select trans-pm css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">

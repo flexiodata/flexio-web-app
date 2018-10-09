@@ -48,13 +48,11 @@
         'is_fetched': 'processes_fetched'
       })
     },
-    created() {
-      this.tryFetchActivity()
-    },
     mounted() {
+      this.tryFetchActivity()
       this.$store.track('Visited Activity Page')
       this.force_loading = true
-      setTimeout(() => { this.force_loading = false, 100 })
+      setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
       tryFetchActivity() {
