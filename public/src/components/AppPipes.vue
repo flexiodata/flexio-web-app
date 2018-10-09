@@ -1,6 +1,6 @@
 <template>
   <!-- fetching -->
-  <div v-if="is_fetching">
+  <div v-if="is_fetching || force_loading">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading pipes..." />
     </div>
@@ -52,6 +52,7 @@
     },
     data() {
       return {
+        force_loading: false,
         filter: ''
       }
     },
@@ -67,6 +68,8 @@
     },
     mounted() {
       this.$store.track('Visited Pipes Page')
+      this.force_loading = true
+      setTimeout(() => { this.force_loading = false, 100 })
     },
     methods: {
       openPipe(eid) {
@@ -81,8 +84,9 @@
         this.$store.dispatch('createPipe', { attrs })
       },
       tryFetchPipes() {
-        if (!this.is_fetched && !this.is_fetching)
+        if (!this.is_fetched && !this.is_fetching) {
           this.$store.dispatch('fetchPipes')
+        }
       },
       tryCreatePipe(attrs) {
         if (!_.isObject(attrs))

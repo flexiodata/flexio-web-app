@@ -73,8 +73,10 @@
         'getAllPipes'
       ]),
       tryFetchPipes() {
-        if (!this.is_fetched)
+        if (!this.is_fetched) {
           this.$store.dispatch('fetchPipes')
+        }
+        this.$store.dispatch('fetchProcessSummary')
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)

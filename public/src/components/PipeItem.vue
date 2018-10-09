@@ -1,6 +1,6 @@
 <template>
   <article
-    class="mv3-l bb ba-l br2-l pointer no-select trans-pm css-list-item"
+    class="pv2 bb pointer no-select trans-pm css-list-item"
     @click="openPipe"
   >
     <div class="flex flex-row items-center">
@@ -20,8 +20,14 @@
           </div>
         </router-link>
       </div>
-      <div class="flex-none flex flex-row items-center">
-        <div class="hint--top" style="padding: 0 1px" :aria-label="schedule_tooltip">
+      <div class="dn db-l f6 fw6 w3">
+        {{execution_cnt}}
+      </div>
+      <div class="dn db-l f6 fw6 w3">
+        {{total_duration}}
+      </div>
+      <div class="dn db-ns ml3 ml4-l">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="schedule_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_schedule ? 'blue' : 'o-10'"
@@ -29,7 +35,7 @@
             schedule
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 1px" :aria-label="api_endpoint_tooltip">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="api_endpoint_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_api ? 'blue' : 'o-10'"
@@ -37,7 +43,7 @@
             code
           </i>
         </div>
-        <div class="hint--top" style="padding: 0 1px" :aria-label="runtime_tooltip">
+        <div class="hint--top" style="margin: 0 -1px" :aria-label="runtime_tooltip">
           <i
             class="material-icons md-21"
             :class="is_deployed_ui ? 'blue' : 'o-10'"
@@ -152,6 +158,18 @@
       pipe_route() {
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
+      execution_cnt() {
+        return _.get(this.item, 'stats.total_count', '')
+      },
+      total_duration() {
+        var val = _.get(this.item, 'stats.total_time', '')
+        if (val.length == 0) {
+          return ''
+        }
+        val = parseFloat(val)
+        val = val.toFixed(2)
+        return val + ' sec'
+      },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
       },
@@ -163,13 +181,13 @@
         return pipe_util.getDeployRuntimeUrl(this.item.eid)
       },
       schedule_tooltip() {
-        return this.is_deployed_schedule ? this.schedule_str : 'Not scheduled'
+        return this.is_deployed_schedule ? 'Scheduler ON: ' + this.schedule_str : 'Scheduler OFF'
       },
       api_endpoint_tooltip() {
-        return this.is_deployed_api ? this.api_endpoint_url : 'Not deployed as an API endpoint'
+        return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
       },
       runtime_tooltip() {
-        return this.is_deployed_ui ? this.runtime_url : 'Not deployed as a Flex.io Web Interface'
+        return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
       }
     },
     methods: {
