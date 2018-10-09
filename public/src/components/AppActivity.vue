@@ -1,6 +1,6 @@
 <template>
   <!-- fetching -->
-  <div v-if="is_fetching">
+  <div v-if="is_fetching || force_loading">
     <div class="flex flex-column justify-center h-100">
       <Spinner size="large" message="Loading activity..." />
     </div>
@@ -47,12 +47,20 @@
         'is_fetched': 'processes_fetched'
       })
     },
+    created() {
+      this.tryFetchActivity()
+    },
     mounted() {
       this.$store.track('Visited Activity Page')
-      this.$store.dispatch('fetchProcesses')
+      this.force_loading = true
+      setTimeout(() => { this.force_loading = false, 100 })
     },
     methods: {
-
+      tryFetchActivity() {
+        if (!this.is_fetched && !this.is_fetching) {
+          this.$store.dispatch('fetchProcesses')
+        }
+      }
     }
   }
 </script>
