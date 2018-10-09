@@ -202,15 +202,6 @@
       execution_cnt() {
         return this.isHeader ? 'Executions' : _.get(this.item, 'stats.total_count', '--')
       },
-      total_duration() {
-        var val = _.get(this.item, 'stats.total_time', '')
-        if (val.length == 0) {
-          return this.isHeader ? 'Duration' : '--'
-        }
-        val = parseFloat(val)
-        val = val.toFixed(2)
-        return val + ' seconds'
-      },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
       },
