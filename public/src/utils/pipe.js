@@ -65,7 +65,7 @@ const getDeployScheduleStr = (s) => {
 }
 
 const getDeployApiUrl = (identifier) => {
-  return 'https://api.flex.io/v1/me/pipes/' + identifier
+  return 'https://api.flex.io/v1/me/pipes/' + identifier + '/run'
 }
 
 const getDeployRuntimeUrl = (eid) => {

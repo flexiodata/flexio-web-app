@@ -7,7 +7,7 @@ const AMAZON_S3 = {
   service_description: 'Amazon Simple Storage Service (S3)',
   connection_type: types.CONNECTION_TYPE_AMAZONS3,
   icon: require('../assets/icon/icon-amazon-128.png'),
-  is_oauth: true,
+  is_oauth: false,
   is_storage: true
 }
 

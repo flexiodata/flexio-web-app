@@ -63,13 +63,11 @@
         'is_fetched': 'pipes_fetched'
       })
     },
-    created() {
-      this.tryFetchPipes()
-    },
     mounted() {
+      this.tryFetchPipes()
       this.$store.track('Visited Pipes Page')
       this.force_loading = true
-      setTimeout(() => { this.force_loading = false, 100 })
+      setTimeout(() => { this.force_loading = false }, 10)
     },
     methods: {
       openPipe(eid) {

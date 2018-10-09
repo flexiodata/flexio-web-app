@@ -17,6 +17,12 @@
 
   <div v-else>
     <PipeItem
+      :is-header="true"
+      :item="{
+        name: 'Name'
+      }"
+    />
+    <PipeItem
       v-for="(pipe, index) in pipes"
       :item="pipe"
       :index="index"
@@ -41,10 +47,10 @@
 
   export default {
     props: {
-      'filter': {
+      filter: {
         type: String
       },
-      'show-header': {
+      showHeader: {
         type: Boolean,
         default: false
       }
@@ -59,7 +65,9 @@
       // mix this into the outer object with the object spread operator
       ...mapState({
         'is_fetching': 'pipes_fetching',
-        'is_fetched': 'pipes_fetched'
+        'is_fetched': 'pipes_fetched',
+        'is_summary_fetching': 'process_summary_fetching',
+        'is_summary_fetched': 'process_summary_fetched'
       }),
       pipes() {
         return this.$_Filter_filter(this.getAllPipes(), this.filter, ['name', 'description'])
@@ -76,7 +84,9 @@
         if (!this.is_fetched) {
           this.$store.dispatch('fetchPipes')
         }
-        this.$store.dispatch('fetchProcessSummary')
+        if (!this.is_summary_fetched) {
+          this.$store.dispatch('fetchProcessSummary')
+        }
       },
       onItemEdit(item) {
         this.$emit('item-edit', item)

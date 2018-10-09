@@ -28,7 +28,7 @@
             </el-button>
           </div>
           <div v-if="item.key == 'deploy_api' && is_api_deployed">
-            <span style="margin-right: 6px">{{api_endpoint_url}}</span>
+            <span style="margin-right: 6px"><span class="b">POST</span> {{api_endpoint_url}}</span>
             <el-button
               type="text"
               size="tiny"
