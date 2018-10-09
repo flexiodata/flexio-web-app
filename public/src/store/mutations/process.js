@@ -69,6 +69,7 @@ export default {
   // ----------------------------------------------------------------------- //
 
   [types.FETCHING_PROCESS_SUMMARY] (state, { fetching }) {
+    state.process_summary_fetching = fetching
   },
 
   [types.FETCHED_PROCESS_SUMMARY] (state, { items }) {
@@ -88,6 +89,9 @@ export default {
         updatePipe(state, pipe.eid, { stats: pipe.stats })
       }
     })
+
+    // set our fetched flag so we know we've queried the backend
+    state.process_summary_fetched = true
   },
 
   // ----------------------------------------------------------------------- //

@@ -5,6 +5,8 @@ export default () => {
     user_fetching: false,
     processes_fetched: false,
     processes_fetching: false,
+    process_summary_fetched: false,
+    process_summary_fetching: false,
     projects_fetched: false,
     projects_fetching: false,
     pipes_fetched: false,
