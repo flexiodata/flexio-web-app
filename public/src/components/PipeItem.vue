@@ -163,13 +163,13 @@
         return pipe_util.getDeployRuntimeUrl(this.item.eid)
       },
       schedule_tooltip() {
-        return this.is_deployed_schedule ? this.schedule_str : 'Not scheduled'
+        return this.is_deployed_schedule ? 'Scheduler ON: ' + this.schedule_str : 'Scheduler OFF'
       },
       api_endpoint_tooltip() {
-        return this.is_deployed_api ? this.api_endpoint_url : 'Not deployed as an API endpoint'
+        return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
       },
       runtime_tooltip() {
-        return this.is_deployed_ui ? this.runtime_url : 'Not deployed as a Flex.io Web Interface'
+        return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
       }
     },
     methods: {
