@@ -20,7 +20,13 @@
           </div>
         </router-link>
       </div>
-      <div class="flex-none flex flex-row items-center">
+      <div class="flex-none flex flex-row items-center f6 fw6 w3">
+        {{execution_cnt}}
+      </div>
+      <div class="flex-none flex flex-row items-center f6 fw6 w3">
+        {{total_duration}}
+      </div>
+      <div class="flex-none flex flex-row items-center ml3 ml4-l">
         <div class="hint--top" style="padding: 0 1px" :aria-label="schedule_tooltip">
           <i
             class="material-icons md-21"
@@ -151,6 +157,18 @@
       },
       pipe_route() {
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
+      },
+      execution_cnt() {
+        return _.get(this.item, 'stats.total_count', '')
+      },
+      total_duration() {
+        var val = _.get(this.item, 'stats.total_time', '')
+        if (val.length == 0) {
+          return ''
+        }
+        val = parseFloat(val)
+        val = val.toFixed(2)
+        return val + ' sec'
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)

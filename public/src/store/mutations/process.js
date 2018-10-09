@@ -77,9 +77,9 @@ export default {
       }
 
       if (!_.has(state.objects, pipe.eid)) {
-        //addPipe(state, pipe)
+        // pipe has since been deleted; we're done
       } else {
-        // otherwise, just set the pipe's fetching flag
+        // otherwise, add the stats node to the pipe
         updatePipe(state, pipe.eid, { stats: pipe.stats })
       }
     })
