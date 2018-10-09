@@ -34,12 +34,9 @@ export default {
   [types.FETCHING_PIPE] (state, { eid, fetching }) {
     // if we're trying to fetch a pipe that's not
     // in our store, add a very basic pipe object to the store
-    if (fetching === true && !_.has(state.objects, eid))
-    {
+    if (fetching === true && !_.has(state.objects, eid)) {
       addPipe(state, eid, { is_fetching: fetching })
-    }
-     else
-    {
+    } else {
       // otherwise, just set the pipe's fetching flag
       updatePipe(state, eid, { is_fetching: fetching })
     }

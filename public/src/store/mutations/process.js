@@ -63,6 +63,30 @@ export default {
 
   // ----------------------------------------------------------------------- //
 
+  [types.FETCHING_PROCESS_SUMMARY] (state, { fetching }) {
+  },
+
+  [types.FETCHED_PROCESS_SUMMARY] (state, { items }) {
+    var pipes = _.map(items, (item) => {
+      return _.assign({}, item.pipe, { stats: item })
+    })
+
+    _.each(pipes, (pipe) => {
+      if (_.get(pipe, 'eid', '').length == 0) {
+        return
+      }
+
+      if (!_.has(state.objects, pipe.eid)) {
+        //addPipe(state, pipe)
+      } else {
+        // otherwise, just set the pipe's fetching flag
+        updatePipe(state, pipe.eid, { stats: pipe.stats })
+      }
+    })
+  },
+
+  // ----------------------------------------------------------------------- //
+
   [types.CANCELING_PROCESS] (state, { eid }) {
   },
 

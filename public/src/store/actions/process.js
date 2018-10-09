@@ -98,6 +98,24 @@ export const fetchProcessLog = ({ commit, dispatch }, { eid }) => {
 
 // ----------------------------------------------------------------------- //
 
+export const fetchProcessSummary = ({ commit, dispatch }) => {
+  commit(types.FETCHING_PROCESS_SUMMARY, { fetching: true })
+
+  return api.fetchProcessSummary().then(response => {
+    // success callback
+    commit(types.FETCHED_PROCESS_SUMMARY, { items: response.body })
+    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
 export const cancelProcess = ({ commit, dispatch }, { eid }) => {
   commit(types.CANCELING_PROCESS, { eid })
 
