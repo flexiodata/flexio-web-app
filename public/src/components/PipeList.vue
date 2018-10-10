@@ -23,19 +23,21 @@
       :sort-direction.sync="sort_direction"
       v-if="showHeader"
     />
-    <PipeItem
-      v-for="(pipe, index) in sorted_pipes"
-      :key="pipe.eid"
-      :item="pipe"
-      :index="index"
-      @edit="onItemEdit"
-      @duplicate="onItemDuplicate"
-      @share="onItemShare"
-      @embed="onItemEmbed"
-      @schedule="onItemSchedule"
-      @deploy="onItemDeploy"
-      @delete="onItemDelete"
-    />
+    <transition-group name="pipe-item">
+      <PipeItem
+        v-for="(pipe, index) in sorted_pipes"
+        :key="pipe.eid"
+        :item="pipe"
+        :index="index"
+        @edit="onItemEdit"
+        @duplicate="onItemDuplicate"
+        @share="onItemShare"
+        @embed="onItemEmbed"
+        @schedule="onItemSchedule"
+        @deploy="onItemDeploy"
+        @delete="onItemDelete"
+      />
+    </transition-group>
     <div class="h4"></div>
   </div>
 </template>
@@ -134,3 +136,8 @@
     }
   }
 </script>
+
+<style lang="stylus">
+  //.pipe-item-move
+  //  transition: transform 0.75s
+</style>
