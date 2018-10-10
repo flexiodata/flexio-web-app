@@ -2,9 +2,25 @@
   <article
     class="no-select trans-pm"
     :class="isHeader ? 'thead' : 'tbody pointer'"
-    @click="isHeader ? () => {} : openPipe"
+    @click="openPipe"
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
+      <div
+        class="flex-none"
+        style="padding: 16px 10px"
+        v-if="showSelectionCheckbox"
+      >
+        <el-checkbox
+          :checked="selected"
+          @change="$emit('select-all', !selected)"
+          v-if="isHeader"
+        />
+        <el-checkbox
+          :checked="selected"
+          @change="$emit('select', !selected, item.eid)"
+          v-else
+        />
+      </div>
       <div
         class="flex-fill"
         style="padding: 16px 10px"
@@ -18,7 +34,7 @@
           @sort="onSort"
         />
       </div>
-      <router-link
+      <div
         class="flex-fill link hint--top hint--large"
         :to="pipe_route"
         :aria-label="item.description"
@@ -32,7 +48,7 @@
             <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
           </div>
         </div>
-      </router-link>
+      </div>
       <div
         class="dn db-l tr"
         style="width: 110px"
@@ -148,13 +164,21 @@
 
   export default {
     props: {
+      item: {
+        type: Object,
+        required: true
+      },
       isHeader: {
         type: Boolean,
         default: false
       },
-      item: {
-        type: Object,
-        required: true
+      showSelectionCheckbox: {
+        type: Boolean,
+        default: false
+      },
+      selected: {
+        type: Boolean,
+        default: false
       },
       sort: {
         type: String,
@@ -250,6 +274,10 @@
     },
     methods: {
       openPipe() {
+        if (this.isHeader) {
+          return
+        }
+
         this.$store.track('Opened Pipe', this.getAnalyticsPayload(this.item))
         this.$router.push(this.pipe_route)
       },

@@ -5,7 +5,7 @@
     </div>
   </div>
 
-  <EmptyItem class="flex-fill justify-center h-100" v-else-if="pipes.length == 0 && filter.length > 0">
+  <EmptyItem class="flex-fill justify-center h-100" v-else-if="filtered_pipes.length == 0 && filter.length > 0">
     <i slot="icon" class="material-icons">storage</i>
     <span slot="text">No pipes match the filter criteria</span>
   </EmptyItem>
@@ -19,8 +19,11 @@
     <PipeItem
       :is-header="true"
       :item="{}"
+      :show-selection-checkbox="showSelectionCheckboxes"
+      :selected="is_all_selected"
       :sort.sync="sort"
       :sort-direction.sync="sort_direction"
+      @select-all="onSelectAll"
       v-if="showHeader"
     />
     <transition-group name="pipe-item">
@@ -29,12 +32,11 @@
         :key="pipe.eid"
         :item="pipe"
         :index="index"
+        :show-selection-checkbox="showSelectionCheckboxes"
+        :selected="isItemSelected(pipe.eid)"
+        @select="onItemSelect"
         @edit="onItemEdit"
         @duplicate="onItemDuplicate"
-        @share="onItemShare"
-        @embed="onItemEmbed"
-        @schedule="onItemSchedule"
-        @deploy="onItemDeploy"
         @delete="onItemDelete"
       />
     </transition-group>
@@ -57,6 +59,10 @@
       showHeader: {
         type: Boolean,
         default: false
+      },
+      showSelectionCheckboxes: {
+        type: Boolean,
+        default: false
       }
     },
     mixins: [MixinFilter],
@@ -68,7 +74,8 @@
     data() {
       return {
         sort: '',
-        sort_direction: ''
+        sort_direction: '',
+        selected_items: []
       }
     },
     computed: {
@@ -79,22 +86,28 @@
         'is_summary_fetching': 'process_summary_fetching',
         'is_summary_fetched': 'process_summary_fetched'
       }),
+      pipes() {
+        return this.getAllPipes()
+      },
       mapped_pipes() {
-        return _.map(this.getAllPipes(), p => {
+        return _.map(this.pipes, p => {
           return _.assign({}, p, {
             execution_cnt: parseInt(_.get(p, 'stats.total_count', '0'))
           })
         })
       },
-      pipes() {
+      filtered_pipes() {
         return this.$_Filter_filter(this.mapped_pipes, this.filter, ['name', 'description'])
       },
       sorted_pipes() {
         if (this.sort.length == 0) {
-          return this.pipes
+          return this.filtered_pipes
         }
 
-        return _.orderBy(this.pipes, [this.sort], [this.sort_direction])
+        return _.orderBy(this.filtered_pipes, [this.sort], [this.sort_direction])
+      },
+      is_all_selected() {
+        return this.selected_items.length == this.sorted_pipes.length
       }
     },
     created() {
@@ -112,23 +125,31 @@
           this.$store.dispatch('fetchProcessSummary')
         }
       },
+      isItemSelected(eid) {
+        return _.includes(this.selected_items, eid)
+      },
+      onSelectAll(selected) {
+        if (selected) {
+          this.selected_items = _.map(this.sorted_pipes, (p) => {
+            return p.eid
+          })
+        } else {
+          this.selected_items = []
+        }
+      },
+      onItemSelect(selected, eid) {
+        if (selected) {
+          this.selected_items = [].concat(this.selected_items).concat([eid])
+        } else {
+          this.selected_items = _.without(this.selected_items, eid)
+        }
+        console.log(this.selected_items)
+      },
       onItemEdit(item) {
         this.$emit('item-edit', item)
       },
       onItemDuplicate(item) {
         this.$emit('item-duplicate', item)
-      },
-      onItemShare(item) {
-        this.$emit('item-share', item)
-      },
-      onItemEmbed(item) {
-        this.$emit('item-embed', item)
-      },
-      onItemSchedule(item) {
-        this.$emit('item-schedule', item)
-      },
-      onItemDeploy(item) {
-        this.$emit('item-deploy', item)
       },
       onItemDelete(item) {
         this.$emit('item-delete', item)
