@@ -2,7 +2,7 @@
   <article
     class="no-select trans-pm"
     :class="isHeader ? 'thead' : 'tbody pointer'"
-    @click="isHeader ? () => {} : openPipe"
+    @click="openPipe"
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
@@ -34,7 +34,7 @@
           @sort="onSort"
         />
       </div>
-      <router-link
+      <div
         class="flex-fill link hint--top hint--large"
         :to="pipe_route"
         :aria-label="item.description"
@@ -48,7 +48,7 @@
             <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
           </div>
         </div>
-      </router-link>
+      </div>
       <div
         class="dn db-l tr"
         style="width: 110px"
@@ -274,6 +274,10 @@
     },
     methods: {
       openPipe() {
+        if (this.isHeader) {
+          return
+        }
+
         this.$store.track('Opened Pipe', this.getAnalyticsPayload(this.item))
         this.$router.push(this.pipe_route)
       },
