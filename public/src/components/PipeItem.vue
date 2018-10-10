@@ -1,12 +1,13 @@
 <template>
   <article
-    class="pointer no-select trans-pm"
-    :class="isHeader ? 'thead' : 'tbody'"
-    @click="openPipe"
+    class="no-select trans-pm"
+    :class="isHeader ? 'thead' : 'tbody pointer'"
+    @click="isHeader ? () => {} : openPipe"
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
-        class="flex-fill pa3"
+        class="flex-fill"
+        style="padding: 16px 10px"
         v-if="isHeader"
       >
         Name
@@ -17,7 +18,7 @@
         :aria-label="item.description"
         v-else
       >
-        <div class="pa3">
+        <div style="padding: 16px 10px">
           <div class="flex-l flex-row items-center">
             <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
           </div>
@@ -92,7 +93,10 @@
           :class="{ 'invisible': isHeader }"
           @command="onCommand"
         >
-          <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
+          <span
+            class="el-dropdown-link dib pointer black-30 hover-black"
+            style="padding: 16px 10px"
+          >
             <i class="material-icons v-mid">expand_more</i>
           </span>
           <el-dropdown-menu style="min-width: 10rem; margin-top: -0.5rem" slot="dropdown">
