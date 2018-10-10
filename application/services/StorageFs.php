@@ -180,6 +180,14 @@ class StorageFileReaderWriter implements \Flexio\IFace\IStreamReader, \Flexio\IF
                 return false;
             return $this->applyStructureToRow($row);
         }
+        else if ($this->file)
+        {
+            $line = fgets($this->file);
+            if ($line === false)
+                return false;
+            return rtrim($line, "\r\n");
+        }
+
 
         return false;
     }
