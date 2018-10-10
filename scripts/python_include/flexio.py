@@ -233,7 +233,7 @@ class Stream(object):
         if info:
             self._name = info['name']
             self._content_type = info['content_type']
-            self._is_table = True if self._content_type == 'application/vnd.flexio.table' else False
+            self._is_table = info['is_table']
             self._size = info['size']
             self._handle = info['handle']
             self._structure = None
@@ -353,7 +353,7 @@ class Stream(object):
             return row
 
     def readall(self):
-        if self.is_table:
+        if self._is_table:
             rows = []
             while True:
                 row = self.readline()
@@ -530,15 +530,8 @@ class ContextFs(object):
 
     def read(self, path, connection=''):
         info = proxy.invoke('fsOpen', ['r', path, connection])
-        handle = info['handle']
-
-        buf = b''
-        while True:
-            chunk = proxy.invoke('read', [handle, 4096])
-            if chunk is False:
-                break
-            buf += chunk
-        return buf
+        stream = Stream(info)
+        return stream.readall()
 
     def write(self, path, data='', connection=''):
  
