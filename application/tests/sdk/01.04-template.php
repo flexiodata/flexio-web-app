@@ -27,10 +27,12 @@ class Test
 Flexio.pipe()
 .javascript(function(context) {
     context.output.write('Hello World!')        // write text to stdout
+    context.end()
 })
 .javascript(function(context) {
     input = context.input.read().toUpperCase()  // read stdin and convert it to uppercase
     context.output.write(input)                 // write the converted output
+    context.end()
 })
 .run(function(err, response) {
     console.log(response.text)

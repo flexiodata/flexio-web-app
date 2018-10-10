@@ -28,7 +28,7 @@
             </el-button>
           </div>
           <div v-if="item.key == 'deploy_api' && is_api_deployed">
-            <span style="margin-right: 6px">{{api_url}}</span>
+            <span style="margin-right: 6px"><span class="b">POST</span> {{api_endpoint_url}}</span>
             <el-button
               type="text"
               size="tiny"
@@ -42,7 +42,7 @@
               class="hint--top"
               aria-label="Copy to Clipboard"
               size="tiny"
-              :data-clipboard-text="api_url"
+              :data-clipboard-text="api_endpoint_url"
             >
               Copy
             </el-button>
@@ -83,9 +83,9 @@
       >
         <span class="ttu f6 fw6">Your pipe is</span>
         <LabelSwitch
-          class="dib ml2 hint--bottom-left"
+          class="dib ml2 hint--bottom"
           active-color="#13ce66"
-          aria-label="Turn pipe on"
+          :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
           :width="58"
           v-model="is_deployed"
         />
@@ -96,6 +96,7 @@
 
 <script>
   import moment from 'moment'
+  import pipe_util from '../utils/pipe'
   import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
 
@@ -108,16 +109,17 @@
         type: Boolean,
         required: true
       },
-      eid: {
-        type: String,
-        required: true
-      },
-      identifier: {
-        type: String,
-        required: true
-      },
-      schedule: {
-        // must be an object or null
+      /*
+        'eid'
+        'pipe_identifier'
+        'deploy_mode',
+        'deploy_schedule',
+        'deploy_api',
+        'deploy_ui',
+        'schedule'
+      */
+      pipe: {
+        type: Object,
         required: true
       },
       showPropertiesPanel: {
@@ -131,24 +133,6 @@
       showRuntimeConfigurePanel: {
         type: Boolean,
         default: false
-      },
-
-      // from v-bind:pipe_deploy_attrs in pipe document
-      deploy_mode: {
-        type: String,
-        required: true
-      },
-      deploy_schedule: {
-        type: String,
-        required: true
-      },
-      deploy_api: {
-        type: String,
-        required: true
-      },
-      deploy_ui: {
-        type: String,
-        required: true
       }
     },
     components: {
@@ -173,12 +157,6 @@
       }
     },
     computed: {
-      api_url() {
-        return 'https://api.flex.io/v1/me/pipes/' + this.identifier
-      },
-      runtime_url() {
-        return 'https://' + window.location.hostname + '/app/pipes/' + this.eid + '/run'
-      },
       is_deployed: {
         get() {
           return this.isModeRun
@@ -214,7 +192,7 @@
       checklist: {
         get() {
           var arr = _.map(this.deployment_options, (d) => {
-            return this[d.key] === ACTIVE ? d.key : false
+            return _.get(this.pipe, [d.key], INACTIVE) === ACTIVE ? d.key : false
           })
           return _.compact(arr)
         },
@@ -236,55 +214,16 @@
         return _.includes(this.checklist, 'deploy_ui')
       },
       schedule_str() {
-        var s = this.schedule
-        switch (s.frequency) {
-          case sched.SCHEDULE_FREQUENCY_ONE_MINUTE:
-            return 'Every minute'
-          case sched.SCHEDULE_FREQUENCY_FIVE_MINUTES:
-            return 'Every 5 minutes'
-          case sched.SCHEDULE_FREQUENCY_FIFTEEN_MINUTES:
-            return 'Every 15 minutes'
-          case sched.SCHEDULE_FREQUENCY_THIRTY_MINUTES:
-            return 'Every 30 minutes'
-          case sched.SCHEDULE_FREQUENCY_HOURLY:
-            return 'Every hour'
-          case sched.SCHEDULE_FREQUENCY_DAILY:
-            return 'Every day at ' + this.getTimeStr()
-          case sched.SCHEDULE_FREQUENCY_WEEKLY:
-            return 'Every ' + this.getDayStr() + ' of every week at ' + this.getTimeStr()
-          case sched.SCHEDULE_FREQUENCY_MONTHLY:
-            return 'On the ' + this.getMonthDayStr() + ' of every month at ' + this.getTimeStr()
-        }
-      }
-    },
-    methods: {
-      getTimeStr() {
-        var times = _.get(this.schedule, 'times', [])
-        times = _.map(times, (t) => {
-          return moment().hour(t.hour).minute(t.minute).format('LT');
-        })
-        return times.join(', ')
+        var schedule = _.get(this.pipe, 'schedule')
+        return pipe_util.getDeployScheduleStr(schedule)
       },
-      getDayStr() {
-        var days = _.get(this.schedule, 'days', [])
-        days = _.map(days, (d) => {
-          return moment().isoWeekday(d).format('dddd')
-        })
-        return days.join(', ')
+      api_endpoint_url() {
+        var identifier = pipe_util.getIdentifier(this.pipe)
+        return pipe_util.getDeployApiUrl(identifier)
       },
-      getMonthDayStr() {
-        var days = _.get(this.schedule, 'days', [])
-        days = _.map(days, (d) => {
-          switch (d) {
-            case 1:
-              return 'first day'
-            case 15:
-              return 'fifteenth day'
-            case 'last':
-              return 'last day'
-          }
-        })
-        return days.join(', ')
+      runtime_url() {
+        var eid = _.get(this.pipe, 'eid', '')
+        return pipe_util.getDeployRuntimeUrl(eid)
       }
     }
   }

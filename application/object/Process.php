@@ -37,6 +37,12 @@ class Process extends \Flexio\Object\Base implements \Flexio\IFace\IObject
         return $result;
     }
 
+    public static function summary_daily(array $filter) : array
+    {
+        $result = \Flexio\System\System::getModel()->process->summary_daily($filter);
+        return $result;
+    }
+
     public static function list(array $filter) : array
     {
         $object = new static();

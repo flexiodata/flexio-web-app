@@ -62,18 +62,19 @@ class StreamReader implements \Flexio\IFace\IStreamReader
         }
          else
         {
-            $linelen = strpos($this->stream->buffer, "\n");
-            if ($linelen === false)
+            $npos = strpos($this->stream->buffer, "\n", $this->offset);
+
+            if ($npos === false)
             {
                 return $this->read(strlen($this->stream->buffer));
             }
              else
             {
-                $line = $this->read($linelen);
+                $npos -= $this->offset;
+                $line = $this->read($npos+1);
                 if ($line === false)
                     return false;
-                $this->read(1); // for the \n
-                return rtrim($line, "\r");
+                return rtrim($line, "\r\n");
             }
         }
     }

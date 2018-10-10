@@ -8,6 +8,7 @@
         <router-link to="/pipes" class="fw6 f6 ttu link nav-link" style="margin: 0 10px" data-tour-step="pipe-onboarding-8">Pipes</router-link>
         <router-link to="/connections" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Connections</router-link>
         <router-link to="/storage" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Storage</router-link>
+        <router-link to="/activity" class="fw6 f6 ttu link nav-link" style="margin: 0 10px">Activity</router-link>
       </div>
       <div v-if="user_fetching"></div>
       <div class="flex-none flex flex-row items-center" v-else-if="is_logged_in">

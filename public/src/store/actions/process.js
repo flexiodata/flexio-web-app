@@ -8,7 +8,7 @@ import {
 
 // ----------------------------------------------------------------------- //
 
-export const fetchProcesses = ({ commit }, { attrs }) => {
+export const fetchProcesses = ({ commit }, attrs) => {
   var pipe_eid = _.get(attrs, 'parent_eid', '')
 
   commit(types.FETCHING_PROCESSES, { pipe_eid, fetching: true })
@@ -92,6 +92,24 @@ export const fetchProcessLog = ({ commit, dispatch }, { eid }) => {
   }, response => {
     // error callback
     commit(types.FETCHING_PROCESS_LOG, { eid, fetching: false })
+    return response
+  })
+}
+
+// ----------------------------------------------------------------------- //
+
+export const fetchProcessSummary = ({ commit, dispatch }) => {
+  commit(types.FETCHING_PROCESS_SUMMARY, { fetching: true })
+
+  return api.fetchProcessSummary().then(response => {
+    // success callback
+    commit(types.FETCHED_PROCESS_SUMMARY, { items: response.body })
+    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
+
+    return response
+  }, response => {
+    // error callback
+    commit(types.FETCHING_PROCESS_SUMMARY, { fetching: false })
     return response
   })
 }

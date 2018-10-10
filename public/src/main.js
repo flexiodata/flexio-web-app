@@ -41,13 +41,13 @@ import VueScrollTo from 'vue-scrollto'
 import App from './components/App.vue'
 import router from './router' // VueRouter
 import store from './store' // Vuex store
-import util from './utils'
+import dom_utils from './utils/dom'
 import { ROUTE_BUILDER, ROUTE_SIGNIN, ROUTE_SIGNUP } from './constants/route'
 import { CHANGE_ACTIVE_DOCUMENT } from './store/mutation-types'
 
 // fallback css (if there's no Internet connection)
 
-util.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
+dom_utils.fallbackCss('tachyons-css-test', '/dist/css/tachyons.min.css')
 
 // setup for Element UI
 
@@ -137,6 +137,20 @@ store.track = function(event_name, attrs) {
   store.dispatch('analyticsTrack', attrs)
 }
 
+// helper functions for below
+
+const tryFetchConnections = () => {
+  if (!store.state.connections_fetched && !store.state.connections_fetching) {
+    store.dispatch('fetchConnections')
+  }
+}
+
+const tryFetchTokens = () => {
+  if (!store.state.tokens_fetched && !store.state.tokens_fetching) {
+    store.dispatch('fetchTokens')
+  }
+}
+
 // global route guards
 
 router.afterEach((to, from) => {
@@ -151,16 +165,17 @@ router.beforeEach((to, from, next) => {
   if (store.state.active_user_eid.length > 0)
   {
     // user is signed in; move to the next route
-    store.dispatch('fetchConnections')
-    store.dispatch('fetchTokens')
+    tryFetchConnections()
+    tryFetchTokens()
     next()
   }
    else if (to.matched.some(record => record.meta.requiresAuth))
   {
     // this route requires authentication
 
-    if (store.state.user_fetching)
+    if (store.state.user_fetching) {
       return
+    }
 
     var redirect_to_signup = to.name == ROUTE_BUILDER
 
@@ -169,8 +184,8 @@ router.beforeEach((to, from, next) => {
       if (store.state.active_user_eid.length > 0)
       {
         // user is signed in; move to the next route
-        store.dispatch('fetchConnections')
-        store.dispatch('fetchTokens')
+        tryFetchConnections()
+        tryFetchTokens()
         next()
       }
        else
@@ -192,8 +207,9 @@ router.beforeEach((to, from, next) => {
    else
   {
     // we're already fetching the user; done
-    if (store.state.user_fetching)
+    if (store.state.user_fetching) {
       return
+    }
 
     // this route does not require authentication; try to sign in just to make
     // sure we know who the active user is and move to the next route

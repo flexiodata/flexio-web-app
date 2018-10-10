@@ -3,6 +3,10 @@ export default () => {
     // TODO: move all of these into `objects_fetched` and `objects_fetching` objects?
     user_fetched: false,
     user_fetching: false,
+    processes_fetched: false,
+    processes_fetching: false,
+    process_summary_fetched: false,
+    process_summary_fetching: false,
     projects_fetched: false,
     projects_fetching: false,
     pipes_fetched: false,

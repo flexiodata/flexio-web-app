@@ -1,53 +1,105 @@
 <template>
   <article
-    class="mv3-l bb ba-l br2-l pointer no-select trans-pm css-list-item"
-    @click="openPipe"
+    class="no-select trans-pm"
+    :class="isHeader ? 'thead' : 'tbody pointer'"
+    @click="isHeader ? () => {} : openPipe"
   >
-    <div class="flex flex-row items-center">
-      <div class="flex-fill mr2 fw6 f6 f5-ns">
-        <router-link class="link" :to="pipe_route">
-          <div class="pa3">
-            <div class="flex-l flex-row items-center">
-              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title">{{item.name}}</h3>
-              <div
-                class="dib f8 code black-40 mt1 mt0-l pa1 bg-nearer-white ba b--black-05 br2"
-                v-if="item.alias"
-              >{{item.alias}}</div>
-            </div>
-            <div class="dn db-l mw7" v-if="has_description">
-              <h4 class="f6 fw4 mt1 mb0 lh-copy light-silver">{{item.description}}</h4>
-            </div>
+    <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
+      <div
+        class="flex-fill"
+        style="padding: 16px 10px"
+        v-if="isHeader"
+      >
+        Name
+        <SortArrows
+          sort-key="name"
+          :is-active="sort == 'name'"
+          :direction="sortDirection"
+          @sort="onSort"
+        />
+      </div>
+      <router-link
+        class="flex-fill link hint--top hint--large"
+        :to="pipe_route"
+        :aria-label="item.description"
+        v-else
+      >
+        <div style="padding: 16px 10px">
+          <div class="flex-l flex-row items-center">
+            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
           </div>
-        </router-link>
+          <div class="dn db-ns mw7" v-if="has_description">
+            <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
+          </div>
+        </div>
+      </router-link>
+      <div
+        class="dn db-l tr"
+        style="width: 110px"
+      >
+        <div v-if="isHeader">
+          Executions
+          <SortArrows
+            sort-key="execution_cnt"
+            :is-active="sort == 'execution_cnt'"
+            :direction="sortDirection"
+            @sort="onSort"
+          />
+        </div>
+        <div class="f6" v-else>{{execution_cnt}}</div>
       </div>
-      <div class="flex-none flex flex-row items-center">
-        <div class="ph1 hint--top" aria-label="Run on a schedule">
-          <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_schedule }"
+      <div
+        class="dn db-l ml3 ml4-l tr"
+        style="width: 110px"
+      >
+        <div v-if="isHeader">Deployment</div>
+        <div v-else>
+          <div
+            class="hint--top"
+            :aria-label="schedule_tooltip"
           >
-            schedule
-          </i>
-        </div>
-        <div class="ph1 hint--top" aria-label="Run using an API endpoint">
-          <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_api }"
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_schedule ? 'blue' : 'o-10'"
+            >
+              schedule
+            </i>
+          </div>
+          <div
+            class="hint--top"
+            :aria-label="api_endpoint_tooltip"
           >
-            code
-          </i>
-        </div>
-        <div class="ph1 hint--top" aria-label="Run using a Flex.io Web Interface">
-          <i
-            class="material-icons md-18 fw6"
-            :class="{ 'o-20': !is_deployed_ui }"
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_api ? 'blue' : 'o-10'"
+            >
+              code
+            </i>
+          </div>
+          <div
+            class="hint--top"
+            :aria-label="runtime_tooltip"
           >
-            offline_bolt
-          </i>
+            <i
+              class="material-icons md-21"
+              :class="is_deployed_ui ? 'blue' : 'o-10'"
+            >
+              offline_bolt
+            </i>
+          </div>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3">
-        <div class="pv3" @click.stop>
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
+        <div v-if="isHeader">
+          Status
+          <SortArrows
+            sort-key="deploy_mode"
+            :is-active="sort == 'deploy_mode'"
+            :direction="sortDirection"
+            @sort="onSort"
+          />
+        </div>
+        <div class="pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -58,8 +110,15 @@
         </div>
       </div>
       <div class="flex-none pl2" @click.stop>
-        <el-dropdown trigger="click" @command="onCommand">
-          <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
+        <el-dropdown
+          trigger="click"
+          :class="{ 'invisible': isHeader }"
+          @command="onCommand"
+        >
+          <span
+            class="el-dropdown-link dib pointer black-30 hover-black"
+            style="padding: 16px 10px"
+          >
             <i class="material-icons v-mid">expand_more</i>
           </span>
           <el-dropdown-menu style="min-width: 10rem; margin-top: -0.5rem" slot="dropdown">
@@ -75,8 +134,10 @@
 </template>
 
 <script>
+  import pipe_util from '../utils/pipe'
   import { ROUTE_PIPES } from '../constants/route'
   import LabelSwitch from './LabelSwitch.vue'
+  import SortArrows from './SortArrows.vue'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
@@ -87,13 +148,26 @@
 
   export default {
     props: {
-      'item': {
+      isHeader: {
+        type: Boolean,
+        default: false
+      },
+      item: {
         type: Object,
         required: true
+      },
+      sort: {
+        type: String,
+        default: 'none'
+      },
+      sortDirection: {
+        type: String,
+        default: 'none' // 'asc', 'desc', 'none'
       }
     },
     components: {
-      LabelSwitch
+      LabelSwitch,
+      SortArrows
     },
     computed: {
       input_type() {
@@ -150,6 +224,28 @@
       },
       pipe_route() {
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
+      },
+      execution_cnt() {
+        return parseInt(_.get(this.item, 'stats.total_count', '0'))
+      },
+      schedule_str() {
+        return pipe_util.getDeployScheduleStr(this.item.schedule)
+      },
+      api_endpoint_url() {
+        var identifier = pipe_util.getIdentifier(this.item)
+        return pipe_util.getDeployApiUrl(identifier)
+      },
+      runtime_url() {
+        return pipe_util.getDeployRuntimeUrl(this.item.eid)
+      },
+      schedule_tooltip() {
+        return this.is_deployed_schedule ? 'Scheduler ON: ' + this.schedule_str : 'Scheduler OFF'
+      },
+      api_endpoint_tooltip() {
+        return this.is_deployed_api ? 'API Endpoint ON' : 'API Endpoint OFF'
+      },
+      runtime_tooltip() {
+        return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
       }
     },
     methods: {
@@ -169,7 +265,30 @@
           case 'duplicate': return this.$emit('duplicate', this.item)
           case 'delete':    return this.$emit('delete', this.item)
         }
+      },
+      onSort(sort_key, direction) {
+        this.$emit('update:sort', sort_key)
+        this.$emit('update:sortDirection', direction)
       }
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  // match Element UI's .el-table thead styling
+  .thead
+    border-bottom: 1px solid #ebeef5
+    color: #909399
+    font-size: 14px
+  .th
+    font-weight: bold
+  .tbody
+    &:hover
+      .td
+        background-color: #f5f7fa
+      .title
+      .description
+        color: #409eff
+  .td
+    border-bottom: 1px solid #ebeef5
+</style>

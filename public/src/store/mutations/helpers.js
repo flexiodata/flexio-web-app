@@ -79,9 +79,16 @@ const addAbstract = (state, objs, defaults, extra_defaults) => {
 }
 
 const updateAbstract = (state, eid, attrs) => {
+  // make sure we create a new object due to Javascript object reference caching
+  var new_obj = _.cloneDeep(state['objects'][eid])
+
+  // update new object attributes
   _.each(attrs, function(val, key) {
-    state['objects'][eid][key] = val
+    new_obj[key] = val
   })
+
+  // store the new object
+  state['objects'][eid] = _.assign({}, new_obj)
 }
 
 const removeAbstract = (state, objs) => {

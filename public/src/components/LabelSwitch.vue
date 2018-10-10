@@ -116,6 +116,9 @@
         return styles.join('; ')
       }
     },
+    mounted() {
+      this.measureText()
+    },
     methods: {
       onChange() {
         this.$emit('input', !this.value)
@@ -124,10 +127,14 @@
         this.$nextTick(() => {
           var at = this.$refs['active-text']
           var iat = this.$refs['inactive-text']
-          this.active_text_width = at.clientWidth
-          this.active_text_height = at.clientHeight
-          this.inactive_text_width = iat.clientWidth
-          this.inactive_text_height = iat.clientHeight
+          if (at) {
+            this.active_text_width = at.clientWidth
+            this.active_text_height = at.clientHeight
+          }
+          if (iat) {
+            this.inactive_text_width = iat.clientWidth
+            this.inactive_text_height = iat.clientHeight
+          }
         })
       },
       updateTextWidth() {

@@ -47,52 +47,52 @@ var DEL = 'delete'
 export default {
 
   // auth
-  signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                            },
-  login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                             },
-  logout:                         function()                            { return LogoutResource[POS] ()                                     },
-  resetPassword:                  function({ attrs })                   { return ResetPasswordResource[POS] ({}, attrs)                     },
+  signUp:                         function({ attrs })                   { return SignupResource[POS] ({}, attrs)                                          },
+  login:                          function({ attrs })                   { return LoginResource[POS] ({}, attrs)                                           },
+  logout:                         function()                            { return LogoutResource[POS] ()                                                   },
+  resetPassword:                  function({ attrs })                   { return ResetPasswordResource[POS] ({}, attrs)                                   },
 
   // validation
-  validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                          },
+  validate:                       function({ attrs })                   { return ValidateResource[POS] ({}, attrs)                                        },
 
   // rights
-  fetchRights:                    function({ attrs })                   { return RightsResource[GET] (attrs)                                },
-  createRights:                   function({ attrs })                   { return RightsResource[POS] ({}, attrs)                            },
-  updateRight:                    function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                       },
-  deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                              },
+  fetchRights:                    function({ attrs })                   { return RightsResource[GET] (attrs)                                              },
+  createRights:                   function({ attrs })                   { return RightsResource[POS] ({}, attrs)                                          },
+  updateRight:                    function({ eid, attrs })              { return RightsResource[POS] ({ eid }, attrs)                                     },
+  deleteRight:                    function({ eid })                     { return RightsResource[DEL] ({ eid })                                            },
 
   // token
-  fetchTokens:                    function()                            { return TokenResource[GET] ()                                      },
-  createToken:                    function()                            { return TokenResource[POS] ()                                      },
-  deleteToken:                    function({ eid })                     { return TokenResource[DEL] ({ eid })                               },
+  fetchTokens:                    function()                            { return TokenResource[GET] ()                                                    },
+  createToken:                    function()                            { return TokenResource[POS] ()                                                    },
+  deleteToken:                    function({ eid })                     { return TokenResource[DEL] ({ eid })                                             },
 
   // user
-  fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                             },
-  updateUser:                     function({ eid, attrs })              { return AccountResource[POS] ({ eid }, attrs)                      },
-  deleteUser:                     function({ eid, attrs })              { return AccountResource[DEL] ({ eid }, attrs)                      },
-  changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)   },
+  fetchUser:                      function({ eid })                     { return AccountResource[GET] ({ eid })                                           },
+  updateUser:                     function({ eid, attrs })              { return AccountResource[POS] ({ eid }, attrs)                                    },
+  deleteUser:                     function({ eid, attrs })              { return AccountResource[DEL] ({ eid }, attrs)                                    },
+  changePassword:                 function({ eid, attrs })              { return AccountResource[POS] ({ eid, p1: 'credentials' }, attrs)                 },
 
   // connection
-  fetchConnections:               function()                            { return ConnectionResource[GET] ()                                 },
-  fetchConnection:                function({ eid })                     { return ConnectionResource[GET] ({ eid })                          },
-  createConnection:               function({ attrs })                   { return ConnectionResource[POS] ({}, attrs)                        },
-  updateConnection:               function({ eid, attrs })              { return ConnectionResource[POS] ({ eid }, attrs)                   },
-  deleteConnection:               function({ eid })                     { return ConnectionResource[DEL] ({ eid })                          },
-  testConnection:                 function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'connect' }, attrs)    },
-  disconnectConnection:           function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'disconnect' }, attrs) },
+  fetchConnections:               function()                            { return ConnectionResource[GET] ()                                               },
+  fetchConnection:                function({ eid })                     { return ConnectionResource[GET] ({ eid })                                        },
+  createConnection:               function({ attrs })                   { return ConnectionResource[POS] ({}, attrs)                                      },
+  updateConnection:               function({ eid, attrs })              { return ConnectionResource[POS] ({ eid }, attrs)                                 },
+  deleteConnection:               function({ eid })                     { return ConnectionResource[DEL] ({ eid })                                        },
+  testConnection:                 function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'connect' }, attrs)                  },
+  disconnectConnection:           function({ eid, attrs })              { return ConnectionResource[POS] ({ eid, p1: 'disconnect' }, attrs)               },
 
   // pipe
-  fetchPipes:                     function()                            { return PipeResource[GET] ()                                       },
-  fetchPipe:                      function({ eid })                     { return PipeResource[GET] ({ eid })                                },
-  createPipe:                     function({ attrs })                   { return PipeResource[POS] ({}, attrs)                              },
-  updatePipe:                     function({ eid, attrs })              { return PipeResource[POS] ({ eid }, attrs)                         },
-  deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                },
+  fetchPipes:                     function()                            { return PipeResource[GET] ()                                                     },
+  fetchPipe:                      function({ eid })                     { return PipeResource[GET] ({ eid })                                              },
+  createPipe:                     function({ attrs })                   { return PipeResource[POS] ({}, attrs)                                            },
+  updatePipe:                     function({ eid, attrs })              { return PipeResource[POS] ({ eid }, attrs)                                       },
+  deletePipe:                     function({ eid })                     { return PipeResource[DEL] ({ eid })                                              },
 
   // process
-  fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                               },
-  fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                             },
-  createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                           },
-  cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})           },
+  fetchProcesses:                 function({ attrs })                   { return ProcessResource[GET] (attrs)                                             },
+  fetchProcess:                   function({ eid })                     { return ProcessResource[GET] ({ eid })                                           },
+  createProcess:                  function({ attrs })                   { return ProcessResource[POS] ({}, attrs)                                         },
+  cancelProcess:                  function({ eid })                     { return ProcessResource[POS] ({ eid, p1: 'cancel' }, {})                         },
 
   // `attrs` differs here from other calls in that it wraps up all of the options (headers, etc.)
   runProcess: function({ eid, attrs }) {
@@ -108,24 +108,28 @@ export default {
   },
 
   // process (other)
-  fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                  },
+  fetchProcessLog:                function({ eid })                     { return ProcessResource[GET] ({ eid, p1: 'log' })                                },
+  fetchProcessSummary:            function()                            { return ProcessResource[GET] ({ p1: 'summary' })                                 },
+  fetchProcessSummaryDaily:       function()                            { return ProcessResource[GET] ({ p1: 'summary', p2: 'daily' })                    },
 
   // stream
-  fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                              },
+  fetchStream:                    function({ eid })                     { return StreamResource[GET] ({ eid })                                            },
 
   // statistics
-  fetchStatistics:                function({ type, action })            { return BaseResource[GET] ({ p1: type, p2: action })               },
+  fetchStatistics:                function({ type, action })            { return BaseResource[GET] ({ p1: type, p2: action })                             },
 
   // admin
-  fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })          },
-  fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })               },
-  runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                 },
+  fetchAdminInfo:                 function({ type, action })            { return AdminInfoResource[GET] ({ p1: type, p2: action })                        },
+  fetchAdminProcessSummary:       function({ eid })                     { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary' })                },
+  fetchAdminProcessSummaryDaily:  function()                            { return AdminInfoResource[GET] ({ p1: 'process', p2: 'summary', p3: 'daily' })   },
+  fetchAdminTests:                function()                            { return AdminTestResource[GET] ({ p1: 'configure' })                             },
+  runAdminTest:                   function({ id })                      { return AdminTestResource[GET] ({ p1: 'run', id })                               },
 
   // vfs
-  vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                },
-  vfsGetFile:                     function({ path })                     { return VfsResource[GET] ({ p1: path })                           },
-  vfsPutFile:                     function({ path })                     { return VfsResource[PUT] ({ p1: path })                           },
-  vfsCreateDirectory:             function({ path })                     { return VfsResource[PUT] ({ p1: path })                           }
+  vfsListFiles:                   function({ path })                     { return VfsResource[GET] ({ p1: 'list', q: path })                              },
+  vfsGetFile:                     function({ path })                     { return VfsResource[GET] ({ p1: path })                                         },
+  vfsPutFile:                     function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         },
+  vfsCreateDirectory:             function({ path })                     { return VfsResource[PUT] ({ p1: path })                                         }
 }
 
 /*

@@ -177,7 +177,6 @@
     background-color: #eef8ff
     border-color: #aad8ff
     box-shadow: 0 4px 20px -8px rgba(0,0,0,0.4)
-*/
 
 .css-list-item
   border-color: rgba(0,0,0,0.1)
@@ -189,5 +188,21 @@
     border-bottom-color: rgba(0,0,0,0.15)
     box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)
 
-.css-list-item:not(.css-trash-item):hover .css-list-title
+.css-list-item:hover .css-list-title
   color: $blue
+*/
+
+
+.css-list-item
+  border-color: rgba(0,0,0,0.075)
+  transition: all 0.2s ease
+
+  &:hover
+    background-color: $bg-nearer-white
+    //border-color: rgba(0,0,0,0.075)
+    //border-bottom-color: rgba(0,0,0,0.15)
+    //box-shadow: 0 6px 6px -6px rgba(0,0,0,0.2)
+
+.css-list-item:hover .css-list-title
+  color: $blue
+

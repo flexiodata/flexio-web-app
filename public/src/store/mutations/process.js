@@ -6,6 +6,8 @@ export default {
   // ----------------------------------------------------------------------- //
 
   [types.FETCHING_PROCESSES] (state, { pipe_eid, fetching }) {
+    state.processes_fetching = fetching
+
     // if we're trying to fetch processes for a pipe that's not
     // in our store, add a very basic pipe object to the store
     if (fetching === true && !_.has(state.objects, pipe_eid))
@@ -24,6 +26,9 @@ export default {
 
     // set the pipe's process fetched flag
     updatePipe(state, pipe_eid, { processes_fetched: true })
+
+    // set our fetched flag so we know we've queried the backend
+    state.processes_fetched = true
   },
 
   // ----------------------------------------------------------------------- //
@@ -59,6 +64,34 @@ export default {
 
   [types.FETCHED_PROCESS_LOG] (state, process) {
     addProcess(state, process, {})
+  },
+
+  // ----------------------------------------------------------------------- //
+
+  [types.FETCHING_PROCESS_SUMMARY] (state, { fetching }) {
+    state.process_summary_fetching = fetching
+  },
+
+  [types.FETCHED_PROCESS_SUMMARY] (state, { items }) {
+    var pipes = _.map(items, (item) => {
+      return _.assign({}, item.pipe, { stats: item })
+    })
+
+    _.each(pipes, (pipe) => {
+      if (_.get(pipe, 'eid', '').length == 0) {
+        return
+      }
+
+      if (!_.has(state.objects, pipe.eid)) {
+        // pipe has since been deleted; we're done
+      } else {
+        // otherwise, add the stats node to the pipe
+        updatePipe(state, pipe.eid, { stats: pipe.stats })
+      }
+    })
+
+    // set our fetched flag so we know we've queried the backend
+    state.process_summary_fetched = true
   },
 
   // ----------------------------------------------------------------------- //
