@@ -56,6 +56,9 @@ class Write extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
+        if (strlen(($job_params['connection'] ?? '')) > 0)
+            $vfs->setRootConnection($job_params['connection']);
+
         // not all services support open/readers/writers; try that first
         try
         {
@@ -74,7 +77,6 @@ class Write extends \Flexio\Jobs\Base
             // check if the service only supports write(), and if so, go to the catch
             if (($service->getFlags() & \Flexio\IFace\IFileSystem::FLAG_HAS_OPEN) == 0)
                 throw new \Exception(""); // go to the catch and use $vfs->write()
-
 
             if (!$vfs->createFile($path, $create_params))
                 throw new \Flexio\Base\Exception(\Flexio\Base\Error::CREATE_FAILED);

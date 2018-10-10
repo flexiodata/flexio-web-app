@@ -47,6 +47,9 @@ class Read extends \Flexio\Jobs\Base
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
 
+        if (strlen(($job_params['connection'] ?? '')) > 0)
+            $vfs->setRootConnection($job_params['connection']);
+        
         $info = $vfs->getFileInfo($path);
 
         $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];

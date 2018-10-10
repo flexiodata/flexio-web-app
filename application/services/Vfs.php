@@ -22,6 +22,7 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     private $process_context_service = null;
     private $store_service = null;
     private $process = null;
+    private $root_connection_identifier = null;  // if set, this forces the vfs to operate only on one connection type
 
     public function __construct(string $owner_eid)
     {
@@ -46,6 +47,11 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
     public function getOwner() : string
     {
         return $this->owner_eid;
+    }
+
+    public function setRootConnection($connection_identifier)
+    {
+        $this->root_connection_identifier = $connection_identifier;
     }
 
     private function isStorageConnectionType(string $type) : bool
@@ -77,7 +83,9 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         $owner_user_eid = $this->getOwner();
 
-        if ($path == '' || $path == '/')
+        // if root_connection_identifier is set, the vfs is bound to that connection
+
+        if ($this->root_connection_identifier === null && ($path == '' || $path == '/'))
         {
             if (strlen($owner_user_eid)==0)
             {
@@ -154,10 +162,19 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
         foreach ($service_list as $entry)
         {
-            $full_path = '/' . $connection_identifier;
-            if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
-                $full_path .= '/';
-            $full_path .= ltrim($entry['path'],'/');
+            if ($this->root_connection_identifier === null)
+            {
+                $full_path = '/' . $connection_identifier;
+                if (strlen($full_path) == 0 || substr($full_path, -1) != '/')
+                    $full_path .= '/';
+                $full_path .= ltrim($entry['path'],'/');
+            }
+             else
+            {
+                $full_path = $entry['path'];
+                if (substr($full_path, 0, 1) !== '/')
+                    $full_path = '/' . $full_path;
+            }
 
             $results[] = array(
                 'name' => $entry['name'],
@@ -170,17 +187,6 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
         }
 
         return $results;
-/*
-            foreach ($results as &$v)
-            {
-                $remote_path = $v['path'];
-                $v['path'] = '/' . $connection_identifier . $remote_path;
-                $v['remote_path'] = $remote_path;
-            }
-            unset($v);
-        }
-        return $results;
-*/
     }
 
 
@@ -410,6 +416,13 @@ class Vfs // TODO: implements \Flexio\IFace\IFileSystem
 
     public function getServiceFromPath(string $path, string &$connection_identifier, string &$rpath) // TODO: add return type
     {
+        if ($this->root_connection_identifier !== null)
+        {
+            $connection_identifier = $this->root_connection_identifier;
+            $rpath = $path;
+            return $this->getService($connection_identifier);
+        }
+
         $service_identifier_len = strpos($path, '://');
         if ($service_identifier_len !== false)
         {
