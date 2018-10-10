@@ -33,7 +33,7 @@
       style="max-width: 1152px"
       :filter="filter"
       :show-header="true"
-      :show-selection-checkboxes="true"
+      :show-selection-checkboxes="false"
       @item-duplicate="duplicatePipe"
       @item-delete="tryDeletePipe"
     />
