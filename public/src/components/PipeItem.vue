@@ -6,6 +6,22 @@
   >
     <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
+        class="flex-none"
+        style="padding: 16px 10px"
+        v-if="showSelectionCheckbox"
+      >
+        <el-checkbox
+          :checked="selected"
+          @change="$emit('select-all')"
+          v-if="isHeader"
+        />
+        <el-checkbox
+          :checked="selected"
+          @change="$emit('select', item.eid)"
+          v-else
+        />
+      </div>
+      <div
         class="flex-fill"
         style="padding: 16px 10px"
         v-if="isHeader"
@@ -148,13 +164,21 @@
 
   export default {
     props: {
+      item: {
+        type: Object,
+        required: true
+      },
       isHeader: {
         type: Boolean,
         default: false
       },
-      item: {
-        type: Object,
-        required: true
+      showSelectionCheckbox: {
+        type: Boolean,
+        default: false
+      },
+      selected: {
+        type: Boolean,
+        default: false
       },
       sort: {
         type: String,

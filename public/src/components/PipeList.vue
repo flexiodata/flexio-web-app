@@ -19,6 +19,7 @@
     <PipeItem
       :is-header="true"
       :item="{}"
+      :show-selection-checkbox="false"
       :sort.sync="sort"
       :sort-direction.sync="sort_direction"
       v-if="showHeader"
@@ -29,12 +30,11 @@
         :key="pipe.eid"
         :item="pipe"
         :index="index"
+        :show-selection-checkbox="false"
+        :selected="isItemSelected(pipe.eid)"
+        @select="onItemSelect"
         @edit="onItemEdit"
         @duplicate="onItemDuplicate"
-        @share="onItemShare"
-        @embed="onItemEmbed"
-        @schedule="onItemSchedule"
-        @deploy="onItemDeploy"
         @delete="onItemDelete"
       />
     </transition-group>
@@ -57,6 +57,10 @@
       showHeader: {
         type: Boolean,
         default: false
+      },
+      showSelectionCheckboxes: {
+        type: Boolean,
+        default: false
       }
     },
     mixins: [MixinFilter],
@@ -68,7 +72,8 @@
     data() {
       return {
         sort: '',
-        sort_direction: ''
+        sort_direction: '',
+        selected_items: []
       }
     },
     computed: {
@@ -112,23 +117,22 @@
           this.$store.dispatch('fetchProcessSummary')
         }
       },
+      isItemSelected(eid) {
+        return _.includes(this.selected_items, eid)
+      },
+      onItemSelect(eid) {
+        if (this.isItemSelected(eid)) {
+          this.selected_items = _.without(this.selected_items, eid)
+        } else {
+          this.selected_items = [].concat(this.selected_items).concat([eid])
+        }
+        console.log(this.selected_items)
+      },
       onItemEdit(item) {
         this.$emit('item-edit', item)
       },
       onItemDuplicate(item) {
         this.$emit('item-duplicate', item)
-      },
-      onItemShare(item) {
-        this.$emit('item-share', item)
-      },
-      onItemEmbed(item) {
-        this.$emit('item-embed', item)
-      },
-      onItemSchedule(item) {
-        this.$emit('item-schedule', item)
-      },
-      onItemDeploy(item) {
-        this.$emit('item-deploy', item)
       },
       onItemDelete(item) {
         this.$emit('item-delete', item)
