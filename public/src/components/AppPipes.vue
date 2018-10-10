@@ -13,14 +13,15 @@
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2 dn db-ns mr3">Pipes</div>
+        </div>
+        <div class="flex-none flex flex-row items-center">
           <el-input
             class="w-100 mw5 mr3"
-            placeholder="Filter items..."
+            placeholder="Search..."
+            prefix-icon="el-icon-search"
             @keydown.esc.native="filter = ''"
             v-model="filter"
           />
-        </div>
-        <div class="flex-none flex flex-row items-center">
           <el-button type="primary" class="ttu b" @click="onNewPipeClick">New pipe</el-button>
         </div>
       </div>
