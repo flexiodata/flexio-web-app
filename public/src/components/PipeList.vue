@@ -136,10 +136,8 @@
         } else {
           this.selected_items = []
         }
-        console.log(this.selected_items)
       },
       onItemSelect(selected, eid) {
-        console.log(selected)
         if (selected) {
           this.selected_items = [].concat(this.selected_items).concat([eid])
         } else {
