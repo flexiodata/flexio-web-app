@@ -11,6 +11,12 @@
         v-if="isHeader"
       >
         Name
+        <SortArrows
+          sort-key="name"
+          :is-active="sort == 'name'"
+          :direction="sortDirection"
+          @sort="onSort"
+        />
       </div>
       <router-link
         class="flex-fill link hint--top hint--large"
@@ -31,7 +37,15 @@
         class="dn db-l tr"
         style="width: 110px"
       >
-        <div v-if="isHeader">Executions</div>
+        <div v-if="isHeader">
+          Executions
+          <SortArrows
+            sort-key="execution_cnt"
+            :is-active="sort == 'execution_cnt'"
+            :direction="sortDirection"
+            @sort="onSort"
+          />
+        </div>
         <div class="f6" v-else>{{execution_cnt}}</div>
       </div>
       <div
@@ -76,7 +90,15 @@
         </div>
       </div>
       <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
-        <div v-if="isHeader">Status</div>
+        <div v-if="isHeader">
+          Status
+          <SortArrows
+            sort-key="deploy_mode"
+            :is-active="sort == 'deploy_mode'"
+            :direction="sortDirection"
+            @sort="onSort"
+          />
+        </div>
         <div class="pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
@@ -115,6 +137,7 @@
   import pipe_util from '../utils/pipe'
   import { ROUTE_PIPES } from '../constants/route'
   import LabelSwitch from './LabelSwitch.vue'
+  import SortArrows from './SortArrows.vue'
 
   const DEPLOY_MODE_UNDEFINED = ''
   const DEPLOY_MODE_BUILD     = 'B'
@@ -132,10 +155,19 @@
       item: {
         type: Object,
         required: true
+      },
+      sort: {
+        type: String,
+        default: 'none'
+      },
+      sortDirection: {
+        type: String,
+        default: 'none' // 'asc', 'desc', 'none'
       }
     },
     components: {
-      LabelSwitch
+      LabelSwitch,
+      SortArrows
     },
     computed: {
       input_type() {
@@ -194,7 +226,7 @@
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
       execution_cnt() {
-        return _.get(this.item, 'stats.total_count', '0')
+        return parseInt(_.get(this.item, 'stats.total_count', '0'))
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
@@ -233,6 +265,10 @@
           case 'duplicate': return this.$emit('duplicate', this.item)
           case 'delete':    return this.$emit('delete', this.item)
         }
+      },
+      onSort(sort_key, direction) {
+        this.$emit('update:sort', sort_key)
+        this.$emit('update:sortDirection', direction)
       }
     }
   }

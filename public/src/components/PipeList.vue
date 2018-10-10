@@ -19,10 +19,13 @@
     <PipeItem
       :is-header="true"
       :item="{}"
+      :sort.sync="sort"
+      :sort-direction.sync="sort_direction"
       v-if="showHeader"
     />
     <PipeItem
-      v-for="(pipe, index) in pipes"
+      v-for="(pipe, index) in sorted_pipes"
+      :key="pipe.eid"
       :item="pipe"
       :index="index"
       @edit="onItemEdit"
@@ -60,6 +63,12 @@
       PipeItem,
       EmptyItem
     },
+    data() {
+      return {
+        sort: '',
+        sort_direction: ''
+      }
+    },
     computed: {
       // mix this into the outer object with the object spread operator
       ...mapState({
@@ -68,8 +77,22 @@
         'is_summary_fetching': 'process_summary_fetching',
         'is_summary_fetched': 'process_summary_fetched'
       }),
+      mapped_pipes() {
+        return _.map(this.getAllPipes(), p => {
+          return _.assign({}, p, {
+            execution_cnt: parseInt(_.get(p, 'stats.total_count', '0'))
+          })
+        })
+      },
       pipes() {
-        return this.$_Filter_filter(this.getAllPipes(), this.filter, ['name', 'description'])
+        return this.$_Filter_filter(this.mapped_pipes, this.filter, ['name', 'description'])
+      },
+      sorted_pipes() {
+        if (this.sort.length == 0) {
+          return this.pipes
+        }
+
+        return _.orderBy(this.pipes, [this.sort], [this.sort_direction])
       }
     },
     created() {
