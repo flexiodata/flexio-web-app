@@ -12,12 +12,12 @@
       >
         <el-checkbox
           :checked="selected"
-          @change="$emit('select-all')"
+          @change="$emit('select-all', !selected)"
           v-if="isHeader"
         />
         <el-checkbox
           :checked="selected"
-          @change="$emit('select', item.eid)"
+          @change="$emit('select', !selected, item.eid)"
           v-else
         />
       </div>
