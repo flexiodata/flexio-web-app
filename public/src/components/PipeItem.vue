@@ -29,14 +29,14 @@
       </router-link>
       <div
         class="dn db-l tr"
-        style="width: 100px"
+        style="width: 110px"
       >
         <div v-if="isHeader">Executions</div>
         <div class="f6" v-else>{{execution_cnt}}</div>
       </div>
       <div
         class="dn db-l ml3 ml4-l tr"
-        style="width: 100px"
+        style="width: 110px"
       >
         <div v-if="isHeader">Deployment</div>
         <div v-else>
@@ -75,7 +75,7 @@
           </div>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 80px">
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
         <div v-if="isHeader">Status</div>
         <div class="pv3" @click.stop v-else>
           <LabelSwitch
@@ -194,7 +194,7 @@
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
       execution_cnt() {
-        return _.get(this.item, 'stats.total_count', '--')
+        return _.get(this.item, 'stats.total_count', '0')
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
