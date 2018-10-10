@@ -40,8 +40,8 @@
           <LabelSwitch
             class="dib ml2 hint--bottom-left"
             active-color="#13ce66"
-            aria-label="Turn pipe on"
             data-tour-step="pipe-onboarding-7"
+            :aria-label="is_deployed ? 'Turn pipe off' : 'Turn pipe on'"
             :width="58"
             v-model="is_deployed"
           />

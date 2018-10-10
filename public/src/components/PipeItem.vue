@@ -1,45 +1,47 @@
 <template>
   <article
-    class="bb pointer no-select trans-pm"
-    :class="isHeader ? 'b--black-10' : 'css-list-item'"
-    @click="openPipe"
+    class="no-select trans-pm"
+    :class="isHeader ? 'thead' : 'tbody pointer'"
+    @click="isHeader ? () => {} : openPipe"
   >
-    <div class="flex flex-row items-center">
-      <div class="flex-fill mr2 fw6 f6 f5-ns">
-        <router-link class="link" :to="pipe_route">
-          <div class="pa3">
-            <div class="flex-l flex-row items-center">
-              <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 css-list-title truncate">{{item.name}}</h3>
-            </div>
-            <div class="dn db-ns mw7" v-if="has_description">
-              <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate">{{item.description}}</h5>
-            </div>
-          </div>
-        </router-link>
-      </div>
+    <div class="flex flex-row items-center" :class="isHeader ? 'th' : 'td'">
       <div
-        class="dn db-l f6 tr"
-        :class="isHeader ? 'fw6' : ''"
-        style="width: 100px"
+        class="flex-fill"
+        style="padding: 16px 10px"
+        v-if="isHeader"
       >
-        {{execution_cnt}}
+        Name
+      </div>
+      <router-link
+        class="flex-fill link hint--top hint--large"
+        :to="pipe_route"
+        :aria-label="item.description"
+        v-else
+      >
+        <div style="padding: 16px 10px">
+          <div class="flex-l flex-row items-center">
+            <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
+          </div>
+          <div class="dn db-ns mw7" v-if="has_description">
+            <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
+          </div>
+        </div>
+      </router-link>
+      <div
+        class="dn db-l tr"
+        style="width: 110px"
+      >
+        <div v-if="isHeader">Executions</div>
+        <div class="f6" v-else>{{execution_cnt}}</div>
       </div>
       <div
         class="dn db-l ml3 ml4-l tr"
-        style="width: 100px"
+        style="width: 110px"
       >
-        <div
-          class="f6 fw6"
-          v-if="isHeader"
-        >
-          Deployment
-        </div>
-        <div
-          v-else
-        >
+        <div v-if="isHeader">Deployment</div>
+        <div v-else>
           <div
             class="hint--top"
-            style="margin: 0 -1px"
             :aria-label="schedule_tooltip"
           >
             <i
@@ -51,7 +53,6 @@
           </div>
           <div
             class="hint--top"
-            style="margin: 0 -1px"
             :aria-label="api_endpoint_tooltip"
           >
             <i
@@ -63,7 +64,6 @@
           </div>
           <div
             class="hint--top"
-            style="margin: 0 -1px"
             :aria-label="runtime_tooltip"
           >
             <i
@@ -75,18 +75,9 @@
           </div>
         </div>
       </div>
-      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 80px">
-        <div
-          class="f6 fw6"
-          v-if="isHeader"
-        >
-          Status
-        </div>
-        <div
-          class="pv3"
-          @click.stop
-          v-else
-        >
+      <div class="flex-none nt3 nb3 ml3 ml4-l tc" style="width: 90px">
+        <div v-if="isHeader">Status</div>
+        <div class="pv3" @click.stop v-else>
           <LabelSwitch
             class="dib hint--top"
             active-color="#13ce66"
@@ -102,7 +93,10 @@
           :class="{ 'invisible': isHeader }"
           @command="onCommand"
         >
-          <span class="el-dropdown-link dib pointer pa3 black-30 hover-black">
+          <span
+            class="el-dropdown-link dib pointer black-30 hover-black"
+            style="padding: 16px 10px"
+          >
             <i class="material-icons v-mid">expand_more</i>
           </span>
           <el-dropdown-menu style="min-width: 10rem; margin-top: -0.5rem" slot="dropdown">
@@ -200,16 +194,7 @@
         return { name: ROUTE_PIPES, params: { eid: this.item.eid } }
       },
       execution_cnt() {
-        return this.isHeader ? 'Executions' : _.get(this.item, 'stats.total_count', '--')
-      },
-      total_duration() {
-        var val = _.get(this.item, 'stats.total_time', '')
-        if (val.length == 0) {
-          return this.isHeader ? 'Duration' : '--'
-        }
-        val = parseFloat(val)
-        val = val.toFixed(2)
-        return val + ' seconds'
+        return _.get(this.item, 'stats.total_count', '0')
       },
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
@@ -252,3 +237,22 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  // match Element UI's .el-table thead styling
+  .thead
+    border-bottom: 1px solid #ebeef5
+    color: #909399
+    font-size: 14px
+  .th
+    font-weight: bold
+  .tbody
+    &:hover
+      .td
+        background-color: #f5f7fa
+      .title
+      .description
+        color: #409eff
+  .td
+    border-bottom: 1px solid #ebeef5
+</style>
