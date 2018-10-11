@@ -39,7 +39,7 @@
         @item-delete="tryDeleteConnection"
         v-if="connections.length > 0"
       />
-      <div class="flex-fill" v-if="connection">
+      <div class="flex-fill overflow-y-auto" v-if="connection">
         <ConnectionEditPanel
           class="pa3 pa4-l"
           style="max-width: 60rem"
