@@ -35,16 +35,18 @@
         />
       </div>
       <div
-        class="flex-fill link"
+        class="flex-fill link "
+        :class="show_description_tooltip ? 'hint--bottom hint--large' : ''"
         :to="pipe_route"
+        :aria-label="item.description"
         v-else
       >
         <div style="padding: 16px 10px">
           <div class="flex-l flex-row items-center">
             <h3 class="f6 f5-ns fw6 lh-title dark-gray mv0 mr2 truncate title">{{item.name}}</h3>
           </div>
-          <div class="dn db-ns mw7" v-if="has_description">
-            <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description">{{item.description}}</h5>
+          <div class="dn db-ns" v-if="has_description">
+            <h5 class="f6 fw4 mt1 mb0 lh-copy light-silver truncate description" ref="description">{{item.description}}</h5>
           </div>
         </div>
       </div>
@@ -192,13 +194,12 @@
       LabelSwitch,
       SortArrows
     },
+    data() {
+      return {
+        is_mounted: false
+      }
+    },
     computed: {
-      input_type() {
-        return ''
-      },
-      output_type() {
-        return ''
-      },
       has_description() {
         return _.get(this.item, 'description', '').length > 0
       },
@@ -254,13 +255,6 @@
       schedule_str() {
         return pipe_util.getDeployScheduleStr(this.item.schedule)
       },
-      api_endpoint_url() {
-        var identifier = pipe_util.getIdentifier(this.item)
-        return pipe_util.getDeployApiUrl(identifier)
-      },
-      runtime_url() {
-        return pipe_util.getDeployRuntimeUrl(this.item.eid)
-      },
       schedule_tooltip() {
         return this.is_deployed_schedule ? 'Scheduler ON: ' + this.schedule_str : 'Scheduler OFF'
       },
@@ -269,7 +263,21 @@
       },
       runtime_tooltip() {
         return this.is_deployed_ui ? 'Flex.io Web Interface ON' : 'Flex.io Web Interface OFF'
+      },
+      show_description_tooltip() {
+        return false
+
+        if (this.is_mounted) {
+          var el = this.$refs.description
+          if (el) {
+            return (el.offsetWidth < el.scrollWidth) ? true : false
+          }
+        }
+        return false
       }
+    },
+    mounted() {
+      this.$nextTick(() => { this.is_mounted = true })
     },
     methods: {
       openPipe() {
