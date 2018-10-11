@@ -7,9 +7,9 @@
   </div>
 
   <!-- fetched -->
-  <div class="flex flex-column overflow-y-auto" v-else-if="is_fetched">
+  <div class="flex flex-column" v-else-if="is_fetched">
     <!-- control bar -->
-    <div class="center flex-none pv3 relative bg-white" style="width: 1280px" >
+    <div class="flex-none pa3 relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Connections</div>
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="center flex flex-row" style="max-width: 1280px" v-if="connections.length > 0">
+    <div class="flex-fill flex flex-row" v-if="connections.length > 0">
       <AbstractList
         ref="list"
         class="br b--black-05 overflow-y-auto"
