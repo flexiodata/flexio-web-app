@@ -10,6 +10,9 @@
   import ResetPasswordForm from './ResetPasswordForm.vue'
 
   export default {
+    metaInfo: {
+      title: 'Reset Password'
+    },
     components: {
       ResetPasswordForm
     },

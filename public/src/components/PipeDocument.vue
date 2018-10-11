@@ -400,6 +400,11 @@
   const tour_steps = our_tours['email-results-of-python-function']
 
   export default {
+    metaInfo() {
+      return {
+        title: _.get(this.orig_pipe, 'name', '')
+      }
+    },
     mixins: [MixinConfig],
     components: {
       Multipane,

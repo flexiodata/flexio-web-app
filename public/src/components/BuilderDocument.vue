@@ -107,6 +107,11 @@
   }
 
   export default {
+    metaInfo() {
+      return {
+        title: _.get(this.def, 'name', '')
+      }
+    },
     props: {
       definition: {
         type: Object,

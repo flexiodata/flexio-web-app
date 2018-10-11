@@ -48,6 +48,9 @@
   import PipeList from './PipeList.vue'
 
   export default {
+    metaInfo: {
+      title: 'Pipes'
+    },
     components: {
       Spinner,
       PipeList

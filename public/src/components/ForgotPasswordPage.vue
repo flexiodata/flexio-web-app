@@ -15,6 +15,9 @@
   import ForgotPasswordForm from './ForgotPasswordForm.vue'
 
   export default {
+    metaInfo: {
+      title: 'Forgot Password'
+    },
     components: {
       ForgotPasswordForm
     },

@@ -26,6 +26,20 @@
 
   export default {
     name: 'App',
+    metaInfo: {
+      // all titles will be injected into this template
+      titleTemplate: (chunk) => {
+        // if undefined or blank then we don't need the pipe
+        return chunk ? `${chunk} | Flex.io` : 'Flex.io';
+      },
+      meta: [
+        {
+          vmid: 'description',
+          name: 'description',
+          content: 'Flex.io enables you to stitch together serverless functions with out-of-the-box helper tasks that take the pain out of OAuth, notifications, scheduling, local storage, library dependencies and other "glue" code.'
+        }
+      ]
+    },
     components: {
       AppNavbar
     },

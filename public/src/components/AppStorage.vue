@@ -71,6 +71,9 @@
   }
 
   export default {
+    metaInfo: {
+      title: 'Storage'
+    },
     mixins: [MixinConnection],
     components: {
       Spinner,

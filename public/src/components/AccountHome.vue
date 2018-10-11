@@ -79,6 +79,9 @@
   import AccountDeleteForm from './AccountDeleteForm.vue'
 
   export default {
+    metaInfo: {
+      title: 'My Account'
+    },
     components: {
       AccountProfileForm,
       AccountRegionForm,

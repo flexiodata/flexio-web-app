@@ -85,6 +85,9 @@
   import EmptyItem from './EmptyItem.vue'
 
   export default {
+    metaInfo: {
+      title: 'Connections'
+    },
     components: {
       Spinner,
       AbstractList,
