@@ -31,6 +31,9 @@
   import ProcessList from './ProcessList.vue'
 
   export default {
+    metaInfo: {
+      title: 'Activity'
+    },
     components: {
       Spinner,
       ProcessList

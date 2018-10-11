@@ -27,45 +27,111 @@
               Copy
             </el-button>
           </div>
+
           <div v-if="item.key == 'deploy_api' && is_api_deployed">
-            <span style="margin-right: 6px"><span class="b">POST</span> {{api_endpoint_url}}</span>
-            <el-button
-              type="text"
-              size="tiny"
-              style="padding: 0; border: 0"
-              @click="show_properties = true"
-            >
-              Edit...
-            </el-button>
-            <el-button
-              type="plain"
-              class="hint--top"
-              aria-label="Copy to Clipboard"
-              size="tiny"
-              :data-clipboard-text="api_endpoint_url"
-            >
-              Copy
-            </el-button>
+            <div class="mt2">
+              <div>
+                <div class="ttu fw6 moon-gray">API Endpoint</div>
+                <div>
+                  <span style="margin-right: 6px">{{api_endpoint_url}}</span>
+                  <el-button
+                    type="text"
+                    size="tiny"
+                    style="padding: 0; border: 0"
+                    @click="show_properties = true"
+                  >
+                    Edit...
+                  </el-button>
+                  <el-button
+                    type="plain"
+                    class="hint--top"
+                    aria-label="Copy to Clipboard"
+                    size="tiny"
+                    :data-clipboard-text="api_endpoint_url"
+                  >
+                    Copy
+                  </el-button>
+                </div>
+              </div>
+
+              <div>
+                <div class="mt2 ttu fw6 moon-gray">API Key</div>
+                <div v-if="api_key.length > 0">
+                  <span style="margin-right: 6px">{{api_key}}</span>
+                  <el-button
+                    type="plain"
+                    class="hint--top"
+                    aria-label="Copy to Clipboard"
+                    size="tiny"
+                    :data-clipboard-text="api_endpoint_url"
+                  >
+                    Copy
+                  </el-button>
+                </div>
+                <div v-else>
+                  <em class="fw4 moon-gray" style="margin-right: 6px">(No API key to show)</em>
+                  <el-button
+                    type="plain"
+                    size="tiny"
+                    @click="generateApiKey"
+                  >
+                    Generate API Key
+                  </el-button>
+                </div>
+              </div>
+
+              <div v-if="api_key.length > 0">
+                <div class="mt2 ttu fw6 moon-gray">REST</div>
+                <div>
+                  <span style="margin-right: 6px">{{example_http}}</span>
+                  <el-button
+                    type="plain"
+                    class="hint--top"
+                    aria-label="Copy to Clipboard"
+                    size="tiny"
+                    :data-clipboard-text="example_http"
+                  >
+                    Copy
+                  </el-button>
+                </div>
+                <div class="mt2 ttu fw6 moon-gray">cURL</div>
+                <div>
+                  <span style="margin-right: 6px">{{example_curl}}</span>
+                  <el-button
+                    type="plain"
+                    class="hint--top"
+                    aria-label="Copy to Clipboard"
+                    size="tiny"
+                    :data-clipboard-text="example_curl"
+                  >
+                    Copy
+                  </el-button>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div v-if="item.key == 'deploy_ui' && is_web_deployed">
-            <span style="margin-right: 6px">{{runtime_url}}</span>
-            <el-button
-              type="text"
-              size="tiny"
-              style="padding: 0; border: 0"
-              @click="show_runtime_configure = true"
-            >
-              Edit...
-            </el-button>
-            <el-button
-              type="plain"
-              class="hint--top"
-              aria-label="Copy to Clipboard"
-              size="tiny"
-              :data-clipboard-text="runtime_url"
-            >
-              Copy
-            </el-button>
+            <div>
+              <span style="margin-right: 6px">{{runtime_url}}</span>
+              <el-button
+                type="text"
+                size="tiny"
+                style="padding: 0; border: 0"
+                @click="show_runtime_configure = true"
+              >
+                Edit...
+              </el-button>
+              <el-button
+                type="plain"
+                class="hint--top"
+                aria-label="Copy to Clipboard"
+                size="tiny"
+                :data-clipboard-text="runtime_url"
+              >
+                Copy
+              </el-button>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +162,7 @@
 
 <script>
   import moment from 'moment'
+  import { mapGetters } from 'vuex'
   import pipe_util from '../utils/pipe'
   import * as sched from '../constants/schedule'
   import LabelSwitch from './LabelSwitch.vue'
@@ -157,6 +224,9 @@
       }
     },
     computed: {
+      api_key() {
+        return this.getFirstToken()
+      },
       is_deployed: {
         get() {
           return this.isModeRun
@@ -224,6 +294,20 @@
       runtime_url() {
         var eid = _.get(this.pipe, 'eid', '')
         return pipe_util.getDeployRuntimeUrl(eid)
+      },
+      example_http() {
+        return this.api_endpoint_url + '?flexio_api_key=' + this.api_key
+      },
+      example_curl() {
+        return 'curl -X POST "' + this.api_endpoint_url + '" --header "Authorization: Bearer ' + this.api_key + '"'
+      }
+    },
+    methods: {
+      ...mapGetters([
+        'getFirstToken'
+      ]),
+      generateApiKey() {
+        this.$store.dispatch('createToken')
       }
     }
   }

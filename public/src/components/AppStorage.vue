@@ -9,7 +9,7 @@
   <!-- fetched -->
   <div class="flex flex-column" v-else-if="is_fetched">
     <!-- control bar -->
-    <div class="pa3 ph4-l relative bg-white bb b--black-05">
+    <div class="pa3 relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
           <div class="f2">Storage</div>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HOME } from '../constants/connection-type'
+  import { CONNECTION_TYPE_FLEX } from '../constants/connection-type'
   import { OBJECT_STATUS_AVAILABLE, OBJECT_STATUS_PENDING } from '../constants/object-status'
   import { mapState, mapGetters } from 'vuex'
   import Spinner from 'vue-simple-spinner'
@@ -65,12 +65,15 @@
   import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
-    connection_type: CONNECTION_TYPE_HOME,
-    eid: 'home',
-    name: 'Local Storage'
+    connection_type: CONNECTION_TYPE_FLEX,
+    eid: 'flex',
+    name: 'Flex.io'
   }
 
   export default {
+    metaInfo: {
+      title: 'Storage'
+    },
     mixins: [MixinConnection],
     components: {
       Spinner,

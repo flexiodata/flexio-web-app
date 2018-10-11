@@ -228,7 +228,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
+                    <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
                   </div>
                 </el-collapse-item>
 
@@ -400,6 +400,11 @@
   const tour_steps = our_tours['email-results-of-python-function']
 
   export default {
+    metaInfo() {
+      return {
+        title: _.get(this.orig_pipe, 'name', '')
+      }
+    },
     mixins: [MixinConfig],
     components: {
       Multipane,
@@ -837,6 +842,7 @@
         this.$store.track('Clicked Tour Next Button', { current_step })
 
         if (current_step == 1) {
+          this.active_collapse_items = ['input', 'tasks', 'output', 'deployment']
           this.process_data = {
             count: 3
           }

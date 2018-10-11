@@ -107,6 +107,11 @@
   }
 
   export default {
+    metaInfo() {
+      return {
+        title: _.get(this.def, 'name', '')
+      }
+    },
     props: {
       definition: {
         type: Object,
@@ -195,7 +200,7 @@
         }, _.get(this.attrs, 'pipe', {}))
       },
       api_key() {
-        return this.getSdkKey()
+        return this.getFirstToken()
       },
       sdk_options() {
         return this.getSdkOptions()
@@ -209,7 +214,7 @@
     },
     methods: {
       ...mapGetters([
-        'getSdkKey',
+        'getFirstToken',
         'getSdkOptions'
       ]),
       loadTemplate() {

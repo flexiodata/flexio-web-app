@@ -423,13 +423,13 @@
               spellcheck="false"
               v-model="cinfo.database"
             />
-            <div class="f8 lh-copy" v-if="is_mysql">
-              <p class="mt1 mb0"><strong>NOTE:</strong> If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.</p>
+            <div class="f8" v-if="is_mysql">
+              <p class="para"><strong>NOTE:</strong> If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.</p>
             </div>
-            <div class="f8 lh-copy" v-if="is_postgres">
-              <p class="mt1"><strong>NOTE:</strong> If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.</p>
-              <p>In addition, you’ll need to grant SELECT access so that Flex.io is allowed to retrieve data from your database. The command is:</p>
-              <p class="bg-nearer-white pv1 ph2 mb0"><code>GRANT SELECT ON your_database.your_table TO your_username@'34.205.178.37' IDENTIFIED BY 'your_password';</code></p>
+            <div class="f8" v-if="is_postgres">
+              <p class="para"><strong>NOTE:</strong> If your database is protected by a firewall, you will need to grant Flex.io access to it. This can be done by allowing connections from the following IP address: 34.205.178.37.</p>
+              <p class="para">In addition, you’ll need to grant SELECT access so that Flex.io is allowed to retrieve data from your database. The command is:</p>
+              <p class="para bg-nearer-white pv1 ph2 mb0"><code>GRANT SELECT ON your_database.your_table TO your_username@'34.205.178.37' IDENTIFIED BY 'your_password';</code></p>
             </div>
           </el-form-item>
 
@@ -851,3 +851,9 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .para
+    margin: 6px 0 12px
+    line-height: 1.5
+</style>

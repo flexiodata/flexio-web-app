@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Router from 'vue-router'
+import Meta from 'vue-meta'
 
 import account from './account'
 import activity from './activity'
@@ -26,7 +27,10 @@ import ResetPasswordPage from '../components/ResetPasswordPage.vue'
 import PageNotFound from '../components/PageNotFound.vue'
 
 // use VueRouter for handling browser history
-Vue.use(VueRouter)
+Vue.use(Router)
+
+// use VueMeta for page metadata
+Vue.use(Meta)
 
 const basepath_redirect = {
   path: '/',
@@ -51,7 +55,7 @@ const routes = [
   { path: "*",                                           component: PageNotFound       }
 ]
 
-export default new VueRouter({
+export default new Router({
   mode: 'history', // use HTML5 history
   base: '/app/', // serve app from /app base folder
   routes

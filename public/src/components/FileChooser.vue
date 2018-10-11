@@ -55,7 +55,7 @@
 
 <script>
   import {
-    CONNECTION_TYPE_HOME,
+    CONNECTION_TYPE_FLEX,
     CONNECTION_TYPE_HTTP,
     CONNECTION_TYPE_RSS
   } from '../constants/connection-type'
@@ -68,9 +68,9 @@
   import MixinConnection from './mixins/connection'
 
   const LOCAL_STORAGE_ITEM = {
-    connection_type: CONNECTION_TYPE_HOME,
-    eid: 'home',
-    name: 'Local Storage'
+    connection_type: CONNECTION_TYPE_FLEX,
+    eid: 'flex',
+    name: 'Flex.io'
   }
 
   export default {
@@ -164,8 +164,13 @@
         return cid.length > 0 ? cid : _.get(this.active_connection, 'eid', '')
       },
       getConnectionBasePath() {
-        if (_.get(this.active_connection, 'connection_type', '') == CONNECTION_TYPE_HOME)
-          return '/home'
+        // Flex.io connection now has an alias of 'flex'... keeping this for reference for a bit...
+        /*
+        if (_.get(this.active_connection, 'connection_type', '') == CONNECTION_TYPE_FLEX) {
+          return '/flex'
+        }
+        */
+
         return '/' + this.getConnectionIdentifier()
       },
       initFromConnection(connection) {

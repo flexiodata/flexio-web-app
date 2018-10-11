@@ -13,7 +13,7 @@
       <i class="material-icons md-18 b mr3" style="color: transparent" v-else-if="showCheckmark && !is_selected">check</i>
       <div class="flex flex-row items-center relative mr3">
         <service-icon class="br1 square-3" :type="ctype" :url="url" :empty-cls="''" />
-        <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_home">
+        <div class="absolute z-1" style="top: -9px; right: -6px" v-if="showStatus && !is_flexio">
           <i class="el-icon-success dark-green bg-white ba b--white br-100 f8" v-if="is_available"></i>
           <i class="el-icon-error dark-red bg-white ba b--white br-100 f8" v-else></i>
         </div>
@@ -21,12 +21,12 @@
 
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6 cursor-default">{{cname}}</div>
-        <div class="light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0 && !is_home">{{identifier}}</div>
+        <div class="light-silver f8 lh-copy code" v-if="showIdentifier && identifier.length > 0">{{identifier}}</div>
         <div class="bt b--black-05" style="padding-top: 2px; margin-top: 2px; max-width: 12rem" v-if="showUrl && url.length > 0">
           <div class="light-silver f8 lh-copy truncate">{{url}}</div>
         </div>
       </div>
-      <div class="ml2" v-if="showDropdown && !is_home">
+      <div class="ml2" v-if="showDropdown && !is_flexio">
         <el-dropdown trigger="click" @command="onCommand">
           <span class="el-dropdown-link dib pointer pa1 black-30 hover-black">
             <i class="material-icons v-mid">expand_more</i>
@@ -46,7 +46,7 @@
 
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
-  import { CONNECTION_TYPE_HOME } from '../constants/connection-type'
+  import { CONNECTION_TYPE_FLEX } from '../constants/connection-type'
   import ServiceIcon from './ServiceIcon.vue'
 
   export default {
@@ -129,8 +129,8 @@
         var cid = _.get(this.item, 'alias', '')
         return cid.length > 0 ? cid : _.get(this.item, 'eid', '')
       },
-      is_home() {
-        return this.ctype == CONNECTION_TYPE_HOME
+      is_flexio() {
+        return this.ctype == CONNECTION_TYPE_FLEX
       },
       is_selected() {
         return this.eid.length > 0

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import { CONNECTION_TYPE_HOME }  from '../constants/connection-type'
+  import { CONNECTION_TYPE_FLEX }  from '../constants/connection-type'
   import * as connections from '../constants/connection-info'
   import ServiceItem from './ServiceItem.vue'
 
@@ -34,7 +34,7 @@
         return this.filterBy ? _.filter(services, this.filterBy) : services
       },
       services() {
-        return _.reject(this.filtered_services, { connection_type: CONNECTION_TYPE_HOME })
+        return _.reject(this.filtered_services, { connection_type: CONNECTION_TYPE_FLEX })
       }
     },
     methods: {
