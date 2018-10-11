@@ -35,9 +35,8 @@
         />
       </div>
       <div
-        class="flex-fill link hint--top hint--large"
+        class="flex-fill link"
         :to="pipe_route"
-        :aria-label="item.description"
         v-else
       >
         <div style="padding: 16px 10px">
