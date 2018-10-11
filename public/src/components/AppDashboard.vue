@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <div class="ma4">
+    <div class="ma4" v-if="false">
       <div class="flex flex-row items-center pv2">
         <div class="flex-fill fw6">Pipe Activity</div>
         <!-- placeholder for consistent spacing -->
@@ -69,7 +69,6 @@
       </div>
       <div class="bg-white br2 css-white-box">
         <div class="pa3">
-          <stats-pipes-run :chart-height="280"></stats-pipes-run>
         </div>
       </div>
     </div>
@@ -78,13 +77,11 @@
 
 <script>
   import { ROUTE_PIPES } from '../constants/route'
-  import StatsPipesRun from './StatsPipesRun.vue'
   import AccountApiForm from './AccountApiForm.vue'
   import HelpItems from './HelpItems.vue'
 
   export default {
     components: {
-      StatsPipesRun,
       AccountApiForm,
       HelpItems
     },

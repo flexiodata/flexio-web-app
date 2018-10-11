@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
-    "chart.js": "^2.6.0",
     "clipboard": "^1.5.16",
     "element-ui": "^2.4.0",
     "filesize": "^3.3.0",
@@ -27,7 +26,6 @@
     "popper.js": "^1.14.4",
     "stickybits": "^3.3.1",
     "vue": "^2.5.13",
-    "vue-chartjs": "^3.0.2",
     "vue-codemirror": "^4.0.5",
     "vue-grid2": "^0.2.14",
     "vue-multipane": "^0.9.5",
