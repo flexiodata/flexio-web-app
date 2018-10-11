@@ -228,7 +228,7 @@
                       @save="saveChanges"
                       v-model="edit_task_list"
                     />
-                    <div data-tour-step="pipe-onboarding-5" class="relative o-0" style="top: -220px"></div>
+                    <div data-tour-step="pipe-onboarding-5" class="relative o-0 w3" style="left: 64px; top: -450px"></div>
                   </div>
                 </el-collapse-item>
 

@@ -24,7 +24,7 @@
   content: |
     **Parameter Testing**
 
-    Parameters let you easily test your functions. Here we'll limit the articles returned to three.
+    Parameters let you easily test your functions. We've added a "count" parameter here to limit the articles returned to three.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-3"]'
@@ -43,11 +43,11 @@
   content: |
     **Add New Pipe Task**
 
-    Now we've added a new task to your pipe. The output from the execute task is passed to the input of this email task.
+    Now we've added a new task to your pipe. The output from the execute task above is passed to the input of this email task.
 
-    Now test your pipe again and check your inbox.
+    Click on the "Test" button once more to test your pipe again. Check your inbox to see the result.
   popperOptions:
-    placement: left
+    placement: top-start
 - target: '[data-tour-step="pipe-onboarding-6"]'
   content: |
     **Deployment Options**
