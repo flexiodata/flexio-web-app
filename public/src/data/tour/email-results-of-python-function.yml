@@ -16,13 +16,15 @@
     **Pipe Tasks**
 
     Pipes can execute functions and related tasks. New tasks can be added by clicking on the plus button.
+
+    This Python function grabs the most recent posts from Hacker News.  Let's give it a try.
   popperOptions:
     placement: left-start
 - target: '[data-tour-step="pipe-onboarding-2"]'
   content: |
     **Parameter Testing**
 
-    Easily test functions with parameters of your choosing.
+    Parameters let you easily test your functions. Here we'll limit the articles returned to three.
   popperOptions:
     placement: left
 - target: '[data-tour-step="pipe-onboarding-3"]'

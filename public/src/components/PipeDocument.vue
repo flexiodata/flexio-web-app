@@ -837,6 +837,7 @@
         this.$store.track('Clicked Tour Next Button', { current_step })
 
         if (current_step == 1) {
+          this.active_collapse_items = ['input', 'tasks', 'output', 'deployment']
           this.process_data = {
             count: 3
           }
