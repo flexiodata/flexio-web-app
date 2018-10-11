@@ -47,6 +47,15 @@ const ELASTICSEARCH = {
   is_storage: true
 }
 
+const FLEX = {
+  service_name: 'Flex.io',
+  service_description: '',
+  connection_type: types.CONNECTION_TYPE_FLEX,
+  icon: require('../assets/icon/icon-flexio-128.png'),
+  is_oauth: false,
+  is_storage: false
+}
+
 const GITHUB = {
   service_name: 'GitHub',
   service_description: 'Source control and code management',
@@ -90,15 +99,6 @@ const GOOGLESHEETS = {
   icon: require('../assets/icon/icon-google-sheets-128.png'),
   is_oauth: true,
   is_storage: true
-}
-
-const HOME = {
-  service_name: 'Local Storage',
-  service_description: '',
-  connection_type: types.CONNECTION_TYPE_HOME,
-  icon: require('../assets/icon/icon-home-128.png'),
-  is_oauth: false,
-  is_storage: false
 }
 
 const MYSQL = {
@@ -232,7 +232,7 @@ const PIPELINEDEALS = {
 /* exports */
 
 // go out of alphabetical order here so the order is correct in the pipe add modal
-export const CONNECTION_INFO_HOME                 = HOME
+export const CONNECTION_INFO_FLEX                 = FLEX
 export const CONNECTION_INFO_API                  = API
 export const CONNECTION_INFO_AMAZON_S3            = AMAZON_S3
 export const CONNECTION_INFO_BOX                  = BOX
