@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div :class="tokens.length == 0 ? 'mt2 tc' : 'mt2'" v-if="showCreateButton">
+    <div class="mt2 mb1" :class="{ 'tc': tokens.length == 0 }" v-if="showCreateButton">
       <el-button
         type="primary"
         class="ttu b"

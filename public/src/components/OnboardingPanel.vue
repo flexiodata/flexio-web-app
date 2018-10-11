@@ -102,7 +102,7 @@
         return _.get(this.getActiveUser(), 'first_name', '')
       },
       api_key() {
-        return this.getSdkKey()
+        return this.getFirstToken()
       },
       example_href() {
         return 'https://api.flex.io/v1/me/pipes/' + this.pipe_identifier + '/run?flexio_api_key=' + this.api_key
@@ -118,7 +118,7 @@
       ...mapGetters([
         'getActiveUser',
         'getAllPipes',
-        'getSdkKey'
+        'getFirstToken'
       ]),
       tryFetchPipes() {
         this.$store.dispatch('fetchPipes')

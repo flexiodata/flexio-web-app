@@ -76,11 +76,12 @@ export const getAllTokens = state => {
     .value()
 }
 
-export const getSdkKey = state => {
+export const getFirstToken = state => {
   var tokens = getAllTokens(state)
 
-  if (tokens.length == 0)
+  if (tokens.length == 0) {
     return ''
+  }
 
   return _.get(tokens, '[0].access_code', '')
 }
