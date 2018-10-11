@@ -45,7 +45,7 @@
         class="ttu b"
         @click="createApiKey"
       >
-        Create API Key
+        Generate API Key
       </el-button>
     </div>
   </div>
