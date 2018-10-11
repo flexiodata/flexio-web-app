@@ -45,7 +45,7 @@
 
     Now we've added a new task to your pipe. The output from the execute task above is passed to the input of this email task.
 
-    Click on the "Test" button once more to test your pipe again. Check your inbox to see the result.
+    Click on the "Test" button once more to test your pipe. Check your inbox to see the result.
   popperOptions:
     placement: top-start
 - target: '[data-tour-step="pipe-onboarding-6"]'
