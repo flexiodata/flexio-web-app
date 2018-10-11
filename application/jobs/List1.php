@@ -76,6 +76,10 @@ class List1 extends \Flexio\Jobs\Base
 
         $vfs = new \Flexio\Services\Vfs($process->getOwner());
         $vfs->setProcess($process);
+
+        if (strlen(($params['connection'] ?? '')) > 0)
+            $vfs->setRootConnection($params['connection']);
+
         $files = $vfs->list($path);
 
         $results = [];

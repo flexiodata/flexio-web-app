@@ -612,6 +612,7 @@ class ScriptHost
             return array('handle' => $this->stdin_fileidx,
                          'name' => '',
                          'size' => $file->stream->getSize(),
+                         'is_table' => $file->stream->isTable(),
                          'content_type' => $file->stream->getMimeType());
         }
         else if (substr($name, 0, 6) == 'files.')
@@ -629,6 +630,7 @@ class ScriptHost
                 return array('handle' => $handle,
                              'name' => $name,
                              'size' => $file->stream->getSize(),
+                             'is_table' => $file->stream->isTable(),
                              'content_type' => $file->stream->getMimeType());
             }
         }
@@ -647,6 +649,7 @@ class ScriptHost
             return array('handle' => $this->stdout_fileidx,
                          'name' => '',
                          'size' => $file->stream->getSize(),
+                         'is_table' => $file->stream->isTable(),
                          'content_type' => $file->stream->getMimeType());
         }
         else
@@ -676,6 +679,7 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
+                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
@@ -696,20 +700,39 @@ class ScriptHost
             return array('handle' => $handle,
                          'name' => '',
                          'size' => $file->stream->getSize(),
+                         'is_table' => $file->stream->isTable(),
                          'content_type' => $file->stream->getMimeType());
         }
-
-        $stream = \Flexio\Base\Stream::create();
-        $stream->setName($path);
-        $streamwriter = $stream->getWriter();
 
 
         $vfs = new \Flexio\Services\Vfs($this->process->getOwner());
         $vfs->setProcess($this->process);
 
+        $info = $vfs->getFileInfo($path);
+
+        
+
+        $is_table = false;
+        $properties = [ 'mime_type' => ($info['content_type'] ?? 'application/octet-stream') ];
+        if (isset($info['structure']))
+        {
+            $is_table = true;
+            $properties['mime_type'] = \Flexio\Base\ContentType::FLEXIO_TABLE;
+            $properties['structure'] = $info['structure'];
+        }
+
+        $properties['name'] = $path;
+
+
+        $stream = \Flexio\Base\Stream::create();
+        $stream->set($properties);        
+        $streamwriter = $stream->getWriter();
+
+
         $files = $vfs->read($path, function($data) use (&$streamwriter) {
             $streamwriter->write($data);
         });
+
 
         $file = new ScriptHostFile();
         $file->stream = $stream;
@@ -726,6 +749,7 @@ class ScriptHost
         return array('handle' => $handle,
                      'name' => '',
                      'size' => $file->stream->getSize(),
+                     'is_table' => $file->stream->isTable(),
                      'content_type' => $file->stream->getMimeType());
     }
 
