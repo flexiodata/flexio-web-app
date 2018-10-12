@@ -51,6 +51,14 @@
               <AccountApiForm class="pa3 ba b--black-10 br3" />
             </div>
           </el-tab-pane>
+
+          <el-tab-pane name="billing">
+            <div slot="label"><div style="min-width: 6rem">Billing</div></div>
+            <div class="ml3 mr4">
+              <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Billing</h3>
+              <AccountBillingForm style="max-width: 30rem" />
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -77,6 +85,7 @@
   import AccountProfileForm from './AccountProfileForm.vue'
   import AccountRegionForm from './AccountRegionForm.vue'
   import AccountApiForm from './AccountApiForm.vue'
+  import AccountBillingForm from './AccountBillingForm.vue'
   import AccountPasswordForm from './AccountPasswordForm.vue'
   import AccountDeleteForm from './AccountDeleteForm.vue'
 
@@ -90,6 +99,7 @@
       AccountProfileForm,
       AccountRegionForm,
       AccountApiForm,
+      AccountBillingForm,
       AccountPasswordForm,
       AccountDeleteForm
     },
@@ -104,7 +114,8 @@
         section_label_lookup: {
           profile: 'Your Profile',
           settings: 'Account Settings',
-          api: 'API Keys'
+          api: 'API Keys',
+          billing: 'Billing'
         },
         active_tab_name: this.getSection(),
         show_account_delete_dialog: false
