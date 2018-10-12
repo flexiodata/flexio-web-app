@@ -1,4 +1,4 @@
-import { ROUTE_HOME } from '../../constants/route'
+import { ROUTE_APP_HOME } from '../../constants/route'
 
 // allows any component to set the active project; if the project hasn't yet
 // been fetched from the server, this mixin will do that as well and then
@@ -20,7 +20,7 @@ export default {
       if (redirect && redirect.length > 0) {
         this.$router.push({ path: redirect })
       } else {
-        this.$router.push({ name: ROUTE_HOME })
+        this.$router.push({ name: ROUTE_APP_HOME })
       }
     }
   }
