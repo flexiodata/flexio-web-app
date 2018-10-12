@@ -20,7 +20,15 @@
       </div>
       <div class="flex-fill flex flex-column">
         <div class="f5 fw6">{{item.name}}</div>
-        <div class="light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
+        <div class="flex flex-row items-center">
+          <div class="light-silver" style="padding: 1px; margin: 2px 3px 0 0" v-if="is_storage">
+            <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>
+          </div>
+          <div class="light-silver" style="padding: 1px; margin: 2px 3px 0 0" v-if="is_email">
+            <i class="db material-icons hint--top" aria-label="Email connection" style="font-size: 14px">email</i>
+          </div>
+          <div class="flex-fill light-silver f8 lh-copy code" v-if="identifier.length > 0">{{identifier}}</div>
+        </div>
       </div>
       <el-button
         plain
@@ -39,6 +47,7 @@
 <script>
   import { CONNECTION_STATUS_AVAILABLE } from '../constants/connection-status'
   import ServiceIcon from './ServiceIcon.vue'
+  import MixinConnection from './mixins/connection'
 
   export default {
     props: {
@@ -67,6 +76,7 @@
         required: false
       }
     },
+    mixins: [MixinConnection],
     components: {
       ServiceIcon
     },
@@ -92,6 +102,12 @@
       },
       is_available() {
         return this.cstatus == CONNECTION_STATUS_AVAILABLE
+      },
+      is_storage() {
+        return this.$_Connection_isStorage(this.ctype)
+      },
+      is_email() {
+        return this.$_Connection_isEmail(this.ctype)
       },
       cls() {
         var sel_cls = this.selectedCls ? this.selectedCls : 'bg-nearer-white'

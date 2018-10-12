@@ -20,7 +20,7 @@
       </div>
 
       <div class="flex-fill flex flex-column">
-          <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
+        <div class="f5 fw6 cursor-default mr1">{{cname}}</div>
         <div class="flex flex-row items-center">
           <div class="light-silver" style="padding: 1px; margin: 2px 3px 0 0" v-if="is_storage">
             <i class="db material-icons hint--top" aria-label="Storage connection" style="font-size: 14px">layers</i>

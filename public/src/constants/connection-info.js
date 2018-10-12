@@ -58,7 +58,7 @@ const FLEX = {
   connection_type: types.CONNECTION_TYPE_FLEX,
   icon: require('../assets/icon/icon-flexio-128.png'),
   is_oauth: false,
-  is_storage: false,
+  is_storage: true,
   is_email: false
 }
 
