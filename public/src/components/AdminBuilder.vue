@@ -54,6 +54,9 @@
   const edit_code = yaml.safeDump(test_def)
 
   export default {
+    metaInfo: {
+      title: 'Admin Builder'
+    },
     components: {
       CodeEditor,
       BuilderDocument

@@ -68,6 +68,9 @@
   import MixinResponse from './mixins/response'
 
   export default {
+    metaInfo: {
+      title: 'Admin Tests'
+    },
     mixins: [MixinFilter, MixinResponse],
     components: {
       AdminTestItem

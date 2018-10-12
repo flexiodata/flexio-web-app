@@ -22,6 +22,9 @@ greet('Bob')\n\
 "
 
   export default {
+    metaInfo: {
+      title: 'Admin Code Editor'
+    },
     components: {
       CodeEditor
     },

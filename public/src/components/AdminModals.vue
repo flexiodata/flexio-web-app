@@ -50,6 +50,9 @@
   import SignUpModal from './SignUpModal.vue'
 
   export default {
+    metaInfo: {
+      title: 'Admin Modals'
+    },
     components: {
       FlexioModal,
       SignUpModal

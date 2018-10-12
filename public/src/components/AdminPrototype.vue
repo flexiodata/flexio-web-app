@@ -36,6 +36,9 @@
   import PopperTour from './PopperTour.vue'
 
   export default {
+    metaInfo: {
+      title: 'Admin Prototype'
+    },
     components: {
       PopperStep,
       PopperTour

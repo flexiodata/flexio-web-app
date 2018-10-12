@@ -43,6 +43,9 @@
   import CodeEditor from './CodeEditor.vue'
 
   export default {
+    metaInfo: {
+      title: 'Admin Code Translator'
+    },
     components: {
       CodeEditor
     },
