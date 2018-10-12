@@ -10,12 +10,11 @@ import home from './home'
 import pipes from './pipes'
 
 import {
-  ROUTE_PIPES,
   ROUTE_SIGNIN,
   ROUTE_SIGNUP,
-  ROUTE_ONBOARD,
   ROUTE_FORGOTPASSWORD,
-  ROUTE_RESETPASSWORD
+  ROUTE_RESETPASSWORD,
+  ROUTE_ONBOARD
 } from '../constants/route'
 
 import SignInPage from '../components/SignInPage.vue'
@@ -25,6 +24,11 @@ import ResetPasswordPage from '../components/ResetPasswordPage.vue'
 import OnboardingPage from '../components/OnboardingPage.vue'
 import PageNotFound from '../components/PageNotFound.vue'
 
+const basepath_redirect =   {
+  path: '/',
+  redirect: '/pipes'
+}
+
 // use VueRouter for handling browser history
 Vue.use(Router)
 
@@ -32,7 +36,7 @@ Vue.use(Router)
 Vue.use(Meta)
 
 const routes = [
-  { path: '/', redirect: { name: ROUTE_PIPES } }, // basepath redirect
+  basepath_redirect,
   account,
   activity,
   admin,
