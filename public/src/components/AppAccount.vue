@@ -3,7 +3,7 @@
     class="bg-nearer-white ph4 overflow-y-scroll relative"
     style="padding-bottom: 8rem"
   >
-    <div class="center" style="max-width: 42rem">
+    <div class="center" style="max-width: 48rem">
       <div class="mt4 mt5-ns bg-white br2 css-white-box">
         <el-tabs
           class="bg-white br2 pv4 pl3"
@@ -15,7 +15,7 @@
             <div slot="label">Profile</div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Profile</h3>
-              <AccountProfileForm />
+              <AccountProfileForm style="max-width: 30rem" />
             </div>
           </el-tab-pane>
 
@@ -23,10 +23,10 @@
             <div slot="label">Account</div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Change password</h3>
-              <AccountPasswordForm />
+              <AccountPasswordForm style="max-width: 30rem" />
               <div class="h3"></div>
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Regional settings</h3>
-              <AccountRegionForm />
+              <AccountRegionForm style="max-width: 30rem" />
               <div class="h3"></div>
               <h3 class="mt0 mb3 pb2 dark-red fw6 bb b--black-10">Delete account</h3>
               <p class="lh-copy f6">Once you delete your account, there's no going back. Please be sure you want to do this!</p>
@@ -42,7 +42,7 @@
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label">API</div>
+            <div slot="label">API keys</div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>
