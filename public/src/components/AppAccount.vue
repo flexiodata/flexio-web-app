@@ -4,7 +4,9 @@
     style="padding-bottom: 8rem"
   >
     <div class="center" style="max-width: 48rem">
-      <div class="mt4 mt5-ns bg-white br2 css-white-box">
+      <div class="mt4 mt5-ns bg-white br2 relative css-white-box">
+        <!-- uncomment this to extend tab list right border all the way down -->
+        <div class="absolute top-2 bottom-2 tab-list-border" v-if="false"></div>
         <el-tabs
           class="bg-white br2 pv4 pl3"
           tab-position="left"
@@ -126,3 +128,9 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  .tab-list-border
+    left: 150px
+    border-left: 2px solid #e4e7ed
+</style>
