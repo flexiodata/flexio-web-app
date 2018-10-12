@@ -12,7 +12,7 @@
     <div class="flex-none pa3 relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
-          <div class="f2">Connections</div>
+          <h1 class="mv0 f2 fw4 mr3">Connections</h1>
         </div>
         <div class="flex-none flex flex-row items-center ml3">
           <el-button type="primary" class="ttu b" @click="show_connection_new_dialog = true">New Connection</el-button>

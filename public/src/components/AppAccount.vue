@@ -12,7 +12,7 @@
           v-model="active_tab_name"
         >
           <el-tab-pane name="profile">
-            <div slot="label">Profile</div>
+            <div slot="label"><div style="min-width: 6rem">Profile</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Profile</h3>
               <AccountProfileForm style="max-width: 30rem" />
@@ -20,7 +20,7 @@
           </el-tab-pane>
 
           <el-tab-pane name="settings">
-            <div slot="label">Account</div>
+            <div slot="label"><div style="min-width: 6rem">Account</div></div>
             <div class="ml3 mr4">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">Change password</h3>
               <AccountPasswordForm style="max-width: 30rem" />
@@ -42,7 +42,7 @@
           </el-tab-pane>
 
           <el-tab-pane name="api">
-            <div slot="label">API keys</div>
+            <div slot="label"><div style="min-width: 6rem">API keys</div></div>
             <div class="ml3 mr4" v-if="has_user">
               <h3 class="mt0 mb3 pb2 fw6 bb b--black-10">API keys</h3>
               <p class="lh-copy f6 mb3">This is a list of API keys associated with your account. Remove any keys that you do not recognize.</p>

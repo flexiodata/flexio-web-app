@@ -12,7 +12,7 @@
     <div class="pa3 relative bg-white bb b--black-05">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
-          <div class="f2">Storage</div>
+          <h1 class="mv0 f2 fw4 mr3">Storage</h1>
         </div>
         <div class="flex-none flex flex-row items-center" v-if="false">
           <el-button type="primary" class="ttu b" @click="openAddModal">New storage</el-button>

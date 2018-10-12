@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row items-center">
     <div class="flex-fill flex flex-row items-center">
-      <h1 class="mv0 fw6 f3" v-if="title.length > 0">{{title}}</h1>
+      <h1 class="mv0 fw4 f3" v-if="title.length > 0">{{title}}</h1>
       <h1 class="mv0 fw4 f3 moon-gray" v-else>(No title)</h1>
       <el-button
         plain

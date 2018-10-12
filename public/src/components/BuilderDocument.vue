@@ -15,7 +15,7 @@
     <!-- use `z-7` to ensure the title z-index is greater than the CodeMirror scrollbar -->
     <div class="mt4 mb3 relative z-7 bg-nearer-white">
       <div class="center tc mw-builder-doc" v-if="show_title">
-        <h1 class="mv0 pv3 fw6">{{title}}</h1>
+        <h1 class="mv0 pv3 fw4">{{title}}</h1>
       </div>
       <div class="h1" v-else></div>
       <div class="center mw-builder-doc" v-if="show_description">

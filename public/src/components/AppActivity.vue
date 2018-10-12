@@ -12,7 +12,7 @@
     <div class="center w-100 pa3 pa4-l pb3-l bb bb-0-l b--black-10" style="max-width: 1152px">
       <div class="flex flex-row">
         <div class="flex-fill flex flex-row items-center">
-          <div class="f2 dn db-ns mr3">Activity</div>
+          <h1 class="mv0 f2 fw4 mr3">Activity</h1>
         </div>
       </div>
     </div>
