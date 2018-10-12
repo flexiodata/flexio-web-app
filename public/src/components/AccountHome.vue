@@ -107,20 +107,21 @@
       this.$store.track('Visited Account Page')
 
       this.$nextTick(() => {
-        this.setHash(this.getTabName())
+        this.setRoute(this.getTabName())
       })
     },
     methods: {
-      setHash(tab_name) {
-        window.location.hash = '#'+tab_name
+      setRoute(tab_name) {
+        // update the route
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.section', tab_name)
+        this.$router.replace(new_route)
       },
       getTabName() {
-        var hash = window.location.hash
-        var tab_name = hash.substring(1)
-        return tab_name.length > 0 ? tab_name : 'profile'
+        return _.get(this.$route, 'params.section', 'profile')
       },
       onTabClick(tab) {
-        this.setHash(tab.name)
+        this.setRoute(tab.name)
       }
     }
   }
