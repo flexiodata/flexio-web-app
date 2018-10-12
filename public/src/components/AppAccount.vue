@@ -81,8 +81,10 @@
   import AccountDeleteForm from './AccountDeleteForm.vue'
 
   export default {
-    metaInfo: {
-      title: 'My Account'
+    metaInfo() {
+      return {
+        title: _.get(this.section_label_lookup, [this.getSection()], 'My Account')
+      }
     },
     components: {
       AccountProfileForm,
@@ -91,9 +93,20 @@
       AccountPasswordForm,
       AccountDeleteForm
     },
+    watch: {
+      route_section: {
+        handler: 'onRouteSectionChange',
+        immediate: true
+      }
+    },
     data() {
       return {
-        active_tab_name: this.getTabName(),
+        section_label_lookup: {
+          profile: 'Your Profile',
+          settings: 'Account Settings',
+          api: 'API Keys'
+        },
+        active_tab_name: this.getSection(),
         show_account_delete_dialog: false
       }
     },
@@ -103,27 +116,34 @@
       ]),
       has_user() {
         return this.active_user_eid.length > 0
+      },
+      route_section() {
+        return _.get(this.$route, 'params.section', 'profile')
       }
     },
     mounted() {
       this.$store.track('Visited Account Page')
 
       this.$nextTick(() => {
-        this.setRoute(this.getTabName())
+        this.setRoute(this.getSection())
       })
     },
     methods: {
-      setRoute(tab_name) {
-        // update the route
-        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
-        _.set(new_route, 'params.section', tab_name)
-        this.$router.replace(new_route)
-      },
-      getTabName() {
+      getSection() {
         return _.get(this.$route, 'params.section', 'profile')
+      },
+      setRoute(section_name) {
+        // update the route
+        var current_section = _.get(this.$route, 'params.section', '')
+        var new_route = _.pick(this.$route, ['name', 'meta', 'params', 'path'])
+        _.set(new_route, 'params.section', section_name)
+        this.$router[current_section.length == 0 ? 'replace' : 'push'](new_route)
       },
       onTabClick(tab) {
         this.setRoute(tab.name)
+      },
+      onRouteSectionChange(val) {
+        this.active_tab_name = val
       }
     }
   }
